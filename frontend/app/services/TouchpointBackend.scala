@@ -1,6 +1,5 @@
 package services
 
-import com.gu.config.Membership
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.salesforce.Contact._
 import com.gu.membership.salesforce.ContactDeserializer.Keys
@@ -88,17 +87,17 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
     } yield customer.card
   }
 
-  def cancelSubscription(contact: Contact[Member, PaymentMethod], user: IdMinimalUser, campaignCode: Option[String] = None): Future[String] = {
+  def cancelSubscription(contact: Contact[Member, PaymentMethod], user: IdMinimalUser): Future[String] = {
     for {
       subscription <- subscriptionService.cancelSubscription(contact)
     } yield {
       memberRepository.metrics.putCancel(contact.tier)
-      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier.name, campaignCode = campaignCode)), user)
+      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier.name)), user)
       ""
     }
   }
 
-  def downgradeSubscription(member: Contact[Member, PaymentMethod], user: IdMinimalUser, campaignCode: Option[String] = None): Future[String] = {
+  def downgradeSubscription(member: Contact[Member, PaymentMethod], user: IdMinimalUser): Future[String] = {
     for {
       _ <- subscriptionService.downgradeSubscription(member)
     } yield {
@@ -110,8 +109,7 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
             member.salesforceContactId,
             member.identityId,
             member.tier.name,
-            Some(DowngradeAmendment(member.tier)), //getting effective date and subscription annual / month is proving difficult
-            campaignCode = campaignCode
+            Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
           )),
         user)
 

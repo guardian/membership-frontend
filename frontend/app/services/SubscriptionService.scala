@@ -130,7 +130,6 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     subscriptions <- zuoraSoapClient.query[Soap.Subscription](SimpleFilter("Name", subscriptionNumber))
   } yield subscriptions
 
-
   def currentSubscription(contact: ContactId): Future[model.Subscription] = for {
     catalog <- membershipCatalog.get()
     accounts <- zuoraSoapClient.query[Soap.Account](SimpleFilter("crmId", contact.salesforceAccountId))

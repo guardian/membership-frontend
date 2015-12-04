@@ -2,7 +2,7 @@ package controllers
 
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.identity.play.PrivateFields
-import com.gu.membership.model.{Year, BillingPeriod}
+import com.gu.membership.model.{BillingPeriod, Year}
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -16,7 +16,6 @@ import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import services._
 import tracking.ActivityTracking
-import utils.CampaignCode.extractCampaignCode
 import utils.TierChangeCookies
 import views.support.PageInfo.CheckoutForm
 import views.support.{CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
@@ -37,7 +36,7 @@ trait DowngradeTier extends ActivityTracking {
 
   def downgradeToFriendConfirm = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, request.user, extractCampaignCode(request))
+      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, request.user)
     } yield Redirect(routes.TierController.downgradeToFriendSummary)
   }
 
@@ -136,7 +135,7 @@ trait UpgradeTier {
     val identityRequest = IdentityRequest(request)
 
     def handleFree(freeMember: Contact[Member, NoPayment])(form: FreeMemberChangeForm) = for {
-      memberId <- MemberService.upgradeFreeSubscription(freeMember, target, form, identityRequest, extractCampaignCode(request))
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, target, form, identityRequest)
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
 
     def handlePaid(paidMember: Contact[Member, StripePayment])(form: PaidMemberChangeForm) = {
@@ -147,7 +146,7 @@ trait UpgradeTier {
       }
 
       def doUpgrade(): Future[Result] = {
-        MemberService.upgradePaidSubscription(paidMember, target, identityRequest, extractCampaignCode(request), form).map {
+        MemberService.upgradePaidSubscription(paidMember, target, identityRequest, form).map {
           _ => Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
@@ -184,7 +183,7 @@ trait CancelTier {
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
-    request.touchpointBackend.cancelSubscription(request.member, request.user, extractCampaignCode(request)).map { _ =>
+    request.touchpointBackend.cancelSubscription(request.member, request.user).map { _ =>
       request.member.tier match {
         case m: FreeTierMember => Redirect(routes.TierController.cancelFreeTierSummary())
         case _ => Redirect(routes.TierController.cancelPaidTierSummary())

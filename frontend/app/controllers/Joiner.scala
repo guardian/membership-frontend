@@ -16,19 +16,17 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
 import forms.MemberForm._
 import model._
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.{GuardianContentService, _}
-import services.EventbriteService._
-import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
-import utils.CampaignCode.extractCampaignCode
+import tracking.ActivityTracking
 import utils.TierChangeCookies
 import views.support
-import views.support.{CountryWithCurrency, PageInfo}
 import views.support.PageInfo.CheckoutForm
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import views.support.{CountryWithCurrency, PageInfo}
 
 import scala.concurrent.Future
 
@@ -190,24 +188,16 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
 
-  private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) =
-    MemberService.createMember(request.user, formData, IdentityRequest(request), extractCampaignCode(request))
-      .map { member =>
-        for {
-          eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-          event <- EventbriteService.getBookableEvent(eventId)
-        } {
-          event.service.wsMetrics.put(s"join-$tier-event", 1)
-          val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name, campaignCode=extractCampaignCode(request))
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), request.user)
-        }
-        result
-      } recover {
+  private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+    MemberService.createMember(request.user, formData, IdentityRequest(request), eventId)
+      .map(_ => onSuccess) recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error =>
         logger.error("An error occurred while calling Joiner.makeMember", error)
         Forbidden
     }
+  }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
     val futureCustomerOpt = request.member.paymentMethod match {

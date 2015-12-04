@@ -3,15 +3,12 @@ package controllers
 import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
-import com.github.nscala_time.time.Imports._
-import com.gu.membership.salesforce.{PaymentMethod, Contact, Member, Tier}
+import com.gu.membership.salesforce.{Contact, Member, PaymentMethod, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
-import configuration.CopyConfig
 import model.EmbedSerializer._
 import model.Eventbrite.{EBEvent, EBOrder}
-import model.RichEvent.MasterclassEvent._
 import model.RichEvent.{RichEvent, _}
 import model._
 import org.joda.time.format.ISODateTimeFormat
@@ -21,7 +18,6 @@ import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService}
 import services.EventbriteService._
 import tracking._
-import utils.CampaignCode.extractCampaignCode
 import views.support.PageInfo
 
 import scala.concurrent.Future
@@ -136,7 +132,7 @@ trait Event extends Controller with ActivityTracking {
 
       memberService.createEBCode(request.member, event).map { code =>
         val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
-        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.memberStatus.tier.name, campaignCode = extractCampaignCode(request))
+        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.memberStatus.tier.name)
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
 
@@ -147,7 +143,7 @@ trait Event extends Controller with ActivityTracking {
 
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Contact[Member, PaymentMethod]]) {
-    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.memberStatus.tier.name, campaignCode=extractCampaignCode(request)))
+    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.memberStatus.tier.name))
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
 

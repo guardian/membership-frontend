@@ -92,10 +92,11 @@ trait MemberService extends LazyLogging with ActivityTracking {
   def createMember(user: IdMinimalUser,
                    formData: JoinForm,
                    identityRequest: IdentityRequest,
-                   campaignCode: Option[String] = None): Future[ContactId] = {
+                   fromEventId: Option[String]): Future[ContactId] = {
 
     val tp = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
+    val tier = formData.plan.tier
 
     val createContact: Future[ContactId] =
       for {
@@ -130,11 +131,17 @@ trait MemberService extends LazyLogging with ActivityTracking {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         tp.memberRepository.metrics.putSignUp(formData.plan)
-        trackRegistration(formData, cId, user, campaignCode)
+        trackRegistration(formData, cId, user)
         cId
       }
     }.andThen {
-      case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
+      case Success(contactId) =>
+        logger.debug(s"createMember() success user=${user.id} memberAccount=$contactId")
+        fromEventId.flatMap(EventbriteService.getBookableEvent).foreach { event =>
+          event.service.wsMetrics.put(s"join-${tier.name}-event", 1)
+          val memberData = MemberData(contactId.salesforceContactId, user.id, tier.name)
+          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
+        }
       case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
       case Failure(error) =>
         logger.error(s"Error in createMember() user=${user.id}", error)
@@ -210,15 +217,14 @@ trait MemberService extends LazyLogging with ActivityTracking {
   def upgradeFreeSubscription(freeMember: Contact[Member, NoPayment],
                               newTier: PaidTier,
                               form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest,
-                              campaignCode: Option[String]): Future[ContactId] = {
+                              identityRequest: IdentityRequest): Future[ContactId] = {
 
     val touchpointBackend = TouchpointBackend.forUser(freeMember)
     val plan = PaidTierPlan(newTier, form.payment.billingPeriod, Current)
     for {
       customer <- touchpointBackend.stripeService.Customer.create(freeMember.identityId, form.payment.token)
       paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(freeMember, customer)
-      memberId <- upgradeSubscription(freeMember, plan, form, Some(customer), identityRequest, campaignCode)
+      memberId <- upgradeSubscription(freeMember, plan, form, Some(customer), identityRequest)
     } yield {
 
       memberId
@@ -228,7 +234,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
   def upgradePaidSubscription(paidMember: Contact[Member, StripePayment],
                               newTier: PaidTier,
                               identityRequest: IdentityRequest,
-                              campaignCode: Option[String],
                               form: PaidMemberChangeForm): Future[ContactId] = {
 
     val tp = TouchpointBackend.forUser(paidMember)
@@ -238,7 +243,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       cat <- catalog
       currentPlan = cat.unsafePaidTierPlan(subs.productRatePlanId)
       newPlan = PaidTierPlan(newTier, currentPlan.billingPeriod, status = Current)
-      memberId <- upgradeSubscription(paidMember, newPlan, form, None, identityRequest, campaignCode)
+      memberId <- upgradeSubscription(paidMember, newPlan, form, None, identityRequest)
     } yield memberId
 
   }
@@ -247,8 +252,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
                                   newRatePlan: PaidTierPlan,
                                   form: MemberChangeForm,
                                   customerOpt: Option[Customer],
-                                  identityRequest: IdentityRequest,
-                                  campaignCode: Option[String]): Future[ContactId] = {
+                                  identityRequest: IdentityRequest): Future[ContactId] = {
 
     val touchpointBackend = TouchpointBackend.forUser(member)
     val addressDetails = form.addressDetails
@@ -261,7 +265,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newRatePlan, customerOpt))
     } yield {
       touchpointBackend.memberRepository.metrics.putUpgrade(newRatePlan.tier)
-      trackUpgrade(memberId, member, newRatePlan, campaignCode, addressDetails)
+      trackUpgrade(memberId, member, newRatePlan, addressDetails)
       memberId
     }
   }
@@ -269,7 +273,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
   private def trackUpgrade(memberId: ContactId,
                            member: Contact[Member, PaymentMethod],
                            newRatePlan: PaidTierPlan,
-                           campaignCode: Option[String],
                            addressDetails: Option[AddressDetails]): Unit = {
 
     track(
@@ -284,13 +287,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
           subscriptionPaymentAnnual = Some(newRatePlan.billingPeriod.annual),
           marketingChoices = None,
           city = addressDetails.map(_.deliveryAddress.town),
-          country = addressDetails.map(_.deliveryAddress.country.name),
-          campaignCode=campaignCode
+          country = addressDetails.map(_.deliveryAddress.country.name)
         )),
       member)
   }
 
-  private def trackRegistration(formData: JoinForm, member: ContactId, user: IdMinimalUser, campaignCode: Option[String] = None) {
+  private def trackRegistration(formData: JoinForm, member: ContactId, user: IdMinimalUser) {
     val subscriptionPaymentAnnual = formData match {
       case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.billingPeriod.annual)
       case _ => None
@@ -313,8 +315,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         subscriptionPaymentAnnual,
         Some(formData.marketingChoices),
         Some(formData.deliveryAddress.town),
-        Some(formData.deliveryAddress.country.name),
-        campaignCode
+        Some(formData.deliveryAddress.country.name)
     )
 
     track(MemberActivity("membershipRegistration", trackingInfo), user)

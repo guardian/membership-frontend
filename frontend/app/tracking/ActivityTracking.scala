@@ -53,16 +53,15 @@ case class UpgradeAmendment(tierFrom: Tier, tierTo: Tier, effectiveFromDate: Opt
 case class DowngradeAmendment(tierFrom: Tier, tierTo: Tier = Tier.Friend, effectiveFromDate: Option[DateTime] = None) extends TierAmendment
 
 case class MemberData(salesforceContactId: String,
-                        identityId: String,
-                        tier: String,
-                        tierAmendment: Option[TierAmendment] = None,
-                        deliveryPostcode: Option[String] = None,
-                        billingPostcode: Option[String] = None,
-                        subscriptionPaymentAnnual: Option[Boolean] = None,
-                        marketingChoices: Option[MarketingChoicesForm] = None,
-                        city: Option[String] = None,
-                        country: Option[String] = None,
-                        campaignCode: Option[String] = None) {
+                      identityId: String,
+                      tier: String,
+                      tierAmendment: Option[TierAmendment] = None,
+                      deliveryPostcode: Option[String] = None,
+                      billingPostcode: Option[String] = None,
+                      subscriptionPaymentAnnual: Option[Boolean] = None,
+                      marketingChoices: Option[MarketingChoicesForm] = None,
+                      city: Option[String] = None,
+                      country: Option[String] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
@@ -102,9 +101,6 @@ case class MemberData(salesforceContactId: String,
             ) ++
             tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
           }
-        } ++
-        campaignCode.map { code =>
-          "campaignCode" -> code
         }
 
     val memberMap = Map("member" -> ActivityTracking.setSubMap(dataMap))
