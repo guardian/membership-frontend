@@ -45,9 +45,11 @@ trait Membership {
   def app(name: String) = lib(name).settings(playArtifactDistSettings: _*).settings(magentaPackageName := name)
     .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq(
       "controllers.TierBinder._",
+      "controllers.CountryGroupBinder._",
       "com.gu.membership.salesforce.Tier",
       "com.gu.membership.salesforce.FreeTier",
-      "com.gu.membership.salesforce.PaidTier"
+      "com.gu.membership.salesforce.PaidTier",
+      "com.gu.i18n.CountryGroup"
     ))
 }
 

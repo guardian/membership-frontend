@@ -90,7 +90,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
       catalog <- request.catalog
@@ -112,11 +112,6 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
          pageInfo = pageInfo))
     }
   }
-
-  private def countryGroup(implicit req: RequestHeader): CountryGroup = (for {
-    queryValue <- req.getQueryString(countryGroupKey)
-    countryGroup <- CountryGroup.byId(queryValue)
-  } yield countryGroup).getOrElse(CountryGroup.UK)
 
   private def setCountry(fields: PrivateFields, cg: CountryGroup): PrivateFields = {
     val country = fields.country.orElse(cg.defaultCountry.map(_.alpha2))
