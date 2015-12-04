@@ -204,15 +204,16 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   def previewUpgradeSubscription(subscription: model.Subscription,
-                                 contactId: ContactId,
-                                 newTier: PaidTier,
-                                 tp: TouchpointBackend): Future[Seq[PreviewInvoiceItem]] =
+                                 contact: Contact[MemberStatus, PaymentMethod],
+                                 newTier: PaidTier): Future[Seq[PreviewInvoiceItem]] = {
+    val tp = TouchpointBackend.forUser(contact)
     for {
       cat <- tp.catalog
       currentPlan = cat.unsafePaidTierPlan(subscription.productRatePlanId)
       newPlan = PaidTierPlan(newTier, currentPlan.billingPeriod, Current)
-      subscriptionResult <- tp.subscriptionService.upgradeSubscription(contactId, newPlan, preview = true, Set.empty)
+      subscriptionResult <- tp.subscriptionService.upgradeSubscription(contact, newPlan, preview = true, Set.empty)
     } yield subscriptionResult.invoiceItems
+  }
 
   def upgradeFreeSubscription(freeMember: Contact[Member, NoPayment],
                               newTier: PaidTier,

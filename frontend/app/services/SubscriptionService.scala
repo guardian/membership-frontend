@@ -2,7 +2,8 @@ package services
 
 import com.github.nscala_time.time.Imports._
 import com.gu.config.Membership
-import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
+import com.gu.i18n.{CountryGroup, Country, Currency, GBP}
+import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Tier._
 import com.gu.membership.salesforce._
@@ -26,6 +27,7 @@ import forms.MemberForm.{JoinForm, PaidMemberJoinForm}
 import model._
 import org.joda.time.DateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import tracking.{DowngradeAmendment, ActivityTracking, MemberData, MemberActivity}
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
 
@@ -110,7 +112,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
 			                    val metrics: ServiceMetrics,
 			                    val productFamily: Membership,
 			                    val bt: BackendType,
-			                    val paymentService: PaymentService) extends LazyLogging {
+			                    val paymentService: PaymentService) extends LazyLogging with ActivityTracking {
 
   import SubscriptionService._
 
@@ -316,23 +318,31 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  def cancelSubscription(contactId: ContactId): Future[AmendResult] =
+  def cancelSubscription(contact: Contact[Member, sf.PaymentMethod], user: IdMinimalUser): Future[String] = {
+    val tp = TouchpointBackend.forUser(contact)
+
     for {
-      sub <- subWithNoPendingAmend(contactId)
+      sub <- subWithNoPendingAmend(contact)
       cancelDate = sub match {
         case p: PaidSubscription => p.chargedThroughDate.map(_.toDateTimeAtCurrentTime).getOrElse(DateTime.now)
         case _ => DateTime.now
       }
-      result <- zuoraSoapClient.authenticatedRequest(CancelPlan(sub.id, sub.ratePlanId, cancelDate))
-    } yield result
+      _ <- zuoraSoapClient.authenticatedRequest(CancelPlan(sub.id, sub.ratePlanId, cancelDate))
+    } yield {
+      tp.memberRepository.metrics.putCancel(contact.tier)
+      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier.name)), user)
+      ""
+    }
+  }
 
-  def downgradeSubscription(contactId: ContactId): Future[AmendResult] = {
+  def downgradeSubscription(contact: Contact[Member, sf.PaymentMethod], user: IdMinimalUser): Future[String] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(sub: model.PaidSubscription) = sub.chargedThroughDate.getOrElse(sub.firstPaymentDate).toDateTimeAtCurrentTime
+    val tp = TouchpointBackend.forUser(contact)
 
     for {
-      sub <- subWithNoPendingAmend(contactId)
+      sub <- subWithNoPendingAmend(contact)
       paidSub = sub match {
         case p: PaidSubscription => p
         case _ => throw SubscriptionServiceError(s"Expected to downgrade a paid subscription")
@@ -343,9 +353,22 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
         paidSub.ratePlanId,
         friendRatePlanId,
         effectiveFrom(paidSub)))
-    } yield result
-  }
+    } yield {
+      tp.memberRepository.metrics.putDowngrade(contact.tier)
+      track(
+        MemberActivity(
+          "downgradeMembership",
+          MemberData(
+            contact.salesforceContactId,
+            contact.identityId,
+            contact.tier.name,
+            Some(DowngradeAmendment(contact.tier)) //getting effective date and subscription annual / month is proving difficult
+          )),
+        user)
 
+      ""
+    }
+  }
 
   def upgradeSubscription(contactId: ContactId, newTierPlan: TierPlan, preview: Boolean, featureChoice: Set[FeatureChoice]): Future[AmendResult] = {
     import SubscriptionService._

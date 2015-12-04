@@ -11,7 +11,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-trait Subscription extends Controller {
+trait Subscription extends Controller with SubscriptionServiceProvider {
   def updateCard() = AjaxPaidMemberAction.async { implicit request =>
     updateForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), stripeToken =>
@@ -25,8 +25,8 @@ trait Subscription extends Controller {
 
   def remainingTickets() = AjaxPaidMemberAction.async { implicit request =>
     for {
-      subscription <- request.touchpointBackend.subscriptionService.currentSubscription(request.member)
-      ticketsUsedCount <- request.touchpointBackend.subscriptionService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
+      subscription <- subscriptionService.currentSubscription(request.member)
+      ticketsUsedCount <- subscriptionService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
     } yield {
       Ok(Json.obj(
         "totalAllocation" -> FreeEventTickets.allowance,

@@ -86,35 +86,4 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
       memberId <- memberRepository.upsert(member.identityId, Json.obj(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
   }
-
-  def cancelSubscription(contact: Contact[Member, PaymentMethod], user: IdMinimalUser): Future[String] = {
-    for {
-      subscription <- subscriptionService.cancelSubscription(contact)
-    } yield {
-      memberRepository.metrics.putCancel(contact.tier)
-      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier.name)), user)
-      ""
-    }
-  }
-
-  def downgradeSubscription(member: Contact[Member, PaymentMethod], user: IdMinimalUser): Future[String] = {
-    for {
-      _ <- subscriptionService.downgradeSubscription(member)
-    } yield {
-      memberRepository.metrics.putDowngrade(member.tier)
-      track(
-        MemberActivity(
-          "downgradeMembership",
-          MemberData(
-            member.salesforceContactId,
-            member.identityId,
-            member.tier.name,
-            Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
-          )),
-        user)
-
-      ""
-    }
-  }
-
 }

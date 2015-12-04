@@ -25,10 +25,15 @@ import utils.TierChangeCookies
 import views.support
 import views.support.PageInfo.CheckoutForm
 import views.support.{CountryWithCurrency, PageInfo}
+import actions.RichAuthRequest
 
 import scala.concurrent.Future
 
-trait Joiner extends Controller with ActivityTracking with LazyLogging {
+trait Joiner extends Controller with ActivityTracking
+                                with LazyLogging
+                                with CatalogProvider
+                                with StripeServiceProvider
+                                with SubscriptionServiceProvider {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
@@ -89,16 +94,17 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
   def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
+    implicit val backendProvider: BackendProvider = request
     for {
-      catalog <- request.catalog
+      cat <- catalog
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
       val cg = countryGroup
-      val paidDetails = catalog.paidTierDetails(tier)
+      val paidDetails = cat.paidTierDetails(tier)
       val currency = if (paidDetails.currencies.contains(cg.currency)) cg.currency else GBP
       val idUserWithCountry = identityUser.withCountryGroup(cg)
       val pageInfo = PageInfo(
-        stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey),
+        stripePublicKey = Some(stripeService.publicKey),
         initialCheckoutForm = CheckoutForm(cg.defaultCountry, currency, Year)
       )
 
@@ -110,15 +116,16 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     }
   }
 
-  def enterFriendDetails = NonMemberAction(Friend).async { implicit request =>
+  def enterFriendDetails = NonMemberAction(Friend).async { implicit request: AuthRequest[_] =>
+    implicit val backendProvider: BackendProvider = request
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
-      catalog <- request.catalog
+      cat <- catalog
     } yield {
       val ukGroup = CountryGroup.UK
       val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, Year)
       Ok(views.html.joiner.form.friendSignup(
-        catalog.friend,
+        cat.friend,
         identityUser,
         support.PageInfo(initialCheckoutForm = formI18n)))
     }
@@ -126,11 +133,12 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
+    implicit val backendProvider: BackendProvider = request
     for {
       identityUser <- identityService.getIdentityUserView(request.identityUser, IdentityRequest(request))
-      catalog <- TouchpointBackend.forUser(request.identityUser).catalog
+      cat <- catalog
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, identityUser, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(cat.staff, identityUser, flashMsgOpt))
     }
   }
 
@@ -183,7 +191,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
     for {
-      paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
+      paymentSummary <- subscriptionService.getMembershipSubscriptionSummary(request.member)
       stripeCustomer <- memberService.getStripeCustomer(request.member)
       destination <- DestinationService.returnDestinationFor(request)
     } yield Ok(views.html.joiner.thankyou(
