@@ -5,7 +5,7 @@ import com.gu.config.Membership
 import com.gu.i18n.{CountryGroup, Country, Currency, GBP}
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Tier._
-import com.gu.membership.salesforce.{Contact, ContactId, MemberStatus, PaymentMethod}
+import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
 import com.gu.membership.util.FutureSupplier
@@ -296,6 +296,19 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
       userInvoiced <- latestSubF.map(_.userHasBeenInvoiced)
       summary <- if (userInvoiced) getSummaryViaInvoice else getSummaryViaPreview
     } yield summary
+  }
+
+  def subscriptionUpgradableTo(memberId: Contact[Member, PaymentMethod], targetTier: PaidTier): Future[Option[model.Subscription]] = {
+    import model.TierOrdering.upgradeOrdering
+
+    membershipCatalog.get().zip(currentSubscription(memberId)).map { case (catalog, sub) =>
+      val currentTier = memberId.tier
+      val targetCurrencies = catalog.paidTierDetails(targetTier).currencies
+
+      if (!sub.isInTrialPeriod && targetCurrencies.contains(sub.accountCurrency) && targetTier > currentTier) {
+        Some(sub)
+      } else None
+    }
   }
 
   def cancelSubscription(contactId: ContactId): Future[AmendResult] =
