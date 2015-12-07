@@ -67,28 +67,22 @@ $_package-promo__actions_height: 117px;
     .package-promo__content {
         display: table;
         padding-bottom: $gs-gutter / 2;
-        .package-promo__description {
-            padding-right: $gs-gutter * 4;
-            display: table-cell;
-            vertical-align: top;
-            width: 100%;
+    }
 
-            @include mq(desktop) {
-                width: 50%;
-            }
-        }
+    .package-promo__description {
+        padding-right: $gs-gutter * 2;
+        display: table-cell;
+        vertical-align: top;
+        width: 100%;
+    }
 
-        .package-promo__actions {
-            margin-top: 0;
-            display: table-cell;
-            vertical-align: top;
-            width: 30%;
-            min-width: 205px;
-
-            @include mq(desktop) {
-                width: 30%;
-            }
-        }
+    .package-promo__actions {
+        margin-top: 0;
+        display: table-cell;
+        vertical-align: top;
+        width: auto;
+        min-width: 205px;
+        max-width: 350px;
     }
 }
 
@@ -117,6 +111,10 @@ $_package-promo__actions_height: 117px;
     }
     @include mq($from: tablet) {
         @include package-promo-wide();
+
+        .package-promo__actions {
+            min-width: 350px;
+        }
     }
 }
 

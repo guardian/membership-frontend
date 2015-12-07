@@ -71,18 +71,6 @@ trait Info extends Controller {
 
     val pageImages = Seq(
       ResponsiveImageGroup(
-        name=Some("intro"),
-        metadata=Some(Grid.Metadata(
-          description = Some("People take part in a demonstration in Times Square, New York, November 27, 2014."),
-          byline = None,
-          credit = Some("Carlo Allegri/REUTERS")
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/293_409_3206_1924",
-          sizes=List(1000,500)
-        )
-      ),
-      ResponsiveImageGroup(
         name=Some("fearless"),
         metadata=Some(Grid.Metadata(
           description = Some("The Counted: people killed by police in the United States in 2015"),

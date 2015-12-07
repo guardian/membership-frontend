@@ -39,6 +39,13 @@
         padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);
     }
 }
+.captioned-image__detail--right {
+    @include mq(tablet) {
+        right: 0;
+        width: 350px;
+        padding-left: 100px;
+    }
+}
 .captioned-image__caption {
     @include mq(tablet) {
         max-width: 27em;

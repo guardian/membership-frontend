@@ -2,7 +2,7 @@
    Hero Banner
    ========================================================================== */
 .hero-banner {
-    background: url(/assets/images/join-challenger/hm_hero01_980x980.jpg) no-repeat top -90px center;
+    background: no-repeat top -90px center;
     background-size: cover;
 
     // All iOS devices and at least some other mobile devices ignore
@@ -35,12 +35,23 @@
 
     //noinspection ALL
     @include mq(desktop) {
-        background-image: url(/assets/images/join-challenger/hm_hero01_1280x800.jpg);
         background-position: center top -13px;
     }
 
     @include mq(mem-full) {
         background-position: center top -113px;
+    }
+}
+.hero-banner--homepage {
+    background-image: url(/assets/images/join-challenger/hm_hero01_980x980.jpg);
+    @include mq(desktop) {
+        background-image: url(/assets/images/join-challenger/hm_hero01_1280x800.jpg);
+    }
+}
+.hero-banner--us-supporter {
+    background-image: url(/assets/images/join-challenger/s_US_hero01_980x980.jpg);
+    @include mq(desktop) {
+        background-image: url(/assets/images/join-challenger/s_US_hero01_1280x800.jpg);
     }
 }
 .hero-banner__inner {
@@ -69,7 +80,6 @@
     left: -15px;
     bottom: 0;
     background: color(brand-main);
-    z-index: 2;
     opacity: 0.5;
     display: none;
 
@@ -96,7 +106,6 @@
     top: 86px;
     right: -26px;
     background: $white;
-    z-index: 1;
     opacity: 0.6;
     width:50px;
     display:none;
@@ -112,7 +121,7 @@
     color: $black;
     background-color: rgb(255, 255, 255);
     position: relative;
-    z-index: 2;
+    z-index: 1;
 
     @include clip-path('top-slice') {
         padding-top: 24px;

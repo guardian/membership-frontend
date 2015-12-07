@@ -1,66 +1,106 @@
-@import views.support.PageInfo
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.memsub.Current
-@import com.gu.i18n.USD
 @import com.gu.i18n.CountryGroup.US
-@import configuration.Videos
-@import views.support.Asset
-@import views.support.Pricing._
-@import com.gu.salesforce.Tier.{Supporter, supporter}
-
-@import com.gu.membership.MembershipCatalog
-@import views.support.PaidPlans
+@import com.gu.memsub.Current
+@import com.gu.salesforce.Tier.Supporter
+@import com.gu.membership.PaidMembershipPlans
+@import views.support.PageInfo
 @(supporterPlans: PaidMembershipPlans[Current, Supporter],
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Supporters", pageInfo=pageInfo) {
+@import com.gu.salesforce.Tier.Supporter
+@import configuration.Videos
+@import views.support.Asset
 
-    @* ===== About Supporters ===== *@
-    @for(img <- pageImages.find(_.name.contains("intro"))) {
-        <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Become a Guardian Supporter", img=img, showImageCaption=true, isLead=true, toneClass=Some("tone-trans-white")) {
-                <div class="text-feature">
-                    <p>
-                        Supporters keep our journalism fearless, open and free from&nbsp;interference.
-                        <span class="text-pale">Plus, join today and $1 will be donated to the Guardian Charity Appeal.</span>
-                    </p>
+@section(title: String = "", hasBorder: Boolean = true)(content: Html) = {
+    <section class="page-slice page-slice--listing">
+        <div class="l-constrained">
+            <div class="listing listing--narrow @if(hasBorder){listing--bordered}">
+                <div class="listing__lead-in">
+                    <h3 class="h-intro">@title</h3>
                 </div>
-                @fragments.tier.packagePromoUSASupporter(supporterPlans.unsafePriceByCurrency(USD), isReversed=false)
-            }
+                <div class="listing__content">@content</div>
+            </div>
         </div>
+    </section>
+}
+
+@sectionCardStack(img: model.ResponsiveImageGroup)(content: Html) = {
+    <section class="page-slice page-slice--listing">
+        <div class="l-constrained">
+            <div class="listing listing--narrow listing--card-stack">
+                @* lead-in is empty but provides column alignment at larger widths *@
+                <div class="listing__lead-in"></div>
+                <div class="listing__content">
+                    <div class="listing--card-stack__card-one"></div>
+                    <div class="listing--card-stack__card-two"></div>
+                    <div class="listing--card-stack__card-three"></div>
+                    @content
+                </div>
+            </div>
+            <figure class="captioned-image">
+                <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
+                @for(metadata <- img.metadata) {
+                    <figcaption class="captioned-image__detail captioned-image__detail--right">
+                        <div class="captioned-image__caption">
+                        @fragments.media.imageCaption(metadata)
+                        </div>
+                    </figcaption>
+                }
+            </figure>
+        </div>
+    </section>
+}
+
+@main("Supporters", pageInfo=pageInfo) {
+    @fragments.page.heroBanner(
+        "Become a Guardian&nbsp;Supporter",
+        "Supporters keep our journalism fearless and free to tell the stories other news organizations won’t",
+        "hero-banner--us-supporter"
+    )()
+
+    @section(hasBorder = false) {
+        @fragments.tier.packagePromoUSASupporter(supporterPlans)
     }
 
-    @* ===== Support open, independent journalism ===== *@
-    <div id="supporter-video" class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoVideoSecondary(
-            "Support open, independent journalism",
-            video=Videos.supporters,
-            toneClass=Some("tone-trans-brand-supporting-2")){
-            <div class="text-feature">
-                <p>Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
+    @*
+     * This section doesn't use the template above because the following
+     * section has no lead-in so we need this section to have no bottom padding.
+     * Rather than add some arbitrary parameters to the template, we use some custom HTML.
+     *@
+    <section>
+        <div class="l-constrained">
+            <div class="listing listing--no-bottom-padding listing--bordered">
+                <div class="listing__lead-in">
+                    <h3 class="h-intro">Support open, independent journalism</h3>
+                </div>
+                <div class="listing__content">
+                    <div class="video-preview video-preview--plain">
+                        <div class="video-preview__video">
+                        @fragments.media.videoPlayer(Videos.supporters)
+                        </div>
+                        <div class="video-preview__header">
+                            @fragments.inlineIcon("video", List("icon-inline--scale"))
+                            Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @for(img <- pageImages.find(_.name.contains("fearless"))) {
+        @sectionCardStack(img) {
+            <div class="listing__text">
+                <p>The Guardian shines a light on critical, underreported stories across the US and the globe.</p>
+                <p>Without a paywall, our journalism is open to everyone.</p>
+                <p>
+                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@US.id">Become a Supporter</a>
+                </p>
             </div>
         }
-    </div>
-
-    @* ===== Ensuring our independence ===== *@
-    @for(img <- pageImages.find(_.name.contains("fearless"))) {
-        <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Fearless, progressive and free from interference", img=img, showImageCaption=true, toneClass=Some("tone-trans-white")) {
-                <div class="text-feature">
-                    <p>The Guardian publishes the stories that others keep hidden.</p>
-                    <p>We have become the most read, serious English-language newspaper in the world, visited by 120 million unique browsers each month. Our journalism is for everyone. The Guardian is open, without a paywall, and we remain true to our 200-year old progressive values.</p>
-                    <p>Become a Supporter to ensure the whole picture is available to everyone.</p>
-                </div>
-                <div class="action-group">
-                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporter)}?countryGroup=@US.id">Become a Supporter</a>
-                </div>
-            }
-        </div>
     }
 
-    @* ===== Join The Guardian and support The Guardian ===== *@
-    <div class="page-slice page-slice--padded l-constrained">
+    @section("If you read the Guardian, join the Guardian") {
         @fragments.promos.promoQuote(
             Asset.at("images/common/katharine-viner-cutout.png"),
             "Katharine Viner, editor-in-chief of the Guardian"
@@ -72,16 +112,9 @@
                 <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
             </blockquote>
         }
-    </div>
+    }
 
-    @* ===== Join Today ===== *@
-    <div class="page-slice tone-tint" id="whats-included">
-        <div class="l-constrained">
-            <h2 class="page-slice__headline">What's included</h2>
-            <div class="page-slice__content">
-                @fragments.tier.packageFeature(PaidPlans(supporterPlans), US, isReversed=true)
-            </div>
-        </div>
-    </div>
-
+    @section("What's included") {
+        @fragments.tier.packagePromoUSASupporter(supporterPlans)
+    }
 }

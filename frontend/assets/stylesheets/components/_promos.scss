@@ -237,10 +237,10 @@
 }
 .promo-quote__text {
     @include mq(phablet) {
-        max-width: 70%;
+        max-width: 64%;
     }
     @include mq(desktop) {
-        padding-left: $gs-gutter * 4;
+        padding-left: $gs-gutter;
     }
 }
 .promo-quote__cutout {
