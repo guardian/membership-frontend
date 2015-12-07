@@ -1,7 +1,7 @@
 package services
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
-import com.gu.membership.model._
+import com.gu.membership.model.{PaymentMethod => _, _}
 import com.gu.membership.salesforce.Contact._
 import com.gu.membership.salesforce.ContactDeserializer.Keys
 import com.gu.membership.salesforce._

@@ -94,12 +94,14 @@
                         <td id="qa-joiner-summary-recurring">@summary.planAmount.pretty</td>
                     </tr>
                     @if(summary.billingPeriod == Year && summary.initialFreePeriodOffer) {
-                        <tr role="row">
-                            <th role="rowheader">
-                                Next Annual payment
-                            </th>
-                            <td id="qa-joiner-summary-annual-date">@summary.renewalDate.pretty</td>
-                        </tr>
+                        @for(renewalDate <- summary.renewalDate) {
+                            <tr role="row">
+                                <th role="rowheader">
+                                    Next Annual payment
+                                </th>
+                                <td id="qa-joiner-summary-annual-date">@renewalDate.pretty</td>
+                            </tr>
+                        }
                     }
 
                     @for(card <- cardOpt) {

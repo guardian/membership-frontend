@@ -8,7 +8,7 @@ case class ThankyouSummary(startDate: DateTime,
                            amountPaidToday: Price,
                            planAmount: Price,
                            nextPayment: Option[NextPayment],
-                           renewalDate: DateTime,
+                           renewalDate: Option[DateTime],
                            initialFreePeriodOffer: Boolean,
                            billingPeriod: BillingPeriod)
 

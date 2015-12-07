@@ -53,7 +53,7 @@ object TouchpointBackend {
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val productFamily = Config.productFamily(restBackendConfig.envName)
-    val zSubscriptionService = new zuora.SubscriptionService(zuoraSoapClient, zuoraRestClient)
+    val zSubscriptionService = new zuora.SubscriptionService(zuoraSoapClient, zuoraRestClient, stripeService)
     val paymentService = new ZuoraPaymentService(stripeService, zSubscriptionService)
     val subscriptionService = new SubscriptionService(zuoraSoapClient, zuoraRestClient, backend.zuoraMetrics("zuora-rest-client"), productFamily, backendType, paymentService)
     val memberRepository = new FrontendMemberRepository(backend.salesforce)

@@ -5,6 +5,7 @@ import com.gu.config.Membership
 import com.gu.i18n.{CountryGroup, Country, Currency, GBP}
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Tier._
+import com.gu.membership.{salesforce => sf}
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
@@ -191,7 +192,8 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
 
   def createPaymentMethod(memberId: ContactId, customer: Stripe.Customer): Future[UpdateResult] = for {
     sub <- currentSubscription(memberId)
-    paymentMethod <- zuoraSoapClient.authenticatedRequest(CreatePaymentMethod(sub.accountId, customer))
+    paymentMethod <- zuoraSoapClient.authenticatedRequest(
+      CreateCreditCardReferencePaymentMethod(sub.accountId, customer.card.id, customer.id))
     result <- zuoraSoapClient.authenticatedRequest(EnablePayment(sub.accountId, paymentMethod.id))
   } yield result
 
@@ -244,7 +246,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  def getMembershipSubscriptionSummary(contact: Contact[MemberStatus, PaymentMethod]): Future[ThankyouSummary] = {
+  def getMembershipSubscriptionSummary(contact: Contact[MemberStatus, sf.PaymentMethod]): Future[ThankyouSummary] = {
     val latestSubF = currentSubscription(contact)
     def price(amount: Float)(implicit currency: Currency) = Price(amount.toInt, currency)
     def plan(sub: Subscription): (Price, BillingPeriod) = sub match {
@@ -260,12 +262,13 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
         implicit val currency = sub.accountCurrency
         val (planAmount, bp) = plan(sub)
         val nextPayment = Some(NextPayment(price(payment.current.price), payment.current.nextPaymentDate))
+
         ThankyouSummary(
           startDate = payment.current.serviceStartDate,
           amountPaidToday = price(payment.totalPrice),
           planAmount = planAmount,
           nextPayment = nextPayment,
-          renewalDate = payment.current.nextPaymentDate,
+          renewalDate = Some(payment.current.nextPaymentDate),
           initialFreePeriodOffer = false,
           billingPeriod = bp
         )
@@ -274,19 +277,24 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     def getSummaryViaPreview =
       for {
         sub <- latestSubF
-        pd <- paymentService.paymentDetails(contact, productFamily)
+        paymentDetails <- paymentService.paymentDetails(contact, productFamily)
       } yield {
         implicit val currency = sub.accountCurrency
         val (planAmount, bp) = plan(sub)
         def price(amount: Float) = Price(amount.toInt, sub.accountCurrency)
-        val nextPayment = (pd.nextPaymentPrice.map(price) |@| pd.nextPaymentDate) { NextPayment }
+
+        val nextPayment = for {
+          pd <- paymentDetails
+          amount <- pd.nextPaymentPrice
+          date <- pd.nextPaymentDate
+        } yield NextPayment(price(amount), date)
 
         ThankyouSummary(
           startDate = sub.startDate.toDateTimeAtCurrentTime(),
           amountPaidToday = price(0f),
           planAmount = planAmount,
           nextPayment = nextPayment,
-          renewalDate = pd.termEndDate.plusDays(1),
+          renewalDate = paymentDetails.map(_.termEndDate.plusDays(1)),
           sub.isInTrialPeriod,
           bp
         )
@@ -298,7 +306,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     } yield summary
   }
 
-  def subscriptionUpgradableTo(memberId: Contact[Member, PaymentMethod], targetTier: PaidTier): Future[Option[model.Subscription]] = {
+  def subscriptionUpgradableTo(memberId: Contact[Member, sf.PaymentMethod], targetTier: PaidTier): Future[Option[model.Subscription]] = {
     import model.TierOrdering.upgradeOrdering
 
     membershipCatalog.get().zip(currentSubscription(memberId)).map { case (catalog, sub) =>
