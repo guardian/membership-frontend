@@ -2,10 +2,9 @@ package services
 
 import com.github.nscala_time.time.Imports._
 import com.gu.config.Membership
-import com.gu.i18n.{CountryGroup, Country, Currency, GBP}
+import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Tier._
-import com.gu.membership.{salesforce => sf}
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
@@ -15,21 +14,20 @@ import com.gu.membership.zuora.soap._
 import com.gu.membership.zuora.soap.actions.Actions._
 import com.gu.membership.zuora.soap.actions.subscribe
 import com.gu.membership.zuora.soap.actions.subscribe.Subscribe
-import com.gu.membership.zuora.soap.models.Queries.{PreviewInvoiceItem, Amendment}
+import com.gu.membership.zuora.soap.models.Queries.{Amendment, PreviewInvoiceItem}
 import com.gu.membership.zuora.soap.models.Results._
 import com.gu.membership.zuora.soap.models.{Queries => Soap, _}
 import com.gu.membership.zuora.{rest, soap}
+import com.gu.membership.{salesforce => sf}
 import com.gu.monitoring.ServiceMetrics
 import com.gu.services.PaymentService
 import com.typesafe.scalalogging.LazyLogging
-import forms.MemberForm.{PaidMemberJoinForm, JoinForm}
+import forms.MemberForm.{JoinForm, PaidMemberJoinForm}
 import model._
 import org.joda.time.DateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
-import scalaz.syntax.applicative._
-import scalaz.std.option._
 
 import scala.concurrent.Future
 
@@ -248,7 +246,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
 
   def getMembershipSubscriptionSummary(contact: Contact[MemberStatus, sf.PaymentMethod]): Future[ThankyouSummary] = {
     val latestSubF = currentSubscription(contact)
-    def price(amount: Float)(implicit currency: Currency) = Price(amount.toInt, currency)
+    def price(amount: Float)(implicit currency: Currency) = Price(amount, currency)
     def plan(sub: Subscription): (Price, BillingPeriod) = sub match {
       case p: PaidSubscription => (p.recurringPrice, p.plan.billingPeriod)
       case _ => (Price(0, sub.accountCurrency), Year)
@@ -281,7 +279,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
       } yield {
         implicit val currency = sub.accountCurrency
         val (planAmount, bp) = plan(sub)
-        def price(amount: Float) = Price(amount.toInt, sub.accountCurrency)
+        def price(amount: Float) = Price(amount, sub.accountCurrency)
 
         val nextPayment = for {
           pd <- paymentDetails

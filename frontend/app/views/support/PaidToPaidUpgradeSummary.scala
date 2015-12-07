@@ -29,7 +29,7 @@ object PaidToPaidUpgradeSummary {
     // price. We add up the refund to the next invoice item, thus computing a pro-rated price for the upgrade.
     val firstPayment = invoices.sortBy(_.price) match {
       case refundItem :: targetPlanItem :: _ if refundItem.price < 0 =>
-        Price((refundItem.price + targetPlanItem.price).toInt, accountCurrency)
+        Price(refundItem.price + targetPlanItem.price, accountCurrency)
       case _ => throw new IllegalStateException(
         s"Failed to compute a pro-rated price from invoice items $invoices. Subscription: ${sub.number}, target tier: $targetTier")
     }

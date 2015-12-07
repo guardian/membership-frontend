@@ -44,8 +44,8 @@ trait DowngradeTier extends ActivityTracking {
   def downgradeToFriendSummary = PaidMemberAction.async { implicit request =>
     val subscriptionService = request.touchpointBackend.subscriptionService
     val catalogF = request.catalog
-    val currentTier = request.member.tier
     for {
+      // The downgrade is effective at the end of the charge date, so the current tier is still paid
       subscription <- subscriptionService.currentPaidSubscription(request.member)
       cat <- catalogF
     } yield {
