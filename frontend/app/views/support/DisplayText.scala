@@ -39,8 +39,10 @@ object DisplayText {
       case Supporter => List(Highlight("Support our journalism and keep theguardian.com free of charge"),
         Highlight("Get access to tickets and to the live broadcast of events"))
 
-      case Partner => List(Highlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses"),
-        Highlight(s"Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events (or 4 Guardian-published books) per year", isNew = true))
+      case Partner => List(
+        Highlight(s"Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events (or 4 Guardian-published books) per year", isNew = true),
+        Highlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses")
+      )
 
       case Patron => List(Highlight("Show deep support for keeping the Guardian free, open and independent."),
         Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
