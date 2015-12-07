@@ -1,5 +1,9 @@
 (function() {
     function id(id) { return document.getElementById(id) };
+    if (!id('address-line-one-deliveryAddress')) {
+        alert('Element with id address-line-one-deliveryAddress not found. Are you on the right page?');
+        return;
+    }
     id('address-line-one-deliveryAddress').value = 'Address Line 1';
     id('address-line-two-deliveryAddress').value = 'Address Line 2';
     id('town-deliveryAddress').value = 'Town';
