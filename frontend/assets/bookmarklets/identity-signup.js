@@ -1,5 +1,5 @@
 (function() {
-    if (!document.getElementById('publicFields_username')) {
+    if (!document.getElementById('user_publicFields_username')) {
         alert('Element with id publicFields_username not found. Are you on the right page?');
         return;
     }
