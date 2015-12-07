@@ -31,12 +31,16 @@ module.exports = function (grunt) {
             publicDir: {
                 root: 'public',
                 stylesheets: '<%= dirs.publicDir.root %>/stylesheets',
+                // bookmarklets are js files but we give them their own directory
+                // to exclude them from asset hashing
+                bookmarklets: '<%= dirs.publicDir.root %>/bookmarklets',
                 javascripts: '<%= dirs.publicDir.root %>/javascripts',
                 images: '<%= dirs.publicDir.root %>/images'
             },
             assets: {
                 root: 'assets',
                 stylesheets: '<%= dirs.assets.root %>/stylesheets',
+                bookmarklets: '<%= dirs.assets.root %>/bookmarklets',
                 javascripts: '<%= dirs.assets.root %>/javascripts',
                 images: '<%= dirs.assets.root %>/images'
             }
@@ -178,6 +182,14 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
+            // For developer use. These are js files, not served with any page
+            // but included dynamically when clicking on the respective bookmarklet.
+            bookmarklets: {
+                cwd: '<%= dirs.assets.bookmarklets %>',
+                src: ['*.js'],
+                dest: '<%= dirs.publicDir.bookmarklets %>',
+                expand: true
+            },
             images: {
                 cwd: '<%= dirs.assets.images %>',
                 src: [
@@ -190,6 +202,7 @@ module.exports = function (grunt) {
         },
 
         clean: {
+            bookmarklets: ['<%= dirs.publicDir.bookmarklets %>'],
             js: ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
             icons: ['<%= dirs.assets.images %>/inline-svgs/*.svg'],
@@ -343,6 +356,10 @@ module.exports = function (grunt) {
         'build:images',
         'build:css'
     ]);
+    grunt.registerTask('compile:bookmarklets', [
+        'clean:bookmarklets',
+        'copy:bookmarklets'
+    ]);
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
             grunt.task.run(['validate']);
@@ -362,7 +379,8 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:public',
             'compile:css',
-            'compile:js'
+            'compile:js',
+            'compile:bookmarklets'
         ]);
         /**
          * Only version files for prod builds
@@ -399,12 +417,15 @@ module.exports = function (grunt) {
      ***********************************************************************/
 
     grunt.registerTask('clean:public', [
+        'clean:bookmarklets',
         'clean:js',
         'clean:css',
         'clean:images',
         'clean:assetMap',
         'clean:dist'
     ]);
+    // Why don't we clean bookmarklets here? Because this is for cleaning out
+    // the pre-hashed assets after hashing, and bookmarklets aren't hashed.
     grunt.registerTask('clean:public:prod', [
         'clean:js',
         'clean:css',

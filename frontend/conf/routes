@@ -108,6 +108,8 @@ GET            /founder                               controllers.VanityUrl.redi
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
 GET            /join                                  controllers.Redirects.homepageRedirect
 
+GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)
+

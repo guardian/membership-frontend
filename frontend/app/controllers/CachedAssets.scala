@@ -17,4 +17,16 @@ object CachedAssets extends Controller {
       if (result.header.headers.contains(CACHE_CONTROL)) result else Cached(2)(result)
     }
   }
+
+  def bookmarkletAt(path: String, file: String) = Action.async { request =>
+    controllers.Assets.at(path, file).apply(request).recover {
+      case e: RuntimeException => {
+        Logger.warn(s"Bookmarklet run time exception for path $path $file. Does this file exist?", e)
+        Cached(NotFound)
+      }
+    }.map { result =>
+      // Always cache bookmarklets for an hour
+      Cached(3600)(result)
+    }
+  }
 }

@@ -3,6 +3,7 @@
 @import configuration.Config
 @import utils.TestUsers.ValidityPeriod
 @import views.support.Dates._
+@import views.support.Asset
 
 @main("Test Users") {
 
@@ -27,6 +28,27 @@
                         <li>Username: <strong>@userString</strong></li>
                         <li>Email: <strong>@userString@@gu.com</strong></li>
                     </ul>
+                </div>
+                <div class="copy">
+                    <p>
+                        Filling out all those registration fields can get tedious.
+                        Here's a bookmarklet to help you:
+                    </p>
+                    <p>
+                        <a href="javascript:
+                            (function() {
+                                var s = document.createElement('script');
+                                s.src = '@Asset.bookmarklet("identity-signup.js")';
+                                s.type = 'text/javascript';
+                                document.head.appendChild(s);
+                            })();">
+                            @if(Config.stageDev){Dev }Identity Signup</a>.
+                        Clicking this on the sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
+                    </p>
+                    <p>
+                        In Chrome you can drag a link to the bookmarks bar to bookmark it.
+                    </p>
+
                 </div>
                 <div class="action-group">
                     <a class="action" href="@Config.idWebAppRegisterUrl("/")" target="_blank">Register Now</a>
