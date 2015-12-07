@@ -31,22 +31,35 @@
                 </div>
                 <div class="copy">
                     <p>
-                        Filling out all those registration fields can get tedious.
-                        Here's a bookmarklet to help you:
+                        Here are some bookmarklets to help with the registration process. (In Chrome you can drag a link to the bookmarks bar to bookmark it.)
                     </p>
-                    <p>
-                        <a href="javascript:
+                    <ul>
+                        <li>
+                            <a href="javascript:
                             (function() {
                                 var s = document.createElement('script');
                                 s.src = '@Asset.bookmarklet("identity-signup.js")';
                                 s.type = 'text/javascript';
                                 document.head.appendChild(s);
                             })();">
-                            @if(Config.stageDev){Dev }Identity Signup</a>.
-                        Clicking this on the sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
-                    </p>
+                                @if(Config.stageDev){Dev }Identity Signup</a>.
+                            Clicking this on the identity sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
+                        </li>
+                        <li>
+                            <a href="javascript:
+                            (function() {
+                                var s = document.createElement('script');
+                                s.src = '@Asset.bookmarklet("mem-signup.js")';
+                                s.type = 'text/javascript';
+                                document.head.appendChild(s);
+                            })();">
+                                @if(Config.stageDev){Dev }Membership Signup</a>.
+                            Clicking this on the membership sign-up page will fill in the address & card details and submit.
+                            It assumes first name & last name are auto-populated with the test user key
+                            (which will be the case if coming back from identity signup).
+                        </li>
+                    </ul>
                     <p>
-                        In Chrome you can drag a link to the bookmarks bar to bookmark it.
                     </p>
 
                 </div>
