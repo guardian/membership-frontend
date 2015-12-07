@@ -12,18 +12,22 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
-    <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/clinton-background.jpg"))">
+    <div class="hero-banner" >
         <div class="hero-banner__inner">
             <div class="l-constrained">
-                <div class="hero-banner__content">
-                    <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
-                    <p class="hero-banner__description">
-                        Join Guardian Members to support our journalism,
-                        and enjoy a programme of fantastic member events
-                    </p>
-                    <div class="hero-banner__action">
-                        @fragments.common.jumpLink("Learn more", "#introducing-members")
-                    </div>
+                <div class="hero-banner__sections">
+                    <div class="hero-banner__accent"></div>
+                    <div class="hero-banner__secondary_accent"></div>
+                    <div class="hero-banner__content">
+                            <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
+                            <p class="hero-banner__description">
+                                Join Guardian Members to support our journalism,
+                                and enjoy a programme of fantastic member events
+                            </p>
+                            <div class="hero-banner__action">
+                                @fragments.common.jumpLink("Learn more", "#introducing-members")
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -43,7 +47,6 @@
         <div class="listing listing--bordered listing--padded l-constrained" id="introducing-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
-                    <span class="o-counter">1</span>
                     Introducing Guardian Members
                 </h3>
             </div>
@@ -66,7 +69,6 @@
         <div class="listing listing--bordered listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
-                    <span class="o-counter">2</span>
                     Why join
                 </h3>
             </div>
@@ -199,7 +201,6 @@
         <div class="listing listing--bordered listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
-                    <span class="o-counter">3</span>
                     Join now
                 </h3>
             </div>
