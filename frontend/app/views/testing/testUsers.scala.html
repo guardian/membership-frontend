@@ -33,6 +33,8 @@
                     <p>
                         Filling out all those registration fields can get tedious.
                         Here's a bookmarklet to help you:
+                    </p>
+                    <p>
                         <a href="javascript:
                             (function() {
                                 var s = document.createElement('script');
@@ -40,9 +42,11 @@
                                 s.type = 'text/javascript';
                                 document.head.appendChild(s);
                             })();">
-                            @if(Config.stageDev){Dev }Register</a>.
-                        In Chrome you can drag the link to the bookmarks bar to bookmark it.
-                        Clicking it on the sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
+                            @if(Config.stageDev){Dev }Identity Signup</a>.
+                        Clicking this on the sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
+                    </p>
+                    <p>
+                        In Chrome you can drag a link to the bookmarks bar to bookmark it.
                     </p>
 
                 </div>
