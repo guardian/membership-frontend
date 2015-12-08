@@ -15,6 +15,8 @@ case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSale
 
   def tierCanBuyTicket(tier: Tier) = datesByTier(tier).isBefore(Instant.now())
   def anyoneCanBuyTicket = generalAvailability.isBefore(Instant.now())
+
+  def noOneCanBuyTicket = !Tier.all.exists(tierCanBuyTicket)
 }
 
 object TicketSaleDates {
