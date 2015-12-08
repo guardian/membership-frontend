@@ -21,7 +21,7 @@ trait Util { this: WebBrowser =>
     driver.manage().timeouts().implicitlyWait(defaultTimeOut, TimeUnit.SECONDS)
   }
 
-  private val defaultTimeOut = 15
+  private val defaultTimeOut = 90
 
   protected def pageHasText(text: String, timeoutSecs: Int=defaultTimeOut): Boolean = {
     val pred = ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), text)
