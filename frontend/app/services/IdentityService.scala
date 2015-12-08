@@ -11,6 +11,7 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json._
 import play.api.libs.ws.WS
+import views.support.IdentityUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -20,6 +21,12 @@ case class IdentityServiceError(s: String) extends Throwable {
 }
 
 case class IdentityService(identityApi: IdentityApi) {
+  def getIdentityUserView(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdentityUser] =
+    getFullUserDetails(user, identityRequest)
+      .zip(doesUserPasswordExist(identityRequest))
+      .map { case (fullUser, doesPasswordExist) =>
+        IdentityUser.apply(fullUser, doesPasswordExist)
+      }
 
   def getFullUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
     identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)

@@ -4,35 +4,36 @@ import actions.Functions._
 import actions._
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.{CountryGroup, GBP}
-import com.gu.identity.play.{IdMinimalUser, PrivateFields, StatusFields}
 import com.gu.membership.model.Year
 import com.gu.membership.salesforce.Tier.Friend
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
-import com.gu.membership.zuora.soap.models.errors.ResultError
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
 import forms.MemberForm._
 import model._
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.{GuardianContentService, _}
-import services.EventbriteService._
-import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
-import utils.CampaignCode.extractCampaignCode
+import tracking.ActivityTracking
 import utils.TierChangeCookies
 import views.support
-import views.support.{CountryWithCurrency, PageInfo}
 import views.support.PageInfo.CheckoutForm
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import views.support.{CountryWithCurrency, PageInfo}
+import actions.RichAuthRequest
 
 import scala.concurrent.Future
 
-trait Joiner extends Controller with ActivityTracking with LazyLogging {
+trait Joiner extends Controller with ActivityTracking
+                                with LazyLogging
+                                with CatalogProvider
+                                with StripeServiceProvider
+                                with SubscriptionServiceProvider {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
@@ -44,6 +45,8 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   val casService = CASService
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
+
+  val identityService = IdentityService(IdentityApi)
 
   def tierChooser = NoCacheAction.async { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
@@ -91,67 +94,53 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
   def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
+    implicit val backendProvider: BackendProvider = request
+    val desiredCurrency = countryGroup.currency
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
-      catalog <- request.catalog
+      cat <- catalog
+      identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
-      val cg = countryGroup
-      val paidDetails = catalog.paidTierDetails(tier)
-      val currency = if (paidDetails.currencies.contains(cg.currency)) cg.currency else GBP
+      val paidDetails = cat.paidTierDetails(tier)
+      val supportedCurrencies = paidDetails.currencies
+      val currency = if (supportedCurrencies.contains(desiredCurrency)) desiredCurrency else GBP
+      val idUserWithCountry = identityUser.withCountryGroup(countryGroup)
       val pageInfo = PageInfo(
-        stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey),
-        initialCheckoutForm = CheckoutForm(cg.defaultCountry, currency, Year)
+        stripePublicKey = Some(stripeService.publicKey),
+        initialCheckoutForm = CheckoutForm(countryGroup.defaultCountry, currency, Year)
       )
 
       Ok(views.html.joiner.form.payment(
-         countriesWithCurrencies = CountryWithCurrency.whitelisted(paidDetails.currencies, GBP),
+         countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          details = paidDetails,
-         userFields = setCountry(privateFields, cg),
-         marketingChoices = marketingChoices,
-         passwordExists = passwordExists,
+         idUser = idUserWithCountry,
          pageInfo = pageInfo))
     }
   }
 
-  private def setCountry(fields: PrivateFields, cg: CountryGroup): PrivateFields = {
-    val country = fields.country.orElse(cg.defaultCountry.map(_.alpha2))
-    fields.copy(billingCountry = country)
-  }
-
-  def enterFriendDetails = NonMemberAction(Friend).async { implicit request =>
+  def enterFriendDetails = NonMemberAction(Friend).async { implicit request: AuthRequest[_] =>
+    implicit val backendProvider: BackendProvider = request
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
-      catalog <- request.catalog
+      identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
+      cat <- catalog
     } yield {
       val ukGroup = CountryGroup.UK
       val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, Year)
       Ok(views.html.joiner.form.friendSignup(
-        catalog.friend,
-        privateFields,
-        marketingChoices,
-        passwordExists,
+        cat.friend,
+        identityUser,
         support.PageInfo(initialCheckoutForm = formI18n)))
     }
   }
 
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
+    implicit val backendProvider: BackendProvider = request
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
-      catalog <- TouchpointBackend.forUser(request.identityUser).catalog
+      identityUser <- identityService.getIdentityUserView(request.identityUser, IdentityRequest(request))
+      cat <- catalog
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, privateFields, marketingChoices, passwordExists, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(cat.staff, identityUser, flashMsgOpt))
     }
-  }
-
-
-  private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
-    val identityService = IdentityService(IdentityApi)
-    val identityRequest = IdentityRequest(request)
-    for {
-      user <- identityService.getFullUserDetails(user, identityRequest)
-      passwordExists <- identityService.doesUserPasswordExist(identityRequest)
-    } yield (user.privateFields.getOrElse(PrivateFields()), user.statusFields.getOrElse(StatusFields()), passwordExists)
   }
 
   def joinFriend = AuthenticatedNonMemberAction.async { implicit request =>
@@ -190,41 +179,27 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
 
-  private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) =
-    MemberService.createMember(request.user, formData, IdentityRequest(request), extractCampaignCode(request))
-      .map { member =>
-        for {
-          eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-          event <- EventbriteService.getBookableEvent(eventId)
-        } {
-          event.service.wsMetrics.put(s"join-$tier-event", 1)
-          val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name, campaignCode=extractCampaignCode(request))
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), request.user)
-        }
-        result
-      } recover {
+  private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+    MemberService.createMember(request.user, formData, IdentityRequest(request), eventId)
+      .map(_ => onSuccess) recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error =>
         logger.error("An error occurred while calling Joiner.makeMember", error)
         Forbidden
     }
+  }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
-    val futureCustomerOpt = request.member.paymentMethod match {
-      case StripePayment(id) =>
-        request.touchpointBackend.stripeService.Customer.read(id).map(Some(_))
-      case _ => Future.successful(None)
-    }
-
     for {
-      paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
-      customerOpt <- futureCustomerOpt
-      destinationOpt <- DestinationService.returnDestinationFor(request)
+      paymentSummary <- subscriptionService.getMembershipSubscriptionSummary(request.member)
+      stripeCustomer <- memberService.getStripeCustomer(request.member)
+      destination <- DestinationService.returnDestinationFor(request)
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
-        customerOpt.map(_.card),
-        destinationOpt,
+        stripeCustomer.map(_.card),
+        destination,
         upgrade
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }

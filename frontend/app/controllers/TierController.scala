@@ -2,7 +2,7 @@ package controllers
 
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.identity.play.PrivateFields
-import com.gu.membership.model.{Year, BillingPeriod}
+import com.gu.membership.model.{BillingPeriod, Year}
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -16,20 +16,20 @@ import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import services._
 import tracking.ActivityTracking
-import utils.CampaignCode.extractCampaignCode
 import utils.TierChangeCookies
 import views.support.PageInfo.CheckoutForm
 import views.support.{CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 
 import scala.concurrent.Future
+import scala.language.implicitConversions
 
-trait DowngradeTier extends ActivityTracking {
+trait DowngradeTier extends ActivityTracking with SubscriptionServiceProvider with CatalogProvider {
   self: TierController =>
 
   def downgradeToFriend() = PaidMemberAction.async { implicit request =>
     for {
-      cat <- request.catalog
-      subs <- request.touchpointBackend.subscriptionService.currentSubscription(request.member)
+      cat <- catalog
+      subs <- subscriptionService.currentSubscription(request.member)
     } yield {
       Ok(views.html.tier.downgrade.confirm(cat.unsafePaidTierPlan(subs.productRatePlanId).tier, cat))
     }
@@ -37,17 +37,15 @@ trait DowngradeTier extends ActivityTracking {
 
   def downgradeToFriendConfirm = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, request.user, extractCampaignCode(request))
+      cancelledSubscription <- subscriptionService.downgradeSubscription(request.member, request.user)
     } yield Redirect(routes.TierController.downgradeToFriendSummary)
   }
 
   def downgradeToFriendSummary = PaidMemberAction.async { implicit request =>
-    val subscriptionService = request.touchpointBackend.subscriptionService
-    val catalogF = request.catalog
     for {
       // The downgrade is effective at the end of the charge date, so the current tier is still paid
       subscription <- subscriptionService.currentPaidSubscription(request.member)
-      cat <- catalogF
+      cat <- catalog
     } yield {
       val startDate = subscription.chargedThroughDate.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
       Ok(views.html.tier.downgrade.summary(subscription, cat, startDate))
@@ -56,21 +54,19 @@ trait DowngradeTier extends ActivityTracking {
   }
 }
 
-trait UpgradeTier {
+trait UpgradeTier extends StripeServiceProvider {
   self: TierController =>
 
   def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
-    val tp = request.touchpointBackend
     val sub = request.subscription
-    val stripeKey = Some(tp.stripeService.publicKey)
-    val catalog = request.catalog
+    val stripeKey = Some(stripeService.publicKey)
     val currency = sub.accountCurrency
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
 
     val identityUserFieldsF =
       IdentityService(IdentityApi)
-        .getFullUserDetails(request.user, IdentityRequest(request))
-        .map(_.privateFields.getOrElse(PrivateFields()))
+        .getIdentityUserView(request.user, IdentityRequest(request))
+        .map(_.privateFields)
 
     // Preselect the country from Identity fields
     // but the currency from Zuora account
@@ -99,10 +95,10 @@ trait UpgradeTier {
       }
 
     def fromPaid(subscription: model.PaidSubscription, contact: Contact[PaidTierMember, StripePayment]): Future[Result] = {
-      val stripeCustomerF = tp.stripeService.Customer.read(contact.stripeCustomerId)
+      val stripeCustomerF = stripeService.Customer.read(contact.stripeCustomerId)
 
       for {
-        previewItems <- MemberService.previewUpgradeSubscription(subscription, contact, target, tp)
+        previewItems <- MemberService.previewUpgradeSubscription(subscription, contact, target)
         cat <- catalog
         customer <- stripeCustomerF
         privateFields <- identityUserFieldsF
@@ -136,7 +132,7 @@ trait UpgradeTier {
     val identityRequest = IdentityRequest(request)
 
     def handleFree(freeMember: Contact[Member, NoPayment])(form: FreeMemberChangeForm) = for {
-      memberId <- MemberService.upgradeFreeSubscription(freeMember, target, form, identityRequest, extractCampaignCode(request))
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, target, form, identityRequest)
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
 
     def handlePaid(paidMember: Contact[Member, StripePayment])(form: PaidMemberChangeForm) = {
@@ -147,7 +143,7 @@ trait UpgradeTier {
       }
 
       def doUpgrade(): Future[Result] = {
-        MemberService.upgradePaidSubscription(paidMember, target, identityRequest, extractCampaignCode(request), form).map {
+        MemberService.upgradePaidSubscription(paidMember, target, identityRequest, form).map {
           _ => Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
@@ -174,17 +170,17 @@ trait UpgradeTier {
   def upgradeThankyou(tier: PaidTier) = Joiner.thankyou(tier, upgrade=true)
 }
 
-trait CancelTier {
+trait CancelTier extends CatalogProvider with SubscriptionServiceProvider {
   self: TierController =>
 
   def cancelTier() = MemberAction.async { implicit request =>
-    request.catalog.map { catalog =>
+    catalog.map { catalog =>
       Ok(views.html.tier.cancel.confirm(request.member.tier, catalog))
     }
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
-    request.touchpointBackend.cancelSubscription(request.member, request.user, extractCampaignCode(request)).map { _ =>
+    subscriptionService.cancelSubscription(request.member, request.user).map { _ =>
       request.member.tier match {
         case m: FreeTierMember => Redirect(routes.TierController.cancelFreeTierSummary())
         case _ => Redirect(routes.TierController.cancelPaidTierSummary())
@@ -197,7 +193,7 @@ trait CancelTier {
   )
 
   def cancelPaidTierSummary = PaidMemberAction.async { implicit request =>
-    request.touchpointBackend.subscriptionService.currentPaidSubscription(request.member).map { sub =>
+    subscriptionService.currentPaidSubscription(request.member).map { sub =>
       Ok(views.html.tier.cancel.summaryPaid(sub))
         .discardingCookies(TierChangeCookies.deletionCookies:_*)
     }
@@ -207,7 +203,6 @@ trait CancelTier {
 trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
   def change() = MemberAction.async { implicit request =>
     implicit val currency = GBP
-    val catalog = request.catalog
     for {
       cat <- catalog
     } yield {
