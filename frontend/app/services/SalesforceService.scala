@@ -9,7 +9,7 @@ import com.gu.membership.util.FutureSupplier
 import com.gu.monitoring.CloudWatch
 import configuration.Config
 import forms.MemberForm.JoinForm
-import model.SFMember
+import model.{GenericSFContact, SFMember}
 import monitoring.MemberMetrics
 import play.api.libs.concurrent.Akka
 import play.api.libs.json._
@@ -49,6 +49,21 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Conta
 }
 
 class SalesforceService(salesforceConfig: SalesforceConfig) extends api.SalesforceService {
+  override def metrics: CloudWatch = repository.metrics
+
+  override def upsert(user: IdUser, joinData: JoinForm): Future[ContactId] =
+    upsert(user.id, initialData(user, joinData))
+
+  override def updateMemberStatus(user: IdMinimalUser, tierPlan: TierPlan, customer: Option[Customer]): Future[ContactId] =
+    upsert(user.id, memberData(tierPlan, customer))
+
+  override def getStripeCustomer(contact: GenericSFContact): Future[Option[Customer]] = contact.paymentMethod match {
+    case StripePayment(id) =>
+      TouchpointBackend.forUser(contact).stripeService.Customer.read(id).map(Some(_))
+    case _ =>
+      Future.successful(None)
+  }
+
   private val repository = new FrontendMemberRepository(salesforceConfig)
 
   private def memberData(plan: TierPlan, customerOpt: Option[Customer]): JsObject = Json.obj(
@@ -76,14 +91,6 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
     ).collect { case (k, Some(v)) => Json.obj(k -> v) }
   }.reduce(_ ++ _)
-
-  override def metrics: CloudWatch = repository.metrics
-
-  override def upsert(user: IdUser, joinData: JoinForm): Future[ContactId] =
-    upsert(user.id, initialData(user, joinData))
-
-  override def updateMemberStatus(user: IdMinimalUser, tierPlan: TierPlan, customer: Option[Customer]): Future[ContactId] =
-      upsert(user.id, memberData(tierPlan, customer))
 
   private def upsert(userId: UserId, value: JsObject) = repository.upsert(userId, value)
 }

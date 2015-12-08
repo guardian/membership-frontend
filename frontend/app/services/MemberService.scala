@@ -1,12 +1,14 @@
 package services
 
 import com.gu.identity.play.IdMinimalUser
+import com.gu.membership.model.{Current, PaidTierPlan, TierPlan}
 import com.gu.membership.salesforce.{ContactId, PaidTier}
+import com.gu.membership.stripe.Stripe.Customer
 import com.gu.membership.stripe.{Stripe, StripeService}
 import com.gu.membership.util.Timing
 import controllers.IdentityRequest
-import forms.MemberForm.{FreeMemberChangeForm, JoinForm, PaidMemberChangeForm, PaidMemberJoinForm}
-import model.{NonPaidSFMember, PaidSFMember}
+import forms.MemberForm._
+import model._
 import play.api.Logger
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 
@@ -17,16 +19,17 @@ class MemberService(
   identityService: IdentityService,
   salesforceService: api.SalesforceService,
   zuoraService: api.ZuoraService,
-  stripeService: StripeService) extends api.MemberService with ActivityTracking {
+  stripeService: StripeService,
+  catalog: () => Future[MembershipCatalog]) extends api.MemberService with ActivityTracking {
 
   import EventbriteService._
 
   private val logger = Logger(getClass)
 
   override def createMember(user: IdMinimalUser,
-                   formData: JoinForm,
-                   identityRequest: IdentityRequest,
-                   fromEventId: Option[String]): Future[ContactId] = {
+                            formData: JoinForm,
+                            identityRequest: IdentityRequest,
+                            fromEventId: Option[String]): Future[ContactId] = {
 
     val tier = formData.plan.tier
 
@@ -81,13 +84,49 @@ class MemberService(
   }
 
   override def upgradeFreeSubscription(freeMember: NonPaidSFMember,
-                              newTier: PaidTier,
-                              form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[ContactId] = ???
+                                       newTier: PaidTier,
+                                       form: FreeMemberChangeForm,
+                                       identityRequest: IdentityRequest): Future[ContactId] = {
+    val plan = PaidTierPlan(newTier, form.payment.billingPeriod, Current)
+    for {
+      customer <- stripeService.Customer.create(freeMember.identityId, form.payment.token)
+      paymentResult <- zuoraService.createPaymentMethod(freeMember, customer)
+      memberId <- upgradeSubscription(freeMember, plan, form, Some(customer), identityRequest)
+    } yield {
+
+      memberId
+    }
+  }
 
   override def upgradePaidSubscription(paidMember: PaidSFMember,
                               newTier: PaidTier,
                               form: PaidMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[ContactId] = ???
+                              identityRequest: IdentityRequest): Future[ContactId] =
+    for {
+      subs <- zuoraService.currentPaidSubscription(paidMember)
+      cat <- catalog()
+      currentPlan = cat.unsafePaidTierPlan(subs.productRatePlanId)
+      newPlan = PaidTierPlan(newTier, currentPlan.billingPeriod, status = Current)
+      memberId <- upgradeSubscription(paidMember, newPlan, form, None, identityRequest)
+    } yield memberId
 
+  private def upgradeSubscription(member: SFMember,
+                                  newRatePlan: PaidTierPlan,
+                                  form: MemberChangeForm,
+                                  customerOpt: Option[Customer],
+                                  identityRequest: IdentityRequest): Future[ContactId] = {
+    val addressDetails = form.addressDetails
+
+    addressDetails.foreach(
+      identityService.updateUserFieldsBasedOnUpgrade(member.identityId, _, identityRequest))
+
+    for {
+      subscriptionResult <- zuoraService.upgradeSubscription(member, newRatePlan, preview = false, form.featureChoice)
+      contactId <- salesforceService.updateMemberStatus(IdMinimalUser(member.identityId, None), newRatePlan, customerOpt)
+    } yield {
+      salesforceService.metrics.putUpgrade(newRatePlan.tier)
+      trackUpgrade(contactId, member, newRatePlan, addressDetails)
+      contactId
+    }
+  }
 }

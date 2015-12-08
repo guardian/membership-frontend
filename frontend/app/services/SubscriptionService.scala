@@ -46,120 +46,7 @@ case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-// --------------- SALESFORCE ----------------------
-class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends ContactRepository {
-  import scala.concurrent.duration._
-  val metrics = new MemberMetrics(salesforceConfig.envName)
-
-  val salesforce = new Scalaforce {
-    val consumerKey = salesforceConfig.consumerKey
-    val consumerSecret = salesforceConfig.consumerSecret
-
-    val apiURL = salesforceConfig.apiURL.toString()
-    val apiUsername = salesforceConfig.apiUsername
-    val apiPassword = salesforceConfig.apiPassword
-    val apiToken = salesforceConfig.apiToken
-
-    val stage = Config.stage
-    val application = "Frontend"
-
-    override val authSupplier: FutureSupplier[sf.Authentication] = new FutureSupplier[sf.Authentication](getAuthentication)
-
-    private val actorSystem = Akka.system
-    actorSystem.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
-  }
-
-  def getMember(userId: String): Future[Option[SFMember]] =
-    get(userId).map(_.collect { case Contact(d, m: sf.Member, p) => Contact(d, m, p) })
-}
-
 trait MemberService extends LazyLogging with ActivityTracking {
-  def initialData(user: IdUser, formData: JoinForm): JsObject = {
-    Seq(Json.obj(
-      Keys.EMAIL -> user.primaryEmailAddress,
-      Keys.FIRST_NAME -> formData.name.first,
-      Keys.LAST_NAME -> formData.name.last,
-      Keys.MAILING_STREET -> formData.deliveryAddress.line,
-      Keys.MAILING_CITY -> formData.deliveryAddress.town,
-      Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
-      Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-      Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
-      Keys.ALLOW_MEMBERSHIP_MAIL -> true
-    )) ++ Map(
-      Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
-      Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
-    ).collect { case (k, Some(v)) => Json.obj(k -> v) }
-  }.reduce(_ ++ _)
-
-  def memberData(plan: TierPlan, customerOpt: Option[Stripe.Customer]): JsObject = Json.obj(
-    Keys.TIER -> plan.salesforceTier
-  ) ++ customerOpt.map { customer =>
-    Json.obj(
-      Keys.STRIPE_CUSTOMER_ID -> customer.id,
-      Keys.DEFAULT_CARD_ID -> customer.card.id
-    )
-  }.getOrElse(Json.obj())
-
-  def createMember(user: IdMinimalUser,
-                   formData: JoinForm,
-                   identityRequest: IdentityRequest,
-                   fromEventId: Option[String]): Future[ContactId] = {
-
-    val tp = TouchpointBackend.forUser(user)
-    val identityService = IdentityService(IdentityApi)
-    val tier = formData.plan.tier
-
-    val createContact: Future[ContactId] =
-      for {
-        user <- identityService.getFullUserDetails(user, identityRequest)
-        userData = initialData(user, formData)
-        contactId <- tp.memberRepository.upsert(user.id, userData)
-      } yield contactId
-
-    def updateContact(customer: Option[Customer]) =
-      tp.memberRepository.upsert(user.id, memberData(formData.plan, customer))
-
-    Timing.record(tp.memberRepository.metrics, "createMember") {
-      formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id))
-
-      val contactId = formData match {
-        case paid: PaidMemberJoinForm =>
-          for {
-            customer <- tp.stripeService.Customer.create(user.id, paid.payment.token)
-            cId <- createContact
-            subscription <- tp.subscriptionService.createPaidSubscription(cId, paid, customer)
-            updatedMember <- updateContact(Some(customer))
-          } yield cId
-        case _ =>
-          for {
-            cId <- createContact
-            subscription <- tp.subscriptionService.createFreeSubscription(cId, formData)
-            updatedMember <- updateContact(None)
-          } yield cId
-      }
-
-      contactId.map { cId =>
-        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
-
-        tp.memberRepository.metrics.putSignUp(formData.plan)
-        trackRegistration(formData, cId, user)
-        cId
-      }
-    }.andThen {
-      case Success(contactId) =>
-        logger.debug(s"createMember() success user=${user.id} memberAccount=$contactId")
-        fromEventId.flatMap(EventbriteService.getBookableEvent).foreach { event =>
-          event.service.wsMetrics.put(s"join-${tier.name}-event", 1)
-          val memberData = MemberData(contactId.salesforceContactId, user.id, tier.name)
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
-        }
-      case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
-      case Failure(error) =>
-        logger.error(s"Error in createMember() user=${user.id}", error)
-        tp.memberRepository.metrics.putFailSignUp(formData.plan)
-    }
-  }
-
   def countComplimentaryTicketsInOrder(event: RichEvent, order: EBOrder): Int = {
     val ticketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
     order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
@@ -215,74 +102,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def previewUpgradeSubscription(subscription: model.Subscription,
-                                 contact: SFMember,
-                                 newTier: PaidTier): Future[Seq[PreviewInvoiceItem]] = {
-    val tp = TouchpointBackend.forUser(contact)
-    for {
-      cat <- tp.catalog
-      currentPlan = cat.unsafePaidTierPlan(subscription.productRatePlanId)
-      newPlan = PaidTierPlan(newTier, currentPlan.billingPeriod, Current)
-      subscriptionResult <- tp.subscriptionService.upgradeSubscription(contact, newPlan, preview = true, Set.empty)
-    } yield subscriptionResult.invoiceItems
-  }
-
-  def upgradeFreeSubscription(freeMember: NonPaidSFMember,
-                              newTier: PaidTier,
-                              form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[ContactId] = {
-
-    val touchpointBackend = TouchpointBackend.forUser(freeMember)
-    val plan = PaidTierPlan(newTier, form.payment.billingPeriod, Current)
-    for {
-      customer <- touchpointBackend.stripeService.Customer.create(freeMember.identityId, form.payment.token)
-      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(freeMember, customer)
-      memberId <- upgradeSubscription(freeMember, plan, form, Some(customer), identityRequest)
-    } yield {
-
-      memberId
-    }
-  }
-
-  def upgradePaidSubscription(paidMember: PaidSFMember,
-                              newTier: PaidTier,
-                              identityRequest: IdentityRequest,
-                              form: PaidMemberChangeForm): Future[ContactId] = {
-
-    val tp = TouchpointBackend.forUser(paidMember)
-    val catalog = tp.catalog
-    for {
-      subs <- tp.subscriptionService.currentPaidSubscription(paidMember)
-      cat <- catalog
-      currentPlan = cat.unsafePaidTierPlan(subs.productRatePlanId)
-      newPlan = PaidTierPlan(newTier, currentPlan.billingPeriod, status = Current)
-      memberId <- upgradeSubscription(paidMember, newPlan, form, None, identityRequest)
-    } yield memberId
-
-  }
-
-  private def upgradeSubscription(member: SFMember,
-                                  newRatePlan: PaidTierPlan,
-                                  form: MemberChangeForm,
-                                  customerOpt: Option[Customer],
-                                  identityRequest: IdentityRequest): Future[ContactId] = {
-
-    val touchpointBackend = TouchpointBackend.forUser(member)
-    val addressDetails = form.addressDetails
-
-    addressDetails.foreach(
-      IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(member.identityId, _, identityRequest))
-
-    for {
-      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newRatePlan, preview = false, form.featureChoice)
-      memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newRatePlan, customerOpt))
-    } yield {
-      touchpointBackend.memberRepository.metrics.putUpgrade(newRatePlan.tier)
-      trackUpgrade(memberId, member, newRatePlan, addressDetails)
-      memberId
-    }
-  }
-
   private def trackUpgrade(memberId: ContactId,
                            member: SFMember,
                            newRatePlan: PaidTierPlan,
@@ -305,34 +124,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
       member)
   }
 
-  private def trackRegistration(formData: JoinForm, member: ContactId, user: IdMinimalUser) {
-    val subscriptionPaymentAnnual = formData match {
-      case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.billingPeriod.annual)
-      case _ => None
-    }
-
-    val billingPostcode = formData match {
-      case paidMemberJoinForm: PaidMemberJoinForm =>
-        paidMemberJoinForm.billingAddress.map(_.postCode).orElse(Some(formData.deliveryAddress.postCode))
-      case _ => None
-    }
-
-    val trackingInfo =
-      MemberData(
-        member.salesforceContactId,
-        user.id,
-        formData.plan.salesforceTier,
-        None,
-        Some(formData.deliveryAddress.postCode),
-        billingPostcode,
-        subscriptionPaymentAnnual,
-        Some(formData.marketingChoices),
-        Some(formData.deliveryAddress.town),
-        Some(formData.deliveryAddress.country.name)
-      )
-
-    track(MemberActivity("membershipRegistration", trackingInfo), user)
-  }
 
   def getStripeCustomer(contact: GenericSFContact): Future[Option[Customer]] = contact.paymentMethod match {
     case StripePayment(id) =>
@@ -342,7 +133,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 }
 
-object MemberService extends MemberService
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -351,28 +141,6 @@ case class SubscriptionServiceError(s: String) extends Throwable {
 object SubscriptionService {
   val membershipProductType = "Membership"
   val productRatePlanChargeModel = "FlatFee"
-
-  /**
-   * A Zuora subscription may have many versions as it is amended, some of which can be in the future (ie. downgrading
-   * from a paid tier - because we don't refund that user, the downgrade is instead set to the point in the future when
-   * their paid period ends).
-   *
-   * The Zuora API does not explicitly tell you what the *current* subscription version is. You have to work it out,
-   * by looking at the 'amendments', finding the first amendment that has yet occurred. That amendment will give you the
-   * id of the subscription it modified - and THAT will be the *current* subscription version.
-   */
-  def findCurrentSubscriptionStatus(subscriptionVersions: Seq[SoapQueries.Subscription], amendments: Seq[SoapQueries.Amendment]): SubscriptionStatus = {
-    val firstAmendmentWhichHasNotYetOccurredOpt = // this amendment *will have modified the current subscription*
-      sortAmendments(subscriptionVersions, amendments).find(_.contractEffectiveDate.isAfterNow)
-
-    val latestSubVersion = subscriptionVersions.maxBy(_.version)
-
-    firstAmendmentWhichHasNotYetOccurredOpt.fold(SubscriptionStatus(latestSubVersion, None, None)) { amendmentOfCurrentSub =>
-      val currentSubId = amendmentOfCurrentSub.subscriptionId
-      val currentSubVersion = subscriptionVersions.find(_.id == currentSubId).get
-      SubscriptionStatus(currentSubVersion, Some(latestSubVersion), Some(amendmentOfCurrentSub.amendType))
-    }
-  }
 
   /**
    * Given an array of subscription invoice items, return only items corresponding to the last invoice
@@ -387,35 +155,7 @@ object SubscriptionService {
     }
   }
 
-  /**
-   * @param amendments which are returned by the Zurora API in an unpredictable order
-   * @return amendments which are sorted by the subscription version number they point to (the sub they amended)
-   */
-  def sortAmendments(subscriptions: Seq[SoapQueries.Subscription], amendments: Seq[SoapQueries.Amendment]): Seq[SoapQueries.Amendment] = {
-    val versionsNumberBySubVersionId = subscriptions.map { sub => (sub.id, sub.version) }.toMap
-    amendments.sortBy { amendment => versionsNumberBySubVersionId(amendment.subscriptionId) }
-  }
 
-  def sortPreviewInvoiceItems(items: Seq[SoapQueries.PreviewInvoiceItem]): Seq[PreviewInvoiceItem] = items.sortBy(_.price)
-
-  def sortSubscriptions(subscriptions: Seq[SoapQueries.Subscription]): Seq[SoapQueries.Subscription] = subscriptions.sortBy(_.version)
-
-  def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(plan: TierPlan, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
-    def byChoice(choice: Set[FeatureChoice]) =
-      zuoraFeatures.filter(f => choice.map(_.zuoraCode).contains(f.code))
-
-    plan.tier match {
-      case Patron => byChoice(FeatureChoice.all)
-      case Partner => byChoice(choice).take(1)
-      case _ => Nil
-    }
-  }
-
-  def supportedAccountCurrency(catalog: MembershipCatalog)(country: Country, plan: PaidTierPlan): Currency =
-    CountryGroup
-      .byCountryCode(country.alpha2).map(_.currency)
-      .filter(catalog.paidTierPlanDetails(plan).currencies)
-      .getOrElse(GBP)
 }
 
 class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
@@ -680,33 +420,4 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
       ""
     }
   }
-
-  def upgradeSubscription(contactId: ContactId, newTierPlan: TierPlan, preview: Boolean, featureChoice: Set[FeatureChoice]): Future[AmendResult] = {
-    import SubscriptionService._
-    for {
-      sub <- subWithNoPendingAmend(contactId)
-      zuoraFeatures <- zuoraSoapClient.featuresSupplier.get()
-      newRatePlanId <- findRatePlanId(newTierPlan)
-      choice = featuresPerTier(zuoraFeatures)(newTierPlan, featureChoice).map(_.id)
-      result <- zuoraSoapClient.authenticatedRequest(
-        UpgradePlan(sub.id, sub.ratePlanId, newRatePlanId, preview, choice))
-    } yield result
-  }
-
-  private def findRatePlanId(newTierPlan: TierPlan): Future[String] = {
-    membershipCatalog.get().map(_.ratePlanId(newTierPlan))
-  }
-
-  private def subWithNoPendingAmend(contactId: ContactId): Future[model.Subscription] =
-    for {
-      sub <- currentSubscription(contactId)
-      status <- getSubscriptionStatus(sub.number)
-    } yield {
-      if (status.futureVersionIdOpt.isEmpty) {
-       sub
-      } else throw SubscriptionServiceError("Cannot amend subscription, amendments are already pending")
-    }
-
-  def getSubscriptionsByCasId(casId: String): Future[Seq[SoapQueries.Subscription]] =
-    zuoraSoapClient.query[SoapQueries.Subscription](SimpleFilter("CASSubscriberID__c", casId))
 }
