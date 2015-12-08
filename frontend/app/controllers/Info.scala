@@ -165,7 +165,7 @@ trait Info extends Controller {
     )
 
     TouchpointBackend.Normal.catalog.map { cat =>
-      Ok(views.html.info.patron(cat, pageInfo, pageImages))
+      Ok(views.html.info.patron(cat, pageInfo, GBP, pageImages))
     }
   }
 
