@@ -1,12 +1,11 @@
 package acceptance.pages
 
-import acceptance.Config.profileUrl
-import acceptance.Config.baseUrl
-import acceptance.{TestUser, Util}
-import org.openqa.selenium.WebDriver
-import org.scalatest.selenium.{WebBrowser, Page}
+import acceptance.util.{TestUser, Util, Config}
+import Config.profileUrl
+import Config.baseUrl
+import org.scalatest.selenium.{Page, WebBrowser}
 
-class Register(implicit val driver: WebDriver) extends Page with WebBrowser with Util {
+class Register(testUser: TestUser) extends Page with WebBrowser with Util {
   val url = s"${profileUrl}/register?returnUrl=${baseUrl}/&skipConfirmation=true"
 
   private object RegisterFields {
@@ -19,11 +18,11 @@ class Register(implicit val driver: WebDriver) extends Page with WebBrowser with
     def fillIn(): Unit = {
       assert(pageHasElement(id("user_password")))
 
-      firstName.value = TestUser.specialString
-      lastName.value = TestUser.specialString
-      email.value = s"${TestUser.specialString}@gu.com"
-      username.value = TestUser.specialString
-      password.value = TestUser.specialString
+      firstName.value = testUser.username
+      lastName.value = testUser.username
+      email.value = s"${testUser.username}@gu.com"
+      username.value = testUser.username
+      password.value = testUser.username
     }
   }
 

@@ -1,11 +1,12 @@
 package acceptance.pages
 
-import acceptance.Config.baseUrl
-import acceptance.Util
+import acceptance.util.{Config, Util}
+import Config.baseUrl
+import acceptance.util.Util
 import org.openqa.selenium.WebDriver
 import org.scalatest.selenium.{WebBrowser, Page}
 
-class ThankYou(implicit val driver: WebDriver) extends Page with WebBrowser with Util {
+class ThankYou extends Page with WebBrowser with Util {
   val url = s"${baseUrl}/join/partner/thankyou"
 
   def userDisplayName: String = {
