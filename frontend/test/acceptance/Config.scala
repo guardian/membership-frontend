@@ -12,7 +12,7 @@ object Config {
 
   def logger = LoggerFactory.getLogger(this.getClass)
 
-  private val conf = ConfigFactory.load("acceptance-test")
+  private val conf = ConfigFactory.load()
 
   val baseUrl = conf.getString("membership.url")
   val profileUrl = conf.getString("identity.webapp.url")

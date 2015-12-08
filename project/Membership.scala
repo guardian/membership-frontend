@@ -37,7 +37,7 @@ trait Membership {
     publishArtifact in (Compile, packageDoc) := false,
     parallelExecution in Global := false,
     updateOptions := updateOptions.value.withCachedResolution(true),
-    javaOptions in Test += "-Dconfig.resource=dev.conf"
+    javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf"
   ) ++ buildInfoPlugin
 
   def lib(name: String) = Project(name, file(name)).enablePlugins(PlayScala).settings(commonSettings: _*)
