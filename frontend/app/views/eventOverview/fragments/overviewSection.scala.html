@@ -59,6 +59,9 @@
                             </div>
                         </div>
                         <ul class="event-trait-container u-unstyled">
+                        @if(event.mainImageHasNoCrop) {
+                          @eventTrait("main-image URL with no crop parameter", "important")
+                        }
                         @event.ticketing.collect {
                             case ExternalTicketing => {
                                 @eventTrait("Not Sold though Eventbrite", "noteworthy")

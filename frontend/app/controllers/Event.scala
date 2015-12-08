@@ -186,7 +186,7 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def preview(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   EventbriteService.getPreviewEvent(id).map(eventDetail)
+     EventbriteService.getPreviewEvent(id).map(eventDetail)
   }
 
   def previewLocal(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>

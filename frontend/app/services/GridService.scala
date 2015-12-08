@@ -16,7 +16,11 @@ import play.api.libs.ws.WSRequest
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+object GridService {
+  val CropQueryParam = "crop"
+}
 case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
+  import GridService._
 
   lazy val agent = Agent[Map[Uri, GridImage]](Map.empty)
 
@@ -24,7 +28,7 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
 
   def getEndpoint(url: Uri) = url.toString.replace(gridUrl, "")
 
-  def cropParam(url: Uri) = url.query.param("crop")
+  def cropParam(url: Uri) = url.query.param(CropQueryParam)
 
   def getRequestedCrop(url: Uri) : Future[Option[GridImage]] = {
     val currentImageData = agent.get()
@@ -34,8 +38,10 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
         for {
           grid <- gridOpt
           exports <- grid.data.exports
+          assets = findAssets(exports, cropParam(url))
+          if assets.nonEmpty
         } yield {
-          val image = GridImage(findAssets(exports, cropParam(url)), grid.data.metadata)
+          val image = GridImage(assets, grid.data.metadata)
           agent send {
             oldImageData =>
               val newImageData = oldImageData + (url -> image)

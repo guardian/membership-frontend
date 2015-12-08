@@ -3,7 +3,7 @@ package model
 import com.gu.contentapi.client.model.Content
 
 abstract class RichContent(content: Content) {
-  val imgOpt = ResponsiveImageGroup(content)
+  val imgOpt = ResponsiveImageGroup.fromContent(content)
 }
 
 case class ContentItem(content: Content) extends RichContent(content)

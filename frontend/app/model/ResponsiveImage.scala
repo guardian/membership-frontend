@@ -13,7 +13,7 @@ object ResponsiveImageGenerator {
 }
 
 object ResponsiveImageGroup {
-  def apply(content: Content): Option[ResponsiveImageGroup] = for {
+  def fromContent(content: Content): Option[ResponsiveImageGroup] = for {
     elements <- content.elements
     element <- elements.find(_.relation == "thumbnail")
   } yield ResponsiveImageGroup(
@@ -26,15 +26,18 @@ object ResponsiveImageGroup {
     } yield ResponsiveImage(file.replace("http://static", "https://static-secure"), width.toInt)
   )
 
-  def apply(image: GridImage): ResponsiveImageGroup = ResponsiveImageGroup(
-    altText = image.metadata.description,
-    metadata = Some(image.metadata),
-    availableImages = image.assets.map { asset =>
-      val path = asset.secureUrl.getOrElse(asset.file)
-      val width = asset.dimensions.width
-      ResponsiveImage(path, width)
-    }
-  )
+  def fromGridImage(image: GridImage): Option[ResponsiveImageGroup] =
+    if (image.assets.nonEmpty)
+      Some(
+        ResponsiveImageGroup(
+        altText = image.metadata.description,
+        metadata = Some(image.metadata),
+        availableImages = image.assets.map { asset =>
+          val path = asset.secureUrl.getOrElse(asset.file)
+          val width = asset.dimensions.width
+          ResponsiveImage(path, width)
+        }))
+    else None
 }
 
 case class ResponsiveImage(path: String, width: Int)

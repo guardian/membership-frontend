@@ -51,7 +51,7 @@ object RichEvent {
   }
 
   def getCitiesWithCount(events: Seq[RichEvent]): Seq[(String, Int)] = {
-    val cities = events.map(_.venue.address.flatMap(_.city)).flatten
+    val cities = events.flatMap(_.venue.address.flatMap(_.city))
     cities.groupBy(identity).mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
   }
 
@@ -80,9 +80,9 @@ object RichEvent {
     val detailsUrl = routes.Event.details(event.slug).url
     val hasLargeImage = true
     val canHavePriorityBooking = true
-    val imgOpt = image.map(ResponsiveImageGroup(_))
+    val imgOpt = image.flatMap(ResponsiveImageGroup.fromGridImage)
     val socialImgUrl = imgOpt.map(_.defaultImage)
-    val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
+    val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup.fromContent)
     val schema = EventSchema.from(this)
     val tags = Nil
 
