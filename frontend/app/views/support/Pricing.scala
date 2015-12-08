@@ -29,6 +29,8 @@ object Pricing {
 
     def gbpPricing = Pricing(td.yearlyPlanDetails.priceGBP, td.monthlyPlanDetails.priceGBP)
 
+    def pricingByCurrencyOrGBP(currency: Currency) = pricing(currency).getOrElse(gbpPricing)
+
     private def pricing(c: Currency): Option[Pricing] = {
       td.yearlyPlanDetails.pricingByCurrency.getPrice(c)
         .zip(td.monthlyPlanDetails.pricingByCurrency.getPrice(c))

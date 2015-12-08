@@ -8,13 +8,13 @@
 @(catalog: MembershipCatalog)(implicit currency: Currency)
 
 
-@comparisonHeader(details: PaidTierDetails, isActive: Boolean = false) = {
+@comparisonHeader(details: PaidTierDetails, currency: Currency, isActive: Boolean = false) = {
     <div class="comparison-table__tier js-clickable@if(isActive){ is-active}" data-tier="@details.tier.slug">
         <div class="comparison-table__tier__name tone-border-@details.tier.slug" data-tier="@details.tier.slug">
         @fragments.tier.tierTrail(details.tier, showCaption = false)
         </div>
         <div class="comparison-table__tier__pricing" data-tier="@details.tier.slug">
-        @fragments.pricing.priceInfo(details, canFlex=false)
+        @fragments.pricing.priceInfo(details, currency, canFlex=false)
         </div>
     </div>
 }
@@ -66,9 +66,9 @@
 
 <div class="comparison-table">
     <div class="comparison-table__header">
-        @comparisonHeader(catalog.supporter)
-        @comparisonHeader(catalog.partner, isActive = true)
-        @comparisonHeader(catalog.patron)
+        @comparisonHeader(catalog.supporter, currency)
+        @comparisonHeader(catalog.partner, currency, isActive = true)
+        @comparisonHeader(catalog.patron, currency)
     </div>
     <div class="comparison-table__body">
         <div class="comparison-table__row">

@@ -5,6 +5,7 @@
 @import views.support.Asset
 
 @import model.MembershipCatalog
+@import com.gu.i18n.GBP
 @(catalog: MembershipCatalog,
   events: Seq[model.RichEvent.RichEvent],
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
@@ -355,11 +356,11 @@
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
-        @fragments.pricing.priceInfo(catalog.partner)
+        @fragments.pricing.priceInfo(catalog.partner, GBP)
     }
 
     @pattern("Pricing Info - Fixed", "Fixed version which only expands to fill width on large screens (canFlex=false)") {
-        @fragments.pricing.priceInfo(catalog.partner, canFlex=false)
+        @fragments.pricing.priceInfo(catalog.partner, GBP, canFlex=false)
     }
 
     @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
@@ -379,10 +380,10 @@
     @pattern("Package: Promo") {
         <ul class="grid grid--3up-stacked">
             <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.partner)
+                @fragments.tier.packagePromo(catalog.partner, GBP)
             </li>
             <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.patron)
+                @fragments.tier.packagePromo(catalog.patron, GBP)
             </li>
         </ul>
     }

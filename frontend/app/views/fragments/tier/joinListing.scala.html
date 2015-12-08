@@ -10,13 +10,13 @@
         <div class="listing__content">
             <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                 <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.supporter, isReversed=true)
+                @fragments.tier.packagePromo(catalog.supporter, currency, isReversed=true)
                 </li>
                 <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.partner, isReversed=true)
+                @fragments.tier.packagePromo(catalog.partner, currency, isReversed=true)
                 </li>
                 <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.patron, isReversed=true)
+                @fragments.tier.packagePromo(catalog.patron, currency, isReversed=true)
                 </li>
             </ul>
             @fragments.tier.friendTeaser(catalog)

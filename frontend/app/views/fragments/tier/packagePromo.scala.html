@@ -3,8 +3,10 @@
 
 @import com.gu.membership.salesforce._
 @import com.gu.membership.salesforce.Tier._
+@import com.gu.i18n.Currency
 @(
     details: TierDetails,
+    currency: Currency,
     showDescription: Boolean = true,
     descriptionAnchor: Option[String] = None,
     modifierClass: Option[String] = None,
@@ -57,7 +59,7 @@
         }
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-               @fragments.pricing.priceInfo(details, canFlex=true)
+               @fragments.pricing.priceInfo(details, currency, canFlex=true)
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
                 <span class="action__label">

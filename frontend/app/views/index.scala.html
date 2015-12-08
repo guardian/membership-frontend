@@ -209,7 +209,7 @@
                 <ul class="grid">
                     @for(details <- Seq(catalog.supporter, catalog.partner, catalog.patron)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(details, modifierClass=Some("package-promo--homepage"))
+                            @fragments.tier.packagePromo(details, currency, modifierClass=Some("package-promo--homepage"))
                         </li>
                     }
                 </ul>

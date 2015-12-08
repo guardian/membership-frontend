@@ -42,16 +42,16 @@
                 </h2>
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.friend, Some("#package-benefits-friend"))
+                        @fragments.tier.packagePromo(catalog.friend, currency, Some("#package-benefits-friend"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.supporter, Some("#package-benefits-supporter"))
+                        @fragments.tier.packagePromo(catalog.supporter, currency, Some("#package-benefits-supporter"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.partner, Some("#package-benefits-partner"))
+                        @fragments.tier.packagePromo(catalog.partner, currency, Some("#package-benefits-partner"))
                     </li>
                 </ul>
-                @fragments.tier.packagePromo(catalog.patron, chooseTier=true)
+                @fragments.tier.packagePromo(catalog.patron, currency, chooseTier = true)
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
                 <div class="page-section__supplementary">
