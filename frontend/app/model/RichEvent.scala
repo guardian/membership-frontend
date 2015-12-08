@@ -51,7 +51,7 @@ object RichEvent {
   }
 
   def getCitiesWithCount(events: Seq[RichEvent]): Seq[(String, Int)] = {
-    val cities = events.map(_.venue.address.flatMap(_.city)).flatten
+    val cities = events.flatMap(_.venue.address.flatMap(_.city))
     cities.groupBy(identity).mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
   }
 
@@ -158,6 +158,5 @@ object RichEvent {
   }
 
   implicit def eventToEBEvent(event: RichEvent): EBEvent = event.event
-
 }
 
