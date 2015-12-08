@@ -1,7 +1,6 @@
 define([
-    'src/modules/form/address/billing',
     'src/modules/form/address/rules'
-], function (billingAddress, address) {
+], function (address) {
     'use strict';
 
     var BILLING_CTA_ELEM = document.querySelector('.js-toggle-billing-address');
@@ -20,7 +19,6 @@ define([
         }
 
         if (BILLING_CTA_ELEM) {
-            billingAddress.init();
             address.addRules(BILLING_FIELDSET_ELEM);
         }
     };

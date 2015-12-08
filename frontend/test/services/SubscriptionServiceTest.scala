@@ -1,6 +1,7 @@
 package services
 
 import com.github.nscala_time.time.Imports._
+import com.gu.i18n.GBP
 import com.gu.membership.model._
 import com.gu.membership.salesforce.PaidTier
 import com.gu.membership.salesforce.Tier.{Partner, Patron, Supporter}
@@ -12,31 +13,6 @@ import org.joda.time.{DateTime, DurationFieldType}
 import org.specs2.mutable.Specification
 
 class SubscriptionServiceTest extends Specification {
-  "SubscriptionService" should {
-    "extract an invoice from a map" in {
-      val startDate = new DateTime(2014, 10, 6, 10, 0)
-      val endDate = new DateTime(2014, 11, 7, 10, 0)
-
-      val subscriptionDetails = SubscriptionDetails(
-        Subscription(
-          id = "some id",
-          name = "name",
-          accountId = "accountId",
-          version = 1,
-          termStartDate = startDate,
-          termEndDate = startDate,
-          contractAcceptanceDate = startDate,
-          activationDate = Some(startDate)),
-        RatePlan("RatePlanId", "Product name - annual", "ProductRatePlanId"),
-        RatePlanCharge("RatePlanChargeId", Some(endDate), startDate, None, None, None, 12.0f)
-      )
-
-
-      subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, GBP, startDate, startDate, Some(endDate), "RatePlanId", "ProductRatePlanId")
-      subscriptionDetails.annual mustEqual false
-    }
-  }
-
   "featuresPerTier" should {
     import SubscriptionService.featuresPerTier
 
@@ -103,35 +79,33 @@ class SubscriptionServiceTest extends Specification {
 
 
   "latestInvoiceItems" should {
-
     import SubscriptionService.latestInvoiceItems
-    val formatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
-    val april = formatter.parseDateTime("2015-04-01 09:00:00")
-    val may = formatter.parseDateTime("2015-05-01 09:00:00")
 
-    def invoiceItem(subscriptionId: String, start: DateTime) =
+    def invoiceItem(subscriptionId: String, chargeNumber: String = "1") = {
+      val start = LocalDate.now().toDateTimeAtStartOfDay()
       InvoiceItem("item-id", 1.2f, start,
-                  start.withFieldAdded(DurationFieldType.months(), 1),
-                  "1", "item", subscriptionId)
+        start.withFieldAdded(DurationFieldType.months(), 1),
+        chargeNumber, "item", subscriptionId)
+    }
 
     "return an empty list when given an empty list" in {
       latestInvoiceItems(Seq()) mustEqual Seq()
     }
 
     "return all those items when given many items with the same subscriptionId" in {
-      val items = Seq(invoiceItem("a", april), invoiceItem("a", april), invoiceItem("a", april))
+      val items = Seq(invoiceItem("a"), invoiceItem("a"), invoiceItem("a"))
       latestInvoiceItems(items) mustEqual items
     }
 
     "return items with the same subscriptionId as the newest item when given items with differing subscription ids" in {
       "items in date order" in {
-        val items = Seq(invoiceItem("a", april), invoiceItem("b", may))
-        latestInvoiceItems(items) mustEqual Seq(invoiceItem("b", may))
+        val items = Seq(invoiceItem("a", "1"), invoiceItem("b", "2"))
+        latestInvoiceItems(items) mustEqual Seq(invoiceItem("b", "2"))
       }
 
       "items out of order" in {
-        val items = Seq(invoiceItem("b", april), invoiceItem("a", may), invoiceItem("a", april), invoiceItem("c", april))
-        latestInvoiceItems(items) mustEqual Seq(invoiceItem("a", april), invoiceItem("a", may))
+        val items = Seq(invoiceItem("b", "1"), invoiceItem("a", "2"), invoiceItem("a", "3"), invoiceItem("c", "2"))
+        latestInvoiceItems(items) mustEqual Seq(invoiceItem("a", "2"), invoiceItem("a", "3"))
       }
     }
   }

@@ -60,8 +60,9 @@ define([
     'src/modules/form/helper/formUtil',
     'src/modules/form/payment',
     'src/modules/form/address',
+    'src/modules/form/options',
     'src/modules/form/helper/password'
-], function (validation, form, payment, address, password) {
+], function (validation, form, payment, address, options, password) {
     'use strict';
 
     var init = function () {
@@ -70,6 +71,7 @@ define([
             validation.init();
             address.init();
             password.init();
+            options.init();
 
             if (form.hasPayment) {
                 require('js!stripe').then(function() {

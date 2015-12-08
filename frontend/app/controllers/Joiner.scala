@@ -3,8 +3,10 @@ package controllers
 import actions.Functions._
 import actions._
 import com.github.nscala_time.time.Imports._
+import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.identity.play.{IdMinimalUser, PrivateFields, StatusFields}
-import com.gu.membership.model.GBP
+import com.gu.membership.model.Year
+import com.gu.membership.salesforce.Tier.Friend
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -22,12 +24,16 @@ import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import utils.CampaignCode.extractCampaignCode
 import utils.TierChangeCookies
+import views.support
+import views.support.{CountryWithCurrency, PageInfo}
+import views.support.PageInfo.CheckoutForm
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
 trait Joiner extends Controller with ActivityTracking with LazyLogging {
   val JoinReferrer = "join-referrer"
-  implicit val currency = GBP
 
   val contentApiService = GuardianContentService
 
@@ -48,6 +54,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referer) ? ("skipConfirmation" -> "true")).toString
     }.getOrElse(Config.idWebAppSigninUrl(""))
 
+    implicit val currency = GBP
     val pageInfo = PageInfo(
       title=CopyConfig.copyTitleChooseTier,
       url=request.path,
@@ -65,6 +72,8 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
     val catalogF = TouchpointBackend.Normal.catalog
+    implicit val currency = GBP
+
     userSignedIn match {
       case Some(user) => for {
         fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
@@ -79,17 +88,49 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     }
   }
 
-  def enterDetails(tier: Tier) = (AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))).async { implicit request =>
+  def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
+
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
       catalog <- request.catalog
     } yield {
-      catalog.publicTierDetails(tier) match {
-        case freeDetails: FreeTierDetails => Ok(views.html.joiner.form.friendSignup(freeDetails, getOrBlank(privateFields), marketingChoices, passwordExists))
-        case paidDetails: PaidTierDetails =>
-          val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          Ok(views.html.joiner.form.payment(paidDetails, getOrBlank(privateFields), marketingChoices, passwordExists, pageInfo))
-      }
+      val cg = countryGroup
+      val paidDetails = catalog.paidTierDetails(tier)
+      val currency = if (paidDetails.currencies.contains(cg.currency)) cg.currency else GBP
+      val pageInfo = PageInfo(
+        stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey),
+        initialCheckoutForm = CheckoutForm(cg.defaultCountry, currency, Year)
+      )
+
+      Ok(views.html.joiner.form.payment(
+         countriesWithCurrencies = CountryWithCurrency.whitelisted(paidDetails.currencies, GBP),
+         details = paidDetails,
+         userFields = setCountry(privateFields, cg),
+         marketingChoices = marketingChoices,
+         passwordExists = passwordExists,
+         pageInfo = pageInfo))
+    }
+  }
+
+  private def setCountry(fields: PrivateFields, cg: CountryGroup): PrivateFields = {
+    val country = fields.country.orElse(cg.defaultCountry.map(_.alpha2))
+    fields.copy(billingCountry = country)
+  }
+
+  def enterFriendDetails = NonMemberAction(Friend).async { implicit request =>
+    for {
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
+      catalog <- request.catalog
+    } yield {
+      val ukGroup = CountryGroup.UK
+      val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, Year)
+      Ok(views.html.joiner.form.friendSignup(
+        catalog.friend,
+        privateFields,
+        marketingChoices,
+        passwordExists,
+        support.PageInfo(initialCheckoutForm = formI18n)))
     }
   }
 
@@ -97,13 +138,12 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
+      catalog <- TouchpointBackend.forUser(request.identityUser).catalog
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(getOrBlank(privateFields), marketingChoices, passwordExists, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, privateFields, marketingChoices, passwordExists, flashMsgOpt))
     }
   }
 
-  private def getOrBlank(privateFields: Option[PrivateFields]): PrivateFields =
-    privateFields.getOrElse(PrivateFields())
 
   private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
     val identityService = IdentityService(IdentityApi)
@@ -111,21 +151,23 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     for {
       user <- identityService.getFullUserDetails(user, identityRequest)
       passwordExists <- identityService.doesUserPasswordExist(identityRequest)
-    } yield (user.privateFields, user.statusFields.getOrElse(StatusFields()), passwordExists)
+    } yield (user.privateFields.getOrElse(PrivateFields()), user.statusFields.getOrElse(StatusFields()), passwordExists)
   }
 
-  def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinFriend = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
       makeMember(Tier.Friend, Redirect(routes.Joiner.thankyou(Tier.Friend))) )
   }
 
-  def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinStaff = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
         makeMember(Tier.Partner, Redirect(routes.Joiner.thankyouStaff())) )
   }
 
   def joinPaid(tier: PaidTier) = AuthenticatedNonMemberAction.async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
+    paidMemberJoinForm.bindFromRequest.fold({ formWithErrors =>
+        Future.successful(BadRequest(formWithErrors.errorsAsJson))
+      },
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
 
@@ -162,7 +204,9 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         result
       } recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case _: ResultError | _: ScalaforceError | _: MemberServiceError => Forbidden
+      case error =>
+        logger.error("An error occurred while calling Joiner.makeMember", error)
+        Forbidden
     }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>

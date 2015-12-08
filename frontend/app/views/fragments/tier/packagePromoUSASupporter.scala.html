@@ -1,14 +1,11 @@
-
-@import model.MembershipCatalog
-@import com.gu.membership.model.Currency
-@(catalog: MembershipCatalog, isReversed: Boolean)(implicit currency: Currency)
+@import com.gu.i18n.CountryGroup.US
+@import views.support.Pricing
+@(pricing: Pricing, isReversed: Boolean)
 
 @import com.gu.membership.salesforce.Tier._
-@import views.support.Prices._
-@import views.support.Pricing._
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(Supporter)"
+    href="@{routes.Joiner.enterPaidDetails(Supporter)}?countryGroup=@US.id"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@Supporter.toString.toLowerCase"
@@ -24,22 +21,19 @@
                 <div class="package-promo__tier__pricing">
 
                     <div class="price-info">
-                        @defining(catalog.supporter.pricingWithFallback) { pricing =>
-                            <div class="price-info__item price-info__item--split">
-                                <div class="price-info__detail">
-                                    <strong class="price-info__value">@pricing.yearly.pretty</strong>
-                                    <span class="price-info__date">/year</span>
-                                </div>
-                                <div class="price-info__saving">about $80/year</div>
+                        <div class="price-info__item price-info__item--split">
+                            <div class="price-info__detail">
+                                <strong class="price-info__value">@pricing.yearly.pretty</strong>
+                                <span class="price-info__date">/year</span>
                             </div>
-                            <div class="price-info__item price-info__item--split price-info__item--last">
-                                <div class="price-info__detail price-info__detail--right">
-                                    <strong class="price-info__value">@pricing.monthly.pretty</strong>
-                                    <span class="price-info__date">/month</span>
-                                </div>
-                                <div class="price-info__saving">about $8/month</div>
+                            <div class="price-info__saving">about @pricing.yearlySaving.pretty</div>
+                        </div>
+                        <div class="price-info__item price-info__item--split price-info__item--last">
+                            <div class="price-info__detail price-info__detail--right">
+                                <strong class="price-info__value">@pricing.monthly.pretty</strong>
+                                <span class="price-info__date">/month</span>
                             </div>
-                        }
+                        </div>
                     </div>
 
                 </div>

@@ -1,9 +1,11 @@
 package views.support
 
+import com.gu.i18n._
 import com.gu.membership.model.{PaidTierPlan, TierPlan}
-import com.gu.membership.zuora.rest.PricingSummary
+import com.gu.membership.salesforce.PaidTier
 import model.MembershipCatalog.Val
-import model.{MembershipCatalog, PaidTierPlanDetails, TierPlanDetails}
+import model._
+import play.api.libs.json._
 
 import scalaz.NonEmptyList
 import scalaz.syntax.std.option._
@@ -38,7 +40,7 @@ object Catalog {
     def fromPlanDetails(env: String)(tpd: TierPlanDetails): TierPlanDescription = {
       val prices = tpd match {
         case paid: PaidTierPlanDetails =>
-          paid.pricingByCurrency.value.toSeq.map { case (c, p) => s"$c: $p" }.mkString(", ")
+          paid.pricingByCurrency.prices.map(_.pretty).mkString("\n")
         case _ => "FREE"
       }
       TierPlanDescription(tierPlanName(tpd.plan), env, tpd.productRatePlanId, prices)
@@ -80,5 +82,33 @@ object Catalog {
       case _ => ""
     }
     basic + suffix
+  }
+
+  implicit val pricingWrites = new Writes[Pricing] {
+    override def writes(p: Pricing): JsValue = Json.obj(
+      "yearly" -> p.yearly.amount,
+      "monthly" -> p.monthly.amount,
+      "saving" -> p.savingInfo
+    )
+  }
+
+  private def tiers(currency: Currency, catalog: MembershipCatalog): JsValue = JsObject(
+    PaidTier.all.map { tier =>
+      val details = catalog.paidTierDetails(tier)
+      (details.yearlyPlanDetails.pricingByCurrency.getPrice(currency), details.monthlyPlanDetails.pricingByCurrency.getPrice(currency), tier)
+    }.collect {
+      case (Some(y), Some(m), tier) =>
+        val pricing = Pricing(y, m)
+        tier.toString -> Json.obj(
+          "pricing" -> Json.toJson(pricing),
+          "benefits" -> Benefits.forTier(tier).map(_.title)
+        )
+    }
+  )
+
+  implicit val catalogWrites = new Writes[MembershipCatalog] {
+    override def writes(c: MembershipCatalog) = JsObject(
+      Currency.all.map { cur => cur.toString -> tiers(cur, c) }
+    )
   }
 }

@@ -1,19 +1,20 @@
 package model
 
 import com.github.nscala_time.time.Imports._
+import com.gu.i18n.GBP
 import com.gu.membership.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import configuration.Config
-import org.joda.time.{PeriodType, Instant}
+import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.StringUtils._
+import views.support.Asset
 import views.support.Dates.YearMonthDayHours
-import views.support.{Dates, Asset}
 
 import scala.util.{Failure, Success, Try}
 
@@ -131,9 +132,7 @@ object Eventbrite {
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
     val feeText = fee.filter(_.value>0).map(_.formattedPrice)
     val totalCost = cost.map(c => c add fee.getOrElse(EBPricing(0)))
-
-
-    val currencyCode = "GBP"
+    val currencyCode = GBP.toString
   }
 
   sealed trait Ticketing

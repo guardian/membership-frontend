@@ -1,5 +1,6 @@
+@import views.support.PageInfo
 @(
-    pageInfo: model.PageInfo,
+    pageInfo: PageInfo,
     groupEvents: model.RichEvent.CalendarMonthDayGroup,
     locations: Seq[model.RichEvent.FilterItem],
     selectedLocation: Option[String]

@@ -19,15 +19,6 @@ class SubscriptionServiceHelpersTest extends Specification {
       sortedAmendments(1).id mustEqual "2c92c0f847cdc31e0147cf2439b76ae6"
     }
 
-    "sort invoice items by charge number ascending" in {
-      val invoiceItems = invoiceItemReader.read(query("model/zuora/invoice-result.xml"))
-
-      val sortedInvoiceItems = SubscriptionService.sortInvoiceItems(invoiceItems)
-
-      sortedInvoiceItems(0).id mustEqual "2c92c0f94b34f993014b4a1c3b0104b7"
-      sortedInvoiceItems(1).id mustEqual "2c92c0f94b34f993014b4a1c3b0004b6"
-    }
-
     "sort preview invoice items by price ascending" in {
       val amendResult = amendResultReader.read(Resource.get("model/zuora/amend-result-preview.xml")).right.get
 

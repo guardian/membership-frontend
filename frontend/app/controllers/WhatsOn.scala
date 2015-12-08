@@ -1,7 +1,7 @@
 package controllers
 
 import com.github.nscala_time.time.Imports._
-import com.gu.membership.model.{Currency, GBP}
+import com.gu.i18n.GBP
 import configuration.CopyConfig
 import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
@@ -10,14 +10,14 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
 import tracking.ActivityTracking
+import views.support.PageInfo
 
 trait WhatsOn extends Controller with ActivityTracking {
+  implicit val currency = GBP
 
   val guLiveEvents: EventbriteService
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
-
-  implicit val currency: Currency = GBP
 
   private def allEvents = {
     guLiveEvents.events ++ localEvents.events
@@ -37,9 +37,9 @@ trait WhatsOn extends Controller with ActivityTracking {
 
   def list = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
+      title = CopyConfig.copyTitleEvents,
+      url = request.path,
+      description = Some(CopyConfig.copyDescriptionEvents)
     )
 
     val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
@@ -65,7 +65,7 @@ trait WhatsOn extends Controller with ActivityTracking {
       CalendarMonthDayGroup("Calendar", groupEventsByDayAndMonth(locationOpt.fold(allEvents)(allEventsByLocation)))
 
     Ok(views.html.event.calendar(
-      PageInfo(s"${calendarEvents.title} | Events", request.path, None),
+      PageInfo(title = s"${calendarEvents.title} | Events", url = request.path),
       calendarEvents,
       locationFilterItems,
       locationOpt
@@ -77,16 +77,16 @@ trait WhatsOn extends Controller with ActivityTracking {
       CalendarMonthDayGroup("Archive", groupEventsByDayAndMonth(allEventsInArchive)(implicitly[Ordering[LocalDate]].reverse))
 
     Ok(views.html.event.eventsListArchive(
-      PageInfo(s"${calendarArchive.title} | Events", request.path, None),
+      PageInfo(title = s"${calendarArchive.title} | Events", url = request.path),
       calendarArchive
     ))
   }
 
   def masterclassesList = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
-      CopyConfig.copyTitleMasterclasses,
-      request.path,
-      Some(CopyConfig.copyDescriptionMasterclasses)
+      title = CopyConfig.copyTitleMasterclasses,
+      url = request.path,
+      description = Some(CopyConfig.copyDescriptionMasterclasses)
     )
     val eventGroup = EventGroup("Masterclasses", masterclassEvents.events)
 
@@ -96,9 +96,9 @@ trait WhatsOn extends Controller with ActivityTracking {
 
   def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
-      CopyConfig.copyTitleMasterclasses,
-      request.path,
-      Some(CopyConfig.copyDescriptionMasterclasses)
+      title = CopyConfig.copyTitleMasterclasses,
+      url = request.path,
+      description = Some(CopyConfig.copyDescriptionMasterclasses)
     )
     val tag = decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
     val eventGroup = EventGroup("Masterclasses", masterclassEvents.getTaggedEvents(tag))

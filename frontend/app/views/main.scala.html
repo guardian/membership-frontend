@@ -1,6 +1,7 @@
+@import views.support.PageInfo
 @(
     title: String,
-    pageInfo: model.PageInfo = model.PageInfo.default
+    pageInfo: PageInfo = views.support.PageInfo()
 )(content: Html)
 
 @import play.api.libs.json.Json

@@ -27,8 +27,8 @@ trait Staff extends Controller {
   }
 
   def catalogDiagnostics = GoogleAuthenticatedStaffAction.async { implicit request =>
-    val testCat = TouchpointBackend.TestUser.subscriptionService.getMembershipCatalog()
-    val normalCat = TouchpointBackend.Normal.subscriptionService.getMembershipCatalog()
+    val testCat = TouchpointBackend.TestUser.subscriptionService.getMembershipCatalog
+    val normalCat = TouchpointBackend.Normal.subscriptionService.getMembershipCatalog
     testCat.zip(normalCat).map((Catalog.Diagnostic.fromCatalogs _).tupled).map { diagnostic =>
       Ok(views.html.staff.catalogDiagnostic(diagnostic))
     }

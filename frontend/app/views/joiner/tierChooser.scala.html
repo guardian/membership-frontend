@@ -1,9 +1,10 @@
-@import com.gu.membership.model.Currency
+@import com.gu.i18n.Currency
 @import com.gu.membership.salesforce.Tier._
 @import model.MembershipCatalog
 
+@import views.support.PageInfo
 @(catalog: MembershipCatalog,
-  pageInfo: model.PageInfo,
+  pageInfo: PageInfo,
   eventOpt: Option[model.RichEvent.RichEvent],
   accessOpt: Option[model.MembershipAccess],
   signInUrl: String

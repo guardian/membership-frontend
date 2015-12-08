@@ -1,8 +1,10 @@
-@(pageInfo: model.PageInfo)
+@import views.support.PageInfo
+@(pageInfo: PageInfo)
 
-@import configuration.Config
 @import model.SVG.Logos
+@import configuration.Config
 @import views.support.Asset
+@import views.support.PageInfo._
 
 @import play.api.libs.json.Json
 
@@ -28,6 +30,7 @@
             stripePublicKey: '@stripePublicKey',
         }
         membership: {
+            checkoutForm: @Html(Json.toJson(pageInfo.initialCheckoutForm).toString),
             buildNumber: '@app.BuildInfo.buildNumber',
             svgSprite: "@Asset.at("images/svg-sprite.svg")"
         },

@@ -18,7 +18,8 @@ GET            /analytics-off                         controllers.Testing.analyt
 # Join
 GET            /join/staff                            controllers.Joiner.staff
 GET            /join/staff/enter-details              controllers.Joiner.enterStaffDetails
-GET            /join/:tier/enter-details              controllers.Joiner.enterDetails(tier: Tier)
+GET            /join/friend/enter-details             controllers.Joiner.enterFriendDetails
+GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK)
 POST           /join/friend/enter-details             controllers.Joiner.joinFriend
 POST           /join/staff/enter-details              controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
@@ -75,7 +76,8 @@ GET            /preview-masterclass/:id               controllers.Event.previewM
 GET            /tier/change                           controllers.TierController.change
 GET            /tier/cancel                           controllers.TierController.cancelTier
 POST           /tier/cancel/confirm                   controllers.TierController.cancelTierConfirm
-GET            /tier/cancel/summary                   controllers.TierController.cancelTierSummary
+GET            /tier/cancel/paid/summary              controllers.TierController.cancelPaidTierSummary
+GET            /tier/cancel/free/summary    controllers.TierController.cancelFreeTierSummary
 GET            /tier/change/friend                    controllers.TierController.downgradeToFriend
 POST           /tier/change/friend                    controllers.TierController.downgradeToFriendConfirm
 GET            /tier/change/friend/summary            controllers.TierController.downgradeToFriendSummary

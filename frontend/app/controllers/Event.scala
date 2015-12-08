@@ -22,6 +22,7 @@ import services.{EventbriteService, GuardianLiveEventService, LocalEventService,
 import services.EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
+import views.support.PageInfo
 
 import scala.concurrent.Future
 
@@ -104,11 +105,11 @@ trait Event extends Controller with ActivityTracking {
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
     val pageInfo = PageInfo(
-      event.name.text,
-      request.path,
-      event.description.map(_.blurb),
-      event.socialImgUrl,
-      Some(event.schema)
+      title = event.name.text,
+      url = request.path,
+      description = event.description.map(_.blurb),
+      image = event.socialImgUrl,
+      schemaOpt = Some(event.schema)
     )
     Ok(views.html.event.eventDetail(pageInfo, event))
   }

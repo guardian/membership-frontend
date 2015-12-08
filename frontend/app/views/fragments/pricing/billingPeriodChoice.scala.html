@@ -1,0 +1,46 @@
+@import views.support.Pricing
+@import com.gu.membership.model.{Year,Month,BillingPeriod}
+@import com.gu.i18n.Currency
+@(pricing: Pricing)
+
+@inputId(bp: BillingPeriod, currency: Currency) = {@{bp.adjective}-@currency}
+
+<div data-currency="@pricing.currency.toString" class="is-hidden js-billing-period__container">
+    <label class="label" for="@inputId(Year, pricing.currency)">
+        <input type="radio"
+               class="is-hidden"
+               name="payment.type"
+               id="@inputId(Year, pricing.currency)"
+               value="@Year.adjective"
+               data-currency="@pricing.currency"
+               checked="checked"/>
+
+    <div class="pseudo-radio">
+        <div class="pseudo-radio__header">Pay @pricing.yearly.pretty/year</div>
+        @if(pricing.hasYearlySaving) {
+            <p class="pseudo-radio__note">@pricing.yearly.pretty
+                one off annual payment (save @pricing.yearlySaving.pretty per year)</p>
+                @for(savingInfo <- pricing.savingInfo) {
+                    <p class="pseudo-radio__note">@savingInfo</p>
+                }
+            } else {
+                <p class="pseudo-radio__note">One-off annual payment</p>
+            }
+        </div>
+    </label>
+
+    <label class="label" for="@inputId(Month, pricing.currency)">
+        <input type="radio"
+               class="is-hidden"
+               name="payment.type"
+               id="@inputId(Month, pricing.currency)"
+               data-currency="@pricing.currency"
+               value="@Month.adjective"/>
+
+        <div class="pseudo-radio">
+            <div class="pseudo-radio__header">Pay @pricing.monthly.pretty/month</div>
+            <p class="pseudo-radio__note">@pricing.monthly.pretty per month (@pricing.yearlyMonthlyPrice.pretty per year)</p>
+            <p class="pseudo-radio__note">1 year membership, pay in instalments over a year</p>
+        </div>
+    </label>
+</div>

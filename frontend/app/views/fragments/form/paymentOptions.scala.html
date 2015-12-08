@@ -1,10 +1,7 @@
-@import views.support.Prices._
-@import views.support.Pricing._
-@import views.support.DisplayText._
-@import com.gu.membership.model.Currency
 @import model.PaidTierDetails
+@import views.support.Pricing._
 
-@(details: PaidTierDetails)(implicit currency: Currency)
+@(details: PaidTierDetails)
 
 <fieldset class="fieldset js-payment-options-container">
 
@@ -14,51 +11,10 @@
     </div>
 
     <div class="fieldset__fields">
-
         <div class="form-field">
-         @defining(details.pricingWithFallback) { pricing =>
-
-            <label class="label" for="annual">
-                <input type="radio"
-                       class="is-hidden"
-                       name="payment.type"
-                       id="annual"
-                       value="annual"
-                       checked="checked"
-                       data-pricing-option-amount="@pricing.yearly"/>
-
-                <div class="pseudo-radio">
-                    <div class="pseudo-radio__header">Pay £@pricing.yearly/year</div>
-                    @if(pricing.hasYearlySaving) {
-                        <p class="pseudo-radio__note">£@pricing.yearly one off annual payment (save £@pricing.yearlySaving per year)</p>
-                        @for(yearlySavingsNote <- details.yearlySavingNote) {
-                            <p class="pseudo-radio__note">@yearlySavingsNote</p>
-                        }
-                    } else {
-                        <p class="pseudo-radio__note">One-off annual payment</p>
-                    }
-                </div>
-            </label>
-            <label class="label" for="monthly">
-                <input type="radio"
-                       class="is-hidden"
-                       name="payment.type"
-                       id="monthly"
-                       value="month"
-                       data-pricing-option-amount="@pricing.monthly"/>
-
-                <div class="pseudo-radio">
-                    <div class="pseudo-radio__header">Pay £@pricing.monthly/month</div>
-                    @pricing.savingInfo.map { savingInfo =>
-                      <div class="price-info__saving">@savingInfo</div>
-                    }
-                    @if(pricing.hasYearlySaving) {
-                        <p class="pseudo-radio__note">£@pricing.monthly per month (£@pricing.yearlyMonthlyCost per year)</p>
-                    }
-                    <p class="pseudo-radio__note">1 year membership, pay in instalments over a year</p>
-                </div>
-            </label>
+            @for(pricing <- details.allPricing) {
+                @fragments.pricing.billingPeriodChoice(pricing)
+            }
         </div>
-        }
     </div>
 </fieldset>

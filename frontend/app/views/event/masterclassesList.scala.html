@@ -1,7 +1,8 @@
 @import model.MembershipCatalog
-@import com.gu.membership.model.Currency
+@import com.gu.i18n.Currency
+@import views.support.PageInfo
 @(catalog: MembershipCatalog,
-  pageInfo: model.PageInfo,
+  pageInfo: PageInfo,
   eventGroup: model.RichEvent.EventGroup,
   selectedTag: String = "",
   selectedSubTag: String = ""

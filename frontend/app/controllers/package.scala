@@ -1,15 +1,14 @@
 import actions._
-import com.gu.membership.salesforce.{PaidTierMember, Member}
+import com.gu.membership.salesforce.{Member, PaidTierMember}
 import com.typesafe.scalalogging.LazyLogging
 import play.api.data.Form
-import play.api.mvc.{RequestHeader, Result}
-import play.api.mvc.Results.Redirect
 import play.api.http.HeaderNames.USER_AGENT
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{RequestHeader, Result}
 
 import scala.concurrent.Future
-import scala.reflect.ClassTag
-import scala.reflect.classTag
+import scala.reflect.{ClassTag, classTag}
 
 package object controllers extends CommonActions with LazyLogging{
 

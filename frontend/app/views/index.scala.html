@@ -1,4 +1,5 @@
-@import com.gu.membership.model.Currency
+@import com.gu.i18n.Currency
+@import views.support.PageInfo
 @import model.MembershipCatalog
 @(
   catalog: MembershipCatalog,
@@ -10,7 +11,7 @@
 @import views.support.Links.BasicLink
 @import views.support.Asset
 
-@main("") {
+@main(PageInfo().title) {
     <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/clinton-background.jpg"))">
         <div class="hero-banner__inner">
             <div class="l-constrained">

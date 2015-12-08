@@ -1,29 +1,49 @@
-@import views.support.Pricing
+@import model.TierDetails
+@import model.FreeTierDetails
+@import model.PaidTierDetails
+@import views.support.Pricing._
+@import com.gu.membership.model.Price
+@import com.gu.membership.model.Year
+@import com.gu.membership.model.Month
 
-@(pricing: Option[Pricing],
+@import com.gu.membership.model.BillingPeriod
+@(tierDetails: TierDetails,
   membershipTermsAndConditions: Boolean = true,
   isSlim: Boolean = false)
 
 @import configuration.Links
 
+@paidButton(price: Price, period: BillingPeriod) = {
+    <span class="is-hidden" data-currency="@price.currency" data-billing-period="@period.adjective">Pay @price.pretty</span>
+}
+
 <fieldset class="fieldset fieldset--simple">
     <div class="fieldset__heading"></div>
     <div class="fieldset__fields fieldset__fields--no-padding">
 
-    @if(membershipTermsAndConditions){
-        <p class="ts-and-cs">By joining Guardian Members, you are agreeing to our
-            <a href="@Links.membershipTerms" class="text-link" target="_blank">Terms and Conditions</a> and
-            <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
-        </p>
-    }
+        @if(membershipTermsAndConditions){
+            <p class="ts-and-cs">By joining Guardian Members, you are agreeing to our
+                <a href="@Links.membershipTerms" class="text-link" target="_blank">Terms and Conditions</a> and
+                <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
+            </p>
+        }
         <div class="actions">
             <noscript>
                 <a href="http://www.enable-javascript.com/" target="_blank" class="action is-disabled">Enable javascript to proceed</a>.
             </noscript>
             <button type="button" class="action js-submit-input u-hidden-non-js">
-            @pricing.fold(Html("Join now")) { p =>
-              Pay £<span class="js-submit-price-option">@p.yearly</span> now
-            }
+
+
+                @{tierDetails match {
+                    case _: FreeTierDetails => Html("Join now")
+                    case p: PaidTierDetails =>
+                    for {
+                        pricing <- p.allPricing
+                        (period, price) <- Seq((Year, pricing.yearly), (Month, pricing.monthly))
+                    } yield {
+                        paidButton(price, period)
+                    }
+                }}
             </button>
             <div class="loader js-loader"></div>
         </div>

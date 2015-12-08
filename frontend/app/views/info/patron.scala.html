@@ -1,8 +1,10 @@
-@import com.gu.membership.model.Currency
+@import com.gu.membership.salesforce.Tier.Patron
+@import views.support.PageInfo
+@import model.PaidTierDetails
 @import model.MembershipCatalog
 @(catalog: MembershipCatalog,
-  pageInfo: model.PageInfo,
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
+  pageInfo: PageInfo,
+  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.support.Asset
 
@@ -43,7 +45,7 @@
             @fragments.promos.promoSecondary(Html("Backstage pass to the Guardian"), img=img, toneClass=Some("tone-trans-brand-supporting-2")) {
                 <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
                 <a class="action"
-                    href="@routes.Joiner.enterDetails(catalog.patron.tier)"
+                    href="@routes.Joiner.enterPaidDetails(Patron)"
                     data-metric-trigger="click"
                     data-metric-category="join"
                     data-metric-action="patron"

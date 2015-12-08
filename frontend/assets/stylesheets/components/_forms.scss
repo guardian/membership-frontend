@@ -362,7 +362,8 @@
         @include radio-circle($c-neutral5);
     }
 }
-input[type=radio]:checked + .pseudo-radio {
+
+input[type=radio]:checked ~ .pseudo-radio {
     border-color: $c-border-brand;
     &:before {
         background-color: color(brand-main);

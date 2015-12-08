@@ -1,15 +1,14 @@
 @import model.PaidTierDetails
-@import com.gu.membership.model.Currency
 
 @(details: PaidTierDetails,
   showDescription: Boolean = true,
   descriptionAnchor: Option[String] = None,
   modifierClass: Option[String] = None,
   extraClasses: Seq[String] = Seq.empty,
-  isReversed: Boolean = false)(implicit currency: Currency)
+  isReversed: Boolean = false)
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(details.tier)"
+    href="@routes.Joiner.enterPaidDetails(details.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@details.tier.slug"

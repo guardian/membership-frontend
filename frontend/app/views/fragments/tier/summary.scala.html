@@ -1,43 +1,46 @@
-@(currentSubscription: com.gu.membership.zuora.soap.models.SubscriptionDetails, currentTierOpt: Option[com.gu.membership.salesforce.Tier])
-
 @import views.support.Dates._
-@import views.support.Prices._
+@import org.joda.time.DateTime
+
+@(subscription: model.PaidSubscription)
 
 <table class="table table--striped" role="grid">
     <tr role="row">
-        @for(currentTier <- currentTierOpt) {
-            <th role="rowheader">
-                Tier
-            </th>
-            <td id="qa-tier-summary-tier">
-                @currentTier.name
-            </td>
-        }
+        <th role="rowheader">
+            Tier
+        </th>
+        <td id="qa-tier-summary-tier">
+            @subscription.plan.tier.name
+        </td>
     </tr>
+
     <tr role="row">
         <th role="rowheader">
             End date
         </th>
         <td id="qa-tier-summary-end">
-            @if(!currentSubscription.inFreePeriodOffer) { @currentSubscription.chargedThroughDate.map(_.pretty)} else { @currentSubscription.effectiveStartDate.pretty}
+            @if(!subscription.isInTrialPeriod) {
+                @subscription.chargedThroughDate.map(_.pretty)
+            } else {
+                @DateTime.now.pretty
+            }
         </td>
     </tr>
-    @if(!currentSubscription.effectiveStartDate.isAfterNow()) {
-        <tr role="row">
+
+    <tr role="row">
         <th role="rowheader">
-            @if(currentSubscription.annual){ Annual } else { Monthly } Payment
+            @subscription.plan.billingPeriod.adjective.capitalize payment
         </th>
         <td id="qa-tier-summary-recurring">
-            @currentSubscription.planAmount.pretty
+            @subscription.recurringPrice.pretty
         </td>
-        </tr>
-        <tr role="row">
-            <th role="rowheader">
-            Last payment
-            </th>
-            <td id="qa-tier-summary-start">
-            @currentSubscription.effectiveStartDate.pretty
-            </td>
-        </tr>
-    }
+    </tr>
+    @*TODO What is expected here?*@
+    @*<tr role="row">*@
+    @*<th role="rowheader">*@
+    @*Last payment*@
+    @*</th>*@
+    @*<td id="qa-tier-summary-start">*@
+    @*subscription.startDate.pretty*@
+    @*</td>*@
+    @*</tr>*@
 </table>

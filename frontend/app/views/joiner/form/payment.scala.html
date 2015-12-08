@@ -1,16 +1,14 @@
-@import com.gu.membership.model.Currency
-
-@(
-    details: model.PaidTierDetails,
-    userFields: com.gu.identity.play.PrivateFields,
-    marketingChoices: com.gu.identity.play.StatusFields,
-    passwordExists: Boolean,
-    pageInfo: model.PageInfo
-)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_], currency: Currency)
-
-@import views.support.DisplayText._
-@import views.support.Pricing._
 @import views.html.helper._
+@import views.support.DisplayText._
+@import views.support.PageInfo
+@import views.support.CountryWithCurrency
+@(details: model.PaidTierDetails,
+  countriesWithCurrencies: List[CountryWithCurrency],
+  userFields: com.gu.identity.play.PrivateFields,
+  marketingChoices: com.gu.identity.play.StatusFields,
+  passwordExists: Boolean,
+  pageInfo: PageInfo
+)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(details.tier.cta, pageInfo=pageInfo) {
 
@@ -34,7 +32,7 @@
             <section class="form-section">
 
                 <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.Joiner.enterDetails(details.tier).url)
+                    @fragments.joiner.signedInAs(routes.FrontPage.index().url)
                 </div>
 
                 <div class="form-section__content">
@@ -49,6 +47,7 @@
 
                         @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                         @fragments.form.addressDetail(
+                            countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
                             note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
                             formType = "deliveryAddress",
@@ -73,6 +72,7 @@
 
                         @fragments.form.billingAddress("Billing address")
                         @fragments.form.addressDetail(
+                            countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
                             addressRequired = true,
                             address1 = userFields.billingAddress1,
@@ -86,8 +86,7 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(Some(details.pricingWithFallback))
-
+                    @fragments.form.submit(details)
                 </div>
             </section>
         </form>
