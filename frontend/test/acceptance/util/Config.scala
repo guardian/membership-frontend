@@ -1,4 +1,4 @@
-package acceptance
+package acceptance.util
 
 import java.net.URL
 import com.typesafe.config.ConfigFactory
@@ -9,30 +9,33 @@ import org.slf4j.LoggerFactory
 import scala.util.Try
 
 object Config {
-
   def logger = LoggerFactory.getLogger(this.getClass)
 
   private val conf = ConfigFactory.load()
 
   val baseUrl = conf.getString("membership.url")
   val profileUrl = conf.getString("identity.webapp.url")
+  val testUsersSecret = conf.getString("identity.test.users.secret")
 
   lazy val driver: WebDriver = {
     Try { new URL(conf.getString("webDriverRemoteUrl")) }.toOption.map { url =>
-      new RemoteWebDriver(url, defaultCapabilities)
+      val capabilities = DesiredCapabilities.firefox()
+      capabilities.setCapability("platform", Platform.WIN8)
+      capabilities.setCapability("name", "membership-frontend: https://github.com/guardian/membership-frontend")
+      new RemoteWebDriver(url, capabilities)
     }.getOrElse {
       new FirefoxDriver()
     }
   }
 
-  val defaultCapabilities = {
-    val capabilities = DesiredCapabilities.firefox()
-    capabilities.setCapability("platform", Platform.WIN8)
-    capabilities.setCapability("name", "Membership Frontend: https://github.com/guardian/membership-frontend")
-    capabilities
+  def webDriverSessionId(): String = {
+    Config.driver match {
+      case remoteDriver: RemoteWebDriver => {
+        remoteDriver.getSessionId.toString
+      }
+      case _ => "unknown session ID"
+    }
   }
-
-  val testUsersSecret = conf.getString("identity.test.users.secret")
 
   def stage(): String = {
     conf.getString("stage")
@@ -43,13 +46,11 @@ object Config {
   }
 
   def printSummary(): Unit = {
-    logger.info("=====================================")
-    logger.info("Acceptance Test Configuration summary")
-    logger.info("=====================================")
+    logger.info("Acceptance Test Configuration")
+    logger.info("=============================")
     logger.info(s"Stage: ${stage}")
     logger.info(s"Membership Frontend: ${Config.baseUrl}")
     logger.info(s"Identity Frontend: ${conf.getString("identity.webapp.url")}")
-    logger.info(s"Identity API: ${conf.getString("identity.api.url")}")
-
+    logger.info(s"WebDriver Session ID = ${Config.webDriverSessionId}")
   }
 }

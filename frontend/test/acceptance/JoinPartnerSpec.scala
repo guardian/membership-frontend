@@ -1,30 +1,35 @@
 package acceptance
 
-import org.openqa.selenium.WebDriver
+import acceptance.util.{Config, Acceptance, TestUser, Util}
 import org.scalatest.selenium.WebBrowser
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfter, FeatureSpec, GivenWhenThen}
+import org.slf4j.LoggerFactory
 
 class JoinPartnerSpec extends FeatureSpec
   with WebBrowser with Util with GivenWhenThen with BeforeAndAfter with BeforeAndAfterAll  {
 
-  implicit lazy val driver: WebDriver = Config.driver
+  def logger = LoggerFactory.getLogger(this.getClass)
 
-  before {
+  before { // Before each test
     resetDriver()
-    Config.printSummary()
   }
 
-  override def afterAll(): Unit = { quit() }
+  override def beforeAll() = {
+    Config.printSummary()
+  }
+  
+  override def afterAll() = {
+    Config.driver.quit()
+  }
 
   feature("Become a Partner Member") {
     scenario("I join as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
-
-      info("Stage: " + Config.stage + " " + Config.baseUrl)
+      val testUser = new TestUser
 
       Given("I clicked 'Become a Partner' button on Membership homepage")
 
       When("I land on 'Identity Register' page")
-      val register = new pages.Register
+      val register = new pages.Register(testUser)
       go.to(register)
       assert(register.pageHasLoaded())
 
@@ -43,7 +48,7 @@ class JoinPartnerSpec extends FeatureSpec
         assert(cookiesSet.map(_.getName).contains(idCookie)) }
 
       And("I should be logged in with my newly created account.")
-      assert(membership.userDisplayName == TestUser.specialString.toLowerCase)
+      assert(membership.userDisplayName == testUser.username.toLowerCase)
 
       When("I click on 'Become a Partner' button")
       membership.becomePartner
@@ -53,7 +58,7 @@ class JoinPartnerSpec extends FeatureSpec
       assert(enterDetails.pageHasLoaded())
 
       And("I should still be logged in with my Identity account.")
-      assert(enterDetails.userDisplayName == TestUser.specialString.toLowerCase)
+      assert(enterDetails.userDisplayName == testUser.username.toLowerCase)
 
       When("I fill in delivery address details")
       enterDetails.fillInDeliveryAddress()
@@ -69,7 +74,7 @@ class JoinPartnerSpec extends FeatureSpec
       assert(thankYou.pageHasLoaded())
 
       And("I should be signed in as Partner.")
-      assert(thankYou.userDisplayName == TestUser.specialString.toLowerCase)
+      assert(thankYou.userDisplayName == testUser.username.toLowerCase)
       assert(thankYou.userTier == "Partner")
     }
   }

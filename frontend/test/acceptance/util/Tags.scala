@@ -1,4 +1,4 @@
-package acceptance
+package acceptance.util
 
 import org.scalatest.Tag
 
