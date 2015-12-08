@@ -15,8 +15,6 @@ package object actions {
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
-  val countryGroupKey = "country-group"
-
   trait TierDetailsProvider {
     def touchpointBackend: TouchpointBackend
     def catalog: Future[MembershipCatalog] = touchpointBackend.subscriptionService.membershipCatalog.get()

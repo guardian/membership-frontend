@@ -5,7 +5,7 @@
 @import com.gu.membership.salesforce.Tier._
 
 @actionAttrs = {
-    href="@{routes.Joiner.enterPaidDetails(Supporter)}?@{actions.countryGroupKey}=@US.id"
+    href="@{routes.Joiner.enterPaidDetails(Supporter)}?countryGroup=@US.id"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@Supporter.toString.toLowerCase"
