@@ -11,12 +11,12 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-trait Subscription extends Controller with SubscriptionServiceProvider {
+trait Subscription extends Controller with MemberServiceProvider {
   def updateCard() = AjaxPaidMemberAction.async { implicit request =>
     updateForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
-          card <- request.touchpointBackend.updateDefaultCard(request.member, stripeToken)
+          card <- memberService.updateDefaultCard(request.member, stripeToken)
         } yield Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`, "type" -> card.`type`))
       ).recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))
@@ -25,8 +25,8 @@ trait Subscription extends Controller with SubscriptionServiceProvider {
 
   def remainingTickets() = AjaxPaidMemberAction.async { implicit request =>
     for {
-      subscription <- subscriptionService.currentSubscription(request.member)
-      ticketsUsedCount <- subscriptionService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
+      subscription <- memberService.currentSubscription(request.member)
+      ticketsUsedCount <- memberService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
     } yield {
       Ok(Json.obj(
         "totalAllocation" -> FreeEventTickets.allowance,

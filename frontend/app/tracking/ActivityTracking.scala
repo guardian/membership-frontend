@@ -4,24 +4,23 @@ import java.util.{List => JList, Map => JMap}
 
 import com.github.t3hnar.bcrypt._
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.salesforce.{Contact, Member, Tier, PaymentMethod}
+import com.gu.membership.model.PaidTierPlan
+import com.gu.membership.salesforce._
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import controllers.Testing
-import forms.MemberForm.MarketingChoicesForm
+import forms.MemberForm.{AddressDetails, JoinForm, MarketingChoicesForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBOrder, EBTicketClass}
 import model.RichEvent.{GuLiveEvent, LocalEvent, MasterclassEvent, RichEvent}
+import model.SFMember
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
 import utils.TestUsers.isTestUser
 
-import play.api.mvc.{RequestHeader, Request}
-import play.api.mvc.{Cookie, RequestHeader, Request, CookieBaker}
 import scala.collection.JavaConversions._
-import play.utils.UriEncoding
 
 
 case class MemberActivity (source: String, member: MemberData) extends TrackerData {
@@ -201,6 +200,56 @@ trait ActivityTracking {
 
   def track(data: TrackerData, member: Contact[Member, PaymentMethod]) {
     if (!isTestUser(member)) executeTracking(data)
+  }
+
+  def trackRegistration(formData: JoinForm, member: ContactId, user: IdMinimalUser) {
+    val subscriptionPaymentAnnual = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.billingPeriod.annual)
+      case _ => None
+    }
+
+    val billingPostcode = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm =>
+        paidMemberJoinForm.billingAddress.map(_.postCode).orElse(Some(formData.deliveryAddress.postCode))
+      case _ => None
+    }
+
+    val trackingInfo =
+      MemberData(
+        member.salesforceContactId,
+        user.id,
+        formData.plan.salesforceTier,
+        None,
+        Some(formData.deliveryAddress.postCode),
+        billingPostcode,
+        subscriptionPaymentAnnual,
+        Some(formData.marketingChoices),
+        Some(formData.deliveryAddress.town),
+        Some(formData.deliveryAddress.country.name)
+      )
+
+    track(MemberActivity("membershipRegistration", trackingInfo), user)
+  }
+
+  def trackUpgrade(member: SFMember,
+                   newRatePlan: PaidTierPlan,
+                   addressDetails: Option[AddressDetails]): Unit = {
+
+    track(
+      MemberActivity(source = "membershipUpgrade",
+        MemberData(
+          salesforceContactId = member.salesforceContactId,
+          identityId = member.identityId,
+          tier = member.tier.name,
+          tierAmendment = Some(UpgradeAmendment(member.tier, newRatePlan.tier)),
+          deliveryPostcode = addressDetails.map(_.deliveryAddress.postCode),
+          billingPostcode = addressDetails.flatMap(f => f.billingAddress.map(_.postCode)).orElse(addressDetails.map(_.deliveryAddress.postCode)),
+          subscriptionPaymentAnnual = Some(newRatePlan.billingPeriod.annual),
+          marketingChoices = None,
+          city = addressDetails.map(_.deliveryAddress.town),
+          country = addressDetails.map(_.deliveryAddress.country.name)
+        )),
+      member)
   }
 
   private def executeTracking(data: TrackerData) {

@@ -1,6 +1,6 @@
 package services
 
-import actions.MemberRequest
+import actions.{AnyMemberTierRequest, MemberRequest}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
@@ -26,10 +26,12 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
       override def onStart(app: Application) {}
     }))
 
+    val fakeMemberService = mock[MemberService]
+
     object DestinationServiceTest extends DestinationService {
       override val contentApiService = mock[GuardianContentService]
-      override val memberService = mock[MemberService]
       override val eventbriteService = mock[EventbriteCollectiveServices]
+      override def memberService(request: AnyMemberTierRequest[_]): MemberService = fakeMemberService
     }
 
     val destinationService = DestinationServiceTest
@@ -70,7 +72,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         //mock the Eventbrite response and discount creation
         val event = TestRichEvent(eventWithName().copy(id = "0123456"))
         destinationService.eventbriteService.getBookableEvent("0123456") returns Some(event)
-        destinationService.memberService.createEBCode(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
+        fakeMemberService.createEBCode(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
 
         //call the method under test
         val futureResult = destinationService.eventDestinationFor(request)
@@ -94,7 +96,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         //mock the Eventbrite response and discount creation
         val event = TestRichEvent(eventWithName().copy(id = "0123456"))
         destinationService.eventbriteService.getBookableEvent("0123456") returns Some(event)
-        destinationService.memberService.createEBCode(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
+        fakeMemberService.createEBCode(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
 
         //call the method under test with the request
         val futureResult = destinationService.returnDestinationFor(request)

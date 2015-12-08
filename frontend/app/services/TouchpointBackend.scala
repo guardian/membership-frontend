@@ -10,7 +10,7 @@ import com.gu.membership.zuora
 import com.gu.membership.zuora.soap.ClientWithFeatureSupplier
 import com.gu.membership.zuora.{rest, soap}
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
-import com.gu.services.ZuoraPaymentService
+import com.gu.services.{PaymentService, ZuoraPaymentService}
 import com.netaporter.uri.Uri
 import configuration.Config
 import model.{FeatureChoice, MembershipCatalog}
@@ -21,6 +21,7 @@ import play.api.libs.ws.WS
 import play.libs.Akka
 import tracking._
 import utils.TestUsers.isTestUser
+import configuration.Config.productFamily
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -48,16 +49,20 @@ object TouchpointBackend {
     }, WS.client)
 
     val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
+    implicit val _bt = backendType
 
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val productFamily = Config.productFamily(restBackendConfig.envName)
     val zSubscriptionService = new zuora.SubscriptionService(zuoraSoapClient, zuoraRestClient, stripeService)
     val paymentService = new ZuoraPaymentService(stripeService, zSubscriptionService)
-    val subscriptionService = new SubscriptionService(zuoraSoapClient, zuoraRestClient, backend.zuoraMetrics("zuora-rest-client"), productFamily, backendType, paymentService)
-    val memberRepository = new FrontendMemberRepository(backend.salesforce)
+    val salesforceService = new SalesforceService(backend.salesforce)
+    val identityService = IdentityService(IdentityApi)
+    val catalogService = new CatalogService(zuoraRestClient, productFamily)
+    val zuoraService = new ZuoraService(catalogService, zuoraSoapClient, zuoraRestClient, productFamily)
+    val memberService = new MemberService(identityService, salesforceService, zuoraService, stripeService, catalogService, paymentService)
 
-    TouchpointBackend(memberRepository, stripeService, zuoraSoapClient, zuoraRestClient, subscriptionService)
+    TouchpointBackend(salesforceService, stripeService, zuoraSoapClient, zuoraRestClient, memberService, catalogService, zuoraService)
   }
 
   val Normal = TouchpointBackend(BackendType.Default)
@@ -70,20 +75,14 @@ object TouchpointBackend {
   def forUser(user: Contact[MemberStatus, PaymentMethod]): TouchpointBackend = if (isTestUser(user)) TestUser else Normal
 }
 
-case class TouchpointBackend(memberRepository: FrontendMemberRepository,
+case class TouchpointBackend(salesforceService: api.SalesforceService,
                              stripeService: StripeService,
-			                       zuoraSoapClient: soap.ClientWithFeatureSupplier,
-			                       zuoraRestClient: rest.Client,
-			                       subscriptionService: SubscriptionService
-			                       ) extends ActivityTracking {
+                             zuoraSoapClient: soap.ClientWithFeatureSupplier,
+                             zuoraRestClient: rest.Client,
+                             memberService: api.MemberService,
+                             catalogService: api.CatalogService,
+                             zuoraService: api.ZuoraService
+                            ) extends ActivityTracking {
 
-  def catalog: Future[MembershipCatalog] = subscriptionService.membershipCatalog.get()
-
-  //TODO: consider moving the following methods elsewhere
-  def updateDefaultCard(member: Contact[Member, StripePayment], token: String): Future[Stripe.Card] = {
-    for {
-      customer <- stripeService.Customer.updateCard(member.stripeCustomerId, token)
-      memberId <- memberRepository.upsert(member.identityId, Json.obj(Keys.DEFAULT_CARD_ID -> customer.card.id))
-    } yield customer.card
-  }
+  def catalog: Future[MembershipCatalog] = catalogService.membershipCatalog.get()
 }

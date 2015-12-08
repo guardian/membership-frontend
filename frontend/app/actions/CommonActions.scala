@@ -99,7 +99,7 @@ trait CommonActions {
 
   def CheckTierChangeTo(targetTier: PaidTier) = new ActionRefiner[AnyMemberTierRequest, SubscriptionRequest] {
     override protected def refine[A](request: AnyMemberTierRequest[A]): Future[Either[Result, SubscriptionRequest[A]]] =
-      request.touchpointBackend.subscriptionService
+      request.touchpointBackend.memberService
         .subscriptionUpgradableTo(request.member, targetTier).map { subscription =>
           subscription
             .map(SubscriptionRequest(_, request))
