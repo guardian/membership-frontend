@@ -3,6 +3,8 @@
 @import org.joda.time.Instant
 @import com.gu.membership.salesforce.Tier
 @import views.support.Dates._
+@import views.support.TicketSaleCTA
+@import views.support.TicketSaleCTA.ctaFor
 
 @ticketSalesItem(label: String)(content: Html) = {
     <li class="ticket-sales__item">
@@ -14,12 +16,16 @@
 }
 
 @ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = {
-    <time class="js-ticket-sale-start-@tier.slug" datetime="@salesDate">
+    <time datetime="@salesDate">
         @salesDate.prettyWithoutYear(needToDisplayTimes)
     </time>
 }
 
-<div class="ticket-sales">
+<div class="ticket-sales js-ticket-sales"
+@for(tierOpt <- TicketSaleCTA.PossibleTiers) {
+    data-cta-tier-@tierOpt.map(_.slug).getOrElse("none")="@ctaFor(ticketing.salesDates, tierOpt)"
+}
+>
     <span class="ticket-sales__header">Tickets</span>
     <ul class="ticket-sales__list u-unstyled">
         @ticketSalesItem("Partners & Patrons") {

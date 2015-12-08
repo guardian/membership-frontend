@@ -15,6 +15,8 @@ case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSale
 
   def tierCanBuyTicket(tier: Tier) = datesByTier(tier).isBefore(Instant.now())
   def anyoneCanBuyTicket = generalAvailability.isBefore(Instant.now())
+
+  def noOneCanBuyTicket = !Tier.all.exists(tierCanBuyTicket)
 }
 
 object TicketSaleDates {
@@ -24,7 +26,7 @@ object TicketSaleDates {
   /**
    * Lead times each tier gets on ticket sales
    * Partners & Patrons get 48 hours priority booking, all other tiers are general release
-   * only if the event has been releasd with at least 4 days notice.
+   * only if the event has been released with at least 4 days notice.
    *
    * Ticket start time in EB --------------------|| general release time ------------------> Event start date
    * ----- Priority booking ---------------------||---------------------------------------->
