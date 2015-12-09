@@ -15,6 +15,7 @@ object Benefits {
   }
 
   val DiscountTicketTiers = Set[Tier](Staff, Partner, Patron)
+  val PriorityBookingTiers = DiscountTicketTiers
   val ComplimenataryTicketTiers = Set[Tier](Partner, Patron)
 
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")

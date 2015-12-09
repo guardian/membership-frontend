@@ -2,7 +2,7 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Partner, Patron}
+import model.Benefits.PriorityBookingTiers
 import model.Eventbrite.{EBTicketClass, EventTimes}
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.Instant
@@ -33,7 +33,7 @@ object TicketSaleDates {
    *                             General Release ||---------------------------------------->
    */
   val memberLeadTimeOverGeneralRelease = SortedMap[Duration, Map[Tier, Period]](
-    4.days.standardDuration -> Map(Patron -> 48.hours, Partner -> 48.hours)
+    4.days.standardDuration -> PriorityBookingTiers.map(_ -> 48.hours.toPeriod).toMap
   )
 
   def datesFor(eventTimes: EventTimes, tickets: EBTicketClass): TicketSaleDates = {
@@ -63,9 +63,8 @@ object TicketSaleDates {
     }
   }
 
-  private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) = {
+  private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) =
     Seq(effectiveSaleStart, toStartOfDay(tierSaleDate)).max
-  }
 
   private def toStartOfDay(instant: Instant) = instant.toDateTime(UTC).withTimeAtStartOfDay().toInstant
 
