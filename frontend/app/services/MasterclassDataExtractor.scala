@@ -20,7 +20,7 @@ object MasterclassDataExtractor {
     val eventbriteIds =
       if (eventbriteIdsFromRefs.nonEmpty) eventbriteIdsFromRefs else scrapeEventbriteIdsFrom(content)
 
-    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, ResponsiveImageGroup(content)))
+    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, ResponsiveImageGroup.fromContent(content)))
   }
 
   def scrapeEventbriteIdsFrom(content: Content): Seq[String] = for {

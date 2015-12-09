@@ -12,6 +12,7 @@ import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import services.GridService
 import utils.StringUtils._
 import views.support.Asset
 import views.support.Dates.YearMonthDayHours
@@ -287,6 +288,9 @@ object Eventbrite {
           None
       }
     } yield uri
+
+    val mainImageHasNoCrop: Boolean =
+      mainImageUrl.fold(false)(uri => uri.query.param(GridService.CropQueryParam).isEmpty)
 
     val slug = slugify(name.text) + "-" + id
 
