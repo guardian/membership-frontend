@@ -122,6 +122,8 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
         if (FRIEND_FORM_EL && checkoutForm) {
             selectCountry(DELIVERY_COUNTRY_EL, checkoutForm.deliveryCountry);
         }
+
+        DELIVERY_COUNTRY_EL.dispatchEvent(new Event('change'));
     };
 
     var addListeners = function () {
