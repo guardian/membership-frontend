@@ -218,8 +218,8 @@ trait EventbriteCollectiveServices {
   def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
     services.flatMap { service => fn(service) }.headOption
 
-  def getBookableEvent(id: String) = searchServices(_.getBookableEvent(id))
-  def getEvent(id: String) = searchServices(_.getEvent(id))
+  def getBookableEvent(id: String): Option[RichEvent] = searchServices(_.getBookableEvent(id))
+  def getEvent(id: String): Option[RichEvent] = searchServices(_.getEvent(id))
 }
 
 object EventbriteService extends EventbriteCollectiveServices

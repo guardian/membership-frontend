@@ -2,11 +2,10 @@
 @import views.support.DisplayText._
 @import views.support.PageInfo
 @import views.support.CountryWithCurrency
+@import views.support.IdentityUser
 @(details: model.PaidTierDetails,
   countriesWithCurrencies: List[CountryWithCurrency],
-  userFields: com.gu.identity.play.PrivateFields,
-  marketingChoices: com.gu.identity.play.StatusFields,
-  passwordExists: Boolean,
+  idUser: IdentityUser,
   pageInfo: PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
@@ -45,23 +44,23 @@
                     <div class="form-group">
                         <h2 class="form-group__title">Address</h2>
 
-                        @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName)
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
                             note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
                             formType = "deliveryAddress",
                             addressRequired = true,
-                            address1 = userFields.address1,
-                            address2 = userFields.address2,
-                            town = userFields.address3,
-                            postcode = userFields.postcode,
-                            county = userFields.address4,
-                            userCountry = userFields.country
+                            address1 = idUser.privateFields.address1,
+                            address2 = idUser.privateFields.address2,
+                            town = idUser.privateFields.address3,
+                            postcode = idUser.privateFields.postcode,
+                            county = idUser.privateFields.address4,
+                            userCountry = idUser.privateFields.country
                         )
-                        @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
+                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
 
-                        @if(!passwordExists) {
+                        @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
                     </div>
@@ -75,12 +74,12 @@
                             countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
                             addressRequired = true,
-                            address1 = userFields.billingAddress1,
-                            address2 = userFields.billingAddress2,
-                            town = userFields.billingAddress3,
-                            postcode = userFields.billingPostcode,
-                            county = userFields.billingAddress4,
-                            userCountry = userFields.billingCountry
+                            address1 = idUser.privateFields.billingAddress1,
+                            address2 = idUser.privateFields.billingAddress2,
+                            town = idUser.privateFields.billingAddress3,
+                            postcode = idUser.privateFields.billingPostcode,
+                            county = idUser.privateFields.billingAddress4,
+                            userCountry = idUser.privateFields.billingCountry
                         )
                         @fragments.form.cardDetail(details)
                     </div>

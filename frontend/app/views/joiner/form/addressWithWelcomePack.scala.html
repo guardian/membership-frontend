@@ -2,10 +2,9 @@
 @import views.support.CountryWithCurrency
 @import com.gu.i18n.GBP
 
+@import views.support.IdentityUser
 @(staffDetails: FreeTierDetails,
-  userFields: com.gu.identity.play.PrivateFields,
-  marketingChoices: com.gu.identity.play.StatusFields,
-  passwordExists: Boolean,
+  idUser: IdentityUser,
   flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
@@ -39,26 +38,26 @@
 
                 <form action="@routes.Joiner.joinStaff" method="POST" id="payment-form" class="form js-form" novalidate>
                     @CSRF.formField
-                    @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+                    @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName)
                     @fragments.form.addressDetail(
                         countriesWithCurrencies = CountryWithCurrency.withCurrency(GBP),
                         heading = "Delivery address",
                         note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
                         formType = "deliveryAddress",
                         addressRequired = true,
-                        address1 = userFields.address1,
-                        address2 = userFields.address2,
-                        town = userFields.address3,
-                        postcode = userFields.postcode,
-                        county = userFields.address4,
-                        userCountry = userFields.country
+                        address1 = idUser.privateFields.address1,
+                        address2 = idUser.privateFields.address2,
+                        town = idUser.privateFields.address3,
+                        postcode = idUser.privateFields.postcode,
+                        county = idUser.privateFields.address4,
+                        userCountry = idUser.privateFields.country
                     )
                     @fragments.form.marketingChoices(
-                        marketingChoices.receiveGnmMarketing,
-                        marketingChoices.receive3rdPartyMarketing
+                        idUser.marketingChoices.receiveGnmMarketing,
+                        idUser.marketingChoices.receive3rdPartyMarketing
                     )
 
-                    @if(!passwordExists) {
+                    @if(!idUser.passwordExists) {
                         @fragments.form.createPassword()
                     }
 
