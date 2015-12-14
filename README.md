@@ -125,22 +125,34 @@ This will start the Play application, which usually listens on port `9100`. Maki
 
 To make the site reachable as `mem.thegulocal.com` (necessary for register/sign-in functionality) you then need to make sure NGINX is configured and running as described in [`/nginx/README.md`](./nginx/README.md).
 
-## Tests
+## Testing
 
-### Running Scala unit tests
+### Manual
 
-To run Scala unit tests run `sbt test` from the root of the project.
+[See here](https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users) for details of how we do test users.
+Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
-### Running JavaScript unit tests
+### Automated
+
+
+#### Scala unit tests
+
+`sbt test`
+
+#### JavaScript unit tests
 
 ```
 cd frontend/
 npm test
 ```
 
-### Running functional tests
+#### Acceptance tests
 
-See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
+1. Run local membership-frontend: `sbt devrun`
+2. Run local [frontend](https://github.com/guardian/frontend): `./sbt "project identity" idrun`
+3. `sbt acceptance-test`
+
+These are browser driving Selenium tests.
 
 
 ## Deployment
@@ -148,12 +160,6 @@ See [README.md](functional-tests/README.md) for details on how to run Membership
 We use continuous deployment of the `master` branch to Production (https://membership.theguardian.com/).
 See [fix-a-failed-deploy.md](https://github.com/guardian/deploy/blob/master/magenta-lib/docs/magenta-lib/howto/fix-a-failed-deploy.md)
 for what to do if a deploy goes bad.
-
-
-## Test Users
-
-[See here](https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users) for details of how we do test users.
-Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
 ## Security
 
@@ -213,4 +219,3 @@ Further documentation notes and useful items can be found in [docs](/docs).
 
 - [Troubleshooting](docs/Troubleshooting.md) for information on common problems and how to fix them.
 - [Building AMIs](docs/building-amis.md) for how to update our AMIs
-
