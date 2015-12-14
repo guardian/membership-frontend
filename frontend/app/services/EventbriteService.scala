@@ -28,14 +28,24 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   override val wsUrl = Config.eventbriteApiUrl
   override def wsPreExecute(builder: Request.Builder): Request.Builder = {
     val req = builder.build()
-    val url = req.httpUrl().newBuilder().addQueryParameter("token", apiToken).build()
+    // Eventbrite redirects all request with no trailing "/"
+    // /v3/users/me/owned_events => /v3/users/me/owned_events/
+    // This is particularly bad for POST requests.
+    //
+    // In order to avoid this, we force okhttp to append a
+    // trailing slash to the request path
+    val url =
+      req.httpUrl().newBuilder()
+        .addPathSegment("")
+        .addQueryParameter("token", apiToken).build()
+
     req.newBuilder().url(url)
   }
 
   def eventsTaskFor(status: String, refreshTime : FiniteDuration): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, refreshTime) {
       for {
-        events <- getAll[EBEvent]("users/me/owned_events", List(
+        events <- getAll[EBEvent]("users/me/owned_events/", List(
           "status" -> status,
           "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
@@ -75,7 +85,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
-    event <- get[EBEvent](s"events/$id", "expand" -> EBEvent.expansions.mkString(","))
+    event <- get[EBEvent](s"events/$id/", "expand" -> EBEvent.expansions.mkString(","))
     richEvent <- mkRichEvent(event)
   } yield richEvent
 
@@ -91,12 +101,12 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getEventsByLocation(slug: String): Seq[RichEvent] = events.filter(_.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
 
   def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
-      val uri = s"events/${event.id}/access_codes"
+      val uri = s"events/${event.id}/access_codes/"
 
       for {
         discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
         discount <- discounts.find(_.code == code).fold {
-          post[EBAccessCode](uri, Json.obj(
+          post[EBAccessCode](uri, Map(
             "access_code.code" -> Seq(code),
             "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
             "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
@@ -105,7 +115,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
       } yield Some(discount)
   } recover { case _: NoSuchElementException => None }
 
-  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id", "expand" -> EBOrder.expansions.mkString(","))
+  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
 abstract class LiveService extends EventbriteService {
