@@ -169,8 +169,9 @@ $mq-breakpoints: (
 );
 
 $max-widths: (
-    max-tablet: gs-span(12),
-    max-desktop: gs-span(14),
+    max-tablet: gs-span(9),
+    max-desktop: gs-span(12),
+    max-mem-full: gs-span(14),
     max-wide: gs-span(16)
 );
 
