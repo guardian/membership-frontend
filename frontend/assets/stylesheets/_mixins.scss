@@ -39,8 +39,11 @@ $gs-max-columns: 16;
     @include mq(tablet) {
         max-width: map-get($max-widths, max-tablet) + $offset;
     }
-    @include mq(mem-full) {
+    @include mq(desktop) {
         max-width: map-get($max-widths, max-desktop) + $offset;
+    }
+    @include mq(mem-full) {
+        max-width: map-get($max-widths, max-mem-full) + $offset;
     }
 }
 
@@ -56,8 +59,13 @@ $gs-max-columns: 16;
         #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
         #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
     }
-    @include mq(mem-full) {
+    @include mq(desktop) {
         $width: map-get($max-widths, max-desktop);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(mem-full) {
+        $width: map-get($max-widths, max-mem-full);
         #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
         #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
     }
