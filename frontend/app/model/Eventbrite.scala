@@ -114,7 +114,7 @@ object Eventbrite {
                            quantity_sold: Int,
                            on_sale_status: Option[String], // Currently undocumented, so treating as optional. "SOLD_OUT", "AVAILABLE", "UNAVAILABLE"
                            cost: Option[EBPricing],
-			   fee: Option[EBPricing],
+			                     fee: Option[EBPricing],
                            sales_end: Instant,
                            sales_start: Option[Instant],
                            hidden: Option[Boolean]) extends EBObject {
