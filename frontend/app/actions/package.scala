@@ -24,7 +24,7 @@ package object actions {
     def forMemberOpt[T](f: Option[Contact[Member, PaymentMethod]] => T)(implicit executor: ExecutionContext): Future[T] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
-          memberOpt <- touchpointBackend.memberRepository.getMember(req.user.id)
+          memberOpt <- touchpointBackend.salesforceService.getMember(req.user.id)
         } yield f(memberOpt)
       }
     }

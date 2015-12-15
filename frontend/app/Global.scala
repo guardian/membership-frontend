@@ -19,7 +19,7 @@ object Global extends WithFilters(RedirectMembersFilter, CheckCacheHeadersFilter
 
     TouchpointBackend.All.foreach { touchPoint =>
       Akka.system.scheduler.schedule(0.millis, 5.minutes) {
-        touchPoint.subscriptionService.membershipCatalog.refresh()
+        touchPoint.catalogService.membershipCatalog.refresh()
       }
     }
   }

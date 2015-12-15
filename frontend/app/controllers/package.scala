@@ -8,26 +8,36 @@ import play.api.http.HeaderNames.USER_AGENT
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{RequestHeader, Result}
-import services.SubscriptionService
+import services.api.{ZuoraService, MemberService, SalesforceService}
 
 import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}
 
 package object controllers extends CommonActions with LazyLogging{
 
-  trait SubscriptionServiceProvider {
-    def subscriptionService(implicit request: BackendProvider): SubscriptionService =
-      request.touchpointBackend.subscriptionService
+  trait MemberServiceProvider {
+    def memberService(implicit request: BackendProvider): MemberService =
+      request.touchpointBackend.memberService
   }
 
   trait CatalogProvider {
     def catalog(implicit request: BackendProvider): Future[MembershipCatalog] =
-      request.touchpointBackend.subscriptionService.membershipCatalog.get
+      request.touchpointBackend.catalogService.membershipCatalog.get
   }
 
   trait StripeServiceProvider {
     def stripeService(implicit request: BackendProvider): StripeService =
       request.touchpointBackend.stripeService
+  }
+
+  trait ZuoraServiceProvider {
+    def zuoraService(implicit request: BackendProvider): ZuoraService =
+      request.touchpointBackend.zuoraService
+  }
+
+  trait SalesforceServiceProvider {
+    def salesforceService(implicit request: BackendProvider): SalesforceService =
+      request.touchpointBackend.salesforceService
   }
 
   implicit class WithRegNumberLabel(m: Member) {

@@ -15,19 +15,18 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService}
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 import services.EventbriteService._
 import tracking._
 import views.support.PageInfo
 
 import scala.concurrent.Future
 
-trait Event extends Controller with ActivityTracking {
+trait Event extends Controller with MemberServiceProvider with ActivityTracking {
 
   val guLiveEvents: EventbriteService
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
-  val memberService: MemberService
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
@@ -114,11 +113,12 @@ trait Event extends Controller with ActivityTracking {
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map {
       case event@(_: GuLiveEvent | _: LocalEvent) =>
-        if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
-        else Future.successful(Redirect(routes.TierController.change()))
-
+        if (tierCanBuyTickets(event, request.member.tier))
+          redirectToEventbrite(event)
+        else
+          Future.successful(Redirect(routes.TierController.change()))
       case event@(_: MasterclassEvent) =>
-        redirectToEventbrite(request, event)
+        redirectToEventbrite(event)
     }.getOrElse(Future.successful(NotFound))
   }
 
@@ -127,7 +127,7 @@ trait Event extends Controller with ActivityTracking {
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
-  private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
+  private def redirectToEventbrite(event: RichEvent)(implicit request: AnyMemberTierRequest[AnyContent]): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.memberStatus.tier}") {
 
       memberService.createEBCode(request.member, event).map { code =>
@@ -154,7 +154,7 @@ trait Event extends Controller with ActivityTracking {
         event <- EventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
-          val count = memberService.countComplimentaryTicketsInOrder(event, order)
+          val count = event.countComplimentaryTicketsInOrder(order)
           if (count > 0) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
@@ -198,5 +198,4 @@ object Event extends Event {
   val guLiveEvents = GuardianLiveEventService
   val localEvents = LocalEventService
   val masterclassEvents = MasterclassEventService
-  val memberService = MemberService
 }

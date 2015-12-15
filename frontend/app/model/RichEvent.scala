@@ -2,10 +2,11 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.Content
+import com.gu.membership.salesforce.Tier
 import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
-import model.Eventbrite.EBEvent
+import model.Eventbrite.{EBTicketClass, EBOrder, EBEvent}
 import org.joda.time.LocalDate
 import services.MasterclassData
 import utils.StringUtils._
@@ -71,6 +72,21 @@ object RichEvent {
     val hasLargeImage: Boolean
     val canHavePriorityBooking: Boolean
     def deficientGuardianMembersTickets: Boolean
+
+    def countComplimentaryTicketsInOrder(order: EBOrder): Int = {
+      val ticketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
+      order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
+    }
+
+    def retrieveDiscountedTickets(tier: Tier): Seq[EBTicketClass] = {
+      val tickets = for {
+        ticketing <- event.internalTicketing
+        _ <- ticketing.memberDiscountOpt
+        if Benefits.DiscountTicketTiers.contains(tier)
+      } yield ticketing.memberBenefitTickets
+
+      tickets.getOrElse(Seq[EBTicketClass]())
+    }
   }
 
   abstract class LiveEvent(
@@ -158,6 +174,5 @@ object RichEvent {
   }
 
   implicit def eventToEBEvent(event: RichEvent): EBEvent = event.event
-
 }
 

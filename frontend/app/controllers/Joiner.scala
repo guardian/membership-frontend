@@ -1,7 +1,7 @@
 package controllers
 
 import actions.Functions._
-import actions._
+import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.membership.model.Year
@@ -25,20 +25,19 @@ import utils.TierChangeCookies
 import views.support
 import views.support.PageInfo.CheckoutForm
 import views.support.{CountryWithCurrency, PageInfo}
-import actions.RichAuthRequest
 
 import scala.concurrent.Future
 
-trait Joiner extends Controller with ActivityTracking
-                                with LazyLogging
-                                with CatalogProvider
-                                with StripeServiceProvider
-                                with SubscriptionServiceProvider {
+object Joiner extends Controller with ActivityTracking
+                                 with LazyLogging
+                                 with CatalogProvider
+                                 with StripeServiceProvider
+                                 with SalesforceServiceProvider
+                                 with MemberServiceProvider {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
 
-  val memberService: MemberService
 
   val subscriberOfferDelayPeriod = 6.months
 
@@ -181,7 +180,8 @@ trait Joiner extends Controller with ActivityTracking
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-    MemberService.createMember(request.user, formData, IdentityRequest(request), eventId)
+    implicit val bp: BackendProvider = request
+    memberService.createMember(request.user, formData, IdentityRequest(request), eventId)
       .map(_ => onSuccess) recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error =>
@@ -192,8 +192,8 @@ trait Joiner extends Controller with ActivityTracking
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
     for {
-      paymentSummary <- subscriptionService.getMembershipSubscriptionSummary(request.member)
-      stripeCustomer <- memberService.getStripeCustomer(request.member)
+      paymentSummary <- memberService.getMembershipSubscriptionSummary(request.member)
+      stripeCustomer <- salesforceService.getStripeCustomer(request.member)
       destination <- DestinationService.returnDestinationFor(request)
     } yield Ok(views.html.joiner.thankyou(
         request.member,
@@ -205,8 +205,4 @@ trait Joiner extends Controller with ActivityTracking
   }
 
   def thankyouStaff = thankyou(Tier.Partner)
-}
-
-object Joiner extends Joiner {
-  val memberService = MemberService
 }
