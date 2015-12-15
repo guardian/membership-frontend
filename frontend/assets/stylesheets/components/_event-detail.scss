@@ -13,14 +13,15 @@
 
     @include mq(tablet) {
         padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-baseline * 3);
-    }
-
-    @include mq(desktop) {
         width: rem(map-get($max-widths, max-tablet) + $gs-gutter * 2);
     }
 
-    @include mq(mem-full) {
+    @include mq(desktop) {
         width: rem(map-get($max-widths, max-desktop) + $gs-gutter * 2);
+    }
+
+    @include mq(mem-full) {
+        width: rem(map-get($max-widths, max-mem-full) + $gs-gutter * 2);
     }
 }
 .event-header__container--details {
