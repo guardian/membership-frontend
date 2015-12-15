@@ -47,8 +47,6 @@ GET            /staff/event-overview/details          controllers.Staff.eventOve
 GET            /staff/catalog                         controllers.Staff.catalogDiagnostics
 
 # Subscription
-POST           /subscription/update-card              controllers.Subscription.updateCard
-OPTIONS        /subscription/update-card              controllers.Subscription.updateCardPreflight
 GET            /subscription/remaining-tickets        controllers.Subscription.remainingTickets
 
 # What's On
