@@ -9,7 +9,6 @@ define([
         buy: {},
         join: {
             id: 'join',
-            label: 'Become a member',
             href: '/choose-tier'
         },
         upgrade: {
@@ -31,7 +30,9 @@ define([
      * @param ctaStatus
      */
     function enhanceCta(elem, ctaStatus) {
-        elem.text(ctaStatus.label);
+        if (ctaStatus.label) {
+            elem.text(ctaStatus.label);
+        }
 
         if (ctaStatus.href) {
             elem.attr('href', ctaStatus.href);
