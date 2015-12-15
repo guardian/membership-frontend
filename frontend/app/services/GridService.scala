@@ -17,23 +17,22 @@ import scala.concurrent.Future
 
 object GridService {
   val CropQueryParam = "crop"
-}
-case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
-  import GridService._
-
-  lazy val agent = Agent[Map[Uri, GridImage]](Map.empty)
+  def cropParam(url: Uri) = url.query.param(CropQueryParam)
 
   case class ImageIdWithCrop(id: String, crop: String)
   object ImageIdWithCrop {
-    def fromGuToolsUri(uri: Uri): Option[ImageIdWithCrop] =
+    def fromGuToolsUri(gridUrl: String)(uri: Uri): Option[ImageIdWithCrop] =
       for {
         imageId <- uri.path.split("/").lastOption
         crop <-  uri.query.param(CropQueryParam)
         if uri.toString().startsWith(gridUrl)
       } yield ImageIdWithCrop(imageId, crop)
   }
+}
+case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
+  import GridService._
 
-  def cropParam(url: Uri) = url.query.param(CropQueryParam)
+  lazy val agent = Agent[Map[Uri, GridImage]](Map.empty)
 
   def getRequestedCrop(url: Uri) : Future[Option[GridImage]] = {
     val currentImageData = agent.get()
@@ -63,7 +62,7 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
   } // We should return no image, rather than die
 
   def getGrid(url: Uri): Future[Option[GridResult]] =
-    ImageIdWithCrop.fromGuToolsUri(url).map { case ImageIdWithCrop(id, cropId) =>
+    ImageIdWithCrop.fromGuToolsUri(gridUrl)(url).map { case ImageIdWithCrop(id, cropId) =>
       get[GridResult](id, CropQueryParam -> cropId).map(Some(_))
     } getOrElse Future.successful(None)
 
