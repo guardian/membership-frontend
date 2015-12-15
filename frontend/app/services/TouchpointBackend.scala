@@ -1,27 +1,24 @@
 package services
 
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.salesforce.Contact._
-import com.gu.membership.salesforce.ContactDeserializer.Keys
-import com.gu.membership.salesforce._
-import com.gu.membership.stripe.{Stripe, StripeService}
-import com.gu.membership.touchpoint.TouchpointBackendConfig
-import com.gu.membership.zuora
-import com.gu.membership.zuora.soap.ClientWithFeatureSupplier
-import com.gu.membership.zuora.{rest, soap}
+import com.gu.memsub
+import com.gu.memsub.services.PaymentService
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
-import com.gu.services.{PaymentService, ZuoraPaymentService}
+import com.gu.salesforce._
+import com.gu.stripe.StripeService
+import com.gu.touchpoint.TouchpointBackendConfig
+import com.gu.zuora.api.ZuoraService
+import com.gu.zuora.soap.ClientWithFeatureSupplier
+import com.gu.zuora.{ZuoraService => ZuoraServiceImpl, rest, soap}
 import com.netaporter.uri.Uri
 import configuration.Config
 import model.{FeatureChoice, MembershipCatalog}
 import monitoring.TouchpointBackendMetrics
-import play.api.libs.json.Json
 import play.libs.Akka
 import tracking._
 import utils.TestUsers.isTestUser
-import configuration.Config.productFamily
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object TouchpointBackend {
@@ -52,12 +49,12 @@ object TouchpointBackend {
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val productFamily = Config.productFamily(restBackendConfig.envName)
-    val zSubscriptionService = new zuora.SubscriptionService(zuoraSoapClient, zuoraRestClient, stripeService)
-    val paymentService = new ZuoraPaymentService(stripeService, zSubscriptionService)
+    val zSubscriptionService = new memsub.services.SubscriptionService(zuoraSoapClient, zuoraRestClient, stripeService)
+    val paymentService = new PaymentService(stripeService, zSubscriptionService)
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val catalogService = new CatalogService(zuoraRestClient, productFamily)
-    val zuoraService = new ZuoraService(catalogService, zuoraSoapClient, zuoraRestClient, productFamily)
+    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, productFamily)
     val memberService = new MemberService(identityService, salesforceService, zuoraService, stripeService, catalogService, paymentService)
 
     TouchpointBackend(salesforceService, stripeService, zuoraSoapClient, zuoraRestClient, memberService, catalogService, zuoraService)
@@ -79,8 +76,7 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              zuoraRestClient: rest.Client,
                              memberService: api.MemberService,
                              catalogService: api.CatalogService,
-                             zuoraService: api.ZuoraService
-                            ) extends ActivityTracking {
+                             zuoraService: ZuoraService) extends ActivityTracking {
 
   def catalog: Future[MembershipCatalog] = catalogService.membershipCatalog.get()
 }

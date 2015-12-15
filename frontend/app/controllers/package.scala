@@ -1,6 +1,7 @@
 import actions._
-import com.gu.membership.salesforce.{Member, PaidTierMember}
-import com.gu.membership.stripe.StripeService
+import com.gu.salesforce.{Member, PaidTierMember}
+import com.gu.stripe.StripeService
+import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
 import model.MembershipCatalog
 import play.api.data.Form
@@ -8,7 +9,7 @@ import play.api.http.HeaderNames.USER_AGENT
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{RequestHeader, Result}
-import services.api.{ZuoraService, MemberService, SalesforceService}
+import services.api.{MemberService, SalesforceService}
 
 import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}

@@ -1,11 +1,11 @@
 package model
 
 import com.gu.membership.model._
-import com.gu.membership.salesforce.Tier._
-import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
-import com.gu.membership.zuora.rest
-import com.gu.membership.zuora.rest.Readers._
-import com.gu.membership.zuora.rest.{ProductCatalog, ProductRatePlan, ProductRatePlanCharge}
+import com.gu.salesforce.Tier._
+import com.gu.touchpoint.TouchpointBackendConfig.BackendType
+import com.gu.zuora.rest
+import com.gu.zuora.rest.Readers._
+import com.gu.zuora.rest.{ProductCatalog, ProductRatePlan, ProductRatePlanCharge}
 import configuration.Config.productFamily
 import org.specs2.mutable.Specification
 import utils.Resource

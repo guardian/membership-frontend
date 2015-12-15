@@ -5,7 +5,7 @@ import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentia
 import com.gu.config.Membership
 import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory

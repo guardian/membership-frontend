@@ -3,7 +3,7 @@ package utils
 import com.github.nscala_time.time.Imports._
 import com.gu.identity.play.{IdMinimalUser, PrivateFields}
 import com.gu.identity.testing.usernames.TestUsernames
-import com.gu.membership.salesforce._
+import com.gu.salesforce._
 import configuration.Config
 
 object TestUsers {

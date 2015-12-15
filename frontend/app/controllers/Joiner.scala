@@ -5,10 +5,10 @@ import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.membership.model.Year
-import com.gu.membership.salesforce.Tier.Friend
-import com.gu.membership.salesforce._
-import com.gu.membership.stripe.Stripe
-import com.gu.membership.stripe.Stripe.Serializer._
+import com.gu.salesforce.Tier.Friend
+import com.gu.salesforce._
+import com.gu.stripe.Stripe
+import com.gu.stripe.Stripe.Serializer._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
@@ -38,10 +38,7 @@ object Joiner extends Controller with ActivityTracking
 
   val contentApiService = GuardianContentService
 
-
   val subscriberOfferDelayPeriod = 6.months
-
-  val casService = CASService
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 

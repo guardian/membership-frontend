@@ -1,15 +1,15 @@
 package services
 
 import com.gu.config.Membership
-import com.gu.membership.zuora.rest
-import com.gu.membership.zuora.soap.ClientWithFeatureSupplier
-import com.gu.membership.zuora.soap.models.Queries.{InvoiceItem, Subscription, Amendment}
+import com.gu.zuora.{ZuoraService, rest}
+import com.gu.zuora.soap.ClientWithFeatureSupplier
+import com.gu.zuora.soap.models.Queries.{InvoiceItem, Subscription, Amendment}
 import org.specs2.mutable.Specification
 import org.joda.time.{DateTime, DurationFieldType}
 import com.github.nscala_time.time.Imports._
 
 class ZuoraServiceTest extends Specification {
-  val service = new ZuoraService(???, ???, ???, ???)
+  val service = new ZuoraService(???, ???, ???)
 
   "findCurrentSubscriptionStatus" in {
     val now = DateTime.now()

@@ -1,6 +1,6 @@
 package views.support
 
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 import model.TicketSaleDates
 
 object TicketSaleCTA {

@@ -2,8 +2,7 @@ package controllers
 
 import play.Logger
 import play.api.mvc.{Action, Controller}
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object CachedAssets extends Controller {
 

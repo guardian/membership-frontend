@@ -2,7 +2,7 @@ package services
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.util.Timing
-import com.gu.i18n.Address
+import com.gu.memsub.Address
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._

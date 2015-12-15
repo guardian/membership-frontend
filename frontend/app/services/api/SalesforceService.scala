@@ -1,8 +1,8 @@
 package services.api
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
-import com.gu.membership.salesforce.{ContactId, Tier}
-import com.gu.membership.stripe.Stripe.Customer
+import com.gu.salesforce.{ContactId, Tier}
+import com.gu.stripe.Stripe.Customer
 import forms.MemberForm.JoinForm
 import model.{SFMember, GenericSFContact}
 import monitoring.MemberMetrics

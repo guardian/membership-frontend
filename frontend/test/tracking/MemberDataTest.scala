@@ -1,6 +1,6 @@
 package tracking
 
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 import forms.MemberForm.MarketingChoicesForm
 import org.specs2.mutable.Specification
 

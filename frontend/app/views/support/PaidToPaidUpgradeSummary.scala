@@ -2,9 +2,9 @@ package views.support
 
 import com.github.nscala_time.time.OrderingImplicits.DateTimeOrdering
 import com.gu.membership.model._
-import com.gu.membership.salesforce.PaidTier
-import com.gu.membership.stripe.Stripe.Card
-import com.gu.membership.zuora.soap.models.Queries.PreviewInvoiceItem
+import com.gu.salesforce.PaidTier
+import com.gu.stripe.Stripe.Card
+import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import model.MembershipCatalog
 import org.joda.time.{DateTime, LocalDate}
 

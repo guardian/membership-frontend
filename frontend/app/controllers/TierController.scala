@@ -3,10 +3,10 @@ package controllers
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.identity.play.PrivateFields
 import com.gu.membership.model.{BillingPeriod, Year}
-import com.gu.membership.salesforce._
-import com.gu.membership.stripe.Stripe
-import com.gu.membership.stripe.Stripe.Serializer._
-import com.gu.membership.zuora.soap.models.errors.ResultError
+import com.gu.salesforce._
+import com.gu.stripe.Stripe
+import com.gu.stripe.Stripe.Serializer._
+import com.gu.zuora.soap.models.errors.ResultError
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate

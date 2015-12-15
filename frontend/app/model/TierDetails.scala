@@ -2,7 +2,7 @@ package model
 
 import com.gu.i18n.Currency
 import com.gu.membership.model.{BillingPeriod, Month, Year}
-import com.gu.membership.salesforce.{FreeTier, PaidTier, Tier}
+import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 
 sealed trait TierDetails {
   def tier: Tier

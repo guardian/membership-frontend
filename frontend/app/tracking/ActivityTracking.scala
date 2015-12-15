@@ -5,7 +5,7 @@ import java.util.{List => JList, Map => JMap}
 import com.github.t3hnar.bcrypt._
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.model.PaidTierPlan
-import com.gu.membership.salesforce._
+import com.gu.salesforce._
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}

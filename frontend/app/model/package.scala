@@ -1,5 +1,5 @@
 import com.gu.membership.model.TierPlan
-import com.gu.membership.{salesforce => sf}
+import com.gu.{salesforce => sf}
 
 package object model {
   type Subscription = CommonSubscription with PaymentStatus[TierPlan]

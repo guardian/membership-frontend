@@ -1,9 +1,10 @@
 package services
 
-import com.gu.i18n.{Country, Address}
+import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.model.Year
-import com.gu.membership.salesforce.Tier
+import com.gu.memsub.Address
+import com.gu.salesforce.Tier
 import controllers.IdentityRequest
 import forms.MemberForm._
 import org.specs2.mock.Mockito

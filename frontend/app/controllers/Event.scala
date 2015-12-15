@@ -3,7 +3,7 @@ package controllers
 import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
-import com.gu.membership.salesforce.{Contact, Member, PaymentMethod, Tier}
+import com.gu.salesforce.{Contact, Member, PaymentMethod, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._

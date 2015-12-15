@@ -1,11 +1,12 @@
 package services
 
 import com.gu.membership.model._
-import com.gu.membership.salesforce.PaidTier
-import com.gu.membership.salesforce.Tier.{Partner, Patron, Supporter}
+import com.gu.salesforce.PaidTier
+import com.gu.salesforce.Tier.{Partner, Patron, Supporter}
 import com.gu.membership.util.FutureSupplier
-import com.gu.membership.zuora.soap.ClientWithFeatureSupplier
-import com.gu.membership.zuora.soap.models.Queries._
+import com.gu.zuora.ZuoraService
+import com.gu.zuora.soap.ClientWithFeatureSupplier
+import com.gu.zuora.soap.models.Queries._
 import model.{Books, FreeEventTickets}
 import org.specs2.mutable.Specification
 import play.api.test.PlaySpecification
@@ -24,7 +25,7 @@ class MemberServiceTest extends Specification with PlaySpecification with Mockit
     val client = mock[ClientWithFeatureSupplier]
     client.featuresSupplier returns new FutureSupplier[Seq[Feature]](features)
 
-    val zuoraService = new ZuoraService(???, client, ???, ???)
+    val zuoraService = new ZuoraService(client, ???, ???)
 
     val service = new MemberService(???, ???, zuoraService = zuoraService, ???, ???, ???)
 

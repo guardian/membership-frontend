@@ -2,7 +2,7 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.Content
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}

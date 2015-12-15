@@ -1,6 +1,6 @@
 package actions
 
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import configuration.Config
 import play.api.mvc.RequestHeader

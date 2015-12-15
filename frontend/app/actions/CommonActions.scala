@@ -3,7 +3,7 @@ package actions
 import actions.Fallbacks._
 import actions.Functions._
 import com.gu.googleauth
-import com.gu.membership.salesforce.PaidTier
+import com.gu.salesforce.PaidTier
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._

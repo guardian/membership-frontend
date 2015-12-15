@@ -11,5 +11,5 @@ trait CatalogService {
   def membershipCatalog: FutureSupplier[MembershipCatalog]
   def getMembershipCatalog: Future[MembershipCatalog.Val[MembershipCatalog]]
   def productFamily: Membership
-  def findRatePlanId(newTierPlan: TierPlan): Future[RatePlanId]
+  def findProductRatePlanId(tierPlan: TierPlan): Future[RatePlanId]
 }
