@@ -1,8 +1,9 @@
 package services
 
-import com.gu.membership.salesforce.{FreeTierMember, PaidTierMember, Member, Tier}
+import com.gu.membership.salesforce.{FreeTierMember, Member, PaidTierMember, Tier}
 import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
+import com.squareup.okhttp.Request
 import configuration.Config
 import monitoring.MembersDataAPIMetrics
 import play.api.Logger
@@ -10,7 +11,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.libs.ws.WSRequest
 import play.api.mvc.Cookie
 
 import scala.util.{Failure, Success}
@@ -44,9 +44,8 @@ object MembersDataAPI {
 
   case class Helper(cookies: Seq[Cookie]) extends WebServiceHelper[Attributes, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
-    override def wsPreExecute(req: WSRequest): WSRequest = req.withHeaders(
-      "Cookie" -> cookies.map(c => s"${c.name}=${c.value}").mkString("; ")
-    )
+    override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader(
+      "Cookie", cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     override val wsMetrics: StatusMetrics = MembersDataAPIMetrics
   }
 
@@ -63,6 +62,6 @@ object MembersDataAPI {
       case Failure(err) => Logger.error(s"Failed while querying the members-data-api (OK in dev)", err)
     }
 
-    private def get(cookies: Seq[Cookie]) = Helper(cookies).get[Attributes]("user-attributes/me/membership")(attributesReads, errorReads)
+    private def get(cookies: Seq[Cookie]) = Helper(cookies).get[Attributes]("user-attributes/me/membership")
   }
 }

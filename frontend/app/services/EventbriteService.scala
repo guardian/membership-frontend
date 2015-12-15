@@ -2,6 +2,7 @@ package services
 
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.membership.util.WebServiceHelper
+import com.squareup.okhttp.Request
 import configuration.Config
 import model.Eventbrite._
 import model.EventbriteDeserializer._
@@ -11,9 +12,8 @@ import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.json.Reads
+import play.api.libs.json.{Json, Reads}
 import play.api.libs.ws._
-import services.EventbriteService._
 import utils.ScheduledTask
 import utils.StringUtils._
 
@@ -25,13 +25,29 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
 
-  val wsUrl = Config.eventbriteApiUrl
-  def wsPreExecute(req: WSRequest): WSRequest = req.withQueryString("token" -> apiToken)
+  override val wsUrl = Config.eventbriteApiUrl
+  override def wsPreExecute(builder: Request.Builder): Request.Builder = {
+    val req = builder.build()
+    // Eventbrite redirects all request with no trailing "/"
+    // /v3/users/me/owned_events => /v3/users/me/owned_events/
+    // This is particularly bad for POST requests.
+    //
+    // In order to avoid this, we force okhttp to append a
+    // trailing slash to the request path
+    val url =
+      req.httpUrl().newBuilder()
+        .addPathSegment("")
+        .addQueryParameter("token", apiToken).build()
+
+    req.newBuilder().url(url)
+  }
 
   def eventsTaskFor(status: String, refreshTime : FiniteDuration): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, refreshTime) {
       for {
-        events <- getAll[EBEvent]("users/me/owned_events", List("status" -> status, "expand" -> EBEvent.expansions.mkString(",")))
+        events <- getAll[EBEvent]("users/me/owned_events/", List(
+          "status" -> status,
+          "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
       } yield richEvents
     }
@@ -69,7 +85,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
-    event <- get[EBEvent](s"events/$id", "expand" -> EBEvent.expansions.mkString(","))
+    event <- get[EBEvent](s"events/$id/", "expand" -> EBEvent.expansions.mkString(","))
     richEvent <- mkRichEvent(event)
   } yield richEvent
 
@@ -85,7 +101,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getEventsByLocation(slug: String): Seq[RichEvent] = events.filter(_.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
 
   def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
-      val uri = s"events/${event.id}/access_codes"
+      val uri = s"events/${event.id}/access_codes/"
 
       for {
         discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
@@ -99,7 +115,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
       } yield Some(discount)
   } recover { case _: NoSuchElementException => None }
 
-  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id", "expand" -> EBOrder.expansions.mkString(","))
+  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
 abstract class LiveService extends EventbriteService {
@@ -147,10 +163,6 @@ object LocalEventService extends LiveService {
     yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
-
-  override def start() {
-    super.start()
-  }
 }
 
 case class MasterclassEventServiceError(s: String) extends Throwable {
@@ -172,7 +184,8 @@ object MasterclassEventService extends EventbriteService {
 
   val contentApiService = GuardianContentService
 
-  override def events: Seq[RichEvent] = super.events.filter(MasterclassesWithAvailableMemberDiscounts)
+  override def events: Seq[RichEvent] =
+    super.events.filter(MasterclassesWithAvailableMemberDiscounts)
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
     val masterclassData = contentApiService.masterclassContent(event.id)

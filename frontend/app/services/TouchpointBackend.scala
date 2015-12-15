@@ -15,9 +15,7 @@ import com.netaporter.uri.Uri
 import configuration.Config
 import model.{FeatureChoice, MembershipCatalog}
 import monitoring.TouchpointBackendMetrics
-import play.api.Play.current
 import play.api.libs.json.Json
-import play.api.libs.ws.WS
 import play.libs.Akka
 import tracking._
 import utils.TestUsers.isTestUser
@@ -46,7 +44,7 @@ object TouchpointBackend {
     val stripeService = new StripeService(backend.stripe, new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = backend.stripe.envName
       val service = "Stripe"
-    }, WS.client)
+    })
 
     val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
     implicit val _bt = backendType

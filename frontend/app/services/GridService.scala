@@ -4,31 +4,35 @@ import akka.agent.Agent
 import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri
-import com.netaporter.uri.Uri.parse
+import com.squareup.okhttp.Request
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import model.Grid._
 import model.GridDeserializer._
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
-import play.api.libs.ws.WSRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object GridService {
   val CropQueryParam = "crop"
+  def cropParam(url: Uri) = url.query.param(CropQueryParam)
+
+  case class ImageIdWithCrop(id: String, crop: String)
+  object ImageIdWithCrop {
+    def fromGuToolsUri(gridUrl: String)(uri: Uri): Option[ImageIdWithCrop] =
+      for {
+        imageId <- uri.path.split("/").lastOption
+        crop <-  uri.query.param(CropQueryParam)
+        if uri.toString().startsWith(gridUrl)
+      } yield ImageIdWithCrop(imageId, crop)
+  }
 }
 case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
   import GridService._
 
   lazy val agent = Agent[Map[Uri, GridImage]](Map.empty)
-
-  def isUrlCorrectFormat(url: Uri) = url.toString.startsWith(gridUrl)
-
-  def getEndpoint(url: Uri) = url.toString.replace(gridUrl, "")
-
-  def cropParam(url: Uri) = url.query.param(CropQueryParam)
 
   def getRequestedCrop(url: Uri) : Future[Option[GridImage]] = {
     val currentImageData = agent.get()
@@ -57,10 +61,10 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
     None
   } // We should return no image, rather than die
 
-  def getGrid(url: Uri) = {
-    if (isUrlCorrectFormat(url)) get[GridResult](getEndpoint(url)).map(Some(_))
-    else Future.successful(None)
-  }
+  def getGrid(url: Uri): Future[Option[GridResult]] =
+    ImageIdWithCrop.fromGuToolsUri(gridUrl)(url).map { case ImageIdWithCrop(id, cropId) =>
+      get[GridResult](id, CropQueryParam -> cropId).map(Some(_))
+    } getOrElse Future.successful(None)
 
   def findAssets(exports: List[Export], cropParameter: Option[String]) = {
     val requestedExport = cropParameter.flatMap(cr => exports.find(_.id == cr)).orElse(exports.headOption)
@@ -69,7 +73,7 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
 
   override val wsUrl: String = Config.gridConfig.apiUrl
 
-  override def wsPreExecute(req: WSRequest): WSRequest = req.withHeaders("X-Gu-Media-Key" -> Config.gridConfig.key)
+  override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader("X-Gu-Media-Key", Config.gridConfig.key)
 
   override val wsMetrics: StatusMetrics = GridApiMetrics
 }
