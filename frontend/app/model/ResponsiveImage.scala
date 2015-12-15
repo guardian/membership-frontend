@@ -21,9 +21,9 @@ object ResponsiveImageGroup {
     metadata = None,
     availableImages = for {
       asset <- element.assets
-      file <- asset.file
+      file <- asset.typeData.get("secureFile")
       width <- asset.typeData.get("width")
-    } yield ResponsiveImage(file.replace("http://static", "https://static-secure"), width.toInt)
+    } yield ResponsiveImage(file, width.toInt)
   )
 
   def fromGridImage(image: GridImage): Option[ResponsiveImageGroup] =
