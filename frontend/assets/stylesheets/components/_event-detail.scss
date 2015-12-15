@@ -363,8 +363,8 @@
 
     @include mq(tablet) {
         float: left;
-        padding: 0 rem($gs-gutter) 0 0;
-        width: rem(gs-span(5) + $gs-gutter * 3);
+        padding: 0 rem($gs-gutter);
+        width: rem(gs-span(5) + $gs-gutter * 2);
     }
 
     @include mq(desktop) {
