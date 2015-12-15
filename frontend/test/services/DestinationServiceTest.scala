@@ -4,8 +4,8 @@ import actions.{AnyMemberTierRequest, MemberRequest}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
-import com.gu.membership.salesforce.Tier.Friend
-import com.gu.membership.salesforce._
+import com.gu.salesforce.Tier.Friend
+import com.gu.salesforce._
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
 import model.{ContentDestination, EventDestination}

@@ -1,7 +1,7 @@
 package monitoring
 
 import com.gu.membership.model.TierPlan
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 
 class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 

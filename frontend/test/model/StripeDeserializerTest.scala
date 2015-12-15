@@ -1,8 +1,8 @@
 package model
 
-import com.gu.membership.stripe.Stripe
-import com.gu.membership.stripe.Stripe.Deserializer._
-import com.gu.membership.stripe.Stripe.{Card, Customer, StripeList}
+import com.gu.stripe.Stripe
+import com.gu.stripe.Stripe.Deserializer._
+import com.gu.stripe.Stripe.{Card, Customer, StripeList}
 import play.api.libs.json.Reads
 import play.api.test.PlaySpecification
 import utils.Resource

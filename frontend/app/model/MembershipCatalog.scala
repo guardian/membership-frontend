@@ -2,11 +2,11 @@ package model
 
 import com.gu.config.Membership
 import com.gu.membership.model._
-import com.gu.membership.salesforce.Tier._
-import com.gu.membership.salesforce.{FreeTier, PaidTier, Tier}
-import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
-import com.gu.membership.zuora.rest
-import com.gu.membership.zuora.rest.{PricingSummary, ProductRatePlan, ProductRatePlanCharge}
+import com.gu.salesforce.Tier._
+import com.gu.salesforce.{FreeTier, PaidTier, Tier}
+import com.gu.touchpoint.TouchpointBackendConfig.BackendType
+import com.gu.zuora.rest
+import com.gu.zuora.rest.{PricingSummary, ProductRatePlan, ProductRatePlanCharge}
 import model.MembershipCatalog.{MembershipCatalogException, ProductRatePlanId}
 
 import scalaz._
@@ -181,7 +181,7 @@ trait MembershipCatalog {
     case _ => throw MembershipCatalogException(s"Cannot find PaidTierPlanDetails for ratePlanId: $productRatePlanId")
   }
 
-  def ratePlanId(plan: TierPlan): String = planDetails(plan).productRatePlanId
+  def productRatePlanId(plan: TierPlan): String = planDetails(plan).productRatePlanId
 
   def publicTierDetails(tier: Tier): TierDetails = tier match {
     case Friend => friend

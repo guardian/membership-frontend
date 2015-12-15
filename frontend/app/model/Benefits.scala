@@ -1,7 +1,7 @@
 package model
 
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier._
+import com.gu.salesforce.Tier
+import com.gu.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
 
 

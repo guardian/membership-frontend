@@ -2,7 +2,7 @@ package views.support
 
 import com.gu.i18n._
 import com.gu.membership.model.{PaidTierPlan, TierPlan}
-import com.gu.membership.salesforce.PaidTier
+import com.gu.salesforce.PaidTier
 import model.MembershipCatalog.Val
 import model._
 import play.api.libs.json._

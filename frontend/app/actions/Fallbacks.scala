@@ -1,6 +1,6 @@
 package actions
 
-import com.gu.membership.salesforce.PaidTier
+import com.gu.salesforce.PaidTier
 import play.api.mvc.Results._
 import play.api.mvc.{Call, RequestHeader}
 import play.twirl.api.Html

@@ -1,6 +1,6 @@
-@import com.gu.membership.salesforce.Contact._
-@import com.gu.membership.salesforce.{Contact, Member, PaidTierMember, PaymentMethod}
-@import com.gu.membership.salesforce.Tier
+@import com.gu.salesforce.Contact._
+@import com.gu.salesforce.{Contact, Member, PaidTierMember, PaymentMethod}
+@import com.gu.salesforce.Tier
 @import com.gu.membership.model.Year
 @import configuration.Links
 @import play.twirl.api.Html
@@ -10,7 +10,7 @@
 @import views.support.ThankyouSummary
 @(member: Contact[Member, PaymentMethod],
   summary: ThankyouSummary,
-  cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
+  cardOpt: Option[com.gu.stripe.Stripe.Card],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean)
 

@@ -1,6 +1,6 @@
 import com.gu.googleauth
 import com.gu.identity.play.AuthenticatedIdUser
-import com.gu.membership.salesforce._
+import com.gu.salesforce._
 import com.gu.membership.util.Timing
 import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest

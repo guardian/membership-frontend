@@ -1,15 +1,16 @@
 package services.api
 
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.salesforce.{ContactId, PaidTier}
-import com.gu.membership.stripe.Stripe
-import com.gu.membership.zuora.soap.models.Queries.PreviewInvoiceItem
-import com.gu.membership.zuora.soap.models.Results.CreateResult
+import com.gu.salesforce.{ContactId, PaidTier}
+import com.gu.stripe.Stripe
+import com.gu.zuora.api.ZuoraService.FeatureId
+import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
+import com.gu.zuora.soap.models.Results.{SubscribeResult, CreateResult}
 import controllers.IdentityRequest
-import forms.MemberForm.{FreeMemberChangeForm, JoinForm, PaidMemberChangeForm}
+import forms.MemberForm.{PaidMemberJoinForm, FreeMemberChangeForm, JoinForm, PaidMemberChangeForm}
 import model.Eventbrite.{EBCode, EBTicketClass, EBOrder}
 import model.RichEvent.RichEvent
-import model.{GenericSFContact, FreeSFMember, PaidSFMember, SFMember}
+import model._
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
@@ -63,4 +64,13 @@ trait MemberService {
   def retrieveComplimentaryTickets(member: SFMember, event: RichEvent): Future[Seq[EBTicketClass]]
 
   def createEBCode(member: SFMember, event: RichEvent): Future[Option[EBCode]]
+
+  def createPaidSubscription(contactId: ContactId,
+                             joinData: PaidMemberJoinForm,
+                             customer: Stripe.Customer): Future[SubscribeResult]
+
+  def createFreeSubscription(contactId: ContactId,
+                             joinData: JoinForm): Future[SubscribeResult]
+
+  def chooseFeature(choices: Set[FeatureChoice]): Future[Seq[FeatureId]]
 }

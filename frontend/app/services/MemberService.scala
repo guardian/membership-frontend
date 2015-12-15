@@ -1,27 +1,29 @@
 package services
 
 import com.github.nscala_time.time.Imports._
-import com.gu.i18n.Currency
+import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.model._
-import com.gu.membership.salesforce.Tier.{Partner, Patron}
-import com.gu.membership.salesforce.{ContactId, PaidTier}
-import com.gu.membership.stripe.Stripe.Customer
-import com.gu.membership.stripe.{Stripe, StripeService}
 import com.gu.membership.util.Timing
-import com.gu.membership.zuora.soap.models.PaymentSummary
-import com.gu.membership.zuora.soap.models.Queries.PreviewInvoiceItem
-import com.gu.membership.zuora.soap.models.Results.{CreateResult, UpdateResult}
-import com.gu.services.PaymentService
+import com.gu.memsub.services.api.PaymentService
+import com.gu.salesforce.Tier.{Partner, Patron}
+import com.gu.salesforce.{ContactId, PaidTier}
+import com.gu.stripe.Stripe.Customer
+import com.gu.stripe.{Stripe, StripeService}
+import com.gu.zuora.api.ZuoraService
+import com.gu.zuora.api.ZuoraService.FeatureId
+import com.gu.zuora.soap.actions.subscribe.{Account => SoapSubscribeAccount, CreditCardReferenceTransaction}
+import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
+import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
+import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.Eventbrite.{EBCode, EBTicketClass, EBOrder}
+import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model._
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.api.ZuoraService.FeatureId
 import tracking._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
@@ -33,13 +35,12 @@ case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-class MemberService(
-  identityService: => IdentityService,
-  salesforceService: => api.SalesforceService,
-  zuoraService: => api.ZuoraService,
-  stripeService: => StripeService,
-  catalogService: => api.CatalogService,
-  paymentService: => PaymentService) extends api.MemberService with ActivityTracking {
+class MemberService(identityService: => IdentityService,
+                     salesforceService: => api.SalesforceService,
+                     zuoraService: => ZuoraService,
+                     stripeService: => StripeService,
+                     catalogService: => api.CatalogService,
+                     paymentService: => PaymentService) extends api.MemberService with ActivityTracking {
 
 
   import EventbriteService._
@@ -94,13 +95,13 @@ class MemberService(
           for {
             customer <- stripeService.Customer.create(user.id, paid.payment.token)
             cId <- createContact
-            subscription <- zuoraService.createPaidSubscription(cId, paid, customer)
+            subscription <- createPaidSubscription(cId, paid, customer)
             updatedMember <- salesforceService.updateMemberStatus(user, formData.plan.tier, Some(customer))
           } yield cId
         case _ =>
           for {
             cId <- createContact
-            subscription <- zuoraService.createFreeSubscription(cId, formData)
+            subscription <- createFreeSubscription(cId, formData)
             updatedMember <- salesforceService.updateMemberStatus(user, formData.plan.tier, None)
           } yield cId
       }
@@ -165,7 +166,7 @@ class MemberService(
         case p: PaidSubscription => p
         case _ => throw MemberServiceError(s"Expected to downgrade a paid subscription")
       }
-      friendRatePlanId <- catalogService.findRatePlanId(FriendTierPlan.current)
+      friendRatePlanId <- catalogService.findProductRatePlanId(FriendTierPlan.current)
       result <- zuoraService.downgradePlan(
         subscriptionId = paidSub.id,
         currentRatePlanId = paidSub.ratePlanId,
@@ -208,7 +209,7 @@ class MemberService(
     val newTierPlan = PaidTierPlan(newTier, subscription.plan.billingPeriod, Current)
 
     for {
-      newRatePlanId <- catalogService.findRatePlanId(newTierPlan)
+      newRatePlanId <- catalogService.findProductRatePlanId(newTierPlan)
       featureIds <- featureIdsForTier(newTierPlan, Set.empty)
       result <- zuoraService.upgradeSubscription(subscription.id, subscription.ratePlanId, newRatePlanId, featureIds, preview = false)
     } yield result.invoiceItems
@@ -346,6 +347,76 @@ class MemberService(
     }
   }
 
+  override def createFreeSubscription(contactId: ContactId,
+                                      joinData: JoinForm): Future[SubscribeResult] =
+    for {
+      zuoraFeatures <- zuoraService.getFeatures
+      productRatePlanId <- catalogService.findProductRatePlanId(joinData.plan)
+      result <- zuoraService.createSubscription(
+        subscribeAccount = SoapSubscribeAccount.stripe(contactId, GBP, autopay = false),
+        paymentMethod = None,
+        productRatePlanId = productRatePlanId,
+        name = joinData.name,
+        address = joinData.deliveryAddress
+      )
+    } yield result
+
+  implicit private def features = zuoraService.getFeatures
+
+  override def chooseFeature(choices: Set[FeatureChoice]): Future[Seq[FeatureId]] =
+    features.map {
+      _.filter(f => choices.map(_.zuoraCode).contains(f.code))
+        .map(_.id)
+    }
+
+  override def createPaidSubscription(contactId: ContactId,
+                                      joinData: PaidMemberJoinForm,
+                                      customer: Stripe.Customer): Future[SubscribeResult] =
+    for {
+      catalog <- catalogService.membershipCatalog.get()
+      zuoraFeatures <- zuoraService.getFeatures
+      productRatePlanId <- catalogService.findProductRatePlanId(joinData.plan)
+      result <- zuoraService.createSubscription(
+        subscribeAccount = SoapSubscribeAccount.stripe(
+          contactId = contactId,
+          currency = supportedAccountCurrency(catalog)(joinData.zuoraAccountAddress.country, joinData.plan),
+          autopay = true),
+        paymentMethod = Some(CreditCardReferenceTransaction(customer)),
+        productRatePlanId = productRatePlanId,
+        name = joinData.name,
+        address = joinData.zuoraAccountAddress,
+        featureIds = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice).map(_.id)
+      )
+    } yield result
+
+
+  // TODO move into catalog
+  private def supportedAccountCurrency(catalog: MembershipCatalog)(country: Country, plan: PaidTierPlan): Currency =
+    CountryGroup
+      .byCountryCode(country.alpha2).map(_.currency)
+      .filter(catalog.paidTierPlanDetails(plan).currencies)
+      .getOrElse(GBP)
+
+  private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(plan: TierPlan, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
+    def byChoice(choice: Set[FeatureChoice]) =
+      zuoraFeatures.filter(f => choice.map(_.zuoraCode).contains(f.code))
+
+    plan.tier match {
+      case Patron => byChoice(FeatureChoice.all)
+      case Partner => byChoice(choice).take(1)
+      case _ => Nil
+    }
+  }
+
+  def latestInvoiceItems(items: Seq[SoapQueries.InvoiceItem]): Seq[SoapQueries.InvoiceItem] = {
+    if(items.isEmpty)
+      items
+    else {
+      val sortedItems = items.sortBy(_.chargeNumber)
+      sortedItems.filter(_.subscriptionId == sortedItems.last.subscriptionId)
+    }
+  }
+
   private def upgradeSubscription(member: SFMember,
                                   newTierPlan: PaidTierPlan,
                                   form: MemberChangeForm,
@@ -359,7 +430,7 @@ class MemberService(
     for {
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(member.identityId, None), newTierPlan.tier, customerOpt)
       sub <- subWithNoPendingAmend(member)
-      newRatePlanId <- catalogService.findRatePlanId(newTierPlan)
+      newRatePlanId <- catalogService.findProductRatePlanId(newTierPlan)
       featureIds <- featureIdsForTier(newTierPlan, form.featureChoice)
       _ <- zuoraService.upgradeSubscription(sub.id, sub.ratePlanId, newRatePlanId, featureIds, preview = false)
     } yield {
@@ -388,8 +459,8 @@ class MemberService(
 
   def featureIdsForTier(plan: TierPlan, choice: Set[FeatureChoice]): Future[Seq[FeatureId]] = {
     plan.tier match {
-      case Patron => zuoraService.chooseFeature(FeatureChoice.all)
-      case Partner => zuoraService.chooseFeature(choice).map(_.take(1))
+      case Patron => chooseFeature(FeatureChoice.all)
+      case Partner => chooseFeature(choice).map(_.take(1))
       case _ => Future.successful(Nil)
     }
   }

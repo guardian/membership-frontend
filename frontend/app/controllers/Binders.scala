@@ -1,7 +1,7 @@
 package controllers
 
 import com.gu.i18n.CountryGroup
-import com.gu.membership.salesforce.{PaidTier, Tier, FreeTier}
+import com.gu.salesforce.{PaidTier, Tier, FreeTier}
 import play.api.mvc.PathBindable.{Parsing => PathParsing}
 import play.api.mvc.QueryStringBindable.{Parsing => QueryParsing}
 

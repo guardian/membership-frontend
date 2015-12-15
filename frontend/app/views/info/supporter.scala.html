@@ -5,7 +5,7 @@
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
 
-@import com.gu.membership.salesforce.Tier.Supporter
+@import com.gu.salesforce.Tier.Supporter
 @import configuration.Videos
 
 @main("Supporters", pageInfo=pageInfo) {

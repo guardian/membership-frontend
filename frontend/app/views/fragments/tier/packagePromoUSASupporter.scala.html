@@ -2,7 +2,7 @@
 @import views.support.Pricing
 @(pricing: Pricing, isReversed: Boolean)
 
-@import com.gu.membership.salesforce.Tier._
+@import com.gu.salesforce.Tier._
 
 @actionAttrs = {
     href="@{routes.Joiner.enterPaidDetails(Supporter)}?countryGroup=@US.id"

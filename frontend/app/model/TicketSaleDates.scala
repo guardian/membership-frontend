@@ -1,7 +1,7 @@
 package model
 
 import com.github.nscala_time.time.Imports._
-import com.gu.membership.salesforce.Tier
+import com.gu.salesforce.Tier
 import model.Benefits.PriorityBookingTiers
 import model.Eventbrite.{EBTicketClass, EventTimes}
 import org.joda.time.DateTimeZone.UTC

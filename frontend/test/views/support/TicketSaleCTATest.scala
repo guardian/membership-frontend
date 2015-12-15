@@ -1,8 +1,8 @@
 package views.support
 
 import com.github.nscala_time.time.Imports._
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier._
+import com.gu.salesforce.Tier
+import com.gu.salesforce.Tier._
 import model.TicketSaleDates
 import org.specs2.mutable.Specification
 import views.support.TicketSaleCTA.ctaFor

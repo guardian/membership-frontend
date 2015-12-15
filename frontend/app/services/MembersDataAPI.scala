@@ -1,6 +1,6 @@
 package services
 
-import com.gu.membership.salesforce.{FreeTierMember, Member, PaidTierMember, Tier}
+import com.gu.salesforce.{FreeTierMember, PaidTierMember, Member, Tier}
 import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.squareup.okhttp.Request

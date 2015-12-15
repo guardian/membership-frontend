@@ -2,14 +2,16 @@ package forms
 
 import com.gu.i18n._
 import com.gu.membership.model._
-import com.gu.membership.salesforce.PaidTier
-import model.{MembershipCatalog, FeatureChoice}
+import com.gu.memsub.Address
+import com.gu.memsub.services.Name
+import com.gu.salesforce.PaidTier
+import model.FeatureChoice
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError, Mapping}
 
 object MemberForm {
-  case class NameForm(first: String, last: String)
+  case class NameForm(first: String, last: String) extends Name
 
   case class PaymentForm(billingPeriod: BillingPeriod, token: String)
 

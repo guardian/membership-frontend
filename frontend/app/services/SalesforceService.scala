@@ -1,9 +1,9 @@
 package services
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
-import com.gu.membership.salesforce.ContactDeserializer.Keys
-import com.gu.membership.salesforce._
-import com.gu.membership.stripe.Stripe.Customer
+import com.gu.salesforce.ContactDeserializer.Keys
+import com.gu.salesforce._
+import com.gu.stripe.Stripe.Customer
 import com.gu.membership.util.FutureSupplier
 import configuration.Config
 import forms.MemberForm.JoinForm

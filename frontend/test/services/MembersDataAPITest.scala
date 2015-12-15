@@ -1,7 +1,7 @@
 package services
 
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.Patron
+import com.gu.salesforce.Tier
+import com.gu.salesforce.Tier.Patron
 import org.scalatest.FreeSpec
 import play.api.libs.json._
 import services.MembersDataAPI.Attributes

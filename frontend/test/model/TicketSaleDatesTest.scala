@@ -1,7 +1,7 @@
 package model
 
 import com.github.nscala_time.time.Imports.{richDateTime, _}
-import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron}
+import com.gu.salesforce.Tier.{Friend, Partner, Patron}
 import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.EventbriteTestObjects._

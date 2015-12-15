@@ -1,19 +1,17 @@
 package controllers
 
-import com.gu.membership.salesforce._
+import com.gu.salesforce._
 import model.Benefits
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.mvc.Controller
-import services.{CASService, MembersDataAPI}
+import services.MembersDataAPI
 import utils.GuMemCookie
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
-
-  val casService = CASService
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)

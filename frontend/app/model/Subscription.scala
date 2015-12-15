@@ -2,9 +2,9 @@ package model
 
 import com.gu.i18n.Currency
 import com.gu.membership.model.{FreeTierPlan, PaidTierPlan, Price, TierPlan}
-import com.gu.membership.salesforce.ContactId
-import com.gu.membership.zuora.rest
-import com.gu.membership.zuora.soap.models.Queries.Account
+import com.gu.salesforce.ContactId
+import com.gu.zuora.rest
+import com.gu.zuora.soap.models.Queries.Account
 import org.joda.time.LocalDate
 
 private[model] case class CommonSubscription(

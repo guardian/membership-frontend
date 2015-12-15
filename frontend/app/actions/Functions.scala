@@ -1,7 +1,7 @@
 package actions
 
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
-import com.gu.membership.salesforce._
+import com.gu.salesforce._
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
 import com.typesafe.scalalogging.LazyLogging
