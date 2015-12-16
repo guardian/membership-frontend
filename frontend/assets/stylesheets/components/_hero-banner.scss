@@ -108,21 +108,21 @@
     }
 }
 .hero-banner__title {
-    @include fs-headline(3);
-    font-weight: guss-font-weight(ultrablack);
+    @include fs-header(5);
+    line-height: 26px;
 
-    @include mq(mem-full) {
-        @include fs-headline(7, $size-only: true);
-        line-height: 1;
-        padding-top: $gs-baseline * 2;
+    @include mq(tablet) {
+        font-size: 36px;
+        line-height: 38px;
     }
 }
 .hero-banner__description {
-    @include fs-headline(3);
-    margin-bottom: $gs-baseline;
+    @include fs-headline(2);
+    margin-bottom: $gs-baseline / 2;
 
-    @include mq(mem-full) {
-        @include fs-headline(4, $size-only: true);
+    @include mq(tablet) {
+        font-size: 22px;
+        line-height: 26px;
     }
 }
 
