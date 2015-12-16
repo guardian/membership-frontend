@@ -51,7 +51,10 @@ case class ResponsiveImageGroup(
 
   private val sortedImages = availableImages.sortBy(_.width)
 
-  val smallestImage = sortedImages.head.path
+  // We expect to have at least one availableImage. In the rare case we don't,
+  // set the path to about:blank, which is still a valid URL whose resource is an empty string.
+  // http://www.w3.org/TR/2011/WD-html5-20110525/fetching-resources.html#about:blank
+  val smallestImage = sortedImages.headOption.map(_.path).getOrElse("about:blank")
   val defaultImage = sortedImages.find(_.width > 300).map(_.path).getOrElse(smallestImage)
 
   val srcset = sortedImages.map { img =>
