@@ -64,7 +64,7 @@ class JoinPartnerSpec extends FeatureSpec
       assert(thankYou.pageHasLoaded())
 
       And("I should be signed in as Partner.")
-      assert(thankYou.userDisplayName == testUser.username.toLowerCase)
+      assert(thankYou.userDisplayName.toLowerCase == testUser.username.toLowerCase)
       assert(thankYou.userTier == "Partner")
     }
   }
