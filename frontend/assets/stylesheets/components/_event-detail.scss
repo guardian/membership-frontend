@@ -189,6 +189,7 @@
 .event-ticket__action {
     padding-top: rem($gs-baseline);
     padding-bottom: rem($gs-baseline);
+    min-width: 169px;
 
     @include mq(tablet) {
         padding-top: 0;
