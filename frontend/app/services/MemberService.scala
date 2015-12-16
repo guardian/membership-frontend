@@ -225,10 +225,12 @@ class MemberService(identityService: IdentityService,
 
     for {
       newRatePlanId <- catalogService.findProductRatePlanId(newTierPlan)
-      featureIds <- zuoraService.getFeatures.map { fs =>
-        featureIdsForTier(fs)(newTierPlan, Set.empty)
-      }
-      result <- zuoraService.upgradeSubscription(subscription.id, subscription.ratePlanId, newRatePlanId, featureIds, preview = false)
+      result <- zuoraService.upgradeSubscription(
+        subscriptionId = subscription.id,
+        currentRatePlanId = subscription.ratePlanId,
+        newRatePlanId = newRatePlanId,
+        featureIds = Nil,
+        preview = false)
     } yield result.invoiceItems
   }
 
