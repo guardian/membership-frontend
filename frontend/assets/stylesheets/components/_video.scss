@@ -91,7 +91,11 @@
     }
 }
 .video-preview__header {
-    @include fs-headline(3);
+    @include fs-headline(2);
+    @include mq(tablet) {
+        @include fs-headline(3);
+    }
+
     padding: rem($gs-baseline) rem($gs-gutter / 2) rem($gs-baseline * 3);
     background: color(brand-supporting-2) url(/assets/images/common/videocard_layers_mb.png) no-repeat bottom right;
 }
