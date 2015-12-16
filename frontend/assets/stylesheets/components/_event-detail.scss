@@ -251,8 +251,14 @@
 .event-image {
     margin: 0 auto;
 
+    @include mq(tablet) {
+        width: rem(map-get($max-widths, max-tablet) + $gs-gutter * 2);
+    }
+    @include mq(desktop) {
+        width: rem(map-get($max-widths, max-desktop) + $gs-gutter * 2);
+    }
     @include mq(mem-full) {
-        width: rem(gs-span(14) + $gs-gutter * 2);
+        width: rem(map-get($max-widths, max-mem-full) + $gs-gutter * 2);
     }
 
     img {
@@ -264,11 +270,6 @@
     padding: rem(5px) rem($gs-gutter / 2) 0;
 
     @include mq(tablet) {
-        padding-left: 0;
-        margin: 0 auto;
-    }
-
-    @include mq(desktop) {
         padding-left: rem($gs-gutter);
     }
 
