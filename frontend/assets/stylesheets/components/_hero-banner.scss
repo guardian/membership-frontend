@@ -13,6 +13,10 @@
         height: 74vh;
     }
 
+    @include mq(tablet) {
+        height: 460px;
+    }
+
     //noinspection ALL
     @include mq(desktop) {
         background-position: center center;
