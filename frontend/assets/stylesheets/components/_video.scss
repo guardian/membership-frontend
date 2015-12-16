@@ -87,17 +87,24 @@
     position: relative;
 
     @include mq(tablet) {
-	width: 620px;
+        width: 620px;
     }
 }
 .video-preview__header {
     @include fs-headline(2);
+    padding: 6px 5px 48px 5px;
+    background: color(brand-supporting-2) url(/assets/images/common/videocard_layers_mb.png) no-repeat bottom right;
+
     @include mq(tablet) {
         @include fs-headline(3);
+        width: 240px;
+        padding: $gs-gutter / 2;
+        background: color(brand-supporting-2) url(/assets/images/common/videocard_layers_tb.png) no-repeat bottom right;
     }
 
-    padding: rem($gs-baseline) rem($gs-gutter / 2) rem($gs-baseline * 3);
-    background: color(brand-supporting-2) url(/assets/images/common/videocard_layers_mb.png) no-repeat bottom right;
+    @include mq(desktop) {
+        width: 320px;
+    }
 }
 .video-preview__header,
 .video-preview__video {
