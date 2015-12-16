@@ -71,6 +71,4 @@ trait MemberService {
 
   def createFreeSubscription(contactId: ContactId,
                              joinData: JoinForm): Future[SubscribeResult]
-
-  def chooseFeature(choices: Set[FeatureChoice]): Future[Seq[FeatureId]]
 }

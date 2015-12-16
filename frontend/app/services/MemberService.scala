@@ -35,15 +35,30 @@ case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-class MemberService(identityService: => IdentityService,
-                     salesforceService: => api.SalesforceService,
-                     zuoraService: => ZuoraService,
-                     stripeService: => StripeService,
-                     catalogService: => api.CatalogService,
-                     paymentService: => PaymentService) extends api.MemberService with ActivityTracking {
+object MemberService {
+  def featureIdsForTier(features: Seq[SoapQueries.Feature])(plan: TierPlan, choice: Set[FeatureChoice]): Seq[FeatureId] = {
+    def chooseFeature(choices: Set[FeatureChoice]): Seq[FeatureId] =
+      features.filter(f => choices.map(_.zuoraCode).contains(f.code))
+        .map(_.id)
+
+    plan.tier match {
+      case Patron => chooseFeature(FeatureChoice.all)
+      case Partner => chooseFeature(choice).take(1)
+      case _ => Nil
+    }
+  }
+}
+
+class MemberService(identityService: IdentityService,
+                     salesforceService: api.SalesforceService,
+                     zuoraService: ZuoraService,
+                     stripeService: StripeService,
+                     catalogService: api.CatalogService,
+                     paymentService: PaymentService) extends api.MemberService with ActivityTracking {
 
 
   import EventbriteService._
+  import MemberService.featureIdsForTier
 
   private val logger = Logger(getClass)
 
@@ -210,8 +225,12 @@ class MemberService(identityService: => IdentityService,
 
     for {
       newRatePlanId <- catalogService.findProductRatePlanId(newTierPlan)
-      featureIds <- featureIdsForTier(newTierPlan, Set.empty)
-      result <- zuoraService.upgradeSubscription(subscription.id, subscription.ratePlanId, newRatePlanId, featureIds, preview = false)
+      result <- zuoraService.upgradeSubscription(
+        subscriptionId = subscription.id,
+        currentRatePlanId = subscription.ratePlanId,
+        newRatePlanId = newRatePlanId,
+        featureIds = Nil,
+        preview = false)
     } yield result.invoiceItems
   }
 
@@ -363,12 +382,6 @@ class MemberService(identityService: => IdentityService,
 
   implicit private def features = zuoraService.getFeatures
 
-  override def chooseFeature(choices: Set[FeatureChoice]): Future[Seq[FeatureId]] =
-    features.map {
-      _.filter(f => choices.map(_.zuoraCode).contains(f.code))
-        .map(_.id)
-    }
-
   override def createPaidSubscription(contactId: ContactId,
                                       joinData: PaidMemberJoinForm,
                                       customer: Stripe.Customer): Future[SubscribeResult] =
@@ -431,7 +444,9 @@ class MemberService(identityService: => IdentityService,
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(member.identityId, None), newTierPlan.tier, customerOpt)
       sub <- subWithNoPendingAmend(member)
       newRatePlanId <- catalogService.findProductRatePlanId(newTierPlan)
-      featureIds <- featureIdsForTier(newTierPlan, form.featureChoice)
+      featureIds <- zuoraService.getFeatures.map { fs =>
+        featureIdsForTier(fs)(newTierPlan, form.featureChoice)
+      }
       _ <- zuoraService.upgradeSubscription(sub.id, sub.ratePlanId, newRatePlanId, featureIds, preview = false)
     } yield {
       salesforceService.metrics.putUpgrade(newTierPlan.tier)
@@ -456,14 +471,6 @@ class MemberService(identityService: => IdentityService,
         sub
       } else throw MemberServiceError("Cannot amend subscription, amendments are already pending")
     }
-
-  def featureIdsForTier(plan: TierPlan, choice: Set[FeatureChoice]): Future[Seq[FeatureId]] = {
-    plan.tier match {
-      case Patron => chooseFeature(FeatureChoice.all)
-      case Partner => chooseFeature(choice).map(_.take(1))
-      case _ => Future.successful(Nil)
-    }
-  }
 
   private def getPaymentSummary(memberId: ContactId): Future[PaymentSummary] =
     currentSubscription(memberId).flatMap { sub =>
