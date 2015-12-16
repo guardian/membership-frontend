@@ -1,6 +1,6 @@
 package model
 
-import com.gu.contentapi.client.model.Content
+import com.gu.contentapi.client.model.{Element, Content}
 import views.support.Asset
 import model.RichEvent.GridImage
 
@@ -13,9 +13,19 @@ object ResponsiveImageGenerator {
 }
 
 object ResponsiveImageGroup {
+
+  /* The "main" image element of articles can have a variety of different
+   * aspect-ratios, whereas the "thumbnail" should always have a consistent
+   * aspect-ratio (5:3), meaning our images line up nicely in grid views etc.
+   * Even though they're used as 'thumbnails', high resolution (2000*1200px)
+   * asset-versions are generally available.
+   * https://github.com/guardian/membership-frontend/pull/628
+   */
+  def hasConsistentAspectRatio(e: Element) = e.relation == "thumbnail"
+
   def fromContent(content: Content): Option[ResponsiveImageGroup] = for {
     elements <- content.elements
-    element <- elements.find(_.relation == "thumbnail")
+    element <- elements.find(hasConsistentAspectRatio)
   } yield ResponsiveImageGroup(
     altText = element.assets.headOption.flatMap(_.typeData.get("altText")),
     metadata = None,
