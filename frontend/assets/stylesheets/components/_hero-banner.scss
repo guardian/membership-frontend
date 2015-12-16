@@ -33,7 +33,7 @@
     right: 0;
     left: 0;
 
-    @include mq(mem-full) {
+    @include mq(tablet) {
         right: auto;
         left: auto;
     }
@@ -96,12 +96,12 @@
             padding-top: 45px;
         }
         margin-left: 0;
+        width: 620px;
         padding: $gs-gutter;
         padding-right: 50px;
     }
 
     @include mq(mem-full) {
-        width: 620px;
         margin-left: gs-span(2.5);
     }
 }
