@@ -15,16 +15,17 @@
 
     @include mq(tablet) {
         height: 460px;
+        background-position: center top -150px;
     }
 
     //noinspection ALL
     @include mq(desktop) {
-        background-position: center center;
+        background-image: url(/assets/images/join-challenger/hm_hero01_1280x800.jpg);
+        background-position: center top -13px;
     }
 
-    @include mq(wide) {
-        background-image: url(/assets/images/join-challenger/hm_hero01_1280x800.jpg);
-        background-size: 100% auto;
+    @include mq(mem-full) {
+        background-position: center top -113px;
     }
 }
 .hero-banner__inner {
