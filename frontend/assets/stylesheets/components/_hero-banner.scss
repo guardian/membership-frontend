@@ -51,7 +51,7 @@
     bottom: 0;
     background: color(brand-main);
     z-index: 2;
-    opacity: 0.6;
+    opacity: 0.5;
 
     @include clip-path('accent-top-slice') {
         padding-top: $gs-gutter * 2;
