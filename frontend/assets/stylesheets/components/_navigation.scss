@@ -417,8 +417,11 @@
     overflow: auto;
     list-style: none;
 
+    @include mq(tablet) {
+        border-left: 1px solid color(brand-main);
+    }
+
     @include mq(mem-full) {
-	border-left: 1px solid color(brand-main);
         margin-left: gs-span(2.5);
     }
 }
