@@ -58,14 +58,13 @@
     }
     @include mq(tablet) {
         padding: $gs-gutter ($gs-gutter * 2);
-    }
-
-    @include mq(mem-full) {
         clip-path: none !important;
         transform: rotate(-6deg);
         height: 230px;
-        left: 163px;
         width: 620px;
+    }
+    @include mq(mem-full) {
+        left: 163px;
     }
 }
 .hero-banner__secondary_accent {
@@ -80,7 +79,7 @@
     display:none;
     transform: rotate(7deg);
 
-    @include mq(mem-full) {
+    @include mq(tablet) {
         display: block;
     }
 }
@@ -93,7 +92,7 @@
     z-index: 2;
 
     @include clip-path('top-slice') {
-        padding-top: 31px;
+        padding-top: 24px;
     }
 
     @include mq(tablet) {
