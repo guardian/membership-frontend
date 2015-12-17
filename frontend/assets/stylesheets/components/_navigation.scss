@@ -412,6 +412,7 @@
 }
 .nav-sections__list {
     margin: 0;
+    margin-left: $gs-gutter;
     width: 100%;
     overflow: auto;
     list-style: none;
