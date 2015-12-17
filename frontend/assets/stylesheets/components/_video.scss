@@ -74,7 +74,7 @@
 .video-preview {
     @include clearfix();
     clear: both;
-    color: $white;
+    color: $c-neutral1;
     margin-bottom: rem($gs-gutter);
 
     @include mq(tablet) {
@@ -87,19 +87,23 @@
     position: relative;
 
     @include mq(tablet) {
-        width: 65%;
+        width: 620px;
     }
 }
 .video-preview__header {
-    @include fs-headline(3);
-    padding: rem($gs-baseline) rem($gs-gutter / 2);
-    padding-bottom: rem($gs-baseline * 3);
-    background-color: color(brand-main);
+    @include fs-headline(2);
+    padding: 6px 5px 48px 5px;
+    background: color(brand-supporting-2) url(/assets/images/common/videocard_layers_mb.png) no-repeat bottom right;
 
     @include mq(tablet) {
-        padding-left: rem($gs-gutter);
-        padding-right: rem($gs-gutter);
-        @include clip-path('promo-bottom-deep');
+        @include fs-headline(3);
+        width: 240px;
+        padding: $gs-gutter / 2;
+        background: color(brand-supporting-2) url(/assets/images/common/videocard_layers_tb.png) no-repeat bottom right;
+    }
+
+    @include mq(desktop) {
+        width: 320px;
     }
 }
 .video-preview__header,

@@ -386,8 +386,8 @@
 .nav-sections {
     @include unstyled-list();
     overflow: hidden;
-    color: $black;
-    background-color: color(neutral-1);
+    color: $c-neutral1;
+    background-color: $c-neutral7;
     position: relative;
 }
 .nav-sections--sticky {
@@ -395,7 +395,7 @@
         will-change: transform;
         position: absolute;
         top: 0;
-        z-index: 1;
+        z-index: 3;
         width: 100%;
     }
 }
@@ -417,39 +417,50 @@
     list-style: none;
 
     @include mq(mem-full) {
-        border-left: 1px solid $c-neutral2;
+	border-left: 1px solid color(brand-main);
         margin-left: gs-span(2.5);
     }
 }
 .nav-sections__item,
 .nav-sections__link {
-    height: 70px;
+    height: 60px;
+    @include mq(desktop) {
+        height: 70px;
+    }
 }
 .nav-sections__item {
 
     @include mq($until: tablet) {
-        width: 33.3%;
+	width: 28%;
+	.nav-sections__list &:first-child {
+	    width: 44%;
+	}
     }
 }
 .nav-sections__link {
     @include font-smoothing();
-    @include fs-data(4);
+    @include fs-data(3, true);
+    @include f-textSans;
     display: inline-block;
     vertical-align: middle;
     text-decoration: none;
-    padding: ($gs-baseline / 2);
-    color: $white;
-    border-right: 1px solid $c-neutral2;
+    padding: $gs-baseline;
+    color: $c-neutral2;
+    border-right: 1px solid color(brand-main);
 
     @include mq($until: tablet) {
         width: 100%;
     }
 
     @include mq(tablet) {
-        @include fs-headline(2);
+        @include fs-data(4, true);
+        @include f-textSans;
         font-weight: bold;
-        width: gs-span(3);
+        width: 207px;
         padding: $gs-baseline $gs-gutter;
+        .nav-sections__list .nav-sections__item:first-child & {
+            width: 205px;
+        }
     }
 }
 .nav-sections__link:hover,
@@ -457,7 +468,7 @@
 .nav-sections__link.is-active {
     text-decoration: none;
     color: $white;
-    background-color: $c-neutral2;
+    background-color: color(brand-main);
 }
 @include mq($until: tablet) {
     .nav-sections__item:last-child .nav-sections__link {
