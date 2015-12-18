@@ -412,12 +412,12 @@
 }
 .nav-sections__list {
     margin: 0;
-    margin-left: $gs-gutter;
     width: 100%;
     overflow: auto;
     list-style: none;
 
     @include mq(tablet) {
+        margin-left: $gs-gutter;
         border-left: 1px solid color(brand-main);
     }
 
@@ -427,18 +427,17 @@
 }
 .nav-sections__item,
 .nav-sections__link {
-    height: 60px;
-    @include mq(desktop) {
-        height: 70px;
+    height: 50px;
+    @include mq(tablet) {
+        height: 60px;
     }
 }
 .nav-sections__item {
-
     @include mq($until: tablet) {
-	width: 28%;
-	.nav-sections__list &:first-child {
-	    width: 44%;
-	}
+        width: 28%;
+        .nav-sections__list &:first-child {
+            width: 44%;
+        }
     }
 }
 .nav-sections__link {
@@ -448,7 +447,7 @@
     display: inline-block;
     vertical-align: middle;
     text-decoration: none;
-    padding: $gs-baseline;
+    padding: $gs-gutter / 2;
     color: $c-neutral2;
     border-right: 1px solid color(brand-main);
 
@@ -461,7 +460,7 @@
         @include f-textSans;
         font-weight: bold;
         width: 207px;
-        padding: $gs-baseline $gs-gutter;
+        padding: 9px $gs-gutter;
         .nav-sections__list .nav-sections__item:first-child & {
             width: 205px;
         }
