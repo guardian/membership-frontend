@@ -1,12 +1,10 @@
 package acceptance.pages
 
-import acceptance.util.{Config, Util}
+import acceptance.util.{Config, WebBrowserUtil}
 import Config.baseUrl
-import acceptance.util.Util
-import org.openqa.selenium.WebDriver
 import org.scalatest.selenium.{WebBrowser, Page}
 
-class ThankYou extends Page with WebBrowser with Util {
+class ThankYou extends Page with WebBrowser with WebBrowserUtil {
   val url = s"${baseUrl}/join/partner/thankyou"
 
   def userDisplayName: String = {
@@ -28,7 +26,7 @@ class ThankYou extends Page with WebBrowser with Util {
   }
 
   def pageHasLoaded(): Boolean = {
-    (pageHasText("Welcome to Guardian Members")
-      && currentUrl.endsWith("join/partner/thankyou"))
+    (pageHasElement(id("qa-joiner-summary-tier"))
+      && pageHasUrl("join/partner/thankyou"))
   }
 }
