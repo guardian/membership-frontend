@@ -56,15 +56,18 @@
     background: color(brand-main);
     z-index: 2;
     opacity: 0.5;
+    display: none;
 
     @include clip-path('accent-top-slice') {
+        display: block;
         padding-top: $gs-gutter * 2;
     }
     @include mq(tablet) {
+        display: block;
         padding: $gs-gutter ($gs-gutter * 2);
         clip-path: none !important;
         transform: rotate(-6deg);
-        height: 222px;
+        height: 190px;
         width: 605px;
         top: 2px;
     }
