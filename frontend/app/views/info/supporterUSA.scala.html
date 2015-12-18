@@ -19,7 +19,10 @@
         <div class="page-slice l-constrained">
             @fragments.promos.promoPrimary(title="Become a Guardian Supporter", img=img, showImageCaption=true, isLead=true, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
-                    <p>Supporters keep our journalism fearless, open and free from&nbsp;interference.</p>
+                    <p>
+                        Supporters keep our journalism fearless, open and free from&nbsp;interference.
+                        <span class="text-pale">Plus, join today and $1 will be donated to the Guardian Charity Appeal.</span>
+                    </p>
                 </div>
                 @fragments.tier.packagePromoUSASupporter(supporterTierDetails.unsafePriceByCurrency(USD), isReversed=false)
             }
