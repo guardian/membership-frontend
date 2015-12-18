@@ -1,10 +1,10 @@
 package acceptance.pages
 
-import acceptance.util.{Util, Config}
+import acceptance.util.{WebBrowserUtil, Config}
 import Config.baseUrl
 import org.scalatest.selenium.{WebBrowser, Page}
 
-class EnterDetails extends Page with WebBrowser with Util {
+class EnterDetails extends Page with WebBrowser with WebBrowserUtil {
   val url = s"$baseUrl/join/partner/enter-details"
 
   def userDisplayName: String = {

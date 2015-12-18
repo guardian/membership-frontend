@@ -1,12 +1,10 @@
 package acceptance.pages
 
-import acceptance.util.{Config, Util}
+import acceptance.util.{WebBrowserUtil, Config}
 import Config.baseUrl
-import acceptance.util.Util
-import org.openqa.selenium.WebDriver
 import org.scalatest.selenium.{WebBrowser, Page}
 
-class Membership extends Page with WebBrowser with Util {
+class Membership extends Page with WebBrowser with WebBrowserUtil {
   val url = baseUrl
 
   def userDisplayName: String = {
@@ -23,6 +21,6 @@ class Membership extends Page with WebBrowser with Util {
 
   def pageHasLoaded(): Boolean = {
     (pageHasElement(cssSelector("a[href='/join/partner/enter-details']"))
-      && currentUrl.startsWith(url))
+      && pageHasUrl(url))
   }
 }
