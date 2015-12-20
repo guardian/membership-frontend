@@ -2,13 +2,11 @@
    Hero Banner
    ========================================================================== */
 .hero-banner {
-    background: url(/assets/images/join-challenger/hm_hero01_980x980.jpg) no-repeat top center;
-    background-size: auto 82%;
-    background-attachment: fixed;
-    height: 69vh;
+    background: url(/assets/images/join-challenger/hm_hero01_980x980.jpg) no-repeat top -90px center;
+    background-size: cover;
+    height: 62vh;
 
     @include mq(mobileLandscape) {
-        background-size: 100% auto;
         background-position: center center;
         height: 74vh;
     }
