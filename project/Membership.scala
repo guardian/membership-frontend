@@ -37,7 +37,8 @@ trait Membership {
     publishArtifact in (Compile, packageDoc) := false,
     parallelExecution in Global := false,
     updateOptions := updateOptions.value.withCachedResolution(true),
-    javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf"
+    javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf",
+    testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
   ) ++ buildInfoPlugin
 
   def lib(name: String) = Project(name, file(name)).enablePlugins(PlayScala).settings(commonSettings: _*)

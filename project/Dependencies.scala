@@ -24,6 +24,7 @@ object Dependencies {
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.1.1"
   val selenium = "org.seleniumhq.selenium" % "selenium-java" % "2.48.2" % "test"
+  val okHttp = "com.madgag" %% "play-git-hub" % "2.3"
 
   //projects
 
@@ -31,6 +32,6 @@ object Dependencies {
     contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3, scalaz,
     PlayImport.specs2 % "test")
 
-  val acceptanceTestDependencies = Seq(scalaTest, selenium, identityTestUsers)
+  val acceptanceTestDependencies = Seq(scalaTest, selenium, identityTestUsers, okHttp)
 
 }

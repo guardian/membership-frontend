@@ -1,14 +1,14 @@
 package acceptance.pages
 
 import acceptance.util.{TestUser, WebBrowserUtil, Config}
-import Config.profileUrl
+import Config.identityFrontendUrl
 import Config.baseUrl
 import org.scalatest.selenium.{Page, WebBrowser}
 import java.net.URLEncoder
 
 class Register(testUser: TestUser) extends Page with WebBrowser with WebBrowserUtil {
   val returnUrlParam = URLEncoder.encode(s"${baseUrl}/join/partner/enter-details", "UTF-8")
-  val url = s"${profileUrl}/register?returnUrl=${returnUrlParam}&skipConfirmation=true"
+  val url = s"${identityFrontendUrl}/register?returnUrl=${returnUrlParam}&skipConfirmation=true"
 
   private object RegisterFields {
     val firstName = textField(id("user_firstName"))
