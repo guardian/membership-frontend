@@ -16,6 +16,7 @@ class JoinPartnerSpec extends FeatureSpec
   }
 
   override def beforeAll() = {
+    Screencast.storeId()
     Config.printSummary()
   }
 
