@@ -30,6 +30,8 @@ object Config {
 
   val webDriverSessionId = driver.asInstanceOf[RemoteWebDriver].getSessionId.toString
 
+  val screencastIdFile = conf.getString("screencastId.file")
+
   def debug() = conf.root().render()
 
   def printSummary(): Unit = {
