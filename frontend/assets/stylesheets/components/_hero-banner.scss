@@ -4,6 +4,21 @@
 .hero-banner {
     background: url(/assets/images/join-challenger/hm_hero01_980x980.jpg) no-repeat top -90px center;
     background-size: cover;
+
+    // All iOS devices and at least some other mobile devices ignore
+    // background-attachment: fixed.
+    // https://twitter.com/paul_irish/status/306818591196602368
+    //
+    // Worse than this, on iOS devices the combination of background-size: cover
+    // and background-attachment: fixed causes the browser to ignore the background-size
+    // property and scale the image up to a ridiculous size.
+    // See 'Known Issues' on http://caniuse.com/#feat=background-attachment
+    //
+    // So we leave background-attachment set to its default value for non-desktop devices
+    // but set it to fixed on desktop devices at all widths.
+    @media (min-device-width: 800px) {
+        background-attachment: fixed;
+    }
     height: 62vh;
 
     @include mq(mobileLandscape) {
