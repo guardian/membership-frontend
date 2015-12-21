@@ -14,7 +14,7 @@ object Config {
   private val conf = ConfigFactory.load()
 
   val baseUrl = conf.getString("membership.url")
-  val profileUrl = conf.getString("identity.webapp.url")
+  val identityFrontendUrl = conf.getString("identity.webapp.url")
   val testUsersSecret = conf.getString("identity.test.users.secret")
 
   lazy val driver: WebDriver = {
@@ -28,29 +28,16 @@ object Config {
     }
   }
 
-  def webDriverSessionId(): String = {
-    Config.driver match {
-      case remoteDriver: RemoteWebDriver => {
-        remoteDriver.getSessionId.toString
-      }
-      case _ => "unknown session ID"
-    }
-  }
+  val webDriverSessionId = driver.asInstanceOf[RemoteWebDriver].getSessionId.toString
 
-  def stage(): String = {
-    conf.getString("stage")
-  }
-
-  def debug() = {
-    conf.root().render()
-  }
+  def debug() = conf.root().render()
 
   def printSummary(): Unit = {
     logger.info("Acceptance Test Configuration")
     logger.info("=============================")
-    logger.info(s"Stage: ${stage}")
-    logger.info(s"Membership Frontend: ${Config.baseUrl}")
-    logger.info(s"Identity Frontend: ${conf.getString("identity.webapp.url")}")
-    logger.info(s"WebDriver Session ID = ${Config.webDriverSessionId}")
+    logger.info(s"Stage: ${conf.getString("stage")}")
+    logger.info(s"Membership Frontend: ${baseUrl}")
+    logger.info(s"Identity Frontend: ${identityFrontendUrl}")
+    logger.info(s"Screencast = https://saucelabs.com/tests/${webDriverSessionId}")
   }
 }

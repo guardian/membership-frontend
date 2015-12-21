@@ -1,6 +1,6 @@
 package acceptance
 
-import acceptance.util.{Config, Acceptance, TestUser, WebBrowserUtil}
+import acceptance.util._
 import org.scalatest.selenium.WebBrowser
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfter, FeatureSpec, GivenWhenThen}
 import org.slf4j.LoggerFactory
@@ -23,8 +23,20 @@ class JoinPartnerSpec extends FeatureSpec
     Config.driver.quit()
   }
 
+  private def assumeDependenciesAreAvailable() = {
+    assume(Dependencies.MembershipFrontend.isAvailable,
+      s"- ${Dependencies.MembershipFrontend.url} unavaliable! " +
+        "\nPlease run local membership-frontend server before running tests.")
+
+    assume(Dependencies.IdentityFrontend.isAvailable,
+      s"- ${Dependencies.IdentityFrontend.url} unavaliable! " +
+        "\nPlease run local identity-frontend server before running tests.")
+  }
+
   feature("Become a Partner in UK") {
     scenario("I join as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
+      assumeDependenciesAreAvailable()
+
       val testUser = new TestUser
 
       Given("I clicked 'Become a Partner' button on Membership homepage")
