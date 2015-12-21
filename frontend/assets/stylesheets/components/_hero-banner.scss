@@ -10,12 +10,14 @@
     // https://twitter.com/paul_irish/status/306818591196602368
     //
     // Worse than this, on iOS devices the combination of background-size: cover
-    // and background-attachment: fixed causes the browser to ignore the background-size
-    // property and scale the image up to a ridiculous size.
+    // and background-attachment: fixed causes the browser to calculate the background size
+    // relative to the height of the entire page rather than the height of the viewport,
+    // resulting in a grossly oversized image.
     // See 'Known Issues' on http://caniuse.com/#feat=background-attachment
     //
-    // So we leave background-attachment set to its default value for non-desktop devices
-    // but set it to fixed on desktop devices at all widths.
+    // So what we want is to set background-attachment: fixed on desktop devices regardless of width,
+    // and to leave background-attachment to its default value (scroll) on all mobile/tablet devices,
+    // also regardless of width. So I've used min-device-width in this particular case.
     @media (min-device-width: 800px) {
         background-attachment: fixed;
     }
