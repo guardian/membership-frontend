@@ -21,7 +21,7 @@
     @media (min-device-width: 800px) {
         background-attachment: fixed;
     }
-    height: 62vh;
+    height: 70vh;
 
     @include mq(mobileLandscape) {
         background-position: center center;
