@@ -87,6 +87,9 @@
     position: relative;
 
     @include mq(tablet) {
+        width: 460px;
+    }
+    @include mq(desktop) {
         width: 620px;
     }
 }
