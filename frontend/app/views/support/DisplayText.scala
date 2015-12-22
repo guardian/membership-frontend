@@ -1,9 +1,10 @@
 package views.support
 
-import com.gu.i18n.GBP
+import com.gu.i18n.CountryGroup
 import com.gu.salesforce.Tier
 import com.gu.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
+import model.Benefits.marketedOnlyToUK
 import model.{Benefits, PaidTierDetails}
 import views.support.Pricing._
 
@@ -17,11 +18,13 @@ object DisplayText {
 
     def cta = s"Become a ${tier.slug}"
 
-    def detailsLimited = tier match {
+    def detailsLimited(countryGroup: CountryGroup = CountryGroup.UK) = (tier match {
       case Friend | Supporter => benefits
       case Partner => benefits.filterNot(Benefits.supporter.toSet)
       case Patron => benefits.filterNot(Benefits.partner.toSet)
       case Staff => benefits.filterNot(i => Benefits.partner.toSet.contains(i) || i == Benefits.booksOrTickets)
+    }).filterNot {
+      benefit => marketedOnlyToUK(benefit) && countryGroup != CountryGroup.UK
     }
 
     def leadin = tier match {

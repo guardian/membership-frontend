@@ -72,7 +72,7 @@
     </div>
     <div class="comparison-table__body">
         <div class="comparison-table__row">
-            @comparisonDetails(catalog.supporter.tier.detailsLimited)
+            @comparisonDetails(catalog.supporter.tier.detailsLimited())
             <div class="comparison-table__checkmarks">
                 @comparisonCheckmark(Supporter, checkmark = true)
                 @comparisonCheckmark(Partner, checkmark = true, isActive = true)
@@ -80,7 +80,7 @@
             </div>
         </div>
         <div class="comparison-table__row">
-            @comparisonDetails(catalog.partner.tier.detailsLimited)
+            @comparisonDetails(catalog.partner.tier.detailsLimited())
             <div class="comparison-table__checkmarks">
                     @comparisonCheckmark(Supporter, checkmark = false)
                     @comparisonCheckmark(Partner, checkmark = true, isActive = true)
@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="comparison-table__row">
-            @comparisonDetails(catalog.patron.tier.detailsLimited)
+            @comparisonDetails(catalog.patron.tier.detailsLimited())
             <div class="comparison-table__checkmarks">
                 @comparisonCheckmark(Supporter, checkmark = false)
                 @comparisonCheckmark(Partner, checkmark = false, isActive = true)
