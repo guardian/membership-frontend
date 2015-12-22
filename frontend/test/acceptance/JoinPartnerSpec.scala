@@ -1,12 +1,10 @@
 package acceptance
 
 import acceptance.util._
-import org.scalatest.selenium.WebBrowser
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfter, FeatureSpec, GivenWhenThen}
 import org.slf4j.LoggerFactory
 
-class JoinPartnerSpec extends FeatureSpec
-  with WebBrowser with WebBrowserUtil
+class JoinPartnerSpec extends FeatureSpec with Browser
   with GivenWhenThen with BeforeAndAfter with BeforeAndAfterAll  {
 
   def logger = LoggerFactory.getLogger(this.getClass)
@@ -60,7 +58,8 @@ class JoinPartnerSpec extends FeatureSpec
         assert(Driver.cookiesSet.map(_.getName).contains(idCookie)) }
 
       And("I should be logged in with my Identity account.")
-      assert(enterDetails.userDisplayName.toLowerCase == testUser.username.toLowerCase)
+      assert(elementHasText(
+        cssSelector(".js-user-displayname"), testUser.username.toLowerCase()))
 
       When("I fill in delivery address details")
       enterDetails.fillInDeliveryAddress()
@@ -76,8 +75,7 @@ class JoinPartnerSpec extends FeatureSpec
       assert(thankYou.pageHasLoaded())
 
       And("I should be signed in as Partner.")
-      assert(thankYou.userDisplayName.toLowerCase == testUser.username.toLowerCase)
-      assert(thankYou.userTier == "Partner")
+      assert(elementHasText(cssSelector(".js-user-tier"), "Partner"))
     }
   }
 }

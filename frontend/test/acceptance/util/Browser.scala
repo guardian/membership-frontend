@@ -5,23 +5,26 @@ import org.openqa.selenium.By
 import org.scalatest.selenium.WebBrowser
 import scala.util.Try
 
-
-trait WebBrowserUtil { this: WebBrowser =>
+trait Browser extends WebBrowser { this: WebBrowser =>
   lazy implicit val driver = Driver()
 
-  protected def pageHasText(text: String): Boolean = {
+  def pageHasText(text: String): Boolean = {
     waitUntil(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), text))
   }
 
-  protected def pageHasElement(q: Query): Boolean = {
+  def pageHasElement(q: Query): Boolean = {
     waitUntil(ExpectedConditions.visibilityOfElementLocated(q.by))
   }
 
-  protected def pageHasUrl(urlFraction: String): Boolean = {
+  def pageHasUrl(urlFraction: String): Boolean = {
     waitUntil(ExpectedConditions.urlContains(urlFraction))
   }
 
-  private def waitUntil[T](pred: ExpectedCondition[T]) = {
+  def elementHasText(q: Query, text: String): Boolean = {
+    waitUntil(ExpectedConditions.textToBePresentInElementLocated(q.by, text))
+  }
+
+  def waitUntil[T](pred: ExpectedCondition[T]) = {
     Try(new WebDriverWait(driver, timeOutSec).until(pred)).isSuccess
   }
 
