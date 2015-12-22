@@ -1,6 +1,6 @@
 package controllers
 
-import com.gu.i18n.{GBP, USD}
+import com.gu.i18n.{CountryGroup, GBP}
 import configuration.CopyConfig
 import forms.MemberForm._
 import model._
@@ -14,7 +14,7 @@ import scala.concurrent.Future
 trait Info extends Controller {
 
   def supporter = CachedAction.async { implicit request =>
-    implicit val currency = GBP
+    implicit val countryGroup = CountryGroup.UK
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -69,7 +69,7 @@ trait Info extends Controller {
   }
 
   def supporterUSA = CachedAction.async { implicit request =>
-    implicit val currency = USD
+    implicit val countryGroup = CountryGroup.US
 
     val pageImages = Seq(
       ResponsiveImageGroup(

@@ -1,19 +1,19 @@
 @import views.support.DisplayText._
 @import model.PaidTierDetails
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 
-@(details: PaidTierDetails, currency: Currency, isReversed: Boolean = false)
+@(details: PaidTierDetails, countryGroup: CountryGroup, isReversed: Boolean = false)
 
 <div class="package-feature">
     <div class="package-feature__promo">
-        @fragments.tier.packagePromo(details, currency, isReversed=isReversed, modifierClass=Some("package-promo--always-narrow"))
+        @fragments.tier.packagePromo(details, countryGroup.currency, isReversed=isReversed, modifierClass=Some("package-promo--always-narrow"))
     </div>
     <div class="package-feature__benefits copy">
         <div class="package-feature__leadin tone-border-@details.tier.slug">
             @details.tier.leadin
         </div>
         <ul>
-            @for(benefit <- details.tier.detailsLimited) {
+            @for(benefit <- details.tier.detailsLimited(countryGroup)) {
                 <li>@benefit.title</li>
             }
         </ul>
