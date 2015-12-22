@@ -1,19 +1,15 @@
 package acceptance
 
 import acceptance.util._
-import org.scalatest.selenium.WebBrowser
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfter, FeatureSpec, GivenWhenThen}
 import org.slf4j.LoggerFactory
 
-class JoinPartnerSpec extends FeatureSpec
-  with WebBrowser with WebBrowserUtil
+class JoinPartnerSpec extends FeatureSpec with Browser
   with GivenWhenThen with BeforeAndAfter with BeforeAndAfterAll  {
 
   def logger = LoggerFactory.getLogger(this.getClass)
 
-  before { // Before each test
-    resetDriver()
-  }
+  before { /* each test */ Driver.reset() }
 
   override def beforeAll() = {
     Screencast.storeId()
@@ -21,22 +17,22 @@ class JoinPartnerSpec extends FeatureSpec
   }
 
   override def afterAll() = {
-    Config.driver.quit()
+    Driver.quit()
   }
 
-  private def assumeDependenciesAreAvailable() = {
+  private def checkDependenciesAreAvailable = {
     assume(Dependencies.MembershipFrontend.isAvailable,
       s"- ${Dependencies.MembershipFrontend.url} unavaliable! " +
-        "\nPlease run local membership-frontend server before running tests.")
+        "\nPlease run membership-frontend server before running tests.")
 
     assume(Dependencies.IdentityFrontend.isAvailable,
       s"- ${Dependencies.IdentityFrontend.url} unavaliable! " +
-        "\nPlease run local identity-frontend server before running tests.")
+        "\nPlease run identity-frontend server before running tests.")
   }
 
   feature("Become a Partner in UK") {
     scenario("I join as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
-      assumeDependenciesAreAvailable()
+      checkDependenciesAreAvailable
 
       val testUser = new TestUser
 
@@ -59,10 +55,11 @@ class JoinPartnerSpec extends FeatureSpec
 
       And("I should have Identity cookies")
       Seq("GU_U", "SC_GU_U", "SC_GU_LA").foreach { idCookie =>
-        assert(cookiesSet.map(_.getName).contains(idCookie)) }
+        assert(Driver.cookiesSet.map(_.getName).contains(idCookie)) }
 
       And("I should be logged in with my Identity account.")
-      assert(enterDetails.userDisplayName.toLowerCase == testUser.username.toLowerCase)
+      assert(elementHasText(
+        cssSelector(".js-user-displayname"), testUser.username.toLowerCase()))
 
       When("I fill in delivery address details")
       enterDetails.fillInDeliveryAddress()
@@ -78,8 +75,7 @@ class JoinPartnerSpec extends FeatureSpec
       assert(thankYou.pageHasLoaded())
 
       And("I should be signed in as Partner.")
-      assert(thankYou.userDisplayName.toLowerCase == testUser.username.toLowerCase)
-      assert(thankYou.userTier == "Partner")
+      assert(elementHasText(cssSelector(".js-user-tier"), "Partner"))
     }
   }
 }

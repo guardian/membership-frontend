@@ -7,7 +7,7 @@ object Screencast {
     val file: File = new File(Config.screencastIdFile)
     file.getParentFile().mkdirs()
     new PrintWriter(file) {
-      write(Config.webDriverSessionId)
+      write(Driver.sessionId)
       close
     }
   }
