@@ -5,9 +5,9 @@
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
-@import com.gu.salesforce.Tier.Supporter
 @import com.gu.i18n.USD
 @import com.gu.i18n.CountryGroup.US
+@import com.gu.salesforce.Tier._
 @import configuration.Videos
 @import views.support.Asset
 @import views.support.Pricing._

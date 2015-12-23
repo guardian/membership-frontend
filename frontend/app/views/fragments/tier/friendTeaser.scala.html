@@ -6,7 +6,7 @@
 <div class="package-teaser">
     <h4 class="package-teaser__title">Alternatively, join for free</h4>
 
-    @for(highlight <- catalog.friend.tier.highlights.headOption) {
+    @for(highlight <- catalog.friend.tier.highlights().headOption) {
         <div class="package-teaser__description copy">
         @highlight.description
         </div>

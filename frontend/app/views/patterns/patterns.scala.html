@@ -1,4 +1,5 @@
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
+@import com.gu.i18n.CountryGroup._
 @import com.gu.salesforce.Tier._
 @import model.FlashMessage
 @import configuration.Videos
@@ -8,7 +9,7 @@
 @import com.gu.i18n.GBP
 @(catalog: MembershipCatalog,
   events: Seq[model.RichEvent.RichEvent],
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
+  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
@@ -380,10 +381,10 @@
     @pattern("Package: Promo") {
         <ul class="grid grid--3up-stacked">
             <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.partner, GBP)
+                @fragments.tier.packagePromo(catalog.partner, UK)
             </li>
             <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.patron, GBP)
+                @fragments.tier.packagePromo(catalog.patron, UK)
             </li>
         </ul>
     }

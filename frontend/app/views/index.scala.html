@@ -1,4 +1,4 @@
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
 @import model.MembershipCatalog
 @(
@@ -6,7 +6,7 @@
   pageImages: Seq[model.ResponsiveImageGroup],
   midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
   eventCollection: model.RichEvent.EventBrandCollection
-)(implicit currency: Currency)
+)(implicit countryGroup: CountryGroup)
 
 @import views.support.Links.BasicLink
 @import views.support.Asset
@@ -210,7 +210,7 @@
                 <ul class="grid">
                     @for(details <- Seq(catalog.supporter, catalog.partner, catalog.patron)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(details, currency, modifierClass=Some("package-promo--homepage"))
+                            @fragments.tier.packagePromo(details, countryGroup, modifierClass=Some("package-promo--homepage"))
                         </li>
                     }
                 </ul>

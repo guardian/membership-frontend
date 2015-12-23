@@ -1,11 +1,12 @@
 @import views.support.DisplayText._
+@import com.gu.i18n.CountryGroup
 @import com.gu.i18n.Currency
 @import model.{PaidTierDetails, Benefit}
 @import com.gu.salesforce.Tier._
 @import com.gu.salesforce.Tier
 @import model.MembershipCatalog
 @import views.support.DisplayText._
-@(catalog: MembershipCatalog)(implicit currency: Currency)
+@(catalog: MembershipCatalog)(implicit countryGroup: CountryGroup)
 
 
 @comparisonHeader(details: PaidTierDetails, currency: Currency, isActive: Boolean = false) = {
@@ -66,9 +67,9 @@
 
 <div class="comparison-table">
     <div class="comparison-table__header">
-        @comparisonHeader(catalog.supporter, currency)
-        @comparisonHeader(catalog.partner, currency, isActive = true)
-        @comparisonHeader(catalog.patron, currency)
+        @comparisonHeader(catalog.supporter, countryGroup.currency)
+        @comparisonHeader(catalog.partner, countryGroup.currency, isActive = true)
+        @comparisonHeader(catalog.patron, countryGroup.currency)
     </div>
     <div class="comparison-table__body">
         <div class="comparison-table__row">

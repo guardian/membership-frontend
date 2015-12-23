@@ -1,5 +1,5 @@
 @import model.MembershipCatalog
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
 @(
     catalog: MembershipCatalog,
@@ -8,7 +8,7 @@
     featuredEvents: model.RichEvent.EventGroup,
     locations: Seq[model.RichEvent.FilterItem],
     selectedLocation: Option[String]
-)(implicit currency: Currency)
+)(implicit countryGroup: CountryGroup)
 
 @import model.SVG.Logos
 

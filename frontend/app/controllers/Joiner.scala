@@ -4,6 +4,7 @@ import actions.Functions._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.{CountryGroup, GBP}
+import com.gu.i18n.CountryGroup._
 import com.gu.membership.model.Year
 import com.gu.salesforce.Tier.Friend
 import com.gu.salesforce._
@@ -53,7 +54,7 @@ object Joiner extends Controller with ActivityTracking
       ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referer) ? ("skipConfirmation" -> "true")).toString
     }.getOrElse(Config.idWebAppSigninUrl(""))
 
-    implicit val currency = GBP
+    implicit val countryGroup = UK
     val pageInfo = PageInfo(
       title=CopyConfig.copyTitleChooseTier,
       url=request.path,
@@ -71,7 +72,7 @@ object Joiner extends Controller with ActivityTracking
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
     val catalogF = TouchpointBackend.Normal.catalog
-    implicit val currency = GBP
+    implicit val countryGroup = UK
 
     userSignedIn match {
       case Some(user) => for {

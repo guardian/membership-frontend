@@ -1,6 +1,6 @@
 @import model.MembershipCatalog
-@import com.gu.i18n.Currency
-@(catalog: MembershipCatalog, membersOnlyContent: Seq[model.ContentItemOffer])(implicit currency: Currency)
+@import com.gu.i18n.CountryGroup
+@(catalog: MembershipCatalog, membersOnlyContent: Seq[model.ContentItemOffer])(implicit countryGroup: CountryGroup)
 
 @offerArticle(memberContent: model.ContentItemOffer) = {
     <a href="@memberContent.content.webUrl" class="article-front">

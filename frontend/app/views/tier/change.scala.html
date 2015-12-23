@@ -1,9 +1,9 @@
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @import model.MembershipCatalog
 @import configuration.Config
 @import com.gu.salesforce.Tier
 
-@(currentTier: Tier, catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
+@(currentTier: Tier, catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Change Tier") {
 

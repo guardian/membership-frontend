@@ -1,11 +1,11 @@
 package views.support
 
 import com.gu.i18n.CountryGroup
+import com.gu.i18n.CountryGroup._
 import com.gu.salesforce.Tier
 import com.gu.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
-import model.Benefits.marketedOnlyToUK
-import model.{Benefits, PaidTierDetails}
+import model.{Highlights, Benefits, PaidTierDetails}
 import views.support.Pricing._
 
 object DisplayText {
@@ -18,13 +18,13 @@ object DisplayText {
 
     def cta = s"Become a ${tier.slug}"
 
-    def detailsLimited(countryGroup: CountryGroup = CountryGroup.UK) = (tier match {
+    def detailsLimited(countryGroup: CountryGroup = UK) = (tier match {
       case Friend | Supporter => benefits
       case Partner => benefits.filterNot(Benefits.supporter.toSet)
       case Patron => benefits.filterNot(Benefits.partner.toSet)
       case Staff => benefits.filterNot(i => Benefits.partner.toSet.contains(i) || i == Benefits.booksOrTickets)
     }).filterNot {
-      benefit => marketedOnlyToUK(benefit) && countryGroup != CountryGroup.UK
+      benefit => Benefits.marketedOnlyToUK(benefit) && countryGroup != UK
     }
 
     def leadin = tier match {
@@ -34,23 +34,8 @@ object DisplayText {
       case _ => "Benefits"
     }
 
-    def highlights = tier match {
-      case Friend => List(Highlight(
-        """Receive regular updates from the membership community,
-          | book tickets to Guardian Live and Local events and access the Guardian members area""".stripMargin))
-
-      case Supporter => List(Highlight("Support our journalism and keep theguardian.com free of charge"),
-        Highlight("Get access to tickets and to the live broadcast of events"))
-
-      case Partner => List(
-        Highlight(s"Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events (or 4 Guardian-published books) per year", isNew = true),
-        Highlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses")
-      )
-
-      case Patron => List(Highlight("Show deep support for keeping the Guardian free, open and independent."),
-        Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
-      )
-      case _ => Nil
+    def highlights(countryGroup: CountryGroup = UK) = Highlights.forTier(tier).filterNot {
+      highlight => Highlights.marketedOnlyToUK(highlight) && countryGroup != UK
     }
 
     val chooseTierPatron = List(Highlight("Get all partner benefits, 6 tickets and 4 books plus invitations  to exclusive behind-the-scenes functions"))

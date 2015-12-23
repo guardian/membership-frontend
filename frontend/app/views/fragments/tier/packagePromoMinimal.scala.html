@@ -1,8 +1,8 @@
 @import model.PaidTierDetails
 
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @(details: PaidTierDetails,
-  currency: Currency,
+  countryGroup: CountryGroup,
   showDescription: Boolean = true,
   descriptionAnchor: Option[String] = None,
   modifierClass: Option[String] = None,
@@ -24,7 +24,7 @@
                 @fragments.tier.tierTrail(details.tier, showCaption=false)
                 </div>
                 <div class="package-promo__tier__pricing">
-                @fragments.pricing.priceInfo(details, currency, canFlex=false)
+                @fragments.pricing.priceInfo(details, countryGroup.currency, canFlex=false)
                 </div>
             </div>
         </a>
