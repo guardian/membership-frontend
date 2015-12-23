@@ -1,11 +1,10 @@
 package controllers
 
 import com.github.nscala_time.time.Imports._
-import com.gu.i18n.GBP
+import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
 import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
-import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
@@ -13,7 +12,7 @@ import tracking.ActivityTracking
 import views.support.PageInfo
 
 trait WhatsOn extends Controller with ActivityTracking {
-  implicit val currency = GBP
+  implicit val countryGroup = UK
 
   val guLiveEvents: EventbriteService
   val localEvents: EventbriteService

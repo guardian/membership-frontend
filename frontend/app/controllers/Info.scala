@@ -1,6 +1,6 @@
 package controllers
 
-import com.gu.i18n.{CountryGroup, GBP}
+import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
 import forms.MemberForm._
 import model._
@@ -14,7 +14,7 @@ import scala.concurrent.Future
 trait Info extends Controller {
 
   def supporter = CachedAction.async { implicit request =>
-    implicit val countryGroup = CountryGroup.UK
+    implicit val countryGroup = UK
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -69,7 +69,7 @@ trait Info extends Controller {
   }
 
   def supporterUSA = CachedAction.async { implicit request =>
-    implicit val countryGroup = CountryGroup.US
+    implicit val countryGroup = US
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -122,7 +122,7 @@ trait Info extends Controller {
   }
 
   def patron() = CachedAction.async { implicit request =>
-    implicit val currency = GBP
+    implicit val countryGroup = UK
 
     val pageInfo = PageInfo(
       title = CopyConfig.copyTitlePatrons,
@@ -165,12 +165,12 @@ trait Info extends Controller {
     )
 
     TouchpointBackend.Normal.catalog.map { cat =>
-      Ok(views.html.info.patron(cat, pageInfo, GBP, pageImages))
+      Ok(views.html.info.patron(cat, pageInfo, UK, pageImages))
     }
   }
 
   def offersAndCompetitions = CachedAction.async { implicit request =>
-    implicit val currency = GBP
+    implicit val countryGroup = UK
 
     val results =
       GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>

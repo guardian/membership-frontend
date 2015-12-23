@@ -1,12 +1,12 @@
 @import model.MembershipCatalog
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
 @(catalog: MembershipCatalog,
   pageInfo: PageInfo,
   eventGroup: model.RichEvent.EventGroup,
   selectedTag: String = "",
   selectedSubTag: String = ""
-)(implicit currency: Currency)
+)(implicit countryGroup: CountryGroup)
 
 @import model.SVG.Logos
 @import model.RichEvent.MasterclassEvent._

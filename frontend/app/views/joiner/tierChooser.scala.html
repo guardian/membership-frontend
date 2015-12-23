@@ -1,4 +1,4 @@
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @import com.gu.salesforce.Tier._
 @import model.MembershipCatalog
 
@@ -8,7 +8,7 @@
   eventOpt: Option[model.RichEvent.RichEvent],
   accessOpt: Option[model.MembershipAccess],
   signInUrl: String
-)(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
+)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @pageHeaderTitle = @{
     val default = "Choose a membership tier"
@@ -42,16 +42,16 @@
                 </h2>
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.friend, currency, Some("#package-benefits-friend"))
+                        @fragments.tier.packagePromo(catalog.friend, countryGroup, Some("#package-benefits-friend"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.supporter, currency, Some("#package-benefits-supporter"))
+                        @fragments.tier.packagePromo(catalog.supporter, countryGroup, Some("#package-benefits-supporter"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.partner, currency, Some("#package-benefits-partner"))
+                        @fragments.tier.packagePromo(catalog.partner, countryGroup, Some("#package-benefits-partner"))
                     </li>
                 </ul>
-                @fragments.tier.packagePromo(catalog.patron, currency, chooseTier = true)
+                @fragments.tier.packagePromo(catalog.patron, countryGroup, chooseTier = true)
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
                 <div class="page-section__supplementary">

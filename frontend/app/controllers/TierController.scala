@@ -1,6 +1,7 @@
 package controllers
 
-import com.gu.i18n.{CountryGroup, GBP}
+import com.gu.i18n.CountryGroup
+import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
 import com.gu.membership.model.{BillingPeriod, Year}
 import com.gu.salesforce._
@@ -204,7 +205,7 @@ trait CancelTier extends CatalogProvider {
 
 trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
   def change() = MemberAction.async { implicit request =>
-    implicit val currency = GBP
+    implicit val countryGroup = UK
     for {
       cat <- catalog
     } yield {

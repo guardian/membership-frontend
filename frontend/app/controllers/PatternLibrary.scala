@@ -1,6 +1,7 @@
 package controllers
 
 import com.gu.i18n.GBP
+import com.gu.i18n.CountryGroup._
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services.{TouchpointBackend, GuardianLiveEventService, EventbriteService}
@@ -8,7 +9,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 trait PatternLibrary extends Controller {
   val guLiveEvents: EventbriteService
-  implicit val currency = GBP
+  implicit val countryGroup = UK
 
   val pageImages = Seq(
     ResponsiveImageGroup(

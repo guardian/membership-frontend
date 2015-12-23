@@ -1,8 +1,8 @@
-@import com.gu.i18n.Currency
+@import com.gu.i18n.CountryGroup
 @import model.{TierDetails,PaidTierDetails, FreeTierDetails}
 @import views.support.DisplayText._
 
-@(details: TierDetails)(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
+@(details: TierDetails)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @actionPath = {
   @details match {
@@ -24,7 +24,7 @@
     <div class="package-promo__content">
         <div class="package-promo__description copy">
             <ul class="o-bulleted-list">
-                @for(highlight <- details.tier.highlights) {
+                @for(highlight <- details.tier.highlights()) {
                     <li>
                         @if(highlight.isNew) {
                             @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -36,7 +36,7 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-            @fragments.pricing.priceInfo(details, currency, canFlex=false)
+            @fragments.pricing.priceInfo(details, countryGroup.currency, canFlex=false)
             </div>
             <a class="action u-no-bottom-margin"
             id="qa-change-tier-@details.tier.slug"
