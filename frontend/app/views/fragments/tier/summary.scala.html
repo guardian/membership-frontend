@@ -1,7 +1,9 @@
 @import views.support.Dates._
 @import org.joda.time.DateTime
+@import model.SubscriptionOps._
 
-@(subscription: model.PaidSubscription)
+@import com.gu.salesforce.Tier
+@(subscription: model.PaidSubscription, tier: Tier)
 
 <table class="table table--striped" role="grid">
     <tr role="row">
@@ -9,7 +11,7 @@
             Tier
         </th>
         <td id="qa-tier-summary-tier">
-            @subscription.plan.tier.name
+            @tier.name
         </td>
     </tr>
 

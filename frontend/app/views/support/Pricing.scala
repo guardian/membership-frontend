@@ -1,8 +1,9 @@
 package views.support
 
 import com.gu.i18n.Currency
-import com.gu.membership.model.Price
-import model.PaidTierDetails
+import com.gu.membership.PaidMembershipPlans
+import com.gu.memsub.{Current, Price}
+import com.gu.salesforce.PaidTier
 
 case class Pricing(yearly: Price, monthly: Price) {
   require(yearly.currency == monthly.currency, "The yearly and monthly prices should have the same currency")
@@ -19,21 +20,22 @@ case class Pricing(yearly: Price, monthly: Price) {
 }
 
 object Pricing {
-  implicit class WithPricing(td: PaidTierDetails) {
+  implicit class WithPricing(plans: PaidMembershipPlans[Current, PaidTier]) {
     lazy val allPricing: List[Pricing] = Currency.all.flatMap(pricing)
 
     def unsafePriceByCurrency(currency: Currency) = pricing(currency).getOrElse {
-      val ratePlanIds = Seq(td.monthlyPlanDetails.productRatePlanId, td.yearlyPlanDetails.productRatePlanId).mkString(",")
-      throw new NoSuchElementException(s"Cannot find a $currency price for tier ${td.tier} (product rate plan ids: $ratePlanIds)")
+      val ratePlanIds = Seq(plans.month.productRatePlanId, plans.year.productRatePlanId).mkString(",")
+      throw new NoSuchElementException(
+        s"Cannot find a $currency price for tier ${plans.tier} (product rate plan ids: $ratePlanIds)")
     }
 
-    def gbpPricing = Pricing(td.yearlyPlanDetails.priceGBP, td.monthlyPlanDetails.priceGBP)
+    def gbpPricing = Pricing(plans.year.priceGBP, plans.month.priceGBP)
 
     def pricingByCurrencyOrGBP(currency: Currency) = pricing(currency).getOrElse(gbpPricing)
 
     private def pricing(c: Currency): Option[Pricing] = {
-      td.yearlyPlanDetails.pricingByCurrency.getPrice(c)
-        .zip(td.monthlyPlanDetails.pricingByCurrency.getPrice(c))
+      plans.year.pricing.getPrice(c)
+        .zip(plans.month.pricing.getPrice(c))
         .map((Pricing.apply _).tupled)
         .headOption
     }

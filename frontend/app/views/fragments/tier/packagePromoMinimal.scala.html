@@ -1,8 +1,11 @@
-@import model.PaidTierDetails
-
+@import com.gu.salesforce.PaidTier
 @import com.gu.i18n.CountryGroup
-@(details: PaidTierDetails,
-  countryGroup: CountryGroup,
+@import com.gu.membership.PaidMembershipPlans
+@import com.gu.memsub.Current
+@import views.support.Pricing._
+
+@(paidPlan: PaidMembershipPlans[Current, PaidTier],
+  cg: CountryGroup,
   showDescription: Boolean = true,
   descriptionAnchor: Option[String] = None,
   modifierClass: Option[String] = None,
@@ -10,30 +13,30 @@
   isReversed: Boolean = false)
 
 @actionAttrs = {
-    href="@routes.Joiner.enterPaidDetails(details.tier)"
+    href="@routes.Joiner.enterPaidDetails(paidPlan.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@details.tier.slug"
+    data-metric-action="@paidPlan.tier.slug"
 }
 
-<div class="package-promo--minimal tone-border-@details.tier.slug">
+<div class="package-promo--minimal tone-border-@paidPlan.tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                @fragments.tier.tierTrail(details.tier, showCaption=false)
+                @fragments.tier.tierTrail(paidPlan.tier, showCaption=false)
                 </div>
                 <div class="package-promo__tier__pricing">
-                @fragments.pricing.priceInfo(details, countryGroup.currency, canFlex=false)
+                @fragments.pricing.paidPriceInfo(paidPlan, cg.currency, canFlex=false)
                 </div>
             </div>
         </a>
     </div>
     <div class="package-promo__content">
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
+            <a class="action action--snap u-no-bottom-margin qa-package-@paidPlan.tier.slug" @actionAttrs>
                 <span class="action__label">
-                    Become a @details.tier.name
+                    Become a @paidPlan.tier.name
                 </span>
             </a>
         </div>
