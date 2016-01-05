@@ -2,11 +2,10 @@ package acceptance.util
 
 import java.security.cert.X509Certificate
 import javax.net.ssl.{X509TrustManager, SSLContext, SSLSession, HostnameVerifier}
-import com.madgag.okhttpscala._
+import com.gu.lib.okhttpscala._
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request.Builder
 import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.util.Try
 import scala.language.postfixOps
