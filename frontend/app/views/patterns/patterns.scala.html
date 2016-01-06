@@ -4,13 +4,15 @@
 @import model.FlashMessage
 @import configuration.Videos
 @import views.support.Asset
-
-@import model.MembershipCatalog
+@import views.support.Pricing._
+@import com.gu.membership.MembershipCatalog
 @import com.gu.i18n.GBP
+@import com.gu.salesforce.Tier
+@import views.support.TierPlans._
+
 @(catalog: MembershipCatalog,
   events: Seq[model.RichEvent.RichEvent],
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
-
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
@@ -195,7 +197,7 @@
         <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
-    @pattern("Modal Component", "A modal window to provide friction to actions", true) {
+    @pattern("Modal Component", "A modal window to provide friction to actions", removeClearFix = true) {
         <div class="modal-container u-cf">
             @fragments.modal.staffChangeEmail("exampleMail@mailprovider.com", "staffEmail@guardian.co.uk")
             <form action="@routes.PatternLibrary.patterns">
@@ -357,11 +359,11 @@
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
-        @fragments.pricing.priceInfo(catalog.partner, GBP)
+        @fragments.pricing.freePriceInfo()
     }
 
     @pattern("Pricing Info - Fixed", "Fixed version which only expands to fill width on large screens (canFlex=false)") {
-        @fragments.pricing.priceInfo(catalog.partner, GBP, canFlex=false)
+        @fragments.pricing.paidPriceInfo(catalog.partner, GBP, canFlex=false)
     }
 
     @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
@@ -371,11 +373,11 @@
     }
 
     @pattern("Tier Trail - Caption", "Tier name with caption") {
-        @fragments.tier.tierTrail(Partner)
+        @fragments.tier.tierTrail(partner)
     }
 
     @pattern("Tier Trail - No Caption", "Tier name with no caption") {
-        @fragments.tier.tierTrail(Partner, showCaption=false)
+        @fragments.tier.tierTrail(partner, showCaption=false)
     }
 
     @pattern("Package: Promo") {
@@ -390,7 +392,7 @@
     }
 
     @pattern("Package: Stack") {
-        @fragments.tier.packageStack(Partner)
+        @fragments.tier.packageStack(partner)
     }
 
     @pattern("Flash Message: Success") {

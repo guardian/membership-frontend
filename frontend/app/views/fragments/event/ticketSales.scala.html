@@ -29,10 +29,10 @@
     <span class="ticket-sales__header">Tickets</span>
     <ul class="ticket-sales__list u-unstyled">
         @ticketSalesItem("Partners & Patrons") {
-            @ticketDateForTier(Tier.Patron, ticketing.salesDates.datesByTier(Tier.Patron), ticketing.salesDates.needToDistinguishTimes)
+            @ticketDateForTier(Tier.patron, ticketing.salesDates.datesByTier(Tier.patron), ticketing.salesDates.needToDistinguishTimes)
         }
         @ticketSalesItem("General release") {
-            @ticketDateForTier(Tier.Friend, ticketing.salesDates.datesByTier(Tier.Friend), ticketing.salesDates.needToDistinguishTimes)
+            @ticketDateForTier(Tier.friend, ticketing.salesDates.datesByTier(Tier.friend), ticketing.salesDates.needToDistinguishTimes)
         }
         @ticketSalesItem("Sale ends") {
             <time class='qa-event-detail-sales-end' datetime="@ticketing.salesEnd">
