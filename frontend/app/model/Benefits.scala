@@ -7,16 +7,16 @@ import configuration.Config.zuoraFreeEventTicketsAllowance
 
 object Benefits {
   def forTier(tier: Tier) = tier match {
-    case Staff() => Benefits.staff
-    case Friend() => Benefits.friend
-    case Supporter() => Benefits.supporter
-    case Partner() => Benefits.partner
-    case Patron() => Benefits.patron
+    case Staff => Benefits.staff
+    case Friend => Benefits.friend
+    case Supporter => Benefits.supporter
+    case Partner => Benefits.partner
+    case Patron => Benefits.patron
   }
 
-  val DiscountTicketTiers = Set[Tier](Staff(), Partner(), Patron())
+  val DiscountTicketTiers = Set[Tier](Staff, Partner, Patron)
   val PriorityBookingTiers = DiscountTicketTiers
-  val ComplimenataryTicketTiers = Set[Tier](Partner(), Patron())
+  val ComplimenataryTicketTiers = Set[Tier](Partner, Patron)
 
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
   val accessTicket = Benefit("access_tickets", "Access to tickets")

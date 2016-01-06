@@ -1,10 +1,9 @@
 import actions._
-import com.gu.membership.MembershipCatalog
-import com.gu.memsub.services.api.SubscriptionService
 import com.gu.salesforce.{Member, PaidTierMember}
 import com.gu.stripe.StripeService
 import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
+import model.MembershipCatalog
 import play.api.data.Form
 import play.api.http.HeaderNames.USER_AGENT
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -23,8 +22,8 @@ package object controllers extends CommonActions with LazyLogging{
   }
 
   trait CatalogProvider {
-    def catalog(implicit request: BackendProvider): MembershipCatalog =
-      request.touchpointBackend.catalogService.membershipCatalog
+    def catalog(implicit request: BackendProvider): Future[MembershipCatalog] =
+      request.touchpointBackend.catalogService.membershipCatalog.get
   }
 
   trait StripeServiceProvider {
@@ -40,11 +39,6 @@ package object controllers extends CommonActions with LazyLogging{
   trait SalesforceServiceProvider {
     def salesforceService(implicit request: BackendProvider): SalesforceService =
       request.touchpointBackend.salesforceService
-  }
-
-  trait SubscriptionServiceProvider {
-    def subscriptionService(implicit request: BackendProvider): SubscriptionService =
-      request.touchpointBackend.subscriptionService
   }
 
   implicit class WithRegNumberLabel(m: Member) {

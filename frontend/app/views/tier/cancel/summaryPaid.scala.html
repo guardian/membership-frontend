@@ -1,10 +1,10 @@
 @import configuration.Config
 @import views.support.Dates._
 
-@import com.gu.salesforce.PaidTier
-@(subscription: model.PaidSubscription, tier: PaidTier)
+@(subscription: model.PaidSubscription)
 
 @main("Cancel Tier summary") {
+
     <main role="main" class="page-content l-constrained">
 
         @subscription.chargedThroughDate.map { endDate =>
@@ -16,7 +16,7 @@
             </div>
             <div class="page-section__content">
 
-                @fragments.tier.summary(subscription, tier)
+                @fragments.tier.summary(subscription)
 
                 <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community.</p>
 

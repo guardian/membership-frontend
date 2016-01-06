@@ -1,19 +1,17 @@
 @import views.support.Pricing
-@import com.gu.memsub.BillingPeriod
-@import com.gu.memsub.BillingPeriod._
+@import com.gu.membership.model.{Year,Month,BillingPeriod}
 @import com.gu.i18n.Currency
-
 @(pricing: Pricing)
 
 @inputId(bp: BillingPeriod, currency: Currency) = {@{bp.adjective}-@currency}
 
 <div data-currency="@pricing.currency.toString" class="is-hidden js-billing-period__container">
-    <label class="label" for="@inputId(year, pricing.currency)">
+    <label class="label" for="@inputId(Year, pricing.currency)">
         <input type="radio"
                class="is-hidden"
                name="payment.type"
-               id="@inputId(year, pricing.currency)"
-               value="@year.adjective"
+               id="@inputId(Year, pricing.currency)"
+               value="@Year.adjective"
                data-currency="@pricing.currency"
                checked="checked"/>
 
@@ -31,13 +29,13 @@
         </div>
     </label>
 
-    <label class="label" for="@inputId(month, pricing.currency)">
+    <label class="label" for="@inputId(Month, pricing.currency)">
         <input type="radio"
                class="is-hidden"
                name="payment.type"
-               id="@inputId(month, pricing.currency)"
+               id="@inputId(Month, pricing.currency)"
                data-currency="@pricing.currency"
-               value="@month.adjective"/>
+               value="@Month.adjective"/>
 
         <div class="pseudo-radio">
             <div class="pseudo-radio__header">Pay @pricing.monthly.pretty/month</div>

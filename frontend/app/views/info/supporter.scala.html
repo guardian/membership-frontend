@@ -1,15 +1,12 @@
+@import model.MembershipCatalog
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
-@import views.support.PaidPlans
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.Tier.Supporter
-@import com.gu.memsub.Current
-@import com.gu.salesforce.Tier
-@import configuration.Videos
-
-@(supporterPlans: PaidMembershipPlans[Current, Supporter],
+@(catalog: MembershipCatalog,
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@import com.gu.salesforce.Tier.Supporter
+@import configuration.Videos
 
 @main("Supporters", pageInfo=pageInfo) {
     @* ===== About Supporters ===== *@
@@ -22,7 +19,7 @@
                         <span class="text-pale">Plus, join today and £1 will be donated to the Guardian Charity Appeal.</span>
                     </p>
                 </div>
-                @fragments.tier.packagePromo(PaidPlans(supporterPlans), countryGroup, showDescription=false, modifierClass=Some("package-promo--spread"))
+                @fragments.tier.packagePromo(catalog.supporter, countryGroup, showDescription=false, modifierClass=Some("package-promo--spread"))
             }
         </div>
     }
@@ -49,7 +46,7 @@
                     <p>Become a Supporter to ensure the whole picture is available to everyone.</p>
                 </div>
                 <div class="action-group">
-                    <a class="action" href="@routes.Joiner.enterPaidDetails(Tier.supporter)">Become a Supporter</a>
+                    <a class="action" href="@routes.Joiner.enterPaidDetails(Supporter)">Become a Supporter</a>
                 </div>
             }
         </div>
@@ -71,7 +68,7 @@
         <div class="l-constrained">
             <h2 class="page-slice__headline">What's included</h2>
             <div class="page-slice__content">
-                @fragments.tier.packageFeature(PaidPlans(supporterPlans), countryGroup, isReversed=true)
+                @fragments.tier.packageFeature(catalog.supporter, countryGroup, isReversed=true)
             </div>
         </div>
     </div>

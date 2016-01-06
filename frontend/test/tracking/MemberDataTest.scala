@@ -1,6 +1,6 @@
 package tracking
 
-import com.gu.salesforce.Tier.partner
+import com.gu.salesforce.Tier
 import forms.MemberForm.MarketingChoicesForm
 import org.specs2.mutable.Specification
 
@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 class MemberDataTest extends Specification {
 
   val memberData = MemberData("salesforce123", "identity123", "Partner",
-    Some(DowngradeAmendment(partner)), Some("N1 9GU"), None, Some(true), Some(MarketingChoicesForm(Some(true), Some(false))))
+    Some(DowngradeAmendment(Tier.Partner)), Some("N1 9GU"), None, Some(true), Some(MarketingChoicesForm(Some(true), Some(false))))
 
   "MemberData" should {
    

@@ -8,11 +8,10 @@ import configuration.Config.zuoraFreeEventTicketsAllowance
 
 object Highlights {
   def forTier(tier: Tier) = tier match {
-    case Friend() => friend
-    case Supporter() => supporter
-    case Partner() => partner
-    case Patron() => patron
-    case Staff() => Nil
+    case Friend => friend
+    case Supporter => supporter
+    case Partner => partner
+    case Patron => patron
   }
 
   val updatesAndTickets = Highlight(

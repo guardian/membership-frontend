@@ -1,7 +1,5 @@
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.PaidTier
-@import com.gu.memsub.Current
-@(plans: PaidMembershipPlans[Current, PaidTier], cardOpt: Option[com.gu.stripe.Stripe.Card] = None)
+@import model.PaidTierDetails
+@(details: PaidTierDetails, cardOpt: Option[com.gu.stripe.Stripe.Card] = None)
 
 @import views.support.Pricing._
 @import views.support.{Asset, Dates, selectDates}
@@ -18,7 +16,7 @@
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Ongoing payments</h3>
-                    @for(pricing <- plans.allPricing) {
+                    @for(pricing <- details.allPricing) {
                         <p class="is-hidden" data-currency="@pricing.currency">
                             Your card will be charged @pricing.currency.glyph
                             <span class="js-card-note-pricing-charge"

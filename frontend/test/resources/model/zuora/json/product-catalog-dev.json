@@ -3679,7 +3679,7 @@
         "type" : "Recurring",
         "model" : "FlatFee",
         "uom" : null,
-        "pricingSummary" : [ "EUR150", "GBP100" ],
+        "pricingSummary" : [ "GBP100" ],
         "pricing" : [ {
           "currency" : "GBP",
           "price" : 100.000000000,

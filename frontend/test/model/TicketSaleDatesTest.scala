@@ -1,7 +1,7 @@
 package model
 
 import com.github.nscala_time.time.Imports.{richDateTime, _}
-import com.gu.salesforce.Tier.{friend, partner, patron}
+import com.gu.salesforce.Tier.{Friend, Partner, Patron}
 import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.EventbriteTestObjects._
@@ -22,9 +22,9 @@ class TicketSaleDatesTest extends Specification {
 
       val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
 
-      datesByTier(friend) must be(saleStart)
-      datesByTier(partner) must be(saleStart)
-      datesByTier(patron) must be(saleStart)
+      datesByTier(Friend) must be(saleStart)
+      datesByTier(Partner) must be(saleStart)
+      datesByTier(Patron) must be(saleStart)
     }
 
     "give patrons and partners advance tickets if there's enough lead time" in {
@@ -33,11 +33,11 @@ class TicketSaleDatesTest extends Specification {
       val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
       val priorityBookingPeriod = 48.hours.standardDuration
 
-      datesByTier(patron) must be_==(saleStart)
-      datesByTier(partner) must be_==(datesByTier(partner))
-      datesByTier(friend) must be_<=(testEventTimes.start)
+      datesByTier(Patron) must be_==(saleStart)
+      datesByTier(Partner) must be_==(datesByTier(Partner))
+      datesByTier(Friend) must be_<=(testEventTimes.start)
 
-      (toStartOfDay(datesByTier(patron)) to toStartOfDay(datesByTier(friend))).duration must be >= priorityBookingPeriod
+      (toStartOfDay(datesByTier(Patron)) to toStartOfDay(datesByTier(Friend))).duration must be >= priorityBookingPeriod
 
     }
 
@@ -58,9 +58,9 @@ class TicketSaleDatesTest extends Specification {
         val ticketSaleDates = TicketSaleDates.datesFor(event.times, tickets)
         val datesByTier = ticketSaleDates.datesByTier
 
-        datesByTier(patron) must be_==(effectiveStartDate)
-        datesByTier(partner) must be_==(effectiveStartDate)
-        datesByTier(friend) must be_<=(event.start)
+        datesByTier(Patron) must be_==(effectiveStartDate)
+        datesByTier(Partner) must be_==(effectiveStartDate)
+        datesByTier(Friend) must be_<=(event.start)
       }
     }
 

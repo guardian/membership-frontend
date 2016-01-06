@@ -1,11 +1,9 @@
-@import com.gu.membership.MembershipCatalog
-@import configuration.Config
-@import com.gu.salesforce.{Tier,PaidTier,FreeTier}
 @import com.gu.i18n.CountryGroup
-@import views.support.TierPlans._
+@import model.MembershipCatalog
+@import configuration.Config
+@import com.gu.salesforce.Tier
 
-@(currentTier: Tier,
-  catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+@(currentTier: Tier, catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Change Tier") {
 
@@ -23,16 +21,13 @@
             @defining(Tier.allPublic.filterNot(_ == currentTier)) { availableTiers =>
             <div class="page-section__content">
 
-                <h1 class="h-section">You are currently a @currentTier.name, choose the tier you would like to switch to:</h1>
+                <h1 class="h-section">You are currently a @currentTier.toString, choose the tier you would like to switch to:</h1>
 
                 @* Packages *@
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     @for(tier <- availableTiers) {
                         <li class="grid__item">
-                            @tier match {
-                                case free: FreeTier => { @fragments.tier.packageChanger(catalog.findFree(free)) }
-                                case paid: PaidTier => { @fragments.tier.packageChanger(catalog.findPaid(paid)) }
-                            }
+                           @fragments.tier.packageChanger(catalog.publicTierDetails(tier))
                         </li>
                     }
                 </ul>

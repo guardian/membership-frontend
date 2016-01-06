@@ -1,6 +1,5 @@
 import com.gu.googleauth
 import com.gu.identity.play.AuthenticatedIdUser
-import com.gu.memsub.Subscription
 import com.gu.salesforce._
 import com.gu.membership.util.Timing
 import monitoring.MemberAuthenticationMetrics
@@ -42,7 +41,7 @@ package object actions {
     lazy val touchpointBackend = TouchpointBackend.forUser(user)
   }
 
-  case class SubscriptionRequest[A](subscription: Subscription,
+  case class SubscriptionRequest[A](subscription: model.Subscription,
                                     memberRequest: MemberRequest[A, Contact[Member, PaymentMethod]]
                                    ) extends WrappedRequest[A](memberRequest) with BackendProvider {
     val user = memberRequest.user

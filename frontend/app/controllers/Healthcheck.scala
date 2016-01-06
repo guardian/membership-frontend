@@ -5,7 +5,7 @@ import com.github.nscala_time.time.Imports._
 import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger.warn
 import play.api.mvc.{Action, Controller}
-import services.{GuardianLiveEventService, TouchpointBackend}
+import services.{GuardianLiveEventService, TouchpointBackend, api}
 
 trait Test {
   def ok: Boolean
@@ -19,11 +19,13 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
 
 object Healthcheck extends Controller {
   val zuoraSoapClient = TouchpointBackend.Normal.zuoraSoapClient
+  val catalogService: api.CatalogService = TouchpointBackend.Normal.catalogService
 
   def tests = Seq(
     new BoolTest("Events", () => GuardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes))
+    new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes)),
+    new BoolTest("ZuoraCatalog", () => catalogService.membershipCatalog.get().value.exists(_.isSuccess) )
   )
 
   def healthcheck() = Action {

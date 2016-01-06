@@ -5,6 +5,7 @@ import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
 import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
 import tracking.ActivityTracking
@@ -33,9 +34,7 @@ trait WhatsOn extends Controller with ActivityTracking {
     getCitiesWithCount(allEvents).map(FilterItem.tupled)
   }
 
-  private val normalCatalog = TouchpointBackend.Normal.catalog
-
-  def list = CachedAction { implicit request =>
+  def list = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
       title = CopyConfig.copyTitleEvents,
       url = request.path,
@@ -46,14 +45,16 @@ trait WhatsOn extends Controller with ActivityTracking {
     val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
     val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
 
-    Ok(views.html.event.eventsList(
-      normalCatalog,
-      pageInfo,
-      events,
-      featuredEvents,
-      locationFilterItems,
-      locationOpt
-    ))
+    TouchpointBackend.Normal.catalog.map(cat =>
+      Ok(views.html.event.eventsList(
+        cat,
+        pageInfo,
+        events,
+        featuredEvents,
+        locationFilterItems,
+        locationOpt
+      ))
+    )
   }
 
   def calendar = CachedAction { implicit request =>
@@ -80,7 +81,7 @@ trait WhatsOn extends Controller with ActivityTracking {
     ))
   }
 
-  def masterclassesList = CachedAction { implicit request =>
+  def masterclassesList = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
       title = CopyConfig.copyTitleMasterclasses,
       url = request.path,
@@ -88,10 +89,11 @@ trait WhatsOn extends Controller with ActivityTracking {
     )
     val eventGroup = EventGroup("Masterclasses", masterclassEvents.events)
 
-    Ok(views.html.event.masterclassesList(normalCatalog, pageInfo, eventGroup))
+    TouchpointBackend.Normal.catalog.map(cat =>
+      Ok(views.html.event.masterclassesList(cat, pageInfo, eventGroup)))
   }
 
-  def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
+  def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
       title = CopyConfig.copyTitleMasterclasses,
       url = request.path,
@@ -100,7 +102,9 @@ trait WhatsOn extends Controller with ActivityTracking {
     val tag = decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
     val eventGroup = EventGroup("Masterclasses", masterclassEvents.getTaggedEvents(tag))
 
-    Ok(views.html.event.masterclassesList(normalCatalog, pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
+    TouchpointBackend.Normal.catalog.map { cat =>
+      Ok(views.html.event.masterclassesList(cat, pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
+    }
   }
 }
 
