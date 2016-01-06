@@ -4,16 +4,8 @@
 @import views.support.PageInfo
 @import views.support.CountryWithCurrency
 @import com.gu.i18n.Currency
-@import com.gu.membership.MembershipPlan
-@import com.gu.salesforce.Tier.Friend
-@import com.gu.memsub.{Status, Current}
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.PaidTier
-
-@import com.gu.membership.MembershipCatalog
-@import views.support.PaidPlans
-@(currentPlan: MembershipPlan[Status, Friend],
-  targetPlans: PaidMembershipPlans[Current, PaidTier],
+@(currentDetails: model.FreeTierDetails,
+  targetDetails: model.PaidTierDetails,
   countriesWithCurrency: List[CountryWithCurrency],
   userFields: com.gu.identity.play.PrivateFields,
   pageInfo: PageInfo
@@ -21,14 +13,14 @@
 
 @import views.html.helper._
 
-@main("Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name, pageInfo = pageInfo) {
+@main("Change Tier | " + targetDetails.tier.name + " from " + currentDetails.tier.name, pageInfo = pageInfo) {
       <main role="main" class="page-content l-constrained">
-          <form action="@routes.TierController.upgrade(targetPlans.tier)" method="POST" id="payment-form"
-          class="js-form" data-change-to-tier="@targetPlans.tier.name">
+          <form action="@routes.TierController.upgrade(targetDetails.tier)" method="POST" id="payment-form"
+          class="js-form" data-change-to-tier="@targetDetails.tier.name">
               @CSRF.formField
 
           <section class="page-header">
-              <h1 class="page-headline">Become a @targetPlans.tier.name</h1>
+              <h1 class="page-headline">Become a @targetDetails.tier.name</h1>
               <p class="page-intro"> Join as an annual Partner or Patron Member by and get 2 months free</p>
           </section>
 
@@ -47,8 +39,8 @@
               <div class="form-section__content">
 
                   <div class="form-group">
-                      @fragments.form.benefitsFieldset(targetPlans.tier.benefits)
-                      @fragments.form.featureChoiceFieldset(targetPlans.tier)
+                      @fragments.form.benefitsFieldset(targetDetails.tier.benefits)
+                      @fragments.form.featureChoiceFieldset(targetDetails.tier)
                   </div>
 
                   <div class="form-group">
@@ -70,7 +62,7 @@
 
                   <div class="form-group">
                       <h2 class="form-group__title">Billing</h2>
-                      @fragments.form.paymentOptions(targetPlans)
+                      @fragments.form.paymentOptions(targetDetails)
                       @fragments.form.billingAddress("Billing address")
                       @fragments.form.addressDetail(
                           countriesWithCurrencies = countriesWithCurrency,
@@ -85,10 +77,10 @@
                           county = userFields.billingAddress4,
                           userCountry = userFields.billingCountry
                       )
-                      @fragments.form.cardDetail(targetPlans)
+                      @fragments.form.cardDetail(targetDetails)
                   </div>
 
-                  @fragments.form.submit(PaidPlans(targetPlans))
+                  @fragments.form.submit(targetDetails)
               </div>
           </section>
           </form>

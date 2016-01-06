@@ -4,6 +4,7 @@ import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
 import forms.MemberForm._
 import model._
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
 import views.support.{Asset, PageInfo}
@@ -12,7 +13,7 @@ import scala.concurrent.Future
 
 trait Info extends Controller {
 
-  def supporter = CachedAction { implicit request =>
+  def supporter = CachedAction.async { implicit request =>
     implicit val countryGroup = UK
 
     val pageImages = Seq(
@@ -56,17 +57,18 @@ trait Info extends Controller {
       )
     )
 
-    Ok(views.html.info.supporter(
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters)
-      ),
-      pageImages))
+    TouchpointBackend.Normal.catalog.map { catalog =>
+      Ok(views.html.info.supporter(catalog,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters)
+        ),
+        pageImages))
+    }
   }
 
-  def supporterUSA = CachedAction { implicit request =>
+  def supporterUSA = CachedAction.async { implicit request =>
     implicit val countryGroup = US
 
     val pageImages = Seq(
@@ -109,16 +111,17 @@ trait Info extends Controller {
     )
 
 
-    Ok(views.html.info.supporterUSA(
-      TouchpointBackend.Normal.catalog.supporter,
+    TouchpointBackend.Normal.catalog.map { catalog =>
+      Ok(views.html.info.supporterUSA(catalog.supporter,
       PageInfo(
         title = CopyConfig.copyTitleSupporters,
         url = request.path,
         description = Some(CopyConfig.copyDescriptionSupporters)),
       pageImages))
+    }
   }
 
-  def patron() = CachedAction { implicit request =>
+  def patron() = CachedAction.async { implicit request =>
     implicit val countryGroup = UK
 
     val pageInfo = PageInfo(
@@ -161,24 +164,21 @@ trait Info extends Controller {
       )
     )
 
-    Ok(views.html.info.patron(
-      patronPlans = TouchpointBackend.Normal.catalog.patron,
-      partnerPlans = TouchpointBackend.Normal.catalog.partner,
-      supporterPlans = TouchpointBackend.Normal.catalog.supporter,
-      pageInfo = pageInfo,
-      countryGroup = UK,
-      pageImages = pageImages)
-    )
+    TouchpointBackend.Normal.catalog.map { cat =>
+      Ok(views.html.info.patron(cat, pageInfo, UK, pageImages))
+    }
   }
 
-  def offersAndCompetitions = CachedAction { implicit request =>
+  def offersAndCompetitions = CachedAction.async { implicit request =>
     implicit val countryGroup = UK
 
     val results =
       GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
         item.content.fields.map(_("membershipAccess")).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
-    Ok(views.html.info.offersAndCompetitions(TouchpointBackend.Normal.catalog, results))
+    TouchpointBackend.Normal.catalog.map { cat =>
+      Ok(views.html.info.offersAndCompetitions(cat, results))
+    }
   }
 
   def help = CachedAction { implicit request =>

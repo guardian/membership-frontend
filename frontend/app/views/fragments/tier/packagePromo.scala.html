@@ -1,37 +1,40 @@
-@import com.gu.salesforce._
 @import views.support.DisplayText._
-@import views.support.{FreePlan, PaidPlans, TierPlans}
-@import com.gu.i18n.CountryGroup
+@import model._
 
-@(plans: TierPlans,
-  cg: CountryGroup,
-  showDescription: Boolean = true,
-  descriptionAnchor: Option[String] = None,
-  modifierClass: Option[String] = None,
-  extraClasses: Seq[String] = Seq.empty,
-  isReversed: Boolean = false,
-  chooseTier: Boolean = false)
+@import com.gu.salesforce._
+@import com.gu.salesforce.Tier._
+@import com.gu.i18n.CountryGroup
+@(
+    details: TierDetails,
+    countryGroup: CountryGroup,
+    showDescription: Boolean = true,
+    descriptionAnchor: Option[String] = None,
+    modifierClass: Option[String] = None,
+    extraClasses: Seq[String] = Seq.empty,
+    isReversed: Boolean = false,
+    chooseTier: Boolean = false
+)
 
 @link(tier: Tier) = {
     @tier match {
-        case paid: PaidTier => {@routes.Joiner.enterPaidDetails(paid)}
-        case _: FreeTier => {@routes.Joiner.enterFriendDetails()}
+        case paid: PaidTier => { @routes.Joiner.enterPaidDetails(paid) }
+        case _: FreeTier => { @routes.Joiner.enterFriendDetails() }
     }
 }
 
 @actionAttrs = {
-    href="@link(plans.tier)?countryGroup=@cg.id"
+    href="@link(details.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@plans.tier.slug"
+    data-metric-action="@details.tier.slug"
 }
 
-<div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@plans.tier.slug">
+<div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@details.tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(plans.tier, showCaption=false)
+                    @fragments.tier.tierTrail(details.tier, showCaption=false)
                 </div>
             </div>
         </a>
@@ -40,7 +43,7 @@
         @if(showDescription) {
             <div class="package-promo__description copy">
                 <ul class="o-bulleted-list">
-                    @for(highlight <- if(chooseTier && plans.tier == Tier.patron) plans.tier.chooseTierPatron else plans.tier.highlights(cg)) {
+                    @for(highlight <- if(chooseTier && details.tier==Patron) details.tier.chooseTierPatron else details.tier.highlights(countryGroup)) {
                         <li>
                             @if(highlight.isNew) {
                                 @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -56,14 +59,11 @@
         }
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-               @plans match {
-                   case FreePlan(_) => { @fragments.pricing.freePriceInfo() }
-                   case PaidPlans(p) => { @fragments.pricing.paidPriceInfo(p, cg.currency) }
-               }
+               @fragments.pricing.priceInfo(details, countryGroup.currency, canFlex=true)
             </div>
-            <a class="action action--no-icon u-no-bottom-margin qa-package-@plans.tier.slug" @actionAttrs>
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
                 <span class="action__label">
-                    Become a @plans.tier.name
+                    Become a @details.tier.name
                 </span>
                 @fragments.actionIcon("arrow-right")
             </a>

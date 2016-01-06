@@ -1,9 +1,7 @@
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.PaidTier
-@import com.gu.memsub.Current
+@import model.PaidTierDetails
 @import views.support.Pricing._
 
-@(plans: PaidMembershipPlans[Current, PaidTier])
+@(details: PaidTierDetails)
 
 <fieldset class="fieldset js-payment-options-container">
 
@@ -14,7 +12,7 @@
 
     <div class="fieldset__fields">
         <div class="form-field">
-            @for(pricing <- plans.allPricing) {
+            @for(pricing <- details.allPricing) {
                 @fragments.pricing.billingPeriodChoice(pricing)
             }
         </div>

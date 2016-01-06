@@ -1,7 +1,7 @@
 package views.support
 
 import com.gu.i18n.{Country, CountryGroup, Currency}
-import com.gu.memsub.BillingPeriod
+import com.gu.membership.model.{BillingPeriod, Year}
 import configuration.{Config, CopyConfig}
 import model.EventSchema
 import play.api.libs.json._
@@ -15,7 +15,7 @@ case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                     customSignInUrl: Option[String] = None,
                     stripePublicKey: Option[String] = None,
                     initialCheckoutForm: CheckoutForm =
-                      CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, BillingPeriod.year)
+                      CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, Year)
                    )
 
 object PageInfo {

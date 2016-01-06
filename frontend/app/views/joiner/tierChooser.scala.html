@@ -1,9 +1,8 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.salesforce.Tier._
-@import com.gu.membership.MembershipCatalog
+@import model.MembershipCatalog
 
 @import views.support.PageInfo
-@import views.support.TierPlans._
 @(catalog: MembershipCatalog,
   pageInfo: PageInfo,
   eventOpt: Option[model.RichEvent.RichEvent],
@@ -68,16 +67,16 @@
             <div class="page-section__content">
                 <h3 class="h-section">What's included</h3>
                 <div id="package-benefits-friend">
-                    @fragments.tier.packageStack(friend)
+                    @fragments.tier.packageStack(Friend)
                 </div>
                 <div id="package-benefits-supporter">
-                    @fragments.tier.packageStack(supporter, Some(friend))
+                    @fragments.tier.packageStack(Supporter, Some(Friend))
                 </div>
                 <div id="package-benefits-partner">
-                    @fragments.tier.packageStack(partner, Some(supporter))
+                    @fragments.tier.packageStack(Partner, Some(Supporter))
                 </div>
                 <div id="package-benefits-patron">
-                    @fragments.tier.packageStack(patron, Some(partner))
+                    @fragments.tier.packageStack(Patron, Some(Partner))
                 </div>
             </div>
         </section>

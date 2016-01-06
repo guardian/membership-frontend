@@ -4,7 +4,7 @@ import actions.{AnyMemberTierRequest, MemberRequest}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
-import com.gu.salesforce.Tier.friend
+import com.gu.salesforce.Tier.Friend
 import com.gu.salesforce._
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
@@ -37,7 +37,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
     val destinationService = DestinationServiceTest
 
     def createRequestWithSession(newSessions: (String, String)*) = {
-      val testMember = Contact(ContactDetails("id", Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId"), FreeTierMember(friend), NoPayment)
+      val testMember = Contact(ContactDetails("id", Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId"), FreeTierMember(Friend), NoPayment)
       val fakeRequest = FakeRequest().withSession(newSessions: _*)
       val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
       MemberRequest(testMember, new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo", "bar"), minimalUser), fakeRequest))

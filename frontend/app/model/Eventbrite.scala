@@ -181,7 +181,7 @@ object Eventbrite {
     val salesEnd = allTickets.map(_.sales_end).max
 
     val isCurrentlyAvailableToPaidMembersOnly =
-      generalReleaseTicketOpt.map(!TicketSaleDates.datesFor(eventTimes, _).tierCanBuyTicket(Tier.friend)).getOrElse(true)
+      generalReleaseTicketOpt.map(!TicketSaleDates.datesFor(eventTimes, _).tierCanBuyTicket(Tier.Friend)).getOrElse(true)
 
     val memberDiscountOpt = for {
       generalReleaseTicket <- generalReleaseTicketOpt

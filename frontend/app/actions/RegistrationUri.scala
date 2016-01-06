@@ -20,10 +20,10 @@ object RegistrationUri {
   )
 
   val campaignTierCodes = Map[String, String](
-    controllers.routes.Joiner.joinPaid(Tier.supporter).toString -> "SUP",
-    controllers.routes.Joiner.joinPaid(Tier.partner).toString -> "PAR",
-    controllers.routes.Joiner.joinPaid(Tier.patron).toString -> "PAT",
-    controllers.routes.Joiner.joinFriend().toString -> "FRI"
+    controllers.routes.Joiner.joinPaid(Tier.Supporter).toString() -> "SUP",
+    controllers.routes.Joiner.joinPaid(Tier.Partner).toString() -> "PAR",
+    controllers.routes.Joiner.joinPaid(Tier.Patron).toString() -> "PAT",
+    controllers.routes.Joiner.joinFriend.toString() -> "FRI"
   )
 
   def parse(request: RequestHeader) = {

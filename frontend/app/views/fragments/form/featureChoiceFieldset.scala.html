@@ -51,10 +51,10 @@
 }
 
 @tier match {
-    case Partner() => {
+    case Partner => {
         @partnerChoice()
     }
-    case Patron() => {
+    case Patron => {
         <input type="hidden" name="featureChoice" value="@FeatureChoice.setToString(FeatureChoice.all)" />
         @patronChoice()
     }

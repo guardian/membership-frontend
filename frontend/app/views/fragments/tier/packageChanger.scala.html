@@ -1,24 +1,22 @@
 @import com.gu.i18n.CountryGroup
+@import model.{TierDetails,PaidTierDetails, FreeTierDetails}
 @import views.support.DisplayText._
-@import views.support.TierPlans
-@import views.support.PaidPlans
-@import views.support.FreePlan
 
-@(tierPlans: TierPlans)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+@(details: TierDetails)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @actionPath = {
-  @tierPlans match {
-        case PaidPlans(plans) => { @routes.TierController.upgrade(plans.tier) }
-        case FreePlan(_) => { @routes.TierController.downgradeToFriend() }
-    }
- }
+  @details match {
+      case paid: PaidTierDetails => { @routes.TierController.upgrade(paid.tier) }
+      case free: FreeTierDetails => { @routes.TierController.downgradeToFriend() }
+  }
+}
 
-<div class="package-promo--default tone-border-@tierPlans.tier.slug">
+<div class="package-promo--default tone-border-@details.tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link">
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(tierPlans.tier, showCaption=false)
+                    @fragments.tier.tierTrail(details.tier, showCaption=false)
                 </div>
             </div>
         </a>
@@ -26,7 +24,7 @@
     <div class="package-promo__content">
         <div class="package-promo__description copy">
             <ul class="o-bulleted-list">
-                @for(highlight <- tierPlans.tier.highlights()) {
+                @for(highlight <- details.tier.highlights()) {
                     <li>
                         @if(highlight.isNew) {
                             @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -38,20 +36,15 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-            @tierPlans match {
-                case FreePlan(_) => { @fragments.pricing.freePriceInfo() }
-                case PaidPlans(plans) => {
-                  @fragments.pricing.paidPriceInfo(plans, countryGroup.currency)
-                }
-            }
+            @fragments.pricing.priceInfo(details, countryGroup.currency, canFlex=false)
             </div>
             <a class="action u-no-bottom-margin"
-            id="qa-change-tier-@tierPlans.tier.slug"
+            id="qa-change-tier-@details.tier.slug"
             href="@actionPath"
             data-metric-trigger="click"
             data-metric-category="changeTier"
-            data-metric-action="@tierPlans.tier.slug">
-                <span class="action__label">Become a @tierPlans.tier.name</span>
+            data-metric-action="@details.tier.slug">
+                <span class="action__label">Become a @details.tier.name</span>
             </a>
         </div>
     </div>

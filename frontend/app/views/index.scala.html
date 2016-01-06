@@ -1,8 +1,6 @@
 @import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
-@import com.gu.membership.MembershipCatalog
-@import views.support.PaidPlans
-@import com.gu.salesforce.PaidTier
+@import model.MembershipCatalog
 @(
   catalog: MembershipCatalog,
   pageImages: Seq[model.ResponsiveImageGroup],
@@ -210,9 +208,9 @@
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
                 <p>Join as an annual Partner or Patron Member and get 2 months free</p>
                 <ul class="grid">
-                    @for(tier <- PaidTier.all) {
+                    @for(details <- Seq(catalog.supporter, catalog.partner, catalog.patron)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(PaidPlans(catalog.findPaid(tier)), countryGroup, modifierClass=Some("package-promo--homepage"))
+                            @fragments.tier.packagePromo(details, countryGroup, modifierClass=Some("package-promo--homepage"))
                         </li>
                     }
                 </ul>

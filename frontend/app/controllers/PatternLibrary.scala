@@ -30,11 +30,12 @@ trait PatternLibrary extends Controller {
     )
   )
 
-  def patterns = NoCacheAction { implicit request =>
-    Ok(views.html.patterns.patterns(
-      TouchpointBackend.Normal.catalog,
-      guLiveEvents.events,
-      pageImages))
+  def patterns = NoCacheAction.async { implicit request =>
+    TouchpointBackend.Normal.catalog.map(cat =>
+      Ok(views.html.patterns.patterns(
+        cat,
+        guLiveEvents.events,
+        pageImages)))
   }
 
 }

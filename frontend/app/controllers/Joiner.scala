@@ -4,9 +4,9 @@ import actions.Functions._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.{CountryGroup, GBP}
-import CountryGroup.UK
-
-import com.gu.memsub.BillingPeriod.year
+import com.gu.i18n.CountryGroup._
+import com.gu.membership.model.Year
+import com.gu.salesforce.Tier.Friend
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -25,7 +25,6 @@ import tracking.ActivityTracking
 import utils.TierChangeCookies
 import views.support
 import views.support.PageInfo.CheckoutForm
-import views.support.Pricing._
 import views.support.{CountryWithCurrency, PageInfo}
 
 import scala.concurrent.Future
@@ -46,7 +45,7 @@ object Joiner extends Controller with ActivityTracking
 
   val identityService = IdentityService(IdentityApi)
 
-  def tierChooser = NoCacheAction { implicit request =>
+  def tierChooser = NoCacheAction.async { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
     val contentRefererOpt = request.headers.get(REFERER)
@@ -63,28 +62,29 @@ object Joiner extends Controller with ActivityTracking
       customSignInUrl=Some(signInUrl)
     )
 
-    Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
-      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+    TouchpointBackend.Normal.catalog.map(cat =>
+      Ok(views.html.joiner.tierChooser(cat, pageInfo, eventOpt, accessOpt, signInUrl))
+        .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+    )
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-    val catalog = TouchpointBackend.Normal.catalog
+    val catalogF = TouchpointBackend.Normal.catalog
     implicit val countryGroup = UK
 
     userSignedIn match {
       case Some(user) => for {
         fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
+        catalog <- catalogF
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
-      } yield
+      } yield {
         Ok(views.html.joiner.staff(catalog, new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
-
-      case _ =>
-        Future.successful(
-          Ok(views.html.joiner.staff(catalog, new StaffEmails(request.user.email, None), None, None, flashMsgOpt)) )
+      }
+      case _ => catalogF.map(cat => Ok(views.html.joiner.staff(cat, new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
     }
   }
 
@@ -94,34 +94,36 @@ object Joiner extends Controller with ActivityTracking
     implicit val backendProvider: BackendProvider = request
     val desiredCurrency = countryGroup.currency
     for {
+      cat <- catalog
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
-      val plans = catalog.findPaid(tier)
-      val supportedCurrencies = plans.allPricing.map(_.currency).toSet
+      val paidDetails = cat.paidTierDetails(tier)
+      val supportedCurrencies = paidDetails.currencies
       val currency = if (supportedCurrencies.contains(desiredCurrency)) desiredCurrency else GBP
       val idUserWithCountry = identityUser.withCountryGroup(countryGroup)
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
-        initialCheckoutForm = CheckoutForm(countryGroup.defaultCountry, currency, year)
+        initialCheckoutForm = CheckoutForm(countryGroup.defaultCountry, currency, Year)
       )
 
       Ok(views.html.joiner.form.payment(
-         plans = plans,
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
+         details = paidDetails,
          idUser = idUserWithCountry,
          pageInfo = pageInfo))
     }
   }
 
-  def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request: AuthRequest[_] =>
+  def enterFriendDetails = NonMemberAction(Friend).async { implicit request: AuthRequest[_] =>
     implicit val backendProvider: BackendProvider = request
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
+      cat <- catalog
     } yield {
       val ukGroup = CountryGroup.UK
-      val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, year)
+      val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, Year)
       Ok(views.html.joiner.form.friendSignup(
-        catalog.friend,
+        cat.friend,
         identityUser,
         support.PageInfo(initialCheckoutForm = formI18n)))
     }
@@ -132,19 +134,20 @@ object Joiner extends Controller with ActivityTracking
     implicit val backendProvider: BackendProvider = request
     for {
       identityUser <- identityService.getIdentityUserView(request.identityUser, IdentityRequest(request))
+      cat <- catalog
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, identityUser, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(cat.staff, identityUser, flashMsgOpt))
     }
   }
 
   def joinFriend = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-      makeMember(Tier.friend, Redirect(routes.Joiner.thankyou(Tier.friend))) )
+      makeMember(Tier.Friend, Redirect(routes.Joiner.thankyou(Tier.Friend))) )
   }
 
   def joinStaff = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-        makeMember(Tier.partner, Redirect(routes.Joiner.thankyouStaff())) )
+        makeMember(Tier.Partner, Redirect(routes.Joiner.thankyouStaff())) )
   }
 
   def joinPaid(tier: PaidTier) = AuthenticatedNonMemberAction.async { implicit request =>
@@ -199,5 +202,5 @@ object Joiner extends Controller with ActivityTracking
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
-  def thankyouStaff = thankyou(Tier.partner)
+  def thankyouStaff = thankyou(Tier.Partner)
 }

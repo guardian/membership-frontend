@@ -1,6 +1,6 @@
 package views.support
 
-import com.gu.memsub.{BillingPeriod, Price}
+import com.gu.membership.model.{BillingPeriod, Price}
 import org.joda.time.DateTime
 import views.support.ThankyouSummary.NextPayment
 
