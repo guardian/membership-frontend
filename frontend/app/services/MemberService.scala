@@ -230,7 +230,7 @@ class MemberService(identityService: IdentityService,
         currentRatePlanId = subscription.ratePlanId,
         newRatePlanId = newRatePlanId,
         featureIds = Nil,
-        preview = false)
+        preview = true)
     } yield result.invoiceItems
   }
 
