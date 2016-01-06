@@ -61,7 +61,7 @@ object Faq {
     Item("How many Guardian Live tickets can I buy for each event?",
       Html("You can buy as many tickets as you want. Partners and Patrons are entitled to two tickets at a discount. After you’ve bought your discounted tickets you can come back and buy as many as you want at full price. We are working to improve this so you can buy all your tickets in one go.")
     ),
-    Item("If I choose the Tickets benefit, which books will I receive and when?",
+    Item("If I choose the Tickets benefit, how do I redeem my tickets?",
       Html("""If you have selected ‘tickets’ as you Partner benefit or you are a Patron,
         | your first six tickets to Guardian Live are available to book immediately.
         | You may use one per event, and this will automatically be applied when you visit the booking page.
