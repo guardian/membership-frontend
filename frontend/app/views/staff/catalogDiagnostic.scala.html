@@ -12,7 +12,7 @@
               <th>RATE PLAN</th>
               <th>ENVIRONMENT</th>
               <th>ID</th>
-              <th>PRICES</th>
+              <th>PRICES/CURRENCIES</th>
             </tr>
           </thead>
           <tbody>
@@ -20,7 +20,7 @@
               <tr>
                 <td>@cat.name</td>
                 <td>@cat.env</td>
-                <td>@cat.productRatePlanId</td>
+                <td>@cat.productRatePlanId.get</td>
                 <td>@cat.prices</td>
               </tr>
             }
