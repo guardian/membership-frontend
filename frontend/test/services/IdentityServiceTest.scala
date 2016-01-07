@@ -2,15 +2,15 @@ package services
 
 import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.model.Year
 import com.gu.memsub.Address
-import com.gu.salesforce.Tier
+import com.gu.salesforce.Tier.partner
 import controllers.IdentityRequest
 import forms.MemberForm._
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsObject, Json}
 import utils.Resource
+import com.gu.memsub.BillingPeriod.year
 
 class IdentityServiceTest extends Specification with Mockito {
 
@@ -54,9 +54,9 @@ class IdentityServiceTest extends Specification with Mockito {
       val identityService = new IdentityService(identityAPI)
 
       val paidForm = PaidMemberJoinForm(
-        Tier.Partner,
+        partner,
         NameForm("Joe", "Bloggs"),
-        PaymentForm(Year, "token"),
+        PaymentForm(year, "token"),
         Address("line one", "line 2", "town", "country", "postcode", Country.UK),
         Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK)),
         MarketingChoicesForm(Some(false), Some(false)),

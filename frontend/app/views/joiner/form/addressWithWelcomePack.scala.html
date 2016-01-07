@@ -1,9 +1,12 @@
-@import model.FreeTierDetails
 @import views.support.CountryWithCurrency
 @import com.gu.i18n.GBP
-
 @import views.support.IdentityUser
-@(staffDetails: FreeTierDetails,
+@import com.gu.membership.FreeMembershipPlan
+@import com.gu.memsub.Current
+@import com.gu.salesforce.Tier.Staff
+
+@import views.support.FreePlan
+@(staffPlan: FreeMembershipPlan[Current, Staff],
   idUser: IdentityUser,
   flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
@@ -62,7 +65,7 @@
                     }
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(staffDetails)
+                    @fragments.form.submit(FreePlan(staffPlan))
                 </form>
 
             </div>

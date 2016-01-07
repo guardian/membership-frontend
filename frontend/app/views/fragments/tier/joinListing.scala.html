@@ -1,4 +1,6 @@
-@import model.MembershipCatalog
+@import com.gu.membership.MembershipCatalog
+
+@import com.gu.salesforce.PaidTier
 @import com.gu.i18n.CountryGroup
 @(catalog: MembershipCatalog)(implicit countryGroup: CountryGroup)
 
@@ -9,17 +11,13 @@
         </div>
         <div class="listing__content">
             <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
-                <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.supporter, countryGroup, isReversed=true)
-                </li>
-                <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.partner, countryGroup, isReversed=true)
-                </li>
-                <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.patron, countryGroup, isReversed=true)
-                </li>
+                @for(tier <- PaidTier.all) {
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(catalog.findPaid(tier), countryGroup, isReversed = true)
+                    </li>
+                }
             </ul>
-            @fragments.tier.friendTeaser(catalog)
+            @fragments.tier.friendTeaser()
         </div>
     </div>
 </section>

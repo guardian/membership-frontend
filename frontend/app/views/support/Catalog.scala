@@ -1,9 +1,11 @@
 package views.support
 
 import com.gu.i18n._
-import com.gu.membership.model.{PaidTierPlan, TierPlan}
-import com.gu.salesforce.PaidTier
-import model.MembershipCatalog.Val
+import com.gu.membership.MembershipCatalog.{PlanId, Val}
+import com.gu.membership.{MembershipCatalog, MembershipPlan, PaidMembershipPlan}
+import com.gu.memsub.Status
+import com.gu.memsub.Subscription.ProductRatePlanId
+import com.gu.salesforce.{PaidTier, Tier}
 import model._
 import play.api.libs.json._
 
@@ -34,22 +36,22 @@ object Catalog {
     }
   }
 
-  case class TierPlanDescription(name: String, env: String, productRatePlanId: String, prices: String)
+  case class PlanDescription(name: String, env: String, productRatePlanId: ProductRatePlanId, prices: String)
 
-  object TierPlanDescription {
-    def fromPlanDetails(env: String)(tpd: TierPlanDetails): TierPlanDescription = {
-      val prices = tpd match {
-        case paid: PaidTierPlanDetails =>
-          paid.pricingByCurrency.prices.map(_.pretty).mkString("\n")
+  object PlanDescription {
+    def fromPlanDetails(env: String)(productRatePlanId: ProductRatePlanId, plan: MembershipPlan[Status, Tier]): PlanDescription = {
+      val prices = plan match {
+        case PaidMembershipPlan(_, _, _, _, pricing) =>
+          pricing.prices.map(_.pretty).mkString("\n")
         case _ => "FREE"
       }
-      TierPlanDescription(tierPlanName(tpd.plan), env, tpd.productRatePlanId, prices)
+      PlanDescription(planName(PlanId(plan)), env, productRatePlanId, prices)
     }
   }
 
-  case class TierPlanError(name: String, errorMsg: String)
+  case class PlanError(name: String, errorMsg: String)
 
-  case class ComparisonTable(rows: Seq[TierPlanDescription]) {
+  case class ComparisonTable(rows: Seq[PlanDescription]) {
     def interleave(other: ComparisonTable) =
       ComparisonTable(
         rows.zip(other.rows)
@@ -61,24 +63,26 @@ object Catalog {
   object ComparisonTable {
     def fromCatalog(catalog: Val[MembershipCatalog], env: String): Option[ComparisonTable] =
       catalog.fold(_ => None, c =>
-        ComparisonTable(c.allTierPlanDetails.map(TierPlanDescription.fromPlanDetails(env))).some
+        ComparisonTable(c.planMap.toSeq.map { case (prpId, plan) =>
+          PlanDescription.fromPlanDetails(env)(prpId, plan)
+        }).some
       )
   }
 
-  case class ErrorTable(env: String, rows: NonEmptyList[TierPlanError])
+  case class ErrorTable(env: String, rows: NonEmptyList[PlanError])
 
   object ErrorTable {
     def fromCatalog(catalog: Val[MembershipCatalog], env: String): Option[ErrorTable] =
       catalog.fold(errs =>
         ErrorTable(
-          env, errs.map { case (tp, msg) => TierPlanError(tierPlanName(tp), msg)}
+          env, errs.map { case (tp, msg) => PlanError(planName(tp), msg)}
         ).some, _ => None)
   }
 
-  private def tierPlanName(tp: TierPlan): String = {
+  private def planName(tp: PlanId): String = {
     val basic  = s"${tp.tier} ${tp.status}"
-    val suffix = tp match {
-      case PaidTierPlan(_, billingPeriod, _) => s" - ${billingPeriod.adverb}"
+    val suffix = tp.billingPeriod match {
+      case Some(bp) => s" - ${bp.adverb}"
       case _ => ""
     }
     basic + suffix
@@ -94,8 +98,8 @@ object Catalog {
 
   private def tiers(currency: Currency, catalog: MembershipCatalog): JsValue = JsObject(
     PaidTier.all.map { tier =>
-      val details = catalog.paidTierDetails(tier)
-      (details.yearlyPlanDetails.pricingByCurrency.getPrice(currency), details.monthlyPlanDetails.pricingByCurrency.getPrice(currency), tier)
+      val details = catalog.findPaid(tier)
+      (details.year.pricing.getPrice(currency), details.month.pricing.getPrice(currency), tier)
     }.collect {
       case (Some(y), Some(m), tier) =>
         val pricing = Pricing(y, m)
