@@ -1,7 +1,7 @@
 @import com.gu.salesforce.Contact._
 @import com.gu.salesforce.{Contact, Member, PaidTierMember, PaymentMethod}
 @import com.gu.salesforce.Tier
-@import com.gu.membership.model.Year
+@import com.gu.memsub.BillingPeriod.year
 @import configuration.Links
 @import play.twirl.api.Html
 @import views.support.Dates._
@@ -55,7 +55,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.memberStatus.tier} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.email}"))
+        @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.memberStatus.tier.name} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.email}"))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -65,7 +65,7 @@
                 <table class="table table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
-                        <td id="qa-joiner-summary-tier">@member.memberStatus.tier</td>
+                        <td id="qa-joiner-summary-tier">@member.memberStatus.tier.name</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
@@ -93,7 +93,7 @@
                         </th>
                         <td id="qa-joiner-summary-recurring">@summary.planAmount.pretty</td>
                     </tr>
-                    @if(summary.billingPeriod == Year && summary.initialFreePeriodOffer) {
+                    @if(summary.billingPeriod == year && summary.initialFreePeriodOffer) {
                         @for(renewalDate <- summary.renewalDate) {
                             <tr role="row">
                                 <th role="rowheader">
@@ -127,7 +127,7 @@
         @returnDestinationOpt.fold{ 
             @getStarted("Get started") {
                 @member.memberStatus.tier match {
-                    case Tier.Supporter => {
+                    case Tier.supporter => {
                         <p>Visit the Members area of theguardian.com, see all the latest news and highlights from our membership programme.</p>
                         <a class="action" href="@Links.membershipFront">Get started</a>
                     }

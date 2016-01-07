@@ -1,13 +1,16 @@
 @import views.support.PageInfo
-@import model.FreeTierDetails
 @import com.gu.i18n.GBP
 @import views.support.CountryWithCurrency
 @import com.gu.salesforce.Tier.Friend
+@import com.gu.salesforce.Tier.friend
 @import views.html.helper._
 @import views.support.DisplayText._
-
 @import views.support.IdentityUser
-@(friendTierDetails: FreeTierDetails,
+@import com.gu.membership.FreeMembershipPlan
+@import com.gu.memsub.Current
+
+@import views.support.FreePlan
+@(friendPlan: FreeMembershipPlan[Current, Friend],
   idUser: IdentityUser,
   pageInfo: PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token)
@@ -38,7 +41,7 @@
                 <div class="form-section__content">
 
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(Friend.benefits)
+                        @fragments.form.benefitsFieldset(friend.benefits)
                     </div>
 
                     <div class="form-group">
@@ -66,7 +69,7 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(friendTierDetails)
+                    @fragments.form.submit(FreePlan(friendPlan))
                 </div>
             </section>
         </form>

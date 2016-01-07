@@ -6,11 +6,11 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader("Unavailable Tier", Some("Unable to change from " + currentTier + " to " + targetTier))
+        @fragments.page.pageHeader("Unavailable Tier", Some("Unable to change from " + currentTier.name + " to " + targetTier.name))
 
         <div class="page-section">
             <div class="page-section__content copy">
-                <p>Sorry you are currently unable to change your tier from <strong>@currentTier</strong> to <strong>@targetTier</strong>. Please contact <a href="mailto:@Email.membershipSupport">@Email.membershipSupport</a> for assistance.</p>
+                <p>Sorry you are currently unable to change your tier from <strong>@currentTier.name</strong> to <strong>@targetTier.name</strong>. Please contact <a href="mailto:@Email.membershipSupport">@Email.membershipSupport</a> for assistance.</p>
             </div>
         </div>
 

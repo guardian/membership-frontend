@@ -5,18 +5,18 @@
 @import com.gu.salesforce.Tier._
 
 @actionAttrs = {
-    href="@{routes.Joiner.enterPaidDetails(Supporter)}?countryGroup=@US.id"
+    href="@{routes.Joiner.enterPaidDetails(supporter)}?countryGroup=@US.id"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@Supporter.toString.toLowerCase"
+    data-metric-action="@supporter.toString.toLowerCase"
 }
 
-<div class="package-promo @if(isReversed){ package-promo--reversed} package-promo--spread tone-border-@Supporter">
+<div class="package-promo @if(isReversed){ package-promo--reversed} package-promo--spread tone-border-@supporter">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(Supporter, showCaption=false)
+                    @fragments.tier.tierTrail(supporter, showCaption=false)
                 </div>
                 <div class="package-promo__tier__pricing">
 
