@@ -7,8 +7,7 @@ object Dependencies {
   val awsClientVersion = "1.9.30"
   //libraries
   val sentryRavenLogback = "net.kencochrane.raven" % "raven-logback" % "6.0.0"
-  val identityCookie = "com.gu.identity" %% "identity-cookie" % "3.44"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.12"
+  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.13"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.123"
@@ -27,7 +26,7 @@ object Dependencies {
 
   //projects
 
-  val frontendDependencies = Seq(identityCookie, identityPlayAuth, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
+  val frontendDependencies = Seq(identityPlayAuth, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
     contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3, scalaz,
     PlayImport.specs2 % "test")
 
