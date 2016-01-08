@@ -10,7 +10,7 @@ import play.api.libs.iteratee.{Iteratee, Enumerator}
 import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Failure
+import scala.util.{Success, Try, Failure}
 import scala.concurrent.duration._
 
 case class ContentAPIPagination(currentPage: Int, pages: Int) {
@@ -87,6 +87,14 @@ trait GuardianContent {
 
   val client = new GuardianContentClient(Config.contentApiKey)
 
+  val logAndRecord: PartialFunction[Try[_], Unit] = {
+    case Success(_) =>
+      ContentApiMetrics.putResponseCode(200, "GET content")
+    case Failure(GuardianContentApiError(status, message)) =>
+      ContentApiMetrics.putResponseCode(status, "GET content")
+      Logger.error(s"Error response from Content API $status")
+  }
+
   def masterclassesQuery(page: Int): Future[ItemResponse] = {
     val date = new DateTime(2014, 1, 1, 0, 0)
     val itemQuery = ItemQuery("guardian-masterclasses")
@@ -96,10 +104,8 @@ trait GuardianContent {
       .showReferences("eventbrite")
       .showFields("body")
       .showElements("image")
-    client.getResponse(itemQuery).andThen {
-      case Failure(GuardianContentApiError(status, message)) =>
-        logAndRecordError(status)
-    }
+
+    client.getResponse(itemQuery).andThen(logAndRecord)
   }
 
   def eventbriteQuery(page: Int): Future[SearchResponse] = {
@@ -109,10 +115,7 @@ trait GuardianContent {
       .showElements("image")
       .pageSize(100)
       .page(page)
-    client.getResponse(searchQuery).andThen {
-      case Failure(GuardianContentApiError(status, message)) =>
-        logAndRecordError(status)
-    }
+    client.getResponse(searchQuery).andThen(logAndRecord)
   }
 
   def offersAndCompetitionsContentQuery(page: Int): Future[ItemResponse] = {
@@ -123,10 +126,7 @@ trait GuardianContent {
       .page(page)
       .tag("membership/membership-offers|membership/membership-competitions")
 
-    client.getResponse(itemQuery).andThen {
-      case Failure(GuardianContentApiError(status, message)) =>
-        logAndRecordError(status)
-    }
+    client.getResponse(itemQuery).andThen(logAndRecord)
   }
 
   def membershipFrontContentQuery(page: Int): Future[ItemResponse] = {
@@ -136,10 +136,7 @@ trait GuardianContent {
       .pageSize(20)
       .page(page)
 
-    client.getResponse(itemQuery).andThen {
-      case Failure(GuardianContentApiError(status, message)) =>
-        logAndRecordError(status)
-    }
+    client.getResponse(itemQuery).andThen(logAndRecord)
   }
 
   def contentItemQuery(path: String): Future[ItemResponse] = {
@@ -147,14 +144,6 @@ trait GuardianContent {
       .showFields("trailText")
       .showElements("all")
       .showTags("all")
-    client.getResponse(itemQuery).andThen {
-      case Failure(GuardianContentApiError(status, message)) =>
-        logAndRecordError(status)
-    }
-  }
-
-  def logAndRecordError(status: Int) {
-    ContentApiMetrics.putResponseCode(status, "GET content")
-    Logger.error(s"Error response from Content API $status")
+    client.getResponse(itemQuery).andThen(logAndRecord)
   }
 }
