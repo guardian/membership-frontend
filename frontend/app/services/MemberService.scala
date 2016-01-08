@@ -1,16 +1,14 @@
 package services
 
-import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
+import com.gu.i18n.Currency
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.MembershipCatalog
-import com.gu.memsub.services.api.CatalogService
 import com.gu.membership.util.Timing
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub._
-import com.gu.memsub.services.api.{PaymentService, SubscriptionService}
+import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
 import com.gu.salesforce.Tier.{Partner, Patron}
-import com.gu.salesforce.{PaidTier, ContactId, Tier}
+import com.gu.salesforce.{ContactId, PaidTier, Tier}
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
@@ -353,17 +351,21 @@ class MemberService(identityService: IdentityService,
   }
 
   override def createFreeSubscription(contactId: ContactId,
-                                      joinData: JoinForm): Future[SubscribeResult] =
+                                      joinData: JoinForm): Future[SubscribeResult] = {
+    val planId = joinData.planChoice.productRatePlanId
+    val currency = catalog.supportedAccountCurrency(joinData.deliveryAddress.country, planId)
+
     for {
       zuoraFeatures <- zuoraService.getFeatures
       result <- zuoraService.createSubscription(
-        subscribeAccount = SoapSubscribeAccount.stripe(contactId, GBP, autopay = false),
+        subscribeAccount = SoapSubscribeAccount.stripe(contactId, currency, autopay = false),
         paymentMethod = None,
-        productRatePlanId = joinData.planChoice.productRatePlanId,
+        productRatePlanId = planId,
         name = joinData.name,
         address = joinData.deliveryAddress
       )
     } yield result
+  }
 
   implicit private def features = zuoraService.getFeatures
 
@@ -376,7 +378,7 @@ class MemberService(identityService: IdentityService,
       result <- zuoraService.createSubscription(
         subscribeAccount = SoapSubscribeAccount.stripe(
           contactId = contactId,
-          currency = supportedAccountCurrency(catalog)(joinData.zuoraAccountAddress.country, planId),
+          currency = catalog.supportedAccountCurrency(joinData.zuoraAccountAddress.country, planId),
           autopay = true),
         paymentMethod = Some(CreditCardReferenceTransaction(customer)),
         productRatePlanId = planId,
@@ -385,14 +387,6 @@ class MemberService(identityService: IdentityService,
         featureIds = featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id)
       )
     } yield result
-
-
-  // TODO move into catalog
-  private def supportedAccountCurrency(catalog: MembershipCatalog)(country: Country, productRatePlanId: ProductRatePlanId): Currency =
-    CountryGroup
-      .byCountryCode(country.alpha2).map(_.currency)
-      .filter(catalog.unsafeFindPaid(productRatePlanId).currencies)
-      .getOrElse(GBP)
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =

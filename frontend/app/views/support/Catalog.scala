@@ -2,7 +2,7 @@ package views.support
 
 import com.gu.i18n._
 import com.gu.membership.MembershipCatalog.{PlanId, Val}
-import com.gu.membership.{MembershipCatalog, MembershipPlan, PaidMembershipPlan}
+import com.gu.membership.{FreeMembershipPlan, MembershipCatalog, MembershipPlan, PaidMembershipPlan}
 import com.gu.memsub.Status
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.salesforce.{PaidTier, Tier}
@@ -43,9 +43,9 @@ object Catalog {
       val prices = plan match {
         case PaidMembershipPlan(_, _, _, _, pricing) =>
           pricing.prices.map(_.pretty).mkString("\n")
-        case _ => "FREE"
+        case FreeMembershipPlan(_, _, currencies, _) => currencies.mkString(", ")
       }
-      PlanDescription(planName(PlanId(plan)), env, productRatePlanId, prices)
+      PlanDescription(planName(plan), env, productRatePlanId, prices)
     }
   }
 
@@ -79,14 +79,22 @@ object Catalog {
         ).some, _ => None)
   }
 
-  private def planName(tp: PlanId): String = {
-    val basic  = s"${tp.tier} ${tp.status}"
-    val suffix = tp.billingPeriod match {
-      case Some(bp) => s" - ${bp.adverb}"
+  private def planName(plan: MembershipPlan[Status, Tier]): String = {
+    val suffix = plan match {
+      case PaidMembershipPlan(_, _, bp, _, _) => s" - ${bp.adverb}"
       case _ => ""
     }
-    basic + suffix
+    tierWithStatus(plan.tier, plan.status) + suffix
   }
+
+  private def planName(plan: PlanId): String = {
+    val suffix = plan.billingPeriod.fold("")(bp => s" - ${bp.adverb}")
+    tierWithStatus(plan.tier, plan.status) + suffix
+  }
+
+  private def tierWithStatus(tier: Tier, status: Status) = s"${tier.name} ${status.name}"
+
+
 
   implicit val pricingWrites = new Writes[Pricing] {
     override def writes(p: Pricing): JsValue = Json.obj(
