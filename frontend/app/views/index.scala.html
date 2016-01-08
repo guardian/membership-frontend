@@ -6,7 +6,6 @@
 @(
   catalog: MembershipCatalog,
   pageImages: Seq[model.ResponsiveImageGroup],
-  midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
   eventCollection: model.RichEvent.EventBrandCollection
 )(implicit countryGroup: CountryGroup)
 
@@ -175,22 +174,6 @@
                         </li>
                     </ul>
                 </div>
-
-                @fragments.common.jumpLink("A home for Guardian members", "#big-ideas")
-
-                @* ===== A home for big ideas ===== *@
-                <div id="big-ideas">
-                    @fragments.promos.promoTertiary(
-                        "A home for Guardian members",
-                        """In 2016, the Guardian is opening the Midland Goods Shed at
-                            | King’s Cross as a new civic space. It features a bar and restaurant,
-                            | and will host events, festivals and courses from the Guardian and
-                            | other organisations we admire.""".stripMargin,
-                        midlandGoodsShedImages,
-                        None
-                    )
-                </div>
-
                 @fragments.common.jumpLink("Join today", "#join-now")
             </div>
         </div>
