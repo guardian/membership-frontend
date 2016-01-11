@@ -5,7 +5,7 @@ import com.gu.salesforce.Tier
 import model.Benefits.PriorityBookingTiers
 import model.Eventbrite.{EBTicketClass, EventTimes}
 import org.joda.time.DateTimeZone.UTC
-import org.joda.time.Instant
+import org.joda.time.{Duration, Instant}
 
 import scala.collection.immutable.SortedMap
 
@@ -39,7 +39,10 @@ object TicketSaleDates {
   def datesFor(eventTimes: EventTimes, tickets: EBTicketClass): TicketSaleDates = {
     val effectiveSaleStart = tickets.sales_start.getOrElse(eventTimes.created)
 
-    val saleStartLeadTimeOnEvent = (effectiveSaleStart to eventTimes.start).duration
+    val saleStartLeadTimeOnEvent =
+      if (effectiveSaleStart <= eventTimes.start)
+        (effectiveSaleStart to eventTimes.start).duration
+      else Duration.ZERO
 
     memberLeadTimeOverGeneralRelease.until(saleStartLeadTimeOnEvent).values.lastOption match {
       case Some(memberLeadTimes) =>
