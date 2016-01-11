@@ -1,4 +1,4 @@
-@(title: String, description: String, modifierClass: String = "")(action: Html = Html(""))
+@(modifierClass: String)(title: Html)(description: Html)(action: Html = Html(""))
 
 <div class="hero-banner @modifierClass">
     <div class="hero-banner__inner">
@@ -7,7 +7,7 @@
                 <div class="hero-banner__accent"></div>
                 <div class="hero-banner__secondary_accent"></div>
                 <div class="hero-banner__content">
-                    <h1 class="hero-banner__title">@Html(title)</h1>
+                    <h1 class="hero-banner__title">@title</h1>
                     <p class="hero-banner__description">@description</p>
                     <div class="hero-banner__action">@action</div>
                 </div>

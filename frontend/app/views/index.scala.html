@@ -13,11 +13,11 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
-    @fragments.page.heroBanner(
-        "Become a Guardian&nbsp;Member",
-        "Join Guardian Members to support our journalism, and enjoy a programme of fantastic member events",
-        "hero-banner--homepage"
-    ) {
+    @fragments.page.heroBanner("hero-banner--homepage") {
+        Become a Guardian&nbsp;Member
+    } {
+        Join Guardian Members to support our journalism, and enjoy a programme of fantastic member events
+    } {
         @fragments.common.jumpLink("Learn more", "#introducing-members")
     }
 

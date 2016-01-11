@@ -52,11 +52,12 @@
 }
 
 @main("Supporters", pageInfo=pageInfo) {
-    @fragments.page.heroBanner(
-        "Become a Guardian&nbsp;Supporter",
-        "Supporters keep our journalism fearless and free to tell the stories other news organizations won’t",
-        "hero-banner--us-supporter"
-    )()
+    @fragments.page.heroBanner("hero-banner--us-supporter") {
+        Become a Guardian&nbsp;Supporter
+    } {
+        Supporters keep our journalism fearless and free to tell the stories other news organizations won’t.
+        <span class="text-pale">Plus, join today and $1 will be donated to the Guardian Charity Appeal.</span>
+    }()
 
     @section(hasBorder = false) {
         @fragments.tier.packagePromoUSASupporter(supporterPlans)
