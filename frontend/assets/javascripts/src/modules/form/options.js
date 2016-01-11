@@ -51,7 +51,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
         selectCountry(DELIVERY_COUNTRY_EL, checkoutForm.deliveryCountry);
         if (!checkoutForm.showBillingAddress && checkoutForm.selectedBillingCountry !== checkoutForm.billingCountry) {
             selectCountry(BILLING_COUNTRY_EL, checkoutForm.billingCountry);
-            BILLING_COUNTRY_EL.dispatchEvent(new Event('change'));
+            bean.fire(BILLING_COUNTRY_EL, 'change');
         }
     }
 
@@ -124,7 +124,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
         }
 
         if (DELIVERY_COUNTRY_EL) {
-            DELIVERY_COUNTRY_EL.dispatchEvent(new Event('change'));
+            bean.fire(DELIVERY_COUNTRY_EL, 'change');
         }
     };
 
