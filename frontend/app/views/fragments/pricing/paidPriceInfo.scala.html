@@ -4,12 +4,20 @@
 @import com.gu.memsub.Current
 @import views.support.Pricing._
 
-@(plans: PaidMembershipPlans[Current, PaidTier], currency: Currency, isReversible: Boolean = false, canFlex: Boolean = true)
+@(
+    plans: PaidMembershipPlans[Current, PaidTier],
+    currency: Currency,
+    isReversible: Boolean = false,
+    canFlex: Boolean = true,
+    showCurrencyPrefix: Boolean = true
+)
 <div class="price-info@if(canFlex) { price-info--flex} @if(isReversible) { price-info--@plans.tier.slug}">
     @defining(plans.pricingByCurrencyOrGBP(currency)) { pricing =>
         <div class="price-info__item price-info__item--split">
             <div class="price-info__detail">
-                <strong class="price-info__value">@pricing.yearly.pretty</strong>
+                <strong class="price-info__value">
+                    @if(showCurrencyPrefix) { @pricing.yearly.pretty } else { @pricing.yearly.prettyWithoutCurrencyPrefix }
+                </strong>
                 <span class="price-info__date">/year</span>
             </div>
             @pricing.savingInfo.map { savingMsg =>
@@ -18,7 +26,9 @@
         </div>
         <div class="price-info__item price-info__item--split price-info__item--last">
             <div class="price-info__detail price-info__detail--right">
-                <strong class="price-info__value">@pricing.monthly.pretty</strong>
+                <strong class="price-info__value">
+                    @if(showCurrencyPrefix) { @pricing.monthly.pretty } else { @pricing.monthly.prettyWithoutCurrencyPrefix }
+                </strong>
                 <span class="price-info__date">/month</span>
             </div>
         </div>

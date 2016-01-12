@@ -34,7 +34,7 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-                @fragments.pricing.paidPriceInfo(supporterPlans, US.currency)
+                @fragments.pricing.paidPriceInfo(supporterPlans, US.currency, showCurrencyPrefix = false)
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@supporter.slug" @actionAttrs>
                 <span class="action__label">
