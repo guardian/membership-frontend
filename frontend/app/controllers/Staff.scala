@@ -4,9 +4,10 @@ import com.gu.memsub.Membership
 import com.gu.memsub.services.CatalogService
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.Controller
+import play.api.mvc.{DiscardingCookie, Cookie, Controller}
 import services._
 import views.support.Catalog
+import configuration.Config.sessionCamCookieName
 import play.api.Play.current
 
 trait Staff extends Controller {
@@ -28,6 +29,16 @@ trait Staff extends Controller {
 
   def eventOverviewDetails = GoogleAuthenticatedStaffAction { implicit request =>
     Ok(views.html.eventOverview.details(request.path))
+  }
+
+  // Temporary solution to evaluate SessionCam without actually activating it across the entire site
+  def dropSessionCamCookie = GoogleAuthenticatedStaffAction { implicit request =>
+    Redirect(routes.FrontPage.welcome()).withCookies(
+      Cookie(name = sessionCamCookieName, value = "y", httpOnly = false))
+  }
+
+  def removeSessionCamCookie = GoogleAuthenticatedStaffAction { implicit request =>
+    Redirect(routes.FrontPage.welcome()).discardingCookies(DiscardingCookie(sessionCamCookieName))
   }
 
   def catalogDiagnostics = GoogleAuthenticatedStaffAction.async { implicit request =>
