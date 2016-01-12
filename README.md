@@ -72,15 +72,12 @@ Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this proje
 
 ### Setup AWS credentials
 
-Setup AWS credentials. Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
-
-In `~/.aws/credentials` add the following:
-
+Install the awscli:
 ```
-[membership]
-aws_access_key_id = [YOUR_AWS_ACCESS_KEY]
-aws_secret_access_key = [YOUR_AWS_SECRET_ACCESS_KEY]
+brew install awscli
 ```
+
+Fetch the developer AWS credentials, discuss how we do this with a team member.
 
 Ensure you have the following in `~/.aws/config` (you may already have this from setting up another AWS application):
 
@@ -94,7 +91,7 @@ region = eu-west-1
 Download our private keys from the `membership-private` S3 bucket. If you have the AWS CLI set up you can run:
 
 ```
-aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
+sudo aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu/ --profile membership
 ```
 
 ### Ubuntu setup
