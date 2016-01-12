@@ -82,6 +82,15 @@
         width: 100%;
     }
 }
+// No yellow background once header becomes a right-hand column
+.video-preview--plain {
+    @include mq(tablet) {
+        .video-preview__header {
+            background: none;
+            padding-top: 0;
+        }
+    }
+}
 .video-preview__video {
     display: block;
     position: relative;

@@ -13,26 +13,13 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
-    <div class="hero-banner" >
-        <div class="hero-banner__inner">
-            <div class="l-constrained">
-                <div class="hero-banner__sections">
-                    <div class="hero-banner__accent"></div>
-                    <div class="hero-banner__secondary_accent"></div>
-                    <div class="hero-banner__content">
-                            <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
-                            <p class="hero-banner__description">
-                                Join Guardian Members to support our journalism,
-                                and enjoy a programme of fantastic member events
-                            </p>
-                            <div class="hero-banner__action">
-                                @fragments.common.jumpLink("Learn more", "#introducing-members")
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @fragments.page.heroBanner("hero-banner--homepage") {
+        Become a Guardian&nbsp;Member
+    } {
+        Join Guardian Members to support our journalism, and enjoy a programme of fantastic member events
+    } {
+        @fragments.common.jumpLink("Learn more", "#introducing-members")
+    }
 
     @* =========================================== *@
     @* 1. Introducing Guardian Members             *@
@@ -45,7 +32,7 @@
             BasicLink("#join-now", "Join now")
         ))
 
-        <div class="listing listing--bordered listing--padded l-constrained" id="introducing-members">
+        <div class="listing listing--bordered l-constrained" id="introducing-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
                     Introducing Guardian Members
@@ -67,7 +54,7 @@
     @* 2. Why join                                 *@
     @* =========================================== *@
     <section class="page-slice page-slice--listing u-padding-top" id="why-join">
-        <div class="listing listing--bordered listing--padded l-constrained">
+        <div class="listing listing--bordered l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
                     Why join
@@ -183,7 +170,7 @@
     @* 3. Join Now                                 *@
     @* =========================================== *@
     <section class="page-slice page-slice--listing u-padding-top" id="join-now">
-        <div class="listing listing--bordered listing--padded l-constrained">
+        <div class="listing listing--bordered l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
                     Join now

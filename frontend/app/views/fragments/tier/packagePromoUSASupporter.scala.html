@@ -1,50 +1,46 @@
 @import com.gu.i18n.CountryGroup.US
-@import views.support.Pricing
-@(pricing: Pricing, isReversed: Boolean)
+@import com.gu.memsub.Current
+@import com.gu.salesforce.Tier.Supporter
+@import com.gu.membership.PaidMembershipPlans
+@(supporterPlans: PaidMembershipPlans[Current, Supporter])
 
 @import com.gu.salesforce.Tier._
 
 @actionAttrs = {
-    href="@{routes.Joiner.enterPaidDetails(supporter)}?countryGroup=@US.id"
+    href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@US.id"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@supporter.toString.toLowerCase"
+    data-metric-action="@Supporter.toString.toLowerCase"
 }
 
-<div class="package-promo @if(isReversed){ package-promo--reversed} package-promo--spread tone-border-@supporter">
+<div class="package-promo package-promo--homepage tone-border-supporter">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(supporter, showCaption=false)
-                </div>
-                <div class="package-promo__tier__pricing">
-
-                    <div class="price-info">
-                        <div class="price-info__item price-info__item--split">
-                            <div class="price-info__detail">
-                                <strong class="price-info__value">@pricing.yearly.pretty</strong>
-                                <span class="price-info__date">/year</span>
-                            </div>
-                        </div>
-                        <div class="price-info__item price-info__item--split price-info__item--last">
-                            <div class="price-info__detail price-info__detail--right">
-                                <strong class="price-info__value">@pricing.monthly.pretty</strong>
-                                <span class="price-info__date">/month</span>
-                            </div>
-                        </div>
-                    </div>
-
+                    @fragments.tier.tierTrail(supporterPlans.tier, showCaption=false)
                 </div>
             </div>
         </a>
     </div>
     <div class="package-promo__content">
+        <div class="package-promo__description copy">
+            <p>Support our journalism and keep theguardian.com free of charge for all</p>
+            <h4 class="u-margin-top">Benefits:</h4>
+            <ul class="o-bulleted-list">
+                <li>Welcome pack, card and gift</li>
+                <li>Regular Members updates</li>
+            </ul>
+        </div>
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin qa-package-@Supporter.toString.toLowerCase" @actionAttrs>
+            <div class="package-promo__actions__pricing">
+                @fragments.pricing.paidPriceInfo(supporterPlans, US.currency)
+            </div>
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@supporter.slug" @actionAttrs>
                 <span class="action__label">
                     Become a Supporter
                 </span>
+                @fragments.actionIcon("arrow-right")
             </a>
         </div>
     </div>

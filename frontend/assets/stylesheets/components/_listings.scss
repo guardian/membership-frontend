@@ -23,6 +23,8 @@
     }
 }
 
+$half-gutter: $gs-gutter / 2;
+$full-gutter: $gs-gutter;
 .listing {
     @include clearfix;
     clear: both;
@@ -31,24 +33,62 @@
     padding-bottom: $gs-baseline * 2;
 }
     .listing__lead-in {
-        padding: $gs-gutter / 2;
+        // LEFT AND RIGHT OF PAGE
+        padding: $half-gutter;
+        @include mq(tablet) {
+            padding-left: $full-gutter;
+            padding-right: $full-gutter;
+        }
 
         @include mq(mem-full) {
             float: left;
             width: gs-span(2);
-            padding: ($gs-gutter / 2) 0 ($gs-baseline * 3);
-            margin-right: $gs-gutter;
-            margin-left: $gs-gutter;
+            padding: $half-gutter 0 ($gs-baseline * 3);
+            margin-right: $full-gutter;
+
+            // LEFT OF PAGE
+            margin-left: $full-gutter;
         }
     }
     .listing__content {
-        padding: 0 $gs-gutter / 2;
+        position: relative;
+        // LEFT AND RIGHT OF PAGE
+        padding: 0 $half-gutter;
+        @include mq(tablet) {
+            padding-left: $full-gutter;
+            padding-right: $full-gutter;
+        }
 
         @include mq(mem-full) {
             float: right;
             width: gs-span(12);
-            padding: ($gs-gutter / 2) 0 0 0;
-            margin-right: $gs-gutter;
+            padding: $half-gutter 0 0 0;
+
+            // RIGHT OF PAGE
+            margin-right: $full-gutter;
+        }
+
+        .listing--narrow & {
+            float: left;
+            @include mq(tablet) {
+                // the gutter is part of the padding at this point so needs to be included in width
+                width: gs-span(8) + $full-gutter;
+                padding-right: 0;
+            }
+            @include mq(mem-full) {
+                // gutter is margin now so doesn't need to be included in width
+                width: gs-span(8);
+            }
+        }
+    }
+    .listing__text {
+        @include fs-headline(2);
+        @include mq(tablet) {
+            @include fs-headline(3);
+            padding-right: $full-gutter;
+        }
+        @include mq(mem-full) {
+            padding-left: $full-gutter;
         }
     }
     .listing__no-results {
@@ -66,12 +106,81 @@
         }
     }
 
+// This type of listing must have an <img> element to give it
+// a height and serve as a background
+.listing--card-stack {
+    // This is to get the listing content to appear on top of a relatively positioned
+    // image which is being used as its background
+    z-index: 1;
+    @include mq(tablet) {
+        position: absolute;
+        background: none;
+
+        .listing__content {
+            background-color: $white;
+        }
+    }
+
+    .listing__lead-in {
+        display: none;
+        @include mq(mem-full) {
+            display: block;
+        }
+    }
+}
+    .listing--card-stack__card-one,
+    .listing--card-stack__card-two,
+    .listing--card-stack__card-three {
+        position: absolute;
+        height: 100%;
+        display: none;
+    }
+    .listing--card-stack__card-one {
+        // bright yellow
+        @include mq(mem-full) {
+            display: block;
+        }
+        width: 8%;
+        top: -24%;
+        left: -2%;
+        z-index: -3;
+        background-color: color(brand-supporting-2);
+        transform: rotate(10deg);
+    }
+    .listing--card-stack__card-two {
+        // darker yellow
+        @include mq(tablet) {
+            display: block;
+        }
+        z-index: -2;
+        background-color: tone('supporter');
+        transform: rotate(-9deg);
+        width: 96%;
+        right: -6%;
+        top: -2%;
+        opacity: 0.8;
+    }
+    .listing--card-stack__card-three {
+        @include mq(tablet) {
+            display: block;
+        }
+        z-index: -1;
+        background-color: $white;
+        transform: rotate(-20deg);
+        width: 31%;
+        right: -10%;
+        top: -55%;
+        opacity: 0.7;
+    }
 
 .listing--transparent {
     background-color: transparent;
 }
 .listing--bordered {
     border-top: 1px solid $c-border-neutral;
+}
+.listing--no-bottom-padding {
+    padding-bottom: 0;
 }
 .listing--basic,
 .listing--lead {
