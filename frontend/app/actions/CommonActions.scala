@@ -1,7 +1,7 @@
 package actions
 
 import actions.Fallbacks._
-import actions.Functions._
+import actions.ActionRefiners._
 import com.gu.googleauth
 import com.gu.salesforce.PaidTier
 import configuration.Config
@@ -77,19 +77,21 @@ trait CommonActions {
     googleAuthenticationRefiner() andThen
     isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffUnauthorisedError())
 
-  val MemberAction = AuthenticatedAction andThen memberRefiner()
+  val SubscriptionAction = AuthenticatedAction andThen subscriptionRefiner()
 
-  val StaffMemberAction = AuthenticatedAction andThen memberRefiner(onNonMember = joinStaffMembership(_))
+  val StaffMemberAction = AuthenticatedAction andThen subscriptionRefiner(onNonMember = joinStaffMembership(_))
 
-  val PaidMemberAction = MemberAction andThen paidMemberRefiner()
+  val PaidSubscriptionAction = SubscriptionAction andThen paidSubscriptionRefiner()
+
+  val FreeSubscriptionAction = SubscriptionAction andThen freeSubscriptionRefiner()
 
   val CorsPublicCachedAction = CorsPublic andThen CachedAction
 
   val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = setGuMemCookie(_))
 
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = setGuMemCookie(_))
+  val AjaxSubscriptionAction = AjaxAuthenticatedAction andThen subscriptionRefiner(onNonMember = setGuMemCookie(_))
 
-  val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
+  val AjaxPaidSubscriptionAction = AjaxSubscriptionAction andThen paidSubscriptionRefiner(onFreeMember = _ => Forbidden)
 
   def setGuMemCookie(implicit request: RequestHeader) =
     AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
@@ -97,17 +99,7 @@ trait CommonActions {
       Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }
 
-  def CheckTierChangeTo(targetTier: PaidTier) = new ActionRefiner[AnyMemberTierRequest, SubscriptionRequest] {
-    override protected def refine[A](request: AnyMemberTierRequest[A]): Future[Either[Result, SubscriptionRequest[A]]] =
-      request.touchpointBackend.memberService
-        .subscriptionUpgradableTo(request.member, targetTier).map { subscription =>
-          subscription
-            .map(SubscriptionRequest(_, request))
-            .toRight(Ok(views.html.tier.upgrade.unavailable(request.member.tier, targetTier)))
-        }
-  }
-
-  def ChangeToPaidAction(targetTier: PaidTier): ActionBuilder[SubscriptionRequest] = MemberAction andThen CheckTierChangeTo(targetTier)
+  def ChangeToPaidAction(targetTier: PaidTier) = SubscriptionAction andThen checkTierChangeTo(targetTier)
 }
 
 trait OAuthActions extends googleauth.Actions {

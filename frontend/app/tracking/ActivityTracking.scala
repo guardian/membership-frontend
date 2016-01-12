@@ -4,8 +4,8 @@ import java.util.{Map => JMap}
 
 import com.github.t3hnar.bcrypt._
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.PaidMembershipPlan
-import com.gu.memsub.{BillingPeriod, Status}
+import com.gu.membership.{MembershipPlan, PaidMembershipPlan}
+import com.gu.memsub.{Subscription, PaymentStatus, BillingPeriod, Status}
 import com.gu.salesforce._
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
@@ -15,7 +15,7 @@ import controllers.Testing
 import forms.MemberForm.{AddressDetails, JoinForm, MarketingChoicesForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBOrder, EBTicketClass}
 import model.RichEvent.{GuLiveEvent, LocalEvent, MasterclassEvent, RichEvent}
-import model.SFMember
+import model.GenericSFContact
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
@@ -205,7 +205,7 @@ trait ActivityTracking {
     if (!isTestUser(user)) executeTracking(data)
   }
 
-  def track(data: TrackerData, member: Contact[Member, PaymentMethod]) {
+  def track(data: TrackerData, member: Contact) {
     if (!isTestUser(member)) executeTracking(data)
   }
 
@@ -239,7 +239,7 @@ trait ActivityTracking {
     track(MemberActivity("membershipRegistration", trackingInfo), user)
   }
 
-  def trackUpgrade(member: SFMember,
+  def trackUpgrade(member: GenericSFContact, subscription: Subscription with PaymentStatus[MembershipPlan[Status, Tier]],
                    newRatePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
                    addressDetails: Option[AddressDetails],
                    campaignCode: Option[CampaignCode]): Unit = {
@@ -249,8 +249,8 @@ trait ActivityTracking {
         MemberData(
           salesforceContactId = member.salesforceContactId,
           identityId = member.identityId,
-          tier = member.tier,
-          tierAmendment = Some(UpgradeAmendment(member.tier, newRatePlan.tier)),
+          tier = subscription.plan.tier,
+          tierAmendment = Some(UpgradeAmendment(subscription.plan.tier, newRatePlan.tier)),
           deliveryPostcode = addressDetails.map(_.deliveryAddress.postCode),
           billingPostcode = addressDetails.flatMap(f => f.billingAddress.map(_.postCode)).orElse(addressDetails.map(_.deliveryAddress.postCode)),
           subscriptionPaymentAnnual = Some(newRatePlan.billingPeriod.annual),

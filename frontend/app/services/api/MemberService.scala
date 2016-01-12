@@ -1,8 +1,10 @@
 package services.api
 
 import com.gu.identity.play.IdMinimalUser
-import com.gu.memsub.Subscription.ProductRatePlanId
-import com.gu.memsub.{Paid, Subscription}
+import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan, MembershipPlan}
+import com.gu.memsub.Subscriber._
+import com.gu.memsub.Subscription.{Plan, Paid, ProductRatePlanId}
+import com.gu.memsub._
 import com.gu.salesforce.{Tier, ContactId, PaidTier}
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
@@ -11,7 +13,7 @@ import controllers.IdentityRequest
 import forms.MemberForm.{FreeMemberChangeForm, JoinForm, PaidMemberChangeForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
-import model.{FreeSFMember, GenericSFContact, PaidSFMember, SFMember}
+import model.{GenericSFContact}
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
@@ -30,23 +32,23 @@ trait MemberService {
   def previewUpgradeSubscription(subscription: Subscription with Paid,
                                  newPlanId: ProductRatePlanId): Future[Seq[PreviewInvoiceItem]]
 
-  def upgradeFreeSubscription(freeMember: FreeSFMember,
+  def upgradeFreeSubscription(subscriber: FreeMember,
                               newTier: PaidTier,
                               form: FreeMemberChangeForm,
                               identityRequest: IdentityRequest,
                               campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId]
 
-  def upgradePaidSubscription(paidMember: PaidSFMember,
+  def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit]
+
+  def upgradePaidSubscription(subscriber: PaidMember,
                               newTier: PaidTier,
                               form: PaidMemberChangeForm,
                               identityRequest: IdentityRequest,
                               campaignCode: Option[CampaignCode]): Future[MemberError \/ContactId]
 
-  def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ Unit]
+  def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
 
-  def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ Unit]
-
-  def subscriptionUpgradableTo(memberId: SFMember, tier: PaidTier): Future[Option[Subscription]]
+  def subscriptionUpgradableTo(subscription: Subscription with PaymentStatus[Plan], newTier: PaidTier): Boolean
 
   def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary]
 
@@ -56,14 +58,14 @@ trait MemberService {
    */
   def getUsageCountWithinTerm(subscription: Subscription, unitOfMeasure: String): Future[Option[Int]]
 
-  def recordFreeEventUsage(member: SFMember,
+  def recordFreeEventUsage(subs: Subscription,
                            event: RichEvent,
                            order: EBOrder,
                            quantity: Int): Future[CreateResult]
 
-  def retrieveComplimentaryTickets(member: SFMember, event: RichEvent): Future[Seq[EBTicketClass]]
+  def retrieveComplimentaryTickets(subscription: Subscription, event: RichEvent): Future[Seq[EBTicketClass]]
 
-  def createEBCode(member: SFMember, event: RichEvent): Future[Option[EBCode]]
+  def createEBCode(subscriber: Member, event: RichEvent): Future[Option[EBCode]]
 
   def createPaidSubscription(contactId: ContactId,
                              joinData: PaidMemberJoinForm,

@@ -1,6 +1,6 @@
 package controllers
 
-import actions.Functions._
+import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup.UK
@@ -183,19 +183,19 @@ object Joiner extends Controller with ActivityTracking
     }
   }
 
-  def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
+  def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
 
     val paymentCard = (for {
-      sub <- OptionT(subscriptionService.get(request.member)(ProductFamily.membership))
+      sub <- OptionT(subscriptionService.get(request.subscriber.contact)(ProductFamily.membership))
       card <- OptionT(paymentService.getPaymentCardByAccount(sub.accountId))
     } yield card).run
 
     for {
-      paymentSummary <- memberService.getMembershipSubscriptionSummary(request.member)
+      paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       destination <- DestinationService.returnDestinationFor(request)
       card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
-        request.member,
+        request.subscriber,
         paymentSummary,
         card,
         destination,

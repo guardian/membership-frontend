@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import play.api.mvc.{Controller, Cookie}
 import play.twirl.api.Html
 import utils.TestUsers.testUsers
-import actions.Functions._
+import actions.ActionRefiners._
 
 object Testing extends Controller with LazyLogging {
 

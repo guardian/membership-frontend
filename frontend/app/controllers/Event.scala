@@ -1,9 +1,10 @@
 package controllers
 
-import actions.AnyMemberTierRequest
+import actions.{Subscriber, SubscriptionRequest}
 import actions.Fallbacks._
-import actions.Functions._
-import com.gu.salesforce.{Contact, Member, PaymentMethod, Tier}
+import actions.ActionRefiners._
+import com.gu.memsub.Subscriber.Member
+import com.gu.salesforce.Tier
 import com.gu.membership.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -41,7 +42,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
   }
 
   private def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen
-    authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
+    authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen subscriptionRefiner()
 
   def details(slug: String) = CachedAction { implicit request =>
     val eventOpt = for {
@@ -114,7 +115,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map {
       case event@(_: GuLiveEvent | _: LocalEvent) =>
-        if (tierCanBuyTickets(event, request.member.tier))
+        if (tierCanBuyTickets(event, request.subscriber.subscription.plan.tier))
           redirectToEventbrite(event)
         else
           Future.successful(Redirect(routes.TierController.change()))
@@ -128,16 +129,16 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
-  private def redirectToEventbrite(event: RichEvent)(implicit request: AnyMemberTierRequest[AnyContent]): Future[Result] =
-    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.memberStatus.tier}") {
+  private def redirectToEventbrite(event: RichEvent)(implicit request: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
+    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.subscriber.subscription.plan.tier}") {
 
-      memberService.createEBCode(request.member, event).map { code =>
+      memberService.createEBCode(request.subscriber, event).map { code =>
         val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
 
         val memberData = MemberData(
-          salesforceContactId = request.member.salesforceContactId,
+          salesforceContactId = request.subscriber.contact.salesforceContactId,
           identityId = request.user.id,
-          tier = request.member.memberStatus.tier,
+          tier = request.subscriber.subscription.plan.tier,
           campaignCode = CampaignCode.fromRequest)
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
@@ -148,18 +149,18 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
     }
 
   private def trackConversionToThankyou(event: RichEvent, order: Option[EBOrder],
-                                        member: Option[Contact[Member, PaymentMethod]])(implicit request: Request[_]) {
+                                        member: Option[Member])(implicit request: Request[_]) {
 
     val memberData = member.map(m => MemberData(
-      salesforceContactId = m.salesforceContactId,
-      identityId = m.identityId,
-      tier = m.memberStatus.tier,
+      salesforceContactId = m.contact.salesforceContactId,
+      identityId = m.contact.identityId,
+      tier = m.subscription.plan.tier,
       campaignCode = CampaignCode.fromRequest))
 
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
 
-  def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
+  def thankyou(id: String, orderIdOpt: Option[String]) = SubscriptionAction.async { implicit request =>
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
@@ -168,10 +169,10 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
         event.service.getOrder(oid).map { order =>
           val count = event.countComplimentaryTicketsInOrder(order)
           if (count > 0) {
-            memberService.recordFreeEventUsage(request.member, event, order, count)
+            memberService.recordFreeEventUsage(request.subscriber.subscription, event, order, count)
           }
 
-          trackConversionToThankyou(event, Some(order), Some(request.member))
+          trackConversionToThankyou(event, Some(order), Some(request.subscriber))
 
           Ok(views.html.event.thankyou(event, order))
             .discardingCookies(DiscardingCookie(eventCookie(event)))

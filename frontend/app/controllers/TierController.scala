@@ -1,9 +1,12 @@
 package controllers
 
+import services.api.MemberService.{PendingAmendError, MemberError}
+import services.{IdentityApi, IdentityService}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub.BillingPeriod._
+import com.gu.memsub.Subscriber.{PaidMember, FreeMember}
+import com.gu.memsub._
 import com.gu.memsub.{BillingPeriod, Membership, PaymentCard, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -17,8 +20,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
-import services._
-import services.api.MemberService.{MemberError, PendingAmendError}
 import tracking.ActivityTracking
 import utils.{TierChangeCookies, CampaignCode}
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
@@ -33,30 +34,23 @@ trait DowngradeTier extends ActivityTracking with CatalogProvider
                                              with PaymentServiceProvider {
   self: TierController =>
 
-  def downgradeToFriend() = PaidMemberAction.async { implicit request =>
-    for {
-      subs <- subscriptionService.unsafeGetPaid(request.member)
-    } yield {
-      Ok(views.html.tier.downgrade.confirm(catalog.unsafeFindPaid(subs.productRatePlanId).tier, catalog))
-    }
+  def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
+    Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, catalog))
   }
 
-  def downgradeToFriendConfirm = PaidMemberAction.async { implicit request => // POST
+  def downgradeToFriendConfirm = PaidSubscriptionAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- memberService.downgradeSubscription(request.member, request.user)
+      cancelledSubscription <- memberService.downgradeSubscription(request.subscriber)
     } yield Redirect(routes.TierController.downgradeToFriendSummary)
   }
 
-  def downgradeToFriendSummary = PaidMemberAction.async { implicit request =>
-    for {
-      // The downgrade is effective at the end of the charge date, so the current tier is still paid
-      sub <- subscriptionService.unsafeGetPaid(request.member)
-    } yield {
-      val startDate = sub.chargedThroughDate.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
-      implicit val c = catalog
-      Ok(views.html.tier.downgrade.summary(sub, sub.paidPlan, catalog.friend, startDate))
-        .discardingCookies(TierChangeCookies.deletionCookies:_*)
-    }
+  def downgradeToFriendSummary = PaidSubscriptionAction { implicit request =>
+    val startDate = request.subscriber.subscription.chargedThroughDate.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
+    implicit val c = catalog
+    Ok(views.html.tier.downgrade.summary(
+      request.subscriber.subscription,
+      request.subscriber.subscription.paidPlan,
+      catalog.friend, startDate)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 }
 
@@ -65,7 +59,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
 
   def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
-    val sub = request.subscription
+    val sub = request.subscriber.subscription
     val stripeKey = Some(stripeService.publicKey)
     val currency = sub.currency
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
@@ -86,7 +80,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       PageInfo(initialCheckoutForm = formI18n, stripePublicKey = stripeKey)
     }
 
-    def fromFree(subscription: FreeSubscription, contact: Contact[_, _]): Future[Result] =
+    def fromFree(subscriber: FreeMember): Future[Result] =
       for {
         privateFields <- identityUserFieldsF
       } yield {
@@ -95,49 +89,49 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
           targetPlans,
           countriesWithCurrency,
           privateFields,
-          pageInfo(privateFields, year)
+          pageInfo(privateFields, BillingPeriod.year)
         )(getToken, request))
       }
 
-    def fromPaid(subscription: PaidSubscription, contact: Contact[_, _], card: PaymentCard): Future[Result] = {
-      val targetPlanId = targetPlans.get(subscription.plan.billingPeriod).productRatePlanId
+    def fromPaid(subscriber: PaidMember, card: PaymentCard): Future[Result] = {
+      val targetPlanId = targetPlans.get(subscriber.subscription.plan.billingPeriod).productRatePlanId
 
       for {
-        previewItems <- memberService.previewUpgradeSubscription(subscription, targetPlanId)
+        previewItems <- memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId)
         privateFields <- identityUserFieldsF
       } yield {
-        val summary = PaidToPaidUpgradeSummary(previewItems, subscription, targetPlanId, card)
+        val summary = PaidToPaidUpgradeSummary(previewItems, subscriber.subscription, targetPlanId, card)
         val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
         Ok(views.html.tier.upgrade.paidToPaid(
         summary,
         privateFields,
-        pageInfo(privateFields, subscription.plan.billingPeriod),
+        pageInfo(privateFields, subscriber.subscription.plan.billingPeriod),
         flashMsgOpt
         )(getToken, request))
       }
     }
 
-    val paymentCard = paymentService.getPaymentCardByAccount(request.subscription.accountId)
+    val paymentCard = paymentService.getPaymentCardByAccount(request.subscriber.subscription.accountId)
 
-    paymentCard flatMap { p => (request.subscription, p) match {
-      case (s: FreeSubscription, _) => fromFree(s, request.member)
-      case (s: PaidSubscription, Some(a: PaymentCard)) => fromPaid(s, request.member, a)
-      case _ => throw new IllegalStateException(request.subscription.accountId + " is missing a payment status or card")
+    paymentCard flatMap { p => (request.subscriber, p) match {
+      case (Subscriber.FreeMember(mem), _) => fromFree(mem)
+      case (Subscriber.PaidMember(mem), Some(a: PaymentCard)) => fromPaid(mem, a)
+      case _ => throw new IllegalStateException(request.subscriber.subscription.accountId + " is missing a payment status or card")
     }}
   }
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     val identityRequest = IdentityRequest(request)
 
-    def handleFree(freeMember: FreeSFMember)(form: FreeMemberChangeForm) = {
+    def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, identityRequest, CampaignCode.fromRequest)
       handleErrors(upgrade) {
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
     }
 
-    def handlePaid(paidMember: PaidSFMember)(form: PaidMemberChangeForm) = {
+    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
         Redirect(routes.TierController.upgrade(target))
           .flashing("error" ->
@@ -152,16 +146,17 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       }
 
       for {
-        status <- IdentityService(IdentityApi).reauthUser(paidMember.email, form.password, identityRequest)
+        status <- IdentityService(IdentityApi).reauthUser(paidMember.contact.email, form.password, identityRequest)
         result <- if (status == 200) doUpgrade() else reauthFailedMessage
       } yield result
 
     }
 
-    val futureResult = request.member match {
-      case Contact(d, m: FreeTierMember, p: NoPayment) => freeMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handleFree(Contact(d, m, p)))
-      case Contact(d, m: PaidTierMember, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, m, p)))
-      case Contact(d, m, p) => throw new IllegalStateException(s"Inconsistent Salesforce state, contact with id ${d.salesforceContactId} is a $m but has a $p payment method")
+    // I don't like this one bit!
+    val futureResult = request.subscriber match {
+      case Subscriber.FreeMember(mem) => freeMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handleFree(mem))
+      case Subscriber.PaidMember(mem)  => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(mem))
+      case a => throw new IllegalStateException(s"Inconsistent Salesforce state, contact with id ${a.contact.salesforceContactId}")
     }
 
     futureResult.map(_.discardingCookies(TierChangeCookies.deletionCookies:_*)).recover {
@@ -177,15 +172,16 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
 trait CancelTier extends CatalogProvider {
   self: TierController =>
 
-  def cancelTier() = MemberAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm(request.member.tier, catalog))
+  def cancelTier() = SubscriptionAction { implicit request =>
+    Ok(views.html.tier.cancel.confirm(request.subscriber.subscription.plan.tier, catalog))
   }
 
-  def cancelTierConfirm() = MemberAction.async { implicit request =>
-    handleErrors(memberService.cancelSubscription(request.member, request.user)) {
-      request.member.tier match {
-        case m: FreeTierMember => Redirect(routes.TierController.cancelFreeTierSummary())
-        case _ => Redirect(routes.TierController.cancelPaidTierSummary())
+  def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
+    handleErrors(memberService.cancelSubscription(request.subscriber)) {
+      if(request.subscriber.subscription.isPaid) {
+        Redirect(routes.TierController.cancelFreeTierSummary())
+      } else {
+        Redirect(routes.TierController.cancelPaidTierSummary())
       }
     }
   }
@@ -194,21 +190,19 @@ trait CancelTier extends CatalogProvider {
     Ok(views.html.tier.cancel.summaryFree())
   )
 
-  def cancelPaidTierSummary = PaidMemberAction.async { implicit request =>
+  def cancelPaidTierSummary = PaidSubscriptionAction { implicit request =>
     implicit val c = catalog
-    subscriptionService.unsafeGetPaid(request.member).map { sub =>
-      Ok(views.html.tier.cancel.summaryPaid(sub, sub.paidPlan.tier))
-        .discardingCookies(TierChangeCookies.deletionCookies:_*)
-    }
+    Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription, request.subscriber.subscription.paidPlan.tier)).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 }
 
 trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
   implicit def productFamily: ProductFamily = Membership()
 
-  def change() = MemberAction { implicit request =>
+  def change() = SubscriptionAction { implicit request =>
     implicit val countryGroup = UK
-    Ok(views.html.tier.change(request.member.tier, catalog))
+    implicit val c = catalog
+    Ok(views.html.tier.change(request.subscriber.subscription.plan.tier, catalog))
   }
 
   def handleErrors(memberResult: Future[MemberError \/ _])(success: => Result): Future[Result] =
