@@ -19,7 +19,7 @@
                     <span class="u-h">Home</span>
                 </a>
             </li>
-            @for(navItem <- Nav.primaryNavigation if !navItem.isPrivate) {
+            @for(navItem <- pageInfo.navigation if !navItem.isPrivate) {
                 <li class="global-navigation__item">
                     <a href="@navItem.href" class="global-navigation__link" id="qa-nav-@navItem.id">@navItem.title</a>
                 </li>

@@ -96,14 +96,18 @@ trait Info extends Controller {
       )
     )
 
-
-    Ok(views.html.info.supporterUSA(
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters)),
-      pageImages))
+    Ok(
+      views.html.info.supporterUSA(
+        TouchpointBackend.Normal.catalog.supporter,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters),
+          navigation = Nav.internationalLandingPageNavigation
+        ),
+        pageImages
+      )
+    )
   }
 
   def patron() = CachedAction { implicit request =>
