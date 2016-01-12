@@ -1,16 +1,16 @@
 package controllers
 
-import com.google.gdata.data.docs.Year
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub.{ProductFamily, Membership, Month, BillingPeriod}
 import com.gu.memsub.BillingPeriod._
+import com.gu.memsub.{BillingPeriod, Membership, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors.ResultError
 import forms.MemberForm._
+import model.SubscriptionOps._
 import model._
 import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -18,16 +18,15 @@ import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import services._
+import services.api.MemberService.{MemberError, PendingAmendError}
 import tracking.ActivityTracking
 import utils.TierChangeCookies
 import views.support.PageInfo.CheckoutForm
 import views.support.{CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
-import SubscriptionOps._
-
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
-
+import scalaz.\/
 
 trait DowngradeTier extends ActivityTracking with CatalogProvider
                                              with SubscriptionServiceProvider
@@ -138,9 +137,10 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     val identityRequest = IdentityRequest(request)
 
-    def handleFree(freeMember: FreeSFMember)(form: FreeMemberChangeForm) = for {
-      memberId <- memberService.upgradeFreeSubscription(freeMember, target, form, identityRequest)
-    } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
+    def handleFree(freeMember: FreeSFMember)(form: FreeMemberChangeForm) =
+      handleErrors(memberService.upgradeFreeSubscription(freeMember, target, form, identityRequest)) {
+        Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
+      }
 
     def handlePaid(paidMember: PaidSFMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
@@ -150,8 +150,8 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       }
 
       def doUpgrade(): Future[Result] = {
-        memberService.upgradePaidSubscription(paidMember, target, form, identityRequest).map {
-          _ => Redirect(routes.TierController.upgradeThankyou(target))
+        handleErrors(memberService.upgradePaidSubscription(paidMember, target, form, identityRequest)) {
+          Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
 
@@ -186,7 +186,7 @@ trait CancelTier extends CatalogProvider {
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
-    memberService.cancelSubscription(request.member, request.user).map { _ =>
+    handleErrors(memberService.cancelSubscription(request.member, request.user)) {
       request.member.tier match {
         case m: FreeTierMember => Redirect(routes.TierController.cancelFreeTierSummary())
         case _ => Redirect(routes.TierController.cancelPaidTierSummary())
@@ -214,6 +214,16 @@ trait TierController extends Controller with UpgradeTier with DowngradeTier with
     implicit val countryGroup = UK
     Ok(views.html.tier.change(request.member.tier, catalog))
   }
+
+  def handleErrors(memberResult: Future[MemberError \/ _])(success: => Result): Future[Result] =
+    for {
+      res <- memberResult
+    } yield {
+      res.fold({
+        case PendingAmendError(subName) => Ok(views.html.tier.pendingAmend())
+        case err => throw err
+      }, _ => success)
+    }
 }
 
 object TierController extends TierController
