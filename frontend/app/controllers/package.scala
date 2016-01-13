@@ -1,6 +1,6 @@
 import actions._
 import com.gu.membership.MembershipCatalog
-import com.gu.memsub.services.api.{PaymentService, SubscriptionService}
+import com.gu.memsub.services.api.SubscriptionService
 import com.gu.salesforce.{Member, PaidTierMember}
 import com.gu.stripe.StripeService
 import com.gu.zuora.api.ZuoraService
@@ -20,11 +20,6 @@ package object controllers extends CommonActions with LazyLogging{
   trait MemberServiceProvider {
     def memberService(implicit request: BackendProvider): MemberService =
       request.touchpointBackend.memberService
-  }
-
-  trait PaymentServiceProvider {
-    def paymentService(implicit request: BackendProvider): PaymentService =
-      request.touchpointBackend.paymentService
   }
 
   trait CatalogProvider {

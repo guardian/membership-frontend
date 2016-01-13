@@ -43,6 +43,8 @@ trait MemberService {
 
   def subscriptionUpgradableTo(memberId: SFMember, tier: PaidTier): Future[Option[Subscription]]
 
+  def updateDefaultCard(member: PaidSFMember, token: String): Future[Stripe.Card]
+
   def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary]
 
   /*

@@ -10,7 +10,7 @@ import model.PaidSubscription
 import model.SubscriptionOps._
 import org.joda.time.{DateTime, LocalDate}
 
-case class CurrentSummary(tier: PaidTier, startDate: LocalDate, payment: Price, card: PaymentCard)
+case class CurrentSummary(tier: PaidTier, startDate: LocalDate, payment: Price, card: Card)
 
 case class TargetSummary(tier: PaidTier, firstPayment: Price, nextPayment: Price, nextPaymentDate: LocalDate)
 
@@ -23,7 +23,7 @@ object PaidToPaidUpgradeSummary {
     override def getMessage = s"Failure while trying to display an upgrade summary for the subscription $subNumber to $targetTier: $msg"
   }
 
-  def apply(invoices: Seq[PreviewInvoiceItem], sub: PaidSubscription, targetId: ProductRatePlanId, card: PaymentCard)(implicit catalog: MembershipCatalog): PaidToPaidUpgradeSummary = {
+  def apply(invoices: Seq[PreviewInvoiceItem], sub: PaidSubscription, targetId: ProductRatePlanId, card: Card)(implicit catalog: MembershipCatalog): PaidToPaidUpgradeSummary = {
     val plan = catalog.unsafeFindPaid(targetId)
     lazy val upgradeError = UpgradeSummaryError(sub.name, plan.tier) _
     val accountCurrency = sub.currency
