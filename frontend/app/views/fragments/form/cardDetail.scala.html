@@ -20,7 +20,7 @@
                 <h3 class="credit-card-note__header">Ongoing payments</h3>
                     @for(pricing <- plans.allPricing) {
                         <p class="is-hidden" data-currency="@pricing.currency">
-                            Your card will be charged @pricing.currency.glyph
+                            Your card will be charged @pricing.currency.identifier
                             <span class="js-card-note-pricing-charge"
                                   data-annual="@pricing.yearly.amount"
                                   data-monthly="@pricing.monthly.amount">
