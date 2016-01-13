@@ -69,8 +69,7 @@ object TouchpointBackend {
       subscriptionService = subscriptionService,
       catalogService = catalogService,
       zuoraService = zuoraService,
-      membershipRatePlanIds = memRatePlanIds,
-      paymentService = paymentService
+      membershipRatePlanIds = memRatePlanIds
     )
   }
 
@@ -92,8 +91,7 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              subscriptionService: memsubapi.SubscriptionService,
                              catalogService: memsubapi.CatalogService,
                              zuoraService: ZuoraService,
-                             membershipRatePlanIds: MembershipRatePlanIds,
-                             paymentService: PaymentService) extends ActivityTracking {
+                             membershipRatePlanIds: MembershipRatePlanIds) extends ActivityTracking {
 
   def catalog: MembershipCatalog = catalogService.membershipCatalog
 }
