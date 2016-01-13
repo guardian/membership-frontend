@@ -46,6 +46,9 @@ GET            /staff/event-overview/masterclasses    controllers.Staff.eventOve
 GET            /staff/event-overview/details          controllers.Staff.eventOverviewDetails
 GET            /staff/catalog                         controllers.Staff.catalogDiagnostics
 
+GET            /sessioncam/on                         controllers.SessionCam.dropSessionCamCookie
+GET            /sessioncam/off                        controllers.SessionCam.removeSessionCamCookie
+
 # Subscription
 GET            /subscription/remaining-tickets        controllers.Subscription.remainingTickets
 

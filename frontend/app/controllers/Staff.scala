@@ -1,13 +1,12 @@
 package controllers
 
-import com.gu.memsub.Membership
 import com.gu.memsub.services.CatalogService
+import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
 import views.support.Catalog
-import play.api.Play.current
 
 trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService
