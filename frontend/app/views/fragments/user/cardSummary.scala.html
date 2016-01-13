@@ -1,10 +1,11 @@
-@(card: com.gu.stripe.Stripe.Card)
+@import com.gu.memsub.PaymentCard
+@(card: PaymentCard)
 
 <div class="card-summary">
     <div class="card-summary__type">
-        <i class="sprite-card sprite-card--small sprite-card--@(card.issuer)"></i>
+        <i class="sprite-card sprite-card--small sprite-card--@(card.cardType)"></i>
     </div>
     <div class="card-summary__digits">
-        @card.last4
+        @card.lastFourDigits
     </div>
 </div>
