@@ -27,6 +27,10 @@ object Nav {
     NavItem("feedback", "/feedback", "Feedback")
   )
 
+  val internationalLandingPageNavigation = List(
+    NavItem("feedback", "/feedback", "Feedback")
+  )
+
   val footerNavigation = List(
     NavItem("help", routes.Info.help().toString, "Help"),
     NavItem("contact", Links.membershipContact, "Contact us"),

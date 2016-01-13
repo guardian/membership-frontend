@@ -4,6 +4,8 @@ import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.memsub.BillingPeriod
 import configuration.{Config, CopyConfig}
 import model.EventSchema
+import model.Nav
+import model.Nav.NavItem
 import play.api.libs.json._
 import views.support.PageInfo.CheckoutForm
 
@@ -15,7 +17,8 @@ case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                     customSignInUrl: Option[String] = None,
                     stripePublicKey: Option[String] = None,
                     initialCheckoutForm: CheckoutForm =
-                      CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, BillingPeriod.year)
+                      CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, BillingPeriod.year),
+                    navigation: Seq[NavItem] = Nav.primaryNavigation
                    )
 
 object PageInfo {
