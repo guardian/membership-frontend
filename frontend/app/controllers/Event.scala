@@ -18,6 +18,7 @@ import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 import services.EventbriteService._
 import tracking._
+import utils.CampaignCode
 import views.support.PageInfo
 
 import scala.concurrent.Future
@@ -132,7 +133,12 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
       memberService.createEBCode(request.member, event).map { code =>
         val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
-        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.memberStatus.tier.name)
+
+        val memberData = MemberData(
+          salesforceContactId = request.member.salesforceContactId,
+          identityId = request.user.id,
+          tier = request.member.memberStatus.tier,
+          campaignCode = CampaignCode.fromRequest)
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
 
@@ -141,9 +147,15 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
       }
     }
 
-  private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
-                                        member: Option[Contact[Member, PaymentMethod]]) {
-    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.memberStatus.tier.name))
+  private def trackConversionToThankyou(event: RichEvent, order: Option[EBOrder],
+                                        member: Option[Contact[Member, PaymentMethod]])(implicit request: Request[_]) {
+
+    val memberData = member.map(m => MemberData(
+      salesforceContactId = m.salesforceContactId,
+      identityId = m.identityId,
+      tier = m.memberStatus.tier,
+      campaignCode = CampaignCode.fromRequest))
+
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
 
@@ -159,7 +171,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
 
-          trackConversionToThankyou(request, event, Some(order), Some(request.member))
+          trackConversionToThankyou(event, Some(order), Some(request.member))
 
           Ok(views.html.event.thankyou(event, order))
             .discardingCookies(DiscardingCookie(eventCookie(event)))
@@ -175,7 +187,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
     EventbriteService.getEvent(id).map { event =>
       // only log a conversion if the user came from a membership event page
       request.cookies.get(eventCookie(event)).foreach { _ =>
-        trackConversionToThankyou(request, event, None, None)
+        trackConversionToThankyou(event, None, None)
       }
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)

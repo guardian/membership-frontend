@@ -16,6 +16,7 @@ import views.support.ThankyouSummary
 
 import scala.concurrent.Future
 import scalaz.\/
+import utils.CampaignCode
 
 trait MemberService {
   import MemberService._
@@ -23,7 +24,8 @@ trait MemberService {
   def createMember(user: IdMinimalUser,
                    formData: JoinForm,
                    identityRequest: IdentityRequest,
-                   fromEventId: Option[String]): Future[ContactId]
+                   fromEventId: Option[String],
+                   campaignCode: Option[CampaignCode]): Future[ContactId]
 
   def previewUpgradeSubscription(subscription: Subscription with Paid,
                                  newPlanId: ProductRatePlanId): Future[Seq[PreviewInvoiceItem]]
@@ -31,16 +33,18 @@ trait MemberService {
   def upgradeFreeSubscription(freeMember: FreeSFMember,
                               newTier: PaidTier,
                               form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[MemberError \/ ContactId]
+                              identityRequest: IdentityRequest,
+                              campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId]
 
   def upgradePaidSubscription(paidMember: PaidSFMember,
                               newTier: PaidTier,
                               form: PaidMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[MemberError \/ContactId]
+                              identityRequest: IdentityRequest,
+                              campaignCode: Option[CampaignCode]): Future[MemberError \/ContactId]
 
-  def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ String]
+  def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ Unit]
 
-  def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ String]
+  def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ Unit]
 
   def subscriptionUpgradableTo(memberId: SFMember, tier: PaidTier): Future[Option[Subscription]]
 
@@ -63,7 +67,8 @@ trait MemberService {
 
   def createPaidSubscription(contactId: ContactId,
                              joinData: PaidMemberJoinForm,
-                             customer: Stripe.Customer): Future[SubscribeResult]
+                             customer: Stripe.Customer,
+                             campaignCode: Option[CampaignCode]): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
                              joinData: JoinForm): Future[SubscribeResult]

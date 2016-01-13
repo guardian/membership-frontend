@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
-import utils.TierChangeCookies
+import utils.{CampaignCode, TierChangeCookies}
 import views.support
 import views.support.PageInfo.CheckoutForm
 import views.support.Pricing._
@@ -182,7 +182,7 @@ object Joiner extends Controller with ActivityTracking
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
     implicit val bp: BackendProvider = request
-    memberService.createMember(request.user, formData, IdentityRequest(request), eventId)
+    memberService.createMember(request.user, formData, IdentityRequest(request), eventId, CampaignCode.fromRequest)
       .map(_ => onSuccess) recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error =>

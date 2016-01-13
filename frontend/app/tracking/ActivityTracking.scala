@@ -19,6 +19,7 @@ import model.SFMember
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
+import utils.CampaignCode
 import utils.TestUsers.isTestUser
 
 import scala.collection.JavaConversions._
@@ -56,14 +57,15 @@ case class DowngradeAmendment(tierFrom: Tier, effectiveFromDate: Option[DateTime
 
 case class MemberData(salesforceContactId: String,
                       identityId: String,
-                      tier: String,
+                      tier: Tier,
                       tierAmendment: Option[TierAmendment] = None,
                       deliveryPostcode: Option[String] = None,
                       billingPostcode: Option[String] = None,
                       subscriptionPaymentAnnual: Option[Boolean] = None,
                       marketingChoices: Option[MarketingChoicesForm] = None,
                       city: Option[String] = None,
-                      country: Option[String] = None) {
+                      country: Option[String] = None,
+                      campaignCode: Option[CampaignCode] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
@@ -79,7 +81,7 @@ case class MemberData(salesforceContactId: String,
       Map(
         "salesforceContactId" -> bcrypt(salesforceContactId),
         "identityId" -> bcrypt(identityId),
-        "tier" -> tier
+        "tier" -> tier.name
       ) ++
         deliveryPostcode.map("deliveryPostcode" -> truncatePostcode(_)) ++
         billingPostcode.map("billingPostcode" -> truncatePostcode(_)) ++
@@ -103,7 +105,9 @@ case class MemberData(salesforceContactId: String,
             ) ++
             tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
           }
-        }
+        } ++ campaignCode.map { code =>
+        "campaignCode" -> code.get
+      }
 
     val memberMap = Map("member" -> ActivityTracking.setSubMap(dataMap))
 
@@ -205,7 +209,7 @@ trait ActivityTracking {
     if (!isTestUser(member)) executeTracking(data)
   }
 
-  def trackRegistration(formData: JoinForm, tier: Tier, member: ContactId, user: IdMinimalUser) {
+  def trackRegistration(formData: JoinForm, tier: Tier, member: ContactId, user: IdMinimalUser, campaignCode: Option[CampaignCode]) {
     val subscriptionPaymentAnnual = formData match {
       case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.billingPeriod.annual)
       case _ => None
@@ -221,14 +225,15 @@ trait ActivityTracking {
       MemberData(
         salesforceContactId = member.salesforceContactId,
         identityId = user.id,
-        tier = tier.name,
+        tier = tier,
         tierAmendment = None,
         deliveryPostcode = Some(formData.deliveryAddress.postCode),
         billingPostcode = billingPostcode,
         subscriptionPaymentAnnual = subscriptionPaymentAnnual,
         marketingChoices = Some(formData.marketingChoices),
         city = Some(formData.deliveryAddress.town),
-        country = Some(formData.deliveryAddress.country.name)
+        country = Some(formData.deliveryAddress.country.name),
+        campaignCode = campaignCode
       )
 
     track(MemberActivity("membershipRegistration", trackingInfo), user)
@@ -236,21 +241,23 @@ trait ActivityTracking {
 
   def trackUpgrade(member: SFMember,
                    newRatePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
-                   addressDetails: Option[AddressDetails]): Unit = {
+                   addressDetails: Option[AddressDetails],
+                   campaignCode: Option[CampaignCode]): Unit = {
 
     track(
       MemberActivity(source = "membershipUpgrade",
         MemberData(
           salesforceContactId = member.salesforceContactId,
           identityId = member.identityId,
-          tier = member.tier.name,
+          tier = member.tier,
           tierAmendment = Some(UpgradeAmendment(member.tier, newRatePlan.tier)),
           deliveryPostcode = addressDetails.map(_.deliveryAddress.postCode),
           billingPostcode = addressDetails.flatMap(f => f.billingAddress.map(_.postCode)).orElse(addressDetails.map(_.deliveryAddress.postCode)),
           subscriptionPaymentAnnual = Some(newRatePlan.billingPeriod.annual),
           marketingChoices = None,
           city = addressDetails.map(_.deliveryAddress.town),
-          country = addressDetails.map(_.deliveryAddress.country.name)
+          country = addressDetails.map(_.deliveryAddress.country.name),
+          campaignCode = campaignCode
         )),
       member)
   }
