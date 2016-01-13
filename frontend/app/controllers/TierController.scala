@@ -1,10 +1,10 @@
 package controllers
 
-import com.google.gdata.data.docs.Year
+import _root_.services.{IdentityApi, IdentityService}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub.{ProductFamily, Membership, Month, BillingPeriod}
+import com.gu.memsub._
 import com.gu.memsub.BillingPeriod._
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -17,7 +17,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
-import services._
 import tracking.ActivityTracking
 import utils.TierChangeCookies
 import views.support.PageInfo.CheckoutForm
@@ -31,7 +30,8 @@ import scala.language.implicitConversions
 
 trait DowngradeTier extends ActivityTracking with CatalogProvider
                                              with SubscriptionServiceProvider
-                                             with MemberServiceProvider {
+                                             with MemberServiceProvider
+                                             with PaymentServiceProvider {
   self: TierController =>
 
   def downgradeToFriend() = PaidMemberAction.async { implicit request =>
@@ -87,7 +87,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       PageInfo(initialCheckoutForm = formI18n, stripePublicKey = stripeKey)
     }
 
-    def fromFree(subscription: FreeSubscription, contact: Contact[FreeTierMember, NoPayment]): Future[Result] =
+    def fromFree(subscription: FreeSubscription, contact: Contact[_, _]): Future[Result] =
       for {
         privateFields <- identityUserFieldsF
       } yield {
@@ -100,39 +100,32 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
         )(getToken, request))
       }
 
-    def fromPaid(subscription: PaidSubscription, contact: Contact[PaidTierMember, StripePayment]): Future[Result] = {
-      val stripeCustomerF = stripeService.Customer.read(contact.stripeCustomerId)
+    def fromPaid(subscription: PaidSubscription, contact: Contact[_, _], card: PaymentCard): Future[Result] = {
       val targetPlanId = targetPlans.get(subscription.plan.billingPeriod).productRatePlanId
 
       for {
-        previewItems <- memberService.previewUpgradeSubscription(
-          subscription, targetPlanId)
-        customer <- stripeCustomerF
+        previewItems <- memberService.previewUpgradeSubscription(subscription, targetPlanId)
         privateFields <- identityUserFieldsF
       } yield {
-        val summary = PaidToPaidUpgradeSummary(previewItems, subscription, targetPlanId, customer.card)
+        val summary = PaidToPaidUpgradeSummary(previewItems, subscription, targetPlanId, card)
         val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
         Ok(views.html.tier.upgrade.paidToPaid(
-          summary,
-          privateFields,
-          pageInfo(privateFields, subscription.plan.billingPeriod),
-          flashMsgOpt
+        summary,
+        privateFields,
+        pageInfo(privateFields, subscription.plan.billingPeriod),
+        flashMsgOpt
         )(getToken, request))
       }
     }
 
-    (request.subscription, request.member) match {
-      case (sub: FreeSubscription, Contact(d, t: FreeTierMember, p: NoPayment)) =>
-        fromFree(sub, Contact(d, t, p))
-      case (sub: PaidSubscription, Contact(d, t: PaidTierMember, p: StripePayment)) =>
-        fromPaid(sub, Contact(d, t, p))
-      case _ =>
-        Future {
-          val msg = s"Zuora account ${sub.accountId} is inconsistent with its corresponding Salesforce information"
-          throw new IllegalStateException(msg)
-        }
-    }
+    val paymentCard = paymentService.getPaymentCardByAccount(request.subscription.accountId)
+
+    paymentCard flatMap { p => (request.subscription, p) match {
+      case (s: FreeSubscription, _) => fromFree(s, request.member)
+      case (s: PaidSubscription, Some(a: PaymentCard)) => fromPaid(s, request.member, a)
+      case _ => throw new IllegalStateException(request.subscription.accountId + " is missing a payment status or card")
+    }}
   }
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
