@@ -8,9 +8,10 @@
 @import views.support.Social.joinThankyou
 
 @import views.support.ThankyouSummary
+@import com.gu.memsub.PaymentCard
 @(member: Contact[Member, PaymentMethod],
   summary: ThankyouSummary,
-  cardOpt: Option[com.gu.stripe.Stripe.Card],
+  cardOpt: Option[PaymentCard],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean)
 
@@ -108,7 +109,7 @@
 
                     <tr role="row">
                         <th role="rowheader">Card</th>
-                        <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.last4</td>
+                        <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.lastFourDigits</td>
                     </tr>
                     }
                 </table>

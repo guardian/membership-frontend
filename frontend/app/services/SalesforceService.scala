@@ -59,16 +59,6 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
   override def updateMemberStatus(user: IdMinimalUser, tier: Tier, customer: Option[Customer]): Future[ContactId] =
     upsert(user.id, memberData(tier, customer))
 
-  override def updateCardId(identityId: String, cardId: String): Future[ContactId] =
-    upsert(identityId, Json.obj(Keys.DEFAULT_CARD_ID -> cardId))
-
-  override def getStripeCustomer(contact: GenericSFContact): Future[Option[Customer]] = contact.paymentMethod match {
-    case StripePayment(id) =>
-      TouchpointBackend.forUser(contact).stripeService.Customer.read(id).map(Some(_))
-    case _ =>
-      Future.successful(None)
-  }
-
   private def memberData(tier: Tier, customerOpt: Option[Customer]): JsObject = Json.obj(
     Keys.TIER -> tier.name
   ) ++ customerOpt.map { customer =>
