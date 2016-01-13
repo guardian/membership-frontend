@@ -3,7 +3,7 @@ package services.api
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.{Paid, Subscription}
-import com.gu.salesforce.{ContactId, PaidTier}
+import com.gu.salesforce.{Tier, ContactId, PaidTier}
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
@@ -15,8 +15,11 @@ import model.{FreeSFMember, GenericSFContact, PaidSFMember, SFMember}
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
+import scalaz.\/
 
 trait MemberService {
+  import MemberService._
+
   def createMember(user: IdMinimalUser,
                    formData: JoinForm,
                    identityRequest: IdentityRequest,
@@ -28,18 +31,16 @@ trait MemberService {
   def upgradeFreeSubscription(freeMember: FreeSFMember,
                               newTier: PaidTier,
                               form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[ContactId]
+                              identityRequest: IdentityRequest): Future[MemberError \/ ContactId]
 
   def upgradePaidSubscription(paidMember: PaidSFMember,
                               newTier: PaidTier,
                               form: PaidMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[ContactId]
+                              identityRequest: IdentityRequest): Future[MemberError \/ContactId]
 
-  // TODO: why do we return a String?
-  def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[String]
+  def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ String]
 
-  // TODO: why do we return a String?
-  def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[String]
+  def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ String]
 
   def subscriptionUpgradableTo(memberId: SFMember, tier: PaidTier): Future[Option[Subscription]]
 
@@ -68,4 +69,15 @@ trait MemberService {
 
   def createFreeSubscription(contactId: ContactId,
                              joinData: JoinForm): Future[SubscribeResult]
+}
+
+object MemberService {
+  sealed trait MemberError extends Throwable
+
+  case class PaidSubscriptionExpected(name: Subscription.Name) extends MemberError {
+    override def getMessage = s"Paid subscription expected. Got a free one instead: ${name.get} "
+  }
+  case class PendingAmendError(name: Subscription.Name) extends MemberError {
+    override def getMessage = s"Subscription ${name.get} already has a pending amend"
+  }
 }

@@ -1,0 +1,14 @@
+@import configuration.Config.idWebAppProfileUrl
+@()
+
+@main("Update pending") {
+    <main role="main" class="page-content l-constrained">
+        @fragments.page.pageHeader("Update pending")
+
+        <div class="page-section">
+            <div class="page-section__content copy">
+                <p>Your membership account has an update pending so no further changes are possible right now. Check your <a href="@idWebAppProfileUrl">profile page</a> to find out when your new tier will be active. </p>
+            </div>
+        </div>
+    </main>
+}
