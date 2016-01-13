@@ -1,10 +1,10 @@
 package controllers
 
-import _root_.services.{IdentityApi, IdentityService}
+import com.google.gdata.data.docs.Year
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub._
+import com.gu.memsub.{ProductFamily, Membership, BillingPeriod, PaymentCard}
 import com.gu.memsub.BillingPeriod._
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -17,6 +17,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
+import services._
 import tracking.ActivityTracking
 import utils.TierChangeCookies
 import views.support.PageInfo.CheckoutForm

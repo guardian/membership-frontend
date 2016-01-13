@@ -230,12 +230,6 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def updateDefaultCard(member: PaidSFMember, token: String): Future[Stripe.Card] =
-    for {
-      customer <- stripeService.Customer.updateCard(member.stripeCustomerId, token)
-      memberId <- salesforceService.updateCardId(member.identityId, customer.card.id)
-    } yield customer.card
-
   override  def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
     val latestSubF = subscriptionService.unsafeGet(contact)
 
