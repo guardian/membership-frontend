@@ -7,50 +7,8 @@
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
-@import com.gu.salesforce.Tier.Supporter
 @import configuration.Videos
 @import views.support.Asset
-
-@section(title: String = "", hasBorder: Boolean = true)(content: Html) = {
-    <section class="page-slice page-slice--listing">
-        <div class="l-constrained">
-            <div class="listing listing--narrow @if(hasBorder){listing--bordered}">
-                <div class="listing__lead-in">
-                    <h3 class="h-intro">@title</h3>
-                </div>
-                <div class="listing__content">@content</div>
-            </div>
-        </div>
-    </section>
-}
-
-@sectionCardStack(img: model.ResponsiveImageGroup)(content: Html) = {
-    <section class="page-slice page-slice--listing">
-        <div class="l-constrained">
-            <div class="listing listing--narrow listing--card-stack">
-                @* lead-in is empty but provides column alignment at larger widths *@
-                <div class="listing__lead-in"></div>
-                <div class="listing__content">
-                    <div class="listing--card-stack__card-one"></div>
-                    <div class="listing--card-stack__card-two"></div>
-                    <div class="listing--card-stack__card-three"></div>
-                    @content
-                </div>
-            </div>
-            <figure class="captioned-image">
-                <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
-                @for(metadata <- img.metadata) {
-                    <figcaption class="captioned-image__detail captioned-image__detail--right">
-                        <div class="captioned-image__caption">
-                        @fragments.media.imageCaption(metadata)
-                        </div>
-                    </figcaption>
-                }
-            </figure>
-        </div>
-    </section>
-}
-
 @main("Supporters", pageInfo=pageInfo) {
     @fragments.page.heroBanner("hero-banner--us-supporter") {
         Become a Guardian&nbsp;Supporter
@@ -59,8 +17,8 @@
         <span class="text-pale">Plus, join today and $1 will be donated to the Guardian Charity Appeal.</span>
     }()
 
-    @section(hasBorder = false) {
-        @fragments.tier.packagePromo(supporterPlans, US, modifierClass=Some("package-promo--homepage"))
+    @fragments.page.section(hasBorder = false) {
+        @fragments.tier.packagePromoSupporter(supporterPlans, US)
     }
 
     @*
@@ -90,7 +48,7 @@
     </section>
 
     @for(img <- pageImages.find(_.name.contains("fearless"))) {
-        @sectionCardStack(img) {
+        @fragments.page.sectionCardStack(img) {
             <div class="listing__text">
                 <p>The Guardian shines a light on critical, underreported stories across the US and the globe.</p>
                 <p>Without a paywall, our journalism is open to everyone.</p>
@@ -101,7 +59,7 @@
         }
     }
 
-    @section("If you read the Guardian, join the Guardian") {
+    @fragments.page.section("If you read the Guardian, join the Guardian") {
         @fragments.promos.promoQuote(
             Asset.at("images/common/katharine-viner-cutout.png"),
             "Katharine Viner, editor-in-chief of the Guardian"
@@ -115,7 +73,7 @@
         }
     }
 
-    @section("What's included") {
-        @fragments.tier.packagePromoSupporter(supporterPlans, US.currency)
+    @fragments.page.section("What's included") {
+        @fragments.tier.packagePromoSupporter(supporterPlans, US)
     }
 }

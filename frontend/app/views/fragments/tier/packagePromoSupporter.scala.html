@@ -2,12 +2,13 @@
 @import com.gu.memsub.Current
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
-@(supporterPlans: PaidMembershipPlans[Current, Supporter], currency: Currency)
+@import com.gu.i18n.CountryGroup
+@(supporterPlans: PaidMembershipPlans[Current, Supporter], cg: CountryGroup)
 
 @import com.gu.salesforce.Tier._
 
 @actionAttrs = {
-    href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@US.id"
+    href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@cg.id"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@Supporter.toString.toLowerCase"
@@ -34,7 +35,7 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-                @fragments.pricing.paidPriceInfo(supporterPlans, currency, showCurrencyPrefix = false)
+                @fragments.pricing.paidPriceInfo(supporterPlans, cg.currency, showCurrencyPrefix = false)
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@supporter.slug" @actionAttrs>
                 <span class="action__label">
