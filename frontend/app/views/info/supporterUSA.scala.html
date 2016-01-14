@@ -60,7 +60,7 @@
     }()
 
     @section(hasBorder = false) {
-        @fragments.tier.packagePromoUSASupporter(supporterPlans)
+        @fragments.tier.packagePromo(supporterPlans, US, modifierClass=Some("package-promo--homepage"))
     }
 
     @*
@@ -116,6 +116,6 @@
     }
 
     @section("What's included") {
-        @fragments.tier.packagePromoUSASupporter(supporterPlans)
+        @fragments.tier.packagePromoSupporter(supporterPlans, US.currency)
     }
 }

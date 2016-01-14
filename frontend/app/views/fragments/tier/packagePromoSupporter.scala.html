@@ -1,8 +1,8 @@
-@import com.gu.i18n.CountryGroup.US
+@import com.gu.i18n.Currency
 @import com.gu.memsub.Current
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
-@(supporterPlans: PaidMembershipPlans[Current, Supporter])
+@(supporterPlans: PaidMembershipPlans[Current, Supporter], currency: Currency)
 
 @import com.gu.salesforce.Tier._
 
@@ -34,7 +34,7 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-                @fragments.pricing.paidPriceInfo(supporterPlans, US.currency, showCurrencyPrefix = false)
+                @fragments.pricing.paidPriceInfo(supporterPlans, currency, showCurrencyPrefix = false)
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@supporter.slug" @actionAttrs>
                 <span class="action__label">
