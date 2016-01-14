@@ -131,6 +131,12 @@ $full-gutter: $gs-gutter;
             background-color: $white;
         }
     }
+
+    @include mq(mem-full) {
+        .listing__lead-in {
+            color: $white;
+        }
+    }
 }
     .listing--card-stack__card-one,
     .listing--card-stack__card-two,

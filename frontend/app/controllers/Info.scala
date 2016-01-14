@@ -97,7 +97,51 @@ trait Info extends Controller {
     )
 
     Ok(
-      views.html.info.supporterUSA(
+      views.html.info.supporterInternational(
+        TouchpointBackend.Normal.catalog.supporter,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters),
+          navigation = Nav.internationalLandingPageNavigation
+        ),
+        pageImages
+      )
+    )
+  }
+
+  def supporterEurope = CachedAction { implicit request =>
+    implicit val countryGroup = Europe
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("fearless"),
+        metadata=Some(Grid.Metadata(
+          description = Some("The Counted: people killed by police in the United States in 2015"),
+          byline = Some("The Guardian US"),
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("join"),
+        metadata=Some(Grid.Metadata(
+          description = Some("Katharine Viner, editor-in-chief of the Guardian"),
+          byline = None,
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="e2e62954254813fd6781952a56f18bf20343ed0a/0_0_2000_1200",
+          sizes=List(1000, 500)
+        )
+      )
+    )
+
+    Ok(
+      views.html.info.supporterInternational(
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
