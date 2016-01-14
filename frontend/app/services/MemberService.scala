@@ -365,7 +365,7 @@ class MemberService(identityService: IdentityService,
   override def createFreeSubscription(contactId: ContactId,
                                       joinData: JoinForm): Future[SubscribeResult] = {
     val planId = joinData.planChoice.productRatePlanId
-    val currency = catalog.supportedAccountCurrency(joinData.deliveryAddress.country, planId)
+    val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country)
 
     for {
       zuoraFeatures <- zuoraService.getFeatures
@@ -388,10 +388,11 @@ class MemberService(identityService: IdentityService,
     for {
       zuoraFeatures <- zuoraService.getFeatures
       planId = joinData.planChoice.productRatePlanId
+      currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
       result <- zuoraService.createSubscription(
         subscribeAccount = SoapSubscribeAccount.stripe(
           contactId = contactId,
-          currency = catalog.supportedAccountCurrency(joinData.zuoraAccountAddress.country, planId),
+          currency = currency,
           autopay = true),
         paymentMethod = Some(CreditCardReferenceTransaction(customer)),
         productRatePlanId = planId,

@@ -1,24 +1,24 @@
 package views.support
 
-import com.gu.i18n.CountryGroup
+import com.gu.i18n.{Country, CountryGroup}
 import com.gu.identity.play.{StatusFields, PrivateFields}
 import com.gu.identity.play.IdUser
 
-/**
-  * A Identity user, for view purposes, with default empty private and status fields
-  */
+
 case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean) {
-  def withCountryGroup(countryGroup: CountryGroup): IdentityUser = {
-    val country = privateFields.country.orElse(countryGroup.defaultCountry.map(_.alpha2))
-    copy(
-      privateFields = privateFields.copy(
-        billingCountry = country
-      )
-    )
-  }
+  private val countryName: Option[String] = privateFields.billingCountry orElse privateFields.country
+
+  val country: Option[Country] =
+    countryName.flatMap(CountryGroup.countryByNameOrCode)
+
+  val countryGroup: Option[CountryGroup] =
+    countryName.flatMap(CountryGroup.byCountryNameOrCode)
 }
 
 object IdentityUser {
+  /**
+  * An Identity user, for view purposes, with default empty private and status fields
+  */
   def apply(user: IdUser, passwordExists: Boolean): IdentityUser =
     IdentityUser(
       privateFields = user.privateFields.getOrElse(PrivateFields()),

@@ -37,7 +37,7 @@ class IdentityServiceTest extends Specification with Mockito {
 
       val friendForm = FriendJoinForm(
         NameForm("Joe", "Bloggs"),
-        Address("line one", "line 2", "town", "country", "postcode", Country.UK),
+        Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
         MarketingChoicesForm(Some(false), Some(false)),
         None
       )
@@ -57,8 +57,8 @@ class IdentityServiceTest extends Specification with Mockito {
         partner,
         NameForm("Joe", "Bloggs"),
         PaymentForm(year, "token"),
-        Address("line one", "line 2", "town", "country", "postcode", Country.UK),
-        Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK)),
+        Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
+        Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK.name)),
         MarketingChoicesForm(Some(false), Some(false)),
         None,
         None,
@@ -78,8 +78,8 @@ class IdentityServiceTest extends Specification with Mockito {
 
     val identityService = new IdentityService(identityAPI)
     val addressDetails = AddressDetails(
-      Address("line one", "line 2", "town", "country", "postcode", Country.UK),
-      Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK))
+      Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
+      Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK.name))
     )
 
     identityService.updateUserFieldsBasedOnUpgrade(user.id, addressDetails, identityRequest)
