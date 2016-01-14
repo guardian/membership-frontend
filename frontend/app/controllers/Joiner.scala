@@ -7,6 +7,7 @@ import com.gu.i18n.{CountryGroup, GBP}
 import CountryGroup.UK
 
 import com.gu.memsub.BillingPeriod.year
+import com.gu.memsub.ProductFamily
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -27,7 +28,10 @@ import views.support
 import views.support.PageInfo.CheckoutForm
 import views.support.Pricing._
 import views.support.{CountryWithCurrency, PageInfo}
-
+import scalaz.std.scalaFuture._
+import scalaz.syntax.monad._
+import scalaz.syntax.std.option._
+import scalaz.{MonadTrans, OptionT}
 import scala.concurrent.Future
 
 object Joiner extends Controller with ActivityTracking
@@ -35,6 +39,8 @@ object Joiner extends Controller with ActivityTracking
                                  with CatalogProvider
                                  with StripeServiceProvider
                                  with SalesforceServiceProvider
+                                 with SubscriptionServiceProvider
+                                 with PaymentServiceProvider
                                  with MemberServiceProvider {
   val JoinReferrer = "join-referrer"
 
@@ -186,14 +192,20 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
+
+    val paymentCard = (for {
+      sub <- OptionT(subscriptionService.get(request.member)(ProductFamily.membership))
+      card <- OptionT(paymentService.getPaymentCardByAccount(sub.accountId))
+    } yield card).run
+
     for {
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.member)
-      stripeCustomer <- salesforceService.getStripeCustomer(request.member)
       destination <- DestinationService.returnDestinationFor(request)
+      card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
-        stripeCustomer.map(_.card),
+        card,
         destination,
         upgrade
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
