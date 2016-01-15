@@ -27,6 +27,7 @@ import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
+import utils.CampaignCode
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
 
@@ -75,7 +76,8 @@ class MemberService(identityService: IdentityService,
   override def createMember(user: IdMinimalUser,
                             formData: JoinForm,
                             identityRequest: IdentityRequest,
-                            fromEventId: Option[String]): Future[ContactId] = {
+                            fromEventId: Option[String],
+                            campaignCode: Option[CampaignCode]): Future[ContactId] = {
 
     val tier = formData.planChoice.tier
 
@@ -96,7 +98,7 @@ class MemberService(identityService: IdentityService,
           for {
             customer <- stripeService.Customer.create(user.id, paid.payment.token)
             cId <- createContact
-            subscription <- createPaidSubscription(cId, paid, customer)
+            subscription <- createPaidSubscription(cId, paid, customer, campaignCode)
             updatedMember <- salesforceService.updateMemberStatus(user, tier, Some(customer))
           } yield cId
         case _ =>
@@ -111,7 +113,7 @@ class MemberService(identityService: IdentityService,
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         salesforceService.metrics.putSignUp(tier)
-        trackRegistration(formData, tier, cId, user)
+        trackRegistration(formData, tier, cId, user, campaignCode)
         cId
       }
     }.andThen {
@@ -119,7 +121,13 @@ class MemberService(identityService: IdentityService,
         logger.debug(s"createMember() success user=${user.id} memberAccount=$contactId")
         fromEventId.flatMap(EventbriteService.getBookableEvent).foreach { event =>
           event.service.wsMetrics.put(s"join-${tier.name}-event", 1)
-          val memberData = MemberData(contactId.salesforceContactId, user.id, tier.name)
+
+          val memberData = MemberData(
+            salesforceContactId = contactId.salesforceContactId,
+            identityId = user.id,
+            tier = tier,
+            campaignCode = campaignCode)
+
           track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
         }
       case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
@@ -132,7 +140,8 @@ class MemberService(identityService: IdentityService,
   override def upgradeFreeSubscription(freeMember: FreeSFMember,
                                        newTier: PaidTier,
                                        form: FreeMemberChangeForm,
-                                       identityRequest: IdentityRequest): Future[MemberError \/ ContactId] = {
+                                       identityRequest: IdentityRequest,
+                                       campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] = {
     (for {
       customer <- stripeService.Customer.create(freeMember.identityId, form.payment.token).liftM
       paymentResult <- createPaymentMethod(freeMember, customer).liftM
@@ -141,7 +150,8 @@ class MemberService(identityService: IdentityService,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
         customerOpt = Some(customer),
-        identityRequest = identityRequest
+        identityRequest = identityRequest,
+        campaignCode = campaignCode
       ))
     } yield memberId).run
   }
@@ -149,7 +159,8 @@ class MemberService(identityService: IdentityService,
   override def upgradePaidSubscription(paidMember: PaidSFMember,
                                        newTier: PaidTier,
                                        form: PaidMemberChangeForm,
-                                       identityRequest: IdentityRequest): Future[MemberError \/ ContactId] =
+                                       identityRequest: IdentityRequest,
+                                       campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] =
     (for {
       subs <- subscriptionService.unsafeGetPaid(paidMember).liftM
       currentPlan = catalog.unsafeFindPaid(subs.productRatePlanId)
@@ -158,11 +169,12 @@ class MemberService(identityService: IdentityService,
         planChoice = PaidPlanChoice(newTier, currentPlan.billingPeriod),
         form = form,
         customerOpt = None,
-        identityRequest = identityRequest
+        identityRequest = identityRequest,
+        campaignCode = campaignCode
       ))
     } yield memberId).run
 
-  override def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ String] = {
+  override def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(sub: model.PaidSubscription): DateTime = sub.chargedThroughDate.getOrElse(sub.firstPaymentDate).toDateTimeAtCurrentTime
@@ -189,16 +201,14 @@ class MemberService(identityService: IdentityService,
           MemberData(
             salesforceContactId = contact.salesforceContactId,
             identityId = contact.identityId,
-            tier = contact.tier.name,
+            tier = contact.tier,
             tierAmendment = Some(DowngradeAmendment(contact.tier)) //getting effective date and subscription annual / month is proving difficult
           )),
         user)
-
-      ""
     }).run
   }
 
-  override def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[ MemberError \/ String] = {
+  override def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[ MemberError \/ Unit] = {
     (for {
       sub <- EitherT(subOrPendingAmendError(contact))
       cancelDate = sub match {
@@ -208,8 +218,7 @@ class MemberService(identityService: IdentityService,
       _ <- zuoraService.cancelPlan(sub, cancelDate).liftM
     } yield {
       salesforceService.metrics.putCancel(contact.tier)
-      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier.name)), user)
-      ""
+      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier)), user)
     }).run
   }
 
@@ -374,7 +383,8 @@ class MemberService(identityService: IdentityService,
 
   override def createPaidSubscription(contactId: ContactId,
                                       joinData: PaidMemberJoinForm,
-                                      customer: Stripe.Customer): Future[SubscribeResult] =
+                                      customer: Stripe.Customer,
+                                      campaignCode: Option[CampaignCode]): Future[SubscribeResult] =
     for {
       zuoraFeatures <- zuoraService.getFeatures
       planId = joinData.planChoice.productRatePlanId
@@ -415,7 +425,8 @@ class MemberService(identityService: IdentityService,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
                                   customerOpt: Option[Customer],
-                                  identityRequest: IdentityRequest): Future[MemberError \/ ContactId] = {
+                                  identityRequest: IdentityRequest,
+                                  campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
@@ -433,7 +444,7 @@ class MemberService(identityService: IdentityService,
       _ <- zuoraService.upgradeSubscription(sub, newPlan.productRatePlanId, featureIds, preview = false).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
-      trackUpgrade(member, newPlan, addressDetails)
+      trackUpgrade(member, newPlan, addressDetails, campaignCode)
       member
     }).run
   }

@@ -7,11 +7,11 @@ import org.specs2.mutable.Specification
 
 class MemberDataTest extends Specification {
 
-  val memberData = MemberData("salesforce123", "identity123", "Partner",
+  val memberData = MemberData("salesforce123", "identity123", partner,
     Some(DowngradeAmendment(partner)), Some("N1 9GU"), None, Some(true), Some(MarketingChoicesForm(Some(true), Some(false))))
 
   "MemberData" should {
-   
+
     "truncate postcode" in {
       memberData.truncatePostcode("N1 9GU") mustEqual "N1"
       memberData.truncatePostcode("N19GU") mustEqual "N1"

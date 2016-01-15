@@ -21,7 +21,7 @@ import play.filters.csrf.CSRF.Token.getToken
 import services._
 import services.api.MemberService.{MemberError, PendingAmendError}
 import tracking.ActivityTracking
-import utils.TierChangeCookies
+import utils.{CampaignCode, TierChangeCookies}
 import views.support.PageInfo.CheckoutForm
 import views.support.{CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 
@@ -132,10 +132,12 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     val identityRequest = IdentityRequest(request)
 
-    def handleFree(freeMember: FreeSFMember)(form: FreeMemberChangeForm) =
-      handleErrors(memberService.upgradeFreeSubscription(freeMember, target, form, identityRequest)) {
+    def handleFree(freeMember: FreeSFMember)(form: FreeMemberChangeForm) = {
+      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, identityRequest, CampaignCode.fromRequest)
+      handleErrors(upgrade) {
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
+    }
 
     def handlePaid(paidMember: PaidSFMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
@@ -145,7 +147,8 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       }
 
       def doUpgrade(): Future[Result] = {
-        handleErrors(memberService.upgradePaidSubscription(paidMember, target, form, identityRequest)) {
+        val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, identityRequest, CampaignCode.fromRequest)
+        handleErrors(upgrade) {
           Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
