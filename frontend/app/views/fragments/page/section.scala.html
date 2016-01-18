@@ -1,8 +1,18 @@
-@(title: String = "", hasBorder: Boolean = true)(content: Html)
+@(
+    title: String = "",
+    hasBorder: Boolean = true,
+    isNarrow: Boolean = true,
+    hasBottomPadding: Boolean = true
+)(content: Html)
 
-<section class="page-slice page-slice--listing">
+<section @if(hasBottomPadding){class="page-slice page-slice--listing"}>
     <div class="l-constrained">
-        <div class="listing listing--narrow @if(hasBorder){listing--bordered}">
+        <div class="
+            listing
+            @if(isNarrow) {listing--narrow}
+            @if(!hasBottomPadding) {listing--no-bottom-padding}
+            @if(hasBorder) {listing--bordered}
+        ">
             <div class="listing__lead-in">
                 <h3 class="h-intro">@title</h3>
             </div>

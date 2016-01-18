@@ -4,16 +4,16 @@
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
 @(supporterPlans: PaidMembershipPlans[Current, Supporter],
-  pageInfo: PageInfo,
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    pageInfo: PageInfo,
+    pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import configuration.Videos
 @import views.support.Asset
 @main("Supporters", pageInfo=pageInfo) {
-    @fragments.page.heroBanner("hero-banner--us-supporter") {
+    @fragments.page.heroBanner("hero-banner--eu-supporter") {
         Become a Guardian&nbsp;Supporter
     } {
-        Supporters keep our journalism fearless and free to tell the stories other news organizations won’t.
+        Supporters keep our journalism fearless and free from interference.
     }()
 
     @fragments.page.section(hasBorder = false) {
@@ -27,7 +27,7 @@
             </div>
             <div class="video-preview__header">
                 @fragments.inlineIcon("video", List("icon-inline--scale"))
-                Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending
+                Watch our journalists explain why the Guardian’s unique approach to journalism is worth defending
             </div>
         </div>
     }
@@ -35,8 +35,16 @@
     @for(img <- pageImages.find(_.name.contains("fearless"))) {
         @fragments.page.sectionCardStack(img) {
             <div class="listing__text">
-                <p>The Guardian shines a light on critical, under-reported stories across the US and the globe.</p>
-                <p>Without a paywall, our journalism is open to everyone.</p>
+                <p>For 200 years, the Guardian has been fearless and independent.</p>
+                <p>
+                    Our journalism shines a light on critical, under-reported stories across Europe and the globe
+                    and we have become the world’s most read, serious English-language newspaper, visited by
+                    120 million unique browsers each month.
+                </p>
+                <p>
+                    By becoming a Member, your financial contribution will support our independence
+                    and our award-winning journalism.
+                </p>
                 <p>
                     <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">Become a Supporter</a>
                 </p>
