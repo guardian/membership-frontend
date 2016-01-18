@@ -38,14 +38,14 @@
                         @featurePanel(
                             Asset.at("images/promo/promo-events.jpg").toString,
                             "Browse our events programme and book tickets now",
-                            routes.WhatsOn.list.toString
+                            routes.WhatsOn.list.path
                         )
                     </li>
                     <li class="grid__item">
                         @featurePanel(
                             Asset.at("images/promo/promo-masterclasses.jpg").toString,
                             "Learn something new with Guardian Masterclasses",
-                            routes.WhatsOn.masterclassesList.toString
+                            routes.WhatsOn.masterclassesList.path
                         )
                     </li>
                     <li class="grid__item">
@@ -57,9 +57,9 @@
                     </li>
                     <li class="grid__item">
                         @featurePanel(
-                            Asset.at("images/promo/promo-space.jpg").toString,
-                            "Transforming the Midland Goods Shed into a new space for debate, culture and curiosity",
-                            Links.membershipBuilding
+                            Asset.at("images/promo/promo-tier-change.png").toString,
+                            "Upgrade your membership today",
+                            routes.TierController.change.path
                         )
                     </li>
                 </ul>
