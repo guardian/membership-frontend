@@ -90,6 +90,7 @@ GET            /tier/change/:tier/summary             controllers.TierController
 GET            /patrons                               controllers.Info.patron
 GET            /supporter                             controllers.Info.supporter
 GET            /us/supporter                          controllers.Info.supporterUSA
+GET            /eu/supporter                          controllers.Info.supporterEurope
 GET            /help                                  controllers.Info.help
 GET            /feedback                              controllers.Info.feedback
 POST           /feedback                              controllers.Info.submitFeedback

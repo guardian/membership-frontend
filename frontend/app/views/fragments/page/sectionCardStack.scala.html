@@ -1,0 +1,28 @@
+@(img: model.ResponsiveImageGroup, leadIn: Option[String] = None)(content: Html)
+
+<section class="page-slice page-slice--listing">
+    <div class="l-constrained">
+        <div class="listing listing--narrow listing--card-stack @if(leadIn.isEmpty){listing--empty-lead-in}">
+            @* If lead-in is empty we still need its containing div for column alignment at larger widths *@
+            <div class="listing__lead-in">@leadIn.getOrElse("")</div>
+            <div class="listing__content">
+                <div class="listing--card-stack__card-one"></div>
+                <div class="listing--card-stack__card-two"></div>
+                <div class="listing--card-stack__card-three"></div>
+                @content
+            </div>
+        </div>
+        <figure class="captioned-image">
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
+            @for(metadata <- img.metadata) {
+                <figcaption class="captioned-image__detail captioned-image__detail--right">
+                    <div class="captioned-image__caption">
+                    @fragments.media.imageCaption(metadata)
+                    </div>
+                </figcaption>
+            }
+        </figure>
+    </div>
+</section>
+
+

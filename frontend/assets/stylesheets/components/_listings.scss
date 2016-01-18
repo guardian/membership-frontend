@@ -106,6 +106,17 @@ $full-gutter: $gs-gutter;
         }
     }
 
+.listing--empty-lead-in {
+    .listing__lead-in {
+        // If lead-in is empty, we don't want its padding to affect layout when vertically stacked.
+        display: none;
+        @include mq(mem-full) {
+            // But once the lead-in is over on the left, we need its width for our two-column layout
+            display: block;
+        }
+    }
+}
+
 // This type of listing must have an <img> element to give it
 // a height and serve as a background
 .listing--card-stack {
@@ -121,10 +132,9 @@ $full-gutter: $gs-gutter;
         }
     }
 
-    .listing__lead-in {
-        display: none;
-        @include mq(mem-full) {
-            display: block;
+    @include mq(mem-full) {
+        .listing__lead-in {
+            color: $white;
         }
     }
 }

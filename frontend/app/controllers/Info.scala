@@ -81,23 +81,38 @@ trait Info extends Controller {
           id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
           sizes=List(1000,500)
         )
-      ),
-      ResponsiveImageGroup(
-        name=Some("join"),
-        metadata=Some(Grid.Metadata(
-          description = Some("Katharine Viner, editor-in-chief of the Guardian"),
-          byline = None,
-          credit = None
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="e2e62954254813fd6781952a56f18bf20343ed0a/0_0_2000_1200",
-          sizes=List(1000, 500)
-        )
       )
     )
 
     Ok(
       views.html.info.supporterUSA(
+        TouchpointBackend.Normal.catalog.supporter,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters),
+          navigation = Nav.internationalLandingPageNavigation
+        ),
+        pageImages
+      )
+    )
+  }
+
+  def supporterEurope = CachedAction { implicit request =>
+    implicit val countryGroup = Europe
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("fearless"),
+        availableImages=ResponsiveImageGenerator(
+          id="88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129",
+          sizes=List(1000,500)
+        )
+      )
+    )
+
+    Ok(
+      views.html.info.supporterEurope(
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
