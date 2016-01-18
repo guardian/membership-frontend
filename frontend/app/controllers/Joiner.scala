@@ -3,10 +3,8 @@ package controllers
 import actions.Functions._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
+import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
-import CountryGroup.UK
-
-import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.ProductFamily
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -25,14 +23,13 @@ import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.{CampaignCode, TierChangeCookies}
 import views.support
-import views.support.PageInfo.CheckoutForm
 import views.support.Pricing._
-import views.support.{CountryWithCurrency, PageInfo}
-import scalaz.std.scalaFuture._
-import scalaz.syntax.monad._
-import scalaz.syntax.std.option._
-import scalaz.{MonadTrans, OptionT}
+import views.support.TierPlans._
+import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
+
 import scala.concurrent.Future
+import scalaz.OptionT
+import scalaz.std.scalaFuture._
 
 object Joiner extends Controller with ActivityTracking
                                  with LazyLogging
@@ -98,23 +95,20 @@ object Joiner extends Controller with ActivityTracking
 
   def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
-    val desiredCurrency = countryGroup.currency
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
-      val currency = if (supportedCurrencies.contains(desiredCurrency)) desiredCurrency else GBP
-      val idUserWithCountry = identityUser.withCountryGroup(countryGroup)
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
-        initialCheckoutForm = CheckoutForm(countryGroup.defaultCountry, currency, year)
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
       )
 
       Ok(views.html.joiner.form.payment(
          plans = plans,
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
-         idUser = idUserWithCountry,
+         idUser = identityUser,
          pageInfo = pageInfo))
     }
   }
@@ -124,12 +118,10 @@ object Joiner extends Controller with ActivityTracking
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
-      val ukGroup = CountryGroup.UK
-      val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, year)
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
         identityUser,
-        support.PageInfo(initialCheckoutForm = formI18n)))
+        support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))))
     }
   }
 

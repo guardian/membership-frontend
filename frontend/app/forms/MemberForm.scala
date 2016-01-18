@@ -96,7 +96,11 @@ object MemberForm {
   }
 
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
-  private val country = of[Country] as countryFormatter
+  private val country: Mapping[String] =
+    text.verifying { code => CountryGroup.countryByCode(code).isDefined }
+      .transform(
+        { code => CountryGroup.countryByCode(code).fold("")(_.name)},
+        { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
 
   val nonPaidAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> text,

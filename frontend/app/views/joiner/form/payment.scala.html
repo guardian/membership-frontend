@@ -6,9 +6,8 @@
 @import com.gu.membership.PaidMembershipPlans
 @import com.gu.memsub.Current
 @import com.gu.salesforce.PaidTier
-
-@import com.gu.membership.MembershipCatalog
 @import views.support.PaidPlans
+
 @(plans: PaidMembershipPlans[Current, PaidTier],
   countriesWithCurrencies: List[CountryWithCurrency],
   idUser: IdentityUser,
@@ -61,8 +60,7 @@
                             address2 = idUser.privateFields.address2,
                             town = idUser.privateFields.address3,
                             postcode = idUser.privateFields.postcode,
-                            county = idUser.privateFields.address4,
-                            userCountry = idUser.privateFields.country
+                            county = idUser.privateFields.address4
                         )
                         @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
 
@@ -84,8 +82,7 @@
                             address2 = idUser.privateFields.billingAddress2,
                             town = idUser.privateFields.billingAddress3,
                             postcode = idUser.privateFields.billingPostcode,
-                            county = idUser.privateFields.billingAddress4,
-                            userCountry = idUser.privateFields.billingCountry
+                            county = idUser.privateFields.billingAddress4
                         )
                         @fragments.form.cardDetail(plans)
                     </div>

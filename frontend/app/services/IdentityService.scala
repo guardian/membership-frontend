@@ -25,7 +25,7 @@ case class IdentityService(identityApi: IdentityApi) {
     getFullUserDetails(user, identityRequest)
       .zip(doesUserPasswordExist(identityRequest))
       .map { case (fullUser, doesPasswordExist) =>
-        IdentityUser.apply(fullUser, doesPasswordExist)
+        IdentityUser(fullUser, doesPasswordExist)
       }
 
   def getFullUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =

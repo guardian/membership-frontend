@@ -1,13 +1,11 @@
 package views.support
 
-import com.gu.i18n.{Country, CountryGroup, Currency}
+import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
 import com.gu.memsub.BillingPeriod
 import configuration.{Config, CopyConfig}
-import model.EventSchema
-import model.Nav
+import model.{EventSchema, Nav}
 import model.Nav.NavItem
 import play.api.libs.json._
-import views.support.PageInfo.CheckoutForm
 
 case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                     url: String = "/",
@@ -22,9 +20,6 @@ case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                    )
 
 object PageInfo {
-  case class CheckoutForm(defaultCountry: Option[Country],
-                          currency: Currency,
-                          billingPeriod: BillingPeriod)
 
   implicit val bpWrites = new Writes[BillingPeriod] {
     override def writes(bp: BillingPeriod): JsValue = JsString(bp.adjective)

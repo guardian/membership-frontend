@@ -3,9 +3,8 @@ package controllers
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub.{ProductFamily, Membership, BillingPeriod, PaymentCard}
 import com.gu.memsub.BillingPeriod._
-import com.gu.memsub.{BillingPeriod, Membership, ProductFamily}
+import com.gu.memsub.{BillingPeriod, Membership, PaymentCard, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -21,9 +20,8 @@ import play.filters.csrf.CSRF.Token.getToken
 import services._
 import services.api.MemberService.{MemberError, PendingAmendError}
 import tracking.ActivityTracking
-import utils.{CampaignCode, TierChangeCookies}
-import views.support.PageInfo.CheckoutForm
-import views.support.{CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
+import utils.{TierChangeCookies, CampaignCode}
+import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
