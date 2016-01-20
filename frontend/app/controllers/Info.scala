@@ -125,6 +125,33 @@ trait Info extends Controller {
     )
   }
 
+  def supporterInternational = CachedAction { implicit request =>
+    implicit val countryGroup = RestOfTheWorld
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("fearless"),
+        availableImages=ResponsiveImageGenerator(
+          id="88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129",
+          sizes=List(1000,500)
+        )
+      )
+    )
+
+    Ok(
+      views.html.info.supporterInternational(
+        TouchpointBackend.Normal.catalog.supporter,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters),
+          navigation = Nav.internationalLandingPageNavigation
+        ),
+        pageImages
+      )
+    )
+  }
+
   def patron() = CachedAction { implicit request =>
     implicit val countryGroup = UK
 
