@@ -60,6 +60,13 @@
         background-image: url(/assets/images/join-challenger/s_EU_hero01_1280x800.jpg);
     }
 }
+// rest of world
+.hero-banner--row-supporter {
+    background-image: url(/assets/images/join-challenger/s_ROW_hero01_980x980.jpg);
+    @include mq(desktop) {
+        background-image: url(/assets/images/join-challenger/s_ROW_hero01_1280x800.jpg);
+    }
+}
 .hero-banner__inner {
     position: relative;
     height: 100%;
