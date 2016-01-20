@@ -7,7 +7,7 @@ import com.gu.stripe.Stripe.Customer
 import com.gu.membership.util.FutureSupplier
 import configuration.Config
 import forms.MemberForm.JoinForm
-import model.{GenericSFContact, SFMember}
+import model.{GenericSFContact}
 import monitoring.MemberMetrics
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -48,8 +48,8 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Conta
 class SalesforceService(salesforceConfig: SalesforceConfig) extends api.SalesforceService {
   private val repository = new FrontendMemberRepository(salesforceConfig)
 
-  override def getMember(userId: UserId): Future[Option[SFMember]] =
-    repository.get(userId).map(_.collect { case Contact(d, m: Member, p) => Contact(d, m, p) })
+  override def getMember(userId: UserId): Future[Option[GenericSFContact]] =
+    repository.get(userId)
 
   override def metrics = repository.metrics
 

@@ -10,17 +10,17 @@ import scala.concurrent.Future
 
 trait DestinationService {
 
-  def memberService(request: AnyMemberTierRequest[_]): api.MemberService
+  def memberService(request: SubscriptionRequest[_]): api.MemberService
 
   val JoinReferrer = "join-referrer"
   val contentApiService: GuardianContentService
   val eventbriteService: EventbriteCollectiveServices
 
-  def returnDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[Destination]] = {
+  def returnDestinationFor(request: SubscriptionRequest[_] with Subscriber): Future[Option[Destination]] = {
     Future.sequence(Seq(contentDestinationFor(request), eventDestinationFor(request))).map(_.flatten.headOption)
   }
 
-  def contentDestinationFor(implicit request: AnyMemberTierRequest[_]): Future[Option[ContentDestination]] = {
+  def contentDestinationFor(implicit request: SubscriptionRequest[_]): Future[Option[ContentDestination]] = {
     request.session.get(JoinReferrer).map { referer =>
       if(referer.host.contains(Config.guardianHost)) {
         contentApiService.contentItemQuery(referer.path).map { resp =>
@@ -32,11 +32,11 @@ trait DestinationService {
     }.getOrElse(Future.successful(None))
   }
 
-  def eventDestinationFor(implicit request: AnyMemberTierRequest[_]): Future[Option[EventDestination]] = {
+  def eventDestinationFor(implicit request: SubscriptionRequest[_] with Subscriber): Future[Option[EventDestination]] = {
     val optFuture = for {
       eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
       event <- eventbriteService.getBookableEvent(eventId)
-    } yield memberService(request).createEBCode(request.member, event).map { discountOpt =>
+    } yield memberService(request).createEBCode(request.subscriber, event).map { discountOpt =>
       EventDestination(event, Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code)))
     }
 
@@ -48,6 +48,6 @@ object DestinationService extends DestinationService  {
   val contentApiService = GuardianContentService
   val eventbriteService = EventbriteService
 
-  override def memberService(request: AnyMemberTierRequest[_]): api.MemberService =
+  override def memberService(request: SubscriptionRequest[_]): api.MemberService =
     request.touchpointBackend.memberService
 }

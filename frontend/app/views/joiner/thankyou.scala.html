@@ -1,5 +1,3 @@
-@import com.gu.salesforce.Contact._
-@import com.gu.salesforce.{Contact, Member, PaidTierMember, PaymentMethod}
 @import com.gu.salesforce.Tier
 @import com.gu.memsub.BillingPeriod.year
 @import configuration.Links
@@ -9,7 +7,8 @@
 
 @import views.support.ThankyouSummary
 @import com.gu.memsub.PaymentCard
-@(member: Contact[Member, PaymentMethod],
+@import com.gu.memsub.Subscriber
+@(member: Subscriber.Member,
   summary: ThankyouSummary,
   cardOpt: Option[PaymentCard],
   returnDestinationOpt: Option[model.Destination],
@@ -17,24 +16,21 @@
 
 @title = @{
     if(upgrade) {
-        s"Thank you for upgrading | ${member.memberStatus.tier.name}"
+        s"Thank you for upgrading | ${member.subscription.plan.tier.name}"
     } else {
-        s"Thank you | ${member.memberStatus.tier.name}"
+        s"Thank you | ${member.subscription.plan.tier.name}"
     }
 }
 
 @regNumberOrFree = @{
-    member.memberStatus match {
-        case PaidTierMember(n, _) => n
-        case _ => "Free"
-    }
+    member.contact.regNumber.getOrElse("Free")
 }
 
 @pageHeader = @{
     if(upgrade) {
         "All done! Thanks for upgrading"
     } else {
-        for(firstName <- member.firstName) {
+        for(firstName <- member.contact.firstName) {
             "Hello " + firstName + "<br/>"
         }
         "Welcome to Guardian Members"
@@ -56,7 +52,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.memberStatus.tier.name} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.email}"))
+        @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.contact.email}"))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -66,7 +62,7 @@
                 <table class="table table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
-                        <td id="qa-joiner-summary-tier">@member.memberStatus.tier.name</td>
+                        <td id="qa-joiner-summary-tier">@member.subscription.plan.tier.name</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
@@ -127,7 +123,7 @@
 
         @returnDestinationOpt.fold{ 
             @getStarted("Get started") {
-                @member.memberStatus.tier match {
+                @member.subscription.plan.tier match {
                     case Tier.supporter => {
                         <p>Visit the Members area of theguardian.com, see all the latest news and highlights from our membership programme.</p>
                         <a class="action" href="@Links.membershipFront">Get started</a>
@@ -157,8 +153,8 @@
         }
     </main>
 
-    @fragments.analytics.googleJoinerConversion(member.memberStatus.tier)
-    @fragments.analytics.facebookJoinerConversion(member.memberStatus.tier)
+    @fragments.analytics.googleJoinerConversion(member.subscription.plan.tier)
+    @fragments.analytics.facebookJoinerConversion(member.subscription.plan.tier)
     @fragments.analytics.videoCampaignPHD.thankyouPage(
         regNumberOrFree, summary.amountPaidToday.pretty)
     )

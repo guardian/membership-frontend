@@ -1,14 +1,22 @@
 package services
 
-import actions.{AnyMemberTierRequest, MemberRequest}
+import actions.{Subscriber, SubscriptionRequest}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
+import com.gu.i18n.{GBP, Currency}
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
-import com.gu.salesforce.Tier.friend
+import com.gu.membership.PaidMembershipPlan
+import com.gu.memsub._
+import com.gu.memsub.Subscription.{FeatureId, ProductRatePlanId, MembershipSub}
+import com.gu.salesforce.Tier.{Partner, friend}
 import com.gu.salesforce._
+import com.gu.zuora.rest
+import com.gu.zuora.rest.{RatePlanCharge, RatePlan}
+import com.gu.zuora.soap.models.SubscriptionStatus
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
 import model.{ContentDestination, EventDestination}
+import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
 import org.specs2.mock.Mockito
 import play.api.mvc.Security.AuthenticatedRequest
@@ -31,16 +39,45 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
     object DestinationServiceTest extends DestinationService {
       override val contentApiService = mock[GuardianContentService]
       override val eventbriteService = mock[EventbriteCollectiveServices]
-      override def memberService(request: AnyMemberTierRequest[_]): MemberService = fakeMemberService
+      override def memberService(request: SubscriptionRequest[_]): MemberService = fakeMemberService
     }
 
     val destinationService = DestinationServiceTest
 
     def createRequestWithSession(newSessions: (String, String)*) = {
-      val testMember = Contact(ContactDetails("id", Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId"), FreeTierMember(friend), NoPayment)
-      val fakeRequest = FakeRequest().withSession(newSessions: _*)
+
+      val testMember = Contact("id", None, Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId")
+      val testSub: MembershipSub = new Subscription(
+        id = Subscription.Id(""),
+        name = Subscription.Name(""),
+        accountId = Subscription.AccountId(""),
+        currency = Currency.all.head,
+        productRatePlanId = Subscription.ProductRatePlanId(""),
+        productName = "productName",
+        startDate = new LocalDate("2015-01-01"),
+        termEndDate = new LocalDate("2016-01-01"),
+        features = Set[FeatureId](),
+        casActivationDate = None,
+        isCancelled = false,
+        ratePlanId = "",
+        isPaid = true
+      ) with PaidPS[PaidMembershipPlan[Status, PaidTier, BillingPeriod]] {
+
+        override def recurringPrice: Price = new Price(0.1f, GBP)
+        override def firstPaymentDate: LocalDate = new LocalDate("2015-01-01")
+        override def chargedThroughDate: Option[LocalDate] = None
+        override def priceAfterTrial: Price = recurringPrice
+        override def hasPendingAmendment: Boolean = false
+        override def plan = new PaidMembershipPlan[Current, Partner, Month](Current(), Tier.Partner(), Month(), ProductRatePlanId(""), PricingSummary(Map(GBP -> Price(0.1f, GBP))) )
+      }
+
       val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
-      MemberRequest(testMember, new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo", "bar"), minimalUser), fakeRequest))
+      val fakeRequest = FakeRequest().withSession(newSessions: _*)
+      val ar = new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo", "bar"), minimalUser), fakeRequest)
+
+      new SubscriptionRequest(mock[TouchpointBackend],ar) with Subscriber {
+        override def subscriber = Subscriber(testSub, testMember)
+      }
 
     }
 
@@ -72,7 +109,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         //mock the Eventbrite response and discount creation
         val event = TestRichEvent(eventWithName().copy(id = "0123456"))
         destinationService.eventbriteService.getBookableEvent("0123456") returns Some(event)
-        fakeMemberService.createEBCode(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
+        fakeMemberService.createEBCode(request.subscriber, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
 
         //call the method under test
         val futureResult = destinationService.eventDestinationFor(request)
@@ -96,7 +133,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         //mock the Eventbrite response and discount creation
         val event = TestRichEvent(eventWithName().copy(id = "0123456"))
         destinationService.eventbriteService.getBookableEvent("0123456") returns Some(event)
-        fakeMemberService.createEBCode(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
+        fakeMemberService.createEBCode(request.subscriber, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
 
         //call the method under test with the request
         val futureResult = destinationService.returnDestinationFor(request)

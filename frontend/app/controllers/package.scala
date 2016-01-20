@@ -1,7 +1,7 @@
 import actions._
 import com.gu.membership.MembershipCatalog
+import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.services.api.{PaymentService, SubscriptionService}
-import com.gu.salesforce.{Member, PaidTierMember}
 import com.gu.stripe.StripeService
 import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
@@ -53,10 +53,7 @@ package object controllers extends CommonActions with LazyLogging{
   }
 
   implicit class WithRegNumberLabel(m: Member) {
-    def regNumberLabel = m match {
-      case PaidTierMember(n, _) => n
-      case _ => ""
-    }
+    def regNumberLabel = m.contact.regNumber.getOrElse("")
   }
 
   def redirectToUnsupportedBrowserInfo[T: ClassTag](form: Form[T])(implicit req: RequestHeader): Future[Result] = {

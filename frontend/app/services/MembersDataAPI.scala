@@ -1,6 +1,7 @@
 package services
 
-import com.gu.salesforce.{FreeTierMember, PaidTierMember, Member, Tier}
+import com.gu.memsub.Subscriber.Member
+import com.gu.salesforce.Tier
 import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.squareup.okhttp.Request
@@ -29,10 +30,7 @@ object MembersDataAPI {
   case class Attributes(tier: Tier, membershipNumber: Option[String])
 
   object Attributes {
-    def fromMember(member: Member) = member match {
-      case PaidTierMember(n, t) => Attributes(t, Some(n))
-      case FreeTierMember(t) => Attributes(t, None)
-    }
+    def fromMember(member: Member) = Attributes(member.subscription.plan.tier, member.contact.regNumber)
   }
 
   case class ApiError(message: String, details: String) extends RuntimeException(s"$message - $details")

@@ -1,6 +1,6 @@
 import com.gu.googleauth
 import com.gu.identity.play.AuthenticatedIdUser
-import com.gu.memsub.Subscription
+import com.gu.memsub.Subscriber.{Member, FreeMember, PaidMember}
 import com.gu.salesforce._
 import com.gu.membership.util.Timing
 import monitoring.MemberAuthenticationMetrics
@@ -10,9 +10,10 @@ import services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-package object actions {
-  type AuthRequest[A] = AuthenticatedRequest[A, AuthenticatedIdUser]
 
+package object actions {
+
+  type AuthRequest[A] = AuthenticatedRequest[A, AuthenticatedIdUser]
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
   trait BackendProvider {
@@ -22,7 +23,7 @@ package object actions {
   implicit class RichAuthRequest[A](req: AuthRequest[A]) extends BackendProvider {
     lazy val touchpointBackend = TouchpointBackend.forUser(req.user)
 
-    def forMemberOpt[T](f: Option[Contact[Member, PaymentMethod]] => T)(implicit executor: ExecutionContext): Future[T] =
+    def forMemberOpt[T](f: Option[Contact] => T)(implicit executor: ExecutionContext): Future[T] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
           memberOpt <- touchpointBackend.salesforceService.getMember(req.user.id)
@@ -30,29 +31,29 @@ package object actions {
       }
     }
 
-  case class MemberRequest[A, +M <: Contact[Member, PaymentMethod]](member: M, request: AuthRequest[A]) extends WrappedRequest[A](request)
-                                                                                                        with BackendProvider {
-    val user = request.user
+  case class SubscriptionRequest[A](touchpointBackend: TouchpointBackend,
+                                    request: AuthRequest[A]) extends AuthRequest(request.user, request) with BackendProvider {
 
     def idCookies: Option[Seq[Cookie]] = for {
       guu <- request.cookies.get("GU_U")
       scguu <- request.cookies.get("SC_GU_U")
     } yield Seq(guu, scguu)
 
-    lazy val touchpointBackend = TouchpointBackend.forUser(user)
+    def this(other: SubscriptionRequest[A]) =
+      this(other.touchpointBackend, other.request)
   }
 
-  case class SubscriptionRequest[A](subscription: Subscription,
-                                    memberRequest: MemberRequest[A, Contact[Member, PaymentMethod]]
-                                   ) extends WrappedRequest[A](memberRequest) with BackendProvider {
-    val user = memberRequest.user
-    val touchpointBackend = memberRequest.touchpointBackend
-    val member = memberRequest.member
+  trait Subscriber {
+    def subscriber: Member
   }
 
-  type AnyMemberTierRequest[A] = MemberRequest[A, Contact[Member, PaymentMethod]]
+  trait PaidSubscriber extends Subscriber {
+    def subscriber: PaidMember
+  }
 
-  type PaidMemberRequest[A] = MemberRequest[A, Contact[PaidTierMember, StripePayment]]
+  trait FreeSubscriber extends Subscriber {
+    def subscriber: FreeMember
+  }
 
   case class IdentityGoogleAuthRequest[A](googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) with BackendProvider {
     lazy val touchpointBackend = TouchpointBackend.forUser(request.user)

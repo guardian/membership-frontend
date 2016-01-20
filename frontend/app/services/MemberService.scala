@@ -3,13 +3,15 @@ package services
 import api.MemberService.{PendingAmendError, PaidSubscriptionExpected, MemberError}
 import com.gu.i18n.Currency
 import com.gu.identity.play.IdMinimalUser
+import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan, MembershipPlan}
 import com.gu.membership.util.Timing
 import com.gu.memsub.BillingPeriod.year
-import com.gu.memsub.Subscription.ProductRatePlanId
+import com.gu.memsub.Subscriber.{PaidMember, FreeMember}
+import com.gu.memsub.Subscription.{MembershipSub, Paid, Plan, ProductRatePlanId}
 import com.gu.memsub._
 import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
 import com.gu.salesforce.Tier.{Partner, Patron}
-import com.gu.salesforce.{ContactId, PaidTier, Tier}
+import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
@@ -137,16 +139,17 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def upgradeFreeSubscription(freeMember: FreeSFMember,
+  override def upgradeFreeSubscription(subscriber: FreeMember,
                                        newTier: PaidTier,
                                        form: FreeMemberChangeForm,
                                        identityRequest: IdentityRequest,
                                        campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(freeMember.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(freeMember, customer).liftM
+      customer <- stripeService.Customer.create(subscriber.contact.identityId, form.payment.token).liftM
+      paymentResult <- createPaymentMethod(subscriber.contact, customer).liftM
       memberId <- EitherT(upgradeSubscription(
-        member = freeMember,
+        subscriber.subscription,
+        contact = subscriber.contact,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
         customerOpt = Some(customer),
@@ -156,17 +159,16 @@ class MemberService(identityService: IdentityService,
     } yield memberId).run
   }
 
-  override def upgradePaidSubscription(paidMember: PaidSFMember,
+  override def upgradePaidSubscription(subscriber: PaidMember,
                                        newTier: PaidTier,
                                        form: PaidMemberChangeForm,
                                        identityRequest: IdentityRequest,
                                        campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] =
     (for {
-      subs <- subscriptionService.unsafeGetPaid(paidMember).liftM
-      currentPlan = catalog.unsafeFindPaid(subs.productRatePlanId)
       memberId <- EitherT(upgradeSubscription(
-        member = paidMember,
-        planChoice = PaidPlanChoice(newTier, currentPlan.billingPeriod),
+        subscriber.subscription,
+        contact = subscriber.contact,
+        planChoice = PaidPlanChoice(newTier, subscriber.subscription.plan.billingPeriod),
         form = form,
         customerOpt = None,
         identityRequest = identityRequest,
@@ -174,51 +176,49 @@ class MemberService(identityService: IdentityService,
       ))
     } yield memberId).run
 
-  override def downgradeSubscription(contact: SFMember, user: IdMinimalUser): Future[MemberError \/ Unit] = {
+  override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(sub: model.PaidSubscription): DateTime = sub.chargedThroughDate.getOrElse(sub.firstPaymentDate).toDateTimeAtCurrentTime
 
-    def expectPaid(s: Subscription with PaymentStatus): MemberError \/ PaidSubscription = s match {
-      case p: PaidSubscription => p.right
-      case _ => PaidSubscriptionExpected(s.name).left
-    }
-
     val friendRatePlanId = catalog.friend.productRatePlanId
 
     (for {
-      sub <- EitherT(subOrPendingAmendError(contact))
-      paidSub <- EitherT(Future(expectPaid(sub)))
+      paidSub <- EitherT(subOrPendingAmendError(subscriber.subscription))
       result <- zuoraService.downgradePlan(
         subscription = paidSub,
         futureRatePlanId = friendRatePlanId,
         effectiveFrom = effectiveFrom(paidSub)).liftM
     } yield {
-      salesforceService.metrics.putDowngrade(contact.tier)
+      salesforceService.metrics.putDowngrade(subscriber.subscription.plan.tier)
       track(
         MemberActivity(
           "downgradeMembership",
           MemberData(
-            salesforceContactId = contact.salesforceContactId,
-            identityId = contact.identityId,
-            tier = contact.tier,
-            tierAmendment = Some(DowngradeAmendment(contact.tier)) //getting effective date and subscription annual / month is proving difficult
+            salesforceContactId = subscriber.contact.salesforceContactId,
+            identityId = subscriber.contact.identityId,
+            tier = subscriber.subscription.plan.tier,
+            tierAmendment = Some(DowngradeAmendment(subscriber.subscription.plan.tier)) //getting effective date and subscription annual / month is proving difficult
           )),
-        user)
+        subscriber.contact)
     }).run
   }
 
-  override def cancelSubscription(contact: SFMember, user: IdMinimalUser): Future[ MemberError \/ Unit] = {
+  override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
     (for {
-      sub <- EitherT(subOrPendingAmendError(contact))
+      sub <- EitherT(subOrPendingAmendError(subscriber.subscription))
       cancelDate = sub match {
-        case p: PaidSubscription => p.chargedThroughDate.map(_.toDateTimeAtCurrentTime).getOrElse(DateTime.now)
+        case p: Subscription with PaidPS[Plan] => p.chargedThroughDate.map(_.toDateTimeAtCurrentTime).getOrElse(DateTime.now)
         case _ => DateTime.now
       }
       _ <- zuoraService.cancelPlan(sub, cancelDate).liftM
     } yield {
-      salesforceService.metrics.putCancel(contact.tier)
-      track(MemberActivity("cancelMembership", MemberData(contact.salesforceContactId, contact.identityId, contact.tier)), user)
+      salesforceService.metrics.putCancel(subscriber.subscription.plan.tier)
+      track(MemberActivity("cancelMembership", MemberData(
+        subscriber.contact.salesforceContactId,
+        subscriber.contact.identityId,
+        subscriber.subscription.plan.tier)), subscriber.contact)
+      track(MemberActivity("cancelMembership", MemberData(subscriber.contact.salesforceContactId, subscriber.contact.identityId, subscriber.subscription.plan.tier)), subscriber.contact)
     }).run
   }
 
@@ -233,18 +233,14 @@ class MemberService(identityService: IdentityService,
     } yield result.invoiceItems
   }
 
-  override def subscriptionUpgradableTo(memberId: SFMember, tier: PaidTier): Future[Option[Subscription]] = {
+  def subscriptionUpgradableTo(sub: Subscription with PaymentStatus[Plan], newTier: PaidTier): Boolean = {
     import model.TierOrdering.upgradeOrdering
+    catalog.find(sub.productRatePlanId) exists { currentPlan =>
+      val newPlan = catalog.findPaid(newTier)
 
-    subscriptionService.unsafeGet(memberId).map { case sub =>
-      val currentTier = memberId.tier
-      val targetPlan = catalog.findPaid(tier)
       // The year and month plans are guaranteed to have the same currencies
-      val targetCurrencies = targetPlan.year.pricing.prices.map(_.currency).toSet
-
-      if (!sub.isInTrialPeriod && targetCurrencies.contains(sub.currency) && tier > currentTier) {
-        Some(sub)
-      } else None
+      val targetCurrencies = newPlan.year.pricing.prices.map(_.currency).toSet
+      !sub.isInTrialPeriod && targetCurrencies.contains(sub.currency) && newPlan.tier > currentPlan.tier
     }
   }
 
@@ -318,11 +314,10 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def recordFreeEventUsage(member: SFMember, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
+  override def recordFreeEventUsage(subs: Subscription, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
     val description = s"event-id:${event.id};order-id:${order.id}"
 
     for {
-      subs <- subscriptionService.unsafeGet(member)
       result <- zuoraService.createFreeEventUsage(
         accountId = subs.accountId,
         subscriptionNumber = subs.name,
@@ -335,16 +330,15 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def retrieveComplimentaryTickets(member: SFMember, event: RichEvent): Future[Seq[EBTicketClass]] = {
+  override def retrieveComplimentaryTickets(sub: Subscription, event: RichEvent): Future[Seq[EBTicketClass]] = {
     Timing.record(salesforceService.metrics, "retrieveComplimentaryTickets") {
       for {
-        subs <- subscriptionService.unsafeGet(member)
-        usageCount <- getUsageCountWithinTerm(subs, FreeEventTickets.unitOfMeasure)
+        usageCount <- getUsageCountWithinTerm(sub, FreeEventTickets.unitOfMeasure)
       } yield {
         val hasComplimentaryTickets = usageCount.isDefined
         val allowanceNotExceeded = usageCount.exists(_ < FreeEventTickets.allowance)
         logger.info(
-          s"User ${member.identityId} has used $usageCount tickets" ++
+          s"User ${sub.accountId} has used $usageCount tickets" ++
             s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")
 
         if (hasComplimentaryTickets && allowanceNotExceeded)
@@ -354,10 +348,10 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def createEBCode(member: SFMember, event: RichEvent): Future[Option[EBCode]] = {
-    retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
-      val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-      val unlockedTickets = complimentaryTickets ++ event.retrieveDiscountedTickets(member.tier)
+  override def createEBCode(subscriber: com.gu.memsub.Subscriber.Member, event: RichEvent): Future[Option[EBCode]] = {
+    retrieveComplimentaryTickets(subscriber.subscription, event).flatMap { complimentaryTickets =>
+      val code = DiscountCode.generate(s"A_${subscriber.contact.identityId}_${event.id}")
+      val unlockedTickets = complimentaryTickets ++ event.retrieveDiscountedTickets(subscriber.subscription.plan.tier)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
     }
   }
@@ -422,7 +416,8 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  private def upgradeSubscription(member: SFMember,
+  private def upgradeSubscription(subscription: MembershipSub,
+                                  contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
                                   customerOpt: Option[Customer],
@@ -434,19 +429,19 @@ class MemberService(identityService: IdentityService,
     val tier = newPlan.tier
 
     addressDetails.foreach(
-      identityService.updateUserFieldsBasedOnUpgrade(member.identityId, _, identityRequest))
+      identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _, identityRequest))
 
     (for {
-      _ <- salesforceService.updateMemberStatus(IdMinimalUser(member.identityId, None), tier, customerOpt).liftM
-      sub <- EitherT(subOrPendingAmendError(member))
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), tier, customerOpt).liftM
+      sub <- EitherT(subOrPendingAmendError(subscription))
       featureIds <- zuoraService.getFeatures.map { fs =>
         featureIdsForTier(fs)(tier, form.featureChoice)
       }.liftM
       _ <- zuoraService.upgradeSubscription(sub, newPlan.productRatePlanId, featureIds, preview = false).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
-      trackUpgrade(member, newPlan, addressDetails, campaignCode)
-      member
+      trackUpgrade(contact, sub, newPlan, addressDetails, campaignCode)
+      contact
     }).run
   }
 
@@ -457,9 +452,8 @@ class MemberService(identityService: IdentityService,
       result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer)
     } yield result
 
-  private def subOrPendingAmendError(contactId: ContactId): Future[MemberError \/ Subscription with PaymentStatus] =
+  private def subOrPendingAmendError[P <: Subscription](sub: P): Future[MemberError \/ P] =
     for {
-      sub <- subscriptionService.unsafeGet(contactId)
       status <- zuoraService.getSubscriptionStatus(sub.name)
     } yield {
       if (status.futureVersionOpt.isDefined)
