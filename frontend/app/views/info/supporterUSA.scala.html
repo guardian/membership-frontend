@@ -27,7 +27,7 @@
             </div>
             <div class="video-preview__header">
                 @fragments.inlineIcon("video", List("icon-inline--scale"))
-                Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending
+                Hear from Guardian journalists first-hand why your support is critical to the work we do every day
             </div>
         </div>
     }
@@ -35,8 +35,11 @@
     @for(img <- pageImages.find(_.name.contains("fearless"))) {
         @fragments.page.sectionCardStack(img) {
             <div class="listing__text">
-                <p>The Guardian shines a light on critical, under-reported stories across the US and the globe.</p>
-                <p>Without a paywall, our journalism is open to everyone.</p>
+                <p>
+                    The Guardian shines a light on critical, under-reported stories across the US and the globe.
+                    Stories and projects such as The Counted, a groundbreaking investigation into people killed by police in America.
+                </p>
+                <p>Our independence allows us to produce award-winning journalism free from outside influence.</p>
                 <p>
                     <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">Become a Supporter</a>
                 </p>
