@@ -19,7 +19,7 @@ object Highlights {
     """Receive regular updates from the membership community,
       | book tickets to Guardian Live and Local events and access the Guardian members area""".stripMargin)
 
-  val support = Highlight("Support our journalism and keep theguardian.com free of charge")
+  val support = Highlight("Support the independence of the Guardian and our award-winning journalism")
   val tickets = Highlight("Get access to tickets and to the live broadcast of events")
   val freeTickets = Highlight(
     s"""Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events
