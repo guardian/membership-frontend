@@ -25,7 +25,7 @@ object Highlights {
     s"""Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events
        | (or 4 Guardian-published books) per year""".stripMargin, isNew = true)
   val priorityBooking = Highlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses")
-  val deepSupport = Highlight("Show deep support for keeping the Guardian free, open and independent")
+  val deepSupport = Highlight("Show deep support for keeping the Guardian open and independent")
   val behindTheScenes = Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
 
   val friend = Seq(updatesAndTickets)
