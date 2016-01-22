@@ -33,7 +33,7 @@ define([
             IDENTITY_MENU_ELEM.classList.toggle(IS_HIDDEN);
             IDENTITY_MENU_CTA_ELEM.classList.toggle(IS_ACTIVE);
 
-            if(IDENTITY_MENU_ELEM.classList.contains(IS_HIDDEN)) {
+            if (IDENTITY_MENU_ELEM.classList.contains(IS_HIDDEN)) {
                 removeDocumentListener();
             } else {
                 addDocumentListener();
@@ -55,7 +55,7 @@ define([
         var windowLocation = window.location;
         var currentUrl = windowLocation.pathname + windowLocation.search;
 
-        if(IDENTITY_MENU_CTA_URL) {
+        if (IDENTITY_MENU_CTA_URL) {
             IDENTITY_MENU_CTA_URL.setAttribute('href',
                 populateReturnUrl(IDENTITY_MENU_CTA_ELEM.getAttribute('href'), currentUrl)
             );

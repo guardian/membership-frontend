@@ -1,5 +1,6 @@
 @import views.support.PageInfo
-@(pageInfo: PageInfo)
+@import com.gu.i18n.CountryGroup
+@(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
 
 @import configuration.Config
 @import model.SVG.Logos
@@ -8,7 +9,7 @@
     <div class="global-header__inner">
         <div class="global-header__branding l-constrained">
             <div class="global-header__primary">
-                @fragments.global.controlNavigation(pageInfo)
+                @fragments.global.controlNavigation(pageInfo, countryGroup)
             </div>
             @* Branding *@
             <div class="global-header__logo">

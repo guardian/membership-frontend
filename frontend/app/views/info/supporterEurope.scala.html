@@ -9,7 +9,7 @@
 
 @import configuration.Videos
 @import views.support.Asset
-@main("Supporters", pageInfo=pageInfo) {
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.page.heroBanner("hero-banner--eu-supporter") {
         Become a Guardian&nbsp;Supporter
     } {

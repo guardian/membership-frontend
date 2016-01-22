@@ -11,7 +11,7 @@
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
-@main("Supporters", pageInfo=pageInfo) {
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @* ===== About Supporters ===== *@
     @for(img <- pageImages.find(_.name.contains("intro"))) {
         <div class="page-slice l-constrained">
