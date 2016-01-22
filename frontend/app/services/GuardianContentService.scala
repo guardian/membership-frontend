@@ -64,13 +64,19 @@ trait GuardianContentService extends GuardianContent {
 
   def membershipFrontContent: Seq[Content] = membershipFrontContentTask.get()
 
-  val masterclassContentTask = ScheduledTask[Seq[MasterclassData]]("GuardianContentService - Masterclass content", Nil, 2.seconds, 2.minutes)(masterclasses)
+  private val contentApiPeriod = 30.minutes
 
-  val contentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, 2.minutes)(eventbrite)
+  val masterclassContentTask = ScheduledTask[Seq[MasterclassData]](
+    "GuardianContentService - Masterclass content", Nil, 2.seconds, contentApiPeriod)(masterclasses)
 
-  val offersAndCompetitionsContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Guardian Members Only", Nil, 1.second, 2.minutes)(offersAndCompetitions)
+  val contentTask = ScheduledTask[Seq[Content]](
+      "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
 
-  val membershipFrontContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content from Membership front", Nil, 1.second, 2.minutes)(membershipFront)
+  val offersAndCompetitionsContentTask = ScheduledTask[Seq[Content]](
+      "GuardianContentService - Content with Guardian Members Only", Nil, 1.second, contentApiPeriod)(offersAndCompetitions)
+
+  val membershipFrontContentTask = ScheduledTask[Seq[Content]](
+      "GuardianContentService - Content from Membership front", Nil, 1.second, contentApiPeriod)(membershipFront)
 
   def start() {
     masterclassContentTask.start()
