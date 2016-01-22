@@ -18,7 +18,7 @@
             @fragments.promos.promoPrimary(title="Introducing Supporter Membership", img=img, showImageCaption=true, isLead=true, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
                     <p>
-                        Supporters keep our journalism fearless, open and free from interference. For £5 a month.
+                        Supporters keep our journalism fearless and free from interference.
                     </p>
                 </div>
                 @fragments.tier.packagePromo(PaidPlans(supporterPlans), countryGroup, showDescription=false, modifierClass=Some("package-promo--spread"))
@@ -29,11 +29,11 @@
     @* ===== Support open, independent journalism ===== *@
     <div id="supporter-video" class="page-slice page-slice--slim l-constrained">
         @fragments.promos.promoVideoSecondary(
-            "Support open, independent journalism",
+            "Support independent journalism",
             video=Videos.supporters,
             toneClass=Some("tone-trans-brand-supporting-2")){
             <div class="text-feature">
-                <p>Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
+                <p>Watch our journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
             </div>
         }
     </div>
@@ -43,9 +43,13 @@
         <div class="page-slice l-constrained">
             @fragments.promos.promoPrimary(title="Fearless, progressive and free from interference", img=img, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
-                    <p>The Guardian publishes the stories that others keep hidden.</p>
-                    <p>We have become the most read, serious English-language newspaper in the world, visited by 130 million unique browsers each month. Our journalism is for everyone. The Guardian is open, without a paywall, and we remain true to our 200-year old progressive values.</p>
-                    <p>Become a Supporter to ensure the whole picture is available to everyone.</p>
+                    <p>For 200 years, the Guardian has been fearless and independent.</p>
+                    <p>
+                        Our journalism shines a light on critical, under-reported stories across the globe
+                        and we have become the world’s most read, serious English-language newspaper,
+                        visited by 130 million unique browsers each month.
+                    </p>
+                    <p>By becoming a Member, your financial contribution will support our independence and our award-winning journalism.</p>
                 </div>
                 <div class="action-group">
                     <a class="action" href="@routes.Joiner.enterPaidDetails(Tier.supporter)">Become a Supporter</a>
