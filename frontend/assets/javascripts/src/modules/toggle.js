@@ -11,8 +11,6 @@
  *     Notes:
  *     * data-toggle-label is optional
  *     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
- *     * data-toggle-weak should be added to toggle elements which should be hidden on a click
- *       anywhere rather than just on the switch element. This is useful for contextual menus.
  */
 define(['$', 'bean'], function ($, bean) {
     'use strict';

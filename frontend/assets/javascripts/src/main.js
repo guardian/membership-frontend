@@ -6,6 +6,7 @@ require([
     'src/modules/slideshow',
     'src/modules/images',
     'src/modules/toggle',
+    'src/modules/dropdown',
     'src/modules/sticky',
     'src/modules/sectionNav',
     'src/modules/navigation',
@@ -32,6 +33,7 @@ require([
     slideshow,
     images,
     toggle,
+    dropdown,
     sticky,
     sectionNav,
     navigation,
@@ -63,6 +65,7 @@ require([
     slideshow.init();
     images.init();
     toggle.init();
+    dropdown.init();
     sticky.init();
     sectionNav.init();
     identityPopup.init();

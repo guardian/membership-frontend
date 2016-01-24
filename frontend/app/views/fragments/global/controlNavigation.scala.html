@@ -9,7 +9,8 @@
 <ul class="nav-control u-cf" role="menubar">
     <li class="nav-control__item">
         <a href="@pageInfo.customSignInUrl.getOrElse(Config.idWebAppSigninUrl(""))"
-           class="control js-identity-menu-toggle@if(pageInfo.customSignInUrl.isEmpty){ js-identity-menu-url}"
+           class="control js-dropdown js-identity-menu-toggle@if(pageInfo.customSignInUrl.isEmpty){ js-identity-menu-url}"
+           data-dropdown-menu="js-identity-menu"
            id="qa-identity-control"
            title="Your account"
            role="menuitem"
@@ -27,7 +28,7 @@
             </span>
         </a>
         @* Identity / Account pop-up *@
-        <nav role="navigation" class="nav-popup is-hidden js-identity-menu" aria-label="Profile menu">
+        <nav id="js-identity-menu" role="navigation" class="nav-popup is-hidden js-dropdown-menu" aria-label="Profile menu">
             <ul class="nav-popup__list">
                 <li class="nav-popup__item">
                     <a href="@ProfileLinks.commentActivity" class="nav-popup__link js-identity-menu-comment-activity">Comment activity</a>
@@ -52,7 +53,7 @@
     </li>
     @for(countryGroup <- countryGroup) {
         <li class="nav-control__item">
-            <a href="#" class="control js-toggle" data-toggle="js-country-switcher" title="Choose country" role="menuitem">
+            <a href="#" class="control js-dropdown" data-dropdown-menu="js-country-switcher" title="Choose country" role="menuitem">
                 <span class="control__item">
                     <span class="control__icon icon-holder icon-holder--large icon-holder--neutral">
                     @fragments.inlineIcon("globe")
@@ -62,7 +63,7 @@
                     <span class="control__info">@countryGroup.name (@countryGroup.currency.identifier)</span>
                 </span>
             </a>
-            <nav id="js-country-switcher" role="navigation" data-toggle-hidden data-toggle-weak class="nav-popup" aria-label="Country switcher">
+            <nav id="js-country-switcher" role="navigation" class="js-dropdown-menu nav-popup is-hidden" aria-label="Country switcher">
                 <ul class="nav-popup__list">
                     <li class="nav-popup__item">
                         <a href="@routes.Info.supporter" class="nav-popup__link">@UK.name (@UK.currency.identifier)</a>
