@@ -2,7 +2,7 @@ package services
 
 import com.gu.memsub.Subscriber.Member
 import com.gu.salesforce.Tier
-import com.gu.membership.util.WebServiceHelper
+import com.gu.memsub.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.squareup.okhttp.Request
 import configuration.Config

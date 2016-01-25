@@ -1,13 +1,12 @@
 package services
 
-import api.MemberService.{PendingAmendError, PaidSubscriptionExpected, MemberError}
 import com.gu.i18n.Currency
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan, MembershipPlan}
-import com.gu.membership.util.Timing
 import com.gu.memsub.BillingPeriod.year
-import com.gu.memsub.Subscriber.{PaidMember, FreeMember}
-import com.gu.memsub.Subscription.{MembershipSub, Paid, Plan, ProductRatePlanId}
+import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
+import com.gu.memsub.Subscription.{MembershipSub, Plan, ProductRatePlanId}
+import com.gu.memsub.util.Timing
+import services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.memsub._
 import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
 import com.gu.salesforce.Tier.{Partner, Patron}
@@ -35,10 +34,10 @@ import views.support.ThankyouSummary.NextPayment
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
-import scalaz.{MonadTrans, EitherT, \/}
-import scalaz.syntax.either._
 import scalaz.std.scalaFuture._
+import scalaz.syntax.either._
 import scalaz.syntax.monad._
+import scalaz.{EitherT, MonadTrans, \/}
 
 object MemberService {
   import api.MemberService.MemberError

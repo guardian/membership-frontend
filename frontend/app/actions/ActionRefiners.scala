@@ -4,7 +4,7 @@ import services._
 import actions.Fallbacks._
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
-import com.gu.membership.util.Timing
+import com.gu.memsub.util.Timing
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.{Subscription => Sub, Status => SubStatus, _}
 import com.gu.monitoring.CloudWatch
