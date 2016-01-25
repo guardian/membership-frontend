@@ -12,18 +12,20 @@ object RegistrationUri {
   val CAMPAIGN_SOURCE: String = "MEM"
 
   val referingPageCodes = Map(
-    controllers.routes.Info.supporter().toString() -> "SUPUK",
-    controllers.routes.Info.supporterUSA().toString() -> "SUPUS",
-    controllers.routes.Info.offersAndCompetitions().toString()-> "COMP",
-    controllers.routes.WhatsOn.list().toString() -> "EVT",
+    controllers.routes.Info.supporterUK().path -> "SUPUK",
+    controllers.routes.Info.supporterUSA().path -> "SUPUS",
+    controllers.routes.Info.supporterEurope().path -> "SUPEU",
+    controllers.routes.Info.supporterInternational().path -> "SUPIN",
+    controllers.routes.Info.offersAndCompetitions().path-> "COMP",
+    controllers.routes.WhatsOn.list().path -> "EVT",
     "/" -> "HOME"
   )
 
   val campaignTierCodes = Map[String, String](
-    controllers.routes.Joiner.joinPaid(Tier.supporter).toString -> "SUP",
-    controllers.routes.Joiner.joinPaid(Tier.partner).toString -> "PAR",
-    controllers.routes.Joiner.joinPaid(Tier.patron).toString -> "PAT",
-    controllers.routes.Joiner.joinFriend().toString -> "FRI"
+    controllers.routes.Joiner.joinPaid(Tier.supporter).path -> "SUP",
+    controllers.routes.Joiner.joinPaid(Tier.partner).path -> "PAR",
+    controllers.routes.Joiner.joinPaid(Tier.patron).path -> "PAT",
+    controllers.routes.Joiner.joinFriend().path -> "FRI"
   )
 
   def parse(request: RequestHeader) = {

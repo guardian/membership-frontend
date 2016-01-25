@@ -71,7 +71,7 @@ class MemberService(identityService: IdentityService,
   import MemberService._
 
   implicit val catalog = catalogService.membershipCatalog
-  implicit val productFamily = Membership()
+  implicit val productFamily = Membership
 
   private val logger = Logger(getClass)
 
@@ -276,7 +276,7 @@ class MemberService(identityService: IdentityService,
     def getSummaryViaPreview =
       for {
         sub <- latestSubF
-        paymentDetails <- paymentService.paymentDetails(contact)(Membership())
+        paymentDetails <- paymentService.paymentDetails(contact)(Membership)
       } yield {
         implicit val currency = sub.currency
         val (planAmount, bp) = plan(sub)
