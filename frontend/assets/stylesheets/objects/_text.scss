@@ -132,7 +132,7 @@ blockquote,
 
 .blockquote--feature {
     font-style: normal;
-    @include fs-headline(3);
+    @include fs-headline(2);
 
     .blockquote__citation {
         font: inherit;
@@ -141,6 +141,6 @@ blockquote,
     }
 
     @include mq(tablet) {
-        @include fs-headline(4);
+        @include fs-headline(3);
     }
 }
