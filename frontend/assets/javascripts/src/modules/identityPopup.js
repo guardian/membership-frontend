@@ -10,52 +10,34 @@ define([
 ], function (bean, userUtil) {
     'use strict';
 
-    var IS_HIDDEN = 'is-hidden';
-    var IS_ACTIVE = 'is-active';
     var IDENTITY_MENU_CTA_ELEM = document.querySelector('.js-identity-menu-toggle');
     var IDENTITY_MENU_CTA_URL = document.querySelector('.js-identity-menu-url');
-    var IDENTITY_MENU_ELEM = document.querySelector('.js-identity-menu');
-    var HTML_ELEM = document.documentElement;
+    var DROPDOWN_DISABLED_CLASS = 'js-dropdown-disabled';
 
     function init() {
         if (userUtil.isLoggedIn()) {
-            addMenuListeners();
+            disableLink();
         } else {
+            disableMenu();
             setIdentityCtaReturnUrl();
         }
     }
 
-    function addMenuListeners() {
-        bean.on(IDENTITY_MENU_CTA_ELEM, 'click', function (e) {
+    function disableLink() {
+        bean.on(IDENTITY_MENU_CTA_ELEM, 'click', function(e) {
             e.preventDefault();
-            e.stopImmediatePropagation();
-
-            IDENTITY_MENU_ELEM.classList.toggle(IS_HIDDEN);
-            IDENTITY_MENU_CTA_ELEM.classList.toggle(IS_ACTIVE);
-
-            if(IDENTITY_MENU_ELEM.classList.contains(IS_HIDDEN)) {
-                removeDocumentListener();
-            } else {
-                addDocumentListener();
-            }
         });
     }
 
-    function addDocumentListener() {
-        bean.on(HTML_ELEM, 'click', function () {
-            IDENTITY_MENU_ELEM.classList.add(IS_HIDDEN);
-        });
-    }
-
-    function removeDocumentListener() {
-        bean.off(IDENTITY_MENU_ELEM, 'click');
+    function disableMenu() {
+        IDENTITY_MENU_CTA_ELEM.classList.add(DROPDOWN_DISABLED_CLASS);
     }
 
     function setIdentityCtaReturnUrl() {
         var windowLocation = window.location;
         var currentUrl = windowLocation.pathname + windowLocation.search;
 
-        if(IDENTITY_MENU_CTA_URL) {
+        if (IDENTITY_MENU_CTA_URL) {
             IDENTITY_MENU_CTA_URL.setAttribute('href',
                 populateReturnUrl(IDENTITY_MENU_CTA_ELEM.getAttribute('href'), currentUrl)
             );

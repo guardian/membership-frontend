@@ -1,5 +1,7 @@
 @import views.support.PageInfo
-@(pageInfo: PageInfo)
+@import com.gu.i18n.CountryGroup
+@import com.gu.i18n.CountryGroup._
+@(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
 
 @import configuration.Config
 @import configuration.ProfileLinks
@@ -7,7 +9,8 @@
 <ul class="nav-control u-cf" role="menubar">
     <li class="nav-control__item">
         <a href="@pageInfo.customSignInUrl.getOrElse(Config.idWebAppSigninUrl(""))"
-           class="control js-identity-menu-toggle@if(pageInfo.customSignInUrl.isEmpty){ js-identity-menu-url}"
+           class="control js-dropdown js-identity-menu-toggle@if(pageInfo.customSignInUrl.isEmpty){ js-identity-menu-url}"
+           data-dropdown-menu="js-identity-menu"
            id="qa-identity-control"
            title="Your account"
            role="menuitem"
@@ -25,7 +28,7 @@
             </span>
         </a>
         @* Identity / Account pop-up *@
-        <nav role="navigation" class="nav-popup is-hidden js-identity-menu" aria-label="Profile menu">
+        <nav id="js-identity-menu" role="navigation" class="nav-popup is-hidden js-dropdown-menu" aria-label="Profile menu">
             <ul class="nav-popup__list">
                 <li class="nav-popup__item">
                     <a href="@ProfileLinks.commentActivity" class="nav-popup__link js-identity-menu-comment-activity">Comment activity</a>
@@ -48,6 +51,36 @@
             </ul>
         </nav>
     </li>
+    @for(countryGroup <- countryGroup) {
+        <li class="nav-control__item">
+            <a href="#" class="control js-dropdown" data-dropdown-menu="js-country-switcher" title="Choose country" role="menuitem">
+                <span class="control__item">
+                    <span class="control__icon icon-holder icon-holder--large icon-holder--neutral">
+                    @fragments.inlineIcon("globe")
+                    </span>
+                </span>
+                <span class="control__item hidden-mobile js-user-detail">
+                    <span class="control__info">@countryGroup.name (@countryGroup.currency.identifier)</span>
+                </span>
+            </a>
+            <nav id="js-country-switcher" role="navigation" class="js-dropdown-menu nav-popup is-hidden" aria-label="Country switcher">
+                <ul class="nav-popup__list">
+                    <li class="nav-popup__item">
+                        <a href="@routes.Info.supporter" class="nav-popup__link">@UK.name (@UK.currency.identifier)</a>
+                    </li>
+                    <li class="nav-popup__item">
+                        <a href="@routes.Info.supporterUSA" class="nav-popup__link">@US.name (@US.currency.identifier)</a>
+                    </li>
+                    <li class="nav-popup__item">
+                        <a href="@routes.Info.supporterEurope" class="nav-popup__link">@Europe.name (@Europe.currency.identifier)</a>
+                    </li>
+                    <li class="nav-popup__item">
+                        <a href="@routes.Info.supporterInternational" class="nav-popup__link">@RestOfTheWorld.name (@RestOfTheWorld.currency.identifier)</a>
+                    </li>
+                </ul>
+            </nav>
+        </li>
+    }
     <li class="nav-control__item nav-control__item--last hidden-mobile">
         <a class="control" href="http://theguardian.com/" role="menuitem">
             <span class="control__item">
