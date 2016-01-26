@@ -1,7 +1,7 @@
 package services
 
 import com.github.nscala_time.time.OrderingImplicits._
-import com.gu.membership.util.WebServiceHelper
+import com.gu.memsub.util.WebServiceHelper
 import com.squareup.okhttp.Request
 import configuration.Config
 import model.Eventbrite._
