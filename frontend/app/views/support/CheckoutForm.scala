@@ -2,23 +2,31 @@ package views.support
 
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod
+import com.typesafe.scalalogging.LazyLogging
 
 case class CheckoutForm(defaultCountry: Option[Country],
                         currency: Currency,
                         billingPeriod: BillingPeriod)
 
-object CheckoutForm {
+object CheckoutForm extends LazyLogging {
   def forIdentityUser(idUser: IdentityUser, plans: TierPlans, requestCountryGroup: Option[CountryGroup]): CheckoutForm = {
-    val countryGroup = idUser.countryGroup.orElse(requestCountryGroup).getOrElse(CountryGroup.UK)
-    val country = idUser.country.orElse(countryGroup.defaultCountry)
+    val (country, desiredCurrency) = (requestCountryGroup, idUser.country) match {
+      case (Some(cg), _) =>
+        (cg.defaultCountry, cg.currency)
+      case (_, Some(idCountry)) =>
+        val currency = CountryGroup.allGroups
+                         .find(_.countries.contains(idCountry))
+                         .getOrElse {
+                           logger.warn(s"Could not find country $idCountry in any CountryGroup, defaulting to UK")
+                           CountryGroup.UK
+                         }.currency
+        (Some(idCountry), currency)
+      case _ =>
+        (Some(Country.UK), CountryGroup.UK.currency)
+    }
 
     val currency =
-      //Get the currency by country
-      country.flatMap(plans.currency)
-        //alternatively, use the countryGroup currency if available in the selected plan
-        .orElse(Some(countryGroup.currency)).filter(plans.currencies)
-        //or fallback to GBP
-        .getOrElse(GBP)
+      if (plans.currencies.contains(desiredCurrency)) desiredCurrency else GBP
 
     CheckoutForm(country, currency, BillingPeriod.year)
   }
