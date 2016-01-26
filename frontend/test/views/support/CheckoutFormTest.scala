@@ -48,17 +48,11 @@ class CheckoutFormTest extends Specification {
   "CheckoutFormTest" should {
     "forIdentityUser" should {
       "when a country group is set from the request" should {
-        "set country/currency from the identity user" in {
-          CheckoutForm.forIdentityUser(
-            idUser, plans, Some(CountryGroup.Australia)
-          ).tupled2 === (Some(Country.US), USD)
-        }
-
         "and the country group currency is available" should {
-          "use the country group for both country and currency" in {
+          "set country/currency from the request" in {
             CheckoutForm.forIdentityUser(
-              idUserWithBlankCountry, plans, Some(CountryGroup.Europe)
-            ).tupled2 === (None, EUR)
+              idUser, plans, Some(CountryGroup.Europe)
+            ).tupled2 ===(None, EUR)
           }
         }
 
