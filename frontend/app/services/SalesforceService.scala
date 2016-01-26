@@ -4,10 +4,10 @@ import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import com.gu.membership.util.FutureSupplier
+import com.gu.memsub.util.FutureSupplier
 import configuration.Config
 import forms.MemberForm.JoinForm
-import model.{GenericSFContact}
+import model.GenericSFContact
 import monitoring.MemberMetrics
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
