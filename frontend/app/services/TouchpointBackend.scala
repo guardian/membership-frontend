@@ -47,7 +47,7 @@ object TouchpointBackend {
 
     val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
 
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)

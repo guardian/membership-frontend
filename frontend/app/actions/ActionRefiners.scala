@@ -4,7 +4,7 @@ import services._
 import actions.Fallbacks._
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
-import com.gu.memsub.util.Timing
+import com.gu.membership.util.Timing
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.{Subscription => Sub, Status => SubStatus, _}
 import com.gu.monitoring.CloudWatch
@@ -31,7 +31,6 @@ import scalaz.std.scalaFuture._
  */
 object ActionRefiners extends LazyLogging {
   import model.TierOrdering.upgradeOrdering
-  implicit val pf: ProductFamily = Membership
 
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
@@ -49,7 +48,7 @@ object ActionRefiners extends LazyLogging {
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
 
   private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
-    implicit val pf = Membership
+    implicit val pf = ProductFamily.membership
     val tp = request.touchpointBackend
 
     (for {

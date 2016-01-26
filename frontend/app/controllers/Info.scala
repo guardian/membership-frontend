@@ -1,9 +1,7 @@
 package controllers
 
-import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
-import controllers.Redirects.redirectToSupporterPage
 import forms.MemberForm._
 import model._
 import play.api.mvc.Controller
@@ -13,17 +11,8 @@ import views.support.{Asset, PageInfo}
 import scala.concurrent.Future
 
 trait Info extends Controller {
-  def supporterRedirect = NoCacheAction { implicit request =>
-    val countryGroup =
-      request.headers
-        .get("X-Fastly-Country-Code")
-        .flatMap(CountryGroup.byFastlyCountryCode)
-        .getOrElse(CountryGroup.RestOfTheWorld)
 
-    Redirect(redirectToSupporterPage(countryGroup))
-  }
-
-  def supporterUK = CachedAction { implicit request =>
+  def supporter = CachedAction { implicit request =>
     implicit val countryGroup = UK
 
     val pageImages = Seq(
