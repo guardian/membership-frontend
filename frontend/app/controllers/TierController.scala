@@ -197,7 +197,7 @@ trait CancelTier extends CatalogProvider {
 }
 
 trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
-  implicit def productFamily: ProductFamily = Membership
+  implicit def productFamily: ProductFamily = Membership()
 
   def change() = SubscriptionAction { implicit request =>
     implicit val countryGroup = UK

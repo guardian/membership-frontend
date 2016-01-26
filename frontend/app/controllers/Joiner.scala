@@ -5,7 +5,7 @@ import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
-import com.gu.memsub.{Membership, ProductFamily}
+import com.gu.memsub.ProductFamily
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -186,7 +186,7 @@ object Joiner extends Controller with ActivityTracking
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
 
     val paymentCard = (for {
-      sub <- OptionT(subscriptionService.get(request.subscriber.contact)(Membership))
+      sub <- OptionT(subscriptionService.get(request.subscriber.contact)(ProductFamily.membership))
       card <- OptionT(paymentService.getPaymentCardByAccount(sub.accountId))
     } yield card).run
 

@@ -1,7 +1,7 @@
 package services
 
 import akka.agent.Agent
-import com.gu.memsub.util.WebServiceHelper
+import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri
 import com.squareup.okhttp.Request

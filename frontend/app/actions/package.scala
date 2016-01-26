@@ -2,7 +2,7 @@ import com.gu.googleauth
 import com.gu.identity.play.AuthenticatedIdUser
 import com.gu.memsub.Subscriber.{Member, FreeMember, PaidMember}
 import com.gu.salesforce._
-import com.gu.memsub.util.Timing
+import com.gu.membership.util.Timing
 import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.{Cookie, WrappedRequest}

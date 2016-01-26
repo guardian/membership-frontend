@@ -5,7 +5,7 @@ import actions.Fallbacks._
 import actions.ActionRefiners._
 import com.gu.memsub.Subscriber.Member
 import com.gu.salesforce.Tier
-import com.gu.memsub.util.Timing
+import com.gu.membership.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import model.EmbedSerializer._
