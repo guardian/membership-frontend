@@ -13,11 +13,11 @@
         <div class="fieldset__fields">
             <div class="form-field">
                 @for(choice <- FeatureChoice.all) {
-                    <label class="label" for="@choice.zuoraCode">
+                    <label class="label" for="@choice.zuoraCode.get">
                         <input type="radio" class="u-h" name="featureChoice"
-                            id="@choice.zuoraCode"
+                            id="@choice.zuoraCode.get"
                             @if(choice == FreeEventTickets) { checked="checked" }
-                            value="@choice.zuoraCode"
+                            value="@choice.zuoraCode.get"
                         />
                         <div class="pseudo-radio">
                             <div class="pseudo-radio__header">@choice.label</div>

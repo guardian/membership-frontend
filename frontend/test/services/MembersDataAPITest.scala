@@ -27,7 +27,7 @@ class MembersDataAPITest extends FreeSpec {
     )
   }
 
-  "Errprs can be serialized" in {
+  "Errors can be serialized" in {
     assertResult(
       JsSuccess(MembersDataAPI.ApiError("Bad Request", "Detailed error message"))
     )(

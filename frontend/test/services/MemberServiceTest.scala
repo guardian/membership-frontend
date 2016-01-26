@@ -1,7 +1,7 @@
 package services
 
-import com.gu.salesforce.PaidTier
-import com.gu.salesforce.Tier.{partner, patron, supporter, friend}
+import com.gu.memsub.Subscription.Feature.{Code, Id}
+import com.gu.salesforce.Tier.{friend, partner, patron, supporter}
 import com.gu.zuora.soap.models.Queries._
 import model.{Books, FreeEventTickets}
 import org.specs2.mutable.Specification
@@ -9,9 +9,9 @@ import org.specs2.mutable.Specification
 class MemberServiceTest extends Specification {
 
   "featureIdsForTier" should {
-    val feature1 = Feature(id = "1", code = "Books")
-    val feature2 = Feature(id = "2", code = "Events")
-    val feature3 = Feature(id = "3", code = "OtherFeature")
+    val feature1 = Feature(id = Id("1"), code = Code("Books"))
+    val feature2 = Feature(id = Id("2"), code = Code("Events"))
+    val feature3 = Feature(id = Id("3"), code = Code("OtherFeature"))
     val features = Seq(feature1, feature2, feature3)
 
     val featureIds = MemberService.featureIdsForTier(features) _

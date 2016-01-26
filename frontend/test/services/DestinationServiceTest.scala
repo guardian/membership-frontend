@@ -3,16 +3,13 @@ package services
 import actions.{Subscriber, SubscriptionRequest}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.i18n.{GBP, Currency}
+import com.gu.i18n.{Currency, GBP}
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
 import com.gu.membership.PaidMembershipPlan
+import com.gu.memsub.Subscription.{MembershipSub, ProductRatePlanId}
 import com.gu.memsub._
-import com.gu.memsub.Subscription.{FeatureId, ProductRatePlanId, MembershipSub}
-import com.gu.salesforce.Tier.{Partner, friend}
+import com.gu.salesforce.Tier.Partner
 import com.gu.salesforce._
-import com.gu.zuora.rest
-import com.gu.zuora.rest.{RatePlanCharge, RatePlan}
-import com.gu.zuora.soap.models.SubscriptionStatus
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
 import model.{ContentDestination, EventDestination}
@@ -56,7 +53,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         productName = "productName",
         startDate = new LocalDate("2015-01-01"),
         termEndDate = new LocalDate("2016-01-01"),
-        features = Set[FeatureId](),
+        features = Nil,
         casActivationDate = None,
         isCancelled = false,
         ratePlanId = "",
