@@ -14,9 +14,9 @@ import com.gu.zuora.soap.ClientWithFeatureSupplier
 import com.gu.zuora.{ZuoraService => ZuoraServiceImpl, rest, soap}
 import com.netaporter.uri.Uri
 import configuration.Config
+import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
-import play.libs.Akka
 import tracking._
 import utils.TestUsers.isTestUser
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -24,8 +24,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 object TouchpointBackend {
 
   import TouchpointBackendConfig.BackendType
-
-  implicit val system = Akka.system()
 
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
     def zuoraEnvName: String = tpbc.zuoraSoap.envName

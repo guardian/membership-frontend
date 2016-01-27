@@ -40,8 +40,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Conta
     override val authSupplier: FutureSupplier[Authentication] =
       new FutureSupplier[Authentication](getAuthentication)
 
-    private val actorSystem = Akka.system
-    actorSystem.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
+    Akka.system.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
   }
 }
 
