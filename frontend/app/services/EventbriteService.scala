@@ -1,9 +1,10 @@
 package services
 
 import com.github.nscala_time.time.OrderingImplicits._
-import com.gu.memsub.util.WebServiceHelper
+import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
 import com.squareup.okhttp.Request
 import configuration.Config
+import configuration.Config.Implicits.akkaSystem
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
@@ -12,11 +13,9 @@ import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.Reads
 import play.api.libs.ws._
-import utils.ScheduledTask
 import utils.StringUtils._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._

@@ -2,12 +2,13 @@ package services
 
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.contentapi.client.model._
+import com.gu.memsub.util.ScheduledTask
 import configuration.Config
+import configuration.Config.Implicits.akkaSystem
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.iteratee.{Iteratee, Enumerator}
-import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Success, Try, Failure}

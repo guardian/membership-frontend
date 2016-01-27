@@ -1,12 +1,12 @@
 package controllers
 
 import com.gu.memsub.services.CatalogService
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import configuration.Config.Implicits.akkaSystem
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
 import views.support.Catalog
+
 
 trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService
@@ -31,7 +31,7 @@ trait Staff extends Controller {
 
   def catalogDiagnostics = GoogleAuthenticatedStaffAction.async { implicit request =>
     val Seq(testCat, normalCat) = Seq(TouchpointBackend.TestUser, TouchpointBackend.Normal).map { be =>
-      CatalogService.makeMembershipCatalog(be.zuoraRestClient, be.membershipRatePlanIds)(Akka.system)
+      CatalogService.makeMembershipCatalog(be.zuoraRestClient, be.membershipRatePlanIds)
     }
 
     testCat.zip(normalCat).map((Catalog.Diagnostic.fromCatalogs _).tupled).map { diagnostic =>

@@ -13,8 +13,9 @@ import model.Eventbrite.EBEvent
 import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import services._
-
 import scala.util.Try
+import play.api.libs.concurrent.Akka
+import play.api.Play.current
 
 object Config {
   val logger = Logger(this.getClass)
@@ -183,4 +184,8 @@ object Config {
 
   def digipackRatePlanIds(env: String) = DigitalPackRatePlanIds.fromConfig(
     config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.digitalpack"))
+
+  object Implicits {
+    implicit val akkaSystem = Akka.system
+  }
 }
