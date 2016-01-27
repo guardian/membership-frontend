@@ -1,7 +1,7 @@
 package services
 
 import com.github.nscala_time.time.OrderingImplicits._
-import com.gu.memsub.util.WebServiceHelper
+import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
 import com.squareup.okhttp.Request
 import configuration.Config
 import model.Eventbrite._
@@ -12,11 +12,10 @@ import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.concurrent.Akka
+import play.api.libs.json.Reads
 import play.api.libs.ws._
-import utils.ScheduledTask
 import utils.StringUtils._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -41,6 +40,8 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
     req.newBuilder().url(url)
   }
+
+  private implicit val system = Akka.system
 
   def eventsTaskFor(status: String, refreshTime : FiniteDuration): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, refreshTime) {
@@ -136,6 +137,8 @@ object GuardianLiveEventService extends LiveService {
   // see https://www.eventbrite.com/developer/v3/formats/event/#ebapi-access-code
   val maxDiscountQuantityAvailable = 3
   val wsMetrics = new EventbriteMetrics("Guardian Live")
+
+  private implicit val system = Akka.system
 
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, refreshTimePriorityEvents) {

@@ -2,12 +2,14 @@ package services
 
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.contentapi.client.model._
+import com.gu.memsub.util.ScheduledTask
 import configuration.Config
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import play.api.Logger
+import play.api.libs.concurrent.Akka
 import play.api.libs.iteratee.{Iteratee, Enumerator}
-import utils.ScheduledTask
+import play.api.Play.current
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Success, Try, Failure}
@@ -63,6 +65,8 @@ trait GuardianContentService extends GuardianContent {
   def offersAndCompetitionsContent: Seq[Content] = offersAndCompetitionsContentTask.get()
 
   def membershipFrontContent: Seq[Content] = membershipFrontContentTask.get()
+
+  private implicit val system = Akka.system
 
   private val contentApiPeriod = 30.minutes
 
