@@ -101,8 +101,8 @@ class MemberFormTest extends Specification {
     }
 
     "bind featureChoices from form data" in {
-      productFeaturesFormatter.bind(key, Map(key -> Books.zuoraCode)) mustEqual Right(Set(Books))
-      productFeaturesFormatter.bind(key, Map(key -> FreeEventTickets.zuoraCode)) mustEqual Right(Set(FreeEventTickets))
+      productFeaturesFormatter.bind(key, Map(key -> Books.zuoraCode.get)) mustEqual Right(Set(Books))
+      productFeaturesFormatter.bind(key, Map(key -> FreeEventTickets.zuoraCode.get)) mustEqual Right(Set(FreeEventTickets))
       productFeaturesFormatter.bind(key, Map(key -> FeatureChoice.setToString(Set(Books, FreeEventTickets)))) mustEqual Right(Set(FreeEventTickets, Books))
     }
   }

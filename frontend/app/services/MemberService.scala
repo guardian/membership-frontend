@@ -4,7 +4,7 @@ import com.gu.i18n.Currency
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{MembershipSub, Plan, ProductRatePlanId}
+import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
 import com.gu.memsub.util.Timing
 import services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.memsub._
@@ -14,7 +14,6 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
-import com.gu.zuora.api.ZuoraService.FeatureId
 import com.gu.zuora.soap.actions.subscribe.{Account => SoapSubscribeAccount, CreditCardReferenceTransaction}
 import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
@@ -45,8 +44,8 @@ object MemberService {
   type EitherTErr[F[_], A] = EitherT[F, MemberError, A]
   implicit val monadTrans = MonadTrans[EitherTErr]
 
-  def featureIdsForTier(features: Seq[SoapQueries.Feature])(tier: Tier, choice: Set[FeatureChoice]): Seq[FeatureId] = {
-    def chooseFeature(choices: Set[FeatureChoice]): Seq[FeatureId] =
+  def featureIdsForTier(features: Seq[SoapQueries.Feature])(tier: Tier, choice: Set[FeatureChoice]): Seq[Feature.Id] = {
+    def chooseFeature(choices: Set[FeatureChoice]): Seq[Feature.Id] =
       features.filter(f => choices.map(_.zuoraCode).contains(f.code))
         .map(_.id)
 
@@ -308,7 +307,7 @@ class MemberService(identityService: IdentityService,
     val features = subscription.features
     val startDate = subscription.startDate.toDateTimeAtCurrentTime()
     zuoraService.getUsages(subscription.name, unitOfMeasure, startDate).map { usages =>
-      val hasComplimentaryTickets = features.map(_.get).contains(FreeEventTickets.zuoraCode)
+      val hasComplimentaryTickets = features.map(_.code).contains(FreeEventTickets.zuoraCode)
       if (!hasComplimentaryTickets) None else Some(usages.size)
     }
   }
@@ -340,6 +339,7 @@ class MemberService(identityService: IdentityService,
           s"User ${sub.accountId} has used $usageCount tickets" ++
             s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")
 
+        logger.info(s"Complementary tickets: ${event.internalTicketing.map(_.complimentaryTickets)}")
         if (hasComplimentaryTickets && allowanceNotExceeded)
           event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
         else Nil
