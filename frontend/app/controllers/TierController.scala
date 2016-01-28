@@ -112,7 +112,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       }
     }
 
-    val paymentCard = paymentService.getPaymentCardByAccount(request.subscriber.subscription.accountId)
+    val paymentCard = paymentService.getPaymentCard(request.subscriber.subscription.accountId)
 
     paymentCard flatMap { p => (request.subscriber, p) match {
       case (Subscriber.FreeMember(mem), _) => fromFree(mem)

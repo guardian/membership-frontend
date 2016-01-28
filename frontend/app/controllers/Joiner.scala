@@ -187,7 +187,7 @@ object Joiner extends Controller with ActivityTracking
 
     val paymentCard = (for {
       sub <- OptionT(subscriptionService.get(request.subscriber.contact)(Membership))
-      card <- OptionT(paymentService.getPaymentCardByAccount(sub.accountId))
+      card <- OptionT(paymentService.getPaymentCard(sub.accountId))
     } yield card).run
 
     for {
