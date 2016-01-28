@@ -1,9 +1,11 @@
 package services
 
+import actions.ActionRefiners.SubReqWithSub
+import com.gu.identity.play.AccessCredentials
 import com.gu.memsub.Subscriber.Member
-import com.gu.salesforce.Tier
 import com.gu.memsub.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
+import com.gu.salesforce.Tier
 import com.squareup.okhttp.Request
 import configuration.Config
 import monitoring.MembersDataAPIMetrics
@@ -12,7 +14,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.mvc.Cookie
 
 import scala.util.{Failure, Success}
 
@@ -40,26 +41,33 @@ object MembersDataAPI {
     (JsPath \ "details").read[String]
   )(ApiError)
 
-  case class Helper(cookies: Seq[Cookie]) extends WebServiceHelper[Attributes, ApiError] {
+  case class Helper(cookies: AccessCredentials.Cookies) extends WebServiceHelper[Attributes, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader(
-      "Cookie", cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
+      "Cookie", cookies.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     override val wsMetrics: StatusMetrics = MembersDataAPIMetrics
   }
 
   object Service  {
-    def check(member: Member)(cookies: Seq[Cookie]) = get(cookies).onComplete {
-      case Success(attrs) =>
-        if (attrs != Attributes.fromMember(member)) {
-          Logger.warn(s"Members data API response doesn't match the expected member data. Expected ${Attributes.fromMember(member)}, got $attrs")
-          MembersDataAPIMetrics.put("members-data-api-mismatch", 1)
-        } else {
-          Logger.debug("Members data API response matches the expected member data")
-          MembersDataAPIMetrics.put("members-data-api-match", 1)
+    def checkMatchesResolvedMemberIn(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
+      case cookies: AccessCredentials.Cookies =>
+        get(cookies).onComplete {
+          case Success(memDataApiAttrs) =>
+            val prefix = s"members-data-api-check identity=${memberRequest.user.id} salesforce=${memberRequest.subscriber.contact.salesforceContactId} : "
+            val salesforceAttrs = Attributes.fromMember(memberRequest.subscriber)
+            if (memDataApiAttrs != salesforceAttrs) {
+              val message = s"$prefix MISMATCH salesforce=$salesforceAttrs mem-data-api=$memDataApiAttrs"
+              if (memDataApiAttrs.tier != salesforceAttrs.tier) Logger.error(message) else Logger.warn(message)
+              MembersDataAPIMetrics.put("members-data-api-mismatch", 1)
+            } else {
+              Logger.debug(s"$prefix MATCH")
+              MembersDataAPIMetrics.put("members-data-api-match", 1)
+            }
+          case Failure(err) => Logger.error(s"Failed while querying the members-data-api (OK in dev)", err)
         }
-      case Failure(err) => Logger.error(s"Failed while querying the members-data-api (OK in dev)", err)
+      case _ => Logger.error(s"Unexpected credentials! ${memberRequest.user.credentials}")
     }
 
-    private def get(cookies: Seq[Cookie]) = Helper(cookies).get[Attributes]("user-attributes/me/membership")
+    private def get(cookies: AccessCredentials.Cookies) = Helper(cookies).get[Attributes]("user-attributes/me/membership")
   }
 }

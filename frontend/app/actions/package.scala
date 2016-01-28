@@ -34,11 +34,6 @@ package object actions {
   case class SubscriptionRequest[A](touchpointBackend: TouchpointBackend,
                                     request: AuthRequest[A]) extends AuthRequest(request.user, request) with BackendProvider {
 
-    def idCookies: Option[Seq[Cookie]] = for {
-      guu <- request.cookies.get("GU_U")
-      scguu <- request.cookies.get("SC_GU_U")
-    } yield Seq(guu, scguu)
-
     def this(other: SubscriptionRequest[A]) =
       this(other.touchpointBackend, other.request)
   }
