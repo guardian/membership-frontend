@@ -6,12 +6,14 @@
 @import com.gu.membership.PaidMembershipPlans
 @import com.gu.memsub.Current
 @import com.gu.salesforce.PaidTier
+@import com.gu.memsub.promo.PromoCode
 @import views.support.PaidPlans
 
 @(plans: PaidMembershipPlans[Current, PaidTier],
   countriesWithCurrencies: List[CountryWithCurrency],
   idUser: IdentityUser,
-  pageInfo: PageInfo
+  pageInfo: PageInfo,
+  promoCode: Option[PromoCode]
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo) {
@@ -72,6 +74,8 @@
                     <div class="form-group">
                         <h2 class="form-group__title">Billing</h2>
                         @fragments.form.paymentOptions(plans)
+
+                        @fragments.form.promoCode(idUser, promoCode)
 
                         @fragments.form.billingAddress("Billing address")
                         @fragments.form.addressDetail(

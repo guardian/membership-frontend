@@ -3,7 +3,7 @@ package services
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.MembershipCatalog
-import com.gu.memsub.services.{api => memsubapi, CatalogService, PaymentService}
+import com.gu.memsub.services.{api => memsubapi, PromoService, CatalogService, PaymentService}
 import com.gu.memsub
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.salesforce._
@@ -19,6 +19,7 @@ import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
 import tracking._
 import utils.TestUsers.isTestUser
+import configuration.Config.demoPromo
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object TouchpointBackend {
@@ -48,6 +49,10 @@ object TouchpointBackend {
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
+
+    //TODO: this should be initialised with UAT for test users and PROD/DEV otherwise
+    val promoService = new PromoService(Seq(demoPromo("UAT")))
+
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)
     val catalogService = CatalogService(zuoraRestClient, memRatePlanIds, digipackRatePlanIds, backendType.name)
@@ -56,7 +61,7 @@ object TouchpointBackend {
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, paymentService)
+      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService)
 
     TouchpointBackend(
       salesforceService = salesforceService,
@@ -67,6 +72,7 @@ object TouchpointBackend {
       subscriptionService = subscriptionService,
       catalogService = catalogService,
       zuoraService = zuoraService,
+      promoService = promoService,
       membershipRatePlanIds = memRatePlanIds,
       paymentService = paymentService
     )
@@ -91,6 +97,7 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              catalogService: memsubapi.CatalogService,
                              zuoraService: ZuoraService,
                              membershipRatePlanIds: MembershipRatePlanIds,
+                             promoService: PromoService,
                              paymentService: PaymentService) extends ActivityTracking {
 
   def catalog: MembershipCatalog = catalogService.membershipCatalog

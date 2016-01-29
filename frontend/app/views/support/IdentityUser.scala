@@ -1,8 +1,10 @@
 package views.support
 
 import com.gu.i18n.{Country, CountryGroup}
+import com.gu.identity.model.PublicFields
 import com.gu.identity.play.{StatusFields, PrivateFields}
 import com.gu.identity.play.IdUser
+import utils.TestUsers
 
 
 case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean) {
@@ -13,6 +15,8 @@ case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFi
 
   val countryGroup: Option[CountryGroup] =
     countryName.flatMap(CountryGroup.byCountryNameOrCode)
+
+  def isTestUser: Boolean = privateFields.firstName.exists(TestUsers.isTestUser)
 }
 
 object IdentityUser {

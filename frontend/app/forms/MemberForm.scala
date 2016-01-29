@@ -2,6 +2,7 @@ package forms
 
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod._
+import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Address, BillingPeriod, FullName}
 import com.gu.salesforce.Tier._
 import com.gu.salesforce.{PaidTier, Tier}
@@ -35,6 +36,7 @@ object MemberForm {
     override val planChoice: FreePlanChoice = FreePlanChoice(staff)
   }
 
+
   case class PaidMemberJoinForm(tier: PaidTier,
                                 name: NameForm,
                                 payment: PaymentForm,
@@ -44,8 +46,10 @@ object MemberForm {
                                 password: Option[String],
                                 casId: Option[String],
                                 subscriberOffer: Boolean,
-                                featureChoice: Set[FeatureChoice]
+                                featureChoice: Set[FeatureChoice],
+                                suppliedPromoCode: Option[PromoCode]
                                ) extends JoinForm {
+
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
     override val planChoice: PaidPlanChoice = PaidPlanChoice(tier, payment.billingPeriod)
   }
@@ -101,6 +105,15 @@ object MemberForm {
       .transform(
         { code => CountryGroup.countryByCode(code).fold("")(_.name)},
         { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
+
+  implicit val promoCodeFormatter: Formatter[PromoCode] = new Formatter[PromoCode] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], PromoCode] =
+      data.get(key).filter(_.nonEmpty).map(PromoCode).toRight(Seq(FormError(key, "Cannot find a promo code")))
+
+    override def unbind(key: String, value: PromoCode) = Map(key -> value.get)
+  }
+
+  val promoCode = of[PromoCode] as promoCodeFormatter
 
   val nonPaidAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> text,
@@ -173,7 +186,8 @@ object MemberForm {
       "password" -> optional(nonEmptyText),
       "casId" -> optional(nonEmptyText),
       "subscriberOffer" -> default(boolean, false),
-      "featureChoice" -> productFeature
+      "featureChoice" -> productFeature,
+      "promoCode" -> optional(promoCode)
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 

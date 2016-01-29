@@ -19,7 +19,7 @@ GET            /analytics-off                         controllers.Testing.analyt
 GET            /join/staff                            controllers.Joiner.staff
 GET            /join/staff/enter-details              controllers.Joiner.enterStaffDetails
 GET            /join/friend/enter-details             controllers.Joiner.enterFriendDetails
-GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK)
+GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK, promoCode: Option[PromoCode] ?= None)
 POST           /join/friend/enter-details             controllers.Joiner.joinFriend
 POST           /join/staff/enter-details              controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
@@ -27,6 +27,7 @@ GET            /join/staff/thankyou                   controllers.Joiner.thankyo
 GET            /join/:tier/thankyou                   controllers.Joiner.thankyou(tier: Tier)
 POST           /join/staff/update-email               controllers.Joiner.updateEmailStaff
 GET            /join/unsupported-browser              controllers.Joiner.unsupportedBrowser
+GET            /lookupPromotion                       controllers.Promotions.validatePromoCode(promoCode: PromoCode, productRatePlanId: ProductRatePlanId, country: Country)
 
 GET            /choose-tier                           controllers.Joiner.tierChooser
 

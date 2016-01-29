@@ -1,0 +1,30 @@
+@import com.gu.i18n.Country
+@import com.gu.memsub.Subscription.ProductRatePlanId
+@import com.gu.memsub.promo.PromoCode
+@import controllers.routes.Promotions.validatePromoCode
+@import views.support.IdentityUser
+
+@(idUser: IdentityUser, promoCode: Option[PromoCode])
+@defining(
+  // use Play reverse routing to get the action request path
+  validatePromoCode(
+      PromoCode("_"),
+      ProductRatePlanId("_"),
+      Country.UK).path.replaceFirst("\\?.*", "")) { lookupUrl =>
+
+    @if(idUser.isTestUser) {
+        <div class="checkout-promo-code js-promo-code">
+            <label class="label" for="promo-code">Promo code</label>
+            <div class="form-field field-group__item">
+                <div class="col-2">
+                    <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input" data-lookup-url="@lookupUrl"/>
+                    <a class="button button--primary button--large button--arrow-right js-promo-code-validate">
+                        Apply</a>
+                </div>
+                @fragments.form.errorMessage("Please enter a valid promo code.")
+            </div>
+            <div class="js-promo-code-applied promo-code-applied" style="display:none"><strong>✓&nbsp;</strong>Promotion applied</div>
+            <div class="promo-code-snippet js-promo-code-snippet"></div>
+        </div>
+    }
+}

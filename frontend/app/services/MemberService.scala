@@ -5,6 +5,7 @@ import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
+import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
 import services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.memsub._
@@ -63,6 +64,7 @@ class MemberService(identityService: IdentityService,
                     stripeService: StripeService,
                     subscriptionService: SubscriptionService,
                     catalogService: CatalogService,
+                    promoService: PromoService,
                     paymentService: PaymentService) extends api.MemberService with ActivityTracking {
 
   import EventbriteService._
@@ -377,10 +379,17 @@ class MemberService(identityService: IdentityService,
   override def createPaidSubscription(contactId: ContactId,
                                       joinData: PaidMemberJoinForm,
                                       customer: Stripe.Customer,
-                                      campaignCode: Option[CampaignCode]): Future[SubscribeResult] =
+                                      campaignCode: Option[CampaignCode]): Future[SubscribeResult] = {
+
+    val planId = joinData.planChoice.productRatePlanId
+    val validPromoCode = for {
+      code <- joinData.suppliedPromoCode
+      promotion <- promoService.findPromotion(code)
+      if promotion.validateFor(planId, joinData.zuoraAccountAddress.country).isRight
+    } yield code
+
     for {
       zuoraFeatures <- zuoraService.getFeatures
-      planId = joinData.planChoice.productRatePlanId
       currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
       result <- zuoraService.createSubscription(
         subscribeAccount = SoapSubscribeAccount.stripe(
@@ -391,9 +400,11 @@ class MemberService(identityService: IdentityService,
         productRatePlanId = planId,
         name = joinData.name,
         address = joinData.zuoraAccountAddress,
+        promoCode = validPromoCode,
         featureIds = featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id)
       )
     } yield result
+  }
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =

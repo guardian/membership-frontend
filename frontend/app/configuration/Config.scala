@@ -5,6 +5,7 @@ import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentia
 import com.gu.config.{DigitalPackRatePlanIds, MembershipRatePlanIds}
 import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
+import com.gu.memsub.promo.{AppliesTo, PromoCode, Promotion}
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -182,6 +183,21 @@ object Config {
 
   def digipackRatePlanIds(env: String) = DigitalPackRatePlanIds.fromConfig(
     config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.digitalpack"))
+
+
+  def demoPromo(env: String) = {
+    val prpIds = membershipRatePlanIds(env)
+    Promotion(
+      codes = Set(PromoCode("mem-01")),
+      appliesTo = AppliesTo.ukOnly(Set(
+        prpIds.partnerMonthly,
+        prpIds.partnerYearly
+      )),
+      thumbnailUrl = "http://lorempixel.com/400/200/abstract",
+      description = "You'll get a complimentary John Lewis digital gift card worth £25*",
+      redemptionInstructions = "We’ll send redemption instructions to your registered email address")
+  }
+
 
   object Implicits {
     implicit val akkaSystem = Akka.system
