@@ -52,7 +52,8 @@ trait Membership {
       "com.gu.i18n.CountryGroup",
       "com.gu.memsub.Subscription.ProductRatePlanId",
       "com.gu.memsub.promo.PromoCode",
-      "controllers.Binders._"
+      "controllers.Binders._",
+      "com.gu.memsub.BillingPeriod"
     ))
 }
 

@@ -2,6 +2,8 @@ package controllers
 
 
 import com.gu.i18n.{Country, CountryGroup}
+import com.gu.memsub.BillingPeriod
+import com.gu.memsub.BillingPeriod._
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.PromoCode
 import com.gu.salesforce.{PaidTier, Tier, FreeTier}
@@ -17,6 +19,10 @@ object Binders {
     } else f(s)
 
   implicit object bindableTier extends PathParsing[Tier](
+    Tier.slugMap, _.slug, (key: String, e: Exception) => s"Cannot parse parameter $key as a Tier: ${e.getMessage}"
+  )
+
+  implicit object bindableTierQuery extends QueryParsing[Tier](
     Tier.slugMap, _.slug, (key: String, e: Exception) => s"Cannot parse parameter $key as a Tier: ${e.getMessage}"
   )
 
@@ -43,4 +49,9 @@ object Binders {
   implicit object bindableCountry extends QueryParsing[Country](
     alpha2 => CountryGroup.countryByCode(alpha2).get, _.alpha2, (key: String, _: Exception) => s"Cannot parse parameter $key as a Country"
   )
+
+  implicit object bindableBillingPeriod extends QueryParsing[BillingPeriod](
+    adjective => Seq(month, year).find(_.adjective == adjective).get, _.adjective, (key: String, _: Exception) => s"Cannot parse parameter $key as a Billing Period"
+  )
+
 }

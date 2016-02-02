@@ -143,7 +143,7 @@ object MemberForm {
     "thirdParty" -> optional(boolean)
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
-  val paymentMapping: Mapping[PaymentForm] = mapping(
+  val  paymentMapping: Mapping[PaymentForm] = mapping(
     "type" -> nonEmptyText.transform[BillingPeriod](b =>
       if (Seq("annual","subscriberOfferAnnual").contains(b)) year else month, _.noun),
     "token" -> nonEmptyText
