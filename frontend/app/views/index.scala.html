@@ -13,6 +13,16 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
+    @* =========================================== *@
+    @* 0. English Heritage Roundel                 *@
+    @* =========================================== *@
+    <div class="roundel l-constrained">
+        <div class="roundel__container">
+            <h1 class="roundel__title">Free English Heritage membership</h1>
+            <p class="roundel__description">join as a Partner or Patron by 31 March</p>
+        </div>
+    </div>
+
     @fragments.page.heroBanner("hero-banner--homepage") {
         Become a Guardian&nbsp;Member
     } {
@@ -177,7 +187,7 @@
             </div>
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
-                <p>Join as an annual Partner or Patron Member and get 2 months free</p>
+                <p>Join as a Partner or Patron by 31 March for free English Heritage membership worth £88.</p>
                 <ul class="grid">
                     @for(tier <- PaidTier.all) {
                         <li class="grid__item">
