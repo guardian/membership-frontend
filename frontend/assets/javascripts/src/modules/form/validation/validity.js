@@ -1,7 +1,8 @@
 define([
-    'src/modules/form/payment/validationProfiles',
+    //TODO: Change to new path
+    'src/modules/form/validation/delegativeValidation',
     'src/modules/form/validation/display'
-], function (validationProfiles, display) {
+], function (delagativeValidation, display) {
     'use strict';
 
     var DATA_VALIDATION_ATTRIBUTE_NAME = 'data-validation';
@@ -33,9 +34,9 @@ define([
 
         if (elem.hasAttribute('disabled')) { return true; }
 
-        if (elem.getAttribute(DATA_VALIDATION_ATTRIBUTE_NAME)) {
+
             valid = valid && profileValidation(elem);
-        }
+
 
         valid = valid && requiredValidation(elem);
         valid = valid && lengthValidation(elem);
@@ -83,12 +84,14 @@ define([
      */
     var profileValidation = function (elem) {
         var profile = elem.getAttribute(DATA_VALIDATION_ATTRIBUTE_NAME);
-        return !!(validationProfileExists(profile) && validationProfiles[profile](elem));
+        return !profile || Boolean(validationProfileExists(profile) && delagativeValidation[profile](elem));
     };
 
     var validationProfileExists = function (profile) {
-        return validationProfiles[profile] && typeof validationProfiles[profile] === 'function';
+        return delagativeValidation[profile] && typeof delagativeValidation[profile] === 'function';
     };
+
+
 
     return {
         check: check,

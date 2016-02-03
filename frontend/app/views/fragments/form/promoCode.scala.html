@@ -30,7 +30,7 @@
 
                 <div class="fieldset__fields">
                     <div class="form-field">
-                        <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input" data-lookup-url="@lookupUrl"/>
+                        <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input" data-lookup-url="@lookupUrl" data-validation="validPromoCode"/>
                         <a class="button button--primary button--large button--arrow-right js-promo-code-validate">
                             Apply</a>
                     </div>

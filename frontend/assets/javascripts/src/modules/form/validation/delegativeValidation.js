@@ -65,10 +65,25 @@ define([
         return isValid;
     };
 
+    /**
+     * Check promocode is valid using the promocode module
+     * This will read several form fields to determine validity.
+     * See promoCode.js
+     *
+     * @param elem
+     * @returns {Boolean}
+     */
+    var validPromoCode = function (elem){
+        elem;
+        //TODO: wire this up
+        return false
+    }
+
     return {
         validCreditCardNumber: validCreditCardNumber,
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,
-        validCreditCardYear: validCreditCardYear
+        validCreditCardYear: validCreditCardYear,
+        validPromoCode: validPromoCode
     };
 });
