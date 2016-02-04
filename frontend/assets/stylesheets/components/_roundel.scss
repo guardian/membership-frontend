@@ -14,14 +14,14 @@
     background: #4bc6df;
     width:140px;
     height:140px;
-    padding: 44px 17px;
+    padding: 15px 15px;
     margin:6px 20px;
 
 
     @include mq(desktop) {
         width:200px;
         height:200px;
-        padding: 68px 22px;
+        padding: 40px 22px;
         margin:20px 20px;
     }
 }
