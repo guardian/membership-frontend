@@ -2,10 +2,11 @@ package configuration
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
+import com.github.nscala_time.time.Imports._
 import com.gu.config.{DigitalPackRatePlanIds, MembershipRatePlanIds}
 import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
-import com.gu.memsub.promo.{AppliesTo, PromoCode, Promotion}
+import com.gu.memsub.promo.{EnglishHeritageOffer, AppliesTo, PromoCode, Promotion}
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -188,14 +189,17 @@ object Config {
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
     Promotion(
-      codes = Set(PromoCode("mem-01")),
+      landingPageTemplate = EnglishHeritageOffer,
+      codes = Set(PromoCode("EH2016")),
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerMonthly,
         prpIds.partnerYearly
       )),
       thumbnailUrl = "http://lorempixel.com/400/200/abstract",
-      description = "You'll get a complimentary John Lewis digital gift card worth £25*",
-      redemptionInstructions = "We’ll send redemption instructions to your registered email address")
+      description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
+      redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
+      expires = DateTime.parse("2016-04-01T00:00:00Z")
+    )
   }
 
 

@@ -1,0 +1,53 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.Current
+@import com.gu.salesforce.Tier.Partner
+@import com.gu.membership.PaidMembershipPlans
+@import views.support.PageInfo
+@(partnerPlans: PaidMembershipPlans[Current, Partner],
+    pageInfo: PageInfo,
+    pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@import configuration.Videos
+@import views.support.Asset
+@main("Partners", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+    @fragments.page.heroBanner("hero-banner--us-partner") {
+        Free English Heritage membership worth £88
+    } {
+        When you become a Partner or Patron Member.
+    }()
+
+    @fragments.page.section(hasBorder = false) {
+        @fragments.tier.packagePromo(partnerPlans, countryGroup)
+    }
+
+    @fragments.page.section("Support independent journalism", isNarrow = false, hasBottomPadding = false) {
+        <div class="video-preview video-preview--plain">
+            <div class="video-preview__video">
+            @fragments.media.videoPlayer(Videos.partners)
+            </div>
+            <div class="video-preview__header">
+                @fragments.inlineIcon("video", List("icon-inline--scale"))
+                Hear from Guardian journalists first-hand why your support is critical to the work we do every day
+            </div>
+        </div>
+    }git
+
+    @fragments.page.section("If you read the Guardian, join the Guardian") {
+        @fragments.promos.promoQuote(
+            Asset.at("images/common/lee-glendinning-cutout.png"),
+            "Lee Glendinning, editor, Guardian US"
+        ) {
+            <blockquote class="blockquote blockquote--feature">
+                Joining Guardian Members means becoming part of a great community of readers who care about independent journalism.
+                You will be helping us to continue to be a distinctive voice in America
+                and to cover under-reported issues that need to be illuminated.
+                When you become a Guardian Member you are supporting journalism that truly makes a difference.
+                <cite class="blockquote__citation">Lee Glendinning, editor, Guardian US</cite>
+            </blockquote>
+        }
+    }
+
+    @fragments.page.section("What's included") {
+        @fragments.tier.packagePromo(partnerPlans, countryGroup)
+    }
+}

@@ -117,3 +117,7 @@ GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.b
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)
 
+# Promotions
+GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr: String)
+GET            /englishheritage                       controllers.Promotions.promotionPage(promoCodeStr = "EH2016")
+
