@@ -23,7 +23,7 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{PaidSubscription, _}
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
@@ -305,7 +305,7 @@ class MemberService(identityService: IdentityService,
 
   override def getUsageCountWithinTerm(subscription: Subscription, unitOfMeasure: String): Future[Option[Int]] = {
     val features = subscription.features
-    val startDate = subscription.startDate.toDateTimeAtCurrentTime()
+    val startDate = subscription.startDate.toDateTimeAtStartOfDay(DateTimeZone.forID("America/Los_Angeles"))
     zuoraService.getUsages(subscription.name, unitOfMeasure, startDate).map { usages =>
       val hasComplimentaryTickets = features.map(_.code).contains(FreeEventTickets.zuoraCode)
       if (!hasComplimentaryTickets) None else Some(usages.size)
