@@ -52,6 +52,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         productRatePlanId = Subscription.ProductRatePlanId(""),
         productName = "productName",
         startDate = new LocalDate("2015-01-01"),
+        termStartDate = new LocalDate("2015-01-01"),
         termEndDate = new LocalDate("2016-01-01"),
         features = Nil,
         casActivationDate = None,
