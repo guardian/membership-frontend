@@ -1,16 +1,16 @@
 package actions
 
-import services._
 import actions.Fallbacks._
-import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
+import com.gu.googleauth.UserIdentity
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
-import com.gu.memsub.util.Timing
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.{Subscription => Sub, Status => SubStatus, _}
+import com.gu.memsub.util.Timing
+import configuration.Config.googleGroupChecker
+import services._
+import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
 import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
 import com.typesafe.scalalogging.LazyLogging
-import configuration.Config
 import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
@@ -122,8 +122,7 @@ object ActionRefiners extends LazyLogging {
   }
 
   def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: Html, email: String, request: Request[_]) = {
-    val googleDirectoryService = new GoogleGroupChecker(Config.googleDirectoryConfig)
-    for (usersGroups <- googleDirectoryService.retrieveGroupsFor(email)) yield {
+    for (usersGroups <- googleGroupChecker.retrieveGroupsFor(email)) yield {
       if (includedGroups.intersect(usersGroups).nonEmpty) None else {
         logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
         Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
