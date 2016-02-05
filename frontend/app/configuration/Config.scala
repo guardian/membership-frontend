@@ -89,8 +89,6 @@ object Config {
 
   val optimizelyEnabled = config.getBoolean("optimizely.enabled")
 
-  val sessionCamCookieName = "sessioncam-on"
-
   val corsAllowOrigin = Set(
     // identity
     "https://profile.thegulocal.com",
