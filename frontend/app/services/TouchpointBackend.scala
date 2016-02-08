@@ -49,9 +49,7 @@ object TouchpointBackend {
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
-
-    //TODO: this should be initialised with UAT for test users and PROD/DEV otherwise
-    val promoService = new PromoService(Seq(demoPromo("UAT")))
+    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)))
 
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)

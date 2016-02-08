@@ -1,96 +1,78 @@
-define(['ajax'],function(ajax){
-    'use strict';
-    //GET PROMO CODE FIELD
-    var inputBox = document.getElementById('promo-code'),
-       countrySelect = document.getElementsByClassName('select js-country'),
-       lookupUrl = inputBox.data('lookup-url'),
-        submitted = false;
-    countrySelect;
-    lookupUrl;
-    ajax;
-/*
-    var submit = function(){
-       submitted = true;
-       validatePromoCode();
-    }
-  */
+define(
+    [
+        '$',
+        'ajax',
+        'bean',
+        'lodash/string/template',
+        'text!src/templates/promoCode.html',
+        'text!src/templates/promoError.html'
+    ],
+    function ($, ajax, bean, template, promoCodeTemplate,promoErrorTemplate) {
+        'use strict';
 
-    var validatePromoCode = function(){
-        //Check whether a promo code has been entered- return early.
-        if (!submitted) {
-            return true;
+        var COUNTRY_SELECT = '.js-country',
+            PROMO_CODE_INPUT = '#promo-code',
+            TIER_ELEMENT = 'input[name="tier"]',
+            APPLY_BUTTON = '.js-promo-code-validate',
+            BILLING_PERIOD = '.js-payment-options-container [type=radio]:checked',
+            FEEDBACK_CONTAINER = '.js-promo-feedback-container';
+
+        var elementsThatTriggerRevalidation = $([
+            COUNTRY_SELECT, BILLING_PERIOD, APPLY_BUTTON
+        ].join(','));
+
+        var showPromoCode = function(promotion) {
+            $(FEEDBACK_CONTAINER).html(template(promoCodeTemplate)(promotion));
+        };
+
+        var showPromoError = function(error) {
+            $(FEEDBACK_CONTAINER).html(template(promoErrorTemplate)(error));
+            $(PROMO_CODE_INPUT).parent().addClass('form-field--error');
+        };
+
+        var clearFeedbackContainer = function() {
+            $(FEEDBACK_CONTAINER).html('');
+            $(PROMO_CODE_INPUT).parent().removeClass('form-field--error');
+        };
+
+        var validatePromoCode = function() {
+
+            clearFeedbackContainer();
+            if(!$(PROMO_CODE_INPUT).val().trim()) {
+                return;
+            }
+
+            ajax({
+                type: 'json',
+                method: 'GET',
+                url: '/lookupPromotion',
+                data: {
+                    promoCode: $(PROMO_CODE_INPUT).val(),
+                    billingPeriod: $(BILLING_PERIOD).val(),
+                    country: $(COUNTRY_SELECT).val(),
+                    tier: $(TIER_ELEMENT).val()
+                }
+            }).then(showPromoCode)
+              .catch(function (a) {
+                showPromoError(JSON.parse(a.response))
+            });
+        };
+
+        return {
+            init: function() {
+
+                // clear the existing promo code when we are editing it
+                bean.on($(PROMO_CODE_INPUT)[0], 'keyup', clearFeedbackContainer);
+
+                // revalidate the code if we change / click stuff
+                elementsThatTriggerRevalidation.each(function(elem) {
+                    bean.on(elem, elem.tagName.toLowerCase() == 'button' ? 'click' : 'change', validatePromoCode);
+                });
+
+                //handle pre-population of codes
+                if ($(PROMO_CODE_INPUT).val()) {
+                    validatePromoCode()
+                }
+            }
         }
-/*
-        ajax({
-            type: 'json',
-            method: 'GET',
-            url: lookupUrl,
-            data: {
-                promoCode: promoCode,
-                //billing period
-                //tier
-                country: countrySelect.options[countrySelect.selectedIndex]
-            }
-        }).then(function (a) {
-            if (a.isValid) {
-                displayPromotion(a.promotion);
-                bindExtraKeyListener();
-            } else {
-                displayError(a.errorMessage);
-            }
-        }).catch(function (a) {
-            // Content of error codes are not parsed by ajax/reqwest.
-            if (a && a.response) {
-                var b = JSON.parse(a.response);
-                if (b && b.errorMessage) {
-                    displayError(b.errorMessage);
-                    return;
-                }
-            }
-            displayError();
-        });
-*/
-        return true;
-    };
-
-
-
-
-
-    /**
-     * useful things:
-     *  $
-     *  ajax!
-     *    ajax({
-            type: 'json',
-            method: 'GET',
-            url: lookupUrl,
-            data: {
-                promoCode: promoCode,
-                productRatePlanId: formElements.getRatePlanId(),
-                country: countryChoice.getCurrentCountryOption().value
-            }
-        }).then(function (a) {
-            if (a.isValid) {
-                displayPromotion(a.promotion);
-                bindExtraKeyListener();
-            } else {
-                displayError(a.errorMessage);
-            }
-        }).catch(function (a) {
-            // Content of error codes are not parsed by ajax/reqwest.
-            if (a && a.response) {
-                var b = JSON.parse(a.response);
-                if (b && b.errorMessage) {
-                    displayError(b.errorMessage);
-                    return;
-                }
-            }
-            displayError();
-        });
-     */
-
-    return{
-        validatePromoCode:validatePromoCode
-    }
-});
+    });

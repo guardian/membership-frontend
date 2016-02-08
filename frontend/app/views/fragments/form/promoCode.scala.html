@@ -1,43 +1,20 @@
-@import com.gu.i18n.Country
- @import com.gu.memsub.promo.PromoCode
-@import com.gu.salesforce.Tier
-@import com.gu.memsub.BillingPeriod
-
-
-@import controllers.routes.Promotions.validatePromoCode
+@import com.gu.memsub.promo.PromoCode
 @import views.support.IdentityUser
 
 @(idUser: IdentityUser, promoCode: Option[PromoCode])
-    @defining(
-        // use Play reverse routing to get the action request path
-        validatePromoCode(
-            PromoCode("_"),
-            BillingPeriod.year,
-            Tier.friend,
-            Country.UK).path.replaceFirst("\\?.*", "")) { lookupUrl =>
 
-        @if(idUser.isTestUser) {
-            <fieldset class="fieldset checkout-promo-code js-promo-code">
-                <div class="fieldset__heading">
+@if(idUser.isTestUser) {
+    <fieldset class="fieldset checkout-promo-code js-promo-code">
+        <div class="fieldset__heading">
+            <h2 class="fieldset__headline">Promo code</h2>
+        </div>
 
-                    <h2 class="fieldset__headline">Promo code</h2>
-                    <div class="fieldset__note">
-                        <div class="js-promo-code-applied promo-code-applied" style="display:none"><strong>✓&nbsp;</strong>
-                            Promotion applied</div>
-                        <div class="promo-code-snippet js-promo-code-snippet"></div>
-                    </div>
-                </div>
-
-                <div class="fieldset__fields">
-                    <div class="form-field">
-                        <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input" data-lookup-url="@lookupUrl" data-validation="validPromoCode"/>
-                        <a class="button button--primary button--large button--arrow-right js-promo-code-validate">
-                            Apply</a>
-                    </div>
-                </div>
-                @fragments.form.errorMessage("Please enter a valid promo code.")
-            </fieldset>
-
-
-        }
-    }
+        <div class="fieldset__fields">
+            <div class="form-field">
+                <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input promo-code__input"/>
+                <button type="button" class="action js-promo-code-validate">Apply</button>
+                <span class="js-promo-feedback-container"></span>
+            </div>
+        </div>
+    </fieldset>
+}

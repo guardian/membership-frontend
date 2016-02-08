@@ -13,6 +13,7 @@
     "respimage": "~1.4.0",
     "lazysizes": "~1.1.0",
     "gumshoe": "https://github.com/cferdinandi/gumshoe.git#~1.1.0",
-    "smooth-scroll": "https://github.com/cferdinandi/smooth-scroll.git#~5.3.7"
+    "smooth-scroll": "https://github.com/cferdinandi/smooth-scroll.git#~5.3.7",
+    "requirejs-text":"~2.0.14"
   }
 }

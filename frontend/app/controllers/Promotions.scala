@@ -70,10 +70,13 @@ object Promotions extends Controller {
     }
 
     val p = for {
-      promo <- TouchpointBackend.Normal.promoService.findPromotion(promoCode).toRightDisjunction(NoSuchCode)
+      promo <- request.touchpointBackend.promoService.findPromotion(promoCode).toRightDisjunction(NoSuchCode)
       _ <- promo.validateFor(prpId, country)
     } yield promo
 
-    Ok(p.fold(Json.toJson(_), Json.toJson(_)))
+    p.fold(
+      {err => BadRequest(Json.toJson(err))},
+      {promo => Ok(Json.toJson(promo))}
+    )
   }
 }
