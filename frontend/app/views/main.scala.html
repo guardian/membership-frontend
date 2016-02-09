@@ -1,15 +1,12 @@
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
-@(
-    title: String,
+@(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None
 )(content: Html)
-
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
 @import views.support.Asset
-
 <!DOCTYPE html lang="en-GB">
 <html class="js-off id--signed-out">
     <head>

@@ -117,7 +117,8 @@ module.exports = function (grunt) {
                         'raven': 'lib/bower-components/raven-js/dist/raven',
                         'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
                         'smoothScroll': 'lib/bower-components/smooth-scroll/dist/js/smooth-scroll',
-                        'ajax': 'src/utils/ajax'
+                        'ajax': 'src/utils/ajax',
+                        'text':'lib/bower-components/requirejs-text/text'
                     },
                     findNestedDependencies: false,
                     wrapShim: true,

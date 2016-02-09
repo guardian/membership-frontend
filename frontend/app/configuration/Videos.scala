@@ -34,4 +34,14 @@ object Videos {
     )
   )
 
+  val partners = Video(
+    srcUrl="//www.youtube.com/embed/rBnvGHEyATc?enablejsapi=1&wmode=transparent",
+    posterImage=Some(
+      ResponsiveImageGroup(
+        altText=Some("If you read the Guardian, join the Guardian"),
+        availableImages=supportersPlaceholder // TODO change to a partnersPlaceholder
+      )
+    )
+  )
+
 }

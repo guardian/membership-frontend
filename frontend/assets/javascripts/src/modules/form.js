@@ -61,8 +61,9 @@ define([
     'src/modules/form/payment',
     'src/modules/form/address',
     'src/modules/form/options',
-    'src/modules/form/helper/password'
-], function (validation, form, payment, address, options, password) {
+    'src/modules/form/helper/password',
+    'src/modules/form/promoCode'
+], function (validation, form, payment, address, options, password, promoCode) {
     'use strict';
 
     var init = function () {
@@ -72,6 +73,7 @@ define([
             address.init();
             password.init();
             options.init();
+            promoCode.init();
 
             if (form.hasPayment) {
                 require('js!stripe').then(function() {

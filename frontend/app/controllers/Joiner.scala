@@ -5,6 +5,7 @@ import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
+import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Membership, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -21,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
-import utils.{CampaignCode, TierChangeCookies}
+import utils.{TestUsers, CampaignCode, TierChangeCookies}
 import views.support
 import views.support.Pricing._
 import views.support.TierPlans._
@@ -93,8 +94,9 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
+
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
@@ -109,7 +111,8 @@ object Joiner extends Controller with ActivityTracking
          plans = plans,
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          idUser = identityUser,
-         pageInfo = pageInfo))
+         pageInfo = pageInfo,
+         promoCode = promoCode))
     }
   }
 
