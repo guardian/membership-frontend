@@ -60,6 +60,9 @@ define(
 
         return {
             init: function() {
+                if (!$(PROMO_CODE_INPUT).length) {
+                    return;
+                }
 
                 // clear the existing promo code when we are editing it
                 bean.on($(PROMO_CODE_INPUT)[0], 'keyup', clearFeedbackContainer);
