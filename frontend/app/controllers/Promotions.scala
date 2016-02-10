@@ -29,6 +29,18 @@ object Promotions extends Controller {
         id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
         sizes=List(1000,500)
       )
+    ),
+    ResponsiveImageGroup(
+      name=Some("stonehenge"),
+      metadata=Some(Grid.Metadata(
+        description = None,
+        byline = None,
+        credit = None
+      )),
+      availableImages=ResponsiveImageGenerator(
+        id="5bb56c3a99704f4f2d03db5c304ee39415331747/184_0_6780_4071",
+        sizes=List(1000,500)
+      )
     )
   )
 

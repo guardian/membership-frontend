@@ -119,5 +119,5 @@ GET            /assets/*assetFile                     controllers.CachedAssets.a
 
 # Promotions
 GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
-GET            /englishheritage                       controllers.Promotions.promotionPage(promoCodeStr = "EH2016")
+GET            /english-heritage                       controllers.Promotions.promotionPage(promoCodeStr = "EH2016")
 

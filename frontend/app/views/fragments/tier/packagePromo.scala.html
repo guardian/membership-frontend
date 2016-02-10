@@ -10,7 +10,8 @@
   modifierClass: Option[String] = None,
   extraClasses: Seq[String] = Seq.empty,
   isReversed: Boolean = false,
-  chooseTier: Boolean = false)
+  chooseTier: Boolean = false,
+  promoCode: Option[String] = None)
 
 @link(tier: Tier) = {
     @tier match {
@@ -20,7 +21,7 @@
 }
 
 @actionAttrs = {
-    href="@link(plans.tier)?countryGroup=@cg.id"
+    href="@link(plans.tier)?countryGroup=@{cg.id}@promoCode.map("&promoCode=" + _).mkString"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@plans.tier.slug"

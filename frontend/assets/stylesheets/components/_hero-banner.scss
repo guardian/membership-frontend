@@ -67,6 +67,13 @@
         background-image: url(/assets/images/join-challenger/s_ROW_hero01_1280x800.jpg);
     }
 }
+// english heritage promo
+.hero-banner--eng-heritage {
+    background-image: url(https://media.guim.co.uk/2fd61ea1702160d25689eb512fcda16b1ee489f1/0_28_2000_1201/500.jpg);
+    @include mq(desktop) {
+        background-image: url(https://media.guim.co.uk/2fd61ea1702160d25689eb512fcda16b1ee489f1/0_28_2000_1201/1000.jpg);
+    }
+}
 .hero-banner__inner {
     position: relative;
     height: 100%;
