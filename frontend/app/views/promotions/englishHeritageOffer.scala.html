@@ -11,9 +11,10 @@
 @main("Partners", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.promos.englishHeritageRoundel()
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
-        Free English Heritage membership worth £88
+        Become a Guardian Partner
     } {
-        When you become a Partner or Patron Member.
+
+        Support the independence of the Guardian and our award-winning journalism, as well as enjoying a host of benefits.
     }()
 
     @fragments.page.section(hasBorder = false) {
@@ -23,9 +24,16 @@
     @for(img <- pageImages.find(_.name.contains("stonehenge"))) {
         @fragments.page.sectionCardStack(img) {
             <div class="listing__text">
-                <p>English Heritage Promo Text 1</p>
-                <p>English Heritage Promo Text 2</p>
-                <p>English Heritage Promo Text 3</p>
+                <h3>Free annual English Heritage membership when you join as a Guardian Partner</h3>
+                <p>There are over 400 historic places to visit with an English Heritage membership, from prehistoric sites to medieval castles, Cold War bunkers to Roman Forts.</p>
+                <p>Become a Guardian Partner and enjoy the following with your free English Heritage membership:</p>
+                <ul class="o-bulleted-list">
+                    <li>Unlimited access to all English Heritage sites</li>
+                    <li>Free entry to the site of your choice for up to 6 accompanying children (under 19 years and within the family group)</li>
+                    <li>A free handbook that’s worth £10.95.</li>
+                    <li>An exclusive Members’ Magazine - four times a year.</li>
+                    <li>Plus money off other associated attractions.</li>
+                </ul>
             </div>
         }
     }
