@@ -50,7 +50,7 @@ define([
                 var memberTier = (memberDetail && memberDetail.tier || 'none').toLowerCase();
                 var ctaStatus =  CTA_ACTIONS[$('.js-ticket-sales').data('cta-tier-'+memberTier)];
 
-                if (Object.keys(ctaStatus).length) {
+                if (ctaStatus && Object.keys(ctaStatus).length) {
                     enhanceCta(elem, ctaStatus);
                 }
             });
