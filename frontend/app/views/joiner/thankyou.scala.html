@@ -8,11 +8,13 @@
 @import views.support.ThankyouSummary
 @import com.gu.memsub.PaymentCard
 @import com.gu.memsub.Subscriber
+@import com.gu.memsub.promo.Promotion
 @(member: Subscriber.Member,
   summary: ThankyouSummary,
   cardOpt: Option[PaymentCard],
   returnDestinationOpt: Option[model.Destination],
-  upgrade: Boolean)
+  upgrade: Boolean,
+  promotion: Option[Promotion])
 
 @title = @{
     if(upgrade) {
@@ -107,6 +109,13 @@
                         <th role="rowheader">Card</th>
                         <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.lastFourDigits</td>
                     </tr>
+                    }
+
+                    @for(promo <- promotion) {
+                        <tr role="row">
+                            <th role="rowheader">Promotion applied</th>
+                            <td id="qa-joiner-summary-promo">@promo.description</td>
+                        </tr>
                     }
                 </table>
             </div>

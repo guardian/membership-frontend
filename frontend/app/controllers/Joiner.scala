@@ -38,6 +38,7 @@ object Joiner extends Controller with ActivityTracking
                                  with StripeServiceProvider
                                  with SalesforceServiceProvider
                                  with SubscriptionServiceProvider
+                                 with PromoServiceProvider
                                  with PaymentServiceProvider
                                  with MemberServiceProvider {
   val JoinReferrer = "join-referrer"
@@ -189,12 +190,12 @@ object Joiner extends Controller with ActivityTracking
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
 
     val paymentCard = (for {
-      sub <- OptionT(subscriptionService.get(request.subscriber.contact)(Membership))
-      card <- OptionT(paymentService.getPaymentCard(sub.accountId))
+      card <- OptionT(paymentService.getPaymentCard(request.subscriber.subscription.accountId))
     } yield card).run
 
     for {
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
+      promotion = request.subscriber.subscription.promoCode.flatMap(promoService.findPromotion)
       destination <- DestinationService.returnDestinationFor(request)
       card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
@@ -202,7 +203,8 @@ object Joiner extends Controller with ActivityTracking
         paymentSummary,
         card,
         destination,
-        upgrade
+        upgrade,
+        promotion
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
