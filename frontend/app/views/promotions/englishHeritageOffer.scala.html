@@ -7,9 +7,9 @@
     pageInfo: PageInfo,
     pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
-@import configuration.Videos
 @import views.support.Asset
 @main("Partners", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+    @fragments.promos.englishHeritageRoundel()
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
         Free English Heritage membership worth £88
     } {

@@ -69,9 +69,10 @@
 }
 // english heritage promo
 .hero-banner--eng-heritage {
-    background-image: url(https://media.guim.co.uk/2fd61ea1702160d25689eb512fcda16b1ee489f1/0_28_2000_1201/500.jpg);
+    background: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/500.jpg) bottom;
+    background-size: cover;
     @include mq(desktop) {
-        background-image: url(https://media.guim.co.uk/2fd61ea1702160d25689eb512fcda16b1ee489f1/0_28_2000_1201/1000.jpg);
+        background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/1000.jpg);
     }
 }
 .hero-banner__inner {

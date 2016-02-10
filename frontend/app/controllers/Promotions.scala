@@ -56,8 +56,7 @@ object Promotions extends Controller {
             PageInfo(
               title = "Free English Heritage membership worth £88",
               url = url,
-              description = Some("LOREM IPSUM"),
-              navigation = Nav.internationalLandingPageNavigation
+              description = Some("LOREM IPSUM")
             ),
             pageImages
           ))
