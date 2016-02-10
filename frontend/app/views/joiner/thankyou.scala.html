@@ -110,16 +110,20 @@
                         <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.lastFourDigits</td>
                     </tr>
                     }
-
-                    @for(promo <- promotion) {
-                        <tr role="row">
-                            <th role="rowheader">Promotion applied</th>
-                            <td id="qa-joiner-summary-promo">@promo.description</td>
-                        </tr>
-                    }
                 </table>
             </div>
         </section>
+        @for(promo <- promotion) {
+            <section class="page-section page-section--bordered">
+                <div class="page-section__lead-in">
+                    <h2 class="page-section__headline">Promotion applied</h2>
+                </div>
+                <div class="page-section__content">
+                    <p>@promo.description</p>
+                    <p>@promo.redemptionInstructions</p>
+                </div>
+            </section>
+        }
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
