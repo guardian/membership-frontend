@@ -8,11 +8,13 @@
 @import views.support.ThankyouSummary
 @import com.gu.memsub.PaymentCard
 @import com.gu.memsub.Subscriber
+@import com.gu.memsub.promo.Promotion
 @(member: Subscriber.Member,
   summary: ThankyouSummary,
   cardOpt: Option[PaymentCard],
   returnDestinationOpt: Option[model.Destination],
-  upgrade: Boolean)
+  upgrade: Boolean,
+  promotion: Option[Promotion])
 
 @title = @{
     if(upgrade) {
@@ -111,6 +113,17 @@
                 </table>
             </div>
         </section>
+        @for(promo <- promotion) {
+            <section class="page-section page-section--bordered">
+                <div class="page-section__lead-in">
+                    <h2 class="page-section__headline">Promotion applied</h2>
+                </div>
+                <div class="page-section__content">
+                    <p>@promo.description</p>
+                    <p>@promo.redemptionInstructions</p>
+                </div>
+            </section>
+        }
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">

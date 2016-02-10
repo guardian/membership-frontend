@@ -1,6 +1,7 @@
 import actions._
 import com.gu.membership.MembershipCatalog
 import com.gu.memsub.Subscriber.Member
+import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.{PaymentService, SubscriptionService}
 import com.gu.stripe.StripeService
 import com.gu.zuora.api.ZuoraService
@@ -16,6 +17,11 @@ import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}
 
 package object controllers extends CommonActions with LazyLogging{
+
+  trait PromoServiceProvider {
+    def promoService(implicit request: BackendProvider): PromoService =
+      request.touchpointBackend.promoService
+  }
 
   trait MemberServiceProvider {
     def memberService(implicit request: BackendProvider): MemberService =

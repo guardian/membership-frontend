@@ -118,6 +118,6 @@ GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.b
 GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)
 
 # Promotions
-GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr: String)
+GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
 GET            /englishheritage                       controllers.Promotions.promotionPage(promoCodeStr = "EH2016")
 
