@@ -15,11 +15,7 @@
         <figure class="captioned-image">
             <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
             @for(metadata <- img.metadata) {
-                <figcaption class="captioned-image__detail captioned-image__detail--right">
-                    <div class="captioned-image__caption">
-                    @fragments.media.imageCaption(metadata)
-                    </div>
-                </figcaption>
+                @fragments.media.imageCaption(metadata, position=Some("right"))
             }
         </figure>
     </div>

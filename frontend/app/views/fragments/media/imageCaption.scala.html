@@ -1,15 +1,18 @@
-@(metadata: model.Grid.Metadata, isBlock: Boolean = false)
-
+@(metadata: model.Grid.Metadata, isBlock: Boolean = false, baseClass:String = "captioned-image", position:Option[String]=None)
 @for(description <- metadata.description) {
-    <div class="o-caption@if(isBlock){ o-caption--block}">
-        @for(byline <- metadata.byline) {
-            <div class="o-caption__byline">@byline</div>
-        }
-        <span class="o-caption__description">
-            @description
-        </span>
-        @for(credit <- metadata.credit) {
-            <span class="o-caption__credit">Photograph: @credit</span>
-        }
-    </div>
+    <figcaption class="@{baseClass}__detail @{position.fold("")(baseClass + "__detail--" + _)}">
+        <div class="@{baseClass}__caption">
+            <div class="o-caption@if(isBlock){ o-caption--block}">
+                @for(byline <- metadata.byline) {
+                    <div class="o-caption__byline">@byline</div>
+                }
+                <span class="o-caption__description">
+                    @description
+                </span>
+                @for(credit <- metadata.credit) {
+                    <span class="o-caption__credit">Photograph: @credit</span>
+                }
+            </div>
+        </div>
+    </figcaption>
 }

@@ -28,11 +28,7 @@
             </div>
         }
         @for(metadata <- img.metadata if showImageCaption) {
-            <figcaption class="captioned-image__detail">
-                <div class="captioned-image__caption">
                     @fragments.media.imageCaption(metadata)
-                </div>
-            </figcaption>
         }
     </figure>
     <div class="promo-primary__content">
