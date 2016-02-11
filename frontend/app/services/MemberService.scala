@@ -181,7 +181,7 @@ class MemberService(identityService: IdentityService,
   override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
-    def effectiveFrom(sub: model.PaidSubscription): DateTime = sub.chargedThroughDate.getOrElse(sub.firstPaymentDate).toDateTimeAtCurrentTime
+    def effectiveFrom(sub: model.PaidSubscription) = sub.chargedThroughDate.getOrElse(sub.firstPaymentDate)
 
     val friendRatePlanId = catalog.friend.productRatePlanId
 
@@ -210,8 +210,8 @@ class MemberService(identityService: IdentityService,
     (for {
       sub <- EitherT(subOrPendingAmendError(subscriber.subscription))
       cancelDate = sub match {
-        case p: Subscription with PaidPS[Plan] => p.chargedThroughDate.map(_.toDateTimeAtCurrentTime).getOrElse(DateTime.now)
-        case _ => DateTime.now
+        case p: Subscription with PaidPS[Plan] => p.chargedThroughDate.getOrElse(DateTime.now.toLocalDate)
+        case _ => DateTime.now.toLocalDate
       }
       _ <- zuoraService.cancelPlan(sub, cancelDate).liftM
     } yield {
@@ -295,7 +295,7 @@ class MemberService(identityService: IdentityService,
         } yield NextPayment(price(amount), date)
 
         ThankyouSummary(
-          startDate = sub.startDate.toDateTimeAtCurrentTime(),
+          startDate = sub.startDate,
           amountPaidToday = price(0f),
           planAmount = planAmount,
           nextPayment = nextPayment,
