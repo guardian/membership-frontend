@@ -117,7 +117,7 @@ object Config {
   val stageProd: Boolean = stage == "PROD"
   val stageDev: Boolean = stage == "DEV"
 
-  val googleGroupChecker = googleGroupCheckerFor(config)
+  lazy val googleGroupChecker = googleGroupCheckerFor(config)
 
   lazy val googleAuthConfig = googleAuthConfigFor(config)
 
