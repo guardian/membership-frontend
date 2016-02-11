@@ -1,12 +1,10 @@
 package configuration
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.github.nscala_time.time.Imports._
 import com.gu.config.{DigitalPackRatePlanIds, MembershipRatePlanIds}
-import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
-import com.gu.memsub.promo.{EnglishHeritageOffer, AppliesTo, PromoCode, Promotion}
+import com.gu.memsub.auth.common.MemSub.Google._
+import com.gu.memsub.promo.{AppliesTo, EnglishHeritageOffer, PromoCode, Promotion}
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -14,10 +12,11 @@ import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
-import services._
-import scala.util.Try
-import play.api.libs.concurrent.Akka
 import play.api.Play.current
+import play.api.libs.concurrent.Akka
+import services._
+
+import scala.util.Try
 
 object Config {
   val logger = Logger(this.getClass)
@@ -118,48 +117,11 @@ object Config {
   val stageProd: Boolean = stage == "PROD"
   val stageDev: Boolean = stage == "DEV"
 
-  val GuardianGoogleAppsDomain = "guardian.co.uk"
+  lazy val googleGroupChecker = googleGroupCheckerFor(config)
 
-  val googleAuthConfig = {
-    val con = config.getConfig("google.oauth")
-    GoogleAuthConfig(
-      con.getString("client.id"),
-      con.getString("client.secret"),
-      con.getString("callback"),
-      Some(GuardianGoogleAppsDomain)        // Google App domain to restrict login
-    )
-  }
+  lazy val googleAuthConfig = googleAuthConfigFor(config)
 
-  val awsProfileName = "membership"
-  val awsS3PrivateBucketName = "membership-private"
-
-  lazy val awsCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider(awsProfileName), new InstanceProfileCredentialsProvider())
-  lazy val s3PrivateKeyService = new S3PrivateKeyService(awsS3PrivateBucketName, awsCredentialsProvider)
-
-  val privateKeyStorePass = "notasecret"
-  val privateKeyAlias = "privatekey"
-  val privateKeyPass = "notasecret"
-  val certPath = config.getString("google.directory.service_account.cert")
-
-  lazy val privateKey = {
-    s3PrivateKeyService.loadPrivateKey(
-      certPath,
-      privateKeyStorePass,
-      privateKeyAlias,
-      privateKeyPass
-    )
-  }
-
-  lazy val googleDirectoryConfig = {
-    val con = config.getConfig("google.directory")
-    GoogleServiceAccount(
-      con.getString("service_account.id"),
-      privateKey,
-      con.getString("service_account.email")
-    )
-  }
-
-  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianGoogleAppsDomain").toSet
+  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianAppsDomain").toSet
 
   val contentApiKey = config.getString("content.api.key")
 
