@@ -14,7 +14,11 @@ object RedirectMembersFilter extends Filter {
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     if (requestHeader.host.toLowerCase.startsWith("members.")) {
       val requestUri = Uri.parse(requestHeader.uri)
-      Future.successful(Redirect(requestUri.withScheme("https").withHost(Config.membershipHost).toString, FOUND))
+      val redirectUri = requestUri.query.param("INTCMP") match {
+        case None => requestUri.addParam("INTCMP", "MEMBERS_DOMAIN_REDIRECT")
+        case _ => requestUri
+      }
+      Future.successful(Redirect(redirectUri.withScheme("https").withHost(Config.membershipHost).toString, FOUND))
     } else nextFilter(requestHeader)
   }
 }
