@@ -34,6 +34,9 @@ class JoinPartnerSpec extends FeatureSpec with Browser
     scenario("I join as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
       checkDependenciesAreAvailable
 
+      And("I have the opt out of the ID frontend AB test cookie. (FOR NOW)")
+      Driver.addCookie("GU_PROFILE_BETA","0")
+
       val testUser = new TestUser
 
       Given("I clicked 'Become a Partner' button on Membership homepage")
