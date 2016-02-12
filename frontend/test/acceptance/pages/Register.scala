@@ -11,14 +11,13 @@ class Register(testUser: TestUser) extends Page with Browser {
   val url = s"${identityFrontendUrl}/register?returnUrl=${returnUrlParam}&skipConfirmation=true"
 
   private object RegisterFields {
-    val firstName = textField(id("user_firstName"))
-    val lastName = textField(id("user_secondName"))
-    val email = emailField(id("user_primaryEmailAddress"))
-    val username = textField(id("user_publicFields_username"))
-    val password = pwdField(id("user_password"))
-
+    val firstName = textField(id("register_field_firstname"))
+    val lastName = textField(id("register_field_lastname"))
+    val email = emailField(id("register_field_email"))
+    val username = textField(id("register_field_username"))
+    val password = pwdField(id("register_field_password"))
     def fillIn(): Unit = {
-      assert(pageHasElement(id("user_password")))
+      assert(pageHasElement(id("register_field_password")))
 
       firstName.value = testUser.username
       lastName.value = testUser.username
@@ -33,12 +32,12 @@ class Register(testUser: TestUser) extends Page with Browser {
   }
 
   def submit(): Unit = {
-    val selector = className("submit-input")
+    val selector = id("register_submit")
     assert(pageHasElement(selector))
     click.on(selector)
   }
 
   def pageHasLoaded(): Boolean = {
-    pageHasElement(className("submit-input"))
+    pageHasElement(id("register_submit"))
   }
 }

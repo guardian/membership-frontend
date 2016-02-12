@@ -41,6 +41,9 @@ class JoinPartnerSpec extends FeatureSpec with Browser
 
       Given("I clicked 'Become a Partner' button on Membership homepage")
 
+      And("I have the new Identity frontend cookie. (FOR NOW)")
+      Driver.addCookie("GU_PROFILE_BETA","1");
+
       When("I land on 'Identity Register' page")
       val register = new pages.Register(testUser)
       go.to(register)
