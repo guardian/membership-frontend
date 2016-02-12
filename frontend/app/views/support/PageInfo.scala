@@ -10,7 +10,7 @@ import play.api.libs.json._
 case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                     url: String = "/",
                     description: Option[String] = Some(CopyConfig.copyDescriptionDefault),
-                    image: Option[String] = Some(Config.membershipUrl + Asset.at("images/common/mem-promo.jpg")),
+                    image: Option[String] = Some(Config.membershipUrl + Asset.at("images/common/mem600.jpg")),
                     schemaOpt: Option[EventSchema] = None,
                     customSignInUrl: Option[String] = None,
                     stripePublicKey: Option[String] = None,
