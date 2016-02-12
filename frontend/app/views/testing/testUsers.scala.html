@@ -37,6 +37,24 @@
                         <li>
                             <a href="javascript:
                             (function() {
+                                if (!document.getElementById('register_field_username')) {
+                                    alert('Element with id register_field_username not found. Are you on the right page?');
+                                    return;
+                                }
+                                var username = prompt('Test User key (first name, last name, username and password will be set to this value):');
+                                if (!username) return;
+                                ['firstname', 'lastname', 'username', 'password', 'email'].forEach(function(field) {
+                                    document.getElementById('register_field_'+field).value = field === 'email' ? username + '@@gu.com' : username;
+                                });
+                                document.querySelector('#register_submit').click();
+                            })();
+                        ">
+                                @if(Config.stageDev){Dev } New Identity Signup</a>.
+                            Clicking this on the <em>new</em> identity sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form. Unless you're a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=866522">Firefox user</a>. 
+                        </li>
+                        <li>
+                            <a href="javascript:
+                            (function() {
                                 var s = document.createElement('script');
                                 s.src = '@Asset.bookmarklet("identity-signup.js")';
                                 s.type = 'text/javascript';
