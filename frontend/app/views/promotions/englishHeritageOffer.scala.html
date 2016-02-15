@@ -8,7 +8,7 @@
     pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import views.support.Asset
-@main("Partners", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+@main("English Heritage Promotion", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.promos.englishHeritageRoundel()
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
         Become a Guardian Partner
