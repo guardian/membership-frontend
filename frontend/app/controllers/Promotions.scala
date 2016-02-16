@@ -4,8 +4,8 @@ import actions.RichAuthRequest
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.BillingPeriod
-import com.gu.memsub.promo._
 import com.gu.memsub.promo.Writers._
+import com.gu.memsub.promo._
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import model._
 import play.api.libs.json._
@@ -47,16 +47,16 @@ object Promotions extends Controller {
   def promotionPage(promoCodeStr: String) = GoogleAuthenticatedStaffAction { implicit request =>
 
     def findTemplateForPromotion(promoCode: PromoCode, promotion: Promotion, url: String) =
-      promotion.landingPageTemplate match {
-        case EnglishHeritageOffer =>
+      promotion.promotionType match {
+        case Incentive =>
           implicit val countryGroup = UK
 
           Some(views.html.promotions.englishHeritageOffer(
             TouchpointBackend.Normal.catalog.partner,
             PageInfo(
-              title = "Free English Heritage membership worth £88",
+              title = promotion.title,
               url = url,
-              description = Some("LOREM IPSUM")
+              description = Some(promotion.description)
             ),
             pageImages
           ))

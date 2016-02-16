@@ -1,5 +1,5 @@
-import sbt._
 import play.sbt.PlayImport
+import sbt._
 
 object Dependencies {
 
@@ -8,7 +8,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "net.kencochrane.raven" % "raven-logback" % "6.0.0"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.156"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.159"
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.1"
   val contentAPI = "com.gu" %% "content-api-client" % "6.4"
   val playWS = PlayImport.ws

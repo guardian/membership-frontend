@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports._
 import com.gu.config.{DigitalPackRatePlanIds, MembershipRatePlanIds}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
-import com.gu.memsub.promo.{AppliesTo, EnglishHeritageOffer, PromoCode, Promotion}
+import com.gu.memsub.promo._
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -151,16 +151,20 @@ object Config {
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
     Promotion(
-      landingPageTemplate = EnglishHeritageOffer,
-      codes = Set(PromoCode("EH2016")),
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerMonthly,
         prpIds.partnerYearly
       )),
-      thumbnailUrl = "http://lorempixel.com/400/200/abstract",
+      campaignName = "English Heritage Offer - Q4 FY2016",
+      codes = PromoCodeSet(PromoCode("EH2016")),
       description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
+      expires = DateTime.parse("2016-04-01T01:00:00Z"),
+      imageUrl = "http://lorempixel.com/400/200/abstract",
+      promotionType = Incentive,
       redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
-      expires = DateTime.parse("2016-04-01T00:00:00Z")
+      roundelHtml = "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
+      thumbnailUrl = "http://lorempixel.com/40/20/abstract",
+      title = "Free English Heritage membership worth £88"
     )
   }
 
