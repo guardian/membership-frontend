@@ -62,7 +62,7 @@ $full-gutter: $gs-gutter;
         @include mq(mem-full) {
             float: right;
             width: gs-span(12);
-            padding: $half-gutter 0 0 0;
+            padding: $full-gutter 0 0 0;
 
             // RIGHT OF PAGE
             margin-right: $full-gutter;
