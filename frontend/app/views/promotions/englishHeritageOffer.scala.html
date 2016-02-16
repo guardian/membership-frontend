@@ -8,13 +8,13 @@
     pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import views.support.Asset
-@main("Partners", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+@main("English Heritage Promotion", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.promos.englishHeritageRoundel()
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
         Become a Guardian Partner
     } {
 
-        Support the independence of the Guardian and our award-winning journalism, as well as enjoying a host of benefits.
+        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits.
     }()
 
     @fragments.page.section(hasBorder = false) {
@@ -22,9 +22,8 @@
     }
 
     @for(img <- pageImages.find(_.name.contains("stonehenge"))) {
-        @fragments.page.sectionCardStack(img) {
+        @fragments.page.sectionCardStack(img,Some("Free annual English Heritage membership")) {
             <div class="listing__text">
-                <h3>Free annual English Heritage membership when you join as a Guardian Partner</h3>
                 <p>There are over 400 historic places to visit with an English Heritage membership, from prehistoric sites to medieval castles, Cold War bunkers to Roman Forts.</p>
                 <p>Become a Guardian Partner and enjoy the following with your free English Heritage membership:</p>
                 <ul class="o-bulleted-list">
