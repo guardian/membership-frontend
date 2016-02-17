@@ -163,7 +163,7 @@ object Config {
       promotionType = Incentive,
       redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
       roundelHtml = "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
-      thumbnailUrl = "http://lorempixel.com/40/20/abstract",
+      thumbnailUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png",
       title = "Free English Heritage membership worth £88"
     )
   }
