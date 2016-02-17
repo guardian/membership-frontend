@@ -2,7 +2,11 @@
 
 <section class="page-slice page-slice--listing">
     <div class="l-constrained">
-        @if(!leadIn.isEmpty){<div class="listing__lead-in listing__lead-in--raised u-hidden-from-mem-full"><h3 class="h-intro">@leadIn.get</h3></div>}
+        @if(!leadIn.isEmpty){
+            <div class="listing__lead-in listing__lead-in--raised u-hidden-from-mem-full">
+                <h3 class="h-intro">@leadIn.get</h3>
+            </div>
+        }
         <div class="listing listing--narrow listing--card-stack @if(leadIn.isEmpty){listing--empty-lead-in}">
             @* If lead-in is empty we still need its containing div for column alignment at larger widths *@
             <div class="listing__lead-in u-hidden-until-mem-full">@if(!leadIn.isEmpty){<h3 class="h-intro">@leadIn.get</h3>}</div>
