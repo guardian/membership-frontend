@@ -159,7 +159,7 @@ object Config {
       codes = PromoCodeSet(PromoCode("EH2016")),
       description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
       expires = DateTime.parse("2016-04-01T01:00:00Z"),
-      imageUrl = "http://lorempixel.com/400/200/abstract",
+      imageUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png",
       promotionType = Incentive,
       redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
       roundelHtml = "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
