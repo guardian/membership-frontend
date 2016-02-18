@@ -109,40 +109,13 @@ object ActionRefiners extends LazyLogging {
     override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
   }
 
-  def isInAuthorisedGroupGoogleAuthReq(includedGroups: Set[String],
-                          errorWhenNotInAcceptedGroups: Html) = new ActionFilter[GoogleAuthRequest] {
-    override def filter[A](request: GoogleAuthRequest[A]) =
-      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.user.email, request)
-  }
-
-  def isInAuthorisedGroupIdentityGoogleAuthReq(includedGroups: Set[String],
-                          errorWhenNotInAcceptedGroups: Html) = new ActionFilter[IdentityGoogleAuthRequest] {
-    override def filter[A](request: IdentityGoogleAuthRequest[A]) =
-      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.googleUser.email, request)
-  }
-
-  def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: Html, email: String, request: Request[_]) = {
-    for (usersGroups <- googleGroupChecker.retrieveGroupsFor(email)) yield {
-      if (includedGroups.intersect(usersGroups).nonEmpty) None else {
-        logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
-        Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
-      }
-    }
-
-  }
-
   def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
-        //Copy the private helper method in play-googleauth to ensure the user is Google auth'd
-        //see https://github.com/guardian/play-googleauth/blob/master/module/src/main/scala/com/gu/googleauth/actions.scala#L59-60
-        val userIdentityOpt = googleAuthUserOpt(request).map(IdentityGoogleAuthRequest(_, request))
-        userIdentityOpt.toRight(onNonAuthentication(request))
+        OAuthActions.userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(onNonAuthentication(request))
       }
     }
   }
-
-  def googleAuthUserOpt(request: RequestHeader) = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity)
 
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
