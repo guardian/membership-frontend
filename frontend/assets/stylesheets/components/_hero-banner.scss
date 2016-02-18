@@ -69,11 +69,26 @@
 }
 // english heritage promo
 .hero-banner--eng-heritage {
-    background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/500.jpg);
-    background-position: bottom;
-    background-size: cover;
-    @include mq(desktop) {
-        background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/1000.jpg);
+
+    overflow: hidden; // added for pseudo-element
+    position: relative; // added for pseudo-element
+
+    // Fixed-position background image thanks to: http://fourkitchens.com/blog/article/fix-scrolling-performance-css-will-change-property
+    &::before {
+        content: ' ';
+        position: fixed; // instead of background-attachment
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/500.jpg);
+        background-position: bottom;
+        background-size: cover;
+        will-change: transform; // creates a new paint layer
+        z-index: -1;
+        @include mq(desktop) {
+            background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/1000.jpg);
+        }
     }
 }
 .hero-banner__inner {
