@@ -84,11 +84,11 @@
         background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/500.jpg);
         background-position: bottom;
         background-size: cover;
+        will-change: transform; // creates a new paint layer
+        z-index: -1;
         @include mq(desktop) {
             background-image: url(https://media.guim.co.uk/88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129/1000.jpg);
         }
-        will-change: transform; // creates a new paint layer
-        z-index: -1;
     }
 }
 .hero-banner__inner {
