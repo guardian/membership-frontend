@@ -36,6 +36,20 @@
     }
 }
 
+.hidden-mem-full,
+.u-hidden-until-mem-full {
+    @include mq($until:mem-full) {
+        display: none !important;
+    }
+}
+
+.u-hidden-from-mem-full {
+    @include mq($from:mem-full) {
+        display:none !important;
+    }
+}
+
+
 .mobile-only {
     @include mq(tablet) {
         display: none !important;

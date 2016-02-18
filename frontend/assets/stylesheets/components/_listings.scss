@@ -49,6 +49,12 @@ $full-gutter: $gs-gutter;
             // LEFT OF PAGE
             margin-left: $full-gutter;
         }
+
+    }
+    .listing__lead-in--raised {
+        position: relative;
+        background-color: $white;
+        z-index:2;
     }
     .listing__content {
         position: relative;
