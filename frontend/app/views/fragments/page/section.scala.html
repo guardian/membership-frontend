@@ -5,7 +5,7 @@
     hasBottomPadding: Boolean = true
 )(content: Html)
 
-<section @if(hasBottomPadding){class="page-slice page-slice--listing"}>
+<section class="page-slice page-slice--listing @if(!hasBottomPadding) {listing--no-bottom-padding}">
     <div class="l-constrained">
         <div class="
             listing

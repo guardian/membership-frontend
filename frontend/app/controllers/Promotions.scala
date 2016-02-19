@@ -34,12 +34,12 @@ object Promotions extends Controller {
       name=Some("stonehenge"),
       metadata=Some(Grid.Metadata(
         description = None,
-        byline = None,
-        credit = None
+        byline = Some("Patrick Eden/Alamy"),
+        credit = Some("Alamy")
       )),
       availableImages=ResponsiveImageGenerator(
-        id="5bb56c3a99704f4f2d03db5c304ee39415331747/184_0_6780_4071",
-        sizes=List(1000,500)
+        id="377bb64740eab08a5eebdb764c488bd98b82e013/0_0_4800_2702",
+        sizes=List(2000,1000,500)
       )
     )
   )
