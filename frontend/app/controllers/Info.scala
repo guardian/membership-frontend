@@ -44,7 +44,7 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("fearless"),
         metadata=Some(Grid.Metadata(
-          description = Some("Reviewing designs on wall - Supporter"),
+          description = Some("Editors in the Guardian newsroom, London"),
           byline = None,
           credit = None
         )),
