@@ -133,7 +133,7 @@ object GuardianLiveEventService extends LiveService {
   // maximum number of tickets that can be purchased with a given code).
   //
   // see https://www.eventbrite.com/developer/v3/formats/event/#ebapi-access-code
-  val maxDiscountQuantityAvailable = 3
+  val maxDiscountQuantityAvailable = 4
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
