@@ -43,7 +43,7 @@
     }
 }
 //Slightly more performant background:fixed for desktop users.
-@mixin fixed-desktop-background($url, $height){
+@mixin fixed-desktop-background($url, $height, $position){
     @include mq(mem-full) {
         background: unset;
         overflow: hidden; // added for pseudo-element
@@ -57,7 +57,7 @@
             height: $height;
             top: 0;
             left: 0;
-            background-position: bottom;
+            background-position: $position;
             background-size: cover;
             will-change: transform; // creates a new paint layer
             z-index: -1;
@@ -67,9 +67,9 @@
 }
 .hero-banner--uk-supporter {
     background-attachment: unset;
-    background-image: url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/1000.jpg);
+    background-image: url(https://media.guim.co.uk/17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457/1000.jpg);
 
-    @include fixed-desktop-background(url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/2000.jpg),70vh);
+    @include fixed-desktop-background(url(https://media.guim.co.uk/17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457/2000.jpg),70vh, center);
 }
 .hero-banner--homepage {
     background-image: url(/assets/images/join-challenger/hm_hero01_980x980.jpg);
@@ -83,7 +83,7 @@
     @include mq(desktop) {
         background-image: url(https://media.guim.co.uk/8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_203_3500_2100/1000.jpg);
     }
-    @include fixed-desktop-background(url(https://media.guim.co.uk/8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_203_3500_2100/2000.jpg),78vh);
+    @include fixed-desktop-background(url(https://media.guim.co.uk/8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_203_3500_2100/2000.jpg),78vh,bottom);
 }
 .hero-banner--eu-supporter {
     background-image: url(/assets/images/join-challenger/s_EU_hero01_980x980.jpg);
@@ -103,7 +103,7 @@
     background-attachment: unset;
     background-image: url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/1000.jpg);
 
-    @include fixed-desktop-background(url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/2000.jpg),70vh);
+    @include fixed-desktop-background(url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/2000.jpg),70vh,bottom);
 }
 .hero-banner__inner {
     position: relative;
