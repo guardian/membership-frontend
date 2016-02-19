@@ -4,6 +4,7 @@
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.memsub.Current
 @import configuration.Videos
+@import views.support.Asset
 
 @(supporterPlans: PaidMembershipPlans[Current, Supporter],
   pageInfo: PageInfo,
@@ -11,7 +12,7 @@
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @* ===== About Supporters ===== *@
-    @fragments.page.heroBanner("hero-banner--eng-heritage") {
+    @fragments.page.heroBanner("hero-banner--uk-supporter") {
         Become a Guardian&nbsp;Supporter
     } {
         Supporters keep our journalism fearless and free to tell the stories other news organizations won’t.
@@ -54,8 +55,8 @@
     @* ===== Join The Guardian and support The Guardian ===== *@
     @fragments.page.section("If you read the Guardian, join the Guardian") {
         @fragments.promos.promoQuote(
-            "https://media.guim.co.uk/17a31ff294d3c77274091c5e078713fc06ef5cd2/0_0_1999_1200/1000.jpg",
-            "Find an image of Polly"
+            Asset.at("images/common/polly-toynbee-cutout.png"),
+            "Polly Toynbee, Guardian columnist"
         ) {
             <blockquote class="blockquote blockquote--feature">
                 You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.

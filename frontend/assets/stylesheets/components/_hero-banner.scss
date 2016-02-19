@@ -65,13 +65,19 @@
         }
     }
 }
+.hero-banner--uk-supporter {
+    background-attachment: unset;
+    background-image: url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/1000.jpg);
 
+    @include fixed-desktop-background(url(https://media.guim.co.uk/b490b12fd4212e8762c27d9fe3ce433dcc215d43/0_0_5616_3370/2000.jpg),70vh);
+}
 .hero-banner--homepage {
     background-image: url(/assets/images/join-challenger/hm_hero01_980x980.jpg);
     @include mq(desktop) {
         background-image: url(/assets/images/join-challenger/hm_hero01_1280x800.jpg);
     }
 }
+
 .hero-banner--us-supporter {
     background-image: url(/assets/images/join-challenger/s_US_hero01_980x980.jpg);
     @include mq(desktop) {
