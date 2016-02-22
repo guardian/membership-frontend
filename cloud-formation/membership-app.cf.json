@@ -38,7 +38,7 @@
         "InstanceType" : {
             "Description" : "EC2 instance type",
             "Type" : "String",
-            "AllowedValues" : [ "t2.micro","m3.medium" ],
+            "AllowedValues" : [ "t2.micro","t2.medium","m3.medium" ],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
         "ImageId": {
@@ -84,12 +84,10 @@
                         "CONF_DIR=/membership/frontend-1.0-SNAPSHOT/conf",
 
                         {"Fn::Join":["", ["wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/authorized_keys &"]]},
-                        "apt-get -y update",
-                        {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
 
-                        "wget -i /etc/gu-artifact-url --directory-prefix=/tmp",
+                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip /tmp"]]},
 
                         "unzip -d /membership /tmp/app.zip",
 
