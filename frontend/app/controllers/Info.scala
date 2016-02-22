@@ -9,7 +9,8 @@ import model._
 import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
 import views.support.{Asset, PageInfo}
-
+import com.netaporter.uri.dsl._
+import com.netaporter.uri.Uri
 import scala.concurrent.Future
 
 trait Info extends Controller {
@@ -20,7 +21,9 @@ trait Info extends Controller {
         .flatMap(CountryGroup.byFastlyCountryCode)
         .getOrElse(CountryGroup.RestOfTheWorld)
 
-    Redirect(redirectToSupporterPage(countryGroup))
+    val url: Uri = redirectToSupporterPage(countryGroup).absoluteURL
+    val withCode = request.getQueryString("INTCMP").map {code => url ? ("INTCMP" -> code)}
+    Redirect(withCode.getOrElse(url), SEE_OTHER)
   }
 
   def supporterUK = CachedAction { implicit request =>
