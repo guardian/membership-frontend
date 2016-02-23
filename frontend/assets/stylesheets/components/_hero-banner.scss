@@ -62,6 +62,8 @@
             will-change: transform; // creates a new paint layer
             z-index: -1;
             background-image: $url;
+            min-height: 600px;
+            max-height: 100%;
         }
     }
 }
@@ -103,7 +105,7 @@
     background-attachment: unset;
     background-image: url(/assets/images/join-challenger/hm_hero01_980x980.jpg);
 
-    @include fixed-desktop-background(url(/assets/images/join-challenger/hm_hero01_1280x800.jpg),70vh,bottom);
+    @include fixed-desktop-background(url(/assets/images/join-challenger/hm_hero01_1280x800.jpg),100%,bottom);
 }
 .hero-banner__inner {
     position: relative;
