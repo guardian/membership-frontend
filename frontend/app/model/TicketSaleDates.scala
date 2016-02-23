@@ -73,8 +73,6 @@ object TicketSaleDates {
 
   private def needToDistinguishTimes(generalAvailability: Instant, memberAdvanceTicketSales: Option[Map[Tier, Instant]] = None) = {
     val allDistinctDates: Set[Instant] = Set(generalAvailability) ++ memberAdvanceTicketSales.map(_.values).toSeq.flatten
-    val smallestGapBetweenDates = allDistinctDates.toSeq.sorted.sliding(2).map(ds => (ds.head to ds.last).duration).toSeq.sorted.headOption
-
-    smallestGapBetweenDates.exists(_ < 24.hours)
+    allDistinctDates.exists(_.toDateTime().millisOfDay()!=0)
   }
 }
