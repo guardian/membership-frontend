@@ -43,7 +43,7 @@ object Promotions extends Controller {
     )
   )
 
-  def promotionPage(promoCodeStr: String) = GoogleAuthenticatedStaffAction { implicit request =>
+  def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
     def findTemplateForPromotion(promoCode: PromoCode, promotion: Promotion, url: String) =
       promotion.promotionType match {
