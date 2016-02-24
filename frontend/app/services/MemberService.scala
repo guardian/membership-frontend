@@ -15,7 +15,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
-import com.gu.zuora.soap.actions.subscribe.{Account => SoapSubscribeAccount, CreditCardReferenceTransaction}
+import com.gu.zuora.soap.actions.subscribe.{Account => SoapSubscribeAccount, RatePlan, CreditCardReferenceTransaction}
 import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
@@ -37,7 +37,7 @@ import scala.util.{Failure, Success}
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
 import scalaz.syntax.monad._
-import scalaz.{EitherT, MonadTrans, \/}
+import scalaz.{NonEmptyList, EitherT, MonadTrans, \/}
 
 object MemberService {
   import api.MemberService.MemberError
@@ -367,7 +367,7 @@ class MemberService(identityService: IdentityService,
       result <- zuoraService.createSubscription(
         subscribeAccount = SoapSubscribeAccount.stripe(contactId, currency, autopay = false),
         paymentMethod = None,
-        productRatePlanId = planId,
+        ratePlans = NonEmptyList(RatePlan(planId.get, None)),
         name = joinData.name,
         address = joinData.deliveryAddress
       )
@@ -397,11 +397,10 @@ class MemberService(identityService: IdentityService,
           currency = currency,
           autopay = true),
         paymentMethod = Some(CreditCardReferenceTransaction(customer)),
-        productRatePlanId = planId,
+        ratePlans = NonEmptyList(RatePlan(planId.get, None, featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id.get))),
         name = joinData.name,
         address = joinData.zuoraAccountAddress,
-        promoCode = validPromoCode,
-        featureIds = featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id)
+        promoCode = validPromoCode
       )
     } yield result
   }
