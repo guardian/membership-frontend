@@ -65,18 +65,11 @@
             </a>
             <nav id="js-country-switcher" role="navigation" class="js-dropdown-menu nav-popup is-hidden" aria-label="Country switcher">
                 <ul class="nav-popup__list">
-                    <li class="nav-popup__item">
-                        <a href="@routes.Info.supporterUK" class="nav-popup__link">@UK.name (@UK.currency.identifier)</a>
-                    </li>
-                    <li class="nav-popup__item">
-                        <a href="@routes.Info.supporterUSA" class="nav-popup__link">@US.name (@US.currency.identifier)</a>
-                    </li>
-                    <li class="nav-popup__item">
-                        <a href="@routes.Info.supporterEurope" class="nav-popup__link">@Europe.name (@Europe.currency.identifier)</a>
-                    </li>
-                    <li class="nav-popup__item">
-                        <a href="@routes.Info.supporterInternational" class="nav-popup__link">@RestOfTheWorld.name (@RestOfTheWorld.currency.identifier)</a>
-                    </li>
+                    @for(countryGroup <- Seq(UK, Europe, US, Canada, RestOfTheWorld)) {
+                        <li class="nav-popup__item">
+                            <a href="@routes.Info.supporterFor(countryGroup)" class="nav-popup__link">@countryGroup.name (@countryGroup.currency.identifier)</a>
+                        </li>
+                    }
                 </ul>
             </nav>
         </li>

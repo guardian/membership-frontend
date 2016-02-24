@@ -34,7 +34,11 @@ object Binders {
     FreeTier.slugMap, _.slug, (key: String, e: Exception) => s"Cannot parse parameter $key as a FreeTier: ${e.getMessage}"
   )
 
-  implicit object bindableCountryGroup extends QueryParsing[CountryGroup](
+  implicit object bindableCountryGroupPathParser extends PathParsing[CountryGroup](
+    id => CountryGroup.byId(id).get, _.id, (key: String, _: Exception) => s"Cannot parse path parameter $key as a CountryGroup"
+  )
+
+  implicit object bindableCountryGroupQueryParser extends QueryParsing[CountryGroup](
     id => CountryGroup.byId(id).get, _.id, (key: String, _: Exception) => s"Cannot parse parameter $key as a CountryGroup"
   )
 
