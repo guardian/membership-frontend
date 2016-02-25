@@ -41,9 +41,6 @@ class JoinPartnerSpec extends FeatureSpec with Browser
 
       Given("I clicked 'Become a Partner' button on Membership homepage")
 
-      And("I have the new Identity frontend cookie. (FOR NOW)")
-      Driver.addCookie("GU_PROFILE_BETA","1");
-
       When("I land on 'Identity Register' page")
       val register = new pages.Register(testUser)
       go.to(register)
@@ -58,6 +55,10 @@ class JoinPartnerSpec extends FeatureSpec with Browser
       Then("I should land on 'Enter Details' page")
       val enterDetails = new pages.EnterDetails
       assert(enterDetails.pageHasLoaded())
+
+      And("I should have Identity cookies")
+      Seq("GU_U", "SC_GU_U", "SC_GU_LA").foreach { idCookie =>
+        assert(Driver.cookiesSet.map(_.getName).contains(idCookie)) }
 
       And("I should be logged in with my Identity account.")
       assert(elementHasText(
