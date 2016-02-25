@@ -59,10 +59,6 @@ class JoinPartnerSpec extends FeatureSpec with Browser
       val enterDetails = new pages.EnterDetails
       assert(enterDetails.pageHasLoaded())
 
-      And("I should have Identity cookies")
-      Seq("GU_U", "SC_GU_U", "SC_GU_LA").foreach { idCookie =>
-        assert(Driver.cookiesSet.map(_.getName).contains(idCookie)) }
-
       And("I should be logged in with my Identity account.")
       assert(elementHasText(
         cssSelector(".js-user-displayname"), testUser.username.toLowerCase()))
