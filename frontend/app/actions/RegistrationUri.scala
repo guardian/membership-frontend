@@ -1,5 +1,7 @@
 package actions
 
+import com.gu.i18n.CountryGroup
+import com.gu.i18n.CountryGroup.RestOfTheWorld
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import configuration.Config
@@ -11,11 +13,14 @@ object RegistrationUri {
   val REFERRER_HEADER: String = "referer"
   val CAMPAIGN_SOURCE: String = "MEM"
 
-  val referingPageCodes = Map(
-    controllers.routes.Info.supporterUK().path -> "SUPUK",
-    controllers.routes.Info.supporterUSA().path -> "SUPUS",
-    controllers.routes.Info.supporterEurope().path -> "SUPEU",
-    controllers.routes.Info.supporterInternational().path -> "SUPIN",
+  val supporterReferingPageCodes =  Map(CountryGroup.allGroups.map { countryGroup =>
+    // sadly 'SUPIN' is the refering page code in use - but our country-group code is 'int'
+    val suffix = if (countryGroup == RestOfTheWorld) "IN" else countryGroup.id.toUpperCase
+
+    controllers.routes.Info.supporterFor(countryGroup).path -> s"SUP$suffix"
+  }: _*)
+
+  val referingPageCodes = supporterReferingPageCodes ++ Map(
     controllers.routes.Info.offersAndCompetitions().path-> "COMP",
     controllers.routes.WhatsOn.list().path -> "EVT",
     "/" -> "HOME"
