@@ -21,7 +21,7 @@ object Highlights {
 
 
   def englishHeritage(tierText: String) = Highlight(
-    s"""Limited offer: Free English Heritage membership worth £88 when you
+    s"""Free English Heritage membership worth £88 when you
       | become a Guardian $tierText by 31 March""".stripMargin, isNew = true)
 
   val ehPartner = englishHeritage("Partner")
@@ -38,8 +38,8 @@ object Highlights {
 
   val friend = Seq(updatesAndTickets)
   val supporter = Seq(support, tickets)
-  val partner = Seq(freeTickets, priorityBooking, ehPartner)
-  val patron = Seq(deepSupport, behindTheScenes, ehPatron)
+  val partner = Seq(ehPartner, freeTickets, priorityBooking)
+  val patron = Seq(ehPatron, deepSupport, behindTheScenes)
 
   val marketedOnlyToUK = Set[Highlight](tickets, freeTickets, priorityBooking, ehPartner, ehPatron)
 }
