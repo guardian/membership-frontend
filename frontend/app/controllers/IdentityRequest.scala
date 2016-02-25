@@ -7,16 +7,16 @@ case class IdentityRequest(headers: List[(String, String)], trackingParameters: 
 
 object IdentityRequest extends RemoteAddress {
   def apply(request: Request[_]): IdentityRequest = {
-    val cookie = request.cookies.get("SC_GU_U")
     val ipAddress = clientIp(request)
 
-    val headers = List(("X-GU-ID-Client-Access-Token" -> s"Bearer ${Config.idApiClientToken}")) ++
-      cookie.map("X-GU-ID-FOWARDED-SC-GU-U" -> _.value)
+    val headers = List("X-GU-ID-Client-Access-Token" -> s"Bearer ${Config.idApiClientToken}") ++
+      request.cookies.get("SC_GU_U").map(_.value).map("X-GU-ID-FOWARDED-SC-GU-U" -> _) ++
+      request.headers.get("GU-IdentityToken").map("Authorization" -> _)
 
     val trackingParameters = List() ++
-      request.headers.get("Referer").map(("trackingReferer" -> _)) ++
-      request.headers.get("User-Agent").map(("trackingUserAgent" -> _)) ++
-      ipAddress.map(("trackingIpAddress" -> _))
+      request.headers.get("Referer").map("trackingReferer" -> _) ++
+      request.headers.get("User-Agent").map("trackingUserAgent" -> _) ++
+      ipAddress.map("trackingIpAddress" -> _)
 
     IdentityRequest(headers, trackingParameters)
 
