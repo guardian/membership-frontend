@@ -20,25 +20,25 @@ object Links {
 
 object ProfileLinks {
 
-  val commentActivity =  Config.idWebAppUrl /  "/user/id/"
+  val commentActivity =  Config.idWebAppUrl /  "user/id/"
 
-  val editProfile =  Config.idWebAppUrl / "/public/edit" ? Config.idMember
+  val editProfile =  Config.idWebAppUrl / "public/edit" ? Config.idMember
 
-  val editProfileMembership =  Config.idWebAppUrl / "/membership/edit" ? Config.idMember
+  val editProfileMembership =  Config.idWebAppUrl / "membership/edit" ? Config.idMember
 
-  val emailPreferences =  Config.idWebAppUrl / "/email-prefs" ? Config.idMember
+  val emailPreferences =  Config.idWebAppUrl / "email-prefs" ? Config.idMember
 
-  val changePassword =  Config.idWebAppUrl / "/password/change" ? Config.idMember
+  val changePassword =  Config.idWebAppUrl / "password/change" ? Config.idMember
 
   def signOut(path: String) = {
 
-    val baseUrl = s"${Config.idWebAppUrl}/signout"
+    val baseUrl = Config.idWebAppUrl / "signout" ? Config.idMember
     val exclusions = Seq(
       routes.FrontPage.welcome.url
     )
 
     if(exclusions.contains(path)) {
-      s"$baseUrl?returnUrl=${Config.membershipUrl}&clientId=members"
+      baseUrl ? ("returnUrl" -> Config.membershipUrl)
     } else baseUrl
 
   }
