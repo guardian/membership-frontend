@@ -24,7 +24,8 @@ object Testing extends Controller with LazyLogging {
       "dig.dev.web-engineers@guardian.co.uk",
       "membership.testusers@guardian.co.uk",
       "touchpoint@guardian.co.uk",
-      "crm@guardian.co.uk"
+      "crm@guardian.co.uk",
+      "identitydev@guardian.co.uk"
     ), unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
 
   def testUser = AuthorisedTester { implicit request =>
