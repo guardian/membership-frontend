@@ -9,9 +9,9 @@ object AuthenticationService extends com.gu.identity.play.AuthenticationService 
 
   val identityKeys = Config.idKeys
 
-  def authenticatedIdUserProvider(targetClientId: String): (RequestHeader) => Option[AuthenticatedIdUser] = AuthenticatedIdUser.provider(
+  override lazy val authenticatedIdUserProvider: (RequestHeader) => Option[AuthenticatedIdUser] = AuthenticatedIdUser.provider(
     AccessCredentials.Cookies.authProvider(identityKeys),
-    AccessCredentials.Token.authProvider(identityKeys, targetClientId)
+    AccessCredentials.Token.authProvider(identityKeys, "members-data-api")
   )
 
 }
