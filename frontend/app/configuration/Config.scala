@@ -42,14 +42,18 @@ object Config {
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
+  val idMember = "clientId" -> "members"
+
+  private val idSkipConfirmation: (String, String) = "skipConfirmation" -> "true"
+
   def idWebAppSigninUrl(uri: String): String =
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
   def idWebAppRegisterUrl(uri: String): String =
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
   def idWebAppSignOutThenInUrl(uri: String): String =
-    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")
+    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) & idSkipConfirmation & idMember
 
   def idWebAppProfileUrl =
     idWebAppUrl / "membership"/ "edit"

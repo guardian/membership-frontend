@@ -1,6 +1,7 @@
 package configuration
 
 import controllers.routes
+import com.netaporter.uri.dsl._
 
 object Links {
   val guardianCookiePolicy = "http://www.theguardian.com/info/cookies"
@@ -19,15 +20,15 @@ object Links {
 
 object ProfileLinks {
 
-  val commentActivity = s"${Config.idWebAppUrl}/user/id/"
+  val commentActivity =  Config.idWebAppUrl /  "/user/id/"
 
-  val editProfile = s"${Config.idWebAppUrl}/public/edit"
+  val editProfile =  Config.idWebAppUrl / "/public/edit" ? Config.idMember
 
-  val editProfileMembership = s"${Config.idWebAppUrl}/membership/edit"
+  val editProfileMembership =  Config.idWebAppUrl / "/membership/edit" ? Config.idMember
 
-  val emailPreferences = s"${Config.idWebAppUrl}/email-prefs"
+  val emailPreferences =  Config.idWebAppUrl / "/email-prefs" ? Config.idMember
 
-  val changePassword = s"${Config.idWebAppUrl}/password/change"
+  val changePassword =  Config.idWebAppUrl / "/password/change" ? Config.idMember
 
   def signOut(path: String) = {
 
@@ -37,7 +38,7 @@ object ProfileLinks {
     )
 
     if(exclusions.contains(path)) {
-      s"$baseUrl?returnUrl=${Config.membershipUrl}"
+      s"$baseUrl?returnUrl=${Config.membershipUrl}&clientId=members"
     } else baseUrl
 
   }
