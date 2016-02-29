@@ -52,7 +52,7 @@ object TouchpointBackend {
     val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)))
 
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
-    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)
+    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds, promoService)
     val catalogService = CatalogService(zuoraRestClient, memRatePlanIds, digipackRatePlanIds, backendType.name)
     val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService)
     val paymentService = new PaymentService(stripeService, subscriptionService, zuoraService, catalogService)

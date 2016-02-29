@@ -139,9 +139,7 @@ trait Info extends Controller {
     )
   }
 
-  def supporterInternational = CachedAction { implicit request =>
-    implicit val countryGroup = RestOfTheWorld
-
+  def supporterFor(implicit countryGroup: CountryGroup) = CachedAction { implicit request =>
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("fearless"),

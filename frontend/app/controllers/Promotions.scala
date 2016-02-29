@@ -32,19 +32,18 @@ object Promotions extends Controller {
     ),
     ResponsiveImageGroup(
       name=Some("stonehenge"),
-      metadata=Some(Grid.Metadata(
-        description = None,
-        byline = Some("Patrick Eden/Alamy"),
-        credit = Some("Alamy")
-      )),
+      metadata=None,
       availableImages=ResponsiveImageGenerator(
-        id="377bb64740eab08a5eebdb764c488bd98b82e013/0_0_4800_2702",
-        sizes=List(2000,1000,500)
+        id="628e2a9c2ff25d1bdc6ead32d0d4407f0efcfd25/0_1048_2773_1663",
+        sizes=List(800,500)
+      ) ++ ResponsiveImageGenerator(
+        id="628e2a9c2ff25d1bdc6ead32d0d4407f0efcfd25/0_693_2773_1662",
+        sizes=List(2773,2000,1000)
       )
     )
   )
 
-  def promotionPage(promoCodeStr: String) = GoogleAuthenticatedStaffAction { implicit request =>
+  def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
     def findTemplateForPromotion(promoCode: PromoCode, promotion: Promotion, url: String) =
       promotion.promotionType match {
