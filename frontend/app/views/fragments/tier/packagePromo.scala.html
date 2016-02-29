@@ -63,10 +63,10 @@
                }
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@plans.tier.slug" @actionAttrs>
-                <span class="action__label">
-                    Become a @plans.tier.name
-                </span>
-                @fragments.actionIcon("arrow-right")
+                Become a @plans.tier.name
+                <svg class="icon-inline action__icon action__icon--right u-no-float">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
+                </svg>
             </a>
         </div>
     </div>
