@@ -16,7 +16,7 @@ object Benefits {
 
   val DiscountTicketTiers = Set[Tier](Staff(), Partner(), Patron())
   val PriorityBookingTiers = DiscountTicketTiers
-  val ComplimenataryTicketTiers = Set[Tier](Partner(), Patron())
+  val ComplimentaryTicketTiers = Set[Tier](Partner(), Patron())
 
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
   val accessTicket = Benefit("access_tickets", "Access to tickets")
@@ -80,11 +80,4 @@ object Benefits {
   )
 
   val staff = (partner ++ supporter).filterNot(_ == booksOrTickets).distinct
-
-  val comparisonHiglightsList = Seq(
-    booksOrTickets,
-    priorityBooking,
-    discount,
-    uniqueExperiences
-  )
 }

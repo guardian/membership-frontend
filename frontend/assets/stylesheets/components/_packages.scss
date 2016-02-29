@@ -27,6 +27,7 @@ $_package-promo__actions_height: 117px;
         p { margin-bottom: 0; }
     }
     .package-promo__actions {
+        white-space: nowrap;
         margin: rem($gs-gutter / 2) 0;
     }
     .package-promo__actions__pricing {
@@ -82,7 +83,6 @@ $_package-promo__actions_height: 117px;
         vertical-align: top;
         width: auto;
         min-width: 205px;
-        max-width: 350px;
     }
 }
 
@@ -96,6 +96,16 @@ $_package-promo__actions_height: 117px;
     }
     @include mq($from: desktop) {
         @include package-promo-narrow();
+    }
+}
+
+// Narrow -> wide -> wide
+.package-promo--landing-page {
+    @include mq($from: mobile, $until: tablet) {
+        @include package-promo-narrow();
+    }
+    @include mq($from: tablet) {
+        @include package-promo-wide();
     }
 }
 

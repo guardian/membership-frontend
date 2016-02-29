@@ -28,7 +28,7 @@ trait User extends Controller {
     "joinDate" -> subscriber.contact.joinDate,
     "benefits" -> Json.obj(
       "discountedEventTickets" -> Benefits.DiscountTicketTiers.contains(subscriber.subscription.plan.tier),
-      "complimentaryEventTickets" -> Benefits.ComplimenataryTicketTiers.contains(subscriber.subscription.plan.tier)
+      "complimentaryEventTickets" -> Benefits.ComplimentaryTicketTiers.contains(subscriber.subscription.plan.tier)
     )
   )
 }
