@@ -38,7 +38,7 @@ object ActionRefiners extends LazyLogging {
   }
 
   def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_)): ActionBuilder[AuthRequest] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor, onUnauthenticated)
+    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
 
   type SubRequestOrResult[A] = Future[Either[Result, SubReqWithSub[A]]]
   type PaidSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with PaidSubscriber]]
