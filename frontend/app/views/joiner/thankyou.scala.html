@@ -8,13 +8,13 @@
 @import views.support.ThankyouSummary
 @import com.gu.memsub.PaymentCard
 @import com.gu.memsub.Subscriber
-@import com.gu.memsub.promo.Promotion
+@import com.gu.memsub.promo.Promotion.AnyPromotion
 @(member: Subscriber.Member,
   summary: ThankyouSummary,
   cardOpt: Option[PaymentCard],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean,
-  promotion: Option[Promotion])
+  promotion: Option[AnyPromotion])
 
 @title = @{
     if(upgrade) {
@@ -120,7 +120,7 @@
                 </div>
                 <div class="page-section__content">
                     <p>@promo.description</p>
-                    <p>@promo.redemptionInstructions</p>
+                    @promo.whenIncentive.map {a => <p>@a.promotionType.redemptionInstructions</p> }
                 </div>
             </section>
         }

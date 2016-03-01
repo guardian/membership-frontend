@@ -4,6 +4,7 @@ import actions.RichAuthRequest
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.BillingPeriod
+import com.gu.memsub.promo.Promotion.AnyPromotion
 import com.gu.memsub.promo.Writers._
 import com.gu.memsub.promo._
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
@@ -45,9 +46,9 @@ object Promotions extends Controller {
 
   def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
-    def findTemplateForPromotion(promoCode: PromoCode, promotion: Promotion, url: String) =
+    def findTemplateForPromotion(promoCode: PromoCode, promotion: AnyPromotion, url: String) =
       promotion.promotionType match {
-        case Incentive =>
+        case i: Incentive =>
           implicit val countryGroup = UK
 
           Some(views.html.promotions.englishHeritageOffer(
