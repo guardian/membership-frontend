@@ -14,11 +14,11 @@
         Become a Guardian Partner
     } {
 
-        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits.
+        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
     }()
 
     @fragments.page.section(hasBorder = false) {
-        @fragments.tier.packagePromo(partnerPlans, countryGroup, promoCode = Some("EH2016"))
+        @fragments.tier.packagePromo(partnerPlans, countryGroup, promoCode = Some("EH2016"), modifierClass = Some("package-promo--landing-page"))
     }
 
     @for(img <- pageImages.find(_.name.contains("stonehenge"))) {
@@ -52,6 +52,6 @@
     }
 
     @fragments.page.section("What's included") {
-        @fragments.tier.packagePromo(partnerPlans, countryGroup, promoCode = Some("EH2016"))
+        @fragments.tier.packagePromo(partnerPlans, countryGroup, promoCode = Some("EH2016"), modifierClass = Some("package-promo--landing-page"))
     }
 }

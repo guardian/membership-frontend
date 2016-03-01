@@ -132,7 +132,6 @@ object Config {
   val gridConfig = {
     val con = config.getConfig("grid.images")
     GridConfig(
-      con.getString("media.url"),
       con.getString("api.url"),
       con.getString("api.key")
     )
@@ -154,7 +153,7 @@ object Config {
 
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
-    Promotion(
+    new Promotion[Incentive](
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerMonthly,
         prpIds.partnerYearly
@@ -163,9 +162,11 @@ object Config {
       codes = PromoCodeSet(PromoCode("EH2016")),
       description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
       expires = DateTime.parse("2016-04-01T01:00:00Z"),
-      imageUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png",
-      promotionType = Incentive,
-      redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
+      imageUrl = Some("https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png"),
+      promotionType = Incentive(
+        redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
+        termsAndConditions = ""
+      ),
       roundelHtml = "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
       thumbnailUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png",
       title = "Free English Heritage membership worth £88"

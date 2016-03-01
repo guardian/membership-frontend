@@ -118,11 +118,11 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 }
 
 abstract class LiveService extends EventbriteService {
-  val gridService = GridService(Config.gridConfig.url)
+
   val contentApiService = GuardianContentService
 
   def gridImageFor(event: EBEvent) =
-    event.mainImageUrl.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
+    event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
 }
 
 object GuardianLiveEventService extends LiveService {
