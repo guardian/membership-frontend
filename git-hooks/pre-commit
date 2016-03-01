@@ -2,8 +2,6 @@
 #
 # Pre-commit hooks
 
-PATH="/usr/local/bin:$PATH"
-
 # Allows us to change directory in this script
 unset GIT_DIR
 
