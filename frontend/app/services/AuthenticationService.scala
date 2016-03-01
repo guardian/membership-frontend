@@ -11,7 +11,7 @@ object AuthenticationService extends com.gu.identity.play.AuthenticationService 
 
   override lazy val authenticatedIdUserProvider: (RequestHeader) => Option[AuthenticatedIdUser] = AuthenticatedIdUser.provider(
     AccessCredentials.Cookies.authProvider(identityKeys),
-    AccessCredentials.Token.authProvider(identityKeys, "members-data-api")
+    AccessCredentials.Token.authProvider(identityKeys, "membership")
   )
 
 }
