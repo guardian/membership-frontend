@@ -52,6 +52,8 @@ GET            /subscription/remaining-tickets        controllers.Subscription.r
 
 # What's On
 GET            /events                                controllers.WhatsOn.list
+GET            /events.json                           controllers.EventApi.events
+
 GET            /events/archive                        controllers.WhatsOn.listArchive
 GET            /events/calendar                       controllers.WhatsOn.calendar
 GET            /masterclasses                         controllers.WhatsOn.masterclassesList
