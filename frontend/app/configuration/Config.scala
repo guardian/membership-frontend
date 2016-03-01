@@ -132,7 +132,6 @@ object Config {
   val gridConfig = {
     val con = config.getConfig("grid.images")
     GridConfig(
-      con.getString("media.url"),
       con.getString("api.url"),
       con.getString("api.key")
     )

@@ -13,6 +13,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import services.GridService
+import services.GridService.{CropQueryParam, ImageIdWithCrop}
 import utils.StringUtils._
 import views.support.Asset
 import views.support.Dates.YearMonthDayHours
@@ -289,8 +290,9 @@ object Eventbrite {
       }
     } yield uri
 
-    val mainImageHasNoCrop: Boolean =
-      mainImageUrl.fold(false)(uri => uri.query.param(GridService.CropQueryParam).isEmpty)
+    val mainImageHasNoCrop: Boolean = mainImageUrl.exists(!_.query.params.contains(CropQueryParam))
+
+    val mainImageGridId: Option[ImageIdWithCrop] = mainImageUrl.flatMap(ImageIdWithCrop.fromGuToolsUri)
 
     val slug = slugify(name.text) + "-" + id
 

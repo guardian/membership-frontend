@@ -11,45 +11,47 @@ import model.Grid._
 import model.GridDeserializer._
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
+import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object GridService {
+object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging{
+
+  val gridUrl: String = "https://media.gutools.co.uk/images/"
   val CropQueryParam = "crop"
   def cropParam(url: Uri) = url.query.param(CropQueryParam)
 
   case class ImageIdWithCrop(id: String, crop: String)
   object ImageIdWithCrop {
-    def fromGuToolsUri(gridUrl: String)(uri: Uri): Option[ImageIdWithCrop] =
+    implicit val writesImageIdWithCrop = Json.writes[ImageIdWithCrop]
+
+
+    def fromGuToolsUri(uri: Uri): Option[ImageIdWithCrop] =
       for {
         imageId <- uri.path.split("/").lastOption
         crop <-  uri.query.param(CropQueryParam)
         if uri.toString().startsWith(gridUrl)
       } yield ImageIdWithCrop(imageId, crop)
   }
-}
-case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
-  import GridService._
 
-  lazy val agent = Agent[Map[Uri, GridImage]](Map.empty)
+  lazy val agent = Agent[Map[ImageIdWithCrop, GridImage]](Map.empty)
 
-  def getRequestedCrop(url: Uri) : Future[Option[GridImage]] = {
+  def getRequestedCrop(gridId: ImageIdWithCrop) : Future[Option[GridImage]] = {
     val currentImageData = agent.get()
-    if(currentImageData.contains(url)) Future.successful(currentImageData.get(url))
+    if(currentImageData.contains(gridId)) Future.successful(currentImageData.get(gridId))
     else {
-      getGrid(url).map { gridOpt =>
+      getGrid(gridId).map { grid =>
         for {
-          grid <- gridOpt
           exports <- grid.data.exports
-          assets = findAssets(exports, cropParam(url))
+          assets = findAssets(exports, gridId.crop)
           if assets.nonEmpty
         } yield {
           val image = GridImage(assets, grid.data.metadata)
           agent send {
             oldImageData =>
-              val newImageData = oldImageData + (url -> image)
-              logger.trace(s"Adding image $url to the event image map")
+              val newImageData = oldImageData + (gridId -> image)
+              logger.trace(s"Adding image $gridId to the event image map")
               newImageData
           }
           image
@@ -57,17 +59,15 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
       }
     }
   }.recover { case e =>
-    logger.error(s"Error getting crop for $url", e)
+    logger.error(s"Error getting crop for $gridId", e)
     None
   } // We should return no image, rather than die
 
-  def getGrid(url: Uri): Future[Option[GridResult]] =
-    ImageIdWithCrop.fromGuToolsUri(gridUrl)(url).map { case ImageIdWithCrop(id, cropId) =>
-      get[GridResult](id, CropQueryParam -> cropId).map(Some(_))
-    } getOrElse Future.successful(None)
+  def getGrid(gridId: ImageIdWithCrop): Future[GridResult] =
+    get[GridResult](gridId.id, CropQueryParam -> gridId.crop)
 
-  def findAssets(exports: List[Export], cropParameter: Option[String]) = {
-    val requestedExport = cropParameter.flatMap(cr => exports.find(_.id == cr)).orElse(exports.headOption)
+  def findAssets(exports: List[Export], cropId: String) = {
+    val requestedExport = exports.find(_.id == cropId)
     requestedExport.map(_.assets).getOrElse(Nil)
   }
 
@@ -78,5 +78,5 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
   override val wsMetrics: StatusMetrics = GridApiMetrics
 }
 
-case class GridConfig(url: String, apiUrl: String, key: String)
+case class GridConfig(apiUrl: String, key: String)
 
