@@ -2,6 +2,7 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.GBP
+import com.gu.memsub.Price
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -338,6 +339,7 @@ object Eventbrite {
   case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
     val ticketCount = attendees.length
     val totalCost = costs.gross.value / 100f
+    val totalCostText = if(totalCost > 0) Price(totalCost, GBP).pretty else "free"
   }
 
   object EBOrder {
