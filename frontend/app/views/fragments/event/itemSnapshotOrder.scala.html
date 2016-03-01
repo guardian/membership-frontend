@@ -1,5 +1,7 @@
 @import configuration.Config
 @import views.support.Asset
+@import com.gu.i18n.GBP
+@import com.gu.memsub.Price
 
 @(event: model.RichEvent.RichEvent, order: model.Eventbrite.EBOrder)
 
@@ -27,7 +29,7 @@
                         <div class="order-summary__id">Order no. @order.id</div>
                         <div class="order-summary__ticket">
                             @order.ticketCount ticket@if(order.ticketCount > 1){s}
-                            @if(order.totalCost > 0) { Pricing.pretty(@order.totalCost, GBP) } else { free }
+                            @if(order.totalCost > 0) { @Price(order.totalCost, GBP).pretty } else { free }
                         </div>
                         <div class="order-summary__reference copy">The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite. We've also sent confirmation to your registered EventBrite email address.</div>
                         <img class="u-margin-top" src="@Asset.at("images/logos/eventbrite.svg")">
