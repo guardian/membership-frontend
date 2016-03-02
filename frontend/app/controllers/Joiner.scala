@@ -10,6 +10,7 @@ import com.gu.memsub.{Membership, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
+import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
@@ -180,10 +181,15 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     memberService.createMember(request.user, formData, IdentityRequest(request), eventId, CampaignCode.fromRequest)
       .map(_ => onSuccess) recover {
-      case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case error =>
-        logger.error("An error occurred while calling Joiner.makeMember", error)
-        Forbidden
+        case error: Stripe.Error =>
+          logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
+          Forbidden(Json.toJson(error))
+
+        case error: PaymentGatewayError => handlePaymentGatewayError(error, request.user.id)
+
+        case error =>
+          logger.error(s"User ${request.user.id} could not become a member: ", error)
+          Forbidden
     }
   }
 
@@ -209,4 +215,33 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyouStaff = thankyou(Tier.partner)
+
+  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String) = {
+
+    def handleError(msg: String, errType: String) = {
+      logger.warn(s"${msg}: \n\t${e} \n\tuser=${userId}")
+      Forbidden(Json.obj("type" -> errType, "message" -> msg))
+    }
+
+    // TODO: Does Zuora provide a guarantee the message is safe to display to users directly?
+    // For now providing custom message to make sure no sensitive information is revealed.
+
+    logger.warn(s"User ${userId} could not become a member due to payment gateway failed transaction.")
+
+    e.errType match {
+      case InsufficientFunds =>
+        handleError("Your card has insufficient funds", "InssufficientFunds")
+
+      case TransactionNotAllowed =>
+        handleError("Your card does not support this type of purchase", "TransactionNotAllowed")
+
+      case RevocationOfAuthorization =>
+        handleError(
+          "Cardholder has requested all payments to be stopped on this card",
+          "RevocationOfAuthorization")
+
+      case _ =>
+        handleError("Your card was declined", "PaymentGatewayError")
+    }
+  }
 }

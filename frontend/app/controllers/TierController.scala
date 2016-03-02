@@ -11,7 +11,7 @@ import com.gu.memsub.{BillingPeriod, Membership, PaymentCard, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
-import com.gu.zuora.soap.models.errors.ResultError
+import com.gu.zuora.soap.models.errors._
 import forms.MemberForm._
 import model.SubscriptionOps._
 import model._
@@ -161,7 +161,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
 
     futureResult.map(_.discardingCookies(TierChangeCookies.deletionCookies:_*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case error: ResultError => Forbidden
+      case error: ZuoraPartialError => Forbidden
       case error: ScalaforceError => Forbidden
     }
   }

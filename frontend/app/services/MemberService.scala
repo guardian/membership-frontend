@@ -19,6 +19,7 @@ import com.gu.zuora.soap.actions.subscribe.{Account => SoapSubscribeAccount, Rat
 import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
+import com.gu.zuora.soap.models.errors._
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
@@ -132,10 +133,8 @@ class MemberService(identityService: IdentityService,
 
           track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
         }
-      case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
-      case Failure(error) =>
-        logger.error(s"Error in createMember() user=${user.id}", error)
-        salesforceService.metrics.putFailSignUp(tier)
+
+      case Failure(error) => salesforceService.metrics.putFailSignUp(tier)
     }
   }
 
