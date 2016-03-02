@@ -54,3 +54,12 @@
 .global-header__logo__link {
     display: block;
 }
+
+/* Header - In App
+   ========================================================================== */
+
+body.in-app {
+    .global-header {
+        display: none;
+    }
+}
