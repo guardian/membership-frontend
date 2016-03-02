@@ -123,3 +123,7 @@ GET            /assets/*assetFile                     controllers.CachedAssets.a
 GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
 GET            /english-heritage                      controllers.Default.redirect(to="/p/EH2016")
 
+# REST
+# Pricing
+GET            /currencies                            controllers.PricingApi.currencies
+
