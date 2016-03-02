@@ -8,7 +8,12 @@
         } else {
             @ticketing.memberDiscountOpt.fold {
                 <div class="price-info-inline__value qa-event-detail-price">
-                    @ticketing.generalReleaseTicketOpt.map(_.priceText)
+                    @for(generalReleaseTicket <- ticketing.generalReleaseTicketOpt) {
+                        @generalReleaseTicket.priceText
+                        @for(description <- generalReleaseTicket.description) {
+                            <div class="price-info-inline__trail">@description</div>
+                        }
+                    }
                 </div>
 	        } { discountTicketing =>
                 <div class="js-event-price">
@@ -27,6 +32,9 @@
                         <div class="price-info-inline__trail price-info-inline__limited">
                             @event.limitedAvailabilityText
                         </div>
+                    }
+                    @for(description <- discountTicketing.generalRelease.description) {
+                        <div class="price-info-inline__trail">@description</div>
                     }
                 </div>
             }

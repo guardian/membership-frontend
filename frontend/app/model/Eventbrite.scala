@@ -111,6 +111,7 @@ object Eventbrite {
    */
   case class EBTicketClass(id: String,
                            name: String,
+                           description: Option[String],
                            free: Boolean,
                            quantity_total: Int,
                            quantity_sold: Int,
