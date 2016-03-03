@@ -130,6 +130,7 @@ GET            /english-heritage                      controllers.Default.redire
 # REST
 # Pricing
 GET            /currencies                            controllers.PricingApi.currencies
+GET            /rate-plans                            controllers.PricingApi.ratePlans
 
 # Giraffe
 GET            /contribute                            controllers.Giraffe.contributeRedirect
