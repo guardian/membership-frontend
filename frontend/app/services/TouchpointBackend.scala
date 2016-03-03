@@ -8,6 +8,7 @@ import com.gu.memsub
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
+import com.gu.subscriptions.Discounter
 import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.ClientWithFeatureSupplier
@@ -19,7 +20,7 @@ import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
 import tracking._
 import utils.TestUsers.isTestUser
-import configuration.Config.demoPromo
+import configuration.Config.{demoPromo, discountPromo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object TouchpointBackend {
@@ -49,7 +50,7 @@ object TouchpointBackend {
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
-    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)))
+    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)) ++ discountPromo(backend.zuoraEnvName))
 
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds, promoService)
@@ -58,8 +59,9 @@ object TouchpointBackend {
     val paymentService = new PaymentService(stripeService, subscriptionService, zuoraService, catalogService)
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
+    val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName), promoService, catalogService.membershipCatalog)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService)
+      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService, discounter)
 
     TouchpointBackend(
       salesforceService = salesforceService,

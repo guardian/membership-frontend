@@ -7,6 +7,7 @@ import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
+import com.gu.subscriptions.Discounter
 import services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.memsub._
 import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
@@ -66,7 +67,8 @@ class MemberService(identityService: IdentityService,
                     subscriptionService: SubscriptionService,
                     catalogService: CatalogService,
                     promoService: PromoService,
-                    paymentService: PaymentService) extends api.MemberService with ActivityTracking {
+                    paymentService: PaymentService,
+                    discounter: Discounter) extends api.MemberService with ActivityTracking {
 
   import EventbriteService._
   import MemberService._
@@ -389,6 +391,7 @@ class MemberService(identityService: IdentityService,
 
     for {
       zuoraFeatures <- zuoraService.getFeatures
+      plan = RatePlan(planId.get, None, featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id.get))
       currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
       result <- zuoraService.createSubscription(
         subscribeAccount = SoapSubscribeAccount.stripe(
@@ -396,7 +399,7 @@ class MemberService(identityService: IdentityService,
           currency = currency,
           autopay = true),
         paymentMethod = Some(CreditCardReferenceTransaction(customer)),
-        ratePlans = NonEmptyList(RatePlan(planId.get, None, featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id.get))),
+        ratePlans = discounter.applyPromoCode(plan, validPromoCode),
         name = joinData.name,
         address = joinData.zuoraAccountAddress,
         promoCode = validPromoCode
