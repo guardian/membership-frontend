@@ -1,7 +1,7 @@
 package configuration
 
 import com.github.nscala_time.time.Imports._
-import com.gu.config.{DigitalPackRatePlanIds, MembershipRatePlanIds}
+import com.gu.config.{DiscountRatePlanIds, DigitalPackRatePlanIds, MembershipRatePlanIds}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
 import com.gu.memsub.promo._
@@ -14,6 +14,7 @@ import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
+import scalaz.syntax.std.option._
 import services._
 
 import scala.util.Try
@@ -150,6 +151,9 @@ object Config {
   def digipackRatePlanIds(env: String) = DigitalPackRatePlanIds.fromConfig(
     config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.digitalpack"))
 
+  def discountRatePlanIds(env: String): DiscountRatePlanIds =
+    DiscountRatePlanIds.fromConfig(config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds"))
+
 
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
@@ -172,6 +176,29 @@ object Config {
       title = "Free English Heritage membership worth £88"
     )
   }
+
+  def discountPromo(env: String): Option[Promotion[PercentDiscount]] = {
+    val prpIds = membershipRatePlanIds(env)
+    new Promotion(
+      appliesTo = AppliesTo.ukOnly(Set(
+        prpIds.partnerMonthly,
+        prpIds.partnerYearly
+      )),
+      campaignName = "Discount Promo",
+      codes = PromoCodeSet(PromoCode("50OFF")),
+      description = "50% off for 3 months for partners",
+      expires = DateTime.parse("2016-04-01T01:00:00Z"),
+      imageUrl = None,
+      promotionType = PercentDiscount(
+        durationMonths = 3.some,
+        amount = 50d
+      ),
+      roundelHtml = "<h1 class=\"roundel__title\">50% off for 3 months</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
+      thumbnailUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png", //change this
+      title = "50% off for 3 months when you sign up as a partner or patron"
+    ).some.filter(_ => env != "PROD")
+  }
+
 
 
   object Implicits {
