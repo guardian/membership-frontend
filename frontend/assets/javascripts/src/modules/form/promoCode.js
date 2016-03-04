@@ -36,9 +36,11 @@ define(
         };
 
         var validatePromoCode = function(code) {
+
+            var trimmedCode = code.trim();
             clearFeedbackContainer();
 
-            if(!code.trim()) {
+            if(!trimmedCode) {
                 return {
                     // a DIY pending promise
                     then: function() { return this },
@@ -51,7 +53,7 @@ define(
                 method: 'GET',
                 url: '/lookupPromotion',
                 data: {
-                    promoCode: code.trim(),
+                    promoCode: trimmedCode,
                     billingPeriod: $(BILLING_PERIOD).val(),
                     country: $(COUNTRY_SELECT).val(),
                     tier: $(TIER_ELEMENT).val()
