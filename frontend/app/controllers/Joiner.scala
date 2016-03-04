@@ -32,6 +32,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
 import scala.concurrent.Future
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
+import PromoSessionService.codeFromSession
 
 object Joiner extends Controller with ActivityTracking
                                  with LazyLogging
@@ -114,7 +115,7 @@ object Joiner extends Controller with ActivityTracking
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          idUser = identityUser,
          pageInfo = pageInfo,
-         promoCode = promoCode))
+         promoCode = promoCode orElse codeFromSession))
     }
   }
 

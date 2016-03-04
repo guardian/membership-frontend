@@ -15,6 +15,7 @@ import services.TouchpointBackend
 import views.support.PageInfo
 
 import scalaz.syntax.std.option._
+import services.PromoSessionService._
 
 object Promotions extends Controller {
 
@@ -68,7 +69,8 @@ object Promotions extends Controller {
     (for {
       promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode)
       html <- if (promotion.expires.isBeforeNow) None else findTemplateForPromotion(promoCode, promotion, request.path)
-    } yield Ok(html)).getOrElse(NotFound(views.html.error404()))
+    } yield Ok(html).withCookies(sessionCookieFromCode(promoCode)))
+      .getOrElse(NotFound(views.html.error404()))
 
   }
 

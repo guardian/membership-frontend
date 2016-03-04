@@ -25,8 +25,8 @@ define(
             $(FEEDBACK_CONTAINER).html(template(promoCodeTemplate)(promotion));
         };
 
-        var showPromoError = function(error) {
-            $(FEEDBACK_CONTAINER).html(template(promoErrorTemplate)(error));
+        var showPromoError = function(ajax) {
+            $(FEEDBACK_CONTAINER).html(template(promoErrorTemplate)(JSON.parse(ajax.response)));
             $(PROMO_CODE_INPUT).parent().addClass('form-field--error');
         };
 
@@ -35,27 +35,30 @@ define(
             $(PROMO_CODE_INPUT).parent().removeClass('form-field--error');
         };
 
-        var validatePromoCode = function() {
+        var validatePromoCode = function(code) {
 
+            var trimmedCode = code.trim();
             clearFeedbackContainer();
-            if(!$(PROMO_CODE_INPUT).val().trim()) {
-                return;
+
+            if(!trimmedCode) {
+                return {
+                    // a DIY pending promise
+                    then: function() { return this },
+                    catch: function() { return this }
+                };
             }
 
-            ajax({
+            return ajax({
                 type: 'json',
                 method: 'GET',
                 url: '/lookupPromotion',
                 data: {
-                    promoCode: $(PROMO_CODE_INPUT).val(),
+                    promoCode: trimmedCode,
                     billingPeriod: $(BILLING_PERIOD).val(),
                     country: $(COUNTRY_SELECT).val(),
                     tier: $(TIER_ELEMENT).val()
                 }
-            }).then(showPromoCode)
-              .catch(function (a) {
-                showPromoError(JSON.parse(a.response))
-            });
+            })
         };
 
         return {
@@ -69,12 +72,19 @@ define(
 
                 // revalidate the code if we change / click stuff
                 elementsThatTriggerRevalidation.each(function(elem) {
-                    bean.on(elem, elem.tagName.toLowerCase() == 'button' ? 'click' : 'change', validatePromoCode);
+                    bean.on(elem, elem.tagName.toLowerCase() == 'button' ? 'click' : 'change', function() {
+                        validatePromoCode($(PROMO_CODE_INPUT).val()).then(showPromoCode).catch(showPromoError)
+                    });
                 });
 
                 //handle pre-population of codes
-                if ($(PROMO_CODE_INPUT).val()) {
-                    validatePromoCode()
+                var prepopulatedCode = $(PROMO_CODE_INPUT).val();
+
+                if (prepopulatedCode) {
+                    $(PROMO_CODE_INPUT).val('');
+                    validatePromoCode(prepopulatedCode).then(showPromoCode).then(function() {
+                        $(PROMO_CODE_INPUT).val(prepopulatedCode)
+                    });
                 }
             }
         }
