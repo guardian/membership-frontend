@@ -33,9 +33,10 @@ trait DestinationService {
   }
 
   def eventDestinationFor(implicit request: SubscriptionRequest[_] with Subscriber): Future[Option[EventDestination]] = {
+    val tier = request.subscriber.subscription.plan.tier
     val optFuture = for {
       eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-      event <- eventbriteService.getBookableEvent(eventId)
+      event <- eventbriteService.getBookableEvent(eventId) if event.isBookableByTier(tier)
     } yield memberService(request).createEBCode(request.subscriber, event).map { discountOpt =>
       EventDestination(event, Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code)))
     }
