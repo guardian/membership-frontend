@@ -88,7 +88,7 @@ object RichEvent {
       tickets.getOrElse(Seq[EBTicketClass]())
     }
 
-    def isBookableByTier(tier: Tier): Boolean = this.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
+    def isBookableByTier(tier: Tier): Boolean = event.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
   }
 
   abstract class LiveEvent(
