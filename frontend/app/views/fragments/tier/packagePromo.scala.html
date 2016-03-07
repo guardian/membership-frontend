@@ -2,34 +2,30 @@
 @import views.support.DisplayText._
 @import views.support.{FreePlan, PaidPlans, TierPlans}
 @import com.gu.i18n.CountryGroup
+@import scalaz.NonEmptyList
+@import views.support.PackagePromo._
 
+@import model.PackagePromo.CtaButton
+@import model.PackagePromo
 @(plans: TierPlans,
   cg: CountryGroup,
   showDescription: Boolean = true,
   descriptionAnchor: Option[String] = None,
   modifierClass: Option[String] = None,
   extraClasses: Seq[String] = Seq.empty,
+  highlightOverrides: Option[NonEmptyList[Highlight]] = None,
   isReversed: Boolean = false,
   chooseTier: Boolean = false,
-  promoCode: Option[String] = None)
+  promoCode: Option[String] = None,
+  button: Option[CtaButton] = None)
 
-@link(tier: Tier) = {
-    @tier match {
-        case paid: PaidTier => {@routes.Joiner.enterPaidDetails(paid)}
-        case _: FreeTier => {@routes.Joiner.enterFriendDetails()}
-    }
-}
-
-@actionAttrs = {
-    href="@link(plans.tier)?countryGroup=@{cg.id}@promoCode.map("&promoCode=" + _).mkString"
-    data-metric-trigger="click"
-    data-metric-category="join"
-    data-metric-action="@plans.tier.slug"
+@promoButton = @{
+    button.getOrElse(forCountryTier(plans.tier, cg, promoCode))
 }
 
 <div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@plans.tier.slug">
     <div class="package-promo__header">
-        <a class="no-underline minimal-link" @actionAttrs>
+        <a class="no-underline minimal-link" href="@promoButton.to" @promoButton.attributes.html>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
                     @fragments.tier.tierTrail(plans.tier, showCaption=false)
@@ -41,7 +37,7 @@
         @if(showDescription) {
             <div class="package-promo__description copy">
                 <ul class="o-bulleted-list">
-                    @for(highlight <- if(chooseTier && plans.tier == Tier.patron) plans.tier.chooseTierPatron else plans.tier.highlights(cg)) {
+                    @for(highlight <- if(chooseTier && plans.tier == Tier.patron) plans.tier.chooseTierPatron else highlightOverrides.fold(plans.tier.highlights(cg))(_.list) ) {
                         <li>
                             @if(highlight.isNew) {
                                 @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -62,8 +58,8 @@
                    case PaidPlans(p) => { @fragments.pricing.paidPriceInfo(p, cg.currency) }
                }
             </div>
-            <a class="action action--no-icon u-no-bottom-margin qa-package-@plans.tier.slug" @actionAttrs>
-                Become a @plans.tier.name
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@plans.tier.slug" href="@promoButton.to" @promoButton.attributes.html>
+                @promoButton.text
                 <svg class="icon-inline action__icon action__icon--right u-no-float">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
                 </svg>

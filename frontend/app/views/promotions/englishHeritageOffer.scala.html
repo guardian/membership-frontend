@@ -3,11 +3,19 @@
 @import com.gu.salesforce.Tier.Partner
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
+@import model.Highlights
+@import model.PackagePromo.CtaButton
+@import com.netaporter.uri.dsl._
+
 @(partnerPlans: PaidMembershipPlans[Current, Partner],
     pageInfo: PageInfo,
     pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import views.support.Asset
+@buttonCta = @{
+    Some(CtaButton("Find out more", "/", Map.empty))
+}
+
 @main("English Heritage Promotion", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.promos.englishHeritageRoundel()
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
@@ -18,7 +26,13 @@
     }()
 
     @fragments.page.section(hasBorder = false) {
-        @fragments.tier.packagePromo(partnerPlans, countryGroup, promoCode = Some("EH2016"), modifierClass = Some("package-promo--landing-page"))
+        @fragments.tier.packagePromo(
+            partnerPlans,
+            countryGroup,
+            promoCode = Some("EH2016"),
+            modifierClass = Some("package-promo--landing-page"),
+            highlightOverrides = Some(Highlights.ehLandingPage),
+            button = buttonCta)
     }
 
     @for(img <- pageImages.find(_.name.contains("stonehenge"))) {
@@ -52,6 +66,12 @@
     }
 
     @fragments.page.section("What's included") {
-        @fragments.tier.packagePromo(partnerPlans, countryGroup, promoCode = Some("EH2016"), modifierClass = Some("package-promo--landing-page"))
+        @fragments.tier.packagePromo(
+            partnerPlans,
+            countryGroup,
+            promoCode = Some("EH2016"),
+            modifierClass = Some("package-promo--landing-page"),
+            button = buttonCta,
+            highlightOverrides = Some(Highlights.ehLandingPage))
     }
 }
