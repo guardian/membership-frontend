@@ -8,13 +8,11 @@ define([
     var CTA_ACTIONS = {
         buy: {},
         join: {
-            id: 'join',
-            href: '/choose-tier'
+            id: 'join'
         },
         upgrade: {
             id: 'upgrade',
-            label: 'Upgrade membership',
-            href: '/tier/change'
+            label: 'Upgrade membership'
         },
         unavailable: {
             id: 'unavailable',
@@ -32,10 +30,6 @@ define([
     function enhanceCta(elem, ctaStatus) {
         if (ctaStatus.label) {
             elem.text(ctaStatus.label);
-        }
-
-        if (ctaStatus.href) {
-            elem.attr('href', ctaStatus.href);
         }
 
         if (ctaStatus.disable) {

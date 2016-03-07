@@ -115,17 +115,14 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map {
       case event@(_: GuLiveEvent | _: LocalEvent) =>
-        if (tierCanBuyTickets(event, request.subscriber.subscription.plan.tier))
+        if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
           redirectToEventbrite(event)
         else
-          Future.successful(Redirect(routes.TierController.change()))
+          Future.successful(Redirect(routes.TierController.change()).addingToSession("preJoinReturnUrl" -> request.uri))
       case event@(_: MasterclassEvent) =>
         redirectToEventbrite(event)
     }.getOrElse(Future.successful(NotFound))
   }
-
-  private def tierCanBuyTickets(event: Eventbrite.EBEvent, tier: Tier): Boolean =
-    event.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
