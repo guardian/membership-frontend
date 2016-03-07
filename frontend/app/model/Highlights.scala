@@ -4,6 +4,7 @@ import com.gu.salesforce.Tier
 import com.gu.salesforce.Tier._
 import views.support.DisplayText.Highlight
 import configuration.Config.zuoraFreeEventTicketsAllowance
+import scalaz.NonEmptyList
 
 
 object Highlights {
@@ -42,4 +43,10 @@ object Highlights {
   val patron = Seq(ehPatron, deepSupport, behindTheScenes)
 
   val marketedOnlyToUK = Set[Highlight](tickets, freeTickets, priorityBooking, ehPartner, ehPatron)
+
+  val ehLandingPage = NonEmptyList(
+    Highlight("Support Guardian journalism and our coverage of critical, under-reported stories from around the world."),
+    Highlight("Enjoy a host of benefits, from Guardian Live tickets to the best Guardian books."),
+    Highlight("Receive a free English Heritage membership worth £88 when you become a Guardian Partner by 31 March")
+  )
 }
