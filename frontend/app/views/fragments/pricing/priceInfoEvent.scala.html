@@ -24,8 +24,8 @@
                         }
                     </div>
                     <div class="price-info-inline__trail">
-                        <span class="js-event-price-saving" data-discount-text="You save @discountTicketing.savingText (@discountTicketing.roundedSavingPercentageExcludingFee% off and no fees)">
-                            Partners/Patrons save @discountTicketing.savingText (@discountTicketing.roundedSavingPercentageExcludingFee% off and no fees)
+                        <span class="js-event-price-saving" data-discount-text="You save @discountTicketing.savingText (@discountTicketing.roundedSavingPercentageExcludingFee% off@if(discountTicketing.generalRelease.feeText.isDefined){ and no fees})">
+                            Partners/Patrons save @discountTicketing.savingText (@discountTicketing.roundedSavingPercentageExcludingFee% off@if(discountTicketing.generalRelease.feeText.isDefined){ and no fees})
                         </span>
                     </div>
                     @if(showLimited && event.isBookable && event.isLimitedAvailability) {
