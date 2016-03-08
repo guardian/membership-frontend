@@ -21,9 +21,15 @@ trait Info extends Controller {
         .flatMap(CountryGroup.byFastlyCountryCode)
         .getOrElse(CountryGroup.RestOfTheWorld)
 
-    val url: Uri = redirectToSupporterPage(countryGroup).absoluteURL
-    val withCode = request.getQueryString("INTCMP").map {code => url ? ("INTCMP" -> code)}
-    Redirect(withCode.getOrElse(url), SEE_OTHER)
+    val baseUrl: Uri = redirectToSupporterPage(countryGroup).absoluteURL
+    val paramsToPropagate = Seq("INTCMP", "CMP")
+    val urlWithParams = paramsToPropagate.foldLeft[Uri](baseUrl) { (url, param) =>
+      // No need to filter out the params that aren't present because if the `?` method gets a key-value tuple
+      // with value of None, that parameter will not be rendered when toString is called
+      url ? (param -> request.getQueryString(param))
+    }
+
+    Redirect(urlWithParams, SEE_OTHER)
   }
 
   def supporterUK = CachedAction { implicit request =>
