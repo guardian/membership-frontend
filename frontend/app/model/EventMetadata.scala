@@ -14,7 +14,8 @@ object EventMetadata {
     eventListUrl: String,
     termsUrl: String,
     highlightsOpt: Option[HighlightsMetadata] = None,
-    chooseTier: ChooseTierMetadata
+    chooseTier: ChooseTierMetadata,
+    brand: String
   )
 
   case class ChooseTierMetadata(title: String, sectionTitle: String)
@@ -35,12 +36,13 @@ object EventMetadata {
     chooseTier=ChooseTierMetadata(
       "Guardian Live events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
-    )
+    ),
+    brand = "A Guardian Live event"
   )
 
   val localMetadata = Metadata(
     identifier="local",
-    title="Guardian Local",
+    title="Guardian Local events",
     shortTitle="Events",
     pluralTitle="Local events",
     description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
@@ -51,7 +53,8 @@ object EventMetadata {
     chooseTier=ChooseTierMetadata(
       "Guardian Local events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
-    )
+    ),
+    brand = "A Guardian Local event"
   )
 
   val masterclassMetadata = Metadata(
@@ -69,7 +72,8 @@ object EventMetadata {
     chooseTier=ChooseTierMetadata(
       "Choose a membership tier to continue with your booking",
       "Become a Partner or Patron to save 20% on your masterclass"
-    )
+    ),
+    brand = ""
   )
 
 }

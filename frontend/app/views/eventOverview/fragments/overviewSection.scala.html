@@ -12,12 +12,10 @@
 }
 
 @previewUrlSubCategory(eventOpt: Option[model.RichEvent.RichEvent]) = @{
-    eventOpt.fold("") { event =>
-        event match {
-            case _: GuLiveEvent => "event"
-            case _: MasterclassEvent => "masterclass"
-            case _: LocalEvent => "local"
-        }
+    eventOpt.fold("") {
+        case _: GuLiveEvent => "event"
+        case _: MasterclassEvent => "masterclass"
+        case _: LocalEvent => "local"
     }
 }
 
@@ -41,7 +39,7 @@
                                             alt="@event.name.text" class="responsive-img"
                                         />
                                     } { img =>
-                                        <img src="@img.defaultImage"" alt="@event.name.text" class="responsive-img"/>
+                                        <img src="@img.defaultImage" alt="@event.name.text" class="responsive-img"/>
                                     }
                                     <span class="pseudo-link event-detail-title">@event.name.text</span>
                                 </a>
