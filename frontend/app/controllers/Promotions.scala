@@ -1,5 +1,6 @@
 package controllers
 
+
 import actions.RichAuthRequest
 
 import com.gu.i18n.Country
@@ -70,10 +71,12 @@ object Promotions extends Controller {
     val promoCode = PromoCode(promoCodeStr)
     val notFound = NotFound(views.html.error404())
 
+
     (for {
       promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode) \/> notFound
-      _ <- if(promoCodeStr.toUpperCase != promoCodeStr) \/.left(Redirect("/p/" + promoCodeStr.toUpperCase))
-      html <- if (promotion.expires.isBeforeNow) \/.left(notFound) else findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
+      _ <- if(promoCodeStr.toUpperCase != promoCodeStr) \/.left(Redirect("/p/" + promoCodeStr.toUpperCase)) else \/.right(Unit)
+      _ <- if(promotion.expires.isBeforeNow) \/.left(notFound) else \/.right(Unit)
+      html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
     } yield Ok(html).withCookies(sessionCookieFromCode(promoCode))).fold(identity, identity)
 
   }
