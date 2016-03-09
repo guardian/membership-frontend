@@ -1,6 +1,7 @@
 package controllers
 
 import actions.RichAuthRequest
+
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.BillingPeriod
@@ -10,10 +11,12 @@ import com.gu.memsub.promo._
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import model._
 import play.api.libs.json._
-import play.api.mvc.Controller
+import play.api.mvc.{Result, Controller}
+import play.mvc.Results.Redirect
 import services.TouchpointBackend
 import views.support.PageInfo
 
+import scalaz.\/
 import scalaz.syntax.std.option._
 import services.PromoSessionService._
 
@@ -65,12 +68,13 @@ object Promotions extends Controller {
       }
 
     val promoCode = PromoCode(promoCodeStr)
+    val notFound = NotFound(views.html.error404())
 
     (for {
-      promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode)
-      html <- if (promotion.expires.isBeforeNow) None else findTemplateForPromotion(promoCode, promotion, request.path)
-    } yield Ok(html).withCookies(sessionCookieFromCode(promoCode)))
-      .getOrElse(NotFound(views.html.error404()))
+      promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode) \/> notFound
+      _ <- if(promoCodeStr.toUpperCase != promoCodeStr) \/.left(Redirect("/p/" + promoCodeStr.toUpperCase))
+      html <- if (promotion.expires.isBeforeNow) \/.left(notFound) else findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
+    } yield Ok(html).withCookies(sessionCookieFromCode(promoCode))).fold(identity, identity)
 
   }
 
