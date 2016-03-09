@@ -42,7 +42,7 @@ object EventMetadata {
 
   val localMetadata = Metadata(
     identifier="local",
-    title="Guardian Local events",
+    title="Guardian Local",
     shortTitle="Events",
     pluralTitle="Local events",
     description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
