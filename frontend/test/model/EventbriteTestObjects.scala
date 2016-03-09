@@ -38,7 +38,8 @@ object EventbriteTestObjects {
       eventListUrl="",
       termsUrl="",
       highlightsOpt=None,
-      chooseTier=ChooseTierMetadata("", "")
+      chooseTier=ChooseTierMetadata("", ""),
+      brand=""
     )
 
     def deficientGuardianMembersTickets: Boolean = false
