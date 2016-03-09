@@ -12,13 +12,14 @@ object Grid {
   case class Data(id: String, metadata: Metadata, exports: Option[List[Export]])
 
   case class Metadata(description: Option[String], credit: Option[String], byline: Option[String]) {
-
     val photographer = (byline ++ credit).mkString("/")
   }
 
-  case class Export(id: String, assets: List[Asset])
+  case class Export(id: String, assets: List[Asset], master: Option[Asset])
 
-  case class Asset(file: String, secureUrl: Option[String], dimensions: Dimensions)
+  case class Asset(file: String, secureUrl: Option[String], dimensions: Dimensions) {
+    lazy val pixels = dimensions.width * dimensions.height
+  }
 
   case class Dimensions(height: Int, width: Int)
 
