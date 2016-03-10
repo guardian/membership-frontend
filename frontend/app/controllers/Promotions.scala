@@ -16,13 +16,14 @@ import play.api.mvc.{Result, Controller}
 import play.mvc.Results.Redirect
 import services.TouchpointBackend
 import views.support.PageInfo
-
-import scalaz.\/
+import scalaz.syntax.either._
+import scalaz.{Monad, \/}
 import scalaz.syntax.std.option._
 import services.PromoSessionService._
 
-object Promotions extends Controller {
 
+object Promotions extends Controller {
+import TouchpointBackend.Normal.promoService
   val pageImages = Seq(
     ResponsiveImageGroup(
       name=Some("fearless"),
@@ -70,17 +71,22 @@ object Promotions extends Controller {
 
     val promoCode = PromoCode(promoCodeStr)
     val notFound = NotFound(views.html.error404())
+    val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
 
-    //Use a \/ disjunction in this for comprehension, so we don't just return a None
+
+    type ResultDisjunction[A] = \/[Result,A]
+    def failWhen(a:Boolean,b:Result) = Monad[ResultDisjunction].whenM(a)(\/.left(b))
+    //When the bool is true, fall through the for comprehension with the result parameter (by returning it as a left disjunction)
+
     (
       for {
-        promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode) \/> notFound
-        _ <- if (promoCodeStr.toUpperCase != promoCodeStr) \/.left(Redirect("/p/" + promoCodeStr.toUpperCase)) else \/.right(Unit)
-        _ <- if (promotion.expires.isBeforeNow) \/.left(notFound) else \/.right(Unit)
+        promotion <- promoService.findPromotion(promoCode) \/> notFound //if we can't find the promotion fail out of the for comprehension with a notFound
+        _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
+        _ <- failWhen(promotion.expires.isBeforeNow,notFound)
         html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
         response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
       } yield response
-     ).fold(identity, identity)
+     ).fold(identity, identity) //Whether or not the for comprehension succeeds, we have a result- which we want to return
   }
 
   def validatePromoCode(promoCode: PromoCode, billingPeriod: BillingPeriod, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>
