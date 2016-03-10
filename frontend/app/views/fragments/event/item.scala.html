@@ -24,12 +24,12 @@
                     @addressShortLine
                 </div>
             }
+            <div class="event-item__brand">@event.metadata.brand</div>
             @for(desc <- event.description if isFeatured) {
                 <div class="event-item__description">
                     @desc.blurb
                 </div>
             }
-            <div class="event-item__brand">@event.metadata.brand</div>
         </div>
     </div>
 }
