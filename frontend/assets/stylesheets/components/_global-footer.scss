@@ -100,3 +100,12 @@
     display: inline-block;
     padding-bottom: ($gs-baseline / 2);
 }
+
+/* Footer - In App
+   ========================================================================== */
+
+body.in-app {
+    .global-footer {
+        display: none;
+    }
+}
