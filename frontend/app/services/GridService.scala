@@ -16,7 +16,7 @@ import play.api.libs.json.Json
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging{
+object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging {
 
   val gridUrl: String = "https://media.gutools.co.uk/images/"
   val CropQueryParam = "crop"
@@ -33,7 +33,7 @@ object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging{
       } yield ImageIdWithCrop(imageId, crop)
   }
 
-  lazy val agent = Agent[Map[ImageIdWithCrop, GridImage]](Map.empty)
+  private lazy val agent = Agent[Map[ImageIdWithCrop, GridImage]](Map.empty)
 
   def getRequestedCrop(gridId: ImageIdWithCrop) : Future[Option[GridImage]] = {
     val currentImageData = agent.get()
@@ -61,10 +61,10 @@ object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging{
     None
   } // We should return no image, rather than die
 
-  def getGrid(gridId: ImageIdWithCrop): Future[GridResult] =
+  private [services] def getGrid(gridId: ImageIdWithCrop): Future[GridResult] =
     get[GridResult](gridId.id, CropQueryParam -> gridId.crop)
 
-  def findExport(exports: List[Export], cropId: String): Option[Export] = exports.find(_.id == cropId)
+  private [services] def findExport(exports: List[Export], cropId: String): Option[Export] = exports.find(_.id == cropId)
 
   override val wsUrl: String = Config.gridConfig.apiUrl
 
