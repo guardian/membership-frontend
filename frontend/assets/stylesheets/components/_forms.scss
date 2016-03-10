@@ -292,6 +292,7 @@
     outline: none;
     width: 100%;
     -webkit-appearance: none;
+    border-radius: $input-border-radius;
 
     &:focus {
         border-color: $c-border-brand;
