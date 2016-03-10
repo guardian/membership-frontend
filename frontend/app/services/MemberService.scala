@@ -246,7 +246,8 @@ class MemberService(identityService: IdentityService,
   }
 
   override  def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
-    val latestSubF = subscriptionService.unsafeGet(contact)
+    val latestSubEither = subscriptionService.getEither(contact).map(_.get)
+    val latestSubF = latestSubEither.map(_.fold(identity,identity))
 
     def price(amount: Float)(implicit currency: Currency) = Price(amount, currency)
     def plan(sub: Subscription): (Price, BillingPeriod) = sub match {
@@ -277,16 +278,16 @@ class MemberService(identityService: IdentityService,
     def getSummaryViaPreview =
       for {
         sub <- latestSubF
-        paymentDetails <- paymentService.paymentDetails(contact)(Membership)
+        subEither <- latestSubEither
+        paymentDetails <- paymentService.paymentDetails(subEither)
       } yield {
         implicit val currency = sub.currency
         val (planAmount, bp) = plan(sub)
         def price(amount: Float) = Price(amount, sub.currency)
 
         val nextPayment = for {
-          pd <- paymentDetails
-          amount <- pd.nextPaymentPrice
-          date <- pd.nextPaymentDate
+          amount <- paymentDetails.nextPaymentPrice
+          date <- paymentDetails.nextPaymentDate
         } yield NextPayment(price(amount), date)
 
         ThankyouSummary(
@@ -294,7 +295,7 @@ class MemberService(identityService: IdentityService,
           amountPaidToday = price(0f),
           planAmount = planAmount,
           nextPayment = nextPayment,
-          renewalDate = paymentDetails.map(_.termEndDate.plusDays(1)),
+          renewalDate = Some(paymentDetails.termEndDate.plusDays(1)),
           sub.isInTrialPeriod,
           bp
         )
