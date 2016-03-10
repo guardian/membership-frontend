@@ -71,14 +71,16 @@ object Promotions extends Controller {
     val promoCode = PromoCode(promoCodeStr)
     val notFound = NotFound(views.html.error404())
 
-
-    (for {
-      promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode) \/> notFound
-      _ <- if(promoCodeStr.toUpperCase != promoCodeStr) \/.left(Redirect("/p/" + promoCodeStr.toUpperCase)) else \/.right(Unit)
-      _ <- if(promotion.expires.isBeforeNow) \/.left(notFound) else \/.right(Unit)
-      html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
-    } yield Ok(html).withCookies(sessionCookieFromCode(promoCode))).fold(identity, identity)
-
+    //Use a \/ disjunction in this for comprehension, so we don't just return a None
+    (
+      for {
+        promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode) \/> notFound
+        _ <- if (promoCodeStr.toUpperCase != promoCodeStr) \/.left(Redirect("/p/" + promoCodeStr.toUpperCase)) else \/.right(Unit)
+        _ <- if (promotion.expires.isBeforeNow) \/.left(notFound) else \/.right(Unit)
+        html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
+        response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
+      } yield response
+     ).fold(identity, identity)
   }
 
   def validatePromoCode(promoCode: PromoCode, billingPeriod: BillingPeriod, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>
