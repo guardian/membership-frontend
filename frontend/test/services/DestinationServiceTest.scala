@@ -72,7 +72,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
 
       val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
       val fakeRequest = FakeRequest().withSession(newSessions: _*)
-      val ar = new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo", "bar"), minimalUser), fakeRequest)
+      val ar = new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo"), minimalUser), fakeRequest)
 
       new SubscriptionRequest(mock[TouchpointBackend],ar) with Subscriber {
         override def subscriber = Subscriber(testSub, testMember)
