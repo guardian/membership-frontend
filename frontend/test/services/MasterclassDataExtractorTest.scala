@@ -63,11 +63,11 @@ class MasterclassDataExtractorTest extends Specification {
       masterclassesContent.map(_.eventId) must contain(exactly("111", "333"))
     }
 
-    "create masterclass content favouring the eventbrite external reference over scraping" in {
+    "create masterclass content including the eventbrite external reference plus what gets scraped" in {
       val itemWithExternalRefAndEBUrlInBody = item.copy(references = List(Reference("eventbrite","eventbrite/111")))
 
       val masterclassesContent = extractEventbriteInformation(itemWithExternalRefAndEBUrlInBody)
-      masterclassesContent.map(_.eventId) must contain(exactly("111"))
+      masterclassesContent.map(_.eventId) must contain(exactly("111","13906168725"))
     }
 
     "not create a masterclass content if there is no eventbrite external ref and body does not contain eventbrite url" in {
