@@ -22,7 +22,6 @@ import scala.concurrent.Future
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
 
-
 /**
  * These ActionFunctions serve as components that can be composed to build the
  * larger, more-generally useful pipelines in 'CommonActions'.
@@ -33,106 +32,160 @@ object ActionRefiners extends LazyLogging {
   import model.TierOrdering.upgradeOrdering
   implicit val pf: ProductFamily = Membership
 
-  def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
-    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
-  }
+  def resultModifier(f: Result => Result) =
+    new ActionBuilder[Request] {
 
-  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_)): ActionBuilder[AuthRequest] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
+      def invokeBlock[A](
+          request: Request[A], block: (Request[A]) => Future[Result]) =
+        block(request).map(f)
+    }
+
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(
+          _)): ActionBuilder[AuthRequest] =
+    new AuthenticatedBuilder(
+        AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
 
   type SubRequestOrResult[A] = Future[Either[Result, SubReqWithSub[A]]]
-  type PaidSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with PaidSubscriber]]
-  type FreeSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with FreeSubscriber]]
+  type PaidSubRequestOrResult[A] = Future[Either[
+  Result, SubscriptionRequest[A] with PaidSubscriber]]
+  type FreeSubRequestOrResult[A] = Future[Either[
+  Result, SubscriptionRequest[A] with FreeSubscriber]]
 
   type SubReqWithPaid[A] = SubscriptionRequest[A] with PaidSubscriber
   type SubReqWithFree[A] = SubscriptionRequest[A] with FreeSubscriber
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
 
-  private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
+  private def getSubRequest[A](
+      request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
     val tp = request.touchpointBackend
 
     (for {
       member <- OptionT(request.forMemberOpt(identity))
       subscription <- OptionT(tp.subscriptionService.get(member))
-      memberSubscriber <- OptionT(Future.successful(Subscriber.Member.unapply(Subscriber(subscription, member))))
-    } yield new SubscriptionRequest[A](tp, request) with Subscriber {
-      override def subscriber = memberSubscriber
-    }).run
+      memberSubscriber <- OptionT(Future.successful(
+          Subscriber.Member.unapply(Subscriber(subscription, member))))
+    } yield
+      new SubscriptionRequest[A](tp, request) with Subscriber {
+
+        override def subscriber = memberSubscriber
+      }).run
   }
 
-  def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {
-    override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
-      getSubRequest(request).map(_ toRight onNonMember(request))
-    }
-  }
+  def subscriptionRefiner(
+      onNonMember: RequestHeader => Result = notYetAMemberOn(_)) =
+    new ActionRefiner[AuthRequest, SubReqWithSub] {
 
-  def paidSubscriptionRefiner(onFreeMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithPaid] {
-    type PaidMemberSub = Sub with PaidPS[PaidMembershipPlan[SubStatus, PaidTier, BillingPeriod]]
-    override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithPaid[A]]] =
-      Future.successful(request.subscriber match {
-        case PaidMember(mem) => Right(new SubscriptionRequest[A](request) with PaidSubscriber {
-          override def subscriber = mem
-        })
-        case _ => Left(onFreeMember(request))
-      })
-  }
-
-
-  def freeSubscriptionRefiner(onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithFree] {
-    type FreeMemberSub = Sub with FreePS[FreeMembershipPlan[SubStatus, FreeTier]]
-    override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithFree[A]]] =
-      Future.successful(request.subscriber match {
-        case FreeMember(mem) => Right(new SubscriptionRequest[A](request) with FreeSubscriber {
-          override def subscriber = mem
-        })
-        case _ => Left(onPaidMember(request))
-      })
-  }
-
-  def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {
-    override protected def filter[A](request: SubReqWithSub[A]): Future[Option[Result]] = {
-      if (!request.touchpointBackend.memberService.subscriptionUpgradableTo(request.subscriber.subscription, targetTier)) {
-        Future.successful(Some(Ok(views.html.tier.upgrade.unavailable(request.subscriber.subscription.plan.tier, targetTier))))
-      } else {
-        Future.successful(None)
+      override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
+        getSubRequest(request).map(_ toRight onNonMember(request))
       }
     }
-  }
 
-  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result = selectedTier match {
-    case t: PaidTier if t > req.subscriber.subscription.plan.tier => tierChangeEnterDetails(t)(req)
-    case _ => Ok(views.html.tier.upgrade.unavailable(req.subscriber.subscription.plan.tier, selectedTier))
-  }
+  def paidSubscriptionRefiner(
+      onFreeMember: RequestHeader => Result = notYetAMemberOn(_)) =
+    new ActionRefiner[SubReqWithSub, SubReqWithPaid] {
+      type PaidMemberSub = Sub with PaidPS[PaidMembershipPlan[
+      SubStatus, PaidTier, BillingPeriod]]
 
-  def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-    override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
-  }
+      override protected def refine[A](request: SubReqWithSub[A]): Future[
+          Either[Result, SubReqWithPaid[A]]] =
+        Future.successful(request.subscriber match {
+          case PaidMember(mem) =>
+            Right(new SubscriptionRequest[A](request) with PaidSubscriber {
 
-  def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
+              override def subscriber = mem
+            })
+          case _ => Left(onFreeMember(request))
+        })
+    }
+
+  def freeSubscriptionRefiner(
+      onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) =
+    new ActionRefiner[SubReqWithSub, SubReqWithFree] {
+      type FreeMemberSub = Sub with FreePS[FreeMembershipPlan[
+      SubStatus, FreeTier]]
+
+      override protected def refine[A](request: SubReqWithSub[A]): Future[
+          Either[Result, SubReqWithFree[A]]] =
+        Future.successful(request.subscriber match {
+          case FreeMember(mem) =>
+            Right(new SubscriptionRequest[A](request) with FreeSubscriber {
+
+              override def subscriber = mem
+            })
+          case _ => Left(onPaidMember(request))
+        })
+    }
+
+  def checkTierChangeTo(targetTier: PaidTier) =
+    new ActionFilter[SubReqWithSub] {
+
+      override protected def filter[A](
+          request: SubReqWithSub[A]): Future[Option[Result]] = {
+        if (!request.touchpointBackend.memberService.subscriptionUpgradableTo(
+                request.subscriber.subscription, targetTier)) {
+          Future.successful(Some(Ok(views.html.tier.upgrade.unavailable(
+              request.subscriber.subscription.plan.tier, targetTier))))
+        } else {
+          Future.successful(None)
+        }
+      }
+    }
+
+  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(
+      req: SubReqWithSub[_]): Result =
+    selectedTier match {
+      case t: PaidTier if t > req.subscriber.subscription.plan.tier =>
+        tierChangeEnterDetails(t)(req)
+      case _ =>
+        Ok(views.html.tier.upgrade
+          .unavailable(req.subscriber.subscription.plan.tier, selectedTier))
+    }
+
+  def onlyNonMemberFilter(
+      onMember: SubReqWithSub[_] => Result = memberHome(_)) =
+    new ActionFilter[AuthRequest] {
+
+      override def filter[A](request: AuthRequest[A]) =
+        getSubRequest(request).map(_.map(onMember))
+    }
+
+  def googleAuthenticationRefiner(
+      onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
-      override def refine[A](request: AuthRequest[A]) = Future.successful {
-        OAuthActions.userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(onNonAuthentication(request))
-      }
+
+      override def refine[A](request: AuthRequest[A]) =
+        Future.successful {
+          OAuthActions.userIdentity(request).map(IdentityGoogleAuthRequest(
+              _, request)).toRight(onNonAuthentication(request))
+        }
     }
   }
 
-  def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result =
-                            joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
-    override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
-      for {
-        user <- IdentityService(IdentityApi).getFullUserDetails(request.identityUser, IdentityRequest(request))
-      } yield {
-        if (GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
-        else Some(onNonGuEmail(request))
+  def matchingGuardianEmail(
+      onNonGuEmail: RequestHeader => Result = joinStaffMembership(_)
+        .flashing("error" -> "Identity email must match Guardian email")) =
+    new ActionFilter[IdentityGoogleAuthRequest] {
+
+      override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
+        for {
+          user <- IdentityService(IdentityApi)
+            .getFullUserDetails(request.identityUser, IdentityRequest(request))
+        } yield {
+          if (GuardianDomains.emailsMatch(
+                  request.googleUser.email, user.primaryEmailAddress)) None
+          else Some(onNonGuEmail(request))
+        }
       }
     }
-  }
 
-  def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
-    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
-      Timing.record(cloudWatch, metricName) {
-        block(request)
-      }
-  }
+  def metricRecord(cloudWatch: CloudWatch, metricName: String) =
+    new ActionBuilder[Request] {
+
+      def invokeBlock[A](
+          request: Request[A], block: (Request[A]) => Future[Result]) =
+        Timing.record(cloudWatch, metricName) {
+          block(request)
+        }
+    }
 }
