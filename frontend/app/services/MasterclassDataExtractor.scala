@@ -17,8 +17,7 @@ object MasterclassDataExtractor {
     val eventbriteIdsFromRefs =
       content.references.filter(_.`type` == "eventbrite").map(_.id.stripPrefix("eventbrite/"))
 
-    val eventbriteIds =
-      if (eventbriteIdsFromRefs.nonEmpty) eventbriteIdsFromRefs else scrapeEventbriteIdsFrom(content)
+    val eventbriteIds = (eventbriteIdsFromRefs ++ scrapeEventbriteIdsFrom(content)).distinct
 
     eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, ResponsiveImageGroup.fromContent(content)))
   }

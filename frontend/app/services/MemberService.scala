@@ -8,6 +8,7 @@ import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlan
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
 import com.gu.subscriptions.Discounter
+import com.gu.zuora.soap.models.Commands.{Account, CreditCardReferenceTransaction, Subscribe, RatePlan}
 import services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.memsub._
 import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
@@ -16,7 +17,6 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
-import com.gu.zuora.soap.actions.subscribe.{Account => SoapSubscribeAccount, RatePlan, CreditCardReferenceTransaction}
 import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
@@ -246,7 +246,8 @@ class MemberService(identityService: IdentityService,
   }
 
   override  def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
-    val latestSubF = subscriptionService.unsafeGet(contact)
+    val latestSubEither = subscriptionService.getEither(contact).map(_.get)
+    val latestSubF = latestSubEither.map(_.fold(identity,identity))
 
     def price(amount: Float)(implicit currency: Currency) = Price(amount, currency)
     def plan(sub: Subscription): (Price, BillingPeriod) = sub match {
@@ -277,16 +278,16 @@ class MemberService(identityService: IdentityService,
     def getSummaryViaPreview =
       for {
         sub <- latestSubF
-        paymentDetails <- paymentService.paymentDetails(contact)(Membership)
+        subEither <- latestSubEither
+        paymentDetails <- paymentService.paymentDetails(subEither)
       } yield {
         implicit val currency = sub.currency
         val (planAmount, bp) = plan(sub)
         def price(amount: Float) = Price(amount, sub.currency)
 
         val nextPayment = for {
-          pd <- paymentDetails
-          amount <- pd.nextPaymentPrice
-          date <- pd.nextPaymentDate
+          amount <- paymentDetails.nextPaymentPrice
+          date <- paymentDetails.nextPaymentDate
         } yield NextPayment(price(amount), date)
 
         ThankyouSummary(
@@ -294,7 +295,7 @@ class MemberService(identityService: IdentityService,
           amountPaidToday = price(0f),
           planAmount = planAmount,
           nextPayment = nextPayment,
-          renewalDate = paymentDetails.map(_.termEndDate.plusDays(1)),
+          renewalDate = Some(paymentDetails.termEndDate.plusDays(1)),
           sub.isInTrialPeriod,
           bp
         )
@@ -365,13 +366,13 @@ class MemberService(identityService: IdentityService,
 
     for {
       zuoraFeatures <- zuoraService.getFeatures
-      result <- zuoraService.createSubscription(
-        subscribeAccount = SoapSubscribeAccount.stripe(contactId, currency, autopay = false),
+      result <- zuoraService.createSubscription(Subscribe(
+        account = Account.stripe(contactId, currency, autopay = false),
         paymentMethod = None,
         ratePlans = NonEmptyList(RatePlan(planId.get, None)),
         name = joinData.name,
         address = joinData.deliveryAddress
-      )
+      ))
     } yield result
   }
 
@@ -393,17 +394,17 @@ class MemberService(identityService: IdentityService,
       zuoraFeatures <- zuoraService.getFeatures
       plan = RatePlan(planId.get, None, featuresPerTier(zuoraFeatures)(planId, joinData.featureChoice).map(_.id.get))
       currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
-      result <- zuoraService.createSubscription(
-        subscribeAccount = SoapSubscribeAccount.stripe(
+      result <- zuoraService.createSubscription(Subscribe(
+        account = Account.stripe(
           contactId = contactId,
           currency = currency,
           autopay = true),
-        paymentMethod = Some(CreditCardReferenceTransaction(customer)),
+        paymentMethod = Some(CreditCardReferenceTransaction(customer.card.id, customer.id)),
         ratePlans = discounter.applyPromoCode(plan, validPromoCode),
         name = joinData.name,
         address = joinData.zuoraAccountAddress,
         promoCode = validPromoCode
-      )
+      ))
     } yield result
   }
 

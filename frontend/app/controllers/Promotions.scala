@@ -1,6 +1,8 @@
 package controllers
 
+
 import actions.RichAuthRequest
+
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.BillingPeriod
@@ -10,15 +12,18 @@ import com.gu.memsub.promo._
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import model._
 import play.api.libs.json._
-import play.api.mvc.Controller
+import play.api.mvc.{Result, Controller}
+import play.mvc.Results.Redirect
 import services.TouchpointBackend
 import views.support.PageInfo
-
+import scalaz.syntax.either._
+import scalaz.{Monad, \/}
 import scalaz.syntax.std.option._
 import services.PromoSessionService._
 
-object Promotions extends Controller {
 
+object Promotions extends Controller {
+import TouchpointBackend.Normal.promoService
   val pageImages = Seq(
     ResponsiveImageGroup(
       name=Some("fearless"),
@@ -65,13 +70,23 @@ object Promotions extends Controller {
       }
 
     val promoCode = PromoCode(promoCodeStr)
+    val notFound = NotFound(views.html.error404())
+    val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
 
-    (for {
-      promotion <- TouchpointBackend.Normal.promoService.findPromotion(promoCode)
-      html <- if (promotion.expires.isBeforeNow) None else findTemplateForPromotion(promoCode, promotion, request.path)
-    } yield Ok(html).withCookies(sessionCookieFromCode(promoCode)))
-      .getOrElse(NotFound(views.html.error404()))
 
+    type ResultDisjunction[A] = \/[Result,A]
+    def failWhen(a:Boolean,b:Result) = Monad[ResultDisjunction].whenM(a)(\/.left(b))
+    //When the bool is true, fall through the for comprehension with the result parameter (by returning it as a left disjunction)
+
+    (
+      for {
+        promotion <- promoService.findPromotion(promoCode) \/> notFound //if we can't find the promotion fail out of the for comprehension with a notFound
+        _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
+        _ <- failWhen(promotion.expires.isBeforeNow,notFound)
+        html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
+        response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
+      } yield response
+     ).fold(identity, identity) //Whether or not the for comprehension succeeds, we have a result- which we want to return
   }
 
   def validatePromoCode(promoCode: PromoCode, billingPeriod: BillingPeriod, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>

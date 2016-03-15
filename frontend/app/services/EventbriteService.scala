@@ -41,8 +41,8 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     req.newBuilder().url(url)
   }
 
-  def eventsTaskFor(status: String, refreshTime : FiniteDuration): ScheduledTask[Seq[RichEvent]] =
-    ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, refreshTime) {
+  def eventsTaskFor(status: String, initialDelay: FiniteDuration, refreshTime: FiniteDuration): ScheduledTask[Seq[RichEvent]] =
+    ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, initialDelay, refreshTime) {
       for {
         events <- getAll[EBEvent]("users/me/owned_events/", List(
           "status" -> status,
@@ -51,17 +51,24 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
       } yield richEvents
     }
 
-  lazy val eventsTask = eventsTaskFor("live", Config.eventbriteRefreshTime.seconds)
+  // The prime numbers are to spread the requests out over the refreshTime.
+  // Live needs to complete ASAP for healthcheck to pass.
+  // Customers see ended in the archive page so it needs to happen soonish.
+  // Draft is for a backend tool, so it can start once everything else has finished.
+  // The HTTP client library in memcommon has a hardcoded timeout of 10 seconds, so the
+  // goal here is to keep the downstream cache warm (AWS CloudFront - ttl 61s).
+  lazy val eventsTask = eventsTaskFor("live", 1.second, Config.eventbriteRefreshTime.seconds)
 
-  lazy val draftEventsTask =  eventsTaskFor("draft", Config.eventbriteRefreshTime.seconds)
+  lazy val archivedEventsTask = eventsTaskFor("ended", 29.seconds, Config.eventbriteRefreshTime.seconds)
 
-  lazy val archivedEventsTask = eventsTaskFor("ended", 2.hours) // we keep archived events so as to not break old urls
+  lazy val draftEventsTask =  eventsTaskFor("draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
 
   def start() {
-    Logger.info("Starting EventbriteService background tasks")
-    eventsTask.start(60.seconds)
-    draftEventsTask.start(60.seconds)
-    archivedEventsTask.start(60.seconds)
+    Logger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
+    val timeout = (Config.eventbriteRefreshTime - 3).seconds
+    eventsTask.start(timeout)
+    draftEventsTask.start(timeout)
+    archivedEventsTask.start(timeout)
   }
 
   def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
@@ -136,8 +143,7 @@ object GuardianLiveEventService extends LiveService {
   val maxDiscountQuantityAvailable = 4
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
-  val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
-  lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, refreshTimePriorityEvents) {
+  lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
     for {
       ordering <- WS.url(Config.eventOrderingJsonUrl).get()
     } yield (ordering.json \ "order").as[Seq[String]]
@@ -149,7 +155,9 @@ object GuardianLiveEventService extends LiveService {
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def start() {
     super.start()
-    eventsOrderingTask.start()
+    Logger.info("Starting EventsOrdering background task")
+    val timeout = (Config.eventbriteRefreshTimeForPriorityEvents - 3).seconds
+    eventsOrderingTask.start(timeout)
   }
 }
 
