@@ -15,7 +15,7 @@ import org.specs2.mutable.Specification
 import org.specs2.specification.AroundEach
 import play.api.libs.json.Json
 
-class EventsResponseTest extends Specification with JsonMatchers with EventFixtures with DateTimeFixed {
+class EventsResponseTest extends Specification with JsonMatchers with EventFixtures {
   "Event response JSON created from RichEvent" should {
     "have event id" in {
       val response = EventsResponse(events = Seq(Event.forRichEvent(defaultLiveEvent)))
@@ -71,16 +71,6 @@ class EventsResponseTest extends Specification with JsonMatchers with EventFixtu
   }
 
   def asJsonString(response: EventsResponse): String = Json.stringify(Json.toJson(response))
-}
-
-trait DateTimeFixed extends AroundEach {
-  override def around[R: AsResult](r: => R): Result = {
-    setCurrentMillisFixed(currentTimeMillis())
-    try
-      AsResult(r)
-    finally
-      setCurrentMillisSystem()
-  }
 }
 
 trait EventFixtures {
