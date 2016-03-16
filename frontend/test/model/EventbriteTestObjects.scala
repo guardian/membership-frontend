@@ -27,6 +27,7 @@ object EventbriteTestObjects {
     val pastImageOpt = None
     val hasLargeImage = true
     val canHavePriorityBooking = true
+    val gridImgUrl = None
 
     val metadata = Metadata(
       identifier="",

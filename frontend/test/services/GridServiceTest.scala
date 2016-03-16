@@ -21,19 +21,16 @@ class GridServiceTest extends Specification {
   }
 
   "GridService" should {
-    "cropParam" in {
-      GridService.cropParam(validGridUrl) mustEqual Some("0_19_480_288")
-      GridService.cropParam("http://example.com?q=v") mustEqual None
-    }
     "must return requested crop with dimensions" in {
       val grid = Resource.getJson("model/grid/api-image.json")
       val gridResponse = grid.as[GridResult]
       val exports = gridResponse.data.exports.get
       val requestedCrop = "0_130_1703_1022"
-      val assets = GridService.findAssets(exports, requestedCrop)
+      val export = GridService.findExport(exports, requestedCrop)
 
-      assets.size mustEqual(3)
-      assets.map(_.dimensions.width) mustEqual(List(1000, 500, 140))
+      export must beSome
+      export.get.assets.size mustEqual(3)
+      export.get.assets.map(_.dimensions.width) mustEqual(List(1000, 500, 140))
     }
   }
 }

@@ -7,6 +7,7 @@ import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.{EBTicketClass, EBOrder, EBEvent}
+import model.Grid.Asset
 import org.joda.time.LocalDate
 import services.MasterclassData
 import utils.StringUtils._
@@ -56,7 +57,9 @@ object RichEvent {
     cities.groupBy(identity).mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
   }
 
-  case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
+  case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata, master: Option[Asset]) {
+    lazy val masterOrBestAsset = master orElse assets.sortBy(_.pixels).reverse.headOption
+  }
 
   trait RichEvent {
     val event: EBEvent
@@ -64,6 +67,7 @@ object RichEvent {
     val logoOpt: Option[ProviderLogo]
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
+    val gridImgUrl: Option[String]
     val schema: EventSchema
     val tags: Seq[String]
     val metadata: Metadata
@@ -103,6 +107,12 @@ object RichEvent {
     val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup.fromContent)
     val schema = EventSchema.from(this)
     val tags = Nil
+
+    override val gridImgUrl = for {
+      i <- image
+      best <- i.masterOrBestAsset
+      uri <- best.secureUrl
+    } yield uri
 
     val fallbackHighlightsMetadata = HighlightsMetadata("View highlights of past events",
       Links.membershipFront + "#recent-events")
@@ -149,6 +159,7 @@ object RichEvent {
     val logoOpt = Some(ProviderLogo(this))
     val contentOpt = None
     val pastImageOpt = None
+    override val gridImgUrl = None
     def deficientGuardianMembersTickets = false
   }
 
