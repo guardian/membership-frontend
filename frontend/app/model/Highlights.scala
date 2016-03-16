@@ -45,8 +45,22 @@ object Highlights {
   val marketedOnlyToUK = Set[Highlight](tickets, freeTickets, priorityBooking, ehPartner, ehPatron)
 
   val ehLandingPage = NonEmptyList(
-    Highlight("Support Guardian journalism and our coverage of critical, under-reported stories from around the world."),
-    Highlight("Enjoy a host of benefits, from Guardian Live tickets to the best Guardian books."),
+    Highlight("Support Guardian journalism and our coverage of critical, under-reported stories from around the world"),
+    Highlight("Enjoy a host of benefits, from Guardian Live tickets to the best Guardian books"),
     Highlight("Receive a free English Heritage membership worth £88 when you become a Guardian Partner by 31 March")
+  )
+
+  val discountLandingPage = NonEmptyList(
+    Highlight("Support Guardian journalism and our coverage of critical, under-reported stories from around the world"),
+    Highlight("Enjoy a host of benefits, from Guardian Live tickets to the best Guardian books"),
+    Highlight("Enjoy £50 off  your first year")
+  )
+  val discountLandingPageLong = NonEmptyList(
+    Highlight("Your choice of 6 tickets to Guardian Live events or 4 Guardian-published books per year"),
+      Highlight(" Priority booking for Guardian Live and Guardian Local"),
+      Highlight(" No booking fees"),
+      Highlight("A 20% discount on Guardian Local, most Guardian Masterclasses and any further Guardian Live tickets"),
+      Highlight("  Bring a guest with the same discount to Guardian Live and Local events"),
+      Highlight("  Welcome pack and gift")
   )
 }

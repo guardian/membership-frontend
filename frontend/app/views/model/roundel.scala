@@ -1,4 +1,4 @@
 package views.model
 
-case class Roundel(title: String, description: Option[String] = None)
+case class Roundel(title: Seq[String], description: Seq[String] = Seq())
 

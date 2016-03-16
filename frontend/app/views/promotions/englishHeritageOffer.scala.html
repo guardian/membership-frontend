@@ -18,7 +18,7 @@
 }
 
 @main("English Heritage Promotion", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
-    @fragments.common.roundel(Roundel("Ends 31 March: Free annual English Heritage membership", Some("when you join as a Partner or Patron")))
+    @fragments.common.roundel(Roundel(Seq("Ends 31 March: Free annual English Heritage membership"), Seq("when you join as a Partner or Patron")))
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
         Become a Guardian Partner
     } {
