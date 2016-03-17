@@ -107,12 +107,5 @@
 }
 
 .text-link {
-    text-decoration: none;
-    border-bottom: 1px solid $c-neutral3;
-
-    &:hover,
-    &:focus {
-        text-decoration: none;
-        border-color: $c-neutral2;
-    }
+    @include text-link();
 }
