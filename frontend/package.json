@@ -38,11 +38,11 @@
     "karma-chrome-launcher": "^0.1.12",
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.2.0",
-    "karma-requirejs": "~0.2.2",
+    "karma-requirejs": "0.2.5",
     "load-grunt-tasks": "^3.2.0",
     "mkdirp": "^0.5.1",
     "phantomjs": "~1.9.17",
-    "requirejs": "^2.1.18",
+    "requirejs": "2.1.22",
     "rimraf": "^2.4.3",
     "time-grunt": "^1.2.1"
   }
