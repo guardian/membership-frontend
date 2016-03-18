@@ -1,19 +1,18 @@
 package services.api
 
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan, MembershipPlan}
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.Subscription.{Plan, Paid, ProductRatePlanId}
 import com.gu.memsub._
-import com.gu.salesforce.{Tier, ContactId, PaidTier}
+import com.gu.salesforce.{ContactId, PaidTier}
+import com.gu.services.model.BillingSchedule
 import com.gu.stripe.Stripe
-import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
 import forms.MemberForm.{FreeMemberChangeForm, JoinForm, PaidMemberChangeForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
-import model.{GenericSFContact}
+import model.GenericSFContact
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
@@ -30,7 +29,7 @@ trait MemberService {
                    campaignCode: Option[CampaignCode]): Future[ContactId]
 
   def previewUpgradeSubscription(subscription: Subscription with Paid,
-                                 newPlanId: ProductRatePlanId): Future[Seq[PreviewInvoiceItem]]
+                                 newPlanId: ProductRatePlanId): Future[BillingSchedule]
 
   def upgradeFreeSubscription(subscriber: FreeMember,
                               newTier: PaidTier,

@@ -7,6 +7,7 @@ import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
+import com.gu.services.model.BillingSchedule
 import com.gu.subscriptions.Discounter
 import com.gu.zuora.soap.models.Commands.{Account, CreditCardReferenceTransaction, Subscribe, RatePlan}
 import services.api.MemberService.{MemberError, PendingAmendError}
@@ -17,10 +18,8 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
-import com.gu.zuora.soap.models.Queries.PreviewInvoiceItem
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
-import com.gu.zuora.soap.models.errors._
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
@@ -224,14 +223,16 @@ class MemberService(identityService: IdentityService,
   }
 
   override def previewUpgradeSubscription(subscription: PaidSubscription,
-                                          newRatePlanId: ProductRatePlanId): Future[Seq[PreviewInvoiceItem]] = {
-    for {
+                                          newRatePlanId: ProductRatePlanId): Future[BillingSchedule] = {
+    (for {
       result <- zuoraService.upgradeSubscription(
         subscription = subscription,
         newRatePlanId = newRatePlanId,
         featureIds = Nil,
         preview = true)
-    } yield result.invoiceItems
+    } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems)).map(_.getOrElse(
+      throw new IllegalStateException(s"Sub ${subscription.id} upgrading to $newRatePlanId has no bills")
+    ))
   }
 
   def subscriptionUpgradableTo(sub: Subscription with PaymentStatus[Plan], newTier: PaidTier): Boolean = {
