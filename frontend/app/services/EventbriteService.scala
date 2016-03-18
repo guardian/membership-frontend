@@ -1,8 +1,9 @@
 package services
 
 import com.github.nscala_time.time.OrderingImplicits._
+import com.gu.lib.okhttpscala._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
-import com.squareup.okhttp.Request
+import com.squareup.okhttp.{OkHttpClient, Request}
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.Eventbrite._
@@ -13,9 +14,9 @@ import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.json.Reads
-import play.api.libs.ws._
+import play.api.libs.json.{Json, Reads}
 import utils.StringUtils._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -145,8 +146,8 @@ object GuardianLiveEventService extends LiveService {
 
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
     for {
-      ordering <- WS.url(Config.eventOrderingJsonUrl).get()
-    } yield (ordering.json \ "order").as[Seq[String]]
+      resp <- new OkHttpClient().execute(new Request.Builder().url(Config.eventOrderingJsonUrl).build())
+    } yield (Json.parse(resp.body.string) \ "order").as[Seq[String]]
   }
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }

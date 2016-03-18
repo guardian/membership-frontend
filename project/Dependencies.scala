@@ -11,7 +11,6 @@ object Dependencies {
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.174"
   val contentAPI = "com.gu" %% "content-api-client" % "6.4"
-  val playWS = PlayImport.ws
   val playCache = PlayImport.cache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
@@ -24,7 +23,7 @@ object Dependencies {
   //projects
 
   val frontendDependencies = Seq(memsubCommonPlayAuth, scalaUri, membershipCommon,
-    contentAPI, playWS, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz,
+    contentAPI, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz,
     PlayImport.specs2 % "test", specs2Extra)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, memsubCommonPlayAuth)

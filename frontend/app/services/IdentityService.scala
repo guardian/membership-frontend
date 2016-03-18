@@ -1,16 +1,17 @@
 package services
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
-import com.gu.memsub.util.Timing
+import com.gu.lib.okhttpscala._
 import com.gu.memsub.Address
+import com.gu.memsub.util.Timing
+import com.squareup.okhttp.Request.Builder
+import com.squareup.okhttp._
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import monitoring.IdentityApiMetrics
 import play.api.Logger
-import play.api.Play.current
 import play.api.libs.json._
-import play.api.libs.ws.WS
 import views.support.IdentityUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -106,29 +107,44 @@ case class IdentityService(identityApi: IdentityApi) {
 
 trait IdentityApi {
 
+  val okhttp = new OkHttpClient()
+
+  val JsonMediaType = MediaType.parse("application/json; charset=utf-8")
+
+  implicit def jsonToRequestBody(json: JsValue): RequestBody = RequestBody.create(JsonMediaType, json.toString)
+
+
+  def requestFor(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]): Request.Builder = {
+    val url = parameters.foldLeft(HttpUrl.parse(s"${Config.idApiUrl}/$endpoint").newBuilder()) {
+      case (u, (k, v)) => u.addQueryParameter(k, v)
+    }.build()
+
+    headers.foldLeft(new Builder().url(url)) {
+      case (r, (k,v)) => r.addHeader(k, v)
+    }
+  }
+
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
-    val endpoint = "user/password-exists"
-    val url = s"${Config.idApiUrl}/$endpoint"
     Timing.record(IdentityApiMetrics, "get-user-password-exists") {
-      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
-        recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
-        (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
+      val endpoint = "user/password-exists"
+      okhttp.execute(requestFor(endpoint, headers, parameters).build()).map { response =>
+        recordAndLogResponse(response.code, "GET user-password-exists", endpoint)
+        (Json.parse(response.body.string) \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"${response.request.urlString} did not return a boolean"))
       }
     }
   }
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdUser]] = {
     Timing.record(IdentityApiMetrics, "get-user") {
-      val url = s"${Config.idApiUrl}/$endpoint"
-      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get()
+      okhttp.execute(requestFor(endpoint, headers, parameters).build())
         .recover { case e =>
           Logger.error("Failure trying to retrieve user data", e)
           throw e
         }
         .map { response =>
-          recordAndLogResponse(response.status, "GET user", endpoint)
-          val jsResult = (response.json \ "user").validate[IdUser]
-          if (jsResult.isError) Logger.error(s"Id Api response on $url : $jsResult")
+          recordAndLogResponse(response.code, "GET user", endpoint)
+          val jsResult = (Json.parse(response.body.string) \ "user").validate[IdUser]
+          if (jsResult.isError) Logger.error(s"Id Api response on ${response.request.urlString} : $jsResult")
           jsResult.asOpt
         }
         .recover { case e =>
@@ -140,10 +156,12 @@ trait IdentityApi {
 
   def post(endpoint: String, data: Option[JsObject], headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
     Timing.record(IdentityApiMetrics, metricName) {
-      val requestHolder = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(5000)
-      val response = requestHolder.post(data.getOrElse(JsNull))
-      response.foreach(r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
-      response.map(_.status)
+      for {
+        response <- okhttp.execute(requestFor(endpoint, headers, parameters).post(data.getOrElse[JsValue](JsNull)).build())
+      } yield {
+        recordAndLogResponse(response.code, s"POST $metricName", endpoint )
+        response.code
+      }
     }
   }
 
