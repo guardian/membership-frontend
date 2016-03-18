@@ -97,10 +97,10 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       val targetPlanId = targetPlans.get(subscriber.subscription.plan.billingPeriod).productRatePlanId
 
       for {
-        previewItems <- memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId)
+        billingSchedule <- memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId)
         privateFields <- identityUserFieldsF
       } yield {
-        val summary = PaidToPaidUpgradeSummary(previewItems, subscriber.subscription, targetPlanId, card)
+        val summary = PaidToPaidUpgradeSummary(billingSchedule, subscriber.subscription, targetPlanId, card)
         val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
         Ok(views.html.tier.upgrade.paidToPaid(
