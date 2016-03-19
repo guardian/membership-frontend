@@ -1,9 +1,12 @@
+@import com.gu.membership.PaidMembershipPlans
+@import com.gu.salesforce.PaidTier
+@import com.gu.memsub.Current
 @import views.support.Pricing
 @import com.gu.memsub.BillingPeriod
 @import com.gu.memsub.BillingPeriod._
 @import com.gu.i18n.Currency
 
-@(pricing: Pricing)
+@(pricing: Pricing, plans: PaidMembershipPlans[Current, PaidTier])
 
 @inputId(bp: BillingPeriod, currency: Currency) = {@{bp.adjective}-@currency}
 
@@ -17,7 +20,7 @@
                data-currency="@pricing.currency"
                checked="checked"/>
 
-    <div class="pseudo-radio">
+    <div class="pseudo-radio" id="@plans.year.productRatePlanId.get">
         <div class="pseudo-radio__header">Pay @pricing.yearly.pretty/year</div>
         @if(pricing.hasYearlySaving) {
             <p class="pseudo-radio__note">@pricing.yearly.pretty
@@ -39,7 +42,7 @@
                data-currency="@pricing.currency"
                value="@month.adjective"/>
 
-        <div class="pseudo-radio">
+        <div class="pseudo-radio" id="@plans.month.productRatePlanId.get">
             <div class="pseudo-radio__header">Pay @pricing.monthly.pretty/month</div>
             <p class="pseudo-radio__note">@pricing.monthly.pretty per month (@pricing.yearlyMonthlyPrice.pretty per year)</p>
             <p class="pseudo-radio__note">1 year membership, pay in instalments over a year</p>

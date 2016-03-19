@@ -5,7 +5,7 @@ import actions.RichAuthRequest
 
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
-import com.gu.memsub.BillingPeriod
+import com.gu.memsub.{Month, Year, BillingPeriod}
 import com.gu.memsub.promo.Promotion.AnyPromotion
 import com.gu.memsub.promo.Writers._
 import com.gu.memsub.promo._
@@ -20,10 +20,13 @@ import scalaz.syntax.either._
 import scalaz.{Monad, \/}
 import scalaz.syntax.std.option._
 import services.PromoSessionService._
+import com.gu.memsub.Subscription.ProductRatePlanId
+import com.gu.memsub.promo.InvalidProductRatePlan
 
 
 object Promotions extends Controller {
-import TouchpointBackend.Normal.promoService
+
+  import TouchpointBackend.Normal.promoService
   val pageImages = Seq(
     ResponsiveImageGroup(
       name=Some("fearless"),
@@ -89,17 +92,19 @@ import TouchpointBackend.Normal.promoService
      ).fold(identity, identity) //Whether or not the for comprehension succeeds, we have a result- which we want to return
   }
 
-  def validatePromoCode(promoCode: PromoCode, billingPeriod: BillingPeriod, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>
+
+  def validatePromoCode(promoCode: PromoCode, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>
     implicit val catalog = request.touchpointBackend.catalog
 
-    val prpId = tier match {
-      case t: PaidTier => PaidPlanChoice(t, billingPeriod).productRatePlanId
-      case t: FreeTier => FreePlanChoice(t).productRatePlanId
+    val prpIds: Seq[ProductRatePlanId] = tier match {
+      case t: PaidTier => Seq(PaidPlanChoice(t, Year()).productRatePlanId, PaidPlanChoice(t, Month()).productRatePlanId)
+      case t: FreeTier => Seq(FreePlanChoice(t).productRatePlanId)
     }
 
     val p = for {
       promo <- request.touchpointBackend.promoService.findPromotion(promoCode).toRightDisjunction(NoSuchCode)
-      _ <- promo.validateFor(prpId, country)
+      results = prpIds.map(promo.validateFor(_, country))
+      _ <- results.find(_.isRight).getOrElse(results.find(_.isLeft).getOrElse(\/.left(InvalidProductRatePlan)))
     } yield promo
 
     p.fold(

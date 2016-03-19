@@ -27,7 +27,7 @@ GET            /join/staff/thankyou                   controllers.Joiner.thankyo
 GET            /join/:tier/thankyou                   controllers.Joiner.thankyou(tier: Tier)
 POST           /join/staff/update-email               controllers.Joiner.updateEmailStaff
 GET            /join/unsupported-browser              controllers.Joiner.unsupportedBrowser
-GET            /lookupPromotion                       controllers.Promotions.validatePromoCode(promoCode: PromoCode, billingPeriod: BillingPeriod, tier: Tier, country: Country)
+GET            /lookupPromotion                       controllers.Promotions.validatePromoCode(promoCode: PromoCode, tier: Tier, country: Country)
 
 GET            /choose-tier                           controllers.Joiner.tierChooser
 
