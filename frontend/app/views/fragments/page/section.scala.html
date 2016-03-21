@@ -2,10 +2,13 @@
     title: String = "",
     hasBorder: Boolean = true,
     isNarrow: Boolean = true,
-    hasBottomPadding: Boolean = true
+    hasBottomPadding: Boolean = true,
+    hasTopPadding: Boolean = true,
+    contentHasBottomPadding: Boolean = true,
+    contentHasTopPadding: Boolean = true
 )(content: Html)
 
-<section class="page-slice page-slice--listing @if(!hasBottomPadding) {listing--no-bottom-padding}">
+<section class="page-slice page-slice--listing @if(!hasBottomPadding) {listing--no-bottom-padding} @if(!hasTopPadding) {listing--no-top-padding}">
     <div class="l-constrained">
         <div class="
             listing
@@ -16,7 +19,7 @@
             <div class="listing__lead-in">
                 <h3 class="h-intro">@title</h3>
             </div>
-            <div class="listing__content">@content</div>
+            <div class="listing__content @if(!contentHasBottomPadding) {listing--no-bottom-padding} @if(!contentHasTopPadding) {listing-content--no-top-padding}">@content</div>
         </div>
     </div>
 </section>
