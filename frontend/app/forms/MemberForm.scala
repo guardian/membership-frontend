@@ -59,16 +59,18 @@ object MemberForm {
   trait MemberChangeForm {
     val featureChoice: Set[FeatureChoice]
     val addressDetails: Option[AddressDetails]
+    val promoCode: Option[PromoCode]
   }
 
-  case class PaidMemberChangeForm(password: String, featureChoice: Set[FeatureChoice]) extends MemberChangeForm {
+  case class PaidMemberChangeForm(password: String, featureChoice: Set[FeatureChoice], promoCode: Option[PromoCode]) extends MemberChangeForm {
     val addressDetails = None
   }
 
   case class FreeMemberChangeForm(payment: PaymentForm,
                                   deliveryAddress: Address,
                                   billingAddress: Option[Address],
-                                  featureChoice: Set[FeatureChoice]
+                                  featureChoice: Set[FeatureChoice],
+                                  promoCode: Option[PromoCode]
                                   ) extends MemberChangeForm {
     val addressDetails = Some(AddressDetails(deliveryAddress, billingAddress))
   }
@@ -196,14 +198,16 @@ object MemberForm {
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),
-      "featureChoice" -> productFeature
-    )(FreeMemberChangeForm.apply)(FreeMemberChangeForm.unapply)
+      "featureChoice" -> productFeature,
+      "promoCode" -> optional(promoCode)
+  )(FreeMemberChangeForm.apply)(FreeMemberChangeForm.unapply)
   )
 
   val paidMemberChangeForm: Form[PaidMemberChangeForm] = Form(
     mapping(
       "password" -> nonEmptyText,
-      "featureChoice" -> productFeature
+      "featureChoice" -> productFeature,
+      "promoCode" -> optional(promoCode)
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
 

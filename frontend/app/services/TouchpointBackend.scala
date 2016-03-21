@@ -47,19 +47,22 @@ object TouchpointBackend {
 
     val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
 
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
-    val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
-    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)) ++ discountPromo(backend.zuoraEnvName))
-
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
-    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds, promoService)
+    val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
+
     val catalogService = CatalogService(zuoraRestClient, memRatePlanIds, digipackRatePlanIds, backendType.name)
+    val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
+
+    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)) ++ discountPromo(backend.zuoraEnvName),
+                                        catalogService.membershipCatalog, discounter)
+
+    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds, promoService)
     val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService)
     val paymentService = new PaymentService(stripeService, subscriptionService, zuoraService, catalogService)
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
-    val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName), promoService, catalogService.membershipCatalog)
     val memberService = new MemberService(
       identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService, discounter)
 
