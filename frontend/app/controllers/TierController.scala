@@ -23,10 +23,10 @@ import play.filters.csrf.CSRF.Token.getToken
 import tracking.ActivityTracking
 import utils.{TierChangeCookies, CampaignCode}
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
-
+import scalaz.std.scalaFuture._
 import scala.concurrent.Future
 import scala.language.implicitConversions
-import scalaz.\/
+import scalaz.{EitherT, \/}
 
 trait DowngradeTier extends ActivityTracking with CatalogProvider
                                              with SubscriptionServiceProvider
@@ -94,11 +94,13 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       }
 
     def fromPaid(subscriber: PaidMember, card: PaymentCard): Future[Result] = {
-      val targetPlanId = targetPlans.get(subscriber.subscription.plan.billingPeriod).productRatePlanId
 
-      for {
-        billingSchedule <- memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId)
-        privateFields <- identityUserFieldsF
+      val targetPlanId = targetPlans.get(subscriber.subscription.plan.billingPeriod).productRatePlanId
+      val preview = memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId)
+
+      (for {
+        billingSchedule <- EitherT(memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId))
+        privateFields <- EitherT(identityUserFieldsF.map(\/.right))
       } yield {
         val summary = PaidToPaidUpgradeSummary(billingSchedule, subscriber.subscription, targetPlanId, card)
         val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
@@ -109,7 +111,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
         pageInfo(privateFields, subscriber.subscription.plan.billingPeriod),
         flashMsgOpt
         )(getToken, request))
-      }
+      }).run.map(handleResultErrors(_))
     }
 
     val paymentCard = paymentService.getPaymentCard(request.subscriber.subscription.accountId)
@@ -206,14 +208,13 @@ trait TierController extends Controller with UpgradeTier with DowngradeTier with
   }
 
   def handleErrors(memberResult: Future[MemberError \/ _])(success: => Result): Future[Result] =
-    for {
-      res <- memberResult
-    } yield {
-      res.fold({
-        case PendingAmendError(subName) => Ok(views.html.tier.pendingAmend())
-        case err => throw err
-      }, _ => success)
-    }
+    memberResult.map { res => handleResultErrors(res.map(_ => success)) }
+
+  def handleResultErrors(memberResult: MemberError \/ Result): Result =
+    memberResult.fold({
+      case PendingAmendError(subName) => Ok(views.html.tier.pendingAmend())
+      case err => throw err
+    }, identity)
 }
 
 object TierController extends TierController
