@@ -1,10 +1,10 @@
-@(cutout: String, altText: String)(content: Html)
+@(cutout: String, altText: String, left: Boolean = false)(content: Html)
 
-<aside class="promo-quote">
-    <div class="promo-quote__body">
-        <div class="promo-quote__text">
+    <aside class="promo-quote">
+        <div class="promo-quote__body">
+            <div class="promo-quote__text">
             @content
+            </div>
         </div>
         <img src="@cutout" alt="@altText" class="promo-quote__cutout">
-    </div>
-</aside>
+    </aside>
