@@ -23,6 +23,7 @@
 @import 'vars';
 @import 'mixins';
 @import 'webfonts';
+@import 'svg';
 
 // =============================================================================
 // Base
@@ -81,6 +82,7 @@
 @import 'components/roundel';
 @import 'components/slideshow';
 @import 'components/promos';
+@import 'components/quote';
 @import 'components/features';
 @import 'components/messages';
 @import 'components/warnings';
