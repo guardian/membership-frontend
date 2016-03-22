@@ -4,15 +4,14 @@ define(
         'ajax',
         'bean',
         'lodash/string/template',
+        'src/modules/form/billingPeriodChoice',
         'text!src/templates/promoCode/promotion.html',
-        'text!src/templates/promoCode/discountedRatePlan.html',
         'text!src/templates/promoCode/validationError.html'
     ],
-    function ($, ajax, bean, template, promotionTemplate, discountedRatePlanTemplate, validationErrorTemplate) {
+    function ($, ajax, bean, template, billingPeriodChoice, promotionTemplate, validationErrorTemplate) {
         'use strict';
 
-        var $PROMOTED_RATE_PLAN,
-            $PROMO_CODE_INPUT = $('#promo-code'),
+        var $PROMO_CODE_INPUT = $('#promo-code'),
             $COUNTRY_SELECT = $('.js-country'),
             $TIER_ELEMENT = $('input[name="tier"]'),
             $APPLY_BUTTON = $('.js-promo-code-validate'),
@@ -22,31 +21,27 @@ define(
             return !!promotion.promotionType.amount;
         };
 
-        var isForJustOneRatePlan = function(promotion) {
-            return promotion.appliesTo.productRatePlanIds.length === 1;
-        };
-
         var isIncentivePromotion = function(promotion) {
             return promotion.promotionType.redemptionInstructions !== '';
         };
 
         var restoreOriginalRatePlans = function() {
-            if ($PROMOTED_RATE_PLAN && $PROMOTED_RATE_PLAN.original) {
-                $PROMOTED_RATE_PLAN.html($PROMOTED_RATE_PLAN.original);
-                $PROMOTED_RATE_PLAN.removeClass('pseudo-radio--promotion');
-                delete $PROMOTED_RATE_PLAN.original;
-            }
+            billingPeriodChoice.reset();
         };
 
         var showPromoCode = function(promotion) {
-            if (isDiscountPromotion(promotion) && isForJustOneRatePlan(promotion)) {
-                if (!($PROMOTED_RATE_PLAN && $PROMOTED_RATE_PLAN.original)) {
-                    $PROMOTED_RATE_PLAN = $('#' + promotion.appliesTo.productRatePlanIds[0]);
-                    $PROMOTED_RATE_PLAN.original = $PROMOTED_RATE_PLAN.html();
-                }
-                $PROMOTED_RATE_PLAN.html(template(discountedRatePlanTemplate)(promotion));
-                $PROMOTED_RATE_PLAN.addClass('pseudo-radio--promotion');
+            if (isDiscountPromotion(promotion)) {
+                promotion.appliesTo.productRatePlanIds.forEach(function(productRatePlanId) {
+                    guardian.membership.checkoutForm.billingPeriods.choices.forEach(function(choice) {
+                        if (choice.inputId === productRatePlanId) {
+                            guardian.membership.checkoutForm.billingPeriods[choice.inputValue].discount = promotion.promotionType.amount;
+                            choice.classes.push('pseudo-radio--promotion');
+                            choice.promoted = true;
+                        }
+                    });
+                });
                 $FEEDBACK_CONTAINER.html(template(promotionTemplate)(promotion));
+                billingPeriodChoice.render();
             } else if (isIncentivePromotion(promotion) || isDiscountPromotion(promotion)) {
                 $FEEDBACK_CONTAINER.html(template(promotionTemplate)(promotion));
                 restoreOriginalRatePlans();
@@ -72,7 +67,6 @@ define(
         };
 
         var validatePromoCode = function() {
-
             var trimmedCode = $PROMO_CODE_INPUT.val().trim();
             if(!trimmedCode) {
                 clearFeedbackContainer();
@@ -103,15 +97,17 @@ define(
 
         return {
             init: function() {
-
-                // revalidate the code if we change / click stuff
-                bean.on($COUNTRY_SELECT[0], 'change', validatePromoCode);
-                bean.on($APPLY_BUTTON[0], 'click', validatePromoCode);
-
-                //handle pre-population of codes
-                if ($PROMO_CODE_INPUT.val()) {
-                    validatePromoCode();
+                if ($PROMO_CODE_INPUT.length === 0) {
+                    return;
                 }
+                // revalidate the code if we change / click stuff
+                if ($COUNTRY_SELECT.length > 0) {
+                    bean.on($COUNTRY_SELECT[0], 'change', validatePromoCode);
+                }
+                if ($APPLY_BUTTON.length > 0) {
+                    bean.on($APPLY_BUTTON[0], 'click', validatePromoCode);
+                }
+                validatePromoCode();
             }
         };
     });

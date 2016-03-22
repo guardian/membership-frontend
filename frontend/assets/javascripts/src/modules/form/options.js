@@ -3,12 +3,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
 
     var CURRENCY_ATTR = 'data-currency';
     var DATA_CURRENCY_SEL = '[' + CURRENCY_ATTR + ']';
-    var BILLING_PERIOD_CONTAINER_EL = '.js-billing-period__container' + DATA_CURRENCY_SEL;
     var PAYMENT_OPTIONS_CONTAINER_EL = $('.js-payment-options-container')[0];
-    var CARD_DETAILS_NOTE_EL = $('.js-card-details-note')[0];
-    var CARD_NOTE_CURRENCIES_ELS = $(DATA_CURRENCY_SEL, CARD_DETAILS_NOTE_EL);
-    var CARD_NOTE_PERIOD = '.js-card-note-pricing-period';
-    var CARD_NOTE_PRICING_CHARGE = '.js-card-note-pricing-charge';
     var SUBMIT_BTN_EL = $('.js-submit-input')[0];
     var DELIVERY_COUNTRY_EL = $('#country-deliveryAddress')[0];
     var BILLING_COUNTRY_EL = $('#country-billingAddress')[0];
@@ -29,14 +24,12 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     function renderPrices() {
         hideBillingAddress();
         selectDeliveryCountry();
-        renderPaymentOptions();
-        renderCardDetailsNotes();
         renderSubmitButton();
     }
 
-    var hasParent = function (elem) {
+    function hasParent(elem) {
         return elem.parentNode;
-    };
+    }
 
     function hideBillingAddress() {
         if (!hasParent(BILLING_ADDRESS_EL) && checkoutForm.showBillingAddress) {
@@ -57,30 +50,10 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
 
     function selectCountry(selectEl, country) {
         $('option', selectEl).each(function (el) {
-            if ($(el).val() == country) {
+            if ($(el).val() === country) {
                 $(el)[0].selected = true;
             }
         });
-    }
-
-    function renderPaymentOptions() {
-        $(BILLING_PERIOD_CONTAINER_EL, PAYMENT_OPTIONS_CONTAINER_EL).each(function (el) {
-            toggleCurrency(el);
-            setBillingPeriod(el);
-        });
-    }
-
-    function renderCardDetailsNotes() {
-        CARD_NOTE_CURRENCIES_ELS.each(function (el) {
-            toggleCurrency(el);
-        });
-
-        var attr = 'data-' + checkoutForm.billingPeriod;
-        var paymentTakenEl = $(dataCurrencySel(checkoutForm.currency, CARD_NOTE_PRICING_CHARGE), CARD_DETAILS_NOTE_EL)[0];
-        var periodEl = $(dataCurrencySel(checkoutForm.currency, CARD_NOTE_PERIOD), CARD_DETAILS_NOTE_EL)[0];
-
-        paymentTakenEl.innerHTML = paymentTakenEl.getAttribute(attr);
-        periodEl.innerHTML = periodEl.getAttribute(attr);
     }
 
     function renderSubmitButton() {
@@ -96,20 +69,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
         });
     }
 
-    function setBillingPeriod(el) {
-        $('input[type="radio"]', el).each(function (inputEl) {
-            var elBillingPeriod = inputEl.value;
-            var elCurrency = inputEl.getAttribute(CURRENCY_ATTR);
-            if (elBillingPeriod === checkoutForm.billingPeriod && elCurrency === checkoutForm.currency) {
-                inputEl.checked = true;
-            }
-            else {
-                inputEl.checked = false;
-            }
-        });
-    }
-
-    var init = function () {
+    function init() {
         checkoutForm.deliveryCountry = checkoutForm.defaultCountry;
 
         if (PAYMENT_OPTIONS_CONTAINER_EL && checkoutForm) {
@@ -126,15 +86,9 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
         if (DELIVERY_COUNTRY_EL) {
             bean.fire(DELIVERY_COUNTRY_EL, 'change');
         }
-    };
+    }
 
-    var addListeners = function () {
-        bean.on(PAYMENT_OPTIONS_CONTAINER_EL, 'click', 'input', function (e) {
-            var input = e.target;
-            checkoutForm.billingPeriod = $(input).val();
-            renderPrices();
-        });
-
+    function addListeners() {
         bean.on(DELIVERY_COUNTRY_EL, 'change', function(e) {
             var input = e.target;
             var selectedCountry = $(input).val();
@@ -178,23 +132,10 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
 
             renderPrices();
         });
-    };
+    }
 
     function toArray(nodeList) {
         return Array.prototype.slice.call(nodeList);
-    }
-
-    function toggleCurrency(el) {
-        if ($(el).attr(CURRENCY_ATTR) === checkoutForm.currency) {
-            el.classList.remove('is-hidden');
-        } else {
-            el.classList.add('is-hidden');
-        }
-    }
-
-    function dataCurrencySel(currency, selector) {
-        var otherSelector = selector && ' ' + selector || '';
-        return '[' + CURRENCY_ATTR + '=' + currency + ']' + otherSelector;
     }
 
     return {

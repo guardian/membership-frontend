@@ -1,0 +1,17 @@
+<% billingPeriods.choices.forEach(function(choice) { %>
+    <label class="label" for="<%= choice.inputId %>">
+        <input type="radio"
+               class="is-hidden"
+               name="payment.type"
+               id="<%= choice.inputId %>"
+               value="<%= choice.inputValue %>"
+               <% if (guardian.membership.checkoutForm.billingPeriod === choice.inputValue) { %>checked="checked"<% } %>
+        />
+        <div  id="<%= choice.productRatePlanId %>" class="pseudo-radio <%= choice.classes.join(' ') %>">
+            <div class="pseudo-radio__header">Pay <%= choice.generateDisplayAmount() %><%= choice.headerSuffix %></div>
+            <% choice.generateNotes().forEach(function(note) { %>
+                <div class="pseudo-radio__note"><%= note %></div>
+            <% }); %>
+        </div>
+    </label>
+<% }); %>

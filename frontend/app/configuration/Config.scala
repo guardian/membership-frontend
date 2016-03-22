@@ -146,7 +146,8 @@ object Config {
     val prpIds = membershipRatePlanIds(env)
     new Promotion(
       appliesTo = AppliesTo.ukOnly(Set(
-        prpIds.partnerYearly
+        prpIds.partnerYearly,
+        prpIds.partnerMonthly
       )),
       campaignName = "Become a Partner for just £99/year",
       codes = PromoCodeSet(PromoCode("PARTNER99")),

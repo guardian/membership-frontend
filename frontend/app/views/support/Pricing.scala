@@ -16,7 +16,7 @@ case class Pricing(yearly: Price, monthly: Price) {
   lazy val yearlySavingsInMonths = (yearly.amount - yearlyMonthlyPrice.amount) / monthly.amount
 
   val savingInfo: Option[String] =
-    if (hasYearlySaving) Some(s"Save ${yearlySaving.pretty}/year") else None
+    if (hasYearlySaving) Some(s"Save ${yearlySaving.pretty}/year vs monthly installments") else None
 }
 
 object Pricing {

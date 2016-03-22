@@ -16,35 +16,13 @@
                 <h3 class="credit-card-note__header">First payment</h3>
                 <p>will be taken today under the name Guardian News & Media.</p>
             </div>
-            <div class="credit-card-note">
-                <h3 class="credit-card-note__header">Ongoing payments</h3>
-                    @for(pricing <- plans.allPricing) {
-                        <p class="is-hidden" data-currency="@pricing.currency">
-                            Your card will be charged @pricing.currency.identifier
-                            <span class="js-card-note-pricing-charge"
-                                  data-annual="@pricing.yearly.amount"
-                                  data-monthly="@pricing.monthly.amount">
-                                @pricing.yearly.amount
-                            </span>
-                            every
-                            <span class="js-card-note-pricing-period"
-                                  data-annual="year"
-                                  data-monthly="month">
-                                year
-                            </span>
-                            . Payments will taken on or shortly after the
-                            <span class="js-card-note-payment-taken"
-                                  data-annual="@Dates.dayInMonthWithSuffixAndMonth()"
-                                  data-monthly="@Dates.dayInMonthWithSuffix()">
-                                @Dates.dayInMonthWithSuffixAndMonth()
-                            </span>
-                            every
-                            <span class="js-card-note-pricing-period" data-annual="year" data-monthly="month">
-                                year
-                            </span>
-                            .
-                        </p>
-                    }
+            <div class="credit-card-note js-ongoing-card-payments">
+                <script type="text/javascript">
+                    guardian.membership.checkoutForm.ongoingCardPayments = {
+                        annual: '@Dates.dayInMonthWithSuffixAndMonth()',
+                        monthly: '@Dates.dayInMonthWithSuffix()'
+                    };
+                </script>
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Cancellation</h3>

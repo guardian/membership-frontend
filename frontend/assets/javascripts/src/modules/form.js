@@ -62,8 +62,10 @@ define([
     'src/modules/form/address',
     'src/modules/form/options',
     'src/modules/form/helper/password',
+    'src/modules/form/ongoingCardPayments',
+    'src/modules/form/billingPeriodChoice',
     'src/modules/form/promoCode'
-], function (validation, form, payment, address, options, password, promoCode) {
+], function (validation, form, payment, address, options, password, ongoingCardPayments, billingPeriodChoice, promoCode) {
     'use strict';
 
     var init = function () {
@@ -73,6 +75,8 @@ define([
             address.init();
             password.init();
             options.init();
+            ongoingCardPayments.init();
+            billingPeriodChoice.init();
             promoCode.init();
 
             if (form.hasPayment) {
