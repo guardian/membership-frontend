@@ -29,7 +29,7 @@ trait MemberService {
                    campaignCode: Option[CampaignCode]): Future[ContactId]
 
   def previewUpgradeSubscription(subscription: Subscription with Paid,
-                                 newPlanId: ProductRatePlanId): Future[BillingSchedule]
+                                 newPlanId: ProductRatePlanId): Future[MemberError \/ BillingSchedule]
 
   def upgradeFreeSubscription(subscriber: FreeMember,
                               newTier: PaidTier,

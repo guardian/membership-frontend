@@ -225,17 +225,17 @@ class MemberService(identityService: IdentityService,
   }
 
   override def previewUpgradeSubscription(subscription: PaidSubscription,
-                                          newRatePlanId: ProductRatePlanId): Future[BillingSchedule] = {
+                                          newRatePlanId: ProductRatePlanId): Future[MemberError \/ BillingSchedule] = {
     (for {
-      result <- zuoraService.upgradeSubscription(Upgrade(
+      _ <- EitherT(subOrPendingAmendError(subscription))
+      result <- EitherT(zuoraService.upgradeSubscription(Upgrade(
         subscriptionId = subscription.id.get,
         currentRatePlan = subscription.ratePlanId,
         newRatePlans = NonEmptyList(RatePlan(newRatePlanId.get, None)),
-        previewMode = true))
-
-    } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems)).map(_.getOrElse(
+        previewMode = true)).map(\/.right))
+    } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems).getOrElse(
       throw new IllegalStateException(s"Sub ${subscription.id} upgrading to $newRatePlanId has no bills")
-    ))
+    )).run
   }
 
   def subscriptionUpgradableTo(sub: Subscription with PaymentStatus[Plan], newTier: PaidTier): Boolean = {
@@ -472,9 +472,11 @@ class MemberService(identityService: IdentityService,
 
   private def subOrPendingAmendError[P <: Subscription](sub: P): Future[MemberError \/ P] =
     for {
-      status <- zuoraService.getSubscriptionStatus(sub.name)
+      restSub <- zuoraService.getRestSubscription(sub.name).map(
+        _.getOrElse(throw new Exception(s"Sub ${sub.name} not found with rest"))
+      )
     } yield {
-      if (status.futureVersionOpt.isDefined)
+      if (restSub.hasPendingAmendment() || restSub.isCancelled)
         PendingAmendError(sub.name).left
       else
         sub.right
