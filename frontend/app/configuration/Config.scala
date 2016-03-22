@@ -160,7 +160,9 @@ object Config {
     new Promotion[Incentive](
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerMonthly,
-        prpIds.partnerYearly
+        prpIds.partnerYearly,
+        prpIds.patronYearly,
+        prpIds.patronMonthly
       )),
       campaignName = "English Heritage Offer - Q4 FY2016",
       codes = PromoCodeSet(PromoCode("EH2016")),
