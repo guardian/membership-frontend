@@ -1,0 +1,10 @@
+@import views.model.Roundel
+@(roundel:Roundel, classModifier:Option[String] = None)
+<div class="roundel l-constrained">
+    <div class="roundel__container @{classModifier.map{"roundel__container--"+_}}">
+        <h1 class="roundel__title">@roundel.title</h1>
+        @for(description <- roundel.description) {
+            <p class="roundel__description">@description</p>
+        }
+    </div>
+</div>

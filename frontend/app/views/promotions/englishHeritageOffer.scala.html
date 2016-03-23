@@ -3,6 +3,7 @@
 @import com.gu.salesforce.Tier.Partner
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
+@import views.model.Roundel
 @import model.Highlights
 @import model.PackagePromo.CtaButton
 @import com.netaporter.uri.dsl._
@@ -17,7 +18,7 @@
 }
 
 @main("English Heritage Promotion", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
-    @fragments.promos.englishHeritageRoundel()
+    @fragments.common.roundel(Roundel("Ends 31 March: Free annual English Heritage membership", Some("when you join as a Partner or Patron")))
     @fragments.page.heroBanner("hero-banner--eng-heritage") {
         Become a Guardian Partner
     } {
