@@ -183,25 +183,22 @@ object Config {
     val prpIds = membershipRatePlanIds(env)
     new Promotion(
       appliesTo = AppliesTo.ukOnly(Set(
-        prpIds.partnerMonthly,
         prpIds.partnerYearly
       )),
-      campaignName = "Discount Promo",
-      codes = PromoCodeSet(PromoCode("50OFF")),
-      description = "50% off for 3 months for partners",
+      campaignName = "Become a Partner for just £99/year",
+      codes = PromoCodeSet(PromoCode("PARTNER99")),
+      description = "",
       expires = DateTime.parse("2016-04-01T01:00:00Z"),
       imageUrl = None,
       promotionType = PercentDiscount(
-        durationMonths = 3.some,
-        amount = 50d
+        durationMonths = None,
+        amount = 33.557046979866
       ),
-      roundelHtml = "<h1 class=\"roundel__title\">50% off for 3 months</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
-      thumbnailUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png", //change this
-      title = "50% off for 3 months when you sign up as a partner or patron"
+      roundelHtml = "<h1 class=\"roundel__title\">Become a Partner or just £99/year</h1>\n<p class=\"roundel__description\">before 31 March 2016</p>",
+      thumbnailUrl = "", //change this
+      title = "Become a Partner for just £99/year"
     ).some.filter(_ => env != "PROD")
   }
-
-
 
   object Implicits {
     implicit val akkaSystem = Akka.system

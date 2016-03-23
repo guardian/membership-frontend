@@ -1,18 +1,19 @@
 @import com.gu.memsub.promo.PromoCode
-@import views.support.IdentityUser
 
 @(promoCode: Option[PromoCode])
 
-<fieldset class="fieldset checkout-promo-code js-promo-code">
+<fieldset class="fieldset">
     <div class="fieldset__heading">
-        <h2 class="fieldset__headline">Promo code</h2>
+        <h2 class="fieldset__headline">Do you have a promo code?</h2>
     </div>
 
     <div class="fieldset__fields">
         <div class="form-field">
-            <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input promo-code__input"/>
-            <button type="button" class="action js-promo-code-validate">Apply</button>
-            <span class="js-promo-feedback-container"></span>
+            <div class="promo-code">
+                <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input promo-code__field"/>
+                <button type="button" class="promo-code__apply action js-promo-code-validate">Apply</button>
+            </div>
+            <div class="js-promo-feedback-container"></div>
         </div>
     </div>
 </fieldset>

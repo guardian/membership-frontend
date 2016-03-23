@@ -4,48 +4,73 @@ define(
         'ajax',
         'bean',
         'lodash/string/template',
-        'text!src/templates/promoCode.html',
-        'text!src/templates/promoError.html'
+        'src/modules/form/billingPeriodChoice',
+        'text!src/templates/promoCode/promotion.html',
+        'text!src/templates/promoCode/validationError.html'
     ],
-    function ($, ajax, bean, template, promoCodeTemplate,promoErrorTemplate) {
+    function ($, ajax, bean, template, billingPeriodChoice, promotionTemplate, validationErrorTemplate) {
         'use strict';
 
-        var COUNTRY_SELECT = '.js-country',
-            PROMO_CODE_INPUT = '#promo-code',
-            TIER_ELEMENT = 'input[name="tier"]',
-            APPLY_BUTTON = '.js-promo-code-validate',
-            BILLING_PERIOD = '.js-payment-options-container [type=radio]:checked',
-            FEEDBACK_CONTAINER = '.js-promo-feedback-container';
+        var $PROMO_CODE_INPUT = $('#promo-code'),
+            $COUNTRY_SELECT = $('.js-country'),
+            $TIER_ELEMENT = $('input[name="tier"]'),
+            $APPLY_BUTTON = $('.js-promo-code-validate'),
+            $FEEDBACK_CONTAINER = $('.js-promo-feedback-container');
 
-        var elementsThatTriggerRevalidation = $([
-            COUNTRY_SELECT, BILLING_PERIOD, APPLY_BUTTON
-        ].join(','));
+        var isDiscountPromotion = function(promotion) {
+            return !!promotion.promotionType.amount;
+        };
+
+        var isIncentivePromotion = function(promotion) {
+            return promotion.promotionType.redemptionInstructions !== '';
+        };
+
+        var restoreOriginalRatePlans = function() {
+            billingPeriodChoice.reset();
+        };
 
         var showPromoCode = function(promotion) {
-            $(FEEDBACK_CONTAINER).html(template(promoCodeTemplate)(promotion));
+            if (isDiscountPromotion(promotion)) {
+                promotion.appliesTo.productRatePlanIds.forEach(function(productRatePlanId) {
+                    guardian.membership.checkoutForm.billingPeriods.choices.forEach(function(choice) {
+                        if (choice.inputId === productRatePlanId) {
+                            guardian.membership.checkoutForm.billingPeriods[choice.inputValue].discount = promotion.promotionType.amount;
+                            choice.classes.push('pseudo-radio--promotion');
+                            choice.promoted = true;
+                        }
+                    });
+                });
+                $FEEDBACK_CONTAINER.html(template(promotionTemplate)(promotion));
+                billingPeriodChoice.render();
+            } else if (isIncentivePromotion(promotion) || isDiscountPromotion(promotion)) {
+                $FEEDBACK_CONTAINER.html(template(promotionTemplate)(promotion));
+                restoreOriginalRatePlans();
+            } else {
+                // is a tracking promotion, so just leave the container blank.
+                $FEEDBACK_CONTAINER.html('');
+                restoreOriginalRatePlans();
+            }
+            $PROMO_CODE_INPUT.parent().removeClass('form-field--error');
+            bindExtraKeyListener();
         };
 
         var showPromoError = function(ajax) {
-            $(FEEDBACK_CONTAINER).html(template(promoErrorTemplate)(JSON.parse(ajax.response)));
-            $(PROMO_CODE_INPUT).parent().addClass('form-field--error');
+            $FEEDBACK_CONTAINER.html(template(validationErrorTemplate)(JSON.parse(ajax.response)));
+            $PROMO_CODE_INPUT.parent().addClass('form-field--error');
+            restoreOriginalRatePlans();
         };
 
         var clearFeedbackContainer = function() {
-            $(FEEDBACK_CONTAINER).html('');
-            $(PROMO_CODE_INPUT).parent().removeClass('form-field--error');
+            $FEEDBACK_CONTAINER.html('');
+            $PROMO_CODE_INPUT.parent().removeClass('form-field--error');
+            restoreOriginalRatePlans();
         };
 
-        var validatePromoCode = function(code) {
-
-            var trimmedCode = code.trim();
-            clearFeedbackContainer();
-
+        var validatePromoCode = function() {
+            var trimmedCode = $PROMO_CODE_INPUT.val().trim();
             if(!trimmedCode) {
-                return {
-                    // a DIY pending promise
-                    then: function() { return this },
-                    catch: function() { return this }
-                };
+                clearFeedbackContainer();
+                return;
             }
 
             return ajax({
@@ -54,38 +79,35 @@ define(
                 url: '/lookupPromotion',
                 data: {
                     promoCode: trimmedCode,
-                    billingPeriod: $(BILLING_PERIOD).val(),
-                    country: $(COUNTRY_SELECT).val(),
-                    tier: $(TIER_ELEMENT).val()
+                    country: $COUNTRY_SELECT.val(),
+                    tier: $TIER_ELEMENT.val()
                 }
             })
+            .then(showPromoCode)
+            .catch(showPromoError);
+        };
+
+        var bindExtraKeyListener = function() {
+            if (bindExtraKeyListener.alreadyBound) {
+                return;
+            }
+            bean.on($PROMO_CODE_INPUT[0], 'keyup blur', validatePromoCode);
+            bindExtraKeyListener.alreadyBound = true;
         };
 
         return {
             init: function() {
-                if (!$(PROMO_CODE_INPUT).length) {
+                if ($PROMO_CODE_INPUT.length === 0) {
                     return;
                 }
-
-                // clear the existing promo code when we are editing it
-                bean.on($(PROMO_CODE_INPUT)[0], 'keyup', clearFeedbackContainer);
-
                 // revalidate the code if we change / click stuff
-                elementsThatTriggerRevalidation.each(function(elem) {
-                    bean.on(elem, elem.tagName.toLowerCase() == 'button' ? 'click' : 'change', function() {
-                        validatePromoCode($(PROMO_CODE_INPUT).val()).then(showPromoCode).catch(showPromoError)
-                    });
-                });
-
-                //handle pre-population of codes
-                var prepopulatedCode = $(PROMO_CODE_INPUT).val();
-
-                if (prepopulatedCode) {
-                    $(PROMO_CODE_INPUT).val('');
-                    validatePromoCode(prepopulatedCode).then(showPromoCode).then(function() {
-                        $(PROMO_CODE_INPUT).val(prepopulatedCode)
-                    });
+                if ($COUNTRY_SELECT.length > 0) {
+                    bean.on($COUNTRY_SELECT[0], 'change', validatePromoCode);
                 }
+                if ($APPLY_BUTTON.length > 0) {
+                    bean.on($APPLY_BUTTON[0], 'click', validatePromoCode);
+                }
+                validatePromoCode();
             }
-        }
+        };
     });

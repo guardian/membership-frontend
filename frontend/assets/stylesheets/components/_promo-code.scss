@@ -1,16 +1,40 @@
 /* ==========================================================================
-   P R O M O   C O D E S
+   P R O M O  C O D E S
    ========================================================================== */
 
+.promo-code {
+    overflow: hidden;
+}
 
-.promo__image {
-    width: 100px;
-    margin-bottom: 50px;
-    margin-right: 10px;
+.promo-code__field {
     float: left;
+    width: 60%;
+}
+.promo-code__apply {
+    float: left;
+    margin-top: 1px;
+    margin-left: $gs-baseline;
 }
 
-.promo__congrats {
-    margin-top: 10px;
+.promotion {
+
 }
 
+.promotion__congrats {
+    margin-top: $gs-baseline;
+}
+
+.promotion__congrats__tick {
+    color: $c-flash-success-border;
+}
+
+.promotion__description {
+
+}
+
+input[type="radio"]:checked ~ .pseudo-radio--promotion {
+    border-color: $c-flash-success-border;
+    &:before {
+        background-color: $c-flash-success-border;
+    }
+}

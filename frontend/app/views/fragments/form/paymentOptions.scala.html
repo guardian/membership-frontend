@@ -1,7 +1,6 @@
 @import com.gu.membership.PaidMembershipPlans
 @import com.gu.salesforce.PaidTier
 @import com.gu.memsub.Current
-@import views.support.Pricing._
 
 @(plans: PaidMembershipPlans[Current, PaidTier])
 
@@ -14,10 +13,7 @@
 
     <div class="fieldset__fields">
         <div class="form-field">
-            @for(pricing <- plans.allPricing) {
-                @fragments.pricing.billingPeriodChoice(pricing)
-            }
+            @fragments.pricing.billingPeriodChoice(plans)
         </div>
-
     </div>
 </fieldset>

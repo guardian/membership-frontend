@@ -1,48 +1,115 @@
-@import views.support.Pricing
-@import com.gu.memsub.BillingPeriod
+@import com.gu.membership.PaidMembershipPlans
+@import com.gu.salesforce.PaidTier
+@import com.gu.memsub.Current
+@import views.support.Pricing._
 @import com.gu.memsub.BillingPeriod._
-@import com.gu.i18n.Currency
 
-@(pricing: Pricing)
+@(plans: PaidMembershipPlans[Current, PaidTier])
 
-@inputId(bp: BillingPeriod, currency: Currency) = {@{bp.adjective}-@currency}
 
-<div data-currency="@pricing.currency.toString" class="is-hidden js-billing-period__container">
-    <label class="label" for="@inputId(year, pricing.currency)">
-        <input type="radio"
-               class="is-hidden"
-               name="payment.type"
-               id="@inputId(year, pricing.currency)"
-               value="@year.adjective"
-               data-currency="@pricing.currency"
-               checked="checked"/>
+<script type="text/javascript">
+(function() {
+    'use strict';
 
-    <div class="pseudo-radio">
-        <div class="pseudo-radio__header">Pay @pricing.yearly.pretty/year</div>
-        @if(pricing.hasYearlySaving) {
-            <p class="pseudo-radio__note">@pricing.yearly.pretty
-                one off annual payment (save @pricing.yearlySaving.pretty per year)</p>
-                @for(savingInfo <- pricing.savingInfo) {
-                    <p class="pseudo-radio__note">@savingInfo</p>
+    function discountedPriceFormatted(price, discount) {
+        return price * ((100 - discount) / 100);
+    }
+
+    function formattedDiscountedPrice(currency, amount, discount) {
+        return checkoutForm.currencySymbols[currency] + discountedPriceFormatted(amount[currency], discount).toFixed(2).replace('.00','');
+    }
+
+    function formattedDiscountedCharge(currency, amount, discount) {
+        return checkoutForm.currencyIdentifiers[currency] + discountedPriceFormatted(amount[currency], discount).toFixed(2);
+    }
+
+    var checkoutForm = guardian.membership.checkoutForm;
+
+    checkoutForm.currencySymbols = {
+        NULL: '' @for(pricing <- plans.allPricing) {, @pricing.currency: '@pricing.currency.glyph'}
+    }
+
+    checkoutForm.currencyIdentifiers = {
+        NULL: '' @for(pricing <- plans.allPricing) {, @pricing.currency: '@pricing.currency.identifier'}
+    }
+
+    checkoutForm.billingPeriods = {
+        annual: {
+            amount: {
+                'NULL': 0 @for(pricing <- plans.allPricing) {, '@pricing.currency': @pricing.yearly.amount }
+            },
+            yearlyMonthlyAmount: {
+                'NULL': 0 @for(pricing <- plans.allPricing) {, '@pricing.currency': @pricing.yearlyMonthlyPrice.amount }
+            },
+            savingInfo: {
+                'NULL':'' @for(pricing <- plans.allPricing) {, '@pricing.currency': '@pricing.savingInfo.getOrElse("")' }
+            },
+            generateChargeAmount: function() {
+                return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
+            },
+            noun: '@year.noun',
+            discount: 0
+        },
+        monthly: {
+            amount: {
+                'NULL': 0 @for(pricing <- plans.allPricing) {, '@pricing.currency': @pricing.monthly.amount }
+            },
+            yearlyMonthlyAmount: {
+                'NULL': 0 @for(pricing <- plans.allPricing) {, '@pricing.currency': @pricing.yearlyMonthlyPrice.amount }
+            },
+            generateChargeAmount: function() {
+                return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
+            },
+            noun: '@month.noun',
+            discount: 0
+        },
+        choices: []
+    };
+
+    checkoutForm.billingPeriods.choices = [
+        {
+            classes: [],
+            generateNotes: function() {
+                var annual = checkoutForm.billingPeriods.annual,
+                    currency = checkoutForm.currency,
+                    notes = [];
+                if (!this.promoted) {
+                    notes.unshift(checkoutForm.billingPeriods.annual.savingInfo[currency]);
                 }
-            } else {
-                <p class="pseudo-radio__note">One-off annual payment</p>
-            }
-        </div>
-    </label>
-
-    <label class="label" for="@inputId(month, pricing.currency)">
-        <input type="radio"
-               class="is-hidden"
-               name="payment.type"
-               id="@inputId(month, pricing.currency)"
-               data-currency="@pricing.currency"
-               value="@month.adjective"/>
-
-        <div class="pseudo-radio">
-            <div class="pseudo-radio__header">Pay @pricing.monthly.pretty/month</div>
-            <p class="pseudo-radio__note">@pricing.monthly.pretty per month (@pricing.yearlyMonthlyPrice.pretty per year)</p>
-            <p class="pseudo-radio__note">1 year membership, pay in instalments over a year</p>
-        </div>
-    </label>
-</div>
+                return notes;
+            },
+            generateDisplayAmount: function() {
+                var annual = checkoutForm.billingPeriods.annual,
+                    currency = checkoutForm.currency;
+                return formattedDiscountedPrice(currency, annual.amount, annual.discount);
+            },
+            headerSuffix: '/@year.noun',
+            inputId: '@plans.year.productRatePlanId.get',
+            inputValue: '@year.adjective',
+            promoted: false
+        },
+        {
+            classes: [],
+            generateNotes: function() {
+                var currency = checkoutForm.currency,
+                    monthly = checkoutForm.billingPeriods.monthly;
+                return [
+                    formattedDiscountedPrice(currency, monthly.amount, monthly.discount) + ' per month (' +
+                    formattedDiscountedPrice(currency, monthly.yearlyMonthlyAmount, monthly.discount) + ' per year)',
+                    '1 year membership, pay in instalments over a year'
+                ];
+            },
+            generateDisplayAmount: function() {
+                var currency = checkoutForm.currency,
+                    monthly = checkoutForm.billingPeriods.monthly;
+                return formattedDiscountedPrice(currency, monthly.amount, monthly.discount);
+            },
+            headerSuffix: '/@month.noun',
+            inputId: '@plans.month.productRatePlanId.get',
+            inputValue: '@month.adjective',
+            promoted: false
+        }
+    ];
+}());
+</script>
+<div class="js-billing-period__container"></div>
