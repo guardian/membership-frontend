@@ -1,5 +1,6 @@
 package services
 
+import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.{CountryGroup, Country, Currency}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.BillingPeriod.year
@@ -9,6 +10,7 @@ import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
 import com.gu.services.model.BillingSchedule
 import com.gu.subscriptions.Discounter
+import com.gu.zuora.rest
 import com.gu.zuora.soap.models.Commands._
 import com.gu.zuora.soap.models.Commands.Lenses._
 import services.api.MemberService.{MemberError, PendingAmendError}
@@ -59,6 +61,13 @@ object MemberService {
       case _ => Nil
     }
   }
+
+  def getRatePlanIdsToRemove(current: Seq[rest.RatePlan],
+                             planFinder: ProductRatePlanId => Option[Plan],
+                             discounts: DiscountRatePlanIds) = current.collect {
+    case discount if discount.productRatePlanId == discounts.percentageDiscount.planId.get => discount.id
+    case plan if planFinder(ProductRatePlanId(plan.productRatePlanId)).isDefined => plan.id
+  }
 }
 
 class MemberService(identityService: IdentityService,
@@ -69,7 +78,8 @@ class MemberService(identityService: IdentityService,
                     catalogService: CatalogService,
                     promoService: PromoService,
                     paymentService: PaymentService,
-                    discounter: Discounter) extends api.MemberService with ActivityTracking {
+                    discounter: Discounter,
+                    discountIds: DiscountRatePlanIds) extends api.MemberService with ActivityTracking {
 
   import EventbriteService._
   import MemberService._
@@ -228,9 +238,9 @@ class MemberService(identityService: IdentityService,
                                           newRatePlanId: ProductRatePlanId): Future[MemberError \/ BillingSchedule] = {
     (for {
       _ <- EitherT(subOrPendingAmendError(subscription))
-      result <- EitherT(zuoraService.upgradeSubscription(Upgrade(
+      result <- EitherT(zuoraService.upgradeSubscription(Amend(
         subscriptionId = subscription.id.get,
-        currentRatePlan = subscription.ratePlanId,
+        plansToRemove = Seq(subscription.ratePlanId),
         newRatePlans = NonEmptyList(RatePlan(newRatePlanId.get, None)),
         previewMode = true)).map(\/.right))
     } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems).getOrElse(
@@ -436,14 +446,19 @@ class MemberService(identityService: IdentityService,
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
     val tier = newPlan.tier
 
+    val oldRest = zuoraService.getRestSubscription(sub.name).map(_.getOrElse(
+      throw new Exception(s"REST sub not found for ${sub.id}")
+    ))
+
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form.featureChoice)}
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.productRatePlanId.get, None, fs.map(_.get)))
 
     val country = identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None), identityRequest)
                                  .map(_.privateFields.flatMap(_.country).flatMap(CountryGroup.countryByNameOrCode))
 
-    val upgradeCommand = (country |@| newRatePlan) { case (ctry, newPln) =>
-      val upgrade = Upgrade(sub.id.get, sub.ratePlanId, NonEmptyList(newPln))
+    val upgradeCommand = (country |@| newRatePlan |@| oldRest) { case (ctry, newPln, restSub) =>
+      val plansToRemove = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find, discountIds)
+      val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
       promoService.applyPromotion(upgrade, form.promoCode, ctry)
     }
 
@@ -453,7 +468,7 @@ class MemberService(identityService: IdentityService,
 
     (for {
       sub <- EitherT(subOrPendingAmendError(sub))
-      command <- EitherT(upgradeCommand.map[MemberError \/ Upgrade](\/.right))
+      command <- EitherT(upgradeCommand.map[MemberError \/ Amend](\/.right))
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), tier, customerOpt).liftM
       _ <- zuoraService.upgradeSubscription(command).liftM
     } yield {

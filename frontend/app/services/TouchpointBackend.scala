@@ -64,7 +64,8 @@ object TouchpointBackend {
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService, discounter)
+      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService, discounter,
+        Config.discountRatePlanIds(backend.zuoraEnvName))
 
     TouchpointBackend(
       salesforceService = salesforceService,
