@@ -17,6 +17,11 @@
     padding: 15px 15px;
     margin:6px 20px;
 
+    display: flex;
+    flex-direction: column;
+
+    justify-content:center;
+    align-items:center;
 
     @include mq(desktop) {
         width:200px;
@@ -24,6 +29,11 @@
         padding: 40px 22px;
         margin:20px 20px;
     }
+}
+
+.roundel__container--alt{
+    background: color(brand-supporting-2);
+    right: unset;
 }
 
 .roundel__title {
