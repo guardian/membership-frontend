@@ -30,8 +30,8 @@
 .brand-panel {
     @include clearfix();
     position: relative;
-    background-color: $c-neutral6;
-    border-top: 1px solid color(brand-supporting-1);
+    background-color: $white;
+    border-top: 1px solid $c-neutral6;
     margin-bottom: $gs-baseline / 2;
 }
 .brand-panel__header {
@@ -42,7 +42,7 @@
     }
 }
 .brand-panel__media {
-    background-color: color(brand-supporting-1);
+    background-color: color(brand-supporting-2);
 }
 .brand-panel__title {
     @include fs-header(4);
