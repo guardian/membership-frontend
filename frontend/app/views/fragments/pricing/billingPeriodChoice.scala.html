@@ -47,6 +47,9 @@
             generateChargeAmount: function() {
                 return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
             },
+            generateDisplayAmount: function() {
+                return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
+            },
             noun: '@year.noun',
             discount: 0
         },
@@ -59,6 +62,9 @@
             },
             generateChargeAmount: function() {
                 return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
+            },
+            generateDisplayAmount: function() {
+                return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
             },
             noun: '@month.noun',
             discount: 0
@@ -79,9 +85,7 @@
                 return notes;
             },
             generateDisplayAmount: function() {
-                var annual = checkoutForm.billingPeriods.annual,
-                    currency = checkoutForm.currency;
-                return formattedDiscountedPrice(currency, annual.amount, annual.discount);
+                return checkoutForm.billingPeriods.annual.generateDisplayAmount();
             },
             headerSuffix: '/@year.noun',
             inputId: '@plans.year.productRatePlanId.get',
@@ -100,9 +104,7 @@
                 ];
             },
             generateDisplayAmount: function() {
-                var currency = checkoutForm.currency,
-                    monthly = checkoutForm.billingPeriods.monthly;
-                return formattedDiscountedPrice(currency, monthly.amount, monthly.discount);
+                return checkoutForm.billingPeriods.monthly.generateDisplayAmount();
             },
             headerSuffix: '/@month.noun',
             inputId: '@plans.month.productRatePlanId.get',
