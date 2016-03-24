@@ -62,11 +62,21 @@
             will-change: transform; // creates a new paint layer
             z-index: -1;
             background-image: $url;
-            min-height: 600px;
+            min-height: 820px;
             max-height: 100%;
         }
     }
 }
+
+
+.hero-banner--newsroom {
+    height: 590px;
+    background-attachment: unset;
+    background-image: url(https://media.guim.co.uk/5821a16dc3d05611212d2692037ecc82384ef7e2/0_0_5376_3180/1000.jpg);
+    background-position: bottom;
+    @include fixed-desktop-background(url(https://media.guim.co.uk/5821a16dc3d05611212d2692037ecc82384ef7e2/0_0_5376_3180/2000.jpg),70vh, top);
+}
+
 .hero-banner--uk-supporter {
     background-attachment: unset;
     background-image: url(https://media.guim.co.uk/17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457/1000.jpg);
@@ -126,6 +136,13 @@
         margin-left: 0;
     }
 }
+
+.hero-banner--alt-accent{
+    .hero-banner__accent {
+        background-color: color(brand-supporting-2);
+    }
+}
+
 .hero-banner__accent {
     position: absolute;
     top: -5px;

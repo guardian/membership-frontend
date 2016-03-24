@@ -17,7 +17,10 @@
   isReversed: Boolean = false,
   chooseTier: Boolean = false,
   promoCode: Option[String] = None,
-  button: Option[CtaButton] = None)
+  button: Option[CtaButton] = None,
+  secondaryButton: Option[CtaButton] = None,
+  customPrice: Option[Html] = None
+)
 
 @promoButton = @{
     button.getOrElse(forCountryTier(plans.tier, cg, promoCode))
@@ -51,19 +54,34 @@
                 }
             </div>
         }
-        <div class="package-promo__actions">
-            <div class="package-promo__actions__pricing">
-               @plans match {
-                   case FreePlan(_) => { @fragments.pricing.freePriceInfo() }
-                   case PaidPlans(p) => { @fragments.pricing.paidPriceInfo(p, cg.currency) }
-               }
+
+            <div class="package-promo__actions @if(secondaryButton.isDefined){package-promo__actions--multiple}">
+                <div class="package-promo__actions__pricing">
+                @plans match {
+                    case _ if customPrice.isDefined => {
+                        @customPrice.get
+                    }
+                    case FreePlan(_) => {
+                        @fragments.pricing.freePriceInfo()
+                    }
+                    case PaidPlans(p) => {
+                        @fragments.pricing.paidPriceInfo(p, cg.currency)
+                    }
+                }
+                </div>
+                <a class="action qa-package-@plans.tier.slug  @if(!secondaryButton.isDefined){u-no-bottom-margin}" href="@promoButton.to" @promoButton.attributes.html>
+                    @promoButton.text
+                </a>
+                @for(button <- secondaryButton){
+
+                    <a class="action action--no-icon action--secondary " href="@button.to" @button.attributes.html>
+                        @button.text
+                        <svg class="icon-inline action__icon action__icon--right">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
+                        </svg>
+                    </a>
+                }
             </div>
-            <a class="action action--no-icon u-no-bottom-margin qa-package-@plans.tier.slug" href="@promoButton.to" @promoButton.attributes.html>
-                @promoButton.text
-                <svg class="icon-inline action__icon action__icon--right u-no-float">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
-                </svg>
-            </a>
-        </div>
+
     </div>
 </div>

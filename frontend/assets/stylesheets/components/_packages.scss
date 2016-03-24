@@ -30,6 +30,12 @@ $_package-promo__actions_height: 117px;
         white-space: nowrap;
         margin: rem($gs-gutter / 2) 0;
     }
+    .package-promo__actions--multiple {
+        .action {
+            margin-bottom: $half-gutter;
+            white-space: normal; //https://bugzilla.mozilla.org/show_bug.cgi?id=488725
+        }
+    }
     .package-promo__actions__pricing {
         margin-bottom: rem($gs-gutter);
         border-top: 1px solid $c-border-neutral;
@@ -109,6 +115,65 @@ $_package-promo__actions_height: 117px;
     }
 }
 
+.package-promo--clean {
+
+    @include mq($until: phablet) {
+        @include package-promo-narrow();
+        border: none;
+        background: $white;
+    }
+    @include mq($from: phablet) {
+        @include package-promo-wide();
+
+        border: none;
+        background: $white;
+        .package-promo__actions {
+            vertical-align: middle;
+
+        }
+    }
+
+    .package-promo__content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        @include mq($from: phablet) {
+            flex-direction: row;
+        }
+    }
+
+    .package-promo__header {
+        display: none;
+    }
+    .package-promo__actions__pricing {
+        border: none;
+    }
+    .package-promo__actions {
+        padding-right: $full-gutter;
+        display: flex;
+        vertical-align: unset;
+        justify-content: center;
+        flex-direction: column;
+
+        @include mq($from: mobile, $until: tablet) {
+            padding-right: 0;
+            padding-left: $full-gutter;
+        }
+    }
+    .package-promo__description {
+        @include fs-headline(3);
+        .o-bulleted-list{
+            padding-top: $full-gutter;
+            li{
+                list-style: none;
+                padding-top: $half-gutter;
+                padding-bottom: $half-gutter;
+                border-top: 1px dotted guss-colour($c-neutral2)
+            }
+        }
+    }
+}
+
 // Narrow -> narrow -> narrow
 .package-promo--always-narrow {
     @include package-promo-narrow();
@@ -169,8 +234,7 @@ $_package-promo__actions_height: 117px;
         }
         .package-promo__actions {
             position: static;
-            padding-top: rem($gs-gutter / 4);
-            padding-bottom: rem($gs-gutter / 4);
+            padding: rem($gs-gutter / 4);
         }
         .package-promo__tier {
             min-height: 0;

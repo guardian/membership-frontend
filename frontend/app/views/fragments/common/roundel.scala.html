@@ -2,9 +2,9 @@
 @(roundel:Roundel, classModifier:Option[String] = None)
 <div class="roundel l-constrained">
     <div class="roundel__container @{classModifier.map{"roundel__container--"+_}}">
-        <h1 class="roundel__title">@roundel.title</h1>
-        @for(description <- roundel.description) {
-            <p class="roundel__description">@description</p>
+        <h1 class="roundel__title">@Html(roundel.title.mkString("</br>"))</h1>
+        @if(!roundel.description.isEmpty) {
+            <p class="roundel__description">@Html(roundel.description.mkString("</br>"))</p>
         }
     </div>
 </div>

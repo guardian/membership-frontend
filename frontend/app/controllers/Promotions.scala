@@ -39,6 +39,13 @@ object Promotions extends Controller {
         id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
         sizes=List(1000,500)
       )
+    ),    ResponsiveImageGroup(
+      name=Some("kingsplace"),
+      metadata=None,
+      availableImages=ResponsiveImageGenerator(
+        id="8bd255e0063f8c089ce9dd2124fcb4e3ff242395/0_68_1020_612",
+        sizes=List(1000,500)
+      )
     ),
     ResponsiveImageGroup(
       name=Some("stonehenge"),
@@ -61,6 +68,18 @@ object Promotions extends Controller {
           implicit val countryGroup = UK
 
           Some(views.html.promotions.englishHeritageOffer(
+            TouchpointBackend.Normal.catalog.partner,
+            PageInfo(
+              title = promotion.title,
+              url = url,
+              description = Some(promotion.description)
+            ),
+            pageImages
+          ))
+        case p: PercentDiscount =>
+          implicit val countryGroup = UK
+
+          Some(views.html.promotions.discountOffer(
             TouchpointBackend.Normal.catalog.partner,
             PageInfo(
               title = promotion.title,

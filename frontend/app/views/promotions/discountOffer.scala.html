@@ -1,0 +1,96 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.Current
+@import com.gu.salesforce.Tier.Partner
+@import com.gu.membership.PaidMembershipPlans
+@import views.support.PageInfo
+@import model.Highlights
+@import model.PackagePromo.CtaButton
+@import com.netaporter.uri.dsl._
+@import views.model.Roundel
+
+@(partnerPlans: PaidMembershipPlans[Current, Partner],
+    pageInfo: PageInfo,
+    pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@import views.support.Asset
+
+
+@main("Become a Guardian Partner for just £99", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    @fragments.common.roundel(Roundel(Seq("Join","as an annual Partner Member before 30 April 2016 and save","£50")),classModifier = Some("alt"))
+
+    @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
+        Become a Guardian Partner for just £99
+    } {
+
+        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
+    }()
+
+
+    @fragments.page.section(hasBorder = false) {
+        @fragments.tier.packagePromo(
+            partnerPlans,
+            countryGroup,
+            promoCode = Some("50OFF"),
+            modifierClass = Some("package-promo--clean"),
+            highlightOverrides = Some(Highlights.discountLandingPage),
+            customPrice = Some(fragments.promos.discountedPrice("£149","£99","first year")),
+            secondaryButton = Some(CtaButton("Find out more", "/", Map.empty))
+            )
+    }
+
+    <section class="page-slice page-slice--listing" id="introducing-members">
+
+        <div class="listing listing--bordered l-constrained" id="introducing-members">
+            <div class="listing__lead-in">
+                <h3 class="h-intro">
+                    Introducing Guardian Members
+                </h3>
+            </div>
+            <div class="listing__content">
+                @fragments.media.videoPreview(
+                    configuration.Videos.whatIsMembership,
+                    "Polly Toynbee, Owen Jones, Ewen MacAskill and Hugh Muir introduce Guardian Members"
+                )
+            </div>
+        </div>
+
+    </section>
+
+
+
+    @for(img <- pageImages.find(_.name.contains("kingsplace"))) {
+        @fragments.page.sectionCardStack(img,Some("Get closer to the Guardian")) {
+            <div class="listing__text">
+                <p>For 200 years, the Guardian has been fearless and independent.</p>
+                <p>Our journalism shines a light on critical, under-reported stories across the globe and we have become the world’s most read, serious English-language newspaper, visited by 130 million unique browsers each month.</p>
+                <p>By becoming a Partner Member, your financial contribution will support our independence and our award-winning journalism and you’ll receive a host of benefits.</p>
+
+            </div>
+        }
+    }
+
+    @fragments.page.section("If you read the Guardian, join the Guardian",hasBottomPadding = false) {
+        @fragments.promos.promoQuote(
+            Asset.at("images/common/katharine-viner-cutout.png"),
+            "Katharine Viner, editor-in-chief of the Guardian"
+        ) {
+            <blockquote class="blockquote blockquote--feature">
+                With Guardian Members we have a profound opportunity to
+                defend the Guardian’s independent journalism and collaborate
+                together on a better, more informed future.
+                <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
+            </blockquote>
+        }
+    }
+
+    @fragments.page.section("What's included") {
+        @fragments.tier.packagePromo(
+            partnerPlans,
+            countryGroup,
+            promoCode = Some("50OFF"),
+            modifierClass = Some("package-promo--clean"),
+            highlightOverrides = Some(Highlights.discountLandingPageLong),
+            customPrice = Some(fragments.promos.discountedPrice("£149","£99","year")))
+    }
+}
