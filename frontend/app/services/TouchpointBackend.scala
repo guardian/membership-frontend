@@ -59,8 +59,8 @@ object TouchpointBackend {
                                         catalogService.membershipCatalog, discounter)
 
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)
-    val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService)
-    val paymentService = new PaymentService(stripeService, subscriptionService, zuoraService, catalogService)
+    val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
+    val paymentService = new PaymentService(stripeService, zuoraService, catalogService)
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
@@ -97,7 +97,7 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              zuoraSoapClient: soap.ClientWithFeatureSupplier,
                              zuoraRestClient: rest.Client,
                              memberService: api.MemberService,
-                             subscriptionService: memsubapi.SubscriptionService,
+                             subscriptionService: memsubapi.SubscriptionService[MembershipCatalog],
                              catalogService: memsubapi.CatalogService,
                              zuoraService: ZuoraService,
                              membershipRatePlanIds: MembershipRatePlanIds,

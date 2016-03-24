@@ -3,7 +3,8 @@ package actions
 import actions.Fallbacks._
 import com.gu.googleauth.UserIdentity
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
-import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
+import com.gu.memsub.Subscriber.{Member, FreeMember, PaidMember}
+import com.gu.memsub.Subscription.{FreeMembershipSub, PaidMembershipSub}
 import com.gu.memsub.util.Timing
 import configuration.Config.googleGroupChecker
 import services._
@@ -16,7 +17,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
-import play.twirl.api.Html
 
 import scala.concurrent.Future
 import scalaz.OptionT
@@ -49,15 +49,17 @@ object ActionRefiners extends LazyLogging {
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
 
   private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
+
     implicit val pf = Membership
     val tp = request.touchpointBackend
+    val FreeSubscriber = Subscriber[FreeMembershipSub] _
+    val PaidSubscriber = Subscriber[PaidMembershipSub] _
 
     (for {
       member <- OptionT(request.forMemberOpt(identity))
-      subscription <- OptionT(tp.subscriptionService.get(member))
-      memberSubscriber <- OptionT(Future.successful(Subscriber.Member.unapply(Subscriber(subscription, member))))
+      subscription <- OptionT(tp.subscriptionService.getEither(member))
     } yield new SubscriptionRequest[A](tp, request) with Subscriber {
-      override def subscriber = memberSubscriber
+      override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run
   }
 
@@ -68,26 +70,21 @@ object ActionRefiners extends LazyLogging {
   }
 
   def paidSubscriptionRefiner(onFreeMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithPaid] {
-    type PaidMemberSub = Sub with PaidPS[PaidMembershipPlan[SubStatus, PaidTier, BillingPeriod]]
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithPaid[A]]] =
-      Future.successful(request.subscriber match {
-        case PaidMember(mem) => Right(new SubscriptionRequest[A](request) with PaidSubscriber {
-          override def subscriber = mem
-        })
-        case _ => Left(onFreeMember(request))
-      })
+      Future.successful(request.paidOrFreeSubscriber.bimap(free => onFreeMember(request), paid =>
+        new SubscriptionRequest[A](request) with PaidSubscriber {
+          override def subscriber = paid
+        }).toEither
+      )
   }
 
-
   def freeSubscriptionRefiner(onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithFree] {
-    type FreeMemberSub = Sub with FreePS[FreeMembershipPlan[SubStatus, FreeTier]]
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithFree[A]]] =
-      Future.successful(request.subscriber match {
-        case FreeMember(mem) => Right(new SubscriptionRequest[A](request) with FreeSubscriber {
-          override def subscriber = mem
-        })
-        case _ => Left(onPaidMember(request))
-      })
+      Future.successful(request.paidOrFreeSubscriber.bimap(free =>
+        new SubscriptionRequest[A](request) with FreeSubscriber {
+          override def subscriber = free
+        }, _ => onPaidMember(request)).swap.toEither
+      )
   }
 
   def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {

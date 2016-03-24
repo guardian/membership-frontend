@@ -6,7 +6,7 @@ import com.gu.contentapi.client.parser.JsonParser
 import com.gu.i18n.{Currency, GBP}
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
 import com.gu.membership.PaidMembershipPlan
-import com.gu.memsub.Subscription.{MembershipSub, ProductRatePlanId}
+import com.gu.memsub.Subscription.{PaidMembershipSub, MembershipSub, ProductRatePlanId}
 import com.gu.memsub._
 import com.gu.salesforce.Tier.Partner
 import com.gu.salesforce._
@@ -22,6 +22,7 @@ import play.api.{Application, GlobalSettings}
 import utils.Resource
 
 import scala.concurrent.Future
+import scalaz.\/
 
 class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFutures {
 
@@ -44,7 +45,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
     def createRequestWithSession(newSessions: (String, String)*) = {
 
       val testMember = Contact("id", None, Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId")
-      val testSub: MembershipSub = new Subscription(
+      val testSub: PaidMembershipSub = new Subscription(
         id = Subscription.Id(""),
         name = Subscription.Name(""),
         accountId = Subscription.AccountId(""),
@@ -75,7 +76,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
       val ar = new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo"), minimalUser), fakeRequest)
 
       new SubscriptionRequest(mock[TouchpointBackend],ar) with Subscriber {
-        override def subscriber = Subscriber(testSub, testMember)
+        override def paidOrFreeSubscriber = \/.right(Subscriber[PaidMembershipSub](testSub, testMember))
       }
 
     }
