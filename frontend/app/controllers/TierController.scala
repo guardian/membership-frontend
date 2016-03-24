@@ -1,5 +1,6 @@
 package controllers
 
+import controllers._
 import services.api.MemberService.{PendingAmendError, MemberError}
 import services.{IdentityApi, IdentityService}
 import com.gu.i18n.CountryGroup
@@ -28,11 +29,13 @@ import scala.concurrent.Future
 import scala.language.implicitConversions
 import scalaz.{EitherT, \/}
 
-trait DowngradeTier extends ActivityTracking with CatalogProvider
-                                             with SubscriptionServiceProvider
-                                             with MemberServiceProvider
-                                             with PaymentServiceProvider {
-  self: TierController =>
+
+object TierController extends Controller with ActivityTracking
+                                         with CatalogProvider
+                                         with SubscriptionServiceProvider
+                                         with MemberServiceProvider
+                                         with StripeServiceProvider
+                                         with PaymentServiceProvider {
 
   def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, catalog))
@@ -52,10 +55,45 @@ trait DowngradeTier extends ActivityTracking with CatalogProvider
       request.subscriber.subscription.paidPlan,
       catalog.friend, startDate)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
-}
 
-trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
-  self: TierController =>
+  def change() = SubscriptionAction { implicit request =>
+    implicit val countryGroup = UK
+    implicit val c = catalog
+    Ok(views.html.tier.change(request.subscriber.subscription.plan.tier, catalog))
+  }
+
+  def handleErrors(memberResult: Future[MemberError \/ _])(success: => Result): Future[Result] =
+    memberResult.map { res => handleResultErrors(res.map(_ => success)) }
+
+  def handleResultErrors(memberResult: MemberError \/ Result): Result =
+    memberResult.fold({
+      case PendingAmendError(subName) => Ok(views.html.tier.pendingAmend())
+      case err => throw err
+    }, identity)
+
+
+  def cancelTier() = SubscriptionAction { implicit request =>
+    Ok(views.html.tier.cancel.confirm(request.subscriber.subscription.plan.tier, catalog))
+  }
+
+  def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
+    handleErrors(memberService.cancelSubscription(request.subscriber)) {
+      if(request.subscriber.subscription.isPaid) {
+        Redirect(routes.TierController.cancelFreeTierSummary())
+      } else {
+        Redirect(routes.TierController.cancelPaidTierSummary())
+      }
+    }
+  }
+
+  def cancelFreeTierSummary = AuthenticatedAction(
+    Ok(views.html.tier.cancel.summaryFree())
+  )
+
+  def cancelPaidTierSummary = PaidSubscriptionAction { implicit request =>
+    implicit val c = catalog
+    Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription, request.subscriber.subscription.paidPlan.tier)).discardingCookies(TierChangeCookies.deletionCookies:_*)
+  }
 
   def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
@@ -106,10 +144,10 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
         val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
         Ok(views.html.tier.upgrade.paidToPaid(
-        summary,
-        privateFields,
-        pageInfo(privateFields, subscriber.subscription.plan.billingPeriod),
-        flashMsgOpt
+          summary,
+          privateFields,
+          pageInfo(privateFields, subscriber.subscription.plan.billingPeriod),
+          flashMsgOpt
         )(getToken, request))
       }).run.map(handleResultErrors(_))
     }
@@ -137,7 +175,7 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
       val reauthFailedMessage: Future[Result] = Future {
         Redirect(routes.TierController.upgrade(target))
           .flashing("error" ->
-          s"That password does not match our records. Please try again.")
+            s"That password does not match our records. Please try again.")
       }
 
       def doUpgrade(): Future[Result] = {
@@ -169,52 +207,5 @@ trait UpgradeTier extends StripeServiceProvider with CatalogProvider {
   }
 
   def upgradeThankyou(tier: PaidTier) = Joiner.thankyou(tier, upgrade=true)
+
 }
-
-trait CancelTier extends CatalogProvider {
-  self: TierController =>
-
-  def cancelTier() = SubscriptionAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm(request.subscriber.subscription.plan.tier, catalog))
-  }
-
-  def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
-    handleErrors(memberService.cancelSubscription(request.subscriber)) {
-      if(request.subscriber.subscription.isPaid) {
-        Redirect(routes.TierController.cancelFreeTierSummary())
-      } else {
-        Redirect(routes.TierController.cancelPaidTierSummary())
-      }
-    }
-  }
-
-  def cancelFreeTierSummary = AuthenticatedAction(
-    Ok(views.html.tier.cancel.summaryFree())
-  )
-
-  def cancelPaidTierSummary = PaidSubscriptionAction { implicit request =>
-    implicit val c = catalog
-    Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription, request.subscriber.subscription.paidPlan.tier)).discardingCookies(TierChangeCookies.deletionCookies:_*)
-  }
-}
-
-trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
-  implicit def productFamily: ProductFamily = Membership
-
-  def change() = SubscriptionAction { implicit request =>
-    implicit val countryGroup = UK
-    implicit val c = catalog
-    Ok(views.html.tier.change(request.subscriber.subscription.plan.tier, catalog))
-  }
-
-  def handleErrors(memberResult: Future[MemberError \/ _])(success: => Result): Future[Result] =
-    memberResult.map { res => handleResultErrors(res.map(_ => success)) }
-
-  def handleResultErrors(memberResult: MemberError \/ Result): Result =
-    memberResult.fold({
-      case PendingAmendError(subName) => Ok(views.html.tier.pendingAmend())
-      case err => throw err
-    }, identity)
-}
-
-object TierController extends TierController
