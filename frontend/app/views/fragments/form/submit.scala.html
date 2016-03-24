@@ -35,17 +35,9 @@
                 <a href="http://www.enable-javascript.com/" target="_blank" class="action is-disabled">Enable javascript to proceed</a>.
             </noscript>
             <button type="button" class="action js-submit-input u-hidden-non-js">
-
-
                 @{plans match {
                     case FreePlan(_) => Html("Join now")
-                    case PaidPlans(p) =>
-                    for {
-                        pricing <- p.allPricing
-                        (period, price) <- Seq((year, pricing.yearly), (month, pricing.monthly))
-                    } yield {
-                        paidButton(price, period)
-                    }
+                    case PaidPlans(p) => <span class='js-submit-input-cta'></span>
                 }}
             </button>
             <div class="loader js-loader"></div>

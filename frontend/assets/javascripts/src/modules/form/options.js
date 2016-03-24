@@ -2,9 +2,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     'use strict';
 
     var CURRENCY_ATTR = 'data-currency';
-    var DATA_CURRENCY_SEL = '[' + CURRENCY_ATTR + ']';
     var PAYMENT_OPTIONS_CONTAINER_EL = $('.js-payment-options-container')[0];
-    var SUBMIT_BTN_EL = $('.js-submit-input')[0];
     var DELIVERY_COUNTRY_EL = $('#country-deliveryAddress')[0];
     var BILLING_COUNTRY_EL = $('#country-billingAddress')[0];
     var BILLING_ADDRESS_SEL = $('.js-billingAddress-fieldset');
@@ -24,7 +22,6 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     function renderPrices() {
         hideBillingAddress();
         selectDeliveryCountry();
-        renderSubmitButton();
     }
 
     function hasParent(elem) {
@@ -52,19 +49,6 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
         $('option', selectEl).each(function (el) {
             if ($(el).val() === country) {
                 $(el)[0].selected = true;
-            }
-        });
-    }
-
-    function renderSubmitButton() {
-        $(DATA_CURRENCY_SEL, SUBMIT_BTN_EL).each(function (el) {
-            var elCurrency = $(el).attr('data-currency');
-            var elBillingPeriod = $(el).attr('data-billing-period');
-
-            if (checkoutForm.currency === elCurrency && checkoutForm.billingPeriod === elBillingPeriod) {
-                el.classList.remove('is-hidden');
-            } else {
-                el.classList.add('is-hidden');
             }
         });
     }
