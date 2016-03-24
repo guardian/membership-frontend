@@ -4,6 +4,7 @@
 @import views.support.PaidPlans
 @import com.gu.salesforce.PaidTier
 @import model.PackagePromo
+@import views.model.Roundel
 @(
   catalog: MembershipCatalog,
   pageImages: Seq[model.ResponsiveImageGroup],
@@ -14,7 +15,7 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
-    @fragments.promos.englishHeritageRoundel()
+    @fragments.common.roundel(Roundel("Ends 31 March: Free annual English Heritage membership", Some("when you join as a Partner or Patron")))
     @fragments.page.heroBanner("hero-banner--homepage") {
         Become a Guardian&nbsp;Member
     } {
