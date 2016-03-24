@@ -49,7 +49,6 @@ object ActionRefiners extends LazyLogging {
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
 
   private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
-
     implicit val pf = Membership
     val tp = request.touchpointBackend
     val FreeSubscriber = Subscriber[FreeMembershipSub] _
