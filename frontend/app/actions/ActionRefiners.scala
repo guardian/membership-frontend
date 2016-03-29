@@ -82,8 +82,8 @@ object ActionRefiners extends LazyLogging {
       Future.successful(request.paidOrFreeSubscriber.bimap(free =>
         new SubscriptionRequest[A](request) with FreeSubscriber {
           override def subscriber = free
-        }, _ => onPaidMember(request)).swap.toEither
-      )
+        }, _ => onPaidMember(request)).swap.toEither // we convert paid to a response, thus giving Free \/ Response
+      )                                              // but we need Either[Response, Free], hence the swap and toEither
   }
 
   def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {
