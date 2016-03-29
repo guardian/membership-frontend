@@ -3,6 +3,7 @@ package services
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.{CountryGroup, Country, Currency}
 import com.gu.identity.play.IdMinimalUser
+import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
@@ -74,7 +75,7 @@ class MemberService(identityService: IdentityService,
                     salesforceService: api.SalesforceService,
                     zuoraService: ZuoraService,
                     stripeService: StripeService,
-                    subscriptionService: SubscriptionService,
+                    subscriptionService: SubscriptionService[MembershipCatalog],
                     catalogService: CatalogService,
                     promoService: PromoService,
                     paymentService: PaymentService,

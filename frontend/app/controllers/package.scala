@@ -54,7 +54,7 @@ package object controllers extends CommonActions with LazyLogging{
   }
 
   trait SubscriptionServiceProvider {
-    def subscriptionService(implicit request: BackendProvider): SubscriptionService =
+    def subscriptionService(implicit request: BackendProvider): SubscriptionService[MembershipCatalog] =
       request.touchpointBackend.subscriptionService
   }
 

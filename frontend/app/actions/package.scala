@@ -7,9 +7,8 @@ import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.{Cookie, WrappedRequest}
 import services._
-
+import scalaz.\/
 import scala.concurrent.{ExecutionContext, Future}
-
 
 package object actions {
 
@@ -39,14 +38,15 @@ package object actions {
   }
 
   trait Subscriber {
-    def subscriber: Member
+    def paidOrFreeSubscriber: FreeMember \/ PaidMember
+    def subscriber: Member = paidOrFreeSubscriber.fold[Member](identity, identity)
   }
 
-  trait PaidSubscriber extends Subscriber {
+  trait PaidSubscriber {
     def subscriber: PaidMember
   }
 
-  trait FreeSubscriber extends Subscriber {
+  trait FreeSubscriber {
     def subscriber: FreeMember
   }
 
