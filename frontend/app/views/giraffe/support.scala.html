@@ -1,353 +1,161 @@
 @import views.support.PageInfo
 @import views.support.Asset
 
-<!DOCTYPE html>
-@* may want js-off here? *@
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Support the Guardian</title>
+@(pageInfo: PageInfo)
 
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+@main("Support", pageInfo=pageInfo) {
+    <div class="hero">
+        <h1 class="u-h">Support the Guardian</h1>
+        <blockquote>
+            <p class="hero__quote headline-text--light">The past year has been a powerful illustration of how the Guardian is living up to its core editorial mission. I would like to invite you to join us as a supporter of our journalism.</p>
+            <cite class="hero__cite headline-text--light"><span class="hero__cite-name">Alan Rusbridger</span> Editor-in-chief, The Guardian</cite>
+        </blockquote>
+        <a href="#form" class="u-button-reset button contribute-button headline-text--bolder">Contribute</a>
+    </div>
 
-        <link rel="shortcut icon" type="image/png" href="https://assets-secure.guim.co.uk/images/favicons/32x32.ico" />
-        <link rel="apple-touch-icon" sizes="152x152" href="https://assets-secure.guim.co.uk/images/favicons/152x152.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="https://assets-secure.guim.co.uk/images/favicons/144x144.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="https://assets-secure.guim.co.uk/images/favicons/120x120.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="https://assets-secure.guim.co.uk/images/favicons/114x114.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="https://assets-secure.guim.co.uk/images/favicons/72x72.png" />
-        <link rel="apple-touch-icon-precomposed" href="https://assets-secure.guim.co.uk/images/favicons/57x57.png" />
-
-        <link rel="publisher" href="https://plus.google.com/113000071431138202574" />
-
-        <meta name="application-name" content="The Guardian" />
-        <meta name="msapplication-TileColor" content="#004983" />
-        <meta name="msapplication-TileImage" content="https://assets-secure.guim.co.uk/images/favicons/windows_tile_144_b.png" />
-
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="HandheldFriendly" content="True" />
-
-        <meta property="fb:app_id" content="180444840287" />
-        <meta property="og:site_name" content="the Guardian" />
-        <meta property="twitter:site" content="@@guardian" />
-        <meta property="twitter:app:name:iphone" content="The Guardian" />
-        <meta property="twitter:app:id:iphone" content="409128287" />
-        <meta property="twitter:app:name:googleplay" content="The Guardian" />
-        <meta property="twitter:app:id:googleplay" content="com.guardian" />
-
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-
-        <!--[if (gt IE 9) | (IEMobile)]><!-->
-        <link rel="stylesheet" media="all" href="@Asset.at("stylesheets/style.css")">
-        <!--<![endif]-->
-
-        <!--[if (IE 9)&(!IEMobile)]>
-        <link rel="stylesheet" type="text/css" href="@Asset.at("stylesheets/ie9.css")" />
-        <![endif]-->
-    </head>
-    <body id="top" itemscope itemtype="http://schema.org/WebPage" itemref="schema-WebPage">
-    @*
-    #parse("membership/fragments/header.vm")
-    *@
-
-        <!-- Lots of hardcoded URLs -->
-        <header class="header" role="banner">
-            <div class="header__inner">
-                <div class="u-cf header__branding">
-                    <div class="header__primary">
-                        <nav>
-                            <ul class="inline-list u-cf" role="menubar">
-                                <li class="menu-item">
-                                    <a href="https://profile.${urls.domain}/signin?returnUrl=https://id.${urls.domain}" role="menuitem" class="no-underline icon-wrapper js-identity-icon control__user-account" title="Your account">
-                                        <span class="control">
-                                            <span class="control__icon">
-                                                <i class="icon-sprite icon-sprite-user-black"></i>
-                                            </span>
-                                        </span>
-                                        <span class="hidden-mobile">
-                                            <span class="identity__notice control__info">Sign in</span>
-                                            <span class="identity__account control__info u-h no-underline--override"></span>
-                                            <span class="identity__tier control__info u-h no-underline--override case--lower"></span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="menu-item menu-item--last is-hidden js-header-join-us-cta">
-                                    <a href="https://membership.theguardian.com/join" role="menuitem" class="no-underline hidden-mobile control__join-us" title="Join us">
-                                        <span class="control control--no-border"><i class="icon-sprite icon-sprite-g-black"></i></span>
-                                        <span class="control__info no-underline--override hidden-mobile">Join us</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="header__secondary">
-                        <ul class="nav nav--global nav-global--mini nav--top-border-off">
-                            <li><a href="http://www.theguardian.com/" class="nav__link case--lower">The Guardian</a></li>
-                            <li><a href="http://jobs.theguardian.com/" class="nav__link case--lower">Jobs</a></li>
-                            <li><a href="https://soulmates.theguardian.com/" class="nav__link case--lower">Soulmates</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="header__secondary header__logo">
-                        <span itemscope itemtype="http://schema.org/Organization">
-                            <a href="https://membership.theguardian.com/" itemprop="url" class="icon-wrapper">
-                                <span class="u-h" itemprop="name">The Guardian</span>
-                                <i class="icon-sprite icon-sprite-membership_beta_mobile mobile-only"></i>
-                                <i class="icon-sprite icon-sprite-logo-beta hidden-mobile"></i>
-                            </a>
-                        </span>
-                    </div>
-
-                    <div class="header__inner header__inner--popup">
-                        <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
-                            <nav role="navigation" aria-label="Profile menu">
-                                <ul class="nav nav--columns">
-                                    <li class="nav__item">
-                                        <a href="https://profile.${urls.domain}/user/id/" class="nav__link js-comment-activity">Comment activity</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://profile.${urls.domain}/public/edit" data-member-href="http://profile.${urls.domain}/membership/edit" class="nav__link js-edit-profile">Edit profile</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://profile.${urls.domain}/email-prefs" class="nav__link">Email preferences</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://profile.${urls.domain}/password/change" class="nav__link">Change password</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://profile.${urls.domain}/signout" class="nav__link">Sign out</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <div class="mobile-menu mobile-only">
-                            <a href="#" role="menuitem" class="mobile-menu__button js-menu-icon" title="Menu">
-                                <span class="control__icon">
-                                    <i></i>
-                                    <i></i>
-                                    <i></i>
-                                </span>
-                            </a>
-                        </div>
-                        <div class="nav-popup--sections nav-popup nav-popup--small is-hidden js-sections-nav-popup">
-                            <nav role="navigation" aria-label="The Guardian sections">
-                                <ul class="nav nav--columns nav--top-border-off u-cf js-sections-nav-popup-page-list">
-                                    <li class="nav__item">
-                                        <a href="https://membership.theguardian.com/events" class="nav__link case--lower">Events</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://membership.theguardian.com/about" class="nav__link case--lower">About membership</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://membership.theguardian.com/patrons" class="nav__link case--lower">Patrons</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://membership.theguardian.com/join" class="nav__link case--lower">Pricing</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://membership.theguardian.com/help" class="nav__link case--lower">Help</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="https://membership.theguardian.com/feedback" class="nav__link nav__link--last case--lower">Feedback</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-                <nav role="navigation" class="nav nav--global nav--global--header">
-                    <div class="header__primary navigation__scroll">
-                        <ul class="inline-list">
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/" class="nav__link"><i class="icon-sprite icon-sprite-home"></i></a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/events" class="nav__link case--lower">Events</a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/about" class="nav__link case--lower">About membership</a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/patrons" class="nav__link case--lower">Patrons</a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/join" class="nav__link case--lower">Pricing</a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/help" class="nav__link case--lower">Help</a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="https://membership.theguardian.com/feedback" class="nav__link nav__link--last case--lower">Feedback</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </header>
-
-        <div class="gs-container">
-            <div class="hero">
-                <h1 class="u-h">Support the Guardian</h1>
-                <blockquote>
-                    <p class="hero__quote headline-text--light">The past year has been a powerful illustration of how the Guardian is living up to its core editorial mission. I would like to invite you to join us as a supporter of our journalism.</p>
-                    <cite class="hero__cite headline-text--light"><span class="hero__cite-name">Alan Rusbridger</span> Editor-in-chief, The Guardian</cite>
-                </blockquote>
-                <a href="#form" class="u-button-reset button contribute-button headline-text--bolder">Contribute</a>
-            </div>
-
-            <noscript>
-                <div class="form-errors form__error sans-text">
-                    <span class="headline-text--bolder">Javascript disabled</span> Javascript must be enabled to use this site, please enable it in your browser.
-                </div>
-            </noscript>
-
-            <div class="form-errors form__error is-hidden">Error</div>
-
-            <div class="support-wrapper">
-
-                <form id="form" class="form" role="main" method="POST" autocomplete="on" novalidate>
-                    <div class="form__column">
-                        <h3 class="form__column-heading form__column-heading--first headline-text--bolder"><span class="num">1</span> Your details</h3>
-                        <ul class="u-unstyled">
-                            <li id="email_field" class="form-field">
-                                <label for="email" class="label u-h">Email address</label>
-                                <div class="input">
-                                    <input type="email" id="email" class="text-input" name="email" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Email address">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="form__note">
-                                By proceeding, you agree to the Guardian's <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">Terms of Service</a> and <a href="http://www.theguardian.com/help/privacy-policy" target="_blank">Privacy Policy</a>.
-                            </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="form__column">
-                        <h3 class="form__column-heading headline-text--bolder"><span class="num">2</span> Your amount</h3>
-                        <ul class="u-unstyled">
-                            <li id="currency_field" class="form-field">
-                                <label for="currency" class="label u-h">Currency</label>
-                                <div class="input">
-                                    <div class="button-group u-cf">
-                                        <button type="button" tabindex="2" class="u-button-reset button currency-button headline-text--bolder active" data-currency="gbp" data-symbol="&pound;">&pound;&nbsp;GBP</button>
-                                        <button type="button" tabindex="3" class="u-button-reset button currency-button headline-text--bolder" data-currency="usd" data-symbol="&#36;">&#36;&nbsp;USD</button>
-                                        <button type="button" tabindex="4" class="u-button-reset button currency-button headline-text--bolder" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;AUD</button>
-                                        <button type="button" tabindex="5" class="u-button-reset button currency-button headline-text--bolder" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
-                                    </div>
-                                    <input type="hidden" id="currency" name="currency" value="gbp">
-                                </div>
-                            </li>
-
-                            <li id="amount_field" class="form-field">
-                                <label for="amount" class="label u-h">Amount</label>
-                                <div class="input">
-                                    <div class="button-group u-cf">
-                                        <button type="button" tabindex="6" class="u-button-reset button amount-button headline-text--bolder" data-amount="1000"><span class="currency">&pound;</span>10</button>
-                                        <button type="button" tabindex="7" class="u-button-reset button amount-button headline-text--bolder active" data-amount="2500"><span class="currency">&pound;</span>25</button>
-                                        <button type="button" tabindex="8" class="u-button-reset button amount-button headline-text--bolder" data-amount="5000"><span class="currency">&pound;</span>50</button>
-                                        <button type="button" tabindex="9" class="u-button-reset button amount-button headline-text--bolder" data-amount="7500"><span class="currency">&pound;</span>75</button>
-                                        <button type="button" tabindex="10" class="u-button-reset button amount-button headline-text--bolder" data-amount="10000"><span class="currency">&pound;</span>100</button>
-                                        <button type="button" tabindex="11" class="u-button-reset button amount-button headline-text--bolder" data-amount="25000"><span class="currency">&pound;</span>250</button>
-                                        <button type="button" tabindex="12" class="u-button-reset button amount-button headline-text--bolder" data-amount="50000"><span class="currency">&pound;</span>500</button>
-                                        <button type="button" tabindex="13" class="u-button-reset button amount-button headline-text--bolder" data-amount="100000"><span class="currency">&pound;</span>1000</button>
-                                    </div>
-                                    <div id="other_amount_field">
-                                        <div class="other_amount_currency headline-text--bolder">&pound;</div>
-                                        <input type="tel" id="other_amount" class="text-input" name="other_amount" maxlength="15" pattern="\d*" tabindex="14" placeholder="Other amount (00.00)">
-                                    </div>
-                                    <input type="hidden" id="amount" name="amount" value="2500">
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="form__column">
-                        <h3 class="form__column-heading headline-text--bolder"><span class="num">3</span> Your payment</h3>
-                        <ul class="u-unstyled">
-                            <li id="card_number_field" class="form-field">
-                                <label for="card_number" class="label u-h">Card number</label>
-                                <div class="input">
-                                    <input type="tel" id="card_number" class="text-input" data-stripe="number" tabindex="15" aria-required="true" maxlength="20" x-autocompletetype="cc-number" pattern="\d*" placeholder="Card number">
-                                </div>
-                            </li>
-
-                            <li id="card_expiry_field" class="form-field">
-                                <label class="label">Expires</label>
-                                <div class="input">
-                                    <label for="card_expiry_month" class="form-field__note form-field__note--sub">Month</label>
-                                    <select id="card_expiry_month" data-stripe="exp-month" tabindex="16" aria-required="true">
-                                        <option value="1">01</option>
-                                        <option value="2">02</option>
-                                        <option value="3">03</option>
-                                        <option value="4">04</option>
-                                        <option value="5">05</option>
-                                        <option value="6">06</option>
-                                        <option value="7">07</option>
-                                        <option value="8">08</option>
-                                        <option value="9">09</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                    <span>/</span>
-                                    <label for="card_expiry_year" class="form-field__note form-field__note--sub">Year</label>
-                                    <select id="card_expiry_year" data-stripe="exp-year" tabindex="17" aria-required="true">
-                                        <option value="14">14</option>
-                                        <option value="15">15</option>
-                                        <option value="16">16</option>
-                                        <option value="17">17</option>
-                                        <option value="18">18</option>
-                                        <option value="19">19</option>
-                                        <option value="20">20</option>
-                                        <option value="21">21</option>
-                                    </select>
-                                </div>
-                            </li>
-
-                            <li id="card_cvc_field" class="form-field">
-                                <label for="card_cvc" class="label">Security code</label>
-                                <div class="input">
-                                    <input type="tel" id="card_cvc" class="text-input" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC">
-                                    <div class="form-field__note form-field__note--below form-field__note--right"><a href="#cvc" data-toggle="cvc-help">What's this?</a></div>
-                                </div>
-                            </li>
-
-                            <li class="cvc-help is-hidden">
-                                <ul class="u-unstyled sans-text">
-                                    <li class="visa">Visa / Mastercard <br />Last 3 digits on the back</li>
-                                    <li class="amex">AMEX <br />4 digits on the front</li>
-                                </ul>
-                            </li>
-
-                            <li id="confirm_email" class="form-field">
-                                <div class="form__note">
-                                A receipt will be emailed to <wbr /><span class="your-email">you</span>.
-                            </div>
-                            </li>
-
-                            <li id="submit_field" class="form-field">
-                                <button class="submit-input headline-text--bolder" type="submit" tabindex="19">Pay &pound;25 now</button>
-                            </li>
-
-                            <li id="secure_message">
-                                <div class="form__note">
-                                    <img class="padlock" src="$urls.staticFilePath/images/support/padlock.png" alt="secure" />
-                                    This payment page is securely encrypted.
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
+    <noscript>
+        <div class="form-errors form__error sans-text">
+            <span class="headline-text--bolder">Javascript disabled</span> Javascript must be enabled to use this site, please enable it in your browser.
         </div>
+    </noscript>
 
-        @*
-        #parse("membership/fragments/footer.vm")
-        #parse("membership/fragments/js.vm")
-        #parse("templates/omniture.vm")
-        *@
-    </body>
-</html>
+    <div class="form-errors form__error is-hidden">Error</div>
+
+    <div class="support-wrapper">
+
+        <form id="form" class="form" role="main" method="POST" autocomplete="on" novalidate>
+            <div class="form__column">
+                <h3 class="form__column-heading form__column-heading--first headline-text--bolder"><span class="num">1</span> Your details</h3>
+                <ul class="u-unstyled">
+                    <li id="email_field" class="form-field">
+                        <label for="email" class="label u-h">Email address</label>
+                        <div class="input">
+                            <input type="email" id="email" class="text-input" name="email" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Email address">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form__note">
+                        By proceeding, you agree to the Guardian's <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">Terms of Service</a> and <a href="http://www.theguardian.com/help/privacy-policy" target="_blank">Privacy Policy</a>.
+                    </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="form__column">
+                <h3 class="form__column-heading headline-text--bolder"><span class="num">2</span> Your amount</h3>
+                <ul class="u-unstyled">
+                    <li id="currency_field" class="form-field">
+                        <label for="currency" class="label u-h">Currency</label>
+                        <div class="input">
+                            <div class="button-group u-cf">
+                                <button type="button" tabindex="2" class="u-button-reset button currency-button headline-text--bolder active" data-currency="gbp" data-symbol="&pound;">&pound;&nbsp;GBP</button>
+                                <button type="button" tabindex="3" class="u-button-reset button currency-button headline-text--bolder" data-currency="usd" data-symbol="&#36;">&#36;&nbsp;USD</button>
+                                <button type="button" tabindex="4" class="u-button-reset button currency-button headline-text--bolder" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;AUD</button>
+                                <button type="button" tabindex="5" class="u-button-reset button currency-button headline-text--bolder" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
+                            </div>
+                            <input type="hidden" id="currency" name="currency" value="gbp">
+                        </div>
+                    </li>
+
+                    <li id="amount_field" class="form-field">
+                        <label for="amount" class="label u-h">Amount</label>
+                        <div class="input">
+                            <div class="button-group u-cf">
+                                <button type="button" tabindex="6" class="u-button-reset button amount-button headline-text--bolder" data-amount="1000"><span class="currency">&pound;</span>10</button>
+                                <button type="button" tabindex="7" class="u-button-reset button amount-button headline-text--bolder active" data-amount="2500"><span class="currency">&pound;</span>25</button>
+                                <button type="button" tabindex="8" class="u-button-reset button amount-button headline-text--bolder" data-amount="5000"><span class="currency">&pound;</span>50</button>
+                                <button type="button" tabindex="9" class="u-button-reset button amount-button headline-text--bolder" data-amount="7500"><span class="currency">&pound;</span>75</button>
+                                <button type="button" tabindex="10" class="u-button-reset button amount-button headline-text--bolder" data-amount="10000"><span class="currency">&pound;</span>100</button>
+                                <button type="button" tabindex="11" class="u-button-reset button amount-button headline-text--bolder" data-amount="25000"><span class="currency">&pound;</span>250</button>
+                                <button type="button" tabindex="12" class="u-button-reset button amount-button headline-text--bolder" data-amount="50000"><span class="currency">&pound;</span>500</button>
+                                <button type="button" tabindex="13" class="u-button-reset button amount-button headline-text--bolder" data-amount="100000"><span class="currency">&pound;</span>1000</button>
+                            </div>
+                            <div id="other_amount_field">
+                                <div class="other_amount_currency headline-text--bolder">&pound;</div>
+                                <input type="tel" id="other_amount" class="text-input" name="other_amount" maxlength="15" pattern="\d*" tabindex="14" placeholder="Other amount (00.00)">
+                            </div>
+                            <input type="hidden" id="amount" name="amount" value="2500">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="form__column">
+                <h3 class="form__column-heading headline-text--bolder"><span class="num">3</span> Your payment</h3>
+                <ul class="u-unstyled">
+                    <li id="card_number_field" class="form-field">
+                        <label for="card_number" class="label u-h">Card number</label>
+                        <div class="input">
+                            <input type="tel" id="card_number" class="text-input" data-stripe="number" tabindex="15" aria-required="true" maxlength="20" x-autocompletetype="cc-number" pattern="\d*" placeholder="Card number">
+                        </div>
+                    </li>
+
+                    <li id="card_expiry_field" class="form-field">
+                        <label class="label">Expires</label>
+                        <div class="input">
+                            <label for="card_expiry_month" class="form-field__note form-field__note--sub">Month</label>
+                            <select id="card_expiry_month" data-stripe="exp-month" tabindex="16" aria-required="true">
+                                <option value="1">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                            <span>/</span>
+                            <label for="card_expiry_year" class="form-field__note form-field__note--sub">Year</label>
+                            <select id="card_expiry_year" data-stripe="exp-year" tabindex="17" aria-required="true">
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                            </select>
+                        </div>
+                    </li>
+
+                    <li id="card_cvc_field" class="form-field">
+                        <label for="card_cvc" class="label">Security code</label>
+                        <div class="input">
+                            <input type="tel" id="card_cvc" class="text-input" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC">
+                            <div class="form-field__note form-field__note--below form-field__note--right"><a href="#cvc" data-toggle="cvc-help">What's this?</a></div>
+                        </div>
+                    </li>
+
+                    <li class="cvc-help is-hidden">
+                        <ul class="u-unstyled sans-text">
+                            <li class="visa">Visa / Mastercard <br />Last 3 digits on the back</li>
+                            <li class="amex">AMEX <br />4 digits on the front</li>
+                        </ul>
+                    </li>
+
+                    <li id="confirm_email" class="form-field">
+                        <div class="form__note">
+                        A receipt will be emailed to <wbr /><span class="your-email">you</span>.
+                    </div>
+                    </li>
+
+                    <li id="submit_field" class="form-field">
+                        <button class="submit-input headline-text--bolder" type="submit" tabindex="19">Pay &pound;25 now</button>
+                    </li>
+
+                    <li id="secure_message">
+                        <div class="form__note">
+                            <img class="padlock" src="$urls.staticFilePath/images/support/padlock.png" alt="secure" />
+                            This payment page is securely encrypted.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+       </form>
+    </div>
+}

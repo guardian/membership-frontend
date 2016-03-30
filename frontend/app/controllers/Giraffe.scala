@@ -15,6 +15,10 @@ import scala.concurrent.Future
 
 object Giraffe extends Controller {
   def support = CachedAction { implicit request =>
-    Ok(views.html.giraffe.support())
+    Ok(views.html.giraffe.support(PageInfo(
+        title = "Support",
+        url = request.path,
+        description = Some("Support the Guardian")
+    )))
   }
 }
