@@ -6,6 +6,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.stripe.Stripe.Serializer._
 import forms.MemberForm.supportForm
 import services.TouchpointBackend
+import views.support.PageInfo
 import scala.concurrent.Future
 
 object Giraffe extends Controller {
