@@ -16,10 +16,12 @@ object MemberForm {
   case class NameForm(first: String, last: String) extends FullName
 
   case class SupportForm(
+    name: String,
     currency: Currency,
     amount: BigDecimal,
     email: String,
-    token: String
+    token: String,
+    marketing: Boolean
   )
 
   case class PaymentForm(billingPeriod: BillingPeriod, token: String)
@@ -239,10 +241,12 @@ object MemberForm {
 
   val supportForm: Form[SupportForm] = Form(
     mapping(
+      "name" -> nonEmptyText,
       "currency" -> of[Currency],
       "amount" -> bigDecimal(10, 2),
-      "email" -> text,
-      "token" -> text
+      "email" -> email,
+      "token" -> nonEmptyText,
+      "marketing" -> boolean
     )(SupportForm.apply)(SupportForm.unapply)
   )
 }

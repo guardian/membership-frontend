@@ -10,6 +10,8 @@ import scala.concurrent.Future
 
 object Giraffe extends Controller {
 
+  val stripe = TouchpointBackend.Normal.stripeService
+
   def support = CachedAction { implicit request =>
     Ok(views.html.giraffe.support(PageInfo(
         title = "Support",
@@ -22,7 +24,14 @@ object Giraffe extends Controller {
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
     },{ f =>
-      val res = TouchpointBackend.Normal.stripeService.Charge.create((f.amount * 100).toInt, f.currency, f.email, "Giraffe", f.token)
+
+      val metadata = Map(
+        "marketing-opt-in" -> f.marketing.toString,
+        "email" -> f.email,
+        "name" -> f.name
+      )
+
+      val res = stripe.Charge.create((f.amount * 100).toInt, f.currency, f.email, "Giraffe", f.token, metadata)
       res.map(_ => Ok(Json.obj("success" -> true))).recover { case e: Stripe.Error => BadRequest(Json.toJson(e))}
     })
   }
