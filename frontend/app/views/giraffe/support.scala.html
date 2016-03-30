@@ -1,21 +1,19 @@
 @import views.support.PageInfo
 @import views.support.Asset
 
-@(pageInfo: PageInfo)
+@(pageInfo: PageInfo, img: model.ResponsiveImageGroup)
 
-@main("Support", pageInfo=pageInfo) {
-    <div class="hero">
-        <h1 class="u-h">Support the Guardian</h1>
-        <blockquote>
-            <p class="hero__quote headline-text--light">The past year has been a powerful illustration of how the Guardian is living up to its core editorial mission. I would like to invite you to join us as a supporter of our journalism.</p>
-            <cite class="hero__cite headline-text--light"><span class="hero__cite-name">Alan Rusbridger</span> Editor-in-chief, The Guardian</cite>
-        </blockquote>
-        <a href="#form" class="u-button-reset button contribute-button headline-text--bolder">Contribute</a>
+@main("Support", pageInfo = pageInfo) {
+    <div class="page-slice l-constrained">
+        <div class="promo-primary__image">
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
+        </div>
     </div>
 
     <noscript>
         <div class="form-errors form__error sans-text">
-            <span class="headline-text--bolder">Javascript disabled</span> Javascript must be enabled to use this site, please enable it in your browser.
+            <span class="headline-text--bolder">Javascript disabled</span>
+            Javascript must be enabled to use this site, please enable it in your browser.
         </div>
     </noscript>
 
@@ -25,7 +23,8 @@
 
         <form id="form" class="form" role="main" method="POST" autocomplete="on" novalidate>
             <div class="form__column">
-                <h3 class="form__column-heading form__column-heading--first headline-text--bolder"><span class="num">1</span> Your details</h3>
+                <h3 class="form__column-heading form__column-heading--first headline-text--bolder"><span class="num">1</span>
+                    Your details</h3>
                 <ul class="u-unstyled">
                     <li id="email_field" class="form-field">
                         <label for="email" class="label u-h">Email address</label>
@@ -35,8 +34,11 @@
                     </li>
                     <li>
                         <div class="form__note">
-                        By proceeding, you agree to the Guardian's <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">Terms of Service</a> and <a href="http://www.theguardian.com/help/privacy-policy" target="_blank">Privacy Policy</a>.
-                    </div>
+                            By proceeding, you agree to the Guardian's <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">
+                            Terms of Service</a>
+                            and <a href="http://www.theguardian.com/help/privacy-policy" target="_blank">
+                            Privacy Policy</a>.
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -61,14 +63,22 @@
                         <label for="amount" class="label u-h">Amount</label>
                         <div class="input">
                             <div class="button-group u-cf">
-                                <button type="button" tabindex="6" class="u-button-reset button amount-button headline-text--bolder" data-amount="1000"><span class="currency">&pound;</span>10</button>
-                                <button type="button" tabindex="7" class="u-button-reset button amount-button headline-text--bolder active" data-amount="2500"><span class="currency">&pound;</span>25</button>
-                                <button type="button" tabindex="8" class="u-button-reset button amount-button headline-text--bolder" data-amount="5000"><span class="currency">&pound;</span>50</button>
-                                <button type="button" tabindex="9" class="u-button-reset button amount-button headline-text--bolder" data-amount="7500"><span class="currency">&pound;</span>75</button>
-                                <button type="button" tabindex="10" class="u-button-reset button amount-button headline-text--bolder" data-amount="10000"><span class="currency">&pound;</span>100</button>
-                                <button type="button" tabindex="11" class="u-button-reset button amount-button headline-text--bolder" data-amount="25000"><span class="currency">&pound;</span>250</button>
-                                <button type="button" tabindex="12" class="u-button-reset button amount-button headline-text--bolder" data-amount="50000"><span class="currency">&pound;</span>500</button>
-                                <button type="button" tabindex="13" class="u-button-reset button amount-button headline-text--bolder" data-amount="100000"><span class="currency">&pound;</span>1000</button>
+                                <button type="button" tabindex="6" class="u-button-reset button amount-button headline-text--bolder" data-amount="1000"><span class="currency">&pound;</span>
+                                    10</button>
+                                <button type="button" tabindex="7" class="u-button-reset button amount-button headline-text--bolder active" data-amount="2500"><span class="currency">&pound;</span>
+                                    25</button>
+                                <button type="button" tabindex="8" class="u-button-reset button amount-button headline-text--bolder" data-amount="5000"><span class="currency">&pound;</span>
+                                    50</button>
+                                <button type="button" tabindex="9" class="u-button-reset button amount-button headline-text--bolder" data-amount="7500"><span class="currency">&pound;</span>
+                                    75</button>
+                                <button type="button" tabindex="10" class="u-button-reset button amount-button headline-text--bolder" data-amount="10000"><span class="currency">&pound;</span>
+                                    100</button>
+                                <button type="button" tabindex="11" class="u-button-reset button amount-button headline-text--bolder" data-amount="25000"><span class="currency">&pound;</span>
+                                    250</button>
+                                <button type="button" tabindex="12" class="u-button-reset button amount-button headline-text--bolder" data-amount="50000"><span class="currency">&pound;</span>
+                                    500</button>
+                                <button type="button" tabindex="13" class="u-button-reset button amount-button headline-text--bolder" data-amount="100000"><span class="currency">&pound;</span>
+                                    1000</button>
                             </div>
                             <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder">&pound;</div>
@@ -127,7 +137,8 @@
                         <label for="card_cvc" class="label">Security code</label>
                         <div class="input">
                             <input type="tel" id="card_cvc" class="text-input" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC">
-                            <div class="form-field__note form-field__note--below form-field__note--right"><a href="#cvc" data-toggle="cvc-help">What's this?</a></div>
+                            <div class="form-field__note form-field__note--below form-field__note--right"><a href="#cvc" data-toggle="cvc-help">
+                                What's this?</a></div>
                         </div>
                     </li>
 
@@ -140,12 +151,13 @@
 
                     <li id="confirm_email" class="form-field">
                         <div class="form__note">
-                        A receipt will be emailed to <wbr /><span class="your-email">you</span>.
-                    </div>
+                            A receipt will be emailed to <wbr /><span class="your-email">you</span>.
+                        </div>
                     </li>
 
                     <li id="submit_field" class="form-field">
-                        <button class="submit-input headline-text--bolder" type="submit" tabindex="19">Pay &pound;25 now</button>
+                        <button class="submit-input headline-text--bolder" type="submit" tabindex="19">Pay &pound;
+                            25 now</button>
                     </li>
 
                     <li id="secure_message">
@@ -156,6 +168,6 @@
                     </li>
                 </ul>
             </div>
-       </form>
+        </form>
     </div>
 }
