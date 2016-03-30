@@ -18,18 +18,23 @@ object Giraffe extends Controller {
     val pageInfo = PageInfo(
       title = "Support",
       url = request.path,
+      stripePublicKey = Some(stripe.publicKey),
       description = Some("Support the Guardian")
     )
     val img = ResponsiveImageGroup(
       name = Some("intro"),
       altText = Some("Patrons of the Guardian"),
-      availableImages = ResponsiveImageGenerator(
+        availableImages = ResponsiveImageGenerator(
         id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
         sizes = List(1000, 500)
       )
     )
 
     Ok(views.html.giraffe.support(pageInfo, img))
+  }
+
+  def thanks = NoCacheAction {
+    Ok("Thank you :D")
   }
 
   def pay = NoCacheAction.async { implicit request =>
@@ -42,7 +47,7 @@ object Giraffe extends Controller {
         "name" -> f.name
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id)
       val res = stripe.Charge.create((f.amount * 100).toInt, f.currency, f.email, "Giraffe", f.token, metadata)
-      res.map(_ => Ok(Json.obj("success" -> true))).recover { case e: Stripe.Error => BadRequest(Json.toJson(e))}
+      res.map(_ => Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))).recover { case e: Stripe.Error => BadRequest(Json.toJson(e))}
     })
   }
 }

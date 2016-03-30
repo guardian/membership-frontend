@@ -1,3 +1,4 @@
+
 @import views.support.PageInfo
 @import views.support.Asset
 
@@ -21,11 +22,17 @@
 
     <div class="support-wrapper">
 
-        <form id="form" class="form" role="main" method="POST" autocomplete="on" novalidate>
+        <form id="form" class="form js-form" role="main" method="POST" autocomplete="on" novalidate action="@routes.Giraffe.pay()">
             <div class="form__column">
                 <h3 class="form__column-heading form__column-heading--first headline-text--bolder"><span class="num">1</span>
                     Your details</h3>
                 <ul class="u-unstyled">
+                    <li class="form-field">
+                        <label for="name" class="label u-h">Name</label>
+                        <div class="input">
+                            <input type="text" id="email" class="text-input" name="name" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Email address">
+                        </div>
+                    </li>
                     <li id="email_field" class="form-field">
                         <label for="email" class="label u-h">Email address</label>
                         <div class="input">
@@ -96,7 +103,7 @@
                     <li id="card_number_field" class="form-field">
                         <label for="card_number" class="label u-h">Card number</label>
                         <div class="input">
-                            <input type="tel" id="card_number" class="text-input" data-stripe="number" tabindex="15" aria-required="true" maxlength="20" x-autocompletetype="cc-number" pattern="\d*" placeholder="Card number">
+                            <input type="tel" id="card_number" class="text-input js-credit-card-number" data-stripe="number" tabindex="15" aria-required="true" maxlength="20" x-autocompletetype="cc-number" pattern="\d*" placeholder="Card number">
                         </div>
                     </li>
 
@@ -104,7 +111,7 @@
                         <label class="label">Expires</label>
                         <div class="input">
                             <label for="card_expiry_month" class="form-field__note form-field__note--sub">Month</label>
-                            <select id="card_expiry_month" data-stripe="exp-month" tabindex="16" aria-required="true">
+                            <select id="card_expiry_month" data-stripe="exp-month" tabindex="16" aria-required="true" class="js-credit-card-exp-month">
                                 <option value="1">01</option>
                                 <option value="2">02</option>
                                 <option value="3">03</option>
@@ -120,7 +127,7 @@
                             </select>
                             <span>/</span>
                             <label for="card_expiry_year" class="form-field__note form-field__note--sub">Year</label>
-                            <select id="card_expiry_year" data-stripe="exp-year" tabindex="17" aria-required="true">
+                            <select id="card_expiry_year" data-stripe="exp-year" tabindex="17" aria-required="true" class="js-credit-card-exp-year">
                                 <option value="14">14</option>
                                 <option value="15">15</option>
                                 <option value="16">16</option>
@@ -136,9 +143,8 @@
                     <li id="card_cvc_field" class="form-field">
                         <label for="card_cvc" class="label">Security code</label>
                         <div class="input">
-                            <input type="tel" id="card_cvc" class="text-input" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC">
-                            <div class="form-field__note form-field__note--below form-field__note--right"><a href="#cvc" data-toggle="cvc-help">
-                                What's this?</a></div>
+                            <input type="tel" id="card_cvc" class="text-input js-credit-card-cvc" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC">
+                            <div class="form-field__note form-field__note--below form-field__note--right"><a href="#cvc" data-toggle="cvc-help">What's this?</a></div>
                         </div>
                     </li>
 
@@ -156,8 +162,8 @@
                     </li>
 
                     <li id="submit_field" class="form-field">
-                        <button class="submit-input headline-text--bolder" type="submit" tabindex="19">Pay &pound;
-                            25 now</button>
+                        <button class="submit-input headline-text--bolder js-submit-input" type="submit" tabindex="19">Pay &pound;25 now</button>
+                        <span class="js-loader"></span>
                     </li>
 
                     <li id="secure_message">
