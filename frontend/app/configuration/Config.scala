@@ -174,7 +174,6 @@ object Config {
         termsAndConditions = ""
       ),
       roundelHtml = "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
-      thumbnailUrl = "https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png",
       title = "Free English Heritage membership worth £88"
     )
   }
@@ -195,7 +194,6 @@ object Config {
         amount = 33.557046979866
       ),
       roundelHtml = "<h1 class=\"roundel__title\">Become a Partner or just £99/year</h1>\n<p class=\"roundel__description\">before 31 March 2016</p>",
-      thumbnailUrl = "", //change this
       title = "Become a Partner for just £99/year"
     ).some.filter(_ => env != "PROD")
   }
