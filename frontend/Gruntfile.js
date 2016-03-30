@@ -353,9 +353,9 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', [
         'clean:css',
+        'build:css',
         'clean:images',
-        'build:images',
-        'build:css'
+        'build:images'
     ]);
     grunt.registerTask('compile:bookmarklets', [
         'clean:bookmarklets',
