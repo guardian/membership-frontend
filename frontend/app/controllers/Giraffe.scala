@@ -13,6 +13,16 @@ import scala.concurrent.Future
 object Giraffe extends Controller {
 
   val stripe = TouchpointBackend.Normal.stripeService
+  val chargeId = "charge_id"
+
+  val img = ResponsiveImageGroup(
+    name = Some("intro"),
+    altText = Some("Patrons of the Guardian"),
+    availableImages = ResponsiveImageGenerator(
+      id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
+      sizes = List(1000, 500)
+    )
+  )
 
   def support = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -21,20 +31,15 @@ object Giraffe extends Controller {
       stripePublicKey = Some(stripe.publicKey),
       description = Some("Support the Guardian")
     )
-    val img = ResponsiveImageGroup(
-      name = Some("intro"),
-      altText = Some("Patrons of the Guardian"),
-        availableImages = ResponsiveImageGenerator(
-        id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
-        sizes = List(1000, 500)
-      )
-    )
-
     Ok(views.html.giraffe.support(pageInfo, img))
   }
 
-  def thanks = NoCacheAction {
-    Ok("Thank you :D")
+  def thanks = NoCacheAction { implicit request =>
+    request.session.get(chargeId).fold(
+      Redirect(routes.Giraffe.support().url, SEE_OTHER)
+    )( id =>
+      Ok(s"Your charge is $id")
+    )
   }
 
   def pay = NoCacheAction.async { implicit request =>
@@ -47,7 +52,13 @@ object Giraffe extends Controller {
         "name" -> f.name
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id)
       val res = stripe.Charge.create((f.amount * 100).toInt, f.currency, f.email, "Giraffe", f.token, metadata)
-      res.map(_ => Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))).recover { case e: Stripe.Error => BadRequest(Json.toJson(e))}
+
+      res.map { charge =>
+        Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))
+          .withSession(chargeId -> charge.id)
+      }.recover {
+        case e: Stripe.Error => BadRequest(Json.toJson(e))
+      }
     })
   }
 }

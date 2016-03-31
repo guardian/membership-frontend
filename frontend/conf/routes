@@ -130,5 +130,5 @@ GET            /currencies                            controllers.PricingApi.cur
 # Giraffe
 GET            /support                               controllers.Giraffe.support
 POST           /support/pay                           controllers.Giraffe.pay
-GET            /support/thankyou                      controllers.Giraffe.thanks
+GET            /support/thank-you                     controllers.Giraffe.thanks
 
