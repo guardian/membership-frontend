@@ -1,0 +1,108 @@
+@import views.support.PageInfo
+@import com.gu.i18n.CountryGroup
+@(  title: String,
+    pageInfo: PageInfo = views.support.PageInfo(),
+    countryGroup: Option[CountryGroup] = None
+)(content: Html)
+@import play.api.libs.json.Json
+@import configuration.{Config, Social}
+@import views.support.Asset
+<!DOCTYPE html lang="en-GB">
+<html class="js-off id--signed-out">
+    <head>
+        <meta charset="utf-8">
+        <title>@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }</title>
+
+        @fragments.meta.mobile()
+        <meta name="description" content="@pageInfo.description"/>
+        <meta name="rating" content="general"/>
+        <meta http-equiv="imagetoolbar" content="no"/>
+        <meta name="Rating" content="general"/>
+        <meta name="Distribution" content="Global"/>
+
+        <meta property="og:title" content="@pageInfo.title | @Config.siteTitle"/>
+        <meta property="og:description" content="@pageInfo.description"/>
+        @for(pageImage <- pageInfo.image) {
+            <meta property="og:image" content="@pageImage"/>
+        }
+        <meta property="og:url" content="@(Config.membershipUrl + pageInfo.url)"/>
+
+        <meta property="og:type" content="website"/>
+        <meta property="fb:app_id" content="@Config.facebookAppId"/>
+        <meta name="twitter:site" content="@@@Social.twitterUsername"/>
+        <meta name="twitter:card" content="summary"/>
+        <meta name="google-site-verification" content="qf7V0ceP_mY_0jTl7R7C1wZSKn2gK7TlharWVLr8Ea0" />
+
+        <script type="application/ld+json">
+            {
+                "@@context": "http://schema.org",
+                "@@type": "Organization",
+                "name": "Guardian Members",
+                "url": "@(Config.membershipUrl)",
+                "logo": "@(Config.membershipUrl)@Asset.at("images/favicons/152x152.png")",
+                "sameAs" : [
+                    "@(Social.youtube)",
+                    "@(Social.googleplus)",
+                    "@(Social.twitter)"
+                ]
+            }
+        </script>
+
+        @for(schema <- pageInfo.schemaOpt) {
+            <script type="application/ld+json">
+                @Html(Json.toJson(schema).toString)
+            </script>
+        }
+
+        @fragments.javaScriptFirstSteps(pageInfo)
+
+        <!--[if (gt IE 9) | (IEMobile)]><!-->
+        <link rel="stylesheet" media="all" href="@Asset.at("stylesheets/style.css")">
+        <!--<![endif]-->
+
+        <!--[if (IE 9)&(!IEMobile)]>
+        <link rel="stylesheet" type="text/css" href="@Asset.at("stylesheets/ie9.css")" />
+        <![endif]-->
+
+        @fragments.javaScriptLaterSteps()
+
+        <link rel="shortcut icon" type="image/png" href="@Asset.at("images/favicons/32x32.ico")">
+        <link rel="apple-touch-icon" sizes="152x152" href="@Asset.at("images/favicons/152x152.png")">
+        <link rel="apple-touch-icon" sizes="144x144" href="@Asset.at("images/favicons/144x144.png")">
+        <link rel="apple-touch-icon" sizes="120x120" href="@Asset.at("images/favicons/120x120.png")">
+        <link rel="apple-touch-icon" sizes="114x114" href="@Asset.at("images/favicons/114x114.png")">
+        <link rel="apple-touch-icon" sizes="72x72" href="@Asset.at("images/favicons/72x72.png")">
+        <link rel="apple-touch-icon-precomposed" href="@Asset.at("images/favicons/57x57.png")">
+        <meta name="msapplication-TileColor" content="#214583">
+        <meta name="msapplication-TileImage" content="@Asset.at("images/favicons/windows_tile_144_b.png")">
+
+        @if(Config.optimizelyEnabled && Config.stageProd) {
+            <script src="https://cdn.optimizely.com/js/10813770.js"></script>
+        }
+    </head>
+    <body id="top">
+        <a class="u-h skip" href="#container">Skip to main content</a>
+        <noscript>
+            <div class="warning-message copy hidden-print">
+                Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Members.
+                <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.
+            </div>
+        </noscript>
+        <div class="browser-warning warning-message copy hidden-print">
+            You are using an <strong>outdated</strong> browser.
+            Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+        </div>
+        <div class="container-global">
+            @fragments.global.header(pageInfo, countryGroup)
+            <div id="container" class="giraffe-container">
+                @content
+            </div>
+        </div>
+
+        @fragments.global.footer(pageInfo)
+        @fragments.javaScriptRequireJS()
+        @fragments.analytics.googleRemarketing()
+        @fragments.analytics.sessionCam()
+        <!-- build-commit-id: @app.BuildInfo.gitCommitId -->
+    </body>
+</html>
