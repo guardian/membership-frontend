@@ -24,7 +24,8 @@ require([
     'src/modules/identityPopupDetails',
     'src/modules/comparisonTable',
     'src/modules/metrics',
-    'src/modules/patterns'
+    'src/modules/patterns',
+    'src/modules/giraffe'
 ], function(
     ajax,
     raven,
@@ -51,7 +52,8 @@ require([
     identityPopupDetails,
     comparisonTable,
     metrics,
-    patterns
+    patterns,
+    giraffe
 ) {
     'use strict';
 
@@ -95,4 +97,6 @@ require([
     // Pattern library
     patterns.init();
 
+
+    giraffe.init();
 });
