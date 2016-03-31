@@ -7,10 +7,16 @@ import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.stripe.Stripe.Serializer._
 import forms.MemberForm.supportForm
 import services.{AuthenticationService, TouchpointBackend}
-import views.support.PageInfo
+import views.support._
 import scala.concurrent.Future
 
 object Giraffe extends Controller {
+
+  val social: Set[Social] = Set(
+    Email("title", "body"),
+    Twitter("url"),
+    Facebook("url")
+  )
 
   val stripe = TouchpointBackend.Normal.stripeService
   val chargeId = "charge_id"
@@ -38,7 +44,7 @@ object Giraffe extends Controller {
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.support().url, SEE_OTHER)
     )( id =>
-      Ok(s"Your charge is $id")
+      Ok(views.html.giraffe.thankyou(PageInfo(), id, social))
     )
   }
 
