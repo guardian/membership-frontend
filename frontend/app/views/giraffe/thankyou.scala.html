@@ -1,0 +1,43 @@
+@import views.support.PageInfo
+
+@import views.support.Social
+@(pageInfo: PageInfo, reference: String, social: Set[Social])
+@giraffeMain("Support", pageInfo = pageInfo) {
+    <div class="support-wrapper page-slice l-constrained support-thanks">
+        <h1 class="support-thanks__title">Thank you</h1>
+            <p class="support-thanks__message">
+                This is appropriate dummy text that is being employed in order to ascertain an approximate length because the
+                actual copy has not yet been received.
+
+                This is appropriate dummy text that is being employed in order to ascertain an approximate length because the
+                actual copy has not yet been received.
+            </p>
+            @fragments.social(social)
+
+        <div class="support-thanks__row blue-border u-cf">
+            <h2 class="support-thanks__subtitle headline-text--bolder">What happens next?</h2>
+            <div class="support-thanks__one-col">
+                <h3 class="support-thanks__sub-subtitle headline-text--bolder">Lorem ipsum?</h3>
+                <p>This is appropriate dummy text that is being employed in order to
+                    ascertain an approximate length because the.</p>
+                <p><a href="#" class="support-thanks__link">Dixit unum</a></p>
+            </div>
+            <div class="support-thanks__one-col">
+                <h3 class="support-thanks__sub-subtitle headline-text--bolder">Lorem ipsum?</h3>
+                <p>This is appropriate dummy text that is being employed in order to
+                    ascertain an approximate length because the.</p>
+                <p><a href="#" class="support-thanks__link">Dixit unum</a></p>
+            </div>
+            <div class="support-thanks__one-col">
+                <h3 class="support-thanks__sub-subtitle headline-text--bolder">Lorem ipsum?</h3>
+                <p>This is appropriate dummy text that is being employed in order to
+                    ascertain an approximate length because the.</p>
+                <p><a href="#" class="support-thanks__link">Dixit unum</a></p>
+            </div>
+        </div>
+
+        <div class="support-thanks__feedback">
+            <p>Feedback lorem ipsum appropriate dummy text</p>
+        </div>
+    </div>
+}

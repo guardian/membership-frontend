@@ -1,10 +1,10 @@
 @import views.support.PageInfo
-@(pageInfo: PageInfo)
+@(pageInfo: PageInfo, extraClass: Option[String] = None)
 
 @import org.joda.time.DateTime
 @import model.Nav
 
-<footer class="global-footer hidden-print" role="contentinfo">
+<footer class="global-footer hidden-print @extraClass.mkString" role="contentinfo">
 
     @fragments.global.brandbar()
 
