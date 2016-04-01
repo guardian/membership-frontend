@@ -1,4 +1,4 @@
-define(['src/modules/form/validation/display','ajax'], function (display) {
+define(['src/modules/form/validation/display','ajax'], function (display, ajax) {
     'use strict';
     var CURRENCY_FIELD = document.querySelector('.js-currency-field');
     var CURRENCY_DISPLAY = document.querySelectorAll('.js-currency');
@@ -10,6 +10,10 @@ define(['src/modules/form/validation/display','ajax'], function (display) {
     var AMOUNT_DISPLAY = document.querySelectorAll('.js-amount');
     var AMOUNT_FIELD_CLASS = 'js-amount-field';
     var AMOUNT_FIELD = document.querySelector('.' + AMOUNT_FIELD_CLASS);
+
+    var EMAIL_FIELD = document.querySelector('.js-email');
+    var NAME_FIELD = document.querySelector('.js-name');
+
 
     function init() {
         if (!document.querySelectorAll('.container-global--giraffe').length) {
@@ -24,6 +28,8 @@ define(['src/modules/form/validation/display','ajax'], function (display) {
 
         //Set custom value listener
         AMOUNT_FIELD.addEventListener('blur', setAmount(AMOUNT_FIELD));
+
+        getStuffFromIdentity();
 
     }
 
@@ -102,6 +108,23 @@ define(['src/modules/form/validation/display','ajax'], function (display) {
 
     function clearAmounts() {
         setInactive(AMOUNT_PICKER);
+    }
+
+    function getStuffFromIdentity() {
+        var IDENTITY_API = 'https://idapi.theguardian.com/user/me/';
+        //var IDENTITY_API = 'https://idapi-code-proxy.thegulocal.com/user/me';
+        ajax.reqwest({
+            url: IDENTITY_API,
+            method: 'get',
+            type: 'jsonp',
+            crossOrigin: true
+        }).then(function (resp) {
+            if (resp.user) {
+                EMAIL_FIELD.value = resp.user.primaryEmailAddress;
+                NAME_FIELD.value = resp.user.publicFields.displayName;
+            }
+        })
+
     }
 
     return {
