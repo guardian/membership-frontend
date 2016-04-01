@@ -814,8 +814,14 @@ blockquote:before {
         padding-right: 150px;
     }
 
+    $offset: 200px;
     .promo-primary__image {
-        margin-bottom: -84px;
+        top: -$offset;
+        margin-bottom: -$offset;
+
+        .primary__heading {
+            top: $offset + 40;
+        }
     }
 
     .page-slice {
