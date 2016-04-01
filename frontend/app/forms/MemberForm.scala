@@ -21,7 +21,8 @@ object MemberForm {
     amount: BigDecimal,
     email: String,
     token: String,
-    marketing: Boolean
+    marketing: Boolean,
+    postCode: Option[String]
   )
 
   case class PaymentForm(billingPeriod: BillingPeriod, token: String)
@@ -246,7 +247,8 @@ object MemberForm {
       "amount" -> bigDecimal(10, 2),
       "email" -> email,
       "payment.token" -> nonEmptyText,
-      "marketing" -> boolean
+      "guardian-opt-in" -> boolean,
+      "postcode" -> optional(nonEmptyText)
     )(SupportForm.apply)(SupportForm.unapply)
   )
 }
