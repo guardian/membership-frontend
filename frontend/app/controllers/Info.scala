@@ -239,7 +239,7 @@ trait Info extends Controller {
 
   def feedback = NoCacheAction { implicit request =>
     val flashMsgOpt = request.flash.get("msg").map(FlashMessage.success)
-    Ok(views.html.info.feedback(flashMsgOpt))
+    Ok(views.html.info.feedback(flashMsgOpt, request.getQueryString("page")))
   }
 
   def submitFeedback = NoCacheAction.async { implicit request =>

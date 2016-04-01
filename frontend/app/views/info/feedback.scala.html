@@ -1,8 +1,12 @@
-@(flashMsgOpt: Option[model.FlashMessage] = None)(implicit token: play.filters.csrf.CSRF.Token)
-
 @import views.html.helper.CSRF
+@(flashMsgOpt: Option[model.FlashMessage] = None, feedbackText: Option[String] = None)(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Feedback") {
+    @mainFunction = @{
+        if(feedbackText.isDefined) giraffeMain("Feedback") _ else main("Feedback") _
+    }
+
+    @mainFunction {
+
 
     <main role="main" class="page-content l-constrained">
 
@@ -41,7 +45,7 @@
 
                 <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="js-form" novalidate>
                     @CSRF.formField
-                    @fragments.form.feedback()
+                    @fragments.form.feedback(feedbackText)
                     @fragments.form.errorMessageDisplay()
                     <fieldset class="fieldset fieldset--simple">
                         <div class="fieldset__heading"></div>

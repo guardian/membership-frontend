@@ -2,6 +2,7 @@ package forms
 
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod._
+import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Address, BillingPeriod, FullName}
 import com.gu.salesforce.Tier._
@@ -13,6 +14,16 @@ import play.api.data.{Form, FormError, Mapping}
 
 object MemberForm {
   case class NameForm(first: String, last: String) extends FullName
+
+  case class SupportForm(
+    name: String,
+    currency: Currency,
+    amount: BigDecimal,
+    email: String,
+    token: String,
+    marketing: Boolean,
+    postCode: Option[String]
+  )
 
   case class PaymentForm(billingPeriod: BillingPeriod, token: String)
 
@@ -113,6 +124,14 @@ object MemberForm {
       data.get(key).filter(_.nonEmpty).map(PromoCode).toRight(Seq(FormError(key, "Cannot find a promo code")))
 
     override def unbind(key: String, value: PromoCode) = Map(key -> value.get)
+  }
+
+  implicit val currencyFormatter = new Formatter[Currency] {
+    type Result = Either[Seq[FormError], Currency]
+    override def bind(key: String, data: Map[String, String]): Result =
+      data.get(key).map(_.toUpperCase).flatMap(Currency.fromString).fold[Result](Left(Seq.empty))(currency => Right(currency))
+    override def unbind(key: String, value: Currency): Map[String, String] =
+      Map(key -> value.identifier)
   }
 
   val promoCode = of[PromoCode] as promoCodeFormatter
@@ -219,5 +238,17 @@ object MemberForm {
       "name" -> nonEmptyText,
       "email" -> email
     )(FeedbackForm.apply)(FeedbackForm.unapply)
+  )
+
+  val supportForm: Form[SupportForm] = Form(
+    mapping(
+      "name" -> nonEmptyText,
+      "currency" -> of[Currency],
+      "amount" -> bigDecimal(10, 2),
+      "email" -> email,
+      "payment.token" -> nonEmptyText,
+      "guardian-opt-in" -> boolean,
+      "postcode" -> optional(nonEmptyText)
+    )(SupportForm.apply)(SupportForm.unapply)
   )
 }
