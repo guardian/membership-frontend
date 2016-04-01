@@ -5,6 +5,13 @@ define([
     'use strict';
 
     /**
+     * is a number less than fifty (for giraffe)
+     */
+    var lessThanFifty = function (number) {
+        return ~~number<=50;
+    };
+
+    /**
      * use stripe lib utility to check for a valid looking credit card number
      * @param cardElem
      * @returns {*}
@@ -69,6 +76,7 @@ define([
         validCreditCardNumber: validCreditCardNumber,
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,
-        validCreditCardYear: validCreditCardYear
+        validCreditCardYear: validCreditCardYear,
+        lessThanFifty: lessThanFifty
     };
 });

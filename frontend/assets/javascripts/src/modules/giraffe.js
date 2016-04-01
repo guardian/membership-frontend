@@ -1,4 +1,4 @@
-define([], function () {
+define(['src/modules/form/validation/display','ajax'], function (display,ajax) {
     'use strict';
     var CURRENCY_FIELD = document.querySelector('.js-currency-field');
     var CURRENCY_DISPLAY = document.querySelectorAll('.js-currency');
@@ -75,8 +75,13 @@ define([], function () {
                 amount = element.value;
             }
             if (element.getAttribute('data-amount')) {
-                amount = element.getAttribute('data-amount');
+                amount = element.getAttribute('data-amount') + '.00';
                 setActive(element);
+                //Force a validation pass if we pick a pre-selected amount
+                display.toggleErrorState({
+                    isValid:true,
+                    elem: AMOUNT_FIELD
+                });
             }
             if (amount) {
                 for (var i = 0; i < AMOUNT_DISPLAY.length; i++) {
