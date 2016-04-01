@@ -10,10 +10,8 @@ define([], function () {
     var AMOUNT_DISPLAY = document.querySelectorAll('.js-amount');
     var AMOUNT_FIELD_CLASS = 'js-amount-field';
     var AMOUNT_FIELD = document.querySelector('.' + AMOUNT_FIELD_CLASS);
-    console.log('hello');
 
     function init() {
-        console.log('hello');
         //Set currency listeners
         setListenerOnChildren('click', CURRENCY_PICKER, setCurrency);
 
@@ -32,7 +30,6 @@ define([], function () {
             var child = element[i];
             var listener = handler(child);
             if (handler) {
-                console.log('Adding', event, listener);
                 child.addEventListener(event, listener);
             }
         }
@@ -40,14 +37,10 @@ define([], function () {
     }
 
     function setActive(element) {
-        console.log('1');
-        console.log(element);
-        setInactive(element.parentElement.childNodes);
         element.classList.add(ACTIVE);
     }
 
     function setInactive(nodeList) {
-        if (nodeList instanceof NodeList) {
             for (var i = 0; i < nodeList.length; i++) {
                 var element = nodeList[i];
                 if (element.classList.contains(ACTIVE)) {
@@ -55,18 +48,15 @@ define([], function () {
                     return;
                 }
             }
-        }
+
     }
 
     function setCurrency(element) {
-        console.log('set e');
-        console.log(element);
         var currency = element.getAttribute('data-currency');
         var symbol = element.getAttribute('data-symbol');
-        console.log(currency, symbol);
         if (currency && symbol) {
             return function () {
-                console.log('HELLO');
+                setInactive(CURRENCY_PICKER);
                 CURRENCY_FIELD.value = currency;
                 for (var i = 0; i < CURRENCY_DISPLAY.length; i++) {
                     CURRENCY_DISPLAY[i].innerHTML = symbol;
@@ -83,17 +73,12 @@ define([], function () {
             clearAmounts();
             if (element.classList.contains(AMOUNT_FIELD_CLASS)) {
                 amount = element.value;
-                console.log('field')
             }
             if (element.getAttribute('data-amount')) {
                 amount = element.getAttribute('data-amount');
                 setActive(element);
-                console.log('select');
             }
-            console.log(amount)
             if (amount) {
-
-
                 for (var i = 0; i < AMOUNT_DISPLAY.length; i++) {
                     var amountdisplay = AMOUNT_DISPLAY[i];
                     if (amountdisplay.tagName == 'INPUT') {
