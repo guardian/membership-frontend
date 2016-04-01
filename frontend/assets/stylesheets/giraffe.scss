@@ -15,7 +15,7 @@
     position: relative;
 
     .promo-primary__image--overlay {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.4);
         position: absolute;
         height: 100%;
         width: 100%;
@@ -25,13 +25,14 @@
         position: absolute;
         z-index: 2;
         top: 150px;
-        left: 20px;
+        left: 80px;
         right: 50%;
     }
 
     .primary__heading--main {
         font-size: 42px;
-        line-height: 44px;
+        line-height: 46px;
+        font-family: $f-serif-headline;
         font-weight: 500;
         color: white;
     }
@@ -39,6 +40,7 @@
     .primary__heading--sub {
         font-size: 42px;
         font-weight: 500;
+        font-family: $f-serif-headline;
         color: #ffce4b;
     }
 
