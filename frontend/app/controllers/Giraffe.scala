@@ -35,7 +35,8 @@ object Giraffe extends Controller {
       title = "Support",
       url = request.path,
       stripePublicKey = Some(stripe.publicKey),
-      description = Some("Support the Guardian")
+      description = Some("Support the Guardian"),
+      navigation = Seq.empty
     )
     Ok(views.html.giraffe.support(pageInfo, img))
   }
@@ -44,7 +45,9 @@ object Giraffe extends Controller {
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.support().url, SEE_OTHER)
     )( id =>
-      Ok(views.html.giraffe.thankyou(PageInfo(), id, social))
+      Ok(views.html.giraffe.thankyou(PageInfo(
+        navigation = Seq.empty
+      ), id, social))
     )
   }
 
