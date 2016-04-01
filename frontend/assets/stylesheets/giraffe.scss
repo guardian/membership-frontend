@@ -225,278 +225,279 @@ blockquote:before {
 }
 
 /** Form */
-.js-off #form {
-    display: none;
-}
-
-#form {
-    margin-top: 8px;
-}
-
-form .form-fields {
-    margin: 0 0 48px;
-}
-
-form .label {
-    font-size: 14px;
-    font-size: 1.4rem;
-    margin-bottom: 4px;
-}
-
-form .submit-input {
-    margin-right: 0;
-    padding: 14px 10px;
-    width: 100%;
-}
-
-form .submit-input.processing {
-    background: #bdbdbd url(https://assets-secure.guim.co.uk/images/auto-update-activity.gif) no-repeat scroll 30px center;
-    text-indent: 72px;
-}
-
-.input {
-    position: relative;
-}
-
-.form-field__note--sub {
-    position: absolute;
-    top: 36px;
-}
-
-.button-group {
-    max-width: 288px;
-    margin: 0 auto;
-}
-
-.button {
-    display: inline-block;
-    background-color: #bdbdbd;
-    color: #fff;
-    cursor: pointer;
-    float: left;
-    font-size: 1.4rem;
-    margin-bottom: 8px;
-    margin-left: 2px;
-    margin-right: 2px;
-    width: 140px;
-    padding: 15px 10px 13px;
-}
-
-.button:hover, .button:focus {
-    background-color: #767676;
-}
-
-
-/* mobileLandscape */
-@media all and (min-width: 495px) {
-    .button-group {
-        max-width: none;
-        margin: 0 0 0 -4px;
-    }
-
-    .button {
-        max-width: none;
-        margin-left: 4px;
-        margin-right: 0;
-        width: 107px;
-    }
-}
-
-/* desktop */
-@media all and (min-width: 61.25em) {
-    form .form-fields {
-        margin: 0;
-    }
-
-    .button-group {
-        margin-left: -4px;
-    }
-
-    .button {
-        margin-bottom: 8px;
-        margin-left: 4px;
-        width: 59px;
-        padding: 10px 10px 9px;
-    }
-
-    form .submit-input {
-        padding: 11px 10px;
-    }
-}
-
-.button[disabled] {
-    background-color: #e3e3db;
-}
-
-.button.active {
-    background-color: #005689;
-}
-
-.button.active[disabled] {
-    background-color: #767676;
-}
-
-.contribute-button {
-    background-color: #005689;
-    display: block;
-    float: none;
-    margin: 24px auto 48px;
-    text-align: center;
-    width: 240px;
-}
-
-.contribute-button:hover,
-.contribute-button:focus {
-    background-color: #004670;
-    text-decoration: none;
-}
-
-.contribute-button:active {
-    background-color: #000;
-    color: #fff;
-}
-
-/* mobileLandscape */
-@media all and (min-width: 30em) {
-    .contribute-button {
-        width: 320px;
-    }
-}
-
-/* tablet */
-@media all and (min-width: 46.25em) {
-    .contribute-button {
-        display: none;
-    }
-}
-
-#other_amount {
-    margin-top: 16px;
-}
-
-#other_amount_field {
-    margin-left: 18px;
-    position: relative;
-}
-
-#other_amount_field .form-field__error {
-    float: left;
-}
-
-.other_amount_currency {
-    bottom: 2px;
-    font-size: 18px;
-    font-size: 1.8rem;
-    left: -17px;
-    position: absolute;
-}
-
-#currency_field {
-    margin-bottom: 16px;
-}
-
-#secure_message {
-    margin-bottom: 0px;
-}
-
-#confirm_email {
-    clear: left;
-    padding-top: 6px;
-    margin-bottom: 10px;
-}
-
-#submit_field {
-    margin-bottom: 20px;
-}
-
-#card_expiry_field {
-    float: left;
-    margin-bottom: 44px;
-}
-
-#card_expiry_field .input {
-    padding-top: 4px;
-}
-
-#card_cvc_field {
-    float: left;
-    margin-left: 20px;
-    width: 100px;
-}
-
-#form .cvc-help {
-    clear: left;
-    font-size: 14px;
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-    padding: 8px 12px;
-    background-color: #f4f4f4;
-}
-
-/* mobileLandscape */
-@media all and (min-width: 495px) {
-    #form .cvc-help {
-        clear: none;
-        float: right;
-    }
-}
-
-
-/* desktop */
-@media all and (min-width: 61.25em) {
-    #form .cvc-help {
-        float: none;
-        clear: left;
-    }
-}
-
-#form .cvc-help .visa {
-    background: transparent url(/static/DEV/cs/images/support/visa.png) center left no-repeat;
-    height: 32px;
-    line-height: 16px;
-    margin-bottom: 4px;
-    padding-left: 60px;
-}
-
-#form .cvc-help .amex {
-    background: transparent url(/static/DEV/cs/images/support/amex.png) center left no-repeat;
-    height: 32px;
-    line-height: 16px;
-    margin-bottom: 4px;
-    padding-left: 60px;
-}
-
-#secure_message img.padlock {
-    vertical-align: middle;
-    margin-top: -4px;
-}
-
-#card_expiry_field.form-field--error {
-    margin-bottom: 64px;
-}
-
-#card_expiry_field .form-field__error {
-    left: 0;
-    top: 48px;
-    position: absolute;
-}
-
-.form-errors.form__error {
-    border: none;
-    background: #d61d00 url(/static/DEV/cs/images/support/alert.png) 10px center no-repeat;
-    color: #fff;
-    font-size: 1.6rem;
-    font-size: 16px;
-    margin-bottom: 24px;
-    margin-top: 0;
-    padding: 12px 8px 12px 40px;
-}
-
-.form-errors span {
-    font-size: 1.8rem;
-    font-size: 18px;
-    padding-right: 4px;
-}
+//
+//.js-off #form {
+//    display: none;
+//}
+//
+//#form {
+//    margin-top: 8px;
+//}
+//
+//form .form-fields {
+//    margin: 0 0 48px;
+//}
+//
+//form .label {
+//    font-size: 14px;
+//    font-size: 1.4rem;
+//    margin-bottom: 4px;
+//}
+//
+//form .submit-input {
+//    margin-right: 0;
+//    padding: 14px 10px;
+//    width: 100%;
+//}
+//
+//form .submit-input.processing {
+//    background: #bdbdbd url(https://assets-secure.guim.co.uk/images/auto-update-activity.gif) no-repeat scroll 30px center;
+//    text-indent: 72px;
+//}
+//
+//.input {
+//    position: relative;
+//}
+//
+//.form-field__note--sub {
+//    position: absolute;
+//    top: 36px;
+//}
+//
+//.button-group {
+//    max-width: 288px;
+//    margin: 0 auto;
+//}
+//
+//.button {
+//    display: inline-block;
+//    background-color: #bdbdbd;
+//    color: #fff;
+//    cursor: pointer;
+//    float: left;
+//    font-size: 1.4rem;
+//    margin-bottom: 8px;
+//    margin-left: 2px;
+//    margin-right: 2px;
+//    width: 140px;
+//    padding: 15px 10px 13px;
+//}
+//
+//.button:hover, .button:focus {
+//    background-color: #767676;
+//}
+//
+//
+///* mobileLandscape */
+//@media all and (min-width: 495px) {
+//    .button-group {
+//        max-width: none;
+//        margin: 0 0 0 -4px;
+//    }
+//
+//    .button {
+//        max-width: none;
+//        margin-left: 4px;
+//        margin-right: 0;
+//        width: 107px;
+//    }
+//}
+//
+///* desktop */
+//@media all and (min-width: 61.25em) {
+//    form .form-fields {
+//        margin: 0;
+//    }
+//
+//    .button-group {
+//        margin-left: -4px;
+//    }
+//
+//    .button {
+//        margin-bottom: 8px;
+//        margin-left: 4px;
+//        width: 59px;
+//        padding: 10px 10px 9px;
+//    }
+//
+//    form .submit-input {
+//        padding: 11px 10px;
+//    }
+//}
+//
+//.button[disabled] {
+//    background-color: #e3e3db;
+//}
+//
+//.button.active {
+//    background-color: #005689;
+//}
+//
+//.button.active[disabled] {
+//    background-color: #767676;
+//}
+//
+//.contribute-button {
+//    background-color: #005689;
+//    display: block;
+//    float: none;
+//    margin: 24px auto 48px;
+//    text-align: center;
+//    width: 240px;
+//}
+//
+//.contribute-button:hover,
+//.contribute-button:focus {
+//    background-color: #004670;
+//    text-decoration: none;
+//}
+//
+//.contribute-button:active {
+//    background-color: #000;
+//    color: #fff;
+//}
+//
+///* mobileLandscape */
+//@media all and (min-width: 30em) {
+//    .contribute-button {
+//        width: 320px;
+//    }
+//}
+//
+///* tablet */
+//@media all and (min-width: 46.25em) {
+//    .contribute-button {
+//        display: none;
+//    }
+//}
+//
+//#other_amount {
+//    margin-top: 16px;
+//}
+//
+//#other_amount_field {
+//    margin-left: 18px;
+//    position: relative;
+//}
+//
+//#other_amount_field .form-field__error {
+//    float: left;
+//}
+//
+//.other_amount_currency {
+//    bottom: 2px;
+//    font-size: 18px;
+//    font-size: 1.8rem;
+//    left: -17px;
+//    position: absolute;
+//}
+//
+//#currency_field {
+//    margin-bottom: 16px;
+//}
+//
+//#secure_message {
+//    margin-bottom: 0px;
+//}
+//
+//#confirm_email {
+//    clear: left;
+//    padding-top: 6px;
+//    margin-bottom: 10px;
+//}
+//
+//#submit_field {
+//    margin-bottom: 20px;
+//}
+//
+//#card_expiry_field {
+//    float: left;
+//    margin-bottom: 44px;
+//}
+//
+//#card_expiry_field .input {
+//    padding-top: 4px;
+//}
+//
+//#card_cvc_field {
+//    float: left;
+//    margin-left: 20px;
+//    width: 100px;
+//}
+//
+//#form .cvc-help {
+//    clear: left;
+//    font-size: 14px;
+//    font-size: 1.4rem;
+//    margin-bottom: 16px;
+//    padding: 8px 12px;
+//    background-color: #f4f4f4;
+//}
+//
+///* mobileLandscape */
+//@media all and (min-width: 495px) {
+//    #form .cvc-help {
+//        clear: none;
+//        float: right;
+//    }
+//}
+//
+//
+///* desktop */
+//@media all and (min-width: 61.25em) {
+//    #form .cvc-help {
+//        float: none;
+//        clear: left;
+//    }
+//}
+//
+//#form .cvc-help .visa {
+//    background: transparent url(/static/DEV/cs/images/support/visa.png) center left no-repeat;
+//    height: 32px;
+//    line-height: 16px;
+//    margin-bottom: 4px;
+//    padding-left: 60px;
+//}
+//
+//#form .cvc-help .amex {
+//    background: transparent url(/static/DEV/cs/images/support/amex.png) center left no-repeat;
+//    height: 32px;
+//    line-height: 16px;
+//    margin-bottom: 4px;
+//    padding-left: 60px;
+//}
+//
+//#secure_message img.padlock {
+//    vertical-align: middle;
+//    margin-top: -4px;
+//}
+//
+//#card_expiry_field.form-field--error {
+//    margin-bottom: 64px;
+//}
+//
+//#card_expiry_field .form-field__error {
+//    left: 0;
+//    top: 48px;
+//    position: absolute;
+//}
+//
+//.form-errors.form__error {
+//    border: none;
+//    background: #d61d00 url(/static/DEV/cs/images/support/alert.png) 10px center no-repeat;
+//    color: #fff;
+//    font-size: 1.6rem;
+//    font-size: 16px;
+//    margin-bottom: 24px;
+//    margin-top: 0;
+//    padding: 12px 8px 12px 40px;
+//}
+//
+//.form-errors span {
+//    font-size: 1.8rem;
+//    font-size: 18px;
+//    padding-right: 4px;
+//}
 
 /** Thanks */
 .support-thanks {
@@ -675,7 +676,7 @@ form .submit-input.processing {
     }
 }
 
-.option-button {
+@mixin button {
     @include font-smoothing();
     @include fs-textSans(4);
 
@@ -702,9 +703,33 @@ form .submit-input.processing {
     }
 }
 
+.option-button {
+    @include button();
+}
+
 .option-button--bold {
     font-weight: bold;
 }
+
+.action--contribute {
+    width: 100%;
+    border: none;
+    background-color: #00558C;
+
+    &:hover {
+        background-color: darken(#00558C, 10%);
+    }
+}
+
+.giraffe-container {
+    #card_expiry_field,
+    #card_cvc_field {
+        display: inline-block;
+        vertical-align: top;
+        width: 49%;
+    }
+}
+
 
 // Numbers
 // colour(news-main-2);
