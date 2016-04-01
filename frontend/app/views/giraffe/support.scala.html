@@ -28,19 +28,19 @@
                     Your details</h3>
                 <ul class="u-unstyled">
                     <li class="form-field">
-                        <label for="name" class="label u-h">Full name</label>
+                        <label for="name" class="label">Full name</label>
                         <div class="input">
                             <input type="text" id="email" class="input-text" name="name" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Full name">
                         </div>
                     </li>
                     <li id="email_field" class="form-field">
-                        <label for="email" class="label u-h">Email address</label>
+                        <label for="email" class="label">Email address</label>
                         <div class="input">
                             <input type="email" id="email" class="input-text" name="email" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Email address">
                         </div>
                     </li>
                     <li id="postcode" class="form-field">
-                        <label for="email" class="label u-h">Postcode</label>
+                        <label for="email" class="label">Postcode</label>
                         <div class="input">
                             <input type="text" id="postcode" class="input-text" name="postcode" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Postcode">
                         </div>
@@ -164,10 +164,12 @@
                         <span class="js-loader"></span>
                     </li>
 
-                    <p class="ts-and-cs">By proceeding, you are agreeing to our
-                        <a href="@Links.membershipTerms" class="text-link" target="_blank">Terms and Conditions</a> and
-                        <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
-                    </p>
+                    <div class="fieldset__note">
+                        <p>By proceeding, you are agreeing to our
+                            <a href="@Links.membershipTerms" class="text-link" target="_blank">Terms and Conditions</a> and
+                            <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
+                        </p>
+                    </div>
                 </ul>
             </div>
         </form>

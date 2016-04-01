@@ -672,6 +672,7 @@ blockquote:before {
 
 .option-button {
     @include button();
+    width: 23%;
 }
 
 .option-button--bold {
@@ -694,6 +695,12 @@ blockquote:before {
         display: inline-block;
         vertical-align: top;
         width: 49%;
+    }
+
+    input:focus {
+        box-shadow: 0 0 2px 2px hsla(0,0%,77%,.5);
+        border-color: #c4c4c4;
+        outline: none;
     }
 }
 
