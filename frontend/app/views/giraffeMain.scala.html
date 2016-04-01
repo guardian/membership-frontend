@@ -92,14 +92,14 @@
             You are using an <strong>outdated</strong> browser.
             Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
         </div>
-        <div class="container-global">
+        <div class="container-global container-global--giraffe">
             @fragments.global.header(pageInfo, countryGroup)
             <div id="container" class="giraffe-container">
                 @content
             </div>
         </div>
 
-        @fragments.global.footer(pageInfo)
+        @fragments.global.footer(pageInfo, extraClass = Some("global-footer--giraffe"))
         @fragments.javaScriptRequireJS()
         @fragments.analytics.googleRemarketing()
         @fragments.analytics.sessionCam()

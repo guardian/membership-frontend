@@ -11,6 +11,29 @@
     - wide:             @media all and (min-width: 81.25em) {}
 */
 
+.container-global.container-global--giraffe, .global-footer.global-footer--giraffe {
+
+    .control__icon {
+        border: 1px solid rgba(255,255,255,0.3)
+    }
+
+    .control__icon, .control__info, .control__item {
+        color: white;
+    }
+
+    .global-header__branding, .global-header__inner {
+        background: #005689;
+    }
+
+    .global-navigation, .global-brandbar {
+        background: #00507f;
+    }
+
+    .global-navigation__scroll {
+        background: #00456e;
+    }
+}
+
 /** Overrides */
 .gs-container {
     background-color: #fff;
