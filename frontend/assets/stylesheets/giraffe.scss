@@ -187,6 +187,10 @@
     padding-bottom: 16px;
 }
 
+.support-thanks .social-list {
+    margin-bottom: 48px;
+}
+
 .support-thanks__subtitle {
     margin-bottom: 28px;
     font-weight: 200;
@@ -214,8 +218,8 @@
 
 .support-thanks__row {
     margin-bottom: 42px;
-    margin-top: 24px;
-    padding-top: 4px;
+    margin-top: 20px;
+    padding-top: 20px;
 }
 
 .support-thanks__title {
@@ -244,9 +248,8 @@
 @include mq($from: desktop) {
 
     .support-thanks__title {
-        margin-bottom: 48px;
+        margin-bottom: 32px;
         margin-top: 16px;
-        font-size: 72px;
     }
 
     .support-thanks__one-col:last-child {
