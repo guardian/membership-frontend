@@ -18,7 +18,7 @@ object Giraffe extends Controller {
     Facebook(s"${Config.membershipUrl}/contribute")
   )
 
-  val stripe = TouchpointBackend.Normal.stripeService
+  val stripe = TouchpointBackend.Normal.giraffeStripeService
   val chargeId = "charge_id"
 
   val img = ResponsiveImageGroup(
