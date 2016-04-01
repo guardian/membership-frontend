@@ -510,11 +510,9 @@ form .submit-input.processing {
 }
 
 .support-thanks__sub-subtitle {
-    font-size: 16px;
-    font-size: 1.6rem;
-    line-height: 24px;
-    line-height: 2.4rem;
+    font-weight: bold;
     margin-bottom: 0;
+    font-size: 20px;
 }
 
 .support-thanks__reference {
@@ -527,8 +525,14 @@ form .submit-input.processing {
 
 .support-thanks__feedback {
     border-top: 1px solid $c-neutral4;
+    @include fs-textSans(4);
     padding-top: 8px;
-    font-size: 12px;
+}
+
+.support-thanks__link {
+    border-bottom: 1px solid $c-neutral2;
+    text-decoration: none;
+    color: #005689;
 }
 
 .blue-border {
