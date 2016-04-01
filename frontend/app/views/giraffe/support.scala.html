@@ -29,15 +29,26 @@
                     <li class="form-field">
                         <label for="name" class="label">Full name</label>
                         <div class="input">
-                            <input type="text" id="name" class="input-text js-name" name="name" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Full name">
+                            <input type="text" id="name" class="input-text js-name" name="name" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Full name" required>
+                            @fragments.form.errorMessage("I NEED COPY")
                         </div>
                     </li>
                     <li id="email_field" class="form-field">
                         <label for="email" class="label">Email address</label>
                         <div class="input">
-                            <input type="email" id="email" class="input-text js-email" name="email" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Email address">
+                            <input type="email" id="email" class="input-text js-email" name="email" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Email address" required>
+                            @fragments.form.errorMessage("I NEED COPY")
+
                         </div>
                     </li>
+
+                    <li id="postcode" class="form-field">
+                        <label for="email" class="label">Postcode</label>
+                        <div class="input">
+                            <input type="text" id="postcode" class="input-text" name="postcode" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Postcode">
+                        </div>
+                    </li>
+
                     <div class="giraffe-checkbox">
                         <input id="guardian-opt-in" type="checkbox" name="guardian-opt-in" checked="checked" value="true">
                         <label for="guardian-opt-in">
@@ -177,14 +188,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <li id="postcode" class="form-field">
-                        <label for="email" class="label">Postcode</label>
-                        <div class="input">
-                            <input type="text" id="postcode" class="input-text" name="postcode" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Postcode">
-                        </div>
-                    </li>
-
                     <li id="submit_field" class="form-field">
                         <button class="action action--contribute js-submit-input" type="submit" tabindex="19">Pay <span class="js-currency">&pound;</span><span class="js-amount">50</span></button>
                         <span class="js-loader"></span>
