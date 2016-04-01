@@ -8,7 +8,8 @@ define([
      * is a number less than fifty (for giraffe)
      */
     var lessThanFifty = function (number) {
-        return ~~number<=50;
+        var amount = parseFloat(number.value);
+        return amount <= 50 && amount >= 1;
     };
 
     /**

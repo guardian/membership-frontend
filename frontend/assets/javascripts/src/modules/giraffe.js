@@ -1,4 +1,4 @@
-define(['src/modules/form/validation/display'], function (display) {
+define(['src/modules/form/validation/display','ajax'], function (display,ajax) {
     'use strict';
     var CURRENCY_FIELD = document.querySelector('.js-currency-field');
     var CURRENCY_DISPLAY = document.querySelectorAll('.js-currency');
@@ -12,6 +12,9 @@ define(['src/modules/form/validation/display'], function (display) {
     var AMOUNT_FIELD = document.querySelector('.' + AMOUNT_FIELD_CLASS);
 
     function init() {
+
+        getStuffFromIdentity();
+
         //Set currency listeners
         setListenerOnChildren('click', CURRENCY_PICKER, setCurrency);
 
@@ -99,6 +102,20 @@ define(['src/modules/form/validation/display'], function (display) {
     function clearAmounts() {
         setInactive(AMOUNT_PICKER);
     }
+
+
+    function getStuffFromIdentity(){
+       // var IDENTITY_API = 'https://idapi.theguardian.com/user/me/';
+   var IDENTITY_API = 'https://idapi-code-proxy.thegulocal.com/user/me';
+            ajax.reqwest({
+                url: IDENTITY_API,
+                method: 'get',
+                type: 'json'
+            }).then(function(resp){
+                console.log(resp);
+            })
+
+}
 
 
     return {
