@@ -15,7 +15,6 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
-    @fragments.common.roundel(Roundel(Seq("Ends 31 March:","Free annual English Heritage membership"), Seq("when you join as a Partner or Patron")))
     @fragments.page.heroBanner("hero-banner--homepage") {
         Become a Guardian&nbsp;Member
     } {
@@ -180,7 +179,6 @@
             </div>
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
-                <p>Join as a Partner or Patron by 31 March for a free annual English Heritage membership worth £88.</p>
                 <ul class="grid">
                     @for(tier <- PaidTier.all) {
                         <li class="grid__item">

@@ -20,14 +20,6 @@ object Highlights {
     """Receive regular updates from the membership community,
       | book tickets to Guardian Live and Local events and access the Guardian members area""".stripMargin)
 
-
-  def englishHeritage(tierText: String) = Highlight(
-    s"""Free English Heritage membership worth £88 when you
-      | become a Guardian $tierText by 31 March""".stripMargin, isNew = true)
-
-  val ehPartner = englishHeritage("Partner")
-  val ehPatron = englishHeritage("Patron")
-
   val support = Highlight("Support the independence of the Guardian and our award-winning journalism")
   val tickets = Highlight("Get access to tickets and to the live broadcast of events")
   val freeTickets = Highlight(
@@ -39,10 +31,10 @@ object Highlights {
 
   val friend = Seq(updatesAndTickets)
   val supporter = Seq(support, tickets)
-  val partner = Seq(ehPartner, freeTickets, priorityBooking)
-  val patron = Seq(ehPatron, deepSupport, behindTheScenes)
+  val partner = Seq(freeTickets, priorityBooking)
+  val patron = Seq(deepSupport, behindTheScenes)
 
-  val marketedOnlyToUK = Set[Highlight](tickets, freeTickets, priorityBooking, ehPartner, ehPatron)
+  val marketedOnlyToUK = Set[Highlight](tickets, freeTickets, priorityBooking)
 
   val ehLandingPage = NonEmptyList(
     Highlight("Support Guardian journalism and our coverage of critical, under-reported stories from around the world"),
