@@ -87,9 +87,14 @@
                             </div>
                             <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder js-currency">&pound;</div>
-                                <input type="tel" id="other_amount" class="input-text js-amount js-amount-field" name="amount" maxlength="15" pattern="\d*" tabindex="14" placeholder="Other amount (00.00)">
+                                <input type="tel" id="other_amount" class="input-text js-amount js-amount-field" name="amount" maxlength="6" tabindex="14" value="50" data-validation="lessThanFifty" pattern="(\d{1,2}\.\d{2}|\d{1,2})">
+
                             </div>
                         </div>
+                    </li>
+                    <li>
+                        @fragments.form.errorMessage("NEED VALIDATION COPY!")
+                        <div class="security-note">We are only presently able to accept contributions of <span class="currency js-currency">&pound;</span>50 or less</div>
                     </li>
                 </ul>
             </div>
@@ -119,7 +124,7 @@
                         <label class="label">Expires</label>
                         <div class="input">
                             <label for="card_expiry_month" class="u-h form-field__note form-field__note--sub">Month</label>
-                            <select id="card_expiry_month" data-stripe="exp-month" tabindex="16" aria-required="true" class="js-credit-card-exp-month">
+                            <select id="card_expiry_month" data-stripe="exp-month" tabindex="16" aria-required="true" class="js-credit-card-exp-month" data-validation="validCreditCardMonth">
                                 <option value="1">01</option>
                                 <option value="2">02</option>
                                 <option value="3">03</option>
@@ -135,9 +140,7 @@
                             </select>
                             <span>/</span>
                             <label for="card_expiry_year" class="u-h form-field__note form-field__note--sub">Year</label>
-                            <select id="card_expiry_year" data-stripe="exp-year" tabindex="17" aria-required="true" class="js-credit-card-exp-year">
-                                <option value="14">14</option>
-                                <option value="15">15</option>
+                            <select id="card_expiry_year" data-stripe="exp-year" tabindex="17" aria-required="true" class="js-credit-card-exp-year" data-validation="validCreditCardYear">
                                 <option value="16">16</option>
                                 <option value="17">17</option>
                                 <option value="18">18</option>
@@ -152,7 +155,7 @@
                     <li id="card_cvc_field" class="form-field">
                         <label for="card_cvc" class="label">Security code</label>
                         <div class="input">
-                            <input type="tel" id="card_cvc" class="input-text js-credit-card-cvc" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC">
+                            <input type="tel" id="card_cvc" class="input-text js-credit-card-cvc" data-stripe="cvc" tabindex="18" aria-required="true" maxlength="4" x-autocompletetype="cc-csc" pattern="\d*" autocomplete="off" placeholder="CVC" data-validation="validCVC">
                             <div class="form-field__note form-field__note--below form-field__note--right">
                                 <a class="cvc-cta text-link js-toggle" data-toggle="js-cvc-image-container" href="#">What's this?</a>
                             </div>
