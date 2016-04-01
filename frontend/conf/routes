@@ -128,7 +128,7 @@ GET            /english-heritage                      controllers.Default.redire
 GET            /currencies                            controllers.PricingApi.currencies
 
 # Giraffe
-GET            /support                               controllers.Giraffe.support
-POST           /support/pay                           controllers.Giraffe.pay
-GET            /support/thank-you                     controllers.Giraffe.thanks
+GET            /contribute                            controllers.Giraffe.support
+POST           /contribute/pay                        controllers.Giraffe.pay
+GET            /contribute/thank-you                  controllers.Giraffe.thanks
 
