@@ -14,8 +14,54 @@
 .promo-primary__image.promo-primary__image--giraffe {
     position: relative;
 
+    @include mq($from: desktop) {
+        .primary__heading {
+            top: 150px;
+            left: 80px;
+            right: 40%;
+        }
+        .primary__heading--main {
+            font-size: 42px;
+            line-height: 46px;
+        }
+        .primary__heading--sub {
+            font-size: 42px;
+        }
+        .primary__heading--text {
+            @include fs-headline(3);
+        }
+        .primary__heading--sub:after {
+            margin-right: -100px;
+            margin-bottom: 10px;
+        }
+    }
+
+    @include mq($from: mobile, $until: desktop) {
+        .primary__heading {
+            font-size: 24px;
+            bottom: 5px;
+            right: 10px;
+            left: 10px;
+            top: 5px;
+        }
+        .primary__heading--main {
+            line-height: 22px;
+            font-size: 20px;
+        }
+        .primary__heading--sub {
+            font-size: 20px;
+        }
+        .primary__heading--text {
+            @include fs-headline(1);
+        }
+        .primary__heading--sub:after {
+            margin-bottom: 5px;
+
+        }
+    }
+
     .promo-primary__image--overlay {
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.5);
         position: absolute;
         height: 100%;
         width: 100%;
@@ -24,37 +70,28 @@
     .primary__heading {
         position: absolute;
         z-index: 2;
-        top: 150px;
-        left: 80px;
-        right: 50%;
     }
 
     .primary__heading--main {
-        font-size: 42px;
-        line-height: 46px;
         font-family: $f-serif-headline;
         font-weight: 500;
         color: white;
     }
 
     .primary__heading--sub {
-        font-size: 42px;
-        font-weight: 500;
         font-family: $f-serif-headline;
+        font-weight: 500;
         color: #ffce4b;
     }
 
     .primary__heading--sub:after {
         border-bottom: 1px solid white;
-        margin-right: -100px;
-        margin-bottom: 10px;
         display: block;
         height: 1px;
         content: '';
     }
 
     .primary__heading--text {
-        @include fs-headline(3);
         font-weight: 500;
         color: white;
     }

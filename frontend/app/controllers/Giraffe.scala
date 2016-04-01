@@ -56,8 +56,8 @@ object Giraffe extends Controller {
         "marketing-opt-in" -> f.marketing.toString,
         "email" -> f.email,
         "name" -> f.name
-      ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id)
-      val res = stripe.Charge.create(Math.min(500, (f.amount * 100).toInt), f.currency, f.email, "Giraffe", f.token, metadata)
+      ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
+      val res = stripe.Charge.create(Math.min(5000, (f.amount * 100).toInt), f.currency, f.email, "Giraffe", f.token, metadata)
 
       res.map { charge =>
         Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))
