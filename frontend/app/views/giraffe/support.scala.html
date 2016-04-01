@@ -19,15 +19,6 @@
         </div>
     </div>
 
-    <noscript>
-        <div class="form-errors form__error sans-text">
-            <span class="headline-text--bolder">Javascript disabled</span>s
-            Javascript must be enabled to use this site, please enable it in your browser.
-        </div>
-    </noscript>
-
-    <div class="form-errors form__error is-hidden">Error</div>
-
     <div class="support-wrapper page-slice l-constrained">
 
         <form id="form" class="form js-form" role="main" method="POST" autocomplete="on" novalidate action="@routes.Giraffe.pay()">
@@ -162,12 +153,30 @@
                         @fragments.form.errorMessage("Sorry, the security code that you have entered is incorrect. Please check and retype.")
                     </li>
 
-                    <li class="cvc-help is-hidden">
-                        <ul class="u-unstyled sans-text">
-                            <li class="visa">Visa / Mastercard <br />Last 3 digits on the back</li>
-                            <li class="amex">AMEX <br />4 digits on the front</li>
-                        </ul>
-                    </li>
+                    <div id="js-cvc-image-container" class="cvc u-cf" data-toggle-hidden>
+                        <div class="u-cf">
+                            <div class="cvc__image">
+                                <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
+                            </div>
+                            <div class="cvc__detail">
+                                <h3 class="cvc__heading">Visa, Mastercard</h3>
+                                <p class="cvc__body">
+                                    The last 3 digits printed on the back within the signature strip
+                                </p>
+                            </div>
+                        </div>
+                        <div class="u-cf">
+                            <div class="cvc__image">
+                                <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
+                            </div>
+                            <div class="cvc__detail">
+                                <h3 class="cvc__heading">American Express</h3>
+                                <p class="cvc__body">
+                                    The 4 digits printed on the front above the card number
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
                     <li id="postcode" class="form-field">
                         <label for="email" class="label">Postcode</label>

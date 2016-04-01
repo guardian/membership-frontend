@@ -30,25 +30,28 @@ object Giraffe extends Controller {
     )
   )
 
-  def support = CachedAction { implicit request =>
+  def support = AuthorisedStaff { implicit request =>
     val pageInfo = PageInfo(
       title = "Support",
       url = request.path,
       stripePublicKey = Some(stripe.publicKey),
-      description = Some("Support the Guardian")
+      description = Some("Support the Guardian"),
+      navigation = Seq.empty
     )
     Ok(views.html.giraffe.support(pageInfo, img))
   }
 
-  def thanks = NoCacheAction { implicit request =>
+  def thanks = AuthorisedStaff { implicit request =>
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.support().url, SEE_OTHER)
     )( id =>
-      Ok(views.html.giraffe.thankyou(PageInfo(), id, social))
+      Ok(views.html.giraffe.thankyou(PageInfo(
+        navigation = Seq.empty
+      ), id, social))
     )
   }
 
-  def pay = NoCacheAction.async { implicit request =>
+  def pay = AuthorisedStaff.async { implicit request =>
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
     },{ f =>
