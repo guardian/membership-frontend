@@ -6,14 +6,23 @@
 
 @giraffeMain("Support", pageInfo = pageInfo) {
     <div class="page-slice l-constrained">
-        <div class="promo-primary__image">
+        <div class="promo-primary__image promo-primary__image--giraffe">
+            <div class="promo-primary__image--overlay"></div>
+            <div class="primary__heading">
+                <h1 class="primary__heading--main">Support the independence<br/> of the Guardian<br/> and our award-winning<br/> journalism</h1>
+                <h2 class="primary__heading--sub">Contribute today</h2>
+                <p class="primary__heading--text">
+                    By making a contribution, you’ll be supporting journalism that sheds a light on critical, under-reported stories from around the world.
+                </p>
+            </div>
+
             <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
         </div>
     </div>
 
     <noscript>
         <div class="form-errors form__error sans-text">
-            <span class="headline-text--bolder">Javascript disabled</span>
+            <span class="headline-text--bolder">Javascript disabled</span>s
             Javascript must be enabled to use this site, please enable it in your browser.
         </div>
     </noscript>

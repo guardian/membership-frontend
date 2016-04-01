@@ -11,6 +11,55 @@
     - wide:             @media all and (min-width: 81.25em) {}
 */
 
+.promo-primary__image.promo-primary__image--giraffe {
+    position: relative;
+
+    .promo-primary__image--overlay {
+        background: rgba(0, 0, 0, 0.3);
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .primary__heading {
+        position: absolute;
+        z-index: 2;
+        top: 150px;
+        left: 20px;
+        right: 50%;
+    }
+
+    .primary__heading--main {
+        font-size: 42px;
+        line-height: 44px;
+        font-weight: 500;
+        color: white;
+    }
+
+    .primary__heading--sub {
+        font-size: 42px;
+        font-weight: 500;
+        color: #ffce4b;
+    }
+
+    .primary__heading--sub:after {
+        border-bottom: 1px solid white;
+        margin-right: -100px;
+        margin-bottom: 10px;
+        display: block;
+        height: 1px;
+        content: '';
+    }
+
+    .primary__heading--text {
+        @include fs-headline(3);
+        font-weight: 500;
+        color: white;
+    }
+}
+
+
+
 .container-global.container-global--giraffe, .global-footer.global-footer--giraffe {
 
     .control__icon {
