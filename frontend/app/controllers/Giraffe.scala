@@ -57,7 +57,7 @@ object Giraffe extends Controller {
         "email" -> f.email,
         "name" -> f.name
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id)
-      val res = stripe.Charge.create((f.amount * 100).toInt, f.currency, f.email, "Giraffe", f.token, metadata)
+      val res = stripe.Charge.create(Math.min(500, (f.amount * 100).toInt), f.currency, f.email, "Giraffe", f.token, metadata)
 
       res.map { charge =>
         Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))
