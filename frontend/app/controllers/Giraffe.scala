@@ -1,5 +1,6 @@
 package controllers
 import com.gu.stripe.Stripe
+import configuration.Config
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.libs.json.{JsString, JsArray, Json}
 import play.api.mvc.{Result, Controller}
@@ -13,9 +14,8 @@ import scala.concurrent.Future
 object Giraffe extends Controller {
 
   val social: Set[Social] = Set(
-    Email("title", "body"),
-    Twitter("url"),
-    Facebook("url")
+    Twitter(s"I’ve just contributed to the Guardian at ${Config.membershipUrl}/contribute"),
+    Facebook(s"${Config.membershipUrl}/contribute")
   )
 
   val stripe = TouchpointBackend.Normal.stripeService
