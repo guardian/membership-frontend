@@ -56,10 +56,10 @@
                         <label for="currency" class="label u-h">Currency</label>
                         <div class="input">
                             <div class="button-group u-cf">
-                                <button type="button" tabindex="2" class="option-button active" data-currency="gbp" data-symbol="&pound;">&pound;&nbsp;GBP</button>
-                                <button type="button" tabindex="3" class="option-button" data-currency="usd" data-symbol="&#36;">&#36;&nbsp;USD</button>
-                                <button type="button" tabindex="4" class="option-button" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;CAD</button>
-                                <button type="button" tabindex="5" class="option-button" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
+                                <button type="button" tabindex="2" class="js-currency-switcher option-button active" data-currency="gbp" data-symbol="&pound;">&pound;&nbsp;GBP</button>
+                                <button type="button" tabindex="3" class="js-currency-switcher option-button" data-currency="usd" data-symbol="&#36;">&#36;&nbsp;USD</button>
+                                <button type="button" tabindex="4" class="js-currency-switcher option-button" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;CAD</button>
+                                <button type="button" tabindex="5" class="js-currency-switcher option-button" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
                             </div>
                             <input type="hidden" id="currency" name="currency" class="js-currency-field" value="gbp">
                         </div>
@@ -69,18 +69,18 @@
                         <label for="amount" class="label u-h">Amount</label>
                         <div class="input">
                             <div class="button-group u-cf">
-                                <button type="button" tabindex="6" class="option-button option-button--bold" data-amount="1000"><span class="currency js-currency">&pound;</span>
+                                <button type="button" tabindex="6" class="option-button option-button--bold" data-amount="10"><span class="currency js-currency">&pound;</span>
                                     10</button>
-                                <button type="button" tabindex="7" class="option-button option-button--bold" data-amount="2500"><span class="currency js-currency">&pound;</span>
+                                <button type="button" tabindex="7" class="option-button option-button--bold" data-amount="25"><span class="currency js-currency">&pound;</span>
                                     25</button>
-                                <button type="button" tabindex="8" class="option-button option-button--bold" data-amount="5000"><span class="currency js-currency">&pound;</span>
+                                <button type="button" tabindex="8" class="option-button option-button--bold" data-amount="50"><span class="currency js-currency">&pound;</span>
                                     50</button>
-                                <button type="button" tabindex="10" class="option-button option-button--bold" data-amount="10000"><span class="currency js-currency">&pound;</span>
+                                <button type="button" tabindex="10" class="option-button option-button--bold" data-amount="100"><span class="currency js-currency">&pound;</span>
                                     100</button>
                             </div>
                             <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder js-currency">&pound;</div>
-                                <input type="tel" id="other_amount" class="input-text" name="amount" maxlength="15" pattern="\d*" tabindex="14" class="js-amount" placeholder="Other amount (00.00)">
+                                <input type="tel" id="other_amount" class="input-text js-amount" name="amount" maxlength="15" pattern="\d*" tabindex="14" placeholder="Other amount (00.00)">
                             </div>
                         </div>
                     </li>
@@ -164,7 +164,7 @@
                     </li>
 
                     <li id="submit_field" class="form-field">
-                        <button class="submit-input headline-text--bolder js-submit-input" type="submit" tabindex="19">Pay &pound;25 now</button>
+                        <button class="submit-input headline-text--bolder js-submit-input" type="submit" tabindex="19">Pay <span class="js-currency">&pound;</span><span class="js-amount">50</span> now</button>
                         <span class="js-loader"></span>
                     </li>
 
