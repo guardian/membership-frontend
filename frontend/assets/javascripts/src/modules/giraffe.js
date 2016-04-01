@@ -1,4 +1,4 @@
-define(['src/modules/form/validation/display','ajax'], function (display,ajax) {
+define(['src/modules/form/validation/display'], function (display) {
     'use strict';
     var CURRENCY_FIELD = document.querySelector('.js-currency-field');
     var CURRENCY_DISPLAY = document.querySelectorAll('.js-currency');
