@@ -1,5 +1,5 @@
 define([
-    'src/modules/form/payment/validationProfiles',
+    'src/modules/form/validation/validationProfiles',
     'src/modules/form/validation/display'
 ], function (validationProfiles, display) {
     'use strict';
