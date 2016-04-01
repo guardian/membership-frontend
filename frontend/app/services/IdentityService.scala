@@ -128,7 +128,7 @@ trait IdentityApi {
         .map { response =>
           recordAndLogResponse(response.status, "GET user", endpoint)
           val jsResult = (response.json \ "user").validate[IdUser]
-          if (jsResult.isError) Logger.error(s"Id Api response on $url : $jsResult")
+          if (jsResult.isError) Logger.error(s"Id Api response on $url : ${response.json.toString}")
           jsResult.asOpt
         }
         .recover { case e =>
