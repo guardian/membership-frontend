@@ -400,11 +400,13 @@
 
     $offset: 200px;
     .promo-primary__image {
-        top: -$offset;
-        margin-bottom: -$offset;
+        @include mq(tablet) {
+            top: -$offset;
+            margin-bottom: -$offset;
 
-        .primary__heading {
-            top: $offset + 40;
+            .primary__heading {
+                top: $offset + 40;
+            }
         }
     }
 
