@@ -61,7 +61,7 @@
             <div class="form__column">
                 <h3 class="form__column-heading headline-text--bolder"><span class="num">2</span> Your amount</h3>
                 <ul class="u-unstyled">
-                    <li id="currency_field" class="form-field">
+                    <li id="currency_field" class="form-field" hidden>
                         <label for="currency" class="label u-h">Currency</label>
                         <div class="input">
                             <div class="button-group u-cf">
@@ -90,7 +90,6 @@
                             <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder js-currency">&pound;</div>
                                 <input type="tel" id="other_amount" class="input-text js-amount js-amount-field" name="amount" maxlength="6" tabindex="14" value="5.00" data-validation="lessThanFifty" pattern="(\d{1,2}\.\d{2}|\d{1,2})">
-                                @fragments.form.errorMessage("NEED VALIDATION COPY!")
                             </div>
                         </div>
                     </li>
