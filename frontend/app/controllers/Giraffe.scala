@@ -14,8 +14,8 @@ import scala.concurrent.Future
 object Giraffe extends Controller {
 
   val social: Set[Social] = Set(
-    Twitter(s"I’ve just contributed to the Guardian at ${Config.membershipUrl}/contribute"),
-    Facebook(s"${Config.membershipUrl}/contribute")
+    Twitter("The Panama Papers: how the world's rich and famous hide their money offshore http://www.theguardian.com/news/series/panama-papers #panamapapers"),
+    Facebook("http://www.theguardian.com/news/series/panama-papers","Follow every development with the Guardian as more and more detail emerges from the biggest leak in history.")
   )
 
   val stripe = TouchpointBackend.Normal.giraffeStripeService

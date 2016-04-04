@@ -90,8 +90,11 @@
                             </div>
                             <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder js-currency">&pound;</div>
-                                <input type="tel" id="other_amount" class="input-text js-amount js-amount-field" name="amount" maxlength="6" tabindex="14" value="5.00" data-validation="lessThanFifty" pattern="(\d{1,2}\.\d{2}|\d{1,2})">
+                                <input type="tel" id="other_amount" class="input-text js-amount js-amount-field"  maxlength="6" tabindex="14" data-validation="lessThanFifty">
+
+                                <input type="hidden" name="amount" class="js-amount js-amount-hidden" value="5.00">
                             </div>
+                            @fragments.form.errorMessage("Please enter a valid amount.")
                         </div>
                     </li>
                     <li>
@@ -205,6 +208,15 @@
     </div>
 
     <div class="feedback l-constrained">
-        If you have any questions about contributing to the Guardian, please <a href="mailto:contribution.support@@theguardian.com" class="support-thanks__link">contact us here</a>.
+        <p>If you have any questions about contributing to the Guardian, please <a href="mailto:contribution.support@@theguardian.com" class="support-thanks__link">
+            contact us here</a>.</p>
+        <p>
+
+            The Guardian Media Group is owned by the Scott Trust, whose role it is to secure the editorial and financial independence of the Guardian and Observer. Reader contributions support the Guardian’s journalism, rather than going to a proprietor or shareholders.
+        </p>
+        <p>
+            Please note that your support of the Guardian’s journalism does not constitute a charitable donation, as such your contribution is not eligible for Gift Aid in the UK nor a tax-deduction elsewhere.
+
+        </p>
     </div>
 }
