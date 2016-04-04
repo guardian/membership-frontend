@@ -5,14 +5,20 @@
 @giraffeMain("Support", pageInfo = pageInfo) {
     <div class="support-wrapper page-slice l-constrained support-thanks">
         <h1 class="support-thanks__title">Thank you for supporting the Guardian</h1>
-            <p class="support-thanks__message">
-                Your contribution is much appreciated, and will help us to maintain our independent, award-winning journalism.
-            </p>
 
-        @fragments.social(social)
         <p class="support-thanks__message">
-            If you’d like to enjoy more of the Guardian’s journalism from breaking investigations to politics, sport, culture and more, why not download our app or sign up for the Guardian’s daily email?
+            Your contribution is much appreciated, and will help us to maintain our independent investigative journalism.
         </p>
+
+        <div class="support-thanks__message">
+            Please take a moment to share the <a class="support-thanks__link" href="//www.theguardian.com/news/series/panama-papers">Panama Papers</a> series.
+            @fragments.social(social)
+        </div>
+
+        <p class="support-thanks__message">
+            Enjoy more of the Guardian's journalism from breaking investigations to politics, sport, culture and more.
+        </p>
+
         <div class="support-thanks__row blue-border u-cf">
             <div class="support-thanks__one-col">
                 <h3 class="support-thanks__sub-subtitle headline-text--bolder">Get the app </h3>
@@ -24,7 +30,7 @@
             </div>
             <div class="support-thanks__one-col">
                 <h3 class="support-thanks__sub-subtitle headline-text--bolder">Follow on Facebook</h3>
-                <p><a href="https://www.facebook.com/theguardian" class="support-thanks__link" onClick="s.tl(true,'o','follow')">Follow the Guardian’s daily reporting</a>, features and investigative journalism</p>
+                <p><a href="https://www.facebook.com/theguardian" class="support-thanks__link" onClick="s.tl(true,'o','follow')">Follow the Guardian's daily reporting</a>, features and investigative journalism</p>
             </div>
         </div>
 
