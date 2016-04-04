@@ -441,7 +441,7 @@
         margin-right: 17px;
     }
 
-    input:focus {
+    button:focus, input:focus {
         box-shadow: 0 0 2px 2px hsla(0,0%,77%,.5);
         border-color: #c4c4c4;
         outline: none;
