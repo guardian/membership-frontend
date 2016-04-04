@@ -23,7 +23,6 @@
 
     @include mq($from: desktop) {
         .primary__heading {
-            top: 150px;
             left: 80px;
             right: 40%;
         }
@@ -48,7 +47,7 @@
         font-size: 24px;
         bottom: 5px;
         right: 10px;
-        top: 55px;
+        top: 120px;
 
         @include mq(tablet) {
             left: $gs-gutter;
