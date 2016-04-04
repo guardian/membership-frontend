@@ -30,7 +30,7 @@ object Giraffe extends Controller {
     )
   )
 
-  def support = AuthorisedStaff { implicit request =>
+  def support = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       title = "Support",
       url = request.path,
@@ -41,7 +41,7 @@ object Giraffe extends Controller {
     Ok(views.html.giraffe.support(pageInfo, img))
   }
 
-  def thanks = AuthorisedStaff { implicit request =>
+  def thanks = CachedAction { implicit request =>
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.support().url, SEE_OTHER)
     )( id =>
@@ -51,7 +51,7 @@ object Giraffe extends Controller {
     )
   }
 
-  def pay = AuthorisedStaff.async { implicit request =>
+  def pay = NoCacheAction.async { implicit request =>
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
     },{ f =>
@@ -60,7 +60,7 @@ object Giraffe extends Controller {
         "email" -> f.email,
         "name" -> f.name
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
-      val res = stripe.Charge.create(Math.min(5000, (f.amount * 100).toInt), f.currency, f.email, "Giraffe", f.token, metadata)
+      val res = stripe.Charge.create(Math.min(5000, (f.amount * 100).toInt), f.currency, f.email, "Your contribution", f.token, metadata)
 
       res.map { charge =>
         Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))
