@@ -21,24 +21,17 @@ object Giraffe extends Controller {
   val stripe = TouchpointBackend.Normal.giraffeStripeService
   val chargeId = "charge_id"
 
-  val img = ResponsiveImageGroup(
-    name = Some("intro"),
-    altText = Some("The Guardian newsroom"),
-    availableImages = ResponsiveImageGenerator(
-      id = "727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320",
-      sizes = List(1000, 500)
-    )
-  )
 
   def support = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       title = "Support",
       url = request.path,
+      image = Some("https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg"),
       stripePublicKey = Some(stripe.publicKey),
       description = Some("Support the Guardian"),
       navigation = Seq.empty
     )
-    Ok(views.html.giraffe.support(pageInfo, img))
+    Ok(views.html.giraffe.support(pageInfo))
   }
 
   def thanks = CachedAction { implicit request =>

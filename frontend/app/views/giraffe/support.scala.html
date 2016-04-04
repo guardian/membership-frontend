@@ -2,7 +2,7 @@
 @import views.support.Asset
 @import configuration.Links
 
-@(pageInfo: PageInfo, img: model.ResponsiveImageGroup)
+@(pageInfo: PageInfo)
 
 @giraffeMain("Contribute", pageInfo = pageInfo) {
     <div class="l-constrained">
@@ -15,9 +15,6 @@
                     By making a contribution, you’ll be supporting independent journalism that speaks truth to power
                 </p>
             </div>
-            @*
-            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
-            *@
         </div>
     </div>
 
