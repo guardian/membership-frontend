@@ -4,11 +4,20 @@ define([
 ], function (display) {
     'use strict';
 
-    /**
-     * is a number less than fifty (for giraffe)
-     */
+        /**
+         * is a number less than fifty (for giraffe)
+         */
     var lessThanFifty = function (number) {
+
+        var hiddenField = document.querySelector('.js-amount-hidden');
         var amount = parseFloat(number.value);
+        if (number.value==''){
+            //Fixme
+            amount = parseFloat(hiddenField.value);
+            console.log(amount);
+        }
+        //user has left prefill
+
         return amount <= 50 && amount >= 1;
     };
 
