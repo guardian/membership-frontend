@@ -536,3 +536,17 @@ $password-strength-score-4: #33a22b;
     font-size: 13px;
     line-height: 16px;
 }
+
+/* ==========================================================================
+   disable number spinners
+   (https://css-tricks.com/numeric-inputs-a-comparison-of-browser-defaults/)
+   ========================================================================== */
+/* Remove controls from Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* Removes leftover margin */
+}
