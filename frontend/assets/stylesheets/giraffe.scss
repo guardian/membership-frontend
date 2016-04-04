@@ -63,7 +63,7 @@
         }
     }
 
-    @include mq($from: mobile, $until: desktop) {
+    @include mq($until: desktop) {
         .primary__heading--main {
             line-height: 32px;
             font-size: 28px;
