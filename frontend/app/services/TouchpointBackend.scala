@@ -44,6 +44,10 @@ object TouchpointBackend {
       val backendEnv = backend.stripe.envName
       val service = "Stripe"
     })
+    val giraffeStripeService = new StripeService(backend.giraffe, new TouchpointBackendMetrics with StatusMetrics {
+      val backendEnv = backend.stripe.envName
+      val service = "Stripe Giraffe"
+    })
 
     val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
 
@@ -70,6 +74,7 @@ object TouchpointBackend {
     TouchpointBackend(
       salesforceService = salesforceService,
       stripeService = stripeService,
+      giraffeStripeService = giraffeStripeService,
       zuoraSoapClient = zuoraSoapClient,
       zuoraRestClient = zuoraRestClient,
       memberService = memberService,
@@ -94,6 +99,7 @@ object TouchpointBackend {
 
 case class TouchpointBackend(salesforceService: api.SalesforceService,
                              stripeService: StripeService,
+                             giraffeStripeService: StripeService,
                              zuoraSoapClient: soap.ClientWithFeatureSupplier,
                              zuoraRestClient: rest.Client,
                              memberService: api.MemberService,

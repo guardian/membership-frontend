@@ -14,18 +14,18 @@ import scala.concurrent.Future
 object Giraffe extends Controller {
 
   val social: Set[Social] = Set(
-    Twitter(s"I’ve just contributed to the Guardian at ${Config.membershipUrl}/contribute"),
-    Facebook(s"${Config.membershipUrl}/contribute")
+    Twitter("The Panama Papers: how the world's rich and famous hide their money offshore http://www.theguardian.com/news/series/panama-papers #panamapapers"),
+    Facebook("http://www.theguardian.com/news/series/panama-papers","Follow every development with the Guardian as more and more detail emerges from the biggest leak in history.")
   )
 
-  val stripe = TouchpointBackend.Normal.stripeService
+  val stripe = TouchpointBackend.Normal.giraffeStripeService
   val chargeId = "charge_id"
 
   val img = ResponsiveImageGroup(
     name = Some("intro"),
-    altText = Some("Patrons of the Guardian"),
+    altText = Some("The Guardian newsroom"),
     availableImages = ResponsiveImageGenerator(
-      id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
+      id = "727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320",
       sizes = List(1000, 500)
     )
   )
