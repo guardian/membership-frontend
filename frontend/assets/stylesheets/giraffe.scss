@@ -13,10 +13,16 @@
 
 .promo-primary__image.promo-primary__image--giraffe {
     position: relative;
+    top: 0;
+    background-size: cover;
+    background-image: url('https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg');
+    height: 360px;
+    @include mq(desktop) {
+        height: 440px;
+    }
 
     @include mq($from: desktop) {
         .primary__heading {
-            top: 150px;
             left: 80px;
             right: 40%;
         }
@@ -41,10 +47,11 @@
         font-size: 24px;
         bottom: 5px;
         right: 10px;
-        top: 5px;
+        top: 120px;
 
         @include mq(tablet) {
             left: $gs-gutter;
+            width: 510px;
         }
 
         @include mq(desktop) {
@@ -58,14 +65,17 @@
 
     @include mq($from: mobile, $until: desktop) {
         .primary__heading--main {
-            line-height: 22px;
-            font-size: 20px;
+            line-height: 32px;
+            font-size: 28px;
         }
         .primary__heading--sub {
-            font-size: 20px;
+            line-height: 32px;
+            font-size: 28px;
         }
         .primary__heading--text {
             @include fs-headline(1);
+            line-height: 22px;
+            font-size: 18px;
         }
         .primary__heading--sub:after {
             margin-bottom: 5px;
@@ -73,7 +83,7 @@
     }
 
     .promo-primary__image--overlay {
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.6);
         position: absolute;
         height: 100%;
         width: 100%;
@@ -410,6 +420,10 @@
         }
     }
 
+    .other_amount_currency {
+        vertical-align: middle;
+    }
+
     .giraffe-checkbox {
         position: relative;
         margin-bottom: $gs-baseline;
@@ -447,20 +461,23 @@
             padding-right: 150px;
         }
     }
-
-    $offset: 200px;
-    .promo-primary__image {
-        @include mq(tablet) {
-            top: -$offset;
-            margin-bottom: -$offset;
-
-            .primary__heading {
-                top: $offset + 40;
-            }
-        }
-    }
+    //
+    //$offset: 200px;
+    //.promo-primary__image {
+    //    @include mq(tablet) {
+    //        top: -$offset;
+    //        margin-bottom: -$offset;
+    //
+    //        .primary__heading {
+    //            top: $offset + 40;
+    //        }
+    //    }
+    //}
 
     .page-slice {
-        padding-top: $gs-baseline * 4;
+        padding-top: 0;
+        @include mq(desktop) {
+            padding-top: $gs-baseline * 4;
+        }
     }
 }

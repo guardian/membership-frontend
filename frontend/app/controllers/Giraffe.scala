@@ -23,9 +23,9 @@ object Giraffe extends Controller {
 
   val img = ResponsiveImageGroup(
     name = Some("intro"),
-    altText = Some("Patrons of the Guardian"),
+    altText = Some("The Guardian newsroom"),
     availableImages = ResponsiveImageGenerator(
-      id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
+      id = "727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320",
       sizes = List(1000, 500)
     )
   )
