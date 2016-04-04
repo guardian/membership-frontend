@@ -1,4 +1,4 @@
-/*global Stripe*/
+/*global Stripe, s*/
 define([
     'src/modules/form/validation/display'
 ], function (display) {
@@ -17,7 +17,10 @@ define([
             console.log(amount);
         }
         //user has left prefill
-
+        if (amount < 50){
+            //global omniture
+            s.tl(true,'o','largeValue:'+amount);
+        }
         return amount <= 50 && amount >= 1;
     };
 
