@@ -133,13 +133,24 @@
 
     .global-header__branding, .global-header__inner {
         background: #005689;
-        height: 130px;
     }
 
     .global-header__inner {
-        height: 130px;
         @include mq(tablet) {
             padding-bottom: 2 * $gs-gutter;
+        }
+    }
+
+    .global-header__logo {
+        svg {
+            height: auto;
+            width: 160px;
+        }
+
+        @include mq(tablet) {
+            svg {
+                width: 320px;
+            }
         }
     }
 
@@ -149,6 +160,7 @@
 
     .global-navigation__scroll {
         background: #00456e;
+        width: 100%;
     }
 }
 .support-wrapper {
@@ -485,18 +497,6 @@
             padding-right: 150px;
         }
     }
-    //
-    //$offset: 200px;
-    //.promo-primary__image {
-    //    @include mq(tablet) {
-    //        top: -$offset;
-    //        margin-bottom: -$offset;
-    //
-    //        .primary__heading {
-    //            top: $offset + 40;
-    //        }
-    //    }
-    //}
 
     .page-slice {
         padding-top: 0;
