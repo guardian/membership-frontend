@@ -17,7 +17,7 @@ define([
             console.log(amount);
         }
         //user has left prefill
-        if (amount < 50){
+        if (amount > 50){
             //global omniture
             s.tl(true,'o','largeValue:'+amount);
         }
