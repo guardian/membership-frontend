@@ -5,7 +5,7 @@ import configuration.{Config, Social => SocialConfig}
 import model.RichEvent.RichEvent
 
 sealed trait Social
-case class Facebook(url: String) extends Social
+case class Facebook(url: String, title: String = "") extends Social
 case class LinkedIn(url: String) extends Social
 case class GooglePlus(url: String) extends Social
 case class Twitter(message: String) extends Social
@@ -18,7 +18,7 @@ object Social {
   def link(s: Social) = s match {
     case Twitter(message) => s"https://twitter.com/intent/tweet?text=${Social.encode(message)}&amp;related=${SocialConfig.twitterUsername}"
     case Email(subject, body) => s"mailto:?subject=${Social.encodeEmail(subject)}&amp;body=${Social.encodeEmail(body)}"
-    case Facebook(url) => s"https://www.facebook.com/sharer/sharer.php?u=${Social.encode(url)}"
+    case Facebook(url, title) => s"https://www.facebook.com/sharer/sharer.php?u=${Social.encode(url)}&t=${Social.encode(title)}"
     case LinkedIn(url) => s"https://www.linkedin.com/shareArticle?url=${Social.encode(url)}"
     case GooglePlus(url) => s"https://plus.google.com/share?url=${Social.encode(url)}"
   }
