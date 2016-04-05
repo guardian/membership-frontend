@@ -15,7 +15,7 @@ define([
     var idCookieAdapter = function (data, rawCookieString) {
         return {
             id: data[0],
-            displayname: data[2],
+            displayname: decodeURIComponent(data[2]),
             accountCreatedDate: data[6],
             emailVerified: data[7],
             rawResponse: rawCookieString
