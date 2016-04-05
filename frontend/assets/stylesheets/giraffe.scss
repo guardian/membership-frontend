@@ -159,12 +159,13 @@
 
     .global-header__logo {
         svg {
-            height: auto;
+            height: 30px;
             width: 160px;
         }
 
         @include mq(tablet) {
             svg {
+                height: 60px;
                 width: 320px;
             }
         }
