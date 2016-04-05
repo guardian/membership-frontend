@@ -2,8 +2,7 @@
 @import com.gu.i18n.CountryGroup
 @import org.joda.time.DateTime
 @import model.Nav
-@(  title: String,
-    pageInfo: PageInfo = views.support.PageInfo(),
+@(  pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None
 )(content: Html)
 @import play.api.libs.json.Json
@@ -13,8 +12,7 @@
 <html class="js-off id--signed-out">
     <head>
         <meta charset="utf-8">
-        <title>@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }</title>
-
+        <title>@pageInfo.title</title>
         @fragments.meta.mobile()
         <meta name="description" content="@pageInfo.description"/>
         <meta name="rating" content="general"/>
@@ -22,7 +20,7 @@
         <meta name="Rating" content="general"/>
         <meta name="Distribution" content="Global"/>
 
-        <meta property="og:title" content="@pageInfo.title | @Config.siteTitle"/>
+        <meta property="og:title" content="@pageInfo.title"/>
         <meta property="og:description" content="@pageInfo.description"/>
         @for(pageImage <- pageInfo.image) {
             <meta property="og:image" content="@pageImage"/>

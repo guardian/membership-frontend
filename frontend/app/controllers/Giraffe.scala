@@ -1,44 +1,46 @@
 package controllers
 import com.gu.stripe.Stripe
-import configuration.Config
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
-import play.api.libs.json.{JsString, JsArray, Json}
-import play.api.mvc.{Result, Controller}
-import play.api.libs.concurrent.Execution.Implicits._
 import com.gu.stripe.Stripe.Serializer._
 import forms.MemberForm.supportForm
+import play.api.libs.concurrent.Execution.Implicits._
+import play.api.libs.json.{JsArray, JsString, Json}
+import play.api.mvc.{Controller, Result}
 import services.{AuthenticationService, TouchpointBackend}
 import views.support._
+
 import scala.concurrent.Future
 
 object Giraffe extends Controller {
 
   val social: Set[Social] = Set(
-    Twitter("The Panama Papers: how the world's rich and famous hide their money offshore http://www.theguardian.com/news/series/panama-papers #panamapapers"),
-    Facebook("http://www.theguardian.com/news/series/panama-papers","Follow every development with the Guardian as more and more detail emerges from the biggest leak in history.")
+    Twitter("The Panama Papers: how the world's rich and famous hide their money offshore http://www.theguardian.com/news/series/panama-papers?CMP=twt_contribute #panamapapers"),
+    Facebook("http://www.theguardian.com/news/series/panama-papers?CMP=fb_contribute")
   )
 
   val stripe = TouchpointBackend.Normal.giraffeStripeService
   val chargeId = "charge_id"
 
-
   def support = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      title = "Support",
+      title = "Support the Guardian | Contribute today",
       url = request.path,
       image = Some("https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg"),
       stripePublicKey = Some(stripe.publicKey),
-      description = Some("Support the Guardian"),
+      description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
       navigation = Seq.empty
     )
     Ok(views.html.giraffe.support(pageInfo))
   }
 
-  def thanks = CachedAction { implicit request =>
+  def thanks = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.support().url, SEE_OTHER)
     )( id =>
       Ok(views.html.giraffe.thankyou(PageInfo(
+        title = "Thank you for supporting the Guardian",
+        url = request.path,
+        image = None,
+        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
         navigation = Seq.empty
       ), id, social))
     )
