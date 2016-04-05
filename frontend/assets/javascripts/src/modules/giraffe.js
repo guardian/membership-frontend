@@ -16,7 +16,7 @@ define(['src/modules/form/validation/display','ajax'], function (display, ajax) 
 
 
     function init() {
-        if (!document.querySelectorAll('.container-global--giraffe').length) {
+        if (!document.querySelectorAll('.container-global--giraffe .js-form').length) {
             return;
         }
 
