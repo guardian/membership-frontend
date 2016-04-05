@@ -22,10 +22,12 @@ define([
             console.log(amount);
         }
         //user has left prefill
-        if (amount > 50){
-            //global omniture
-            s.tl(true,'o','largeValue:'+amount);
-        }
+            if (amount > 50) {
+                //global omniture
+                if (s) {
+                    s.tl(true, 'o', 'largeValue:' + amount);
+                }
+            }
         if(amount <= 50 && amount >= 1) {
             element.value = amount.toFixed(2);
             return true;
