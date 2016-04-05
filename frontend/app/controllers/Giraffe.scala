@@ -7,6 +7,8 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
 import play.api.mvc.{Controller, Result}
 import services.{AuthenticationService, TouchpointBackend}
+import com.netaporter.uri.Uri
+import com.netaporter.uri.dsl._
 import views.support._
 
 import scala.concurrent.Future
@@ -29,7 +31,7 @@ object Giraffe extends Controller {
       stripePublicKey = Some(stripe.publicKey),
       description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
       navigation = Seq.empty,
-      customSignInUrl = Some(Config.idWebAppUrl)
+      customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
     Ok(views.html.giraffe.support(pageInfo))
   }
