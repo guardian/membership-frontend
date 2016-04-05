@@ -1,12 +1,8 @@
-@import views.html.helper.CSRF
 @(flashMsgOpt: Option[model.FlashMessage] = None, feedbackText: Option[String] = None)(implicit token: play.filters.csrf.CSRF.Token)
 
-    @mainFunction = @{
-        if(feedbackText.isDefined) giraffeMain("Feedback") _ else main("Feedback") _
-    }
+@import views.html.helper.CSRF
 
-    @mainFunction {
-
+@main("Feedback") {
 
     <main role="main" class="page-content l-constrained">
 

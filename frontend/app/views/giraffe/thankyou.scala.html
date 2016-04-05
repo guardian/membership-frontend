@@ -2,13 +2,11 @@
 
 @import views.support.Social
 @(pageInfo: PageInfo, reference: String, social: Set[Social])
-@giraffeMain("Support", pageInfo = pageInfo) {
+@giraffeMain(pageInfo) {
     <div class="support-wrapper page-slice l-constrained support-thanks">
-        <h1 class="support-thanks__title">Thank you for supporting the Guardian</h1>
+        <h1 class="support-thanks__title">@pageInfo.title</h1>
 
-        <p class="support-thanks__message">
-            Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism.
-        </p>
+        <p class="support-thanks__message">@pageInfo.description</p>
 
         <div class="support-thanks__message">
             Please take a moment to share the <a class="support-thanks__link" href="//www.theguardian.com/news/series/panama-papers" onClick="s.tl(true,'o','panamapapers')">Panama Papers</a> series.
