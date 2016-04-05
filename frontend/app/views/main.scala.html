@@ -7,8 +7,8 @@
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
 @import views.support.Asset
-<!DOCTYPE html lang="en-GB">
-<html class="js-off id--signed-out">
+<!DOCTYPE html>
+<html lang="en-GB" class="js-off id--signed-out">
     <head>
         <meta charset="utf-8">
         <title>@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }</title>
