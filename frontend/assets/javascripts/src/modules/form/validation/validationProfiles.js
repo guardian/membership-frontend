@@ -4,6 +4,11 @@ define([
 ], function (display) {
     'use strict';
 
+    var native = function(element){
+        return element.validity.valid
+    };
+
+
         /**
          * is a number less than fifty (for giraffe)
          */
@@ -90,6 +95,7 @@ define([
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,
         validCreditCardYear: validCreditCardYear,
-        lessThanFifty: lessThanFifty
+        lessThanFifty: lessThanFifty,
+        native: native
     };
 });
