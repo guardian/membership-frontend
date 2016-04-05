@@ -12,11 +12,11 @@ define([
         /**
          * is a number less than fifty (for giraffe)
          */
-    var lessThanFifty = function (number) {
+    var lessThanFifty = function (element) {
 
         var hiddenField = document.querySelector('.js-amount-hidden');
-        var amount = parseFloat(number.value);
-        if (number.value==''){
+        var amount = parseFloat(element.value);
+        if (element.value==''){
             //Fixme
             amount = parseFloat(hiddenField.value);
             console.log(amount);
@@ -26,7 +26,11 @@ define([
             //global omniture
             s.tl(true,'o','largeValue:'+amount);
         }
-        return amount <= 50 && amount >= 1;
+        if(amount <= 50 && amount >= 1) {
+            element.value = amount.toFixed(2);
+            return true;
+        }
+            return false;
     };
 
     /**
