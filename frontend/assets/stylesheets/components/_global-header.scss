@@ -37,23 +37,25 @@
         margin-right: -20px;
     }
 }
-.global-header__logo__image {
-    width: auto;
+.global-header__logo__image,
+.global-header__logo__link {
     height: 50px;
 
     @include mq(tablet) {
         height: 90px;
     }
 }
+.global-header__logo__image {
+    width: auto;
+}
+.global-header__logo__link {
+    display: block;
+}
 .js-on .global-header__logo__image img {
     visibility: hidden;
 }
 .global-header__logo__image img.is-loaded {
     visibility: visible;
-}
-.global-header__logo__link {
-    display: block;
-    height: 90px;
 }
 
 /* Header - In App
