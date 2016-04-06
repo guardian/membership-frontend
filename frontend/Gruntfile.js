@@ -217,9 +217,17 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         watch: {
-            compile: {
-                files: ['<%= dirs.assets.stylesheets %>/**/*.scss', '<%= dirs.assets.javascripts %>/**/*.js'],
-                tasks: ['compile']
+            compile_css: {
+                files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
+                tasks: ['compile:css']
+            },
+            compile_js: {
+                files: ['<%= dirs.assets.javascripts %>/**/*.js'],
+                tasks: ['compile:js']
+            },
+            compile_images: {
+                files: ['<%= dirs.assets.images %>/**/*'],
+                tasks: ['compile:images']
             }
         },
 
@@ -353,13 +361,15 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', [
         'clean:css',
-        'clean:images',
-        'build:images',
         'build:css'
     ]);
     grunt.registerTask('compile:bookmarklets', [
         'clean:bookmarklets',
         'copy:bookmarklets'
+    ]);
+    grunt.registerTask('compile:images', [
+        'clean:images',
+        'build:images'
     ]);
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
@@ -380,6 +390,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:public',
             'compile:css',
+            'compile:images',
             'compile:js',
             'compile:bookmarklets'
         ]);
