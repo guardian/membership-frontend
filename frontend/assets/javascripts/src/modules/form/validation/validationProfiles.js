@@ -8,31 +8,29 @@ define([
         return element.validity.valid
     };
 
-
-        /**
-         * is a number less than fifty (for giraffe)
-         */
-    var lessThanFifty = function (element) {
-
+    /**
+     * is a number less than fifty (for giraffe)
+     */
+    var giraffe = function (element) {
         var hiddenField = document.querySelector('.js-amount-hidden');
         var amount = parseFloat(element.value);
-        if (element.value==''){
+        if (element.value == '') {
             //Fixme
             amount = parseFloat(hiddenField.value);
             console.log(amount);
         }
         //user has left prefill
-            if (amount > 50) {
-                //global omniture
-                if (s) {
-                    s.tl(true, 'o', 'largeValue:' + amount);
-                }
+        if (amount > 500) {
+            //global omniture
+            if (s) {
+                s.tl(true, 'o', 'largeValue:' + amount);
             }
-        if(amount <= 50 && amount >= 1) {
+        }
+        if (amount <= 500 && amount >= 1) {
             element.value = amount.toFixed(2);
             return true;
         }
-            return false;
+        return false;
     };
 
     /**
@@ -101,7 +99,7 @@ define([
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,
         validCreditCardYear: validCreditCardYear,
-        lessThanFifty: lessThanFifty,
+        giraffe: giraffe,
         native: native
     };
 });
