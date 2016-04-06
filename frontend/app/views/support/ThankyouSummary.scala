@@ -1,6 +1,5 @@
 package views.support
 
-
 import com.gu.memsub.{BillingPeriod, Price}
 import org.joda.time.LocalDate
 import views.support.ThankyouSummary.NextPayment

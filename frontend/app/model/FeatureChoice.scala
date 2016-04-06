@@ -22,9 +22,7 @@ object FeatureChoice {
     choices.map(_.zuoraCode.get).mkString(separator.toString)
 
   def setFromString(ids: String): Set[FeatureChoice] =
-    ids.split(separator)
-      .flatMap(c => byId.get(Code(c)))
-      .toSet
+    ids.split(separator).flatMap(c => byId.get(Code(c))).toSet
 }
 
 case class FeatureCode(get: String)
@@ -32,9 +30,10 @@ case class FeatureCode(get: String)
 case object Books extends FeatureChoice {
   override val zuoraCode = Feature.Code.Books
   override val label = "4 books"
-  override val description = """
-    |We send you 4 carefully selected Guardian published books throughout the year.
-    |The exact book remains a mystery until it lands on the doorstep.
+  override val description =
+    """
+      |We send you 4 carefully selected Guardian published books throughout the year.
+      |The exact book remains a mystery until it lands on the doorstep.
   """.stripMargin
 }
 
@@ -44,7 +43,7 @@ case object FreeEventTickets extends FeatureChoice {
   override val zuoraCode = Feature.Code.Events
   override val label = s"$allowance tickets"
   override val description = s"""
-    |Get $allowance Guardian Live tickets to use throughout the year.
-    |Use one ticket per event at the event of your choosing.
+                                |Get $allowance Guardian Live tickets to use throughout the year.
+                                |Use one ticket per event at the event of your choosing.
   """.stripMargin
 }

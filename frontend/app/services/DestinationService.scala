@@ -16,39 +16,57 @@ trait DestinationService {
   val contentApiService: GuardianContentService
   val eventbriteService: EventbriteCollectiveServices
 
-  def returnDestinationFor(request: SubscriptionRequest[_] with Subscriber): Future[Option[Destination]] = {
-    Future.sequence(Seq(contentDestinationFor(request), eventDestinationFor(request))).map(_.flatten.headOption)
+  def returnDestinationFor(request: SubscriptionRequest[_] with Subscriber
+      ): Future[Option[Destination]] = {
+    Future
+      .sequence(
+          Seq(contentDestinationFor(request), eventDestinationFor(request)))
+      .map(_.flatten.headOption)
   }
 
-  def contentDestinationFor(implicit request: SubscriptionRequest[_]): Future[Option[ContentDestination]] = {
-    request.session.get(JoinReferrer).map { referer =>
-      if(referer.host.contains(Config.guardianHost)) {
-        contentApiService.contentItemQuery(referer.path).map { resp =>
-          resp.content.map(ContentItem).map(ContentDestination)
-        } recover { case _ => None }
-      } else {
-        Future.successful(None)
+  def contentDestinationFor(implicit request: SubscriptionRequest[_]
+      ): Future[Option[ContentDestination]] = {
+    request.session
+      .get(JoinReferrer)
+      .map { referer =>
+        if (referer.host.contains(Config.guardianHost)) {
+          contentApiService.contentItemQuery(referer.path).map { resp =>
+            resp.content.map(ContentItem).map(ContentDestination)
+          } recover { case _ => None }
+        } else {
+          Future.successful(None)
+        }
       }
-    }.getOrElse(Future.successful(None))
+      .getOrElse(Future.successful(None))
   }
 
-  def eventDestinationFor(implicit request: SubscriptionRequest[_] with Subscriber): Future[Option[EventDestination]] = {
+  def eventDestinationFor(
+      implicit request: SubscriptionRequest[_] with Subscriber
+      ): Future[Option[EventDestination]] = {
     val tier = request.subscriber.subscription.plan.tier
     val optFuture = for {
-      eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-      event <- eventbriteService.getBookableEvent(eventId) if event.isBookableByTier(tier)
-    } yield memberService(request).createEBCode(request.subscriber, event).map { discountOpt =>
-      EventDestination(event, Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code)))
-    }
+      eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(
+          request)
+      event <- eventbriteService.getBookableEvent(eventId)
+                  if event.isBookableByTier(tier)
+    } yield
+      memberService(request).createEBCode(request.subscriber, event).map {
+        discountOpt =>
+          EventDestination(
+              event,
+              Config.eventbriteApiIframeUrl ? ("eid" -> event.id) &
+              ("discount" -> discountOpt.map(_.code)))
+      }
 
     optFuture.map(_.map(Some(_))).getOrElse(Future.successful(None))
   }
 }
 
-object DestinationService extends DestinationService  {
+object DestinationService extends DestinationService {
   val contentApiService = GuardianContentService
   val eventbriteService = EventbriteService
 
-  override def memberService(request: SubscriptionRequest[_]): api.MemberService =
+  override def memberService(
+      request: SubscriptionRequest[_]): api.MemberService =
     request.touchpointBackend.memberService
 }

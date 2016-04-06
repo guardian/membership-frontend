@@ -16,8 +16,7 @@ object GuMemCookie {
     Cookie(key, encodeUserJson(json), secure = true, httpOnly = false)
   }
 
-  val deletionCookie : DiscardingCookie = {
+  val deletionCookie: DiscardingCookie = {
     DiscardingCookie(key)
   }
-
 }

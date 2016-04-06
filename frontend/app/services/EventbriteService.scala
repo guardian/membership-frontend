@@ -33,20 +33,27 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     //
     // In order to avoid this, we force okhttp to append a
     // trailing slash to the request path
-    val url =
-      req.httpUrl().newBuilder()
-        .addPathSegment("")
-        .addQueryParameter("token", apiToken).build()
+    val url = req
+      .httpUrl()
+      .newBuilder()
+      .addPathSegment("")
+      .addQueryParameter("token", apiToken)
+      .build()
 
     req.newBuilder().url(url)
   }
 
-  def eventsTaskFor(status: String, initialDelay: FiniteDuration, refreshTime: FiniteDuration): ScheduledTask[Seq[RichEvent]] =
-    ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, initialDelay, refreshTime) {
+  def eventsTaskFor(
+      status: String,
+      initialDelay: FiniteDuration,
+      refreshTime: FiniteDuration): ScheduledTask[Seq[RichEvent]] =
+    ScheduledTask[Seq[RichEvent]](
+        s"Eventbrite $status events", Nil, initialDelay, refreshTime) {
       for {
-        events <- getAll[EBEvent]("users/me/owned_events/", List(
-          "status" -> status,
-          "expand" -> EBEvent.expansions.mkString(",")))
+        events <- getAll[EBEvent](
+            "users/me/owned_events/",
+            List("status" -> status,
+                 "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
       } yield richEvents
     }
@@ -57,21 +64,26 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   // Draft is for a backend tool, so it can start once everything else has finished.
   // The HTTP client library in memcommon has a hardcoded timeout of 10 seconds, so the
   // goal here is to keep the downstream cache warm (AWS CloudFront - ttl 61s).
-  lazy val eventsTask = eventsTaskFor("live", 1.second, Config.eventbriteRefreshTime.seconds)
+  lazy val eventsTask = eventsTaskFor(
+      "live", 1.second, Config.eventbriteRefreshTime.seconds)
 
-  lazy val archivedEventsTask = eventsTaskFor("ended", 29.seconds, Config.eventbriteRefreshTime.seconds)
+  lazy val archivedEventsTask = eventsTaskFor(
+      "ended", 29.seconds, Config.eventbriteRefreshTime.seconds)
 
-  lazy val draftEventsTask =  eventsTaskFor("draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
+  lazy val draftEventsTask = eventsTaskFor(
+      "draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
 
   def start() {
-    Logger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
+    Logger.info(
+        s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
     val timeout = (Config.eventbriteRefreshTime - 3).seconds
     eventsTask.start(timeout)
     draftEventsTask.start(timeout)
     archivedEventsTask.start(timeout)
   }
 
-  def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
+  def events: Seq[RichEvent] =
+    eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
   def eventsDraft: Seq[RichEvent] = draftEventsTask.get()
   def eventsArchive: Seq[RichEvent] = archivedEventsTask.get()
 
@@ -81,47 +93,70 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
   def getPartnerEvents: Seq[RichEvent] = events.filter(_.providerOpt.isDefined)
 
-  private def getAll[T](url: String, params: Seq[(String, String)] = Seq.empty)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
-    def getPage(page: Int) = get[EBResponse[T]](url, Seq("page" -> page.toString) ++ params:_*)
+  private def getAll[T](
+      url: String, params: Seq[(String, String)] = Seq.empty)(
+      implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
+    def getPage(page: Int) =
+      get[EBResponse[T]](url, Seq("page" -> page.toString) ++ params:_*)
 
     for {
       initialResponse <- getPage(1)
-      followingResponses: Seq[EBResponse[T]] <- Future.traverse(2 to initialResponse.pagination.page_count)(getPage)
+      followingResponses: Seq [EBResponse [T]] <- Future.traverse(
+          2 to initialResponse.pagination.page_count)(getPage)
     } yield (initialResponse +: followingResponses).flatMap(_.data)
   }
 
-  def getPreviewEvent(id: String): Future[RichEvent] = for {
-    event <- get[EBEvent](s"events/$id/", "expand" -> EBEvent.expansions.mkString(","))
-    richEvent <- mkRichEvent(event)
-  } yield richEvent
+  def getPreviewEvent(id: String): Future[RichEvent] =
+    for {
+      event <- get[EBEvent](
+          s"events/$id/", "expand" -> EBEvent.expansions.mkString(","))
+      richEvent <- mkRichEvent(event)
+    } yield richEvent
 
   def getBookableEvent(id: String): Option[RichEvent] = events.find(_.id == id)
-  def getEvent(id: String): Option[RichEvent] = (events ++ eventsArchive).find(_.id == id)
+  def getEvent(id: String): Option[RichEvent] =
+    (events ++ eventsArchive).find(_.id == id)
 
-  def getEventsByIds(ids: Seq[String]): Seq[RichEvent] = events.filter(e => ids.contains(e.event.id))
-  def getLimitedAvailability: Seq[RichEvent] = events.filter(_.event.isLimitedAvailability)
-  def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.created.isAfter(start))
-  def getSortedByCreationDate: Seq[RichEvent] = events.sortBy(_.created.toDateTime)(Ordering[DateTime].reverse)
-  def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.start))
+  def getEventsByIds(ids: Seq[String]): Seq[RichEvent] =
+    events.filter(e => ids.contains(e.event.id))
+  def getLimitedAvailability: Seq[RichEvent] =
+    events.filter(_.event.isLimitedAvailability)
+  def getRecentlyCreated(start: DateTime): Seq[RichEvent] =
+    events.filter(_.created.isAfter(start))
+  def getSortedByCreationDate: Seq[RichEvent] =
+    events.sortBy(_.created.toDateTime)(Ordering[DateTime].reverse)
+  def getEventsBetween(interval: Interval): Seq[RichEvent] =
+    events.filter(event => interval.contains(event.start))
 
-  def getEventsByLocation(slug: String): Seq[RichEvent] = events.filter(_.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
+  def getEventsByLocation(slug: String): Seq[RichEvent] =
+    events.filter(
+        _.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
 
-  def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
-      val uri = s"events/${event.id}/access_codes/"
+  def createOrGetAccessCode(
+      event: RichEvent,
+      code: String,
+      ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
+    val uri = s"events/${event.id}/access_codes/"
 
-      for {
-        discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
-        discount <- discounts.find(_.code == code).fold {
-          post[EBAccessCode](uri, Map(
-            "access_code.code" -> Seq(code),
-            "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
-            "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
-          ))
+    for {
+      discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
+      discount <- discounts
+        .find(_.code == code)
+        .fold {
+          post[EBAccessCode](uri,
+                             Map(
+                                 "access_code.code" -> Seq(code),
+                                 "access_code.quantity_available" -> Seq(
+                                     maxDiscountQuantityAvailable.toString),
+                                 "access_code.ticket_ids" -> Seq(
+                                     ticketClasses.map(_.id).mkString(","))
+                             ))
         }(Future.successful)
-      } yield Some(discount)
+    } yield Some(discount)
   } recover { case _: NoSuchElementException => None }
 
-  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
+  def getOrder(id: String): Future[EBOrder] =
+    get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
 abstract class LiveService extends EventbriteService {
@@ -129,7 +164,8 @@ abstract class LiveService extends EventbriteService {
   val contentApiService = GuardianContentService
 
   def gridImageFor(event: EBEvent) =
-    event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
+    event.mainImageGridId.fold[Future[Option[GridImage]]](
+        Future.successful(None))(GridService.getRequestedCrop)
 }
 
 object GuardianLiveEventService extends LiveService {
@@ -143,16 +179,23 @@ object GuardianLiveEventService extends LiveService {
   val maxDiscountQuantityAvailable = 4
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
-  lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
+  lazy val eventsOrderingTask = ScheduledTask[Seq[String]](
+      "Event ordering",
+      Nil,
+      1.second,
+      Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
     for {
       ordering <- WS.url(Config.eventOrderingJsonUrl).get()
     } yield (ordering.json \ "order").as[Seq[String]]
   }
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
-    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+  def mkRichEvent(event: EBEvent): Future[RichEvent] =
+    for { gridImageOpt <- gridImageFor(event) } yield
+      GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
-  override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
+  override def getFeaturedEvents: Seq[RichEvent] =
+    EventbriteServiceHelpers.getFeaturedEvents(
+        eventsOrderingTask.get(), events)
   override def start() {
     super.start()
     Logger.info("Starting EventsOrdering background task")
@@ -166,10 +209,12 @@ object LocalEventService extends LiveService {
   val maxDiscountQuantityAvailable = 2
   val wsMetrics = new EventbriteMetrics("Local")
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
-    yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
+  def mkRichEvent(event: EBEvent): Future[RichEvent] =
+    for { gridImageOpt <- gridImageFor(event) } yield
+      LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
-  override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
+  override def getFeaturedEvents: Seq[RichEvent] =
+    EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
 }
 
 case class MasterclassEventServiceError(s: String) extends Throwable {
@@ -201,19 +246,26 @@ object MasterclassEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil
-  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
+  override def getTaggedEvents(tag: String): Seq[RichEvent] =
+    events.filter(_.tags.contains(tag.toLowerCase))
 }
 
 object EventbriteServiceHelpers {
 
-  def getFeaturedEvents(orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
-    val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.id) }
-    orderedEvents.sortBy { event => orderedIds.indexOf(event.id) } ++ normalEvents.filter(!_.isSoldOut).take(4 - orderedEvents.length)
+  def getFeaturedEvents(
+      orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
+    val (orderedEvents, normalEvents) = events.partition { event =>
+      orderedIds.contains(event.id)
+    }
+    orderedEvents.sortBy { event =>
+      orderedIds.indexOf(event.id)
+    } ++ normalEvents.filter(!_.isSoldOut).take(4 - orderedEvents.length)
   }
 }
 
 trait EventbriteCollectiveServices {
-  val services = Seq(GuardianLiveEventService, LocalEventService, MasterclassEventService)
+  val services = Seq(
+      GuardianLiveEventService, LocalEventService, MasterclassEventService)
 
   implicit class RichEventProvider(event: RichEvent) {
     val service = event match {
@@ -223,22 +275,29 @@ trait EventbriteCollectiveServices {
     }
   }
 
-  def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    GuardianLiveEventService.getPreviewEvent(id)
-  }
+  def getPreviewEvent(id: String): Future[RichEvent] =
+    Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+      GuardianLiveEventService.getPreviewEvent(id)
+    }
 
-  def getPreviewLocalEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    LocalEventService.getPreviewEvent(id)
-  }
+  def getPreviewLocalEvent(id: String): Future[RichEvent] =
+    Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+      LocalEventService.getPreviewEvent(id)
+    }
 
-  def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    MasterclassEventService.getPreviewEvent(id)
-  }
+  def getPreviewMasterclass(id: String): Future[RichEvent] =
+    Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+      MasterclassEventService.getPreviewEvent(id)
+    }
 
-  def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
-    services.flatMap { service => fn(service) }.headOption
+  def searchServices(
+      fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
+    services.flatMap { service =>
+      fn(service)
+    }.headOption
 
-  def getBookableEvent(id: String): Option[RichEvent] = searchServices(_.getBookableEvent(id))
+  def getBookableEvent(id: String): Option[RichEvent] =
+    searchServices(_.getBookableEvent(id))
   def getEvent(id: String): Option[RichEvent] = searchServices(_.getEvent(id))
 }
 

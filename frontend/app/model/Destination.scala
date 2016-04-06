@@ -5,7 +5,8 @@ import model.RichEvent.RichEvent
 
 sealed trait Destination
 
-case class EventDestination(event: RichEvent, iframeUrl: Uri) extends Destination {
+case class EventDestination(event: RichEvent, iframeUrl: Uri)
+    extends Destination {
   val iframeHeight = {
     val ticketHeight = 60
     val iframeChrome = 560

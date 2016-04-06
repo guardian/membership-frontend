@@ -22,7 +22,8 @@ trait WhatsOn extends Controller with ActivityTracking {
   }
 
   private def allEventsByLocation(location: String) = {
-    guLiveEvents.getEventsByLocation(location) ++ localEvents.getEventsByLocation(location)
+    guLiveEvents.getEventsByLocation(location) ++ localEvents
+      .getEventsByLocation(location)
   }
 
   private def allEventsInArchive = {
@@ -37,71 +38,87 @@ trait WhatsOn extends Controller with ActivityTracking {
 
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      title = CopyConfig.copyTitleEvents,
-      url = request.path,
-      description = Some(CopyConfig.copyDescriptionEvents)
+        title = CopyConfig.copyTitleEvents,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionEvents)
     )
 
-    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
+    val locationOpt =
+      request.getQueryString("location").filter(_.trim.nonEmpty)
     val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
-    val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
+    val events = EventGroup(
+        "What's on",
+        chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
 
     Ok(views.html.event.eventsList(
-      normalCatalog,
-      pageInfo,
-      events,
-      featuredEvents,
-      locationFilterItems,
-      locationOpt
-    ))
+            normalCatalog,
+            pageInfo,
+            events,
+            featuredEvents,
+            locationFilterItems,
+            locationOpt
+        ))
   }
 
   def calendar = CachedAction { implicit request =>
-    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
+    val locationOpt =
+      request.getQueryString("location").filter(_.trim.nonEmpty)
 
-    val calendarEvents =
-      CalendarMonthDayGroup("Calendar", groupEventsByDayAndMonth(locationOpt.fold(allEvents)(allEventsByLocation)))
+    val calendarEvents = CalendarMonthDayGroup(
+        "Calendar",
+        groupEventsByDayAndMonth(
+            locationOpt.fold(allEvents)(allEventsByLocation)))
 
     Ok(views.html.event.calendar(
-      PageInfo(title = s"${calendarEvents.title} | Events", url = request.path),
-      calendarEvents,
-      locationFilterItems,
-      locationOpt
-    ))
+            PageInfo(title = s"${calendarEvents.title} | Events",
+                     url = request.path),
+            calendarEvents,
+            locationFilterItems,
+            locationOpt
+        ))
   }
 
   def listArchive = CachedAction { implicit request =>
     val calendarArchive =
-      CalendarMonthDayGroup("Archive", groupEventsByDayAndMonth(allEventsInArchive)(implicitly[Ordering[LocalDate]].reverse))
+      CalendarMonthDayGroup("Archive",
+                            groupEventsByDayAndMonth(allEventsInArchive)(
+                                implicitly[Ordering[LocalDate]].reverse))
 
     Ok(views.html.event.eventsListArchive(
-      PageInfo(title = s"${calendarArchive.title} | Events", url = request.path),
-      calendarArchive
-    ))
+            PageInfo(title = s"${calendarArchive.title} | Events",
+                     url = request.path),
+            calendarArchive
+        ))
   }
 
   def masterclassesList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      title = CopyConfig.copyTitleMasterclasses,
-      url = request.path,
-      description = Some(CopyConfig.copyDescriptionMasterclasses)
+        title = CopyConfig.copyTitleMasterclasses,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionMasterclasses)
     )
     val eventGroup = EventGroup("Masterclasses", masterclassEvents.events)
 
     Ok(views.html.event.masterclassesList(normalCatalog, pageInfo, eventGroup))
   }
 
-  def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      title = CopyConfig.copyTitleMasterclasses,
-      url = request.path,
-      description = Some(CopyConfig.copyDescriptionMasterclasses)
-    )
-    val tag = decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
-    val eventGroup = EventGroup("Masterclasses", masterclassEvents.getTaggedEvents(tag))
+  def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") =
+    CachedAction { implicit request =>
+      val pageInfo = PageInfo(
+          title = CopyConfig.copyTitleMasterclasses,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionMasterclasses)
+      )
+      val tag = decodeTag(if (rawSubTag.nonEmpty) rawSubTag else rawTag)
+      val eventGroup =
+        EventGroup("Masterclasses", masterclassEvents.getTaggedEvents(tag))
 
-    Ok(views.html.event.masterclassesList(normalCatalog, pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
-  }
+      Ok(views.html.event.masterclassesList(normalCatalog,
+                                            pageInfo,
+                                            eventGroup,
+                                            decodeTag(rawTag),
+                                            decodeTag(rawSubTag)))
+    }
 }
 
 object WhatsOn extends WhatsOn {

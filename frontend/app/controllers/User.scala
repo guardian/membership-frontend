@@ -11,7 +11,9 @@ import utils.GuMemCookie
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
-  implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
+  implicit val writesInstant = Writes[Instant] { instant =>
+    JsString(instant.toString(standardFormat))
+  }
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)
@@ -19,18 +21,21 @@ trait User extends Controller {
     Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
   }
 
-  def basicDetails(subscriber: Subscriber.Member) = Json.obj(
-    "userId" -> subscriber.contact.identityId,
-    "regNumber" -> subscriber.contact.regNumber,
-    "firstName" -> subscriber.contact.firstName,
-    "tier" -> subscriber.subscription.plan.tier.name,
-    "isPaidTier" -> subscriber.subscription.plan.tier.isPaid,
-    "joinDate" -> subscriber.contact.joinDate,
-    "benefits" -> Json.obj(
-      "discountedEventTickets" -> Benefits.DiscountTicketTiers.contains(subscriber.subscription.plan.tier),
-      "complimentaryEventTickets" -> Benefits.ComplimentaryTicketTiers.contains(subscriber.subscription.plan.tier)
+  def basicDetails(subscriber: Subscriber.Member) =
+    Json.obj(
+        "userId" -> subscriber.contact.identityId,
+        "regNumber" -> subscriber.contact.regNumber,
+        "firstName" -> subscriber.contact.firstName,
+        "tier" -> subscriber.subscription.plan.tier.name,
+        "isPaidTier" -> subscriber.subscription.plan.tier.isPaid,
+        "joinDate" -> subscriber.contact.joinDate,
+        "benefits" -> Json.obj(
+            "discountedEventTickets" -> Benefits.DiscountTicketTiers
+              .contains(subscriber.subscription.plan.tier),
+            "complimentaryEventTickets" -> Benefits.ComplimentaryTicketTiers
+              .contains(subscriber.subscription.plan.tier)
+        )
     )
-  )
 }
 
 object User extends User

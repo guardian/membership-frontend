@@ -1,4 +1,5 @@
 package model
+
 import com.netaporter.uri.Uri
 
 object PackagePromo {

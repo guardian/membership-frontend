@@ -12,12 +12,13 @@ object PromoSessionService {
   def base64encode(str: String) =
     Base64.getEncoder.encodeToString(str.getBytes(StandardCharsets.UTF_8))
 
-  def base64decode(str: String) =
-    new String(Base64.getDecoder.decode(str))
+  def base64decode(str: String) = new String(Base64.getDecoder.decode(str))
 
   def sessionCookieFromCode(code: PromoCode) =
     Cookie(cookieName, base64encode(code.get))
 
   def codeFromSession(implicit request: Request[AnyContent]) =
-    request.cookies.find(_.name == cookieName).map(a => PromoCode(base64decode(a.value)))
+    request.cookies
+      .find(_.name == cookieName)
+      .map(a => PromoCode(base64decode(a.value)))
 }

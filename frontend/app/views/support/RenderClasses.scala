@@ -5,5 +5,6 @@ object RenderClasses {
     apply(classes.filter(_._2).keys.toSeq:_*)
   }
 
-  def apply(classes: String*): String = classes.filter(_.nonEmpty).sorted.distinct.mkString(" ")
+  def apply(classes: String*): String =
+    classes.filter(_.nonEmpty).sorted.distinct.mkString(" ")
 }
