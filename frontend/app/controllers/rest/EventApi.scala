@@ -17,6 +17,7 @@ object EventApi extends Controller with LazyLogging {
     * @return for now, only Guardian Live Events - other types may be added in the future
     */
   def events = CachedAction {
-    Ok(toJson(EventsResponse(controllers.Event.guLiveEvents.events.map(Event.forRichEvent))))
+    Ok(toJson(EventsResponse(controllers.Event.guLiveEvents.events
+                  .map(Event.forRichEvent))))
   }
 }

@@ -12,9 +12,10 @@ package object rest {
   }
 
   implicit val dateTimeWrites = new Writes[DateTime] {
-    override def writes(dt: DateTime): JsValue = Json.obj(
-      "time" -> dt.withZone(UTC).toString(dateTimeNoMillis),
-      "zone" -> dt.getZone.getID
-    )
+    override def writes(dt: DateTime): JsValue =
+      Json.obj(
+          "time" -> dt.withZone(UTC).toString(dateTimeNoMillis),
+          "zone" -> dt.getZone.getID
+      )
   }
 }

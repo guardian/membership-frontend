@@ -8,7 +8,6 @@ import controllers.routes
 import model.PackagePromo.CtaButton
 import play.twirl.api.Html
 
-
 object PackagePromo {
 
   /**
@@ -16,15 +15,16 @@ object PackagePromo {
     */
   def forCountryTier(t: Tier, cg: CountryGroup, promoCode: Option[String]) = {
 
-    val link = (t match {
-      case p: PaidTier => Uri.parse(routes.Joiner.enterPaidDetails(p).url)
-      case _: FreeTier => Uri.parse(routes.Joiner.enterFriendDetails().url)
-    }) ? ("countryGroup" -> cg.id) & ("promoCode" -> promoCode)
+    val link =
+      (t match {
+        case p: PaidTier => Uri.parse(routes.Joiner.enterPaidDetails(p).url)
+        case _: FreeTier => Uri.parse(routes.Joiner.enterFriendDetails().url)
+      }) ? ("countryGroup" -> cg.id) & ("promoCode" -> promoCode)
 
     val attrs = Map[String, String](
-      "data-metric-trigger" -> "click",
-      "data-metric-category" -> "join",
-      "data-metric-action" -> t.slug
+        "data-metric-trigger" -> "click",
+        "data-metric-category" -> "join",
+        "data-metric-action" -> t.slug
     )
 
     CtaButton("Become a " + t.slug, to = link, attributes = attrs)

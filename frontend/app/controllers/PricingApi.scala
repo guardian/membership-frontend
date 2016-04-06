@@ -26,4 +26,3 @@ object PricingApi extends Controller {
     Ok(Json.toJson(CountryWithCurrency.all))
   }
 }
-

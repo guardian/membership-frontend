@@ -7,6 +7,7 @@ import play.api.libs.json.Json
  * events on theguardian.com articles – be wary of changing this
  * without changing those services, too.
  */
+
 case class EmbedData(title: String,
                      image: Option[String],
                      venue: Option[String],
@@ -23,6 +24,7 @@ object EmbedSerializer {
   implicit val writesResponse = Json.writes[EmbedResponse]
 
   def eventToJson(embedData: Option[EmbedData]) = {
-    Json.toJson(EmbedResponse(embedData.fold("error")(_ => "success"), embedData))
+    Json.toJson(
+        EmbedResponse(embedData.fold("error")(_ => "success"), embedData))
   }
 }

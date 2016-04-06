@@ -12,10 +12,12 @@ object CopyConfig {
   val copyDescriptionJoin = config.getString("copy.join.description")
 
   val copyTitleChooseTier = config.getString("copy.choosetier.title")
-  val copyDescriptionChooseTier = config.getString("copy.choosetier.description")
+  val copyDescriptionChooseTier =
+    config.getString("copy.choosetier.description")
 
   val copyTitleSupporters = config.getString("copy.supporters.title")
-  val copyDescriptionSupporters = config.getString("copy.supporters.description")
+  val copyDescriptionSupporters =
+    config.getString("copy.supporters.description")
 
   val copyTitlePatrons = config.getString("copy.patrons.title")
   val copyDescriptionPatrons = config.getString("copy.patrons.description")
@@ -24,9 +26,9 @@ object CopyConfig {
   val copyDescriptionEvents = config.getString("copy.events.description")
 
   val copyTitleMasterclasses = config.getString("copy.masterclasses.title")
-  val copyDescriptionMasterclasses = config.getString("copy.masterclasses.description")
+  val copyDescriptionMasterclasses =
+    config.getString("copy.masterclasses.description")
 
   val copyTitleAbout = config.getString("copy.about.title")
   val copyDescriptionAbout = config.getString("copy.about.description")
-
 }

@@ -21,7 +21,8 @@ object FrontendMemberRepository {
   type UserId = String
 }
 
-class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends ContactRepository {
+class FrontendMemberRepository(salesforceConfig: SalesforceConfig)
+    extends ContactRepository {
   import scala.concurrent.duration._
   val metrics = new MemberMetrics(salesforceConfig.envName)
 
@@ -40,11 +41,14 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Conta
     override val authSupplier: FutureSupplier[Authentication] =
       new FutureSupplier[Authentication](getAuthentication)
 
-    Akka.system.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
+    Akka.system.scheduler.schedule(30.minutes, 30.minutes) {
+      authSupplier.refresh()
+    }
   }
 }
 
-class SalesforceService(salesforceConfig: SalesforceConfig) extends api.SalesforceService {
+class SalesforceService(salesforceConfig: SalesforceConfig)
+    extends api.SalesforceService {
   private val repository = new FrontendMemberRepository(salesforceConfig)
 
   override def getMember(userId: UserId): Future[Option[GenericSFContact]] =
@@ -55,34 +59,39 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
   override def upsert(user: IdUser, joinData: JoinForm): Future[ContactId] =
     upsert(user.id, initialData(user, joinData))
 
-  override def updateMemberStatus(user: IdMinimalUser, tier: Tier, customer: Option[Customer]): Future[ContactId] =
+  override def updateMemberStatus(
+      user: IdMinimalUser,
+      tier: Tier,
+      customer: Option[Customer]): Future[ContactId] =
     upsert(user.id, memberData(tier, customer))
 
-  private def memberData(tier: Tier, customerOpt: Option[Customer]): JsObject = Json.obj(
-    Keys.TIER -> tier.name
-  ) ++ customerOpt.map { customer =>
+  private def memberData(tier: Tier, customerOpt: Option[Customer]): JsObject =
     Json.obj(
-      Keys.STRIPE_CUSTOMER_ID -> customer.id,
-      Keys.DEFAULT_CARD_ID -> customer.card.id
-    )
-  }.getOrElse(Json.obj())
+        Keys.TIER -> tier.name
+    ) ++ customerOpt.map { customer =>
+      Json.obj(
+          Keys.STRIPE_CUSTOMER_ID -> customer.id,
+          Keys.DEFAULT_CARD_ID -> customer.card.id
+      )
+    }.getOrElse(Json.obj())
 
   private def initialData(user: IdUser, formData: JoinForm): JsObject = {
     Seq(Json.obj(
-      Keys.EMAIL -> user.primaryEmailAddress,
-      Keys.FIRST_NAME -> formData.name.first,
-      Keys.LAST_NAME -> formData.name.last,
-      Keys.MAILING_STREET -> formData.deliveryAddress.line,
-      Keys.MAILING_CITY -> formData.deliveryAddress.town,
-      Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
-      Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-      Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
-      Keys.ALLOW_MEMBERSHIP_MAIL -> true
-    )) ++ Map(
-      Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
-      Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
+            Keys.EMAIL -> user.primaryEmailAddress,
+            Keys.FIRST_NAME -> formData.name.first,
+            Keys.LAST_NAME -> formData.name.last,
+            Keys.MAILING_STREET -> formData.deliveryAddress.line,
+            Keys.MAILING_CITY -> formData.deliveryAddress.town,
+            Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
+            Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
+            Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
+            Keys.ALLOW_MEMBERSHIP_MAIL -> true
+        )) ++ Map(
+        Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
+        Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
     ).collect { case (k, Some(v)) => Json.obj(k -> v) }
   }.reduce(_ ++ _)
 
-  private def upsert(userId: UserId, value: JsObject) = repository.upsert(userId, value)
+  private def upsert(userId: UserId, value: JsObject) =
+    repository.upsert(userId, value)
 }

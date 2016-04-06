@@ -7,17 +7,20 @@ import model.{EventSchema, Nav}
 import model.Nav.NavItem
 import play.api.libs.json._
 
-case class PageInfo(title: String = CopyConfig.copyTitleDefault,
-                    url: String = "/",
-                    description: Option[String] = Some(CopyConfig.copyDescriptionDefault),
-                    image: Option[String] = Some(Config.membershipUrl + Asset.at("images/common/mem600.jpg")),
-                    schemaOpt: Option[EventSchema] = None,
-                    customSignInUrl: Option[String] = None,
-                    stripePublicKey: Option[String] = None,
-                    initialCheckoutForm: CheckoutForm =
-                      CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, BillingPeriod.year),
-                    navigation: Seq[NavItem] = Nav.primaryNavigation
-                   )
+case class PageInfo(
+    title: String = CopyConfig.copyTitleDefault,
+    url: String = "/",
+    description: Option[String] = Some(CopyConfig.copyDescriptionDefault),
+    image: Option[String] = Some(
+          Config.membershipUrl + Asset.at("images/common/mem600.jpg")),
+    schemaOpt: Option[EventSchema] = None,
+    customSignInUrl: Option[String] = None,
+    stripePublicKey: Option[String] = None,
+    initialCheckoutForm: CheckoutForm = CheckoutForm(
+          CountryGroup.UK.defaultCountry,
+          CountryGroup.UK.currency,
+          BillingPeriod.year),
+    navigation: Seq[NavItem] = Nav.primaryNavigation)
 
 object PageInfo {
 

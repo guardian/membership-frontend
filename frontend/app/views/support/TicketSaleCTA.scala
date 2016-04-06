@@ -22,7 +22,11 @@ object TicketSaleCTA {
     * - If event is on sale to everyone, and user is logged-in with or without a tier return empty 'buy' status object
     *
     */
-  def ctaFor(dates: TicketSaleDates, tierOpt: Option[Tier]): String = if (dates.noOneCanBuyTicket) "unavailable" else {
-    tierOpt.map(t => if (dates.tierCanBuyTicket(t)) "buy" else "upgrade").getOrElse("join")
-  }
+  def ctaFor(dates: TicketSaleDates, tierOpt: Option[Tier]): String =
+    if (dates.noOneCanBuyTicket) "unavailable"
+    else {
+      tierOpt
+        .map(t => if (dates.tierCanBuyTicket(t)) "buy" else "upgrade")
+        .getOrElse("join")
+    }
 }

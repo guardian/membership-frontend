@@ -29,61 +29,91 @@ object TouchpointBackend {
 
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
     def zuoraEnvName: String = tpbc.zuoraSoap.envName
-    def zuoraMetrics(component: String): ServiceMetrics = new ServiceMetrics(zuoraEnvName, "membership", component)
+    def zuoraMetrics(component: String): ServiceMetrics =
+      new ServiceMetrics(zuoraEnvName, "membership", component)
     def zuoraRestUrl(config: com.typesafe.config.Config): String =
-      config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
+      config.getString(
+          s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
 
-  def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend = {
-    val touchpointBackendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
+  def apply(
+      backendType: TouchpointBackendConfig.BackendType): TouchpointBackend = {
+    val touchpointBackendConfig =
+      TouchpointBackendConfig.byType(backendType, Config.config)
     TouchpointBackend(touchpointBackendConfig, backendType)
   }
 
-  def apply(backend: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
-    val stripeService = new StripeService(backend.stripe, new TouchpointBackendMetrics with StatusMetrics {
+  def apply(backend: TouchpointBackendConfig,
+            backendType: BackendType): TouchpointBackend = {
+    val stripeService = new StripeService(
+        backend.stripe, new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = backend.stripe.envName
       val service = "Stripe"
     })
-    val giraffeStripeService = new StripeService(backend.giraffe, new TouchpointBackendMetrics with StatusMetrics {
+    val giraffeStripeService = new StripeService(
+        backend.giraffe, new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = backend.stripe.envName
       val service = "Stripe Giraffe"
     })
 
-    val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
+    val restBackendConfig = backend.zuoraRest
+      .copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
 
-    val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
-    val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
-    val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
+    val memRatePlanIds =
+      Config.membershipRatePlanIds(restBackendConfig.envName)
+    val digipackRatePlanIds =
+      Config.digipackRatePlanIds(restBackendConfig.envName)
+    val zuoraRestClient = new rest.Client(
+        restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(
+        FeatureChoice.codes,
+        backend.zuoraSoap,
+        backend.zuoraMetrics("zuora-soap-client"))
 
-    val catalogService = CatalogService(zuoraRestClient, memRatePlanIds, digipackRatePlanIds, backendType.name)
-    val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
+    val catalogService = CatalogService(
+        zuoraRestClient, memRatePlanIds, digipackRatePlanIds, backendType.name)
+    val discounter = new Discounter(
+        Config.discountRatePlanIds(backend.zuoraEnvName))
 
-    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)) ++ discountPromo(backend.zuoraEnvName),
-                                        catalogService.membershipCatalog, discounter)
+    val promoService = new PromoService(
+        Seq(demoPromo(backend.zuoraEnvName)) ++ discountPromo(
+            backend.zuoraEnvName),
+        catalogService.membershipCatalog,
+        discounter)
 
-    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)
-    val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
-    val paymentService = new PaymentService(stripeService, zuoraService, catalogService)
+    val zuoraService = new ZuoraServiceImpl(
+        zuoraSoapClient, zuoraRestClient, memRatePlanIds)
+    val subscriptionService = new memsub.services.SubscriptionService(
+        zuoraService, stripeService, catalogService.membershipCatalog)
+    val paymentService = new PaymentService(
+        stripeService, zuoraService, catalogService)
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService, discounter,
+        identityService,
+        salesforceService,
+        zuoraService,
+        stripeService,
+        subscriptionService,
+        catalogService,
+        promoService,
+        paymentService,
+        discounter,
         Config.discountRatePlanIds(backend.zuoraEnvName))
 
     TouchpointBackend(
-      salesforceService = salesforceService,
-      stripeService = stripeService,
-      giraffeStripeService = giraffeStripeService,
-      zuoraSoapClient = zuoraSoapClient,
-      zuoraRestClient = zuoraRestClient,
-      memberService = memberService,
-      subscriptionService = subscriptionService,
-      catalogService = catalogService,
-      zuoraService = zuoraService,
-      promoService = promoService,
-      membershipRatePlanIds = memRatePlanIds,
-      paymentService = paymentService
+        salesforceService = salesforceService,
+        stripeService = stripeService,
+        giraffeStripeService = giraffeStripeService,
+        zuoraSoapClient = zuoraSoapClient,
+        zuoraRestClient = zuoraRestClient,
+        memberService = memberService,
+        subscriptionService = subscriptionService,
+        catalogService = catalogService,
+        zuoraService = zuoraService,
+        promoService = promoService,
+        membershipRatePlanIds = memRatePlanIds,
+        paymentService = paymentService
     )
   }
 
@@ -92,23 +122,26 @@ object TouchpointBackend {
 
   val All = Seq(Normal, TestUser)
 
-  def forUser(user: IdMinimalUser): TouchpointBackend = if (isTestUser(user)) TestUser else Normal
+  def forUser(user: IdMinimalUser): TouchpointBackend =
+    if (isTestUser(user)) TestUser else Normal
   // Convenience method for Salesforce users. Assumes firstName matches the test user key generated by the app
-  def forUser(user: Contact): TouchpointBackend = if (isTestUser(user)) TestUser else Normal
+  def forUser(user: Contact): TouchpointBackend =
+    if (isTestUser(user)) TestUser else Normal
 }
 
-case class TouchpointBackend(salesforceService: api.SalesforceService,
-                             stripeService: StripeService,
-                             giraffeStripeService: StripeService,
-                             zuoraSoapClient: soap.ClientWithFeatureSupplier,
-                             zuoraRestClient: rest.Client,
-                             memberService: api.MemberService,
-                             subscriptionService: memsubapi.SubscriptionService[MembershipCatalog],
-                             catalogService: memsubapi.CatalogService,
-                             zuoraService: ZuoraService,
-                             membershipRatePlanIds: MembershipRatePlanIds,
-                             promoService: PromoService,
-                             paymentService: PaymentService) extends ActivityTracking {
+case class TouchpointBackend(
+    salesforceService: api.SalesforceService,
+    stripeService: StripeService,
+    giraffeStripeService: StripeService,
+    zuoraSoapClient: soap.ClientWithFeatureSupplier,
+    zuoraRestClient: rest.Client,
+    memberService: api.MemberService,
+    subscriptionService: memsubapi.SubscriptionService[MembershipCatalog],
+    catalogService: memsubapi.CatalogService,
+    zuoraService: ZuoraService,
+    membershipRatePlanIds: MembershipRatePlanIds,
+    promoService: PromoService,
+    paymentService: PaymentService) extends ActivityTracking {
 
   def catalog: MembershipCatalog = catalogService.membershipCatalog
 }

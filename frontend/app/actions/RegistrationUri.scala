@@ -13,33 +13,38 @@ object RegistrationUri {
   val REFERRER_HEADER: String = "referer"
   val CAMPAIGN_SOURCE: String = "MEM"
 
-  val supporterReferingPageCodes =  Map(CountryGroup.allGroups.map { countryGroup =>
+  val supporterReferingPageCodes = Map(
+      CountryGroup.allGroups.map { countryGroup =>
     // sadly 'SUPIN' is the refering page code in use - but our country-group code is 'int'
-    val suffix = if (countryGroup == RestOfTheWorld) "IN" else countryGroup.id.toUpperCase
+    val suffix =
+      if (countryGroup == RestOfTheWorld) "IN" else countryGroup.id.toUpperCase
 
     controllers.routes.Info.supporterFor(countryGroup).path -> s"SUP$suffix"
-  }: _*)
+  }:_*)
 
-  val referingPageCodes = supporterReferingPageCodes ++ Map(
-    controllers.routes.Info.offersAndCompetitions().path-> "COMP",
-    controllers.routes.WhatsOn.list().path -> "EVT",
-    "/" -> "HOME"
-  )
+  val referingPageCodes =
+    supporterReferingPageCodes ++ Map(
+        controllers.routes.Info.offersAndCompetitions().path -> "COMP",
+        controllers.routes.WhatsOn.list().path -> "EVT",
+        "/" -> "HOME"
+    )
 
   val campaignTierCodes = Map[String, String](
-    controllers.routes.Joiner.joinPaid(Tier.supporter).path -> "SUP",
-    controllers.routes.Joiner.joinPaid(Tier.partner).path -> "PAR",
-    controllers.routes.Joiner.joinPaid(Tier.patron).path -> "PAT",
-    controllers.routes.Joiner.joinFriend().path -> "FRI"
+      controllers.routes.Joiner.joinPaid(Tier.supporter).path -> "SUP",
+      controllers.routes.Joiner.joinPaid(Tier.partner).path -> "PAR",
+      controllers.routes.Joiner.joinPaid(Tier.patron).path -> "PAT",
+      controllers.routes.Joiner.joinFriend().path -> "FRI"
   )
 
   def parse(request: RequestHeader) = {
     val redirectUrl: String = Config.idWebAppRegisterUrl(request.uri)
-    val campaignCode = extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
+    val campaignCode = extractCampaignCode(
+        request.headers.get(REFERRER_HEADER), request.path)
     redirectUrl.concat(s"&INTCMP=$campaignCode")
   }
 
-  private def extractCampaignCode(refererOpt: Option[String], path: String) : String = {
+  private def extractCampaignCode(
+      refererOpt: Option[String], path: String): String = {
 
     val referingCode = refererOpt.flatMap(getReferingPageCode)
     val campaignTier: Option[String] = campaignTierCodes.get(path)
@@ -48,9 +53,7 @@ object RegistrationUri {
   }
 
   def getReferingPageCode(referer: String): Option[String] = {
-    Try(Uri.parse(referer))
-      .toOption
+    Try(Uri.parse(referer)).toOption
       .flatMap(refererUrl => referingPageCodes.get(refererUrl.path))
   }
-
 }

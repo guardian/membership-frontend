@@ -26,7 +26,8 @@ object SentryLogging {
         play.api.Logger.info(s"Initialising Sentry logging")
         val buildInfo: Map[String, Any] = app.BuildInfo.toMap
         val tags = Map("stage" -> Config.stage) ++ buildInfo
-        val tagsString = tags.map { case (key, value) => s"$key:$value"}.mkString(",")
+        val tagsString = tags.map { case (key, value) => s"$key:$value" }
+          .mkString(",")
 
         val filter = new ThresholdFilter { setLevel("ERROR") }
         filter.start() // OMG WHY IS THIS NECESSARY LOGBACK?
@@ -35,10 +36,14 @@ object SentryLogging {
           addFilter(filter)
           setTags(tagsString)
           setExtraTags(AllMDCTags.mkString(","))
-          setContext(LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext])
+          setContext(
+              LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext])
         }
         sentryAppender.start()
-        LoggerFactory.getLogger(ROOT_LOGGER_NAME).asInstanceOf[Logger].addAppender(sentryAppender)
+        LoggerFactory
+          .getLogger(ROOT_LOGGER_NAME)
+          .asInstanceOf[Logger]
+          .addAppender(sentryAppender)
     }
   }
 }

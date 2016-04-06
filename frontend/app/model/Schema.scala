@@ -8,37 +8,37 @@ object LocationSchema {
 }
 
 case class LocationSchema(
-  name: String,
-  address: Option[String],
-  hasMap: Option[String],
-  `@type`: String = "Place"
-)
+    name: String,
+    address: Option[String],
+    hasMap: Option[String],
+    `@type`: String = "Place"
+    )
 
 object OfferSchema {
   implicit val writesSchema = Json.writes[OfferSchema]
 }
 
 case class OfferSchema(
-  url: String,
-  category: String,
-  price: String,
-  priceCurrency: String,
-  availability: Option[String],
-  `@type`: String = "Offer"
-)
+    url: String,
+    category: String,
+    price: String,
+    priceCurrency: String,
+    availability: Option[String],
+    `@type`: String = "Offer"
+    )
 
 case class EventSchema(
-  name: String,
-  description: Option[String],
-  startDate: String,
-  endDate: String,
-  url: String,
-  image: Option[String],
-  location: Option[LocationSchema],
-  offers: Option[OfferSchema],
-  `@context`: String = "http://schema.org",
-  `@type`: String = "Event"
-)
+    name: String,
+    description: Option[String],
+    startDate: String,
+    endDate: String,
+    url: String,
+    image: Option[String],
+    location: Option[LocationSchema],
+    offers: Option[OfferSchema],
+    `@context`: String = "http://schema.org",
+    `@type`: String = "Event"
+    )
 
 object EventSchema {
 
@@ -52,18 +52,23 @@ object EventSchema {
 
   private def offerOpt(event: RichEvent): Option[OfferSchema] = {
     event.generalReleaseTicket.map { ticket =>
-      OfferSchema(event.memUrl, "primary", ticket.priceValue, ticket.currencyCode, event.statusSchema)
+      OfferSchema(event.memUrl,
+                  "primary",
+                  ticket.priceValue,
+                  ticket.currencyCode,
+                  event.statusSchema)
     }
   }
 
-  def from(event: RichEvent): EventSchema = EventSchema(
-    event.name.text,
-    event.description.map(_.text),
-    event.start.toString,
-    event.end.toString,
-    event.memUrl,
-    event.socialImgUrl,
-    locationOpt(event),
-    offerOpt(event)
-  )
+  def from(event: RichEvent): EventSchema =
+    EventSchema(
+        event.name.text,
+        event.description.map(_.text),
+        event.start.toString,
+        event.end.toString,
+        event.memUrl,
+        event.socialImgUrl,
+        locationOpt(event),
+        offerOpt(event)
+    )
 }

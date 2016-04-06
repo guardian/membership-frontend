@@ -26,9 +26,9 @@ trait GuardianContentService extends GuardianContent {
         for {
           response <- eventbriteQuery(nextPage)
         } yield {
-          val pagination = ContentAPIPagination(response.currentPage, response.pages)
+          val pagination =
+            ContentAPIPagination(response.currentPage, response.pages)
           Some(pagination.nextPageOpt, response.results)
-
         }
       }.getOrElse(Future.successful(None))
     }
@@ -42,10 +42,12 @@ trait GuardianContentService extends GuardianContent {
         for {
           response <- masterclassesQuery(nextPage)
         } yield {
-          val masterclassData = response.results.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
-          val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
+          val masterclassData = response.results.flatMap(
+              MasterclassDataExtractor.extractEventbriteInformation)
+          val pagination =
+            ContentAPIPagination(response.currentPage.getOrElse(0),
+                                 response.pages.getOrElse(0))
           Some(pagination.nextPageOpt, masterclassData)
-
         }
       }.getOrElse(Future.successful(None))
     }
@@ -53,31 +55,50 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def offersAndCompetitions: Future[Seq[Content]] = offersAndCompetitionsContentQuery(1).map(_.results)
+  private def offersAndCompetitions: Future[Seq[Content]] =
+    offersAndCompetitionsContentQuery(1).map(_.results)
 
-  private def membershipFront: Future[Seq[Content]] = membershipFrontContentQuery(1).map(_.results)
+  private def membershipFront: Future[Seq[Content]] =
+    membershipFrontContentQuery(1).map(_.results)
 
-  def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
+  def masterclassContent(eventId: String): Option[MasterclassData] =
+    masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
 
-  def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
+  def content(eventId: String): Option[Content] =
+    contentTask
+      .get()
+      .find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
-  def offersAndCompetitionsContent: Seq[Content] = offersAndCompetitionsContentTask.get()
+  def offersAndCompetitionsContent: Seq[Content] =
+    offersAndCompetitionsContentTask.get()
 
   def membershipFrontContent: Seq[Content] = membershipFrontContentTask.get()
 
   private val contentApiPeriod = 30.minutes
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]](
-    "GuardianContentService - Masterclass content", Nil, 2.seconds, contentApiPeriod)(masterclasses)
+      "GuardianContentService - Masterclass content",
+      Nil,
+      2.seconds,
+      contentApiPeriod)(masterclasses)
 
   val contentTask = ScheduledTask[Seq[Content]](
-      "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
+      "GuardianContentService - Content with Eventbrite reference",
+      Nil,
+      1.millis,
+      contentApiPeriod)(eventbrite)
 
   val offersAndCompetitionsContentTask = ScheduledTask[Seq[Content]](
-      "GuardianContentService - Content with Guardian Members Only", Nil, 1.second, contentApiPeriod)(offersAndCompetitions)
+      "GuardianContentService - Content with Guardian Members Only",
+      Nil,
+      1.second,
+      contentApiPeriod)(offersAndCompetitions)
 
   val membershipFrontContentTask = ScheduledTask[Seq[Content]](
-      "GuardianContentService - Content from Membership front", Nil, 1.second, contentApiPeriod)(membershipFront)
+      "GuardianContentService - Content from Membership front",
+      Nil,
+      1.second,
+      contentApiPeriod)(membershipFront)
 
   def start() {
     masterclassContentTask.start()
@@ -85,7 +106,6 @@ trait GuardianContentService extends GuardianContent {
     contentTask.start()
     membershipFrontContentTask.start()
   }
-
 }
 
 object GuardianContentService extends GuardianContentService
