@@ -21,6 +21,7 @@ object Giraffe extends Controller {
   )
 
   val stripe = TouchpointBackend.Normal.giraffeStripeService
+  val identity = TouchpointBackend.Normal.identityService
   val chargeId = "charge_id"
 
   def support = CachedAction { implicit request =>
@@ -60,6 +61,10 @@ object Giraffe extends Controller {
         "name" -> f.name
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
       val res = stripe.Charge.create(Math.min(5000, (f.amount * 100).toInt), f.currency, f.email, "Your contribution", f.token, metadata)
+
+      AuthenticationService.authenticatedUserFor(request).map { user =>
+        identity.updateUserMarketingPreferences(IdentityRequest(request), user, f.marketing)
+      }
 
       res.map { charge =>
         Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))

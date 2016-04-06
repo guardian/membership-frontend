@@ -58,6 +58,9 @@ case class IdentityService(identityApi: IdentityApi) {
     identityApi.post("/user/password", Some(json), identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
+  def updateUserMarketingPreferences(req: IdentityRequest, user: IdMinimalUser, allowMarketing: Boolean) =
+    postFields(Json.obj("statusFields.receiveGnmMarketing" -> allowMarketing), user.id, req)
+
   def updateUserFieldsBasedOnUpgrade(userId: String, addressDetails: AddressDetails, identityRequest: IdentityRequest) {
     val billingAddressForm = addressDetails.billingAddress.getOrElse(addressDetails.deliveryAddress)
     val fields = deliveryAddress(addressDetails.deliveryAddress) ++ billingAddress(billingAddressForm)
