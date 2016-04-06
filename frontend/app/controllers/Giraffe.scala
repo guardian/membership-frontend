@@ -21,6 +21,7 @@ object Giraffe extends Controller {
   )
 
   val stripe = TouchpointBackend.Normal.giraffeStripeService
+  val identity = TouchpointBackend.Normal.identityService
   val chargeId = "charge_id"
 
   def support = CachedAction { implicit request =>
