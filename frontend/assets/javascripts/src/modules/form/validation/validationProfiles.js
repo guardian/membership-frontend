@@ -12,7 +12,7 @@ define([
         /**
          * is a number less than fifty (for giraffe)
          */
-    var lessThanFifty = function (element) {
+    var giraffe = function (element) {
 
         var hiddenField = document.querySelector('.js-amount-hidden');
         var amount = parseFloat(element.value);
@@ -22,13 +22,13 @@ define([
             console.log(amount);
         }
         //user has left prefill
-            if (amount > 50) {
+            if (amount > 500) {
                 //global omniture
                 if (s) {
                     s.tl(true, 'o', 'largeValue:' + amount);
                 }
             }
-        if(amount <= 50 && amount >= 1) {
+        if(amount <= 500 && amount >= 1) {
             element.value = amount.toFixed(2);
             return true;
         }
