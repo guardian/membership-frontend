@@ -25,7 +25,7 @@
 
 .promo-quote__text {
     @include mq($from:tablet){
-    padding-left: 300px;
+    padding-left: 300px + 30px;
     }
 }
 
@@ -33,14 +33,16 @@
     height:  gs-height(4);
     clear: both;
     position: absolute;
-    right: 30px;
+    right: 30px + $gs-gutter;
     bottom: -1.5em;
-    @include mq($from:tablet){
-        left: 30px;
+    @include mq($from:tablet, $until:mem-full){
+        left: 30px + $gs-gutter;
         height:  gs-height(6);
     }
-
-
+    @include mq($from:mem-full){
+        left: 30px;
+        height: gs-height(6);
+    }
 }
 
 

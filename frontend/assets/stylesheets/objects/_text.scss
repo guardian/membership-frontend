@@ -1,6 +1,11 @@
 /* ==========================================================================
    Objects: Text
    ========================================================================== */
+//
+//  Function to create an optimized svg url
+//  See: http://codepen.io/tigt/post/optimizing-svgs-in-data-uris
+//
+//
 
 .text-body {
     @include fs-bodyCopy(2);
@@ -108,18 +113,23 @@
 
 blockquote,
 .blockquote {
-    //font-weight: normal;
-    @include fs-bodyCopy(1);
-    @include mq($from:tablet){
-        @include fs-bodyCopy(2);
-    }
+    @include fs-bodyCopy(2);
+    line-height: 20px;
+    color: $c-neutral1;
+
     margin: 0;
     margin-bottom: $gs-baseline;
+
+    @include mq($from:tablet){
+        @include f-bodyCopy;
+        font-size: 20px;
+        line-height: 24px;
+    }
 
     &:before {
         content: '';
         display: block;
-        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNCIgaGVpZ2h0PSIyMCI+PHBhdGggZmlsbD0iI2JiM2E3ZiIgZD0iTTI2LjU1OCA1Ljk5OGMtMi4wMjMgMC0zLjg0NS44Ni01LjEyNCAyLjIzMi0uMDc3LS40Ny0uMTE4LS45NTctLjExOC0xLjQ2IDAtMy41MDYgMi40NS02LjM1IDYuMDU1LTYuMzUgMS42MTYgMCAzLjEzLjU4OCA0LjI2OCAxLjUzMmguNTEyYy0xLjYyMS0xLjM0NC0yLjcyNC0xLjg2NS01LjIwMy0xLjk0Ny01LjY3LS4xODctOS41OTUgNC40NzYtOS41OTUgOS45OTdzMy4zNzcgOS45OTggOS4wNSA5Ljk5OHYtLjAwNGwuMTU1LjAwNGMzLjg2NyAwIDctMy4xMzUgNy03IC4wMDItMy44NjgtMy4xMzMtNy4wMDItNy03LjAwMnptLTE3LjM1NCAwYy0yLjAyMyAwLTMuODQ1Ljg2LTUuMTIzIDIuMjMyLS4wNzctLjQ3LS4xMTctLjk1Ny0uMTE3LTEuNDYgMC0zLjUwNiAyLjQ1LTYuMzUgNi4wNTYtNi4zNSAxLjYxNCAwIDMuMTI2LjU4OCA0LjI2NiAxLjUzMmguNTEyYy0xLjYyLTEuMzQ0LTIuNzIyLTEuODY1LTUuMi0xLjk0Ny01LjY3My0uMTg3LTkuNTk4IDQuNDc1LTkuNTk4IDkuOTk3czMuMzc2IDkuOTk4IDkuMDUgOS45OTh2LS4wMDRsLjE1NC4wMDRjMy44NjcgMCA3LjAwMi0zLjEzNSA3LjAwMi03IDAtMy44NjgtMy4xMzUtNy4wMDItNy4wMDItNy4wMDJ6Ii8+PC9zdmc+);
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="32" height="19.394" viewBox="1.003 0 32 19.394"><path fill="#333" d="M9.73 19.393c3.734.066 6.722-3.01 6.788-6.78.066-3.775-3.054-6.728-6.787-6.794-1.954-.037-3.48.67-4.74 1.99-.067-.467-.117-1.01-.108-1.507C4.944 2.88 8.192.91 11.672.97l-.97-.97c-5.84 0-9.605 4.312-9.697 9.702-.095 5.388 3.248 9.592 8.726 9.69zm16.485 0c3.732.066 6.72-3.01 6.787-6.78.066-3.775-3.055-6.728-6.787-6.794-1.955-.036-3.48.672-4.74 1.99-.067-.465-.118-1.008-.11-1.506C21.43 2.88 24.678.91 28.156.97L27.188 0c-5.84 0-9.604 4.312-9.697 9.702-.094 5.388 3.248 9.592 8.728 9.69h-.003z"/></svg>');
         background-repeat: no-repeat;
         width: 34px; height: 20px;
         margin-right: $gs-baseline / 2;
@@ -127,7 +137,7 @@ blockquote,
     &:after {
         content: '';
         display: block;
-        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNCIgaGVpZ2h0PSIyMCI+PHBhdGggZmlsbD0iI2JiM2E3ZiIgZD0iTTI2LjU1OCA1Ljk5OGMtMi4wMjMgMC0zLjg0NS44Ni01LjEyNCAyLjIzMi0uMDc3LS40Ny0uMTE4LS45NTctLjExOC0xLjQ2IDAtMy41MDYgMi40NS02LjM1IDYuMDU1LTYuMzUgMS42MTYgMCAzLjEzLjU4OCA0LjI2OCAxLjUzMmguNTEyYy0xLjYyMS0xLjM0NC0yLjcyNC0xLjg2NS01LjIwMy0xLjk0Ny01LjY3LS4xODctOS41OTUgNC40NzYtOS41OTUgOS45OTdzMy4zNzcgOS45OTggOS4wNSA5Ljk5OHYtLjAwNGwuMTU1LjAwNGMzLjg2NyAwIDctMy4xMzUgNy03IC4wMDItMy44NjgtMy4xMzMtNy4wMDItNy03LjAwMnptLTE3LjM1NCAwYy0yLjAyMyAwLTMuODQ1Ljg2LTUuMTIzIDIuMjMyLS4wNzctLjQ3LS4xMTctLjk1Ny0uMTE3LTEuNDYgMC0zLjUwNiAyLjQ1LTYuMzUgNi4wNTYtNi4zNSAxLjYxNCAwIDMuMTI2LjU4OCA0LjI2NiAxLjUzMmguNTEyYy0xLjYyLTEuMzQ0LTIuNzIyLTEuODY1LTUuMi0xLjk0Ny01LjY3My0uMTg3LTkuNTk4IDQuNDc1LTkuNTk4IDkuOTk3czMuMzc2IDkuOTk4IDkuMDUgOS45OTh2LS4wMDRsLjE1NC4wMDRjMy44NjcgMCA3LjAwMi0zLjEzNSA3LjAwMi03IDAtMy44NjgtMy4xMzUtNy4wMDItNy4wMDItNy4wMDJ6Ii8+PC9zdmc+);
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="32" height="19.394" viewBox="53.003 0 32 19.394"><path fill="#333" d="M76.275 0c-3.733-.065-6.722 3.01-6.787 6.782-.066 3.774 3.054 6.727 6.787 6.794 1.955.035 3.48-.674 4.74-1.99.066.465.117 1.008.108 1.505-.062 3.424-3.31 5.395-6.79 5.334l.97.97c5.84 0 9.604-4.312 9.697-9.702.095-5.388-3.25-9.592-8.728-9.69h.003zM59.79 0c-3.73-.065-6.72 3.01-6.786 6.782-.066 3.774 3.055 6.727 6.787 6.794 1.956.035 3.482-.674 4.74-1.99.068.465.12 1.008.11 1.505-.062 3.424-3.31 5.395-6.79 5.334l.97.97c5.838 0 9.603-4.312 9.696-9.702C68.61 4.304 65.268.1 59.788.002h.003z"/></svg>');
         background-repeat: no-repeat;
         width: 34px; height: 20px;
         margin-right: $gs-baseline / 2;
@@ -140,8 +150,8 @@ blockquote,
     color: color(brand-main);
     display: block;
     @include mq($from:tablet){
-        @include fs-headline(1);
-
+        @include fs-bodyCopy(2);
+        line-height: 20px;
     }
 }
 
