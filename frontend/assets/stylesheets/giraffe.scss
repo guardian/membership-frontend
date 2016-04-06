@@ -219,23 +219,22 @@
 }
 
 /* desktop */
+$tablet-form-width: map_get($max-widths, max-tablet);
+$tablet-col-padding-left: $gs-gutter/2;
+$tablet-col-padding-right: ($gs-gutter/2) + 1;
 @include mq(tablet) {
-    $form-width: map_get($max-widths, max-tablet);
-    $col-padding-left: $gs-gutter/2;
-    $col-padding-right: ($gs-gutter/2) + 1;
-
     .support-wrapper .form {
         display: table;
         margin: 0 auto;
-        width: $form-width;
+        width: $tablet-form-width;
     }
 
     .support-wrapper .form__column {
-        border-left: 1px solid #dcdcdc;
+        border-left: 1px solid color(neutral-4);
         display: table-cell;
-        padding-left: $col-padding-left;
-        padding-right: $col-padding-right;
-        width: ($form-width) / 3;
+        padding-left: $tablet-col-padding-left;
+        padding-right: $tablet-col-padding-right;
+        width: ($tablet-form-width) / 3;
         vertical-align: top;
     }
 
@@ -254,6 +253,9 @@
     }
 }
 
+$desktop-form-width: 936px;
+$desktop-col-padding-left: 15px;
+$desktop-col-padding-right: 16px;
 @include mq(desktop) {
     //$form-width: map_get($max-widths, max-tablet) - $gs-gutter;
     //$col-padding-left: $gs-gutter/2;
@@ -269,12 +271,12 @@
     //}
 
     .support-wrapper .form {
-        width: 936px;
+        width: $desktop-form-width;
     }
 
     .support-wrapper .form__column {
-        padding-left: 15px;
-        padding-right: 16px;
+        padding-left: $desktop-col-padding-left;
+        padding-right: $desktop-col-padding-right;
         width: 280px;
     }
 }
@@ -495,30 +497,23 @@
 
     .feedback {
         @include fs-textSans(2);
-        padding-top: $gs-baseline;
-        padding-bottom: $gs-baseline * 2;
+        margin: $gs-baseline*4 auto 0 auto;
 
-        padding-left: $gs-gutter / 2;
-        padding-right: $gs-gutter / 2;
+        padding-top: $gs-baseline;
+        border-top: 1px solid color(neutral-4);
 
         @include mq(tablet) {
-            padding-left: $gs-gutter;
-            padding-right: $gs-gutter;
+            width: $tablet-form-width;
         }
 
         @include mq(desktop) {
-            padding-left: 74px;
-            padding-right: 74px;
-        }
-
-        @include mq(mem-full) {
-            padding-left: 150px;
-            padding-right: 150px;
+            width: $desktop-form-width;
         }
     }
 
     .page-slice {
         padding-top: 0;
+        padding-bottom: $gs-baseline;
         @include mq(tablet) {
             padding-top: $gs-baseline * 4;
         }
