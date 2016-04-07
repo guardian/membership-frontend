@@ -125,11 +125,6 @@ Note that we read the shared secret for these from the `identity.test.users.secr
 
 ### Automated
 
-
-#### Scala unit tests
-
-`sbt test`
-
 #### JavaScript unit tests
 
 ```
@@ -137,13 +132,22 @@ cd frontend/
 npm test
 ```
 
+
+#### Scala unit tests
+
+`sbt fast-test`
+
 #### Acceptance tests
 
 1. Run local membership-frontend: `sbt devrun`
-2. Run local [frontend](https://github.com/guardian/frontend): `./sbt "project identity" idrun`
+2. Run local [idenity-frontend](https://github.com/guardian/identity-frontend): `sbt devrun`
 3. `sbt acceptance-test`
 
 These are browser driving Selenium tests.
+
+#### All tests
+
+`sbt test`
 
 
 ## Deployment
