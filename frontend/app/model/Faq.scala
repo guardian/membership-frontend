@@ -108,7 +108,7 @@ object Faq {
       Html("We only run events at venues that are accessible by wheelchair. You can tell us that you require accessibility information on the ticket booking form and we will contact you to go over the access route before the event.")
     ),
     Item("I've got a question",
-      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Members customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends.")
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Members customer services team on 0330 333 6898 from 8am to 8pm Monday to Friday and 8am to 6pm at weekends.")
     ),
     Item("What are Guardian Masterclasses?",
       Html("""
