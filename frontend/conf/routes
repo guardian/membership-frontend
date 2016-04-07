@@ -129,7 +129,9 @@ GET            /currencies                            controllers.PricingApi.cur
 
 # Giraffe
 GET            /contribute/                           controllers.Default.redirect(to="/contribute")
-GET            /contribute                            controllers.Giraffe.support
+GET            /contribute                            controllers.Giraffe.contribute
+GET            /us/contribute                         controllers.Giraffe.contributeUSA
 POST           /contribute/pay                        controllers.Giraffe.pay
 GET            /contribute/thank-you                  controllers.Giraffe.thanks
+GET            /us/contribute/thank-you               controllers.Giraffe.thanksUSA
 
