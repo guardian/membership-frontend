@@ -195,7 +195,7 @@ object Config {
       ),
       roundelHtml = "<h1 class=\"roundel__title\">Become a Partner or just £99/year</h1>\n<p class=\"roundel__description\">before 31 March 2016</p>",
       title = "Become a Partner for just £99/year"
-    ).some.filter(_ => env != "PROD")
+    ).some
   }
 
   object Implicits {
