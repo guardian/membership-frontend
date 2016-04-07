@@ -1,4 +1,6 @@
 package controllers
+
+import com.gu.i18n._
 import com.gu.stripe.Stripe
 import configuration.Config
 import com.gu.stripe.Stripe.Serializer._
@@ -96,8 +98,13 @@ object Giraffe extends Controller {
         identity.updateUserMarketingPreferences(IdentityRequest(request), user, f.marketing)
       }
 
+      val redirect = f.currency match {
+        case USD => routes.Giraffe.thanksUSA().url
+        case _ => routes.Giraffe.thanks().url
+      }
+
       res.map { charge =>
-        Ok(Json.obj("redirect" -> routes.Giraffe.thanks().url))
+        Ok(Json.obj("redirect" -> redirect))
           .withSession(chargeId -> charge.id)
       }.recover {
         case e: Stripe.Error => BadRequest(Json.toJson(e))
