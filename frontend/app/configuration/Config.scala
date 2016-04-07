@@ -191,11 +191,11 @@ object Config {
       expires = new LocalDate(2016,4,30).toDateTime(LocalTime.Midnight, timezone),
       imageUrl = None,
       promotionType = PercentDiscount(
-        durationMonths = None,
+        durationMonths = Some(12),
         amount = 33.557046979866
       ),
-      roundelHtml = "<h1 class=\"roundel__title\">Become a Partner or just £99/year</h1>\n<p class=\"roundel__description\">before 31 March 2016</p>",
-      title = "Become a Partner for just £99/year"
+      roundelHtml = "Join</br>as an annual Partner Member before 30 April 2016 and save</br>£50",
+      title = "Become a Guardian Partner for just £99"
     ).some
   }
 

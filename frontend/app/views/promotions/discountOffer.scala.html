@@ -1,5 +1,7 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.Current
+@import com.gu.memsub.promo.PromoCode
+@import com.gu.memsub.promo.Promotion.AnyPromotion
 @import com.gu.salesforce.Tier.Partner
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
@@ -10,14 +12,17 @@
 
 @(partnerPlans: PaidMembershipPlans[Current, Partner],
     pageInfo: PageInfo,
-    pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    pageImages: Seq[model.ResponsiveImageGroup],
+    promoCode: PromoCode,
+    promotion: AnyPromotion
+)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import views.support.Asset
 
 
-@main("Become a Guardian Partner for just £99", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+@main(promotion.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.common.roundel(Roundel(Seq("Join","as an annual Partner Member before 30 April 2016 and save","£50")),classModifier = Some("alt"))
+    @fragments.common.roundel(Roundel(Seq(promotion.roundelHtml)),classModifier = Some("alt"))
 
     @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
         Become a Guardian Partner for just £99
@@ -31,12 +36,12 @@
         @fragments.tier.packagePromo(
             partnerPlans,
             countryGroup,
-            promoCode = Some("50OFF"),
+            promoCode = Some(promoCode.get),
             modifierClass = Some("package-promo--clean"),
             highlightOverrides = Some(Highlights.discountLandingPage),
-            customPrice = Some(fragments.promos.discountedPrice("£149","£99","first year")),
+            customPrice = Some(fragments.promos.discountedPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get.pretty, promotion.applyDiscountToPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get).pretty,"first year")))
             secondaryButton = Some(CtaButton("Find out more", "/", Map.empty))
-            )
+        )
     }
 
     <section class="page-slice page-slice--listing" id="introducing-members">
@@ -88,9 +93,9 @@
         @fragments.tier.packagePromo(
             partnerPlans,
             countryGroup,
-            promoCode = Some("50OFF"),
+            promoCode = Some(promoCode.get),
             modifierClass = Some("package-promo--clean"),
             highlightOverrides = Some(Highlights.discountLandingPageLong),
-            customPrice = Some(fragments.promos.discountedPrice("£149","£99","year")))
+            customPrice = Some(fragments.promos.discountedPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get.pretty, promotion.applyDiscountToPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get).pretty,"first year")))
     }
 }
