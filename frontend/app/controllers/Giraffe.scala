@@ -24,7 +24,10 @@ object Giraffe extends Controller {
   val identity = TouchpointBackend.Normal.identityService
   val chargeId = "charge_id"
 
-  def support = CachedAction { implicit request =>
+  // Once things have settled down and we have a reasonable idea of what might
+  // and might not vary between different countries, we should merge these country-specific
+  // controllers & templates into a single one which varies on a number of parameters
+  def contribute = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
       url = request.path,
@@ -34,14 +37,41 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.support(pageInfo))
+    Ok(views.html.giraffe.contribute(pageInfo))
+  }
+
+  def contributeUSA = CachedAction { implicit request =>
+    val pageInfo = PageInfo(
+      title = "Support the Guardian | Contribute today",
+      url = request.path,
+      image = Some("https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg"),
+      stripePublicKey = Some(stripe.publicKey),
+      description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
+      navigation = Seq.empty,
+      customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
+    )
+    Ok(views.html.giraffe.contributeUSA(pageInfo))
   }
 
   def thanks = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
-      Redirect(routes.Giraffe.support().url, SEE_OTHER)
+      Redirect(routes.Giraffe.contribute().url, SEE_OTHER)
     )( id =>
       Ok(views.html.giraffe.thankyou(PageInfo(
+        title = "Thank you for supporting the Guardian",
+        url = request.path,
+        image = None,
+        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
+        navigation = Seq.empty
+      ), id, social))
+    )
+  }
+
+  def thanksUSA = NoCacheAction { implicit request =>
+    request.session.get(chargeId).fold(
+      Redirect(routes.Giraffe.contributeUSA().url, SEE_OTHER)
+    )( id =>
+      Ok(views.html.giraffe.thankyouUSA(PageInfo(
         title = "Thank you for supporting the Guardian",
         url = request.path,
         image = None,

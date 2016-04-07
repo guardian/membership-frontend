@@ -1,0 +1,39 @@
+@import views.support.PageInfo
+
+@import views.support.Social
+@(pageInfo: PageInfo, reference: String, social: Set[Social])
+@giraffeMain(pageInfo) {
+    <div class="support-wrapper page-slice l-constrained support-thanks">
+        <h1 class="support-thanks__title">@pageInfo.title</h1>
+
+        <p class="support-thanks__message">@pageInfo.description</p>
+
+        <div class="support-thanks__message">
+            Please take a moment to share the <a class="support-thanks__link" href="//www.theguardian.com/news/series/panama-papers" onClick="s.tl(true,'o','panamapapers')">Panama Papers</a> series.
+            @fragments.social(social)
+        </div>
+
+        <p class="support-thanks__message">
+            Enjoy more of the Guardian's journalism from breaking investigations to politics, sports, arts and more.
+        </p>
+
+        <div class="support-thanks__row blue-border u-cf">
+            <div class="support-thanks__one-col">
+                <h3 class="support-thanks__sub-subtitle headline-text--bolder">Get the app </h3>
+                <p>Up-to-the-minute coverage, personalised alerts, off​line​ reading and more. <br><a href="https://itunes.apple.com/us/app/the-guardian/id409128287?mt=8" class="support-thanks__link" onClick="s.tl(true,'o','iApp')">iPhone and iPad app</a> <br><a href="https://play.google.com/store/apps/details?id=com.guardian" class="support-thanks__link" onClick="s.tl(true,'o','aApp')">Android app</a></p>
+            </div>
+            <div class="support-thanks__one-col">
+                <h3 class="support-thanks__sub-subtitle headline-text--bolder">Subscribe to daily email</h3>
+                <p><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-us?CMP=contribution_thankyou" class="support-thanks__link" onClick="s.tl(true,'o','email')">Get the must-read stories</a> delivered straight to your inbox each morning in one handy email</p>
+            </div>
+            <div class="support-thanks__one-col">
+                <h3 class="support-thanks__sub-subtitle headline-text--bolder">Follow on Facebook</h3>
+                <p><a href="https://www.facebook.com/theguardian" class="support-thanks__link" onClick="s.tl(true,'o','follow')">Follow the Guardian's daily reporting</a>, features and investigative journalism</p>
+            </div>
+        </div>
+
+        <div class="support-thanks__feedback">
+            If you have any questions about contributing to the Guardian, please <a href="mailto:contribution.support@@theguardian.com" class="support-thanks__link" onClick="s.tl(true,'o','emailUs')">contact us here</a>.
+        </div>
+    </div>
+}
