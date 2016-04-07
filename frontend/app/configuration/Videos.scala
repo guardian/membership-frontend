@@ -24,12 +24,28 @@ object Videos {
     sizes=List(1000, 500)
   )
 
+  private val supportersUSAPlaceholder = ResponsiveImageGenerator(
+    id="d9e217dbfa10f4c6b352ff2abac13379994a992f/0_0_960_540",
+    sizes=List(960, 500)
+  )
+
+
   val supporters = Video(
     srcUrl="//www.youtube.com/embed/rBnvGHEyATc?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
         availableImages=supportersPlaceholder
+      )
+    )
+  )
+
+  val supportersUSA =  Video(
+    srcUrl="//www.youtube.com/embed/CAzEi7vDxcg?enablejsapi=1&wmode=transparent",
+    posterImage=Some(
+      ResponsiveImageGroup(
+        altText=Some("If you read the Guardian, join the Guardian"),
+        availableImages=supportersUSAPlaceholder
       )
     )
   )
