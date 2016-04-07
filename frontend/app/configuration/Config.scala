@@ -154,6 +154,7 @@ object Config {
   def discountRatePlanIds(env: String): DiscountRatePlanIds =
     DiscountRatePlanIds.fromConfig(config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds"))
 
+  val timezone = DateTimeZone.forID("Europe/London")
 
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
@@ -187,7 +188,7 @@ object Config {
       campaignName = "Become a Partner for just £99/year",
       codes = PromoCodeSet(PromoCode("PARTNER99")),
       description = "",
-      expires = DateTime.parse("2017-04-01T01:00:00Z"),
+      expires = new LocalDate(2016,4,30).toDateTime(LocalTime.Midnight, timezone),
       imageUrl = None,
       promotionType = PercentDiscount(
         durationMonths = None,
