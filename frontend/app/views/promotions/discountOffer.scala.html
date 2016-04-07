@@ -39,7 +39,7 @@
             promoCode = Some(promoCode.get),
             modifierClass = Some("package-promo--clean"),
             highlightOverrides = Some(Highlights.discountLandingPage),
-            customPrice = Some(fragments.promos.discountedPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get.pretty, promotion.applyDiscountToPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get).pretty,"first year")))
+            customPrice = Some(fragments.promos.discountedPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get.pretty, promotion.applyDiscountToPrice(partnerPlans.year.pricing.getPrice(countryGroup.currency).get).pretty,"first year")),
             secondaryButton = Some(CtaButton("Find out more", "/", Map.empty))
         )
     }
