@@ -22,7 +22,7 @@ define([
         //user has left prefill
         if (amount > 500) {
             //global omniture
-            if (s) {
+            if ((typeof s !== 'undefined') && s) {
                 s.tl(true, 'o', 'largeValue:' + amount);
             }
         }
