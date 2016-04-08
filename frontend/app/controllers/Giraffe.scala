@@ -55,6 +55,19 @@ object Giraffe extends Controller {
     Ok(views.html.giraffe.contributeUSA(pageInfo))
   }
 
+  def contributeAustralia = CachedAction { implicit request =>
+    val pageInfo = PageInfo(
+      title = "Support the Guardian | Contribute today",
+      url = request.path,
+      image = Some("https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg"),
+      stripePublicKey = Some(stripe.publicKey),
+      description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
+      navigation = Seq.empty,
+      customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
+    )
+    Ok(views.html.giraffe.contributeAustralia(pageInfo))
+  }
+
   def thanks = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.contribute().url, SEE_OTHER)
@@ -83,6 +96,20 @@ object Giraffe extends Controller {
     )
   }
 
+  def thanksAustralia = NoCacheAction { implicit request =>
+    request.session.get(chargeId).fold(
+      Redirect(routes.Giraffe.contributeAustralia().url, SEE_OTHER)
+    )( id =>
+      Ok(views.html.giraffe.thankyouAustralia(PageInfo(
+        title = "Thank you for supporting the Guardian",
+        url = request.path,
+        image = None,
+        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
+        navigation = Seq.empty
+      ), id, social))
+    )
+  }
+
   def pay = NoCacheAction.async { implicit request =>
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
@@ -100,6 +127,7 @@ object Giraffe extends Controller {
 
       val redirect = f.currency match {
         case USD => routes.Giraffe.thanksUSA().url
+        case AUD => routes.Giraffe.thanksAustralia().url
         case _ => routes.Giraffe.thanks().url
       }
 
