@@ -418,12 +418,12 @@ $desktop-col-padding-right: 16px;
 
     background-color: #ffffff;
 
-    &.active {
-        background-color: color(news-support-1);
-    }
-
     &:hover {
         background-color: lighten(color(news-support-1), 10%);
+    }
+
+    &.active {
+        background-color: color(news-support-1);
     }
 }
 
