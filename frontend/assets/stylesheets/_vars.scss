@@ -101,7 +101,8 @@ $clip-paths: (
     thumbnail-a: "0 0, 0 100%, 100% 100%, 100% 90%, 10% 100%",
     thumbnail-b: "90% 100%, 100% 0, 100% 100%, 0 100%, 0 90%",
     thumbnail-c: "100% 0, 0 0, 100% 10%",
-    jaunty-bottom-left: "100% 0, 100% 65%, 0 90%, 0 0"
+    quote-mobile: "100% 0, 100% calc(100% - 82px), 0 calc(100% - 46px), 0 0", //CALC 100% - X px where X is desired - 50
+    quote: "100% 0, 100% calc(100% - 34px), 0 calc(100% - 1px), 0 0" //CALC 100% - X px where X is desired - 50
 );
 
 // Tone Colours
