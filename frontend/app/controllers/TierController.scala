@@ -1,7 +1,10 @@
 package controllers
 
+import actions.BackendProvider
+import com.gu.membership.{PaidMembershipPlans, MembershipCatalog}
+import com.gu.memsub.promo.PromoCode
 import controllers._
-import services.api.MemberService.{PendingAmendError, MemberError}
+import services.api.MemberService.{PendingAmendError, MemberError, NoCardError}
 import services.{IdentityApi, IdentityService}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
@@ -25,10 +28,15 @@ import tracking.ActivityTracking
 import utils.{TierChangeCookies, CampaignCode}
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 import scalaz.std.scalaFuture._
+import scalaz.syntax.std.option._
 import scala.concurrent.Future
 import scala.language.implicitConversions
-import scalaz.{EitherT, \/}
-
+import scalaz.{OptionT, EitherT, \/}
+import scala.concurrent.{ExecutionContext, Future}
+import scalaz.std.scalaFuture._
+import scalaz.syntax.monad._
+import scalaz.syntax.std.option._
+import scalaz.\/
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -95,8 +103,27 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription, request.subscriber.subscription.paidPlan.tier)).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
+  def upgradePreview(target: PaidTier, code: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
+    paymentSummary(request.subscriber, catalog.findPaid(target), code)(request, catalog, IdentityRequest(request))
+      .map(summary => handleResultErrors(summary.map(s => Ok(Json.toJson(s)))))
+  }
+
+  def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[Current, PaidTier], code: Option[PromoCode])
+                    (implicit b: BackendProvider, c: MembershipCatalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
+
+    val targetPlan = targetPlans.get(subscriber.subscription.plan.billingPeriod)
+    val targetChoice = PaidPlanChoice(targetPlan.tier, targetPlan.billingPeriod)
+    val sub = subscriber.subscription
+
+    (for {
+      card <- EitherT(paymentService.getPaymentCard(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
+      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice, code))
+    } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)).run
+  }
+
   def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
+    implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
     val stripeKey = Some(stripeService.publicKey)
     val currency = sub.currency
@@ -118,10 +145,8 @@ object TierController extends Controller with ActivityTracking
       PageInfo(initialCheckoutForm = formI18n, stripePublicKey = stripeKey)
     }
 
-    def fromFree(subscriber: FreeMember): Future[Result] =
-      for {
-        privateFields <- identityUserFieldsF
-      } yield {
+    request.paidOrFreeSubscriber.fold({freeSubscriber =>
+      identityUserFieldsF.map(privateFields =>
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
@@ -129,43 +154,22 @@ object TierController extends Controller with ActivityTracking
           privateFields,
           pageInfo(privateFields, BillingPeriod.year)
         )(getToken, request))
-      }
+      )
+    }, { paidSubscriber =>
+      val billingPeriod = paidSubscriber.subscription.plan.billingPeriod
+      val flashError = request.flash.get("error").map(FlashMessage.error)
 
-    def fromPaid(subscriber: PaidMember, card: PaymentCard): Future[Result] = {
-
-      val targetPlanId = targetPlans.get(subscriber.subscription.plan.billingPeriod).productRatePlanId
-      val preview = memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId)
-
-      (for {
-        billingSchedule <- EitherT(memberService.previewUpgradeSubscription(subscriber.subscription, targetPlanId))
-        privateFields <- EitherT(identityUserFieldsF.map(\/.right))
-      } yield {
-        val summary = PaidToPaidUpgradeSummary(billingSchedule, subscriber.subscription, targetPlanId, card)
-        val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
-
-        Ok(views.html.tier.upgrade.paidToPaid(
-          summary,
-          privateFields,
-          pageInfo(privateFields, subscriber.subscription.plan.billingPeriod),
-          flashMsgOpt
-        )(getToken, request))
-      }).run.map(handleResultErrors(_))
-    }
-
-    val paymentCard = paymentService.getPaymentCard(request.subscriber.subscription.accountId)
-
-    paymentCard flatMap { p => (request.subscriber, p) match {
-      case (Subscriber.FreeMember(mem), _) => fromFree(mem)
-      case (Subscriber.PaidMember(mem), Some(a: PaymentCard)) => fromPaid(mem, a)
-      case _ => throw new IllegalStateException(request.subscriber.subscription.accountId + " is missing a payment status or card")
-    }}
+      (identityUserFieldsF |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (fields, summary) =>
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, fields, pageInfo(fields, billingPeriod), flashError)(getToken, request)))
+      }.map(handleResultErrors)
+    })
   }
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
-    val identityRequest = IdentityRequest(request)
+    implicit val identityRequest = IdentityRequest(request)
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
-      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, identityRequest, CampaignCode.fromRequest)
+      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, CampaignCode.fromRequest)
       handleErrors(upgrade) {
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
@@ -179,7 +183,7 @@ object TierController extends Controller with ActivityTracking
       }
 
       def doUpgrade(): Future[Result] = {
-        val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, identityRequest, CampaignCode.fromRequest)
+        val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, CampaignCode.fromRequest)
         handleErrors(upgrade) {
           Redirect(routes.TierController.upgradeThankyou(target))
         }

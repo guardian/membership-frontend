@@ -7,6 +7,7 @@ import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
+import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
 import com.gu.services.model.BillingSchedule
@@ -100,7 +101,7 @@ class MemberService(identityService: IdentityService,
 
     val createContact: Future[ContactId] =
       for {
-        user <- identityService.getFullUserDetails(user, identityRequest)
+        user <- identityService.getFullUserDetails(user)(identityRequest)
         contactId <- salesforceService.upsert(user, formData)
       } yield contactId
 
@@ -152,40 +153,32 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def upgradeFreeSubscription(subscriber: FreeMember,
-                                       newTier: PaidTier,
-                                       form: FreeMemberChangeForm,
-                                       identityRequest: IdentityRequest,
-                                       campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] = {
+  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+                                      (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(subscriber.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(subscriber.contact, customer).liftM
+      customer <- stripeService.Customer.create(sub.contact.identityId, form.payment.token).liftM
+      paymentResult <- createPaymentMethod(sub.contact, customer).liftM
       memberId <- EitherT(upgradeSubscription(
-        subscriber.subscription,
-        contact = subscriber.contact,
+        sub.subscription,
+        contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
         customerOpt = Some(customer),
-        identityRequest = identityRequest,
-        campaignCode = campaignCode
+        campaignCode = code
       ))
     } yield memberId).run
   }
 
-  override def upgradePaidSubscription(subscriber: PaidMember,
-                                       newTier: PaidTier,
-                                       form: PaidMemberChangeForm,
-                                       identityRequest: IdentityRequest,
-                                       campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] =
+  override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
+                                      (implicit id: IdentityRequest): Future[MemberError \/ ContactId] =
     (for {
       memberId <- EitherT(upgradeSubscription(
-        subscriber.subscription,
-        contact = subscriber.contact,
-        planChoice = PaidPlanChoice(newTier, subscriber.subscription.plan.billingPeriod),
+        sub.subscription,
+        contact = sub.contact,
+        planChoice = PaidPlanChoice(newTier, sub.subscription.plan.billingPeriod),
         form = form,
         customerOpt = None,
-        identityRequest = identityRequest,
-        campaignCode = campaignCode
+        campaignCode = code
       ))
     } yield memberId).run
 
@@ -235,17 +228,14 @@ class MemberService(identityService: IdentityService,
     }).run
   }
 
-  override def previewUpgradeSubscription(subscription: PaidSubscription,
-                                          newRatePlanId: ProductRatePlanId): Future[MemberError \/ BillingSchedule] = {
+  override def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[PromoCode])
+                                         (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule] = {
     (for {
-      _ <- EitherT(subOrPendingAmendError(subscription))
-      result <- EitherT(zuoraService.upgradeSubscription(Amend(
-        subscriptionId = subscription.id.get,
-        plansToRemove = Seq(subscription.ratePlanId),
-        newRatePlans = NonEmptyList(RatePlan(newRatePlanId.get, None)),
-        previewMode = true)).map(\/.right))
+      _ <- EitherT(subOrPendingAmendError(subscriber.subscription))
+      a <- EitherT(amend(subscriber.subscription, subscriber.contact, newPlan, Set.empty, code).map(\/.right))
+      result <- EitherT(zuoraService.upgradeSubscription(a.copy(previewMode = true)).map(\/.right))
     } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems).getOrElse(
-      throw new IllegalStateException(s"Sub ${subscription.id} upgrading to $newRatePlanId has no bills")
+      throw new IllegalStateException(s"Sub ${subscriber.subscription.id} upgrading to ${newPlan.tier} has no bills")
     )).run
   }
 
@@ -435,15 +425,12 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  private def upgradeSubscription(sub: MembershipSub,
-                                  contact: Contact,
-                                  planChoice: PlanChoice,
-                                  form: MemberChangeForm,
-                                  customerOpt: Option[Customer],
-                                  identityRequest: IdentityRequest,
-                                  campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId] = {
+  /**
+    * Construct an Amend command
+    */
+  private def amend(sub: MembershipSub, contact: Contact, planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[PromoCode])
+                   (implicit r: IdentityRequest): Future[Amend] = {
 
-    val addressDetails = form.addressDetails
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
     val tier = newPlan.tier
 
@@ -451,29 +438,38 @@ class MemberService(identityService: IdentityService,
       throw new Exception(s"REST sub not found for ${sub.id}")
     ))
 
-    val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form.featureChoice)}
+    val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.productRatePlanId.get, None, fs.map(_.get)))
 
-    val country = identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None), identityRequest)
-                                 .map(_.privateFields.flatMap(_.country).flatMap(CountryGroup.countryByNameOrCode))
+    val country = identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
+      .map(_.privateFields.flatMap(_.country).flatMap(CountryGroup.countryByNameOrCode))
 
-    val upgradeCommand = (country |@| newRatePlan |@| oldRest) { case (ctry, newPln, restSub) =>
+    (country |@| newRatePlan |@| oldRest) { case (ctry, newPln, restSub) =>
       val plansToRemove = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find, discountIds)
       val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
-      promoService.applyPromotion(upgrade, form.promoCode, ctry)
+      promoService.applyPromotion(upgrade, code, ctry)
     }
+  }
 
-    addressDetails.foreach(
-      identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _, identityRequest)
-    )
+  private def upgradeSubscription(sub: MembershipSub,
+                                  contact: Contact,
+                                  planChoice: PlanChoice,
+                                  form: MemberChangeForm,
+                                  customerOpt: Option[Customer],
+                                  campaignCode: Option[CampaignCode])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
+
+    val addressDetails = form.addressDetails
+    val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
+    val tier = newPlan.tier
 
     (for {
-      sub <- EitherT(subOrPendingAmendError(sub))
-      command <- EitherT(upgradeCommand.map[MemberError \/ Amend](\/.right))
-      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), tier, customerOpt).liftM
+      s <- EitherT(subOrPendingAmendError(sub))
+      command <- EitherT(amend(sub, contact, planChoice, form.featureChoice, form.promoCode).map(\/.right))
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, customerOpt).liftM
       _ <- zuoraService.upgradeSubscription(command).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
+      addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
       trackUpgrade(contact, sub, newPlan, addressDetails, campaignCode)
       contact
     }).run

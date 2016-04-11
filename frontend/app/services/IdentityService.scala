@@ -22,13 +22,13 @@ case class IdentityServiceError(s: String) extends Throwable {
 
 case class IdentityService(identityApi: IdentityApi) {
   def getIdentityUserView(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdentityUser] =
-    getFullUserDetails(user, identityRequest)
+    getFullUserDetails(user)(identityRequest)
       .zip(doesUserPasswordExist(identityRequest))
       .map { case (fullUser, doesPasswordExist) =>
         IdentityUser(fullUser, doesPasswordExist)
       }
 
-  def getFullUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
+  def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
     identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
       .map(_.getOrElse(throw IdentityServiceError(s"Couldn't find user with ID ${user.id}")))
 
@@ -61,11 +61,11 @@ case class IdentityService(identityApi: IdentityApi) {
   def updateUserMarketingPreferences(req: IdentityRequest, user: IdMinimalUser, allowMarketing: Boolean) =
     postFields(Json.obj("statusFields.receiveGnmMarketing" -> allowMarketing), user.id, req)
 
-  def updateUserFieldsBasedOnUpgrade(userId: String, addressDetails: AddressDetails, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnUpgrade(userId: String, addressDetails: AddressDetails)(implicit r: IdentityRequest) {
     val billingAddressForm = addressDetails.billingAddress.getOrElse(addressDetails.deliveryAddress)
     val fields = deliveryAddress(addressDetails.deliveryAddress) ++ billingAddress(billingAddressForm)
     val json = Json.obj("privateFields" -> fields)
-    postFields(json, userId, identityRequest)
+    postFields(json, userId, r)
   }
 
   def updateEmail(user: IdMinimalUser, email: String, identityRequest: IdentityRequest) = {

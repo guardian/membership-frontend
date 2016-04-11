@@ -1,5 +1,6 @@
 package views.support
 
+import com.gu.i18n.Currency
 import com.gu.membership.MembershipCatalog
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub._
@@ -8,6 +9,8 @@ import com.gu.services.model.BillingSchedule
 import model.PaidSubscription
 import model.SubscriptionOps._
 import org.joda.time.{DateTime, LocalDate}
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class CurrentSummary(tier: PaidTier, startDate: LocalDate, payment: Price, card: PaymentCard)
 
@@ -57,4 +60,29 @@ object PaidToPaidUpgradeSummary {
 
     PaidToPaidUpgradeSummary(billingPeriod, currentSummary, targetSummary)
   }
+
+
+  implicit val currencyWrites = new Writes[Currency] {
+    override def writes(o: Currency): JsValue = JsString(o.glyph)
+  }
+
+  implicit val tierWrites = new Writes[PaidTier] {
+    override def writes(o: PaidTier): JsValue = JsString(o.name)
+  }
+
+  implicit val paymentCardWrites = Json.writes[PaymentCard]
+  implicit val priceWrites = Json.writes[Price]
+
+  implicit val billingPeriodWrites = new Writes[BillingPeriod] {
+    override def writes(o: BillingPeriod): JsValue = JsString(o.noun)
+  }
+
+  implicit val currentSummaryWrites = Json.writes[CurrentSummary]
+  implicit val targetSummaryWrites = Json.writes[TargetSummary]
+
+  implicit val summaryWrites: Writes[PaidToPaidUpgradeSummary] = (
+    (JsPath \ "billingPeriod").write[BillingPeriod] and
+      (JsPath \ "currentSummary").write[CurrentSummary] and
+      (JsPath \ "targetSummary").write[TargetSummary]
+    )(unlift(PaidToPaidUpgradeSummary.unapply))
 }

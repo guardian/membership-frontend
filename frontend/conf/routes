@@ -83,6 +83,7 @@ GET            /tier/change/friend                    controllers.TierController
 POST           /tier/change/friend                    controllers.TierController.downgradeToFriendConfirm
 GET            /tier/change/friend/summary            controllers.TierController.downgradeToFriendSummary
 GET            /tier/change/:tier                     controllers.TierController.upgrade(tier: PaidTier)
+GET            /tier/preview/:tier                    controllers.TierController.upgradePreview(tier: PaidTier, promoCode: Option[PromoCode])
 POST           /tier/change/:tier                     controllers.TierController.upgradeConfirm(tier: PaidTier)
 GET            /tier/change/:tier/summary             controllers.TierController.upgradeThankyou(tier: PaidTier)
 

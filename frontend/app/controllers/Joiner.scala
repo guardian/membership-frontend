@@ -82,7 +82,7 @@ object Joiner extends Controller with ActivityTracking
 
     userSignedIn match {
       case Some(user) => for {
-        fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
+        fullUser <- IdentityService(IdentityApi).getFullUserDetails(user)(IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
