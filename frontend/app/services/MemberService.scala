@@ -161,7 +161,13 @@ class MemberService(identityService: IdentityService,
       customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
       paymentResult <- createPaymentMethod(friend.contact, customer).liftM
       subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
-    } yield friend.contact).run
+    } yield {
+      track(MemberActivity("upgradeMembership", MemberData(
+        friend.contact.salesforceContactId,
+        friend.contact.identityId,
+        newTier)), friend.contact)
+      salesforceService.metrics.putUpgrade(newTier)
+      friend.contact}).run
 
   }
 
@@ -176,7 +182,13 @@ class MemberService(identityService: IdentityService,
         customerOpt = None,
         campaignCode = code
       ))
-    } yield memberId).run
+    } yield {
+      track(MemberActivity("upgradeMembership", MemberData(
+        sub.contact.salesforceContactId,
+        sub.contact.identityId,
+        sub.subscription.plan.tier)), sub.contact)
+      salesforceService.metrics.putUpgrade(newTier)
+      memberId}).run
 
   override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
@@ -195,7 +207,7 @@ class MemberService(identityService: IdentityService,
       salesforceService.metrics.putDowngrade(subscriber.subscription.plan.tier)
       track(
         MemberActivity(
-          "downgradeMembership",
+          "upgradeMembership",
           MemberData(
             salesforceContactId = subscriber.contact.salesforceContactId,
             identityId = subscriber.contact.identityId,
