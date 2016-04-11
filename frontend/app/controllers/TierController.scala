@@ -3,7 +3,6 @@ package controllers
 import actions.BackendProvider
 import com.gu.membership.{PaidMembershipPlans, MembershipCatalog}
 import com.gu.memsub.promo.PromoCode
-import controllers._
 import services.api.MemberService.{PendingAmendError, MemberError, NoCardError}
 import services.{IdentityApi, IdentityService}
 import com.gu.i18n.CountryGroup
@@ -11,7 +10,7 @@ import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
 import com.gu.memsub.Subscriber.{PaidMember, FreeMember}
 import com.gu.memsub._
-import com.gu.memsub.{BillingPeriod, Membership, PaymentCard, ProductFamily}
+import com.gu.memsub.BillingPeriod
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -27,12 +26,9 @@ import play.filters.csrf.CSRF.Token.getToken
 import tracking.ActivityTracking
 import utils.{TierChangeCookies, CampaignCode}
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
-import scalaz.std.scalaFuture._
-import scalaz.syntax.std.option._
-import scala.concurrent.Future
 import scala.language.implicitConversions
-import scalaz.{OptionT, EitherT, \/}
-import scala.concurrent.{ExecutionContext, Future}
+import scalaz.EitherT
+import scala.concurrent.Future
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._

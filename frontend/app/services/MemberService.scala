@@ -1,7 +1,7 @@
 package services
 
 import com.gu.config.DiscountRatePlanIds
-import com.gu.i18n.{CountryGroup, Country, Currency}
+import com.gu.i18n.{CountryGroup, Currency}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
@@ -153,15 +153,15 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  override def upgradeFreeSubscription(friend: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      sub <- EitherT(subOrPendingAmendError(subscriber.subscription))
+      sub <- EitherT(subOrPendingAmendError(friend.subscription))
       _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
-      customer <- stripeService.Customer.create(subscriber.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(subscriber.contact, customer).liftM
-      subRes <- createPaidSubscription(subscriber.contact,form,NameForm(subscriber.contact.firstName.getOrElse(""),subscriber.contact.lastName),newTier,customer,campaignCode).liftM
-    } yield subscriber.contact).run
+      customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
+      paymentResult <- createPaymentMethod(friend.contact, customer).liftM
+      subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
+    } yield friend.contact).run
 
   }
 
