@@ -160,7 +160,7 @@ class MemberService(identityService: IdentityService,
       _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
       customer <- stripeService.Customer.create(subscriber.contact.identityId, form.payment.token).liftM
       paymentResult <- createPaymentMethod(subscriber.contact, customer).liftM
-      subRes <- createPaidSubscription(subscriber.contact,form,NameForm(subscriber.contact.firstName.getOrElse(""),subscriber.contact.lastName),newTier,customer,campaignCode)
+      subRes <- createPaidSubscription(subscriber.contact,form,NameForm(subscriber.contact.firstName.getOrElse(""),subscriber.contact.lastName),newTier,customer,campaignCode).liftM
     } yield subscriber.contact).run
 
   }
@@ -389,7 +389,7 @@ class MemberService(identityService: IdentityService,
     val subscribe = zuoraService.getFeatures map { features =>
 
       val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
-      val planId = joinData.planChoice.productRatePlanId
+      val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
 

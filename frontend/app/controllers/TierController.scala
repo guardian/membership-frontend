@@ -37,6 +37,9 @@ import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.\/
+import views.support.Pricing._
+
+
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -127,8 +130,9 @@ object TierController extends Controller with ActivityTracking
     val sub = request.subscriber.subscription
     val stripeKey = Some(stripeService.publicKey)
     val currency = sub.currency
-    val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
     val targetPlans = c.findPaid(target)
+    val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
+    val countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, currency)
 
     val identityUserFieldsF =
       IdentityService(IdentityApi)
@@ -150,7 +154,7 @@ object TierController extends Controller with ActivityTracking
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
-          countriesWithCurrency,
+          countriesWithCurrencies,
           privateFields,
           pageInfo(privateFields, BillingPeriod.year)
         )(getToken, request))
