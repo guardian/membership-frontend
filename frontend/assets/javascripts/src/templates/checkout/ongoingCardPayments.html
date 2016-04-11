@@ -1,5 +1,15 @@
 <h3 class="credit-card-note__header">Ongoing payments</h3>
 <p>
+<% if (billingPeriods[billingPeriod].discount > 0 && billingPeriods[billingPeriod].discountDurationMonths > 0) { %>
+    <% if (billingPeriod === 'annual') { %>
+        Your card will be charged <%= billingPeriods[billingPeriod].generateChargeAmount() %> for your first year, then <%= billingPeriods[billingPeriod].getOriginalChargeAmount() %> every year thereafter.
+        Payments will taken on or shortly after the <%= ongoingCardPayments[billingPeriod] %> each year.
+    <% } else { %>
+        Your card will be charged <%= billingPeriods[billingPeriod].generateChargeAmount() %> every month for <%= billingPeriods[billingPeriod].discountDurationMonths %> months, then <%= billingPeriods[billingPeriod].getOriginalChargeAmount() %> every month thereafter.
+        Payments will taken on or shortly after the <%= ongoingCardPayments[billingPeriod] %> each month.
+    <% } %>
+<% } else { %>
     Your card will be charged <%= billingPeriods[billingPeriod].generateChargeAmount() %> every <%= billingPeriods[billingPeriod].noun %>.
-    Payments will taken on or shortly after the <%= ongoingCardPayments[billingPeriod] %> every <%= billingPeriods[billingPeriod].noun %>.
+    Payments will taken on or shortly after the <%= ongoingCardPayments[billingPeriod] %> each <%= billingPeriods[billingPeriod].noun %>.
+<% } %>
 </p>

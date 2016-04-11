@@ -185,7 +185,7 @@ object Config {
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerYearly
       )),
-      campaignName = "Become a Partner for just £99/year",
+      campaignName = "Become a Guardian Partner for just £99",
       codes = PromoCodeSet(PromoCode("PARTNER99")),
       description = "",
       expires = new LocalDate(2016,4,30).toDateTime(LocalTime.Midnight, timezone),

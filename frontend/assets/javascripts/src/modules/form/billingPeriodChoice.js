@@ -29,7 +29,9 @@ define(
         function reset() {
             if (billingPeriods) {
                 billingPeriods.annual.discount = 0;
+                billingPeriods.annual.discountDurationMonths = 0;
                 billingPeriods.monthly.discount = 0;
+                billingPeriods.monthly.discountDurationMonths = 0;
                 billingPeriods.choices.forEach(function (choice) {
                     choice.classes = [];
                     choice.promoted = false;

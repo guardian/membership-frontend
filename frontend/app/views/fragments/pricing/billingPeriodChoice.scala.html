@@ -45,13 +45,21 @@
                 'NULL':'' @for(pricing <- plans.allPricing) {, '@pricing.currency': '@pricing.savingInfo.getOrElse("")' }
             },
             generateChargeAmount: function() {
-                return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
+                var discountPercentageOfYear = (this.discountDurationMonths / 12) || 1;
+                var yearProRatedDiscount = this.discount * discountPercentageOfYear;
+                return formattedDiscountedCharge(checkoutForm.currency, this.amount, yearProRatedDiscount);
+            },
+            getOriginalChargeAmount: function() {
+                return formattedDiscountedCharge(checkoutForm.currency, this.amount, 0);
             },
             generateDisplayAmount: function() {
-                return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
+                var percentageOfYear = (this.discountDurationMonths / 12) || 1;
+                var yearProRatedDiscount = this.discount * percentageOfYear;
+                return formattedDiscountedPrice(checkoutForm.currency, this.amount, yearProRatedDiscount);
             },
             noun: '@year.noun',
-            discount: 0
+            discount: 0,
+            discountDurationMonths: 0
         },
         monthly: {
             amount: {
@@ -63,11 +71,15 @@
             generateChargeAmount: function() {
                 return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
             },
+            getOriginalChargeAmount: function() {
+                return formattedDiscountedCharge(checkoutForm.currency, this.amount, 0);
+            },
             generateDisplayAmount: function() {
                 return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
             },
             noun: '@month.noun',
-            discount: 0
+            discount: 0,
+            discountDurationMonths: 0
         },
         choices: []
     };
@@ -79,15 +91,23 @@
                 var annual = checkoutForm.billingPeriods.annual,
                     currency = checkoutForm.currency,
                     notes = [];
-                if (!this.promoted) {
-                    notes.unshift(checkoutForm.billingPeriods.annual.savingInfo[currency]);
+                if (this.promoted) {
+                    if(annual.discountDurationMonths > 0) {
+                        notes.unshift(formattedDiscountedPrice(checkoutForm.currency, annual.amount, 0) + '/year thereafter');
+                    }
+                } else {
+                    notes.unshift(annual.savingInfo[currency]);
                 }
                 return notes;
             },
             generateDisplayAmount: function() {
-                return checkoutForm.billingPeriods.annual.generateDisplayAmount();
+                var annual = checkoutForm.billingPeriods.annual,
+                    suffix = '/year';
+                if (this.promoted && annual.discountDurationMonths > 0) {
+                    suffix = ' this year';
+                }
+                return annual.generateDisplayAmount() + suffix;
             },
-            headerSuffix: '/@year.noun',
             inputId: '@plans.year.productRatePlanId.get',
             inputValue: '@year.adjective',
             promoted: false
@@ -95,18 +115,18 @@
         {
             classes: [],
             generateNotes: function() {
-                var currency = checkoutForm.currency,
-                    monthly = checkoutForm.billingPeriods.monthly;
+                var monthly = checkoutForm.billingPeriods.monthly,
+                    currency = checkoutForm.currency,
+                    discountPercentageOfYear = (monthly.discountDurationMonths / 12) || 1,
+                    yearProRatedDiscount = monthly.discount * discountPercentageOfYear;
                 return [
-                    formattedDiscountedPrice(currency, monthly.amount, monthly.discount) + ' per month (' +
-                    formattedDiscountedPrice(currency, monthly.yearlyMonthlyAmount, monthly.discount) + ' per year)',
+                    '(' + formattedDiscountedPrice(currency, monthly.yearlyMonthlyAmount, yearProRatedDiscount) + ' per year)',
                     '1 year membership, pay in instalments over a year'
                 ];
             },
             generateDisplayAmount: function() {
-                return checkoutForm.billingPeriods.monthly.generateDisplayAmount();
+                return checkoutForm.billingPeriods.monthly.generateDisplayAmount() + '/month';
             },
-            headerSuffix: '/@month.noun',
             inputId: '@plans.month.productRatePlanId.get',
             inputValue: '@month.adjective',
             promoted: false
