@@ -116,7 +116,7 @@ class MemberService(identityService: IdentityService,
           for {
             customer <- stripeService.Customer.create(user.id, paid.payment.token)
             cId <- createContact
-            subscription <- createPaidSubscription(cId, paid, customer, campaignCode)
+            subscription <- createPaidSubscription(cId, paid, paid.name, paid.tier, customer, campaignCode)
             updatedMember <- salesforceService.updateMemberStatus(user, tier, Some(customer))
           } yield cId
         case _ =>
@@ -156,17 +156,13 @@ class MemberService(identityService: IdentityService,
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(sub.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(sub.contact, customer).liftM
-      memberId <- EitherT(upgradeSubscription(
-        sub.subscription,
-        contact = sub.contact,
-        planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
-        form = form,
-        customerOpt = Some(customer),
-        campaignCode = code
-      ))
-    } yield memberId).run
+      sub <- EitherT(subOrPendingAmendError(subscriber.subscription))
+      _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
+      customer <- stripeService.Customer.create(subscriber.contact.identityId, form.payment.token).liftM
+      paymentResult <- createPaymentMethod(subscriber.contact, customer).liftM
+      subRes <- createPaidSubscription(subscriber.contact,form,NameForm(subscriber.contact.firstName.getOrElse(""),subscriber.contact.lastName),newTier,customer,campaignCode)
+    } yield subscriber.contact).run
+
   }
 
   override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
@@ -384,12 +380,15 @@ class MemberService(identityService: IdentityService,
   implicit private def features = zuoraService.getFeatures
 
   override def createPaidSubscription(contactId: ContactId,
-                                      joinData: PaidMemberJoinForm,
+                                      joinData: PaidMemberForm,
+                                      nameData: NameForm,
+                                      tier: PaidTier,
                                       customer: Stripe.Customer,
                                       campaignCode: Option[CampaignCode]): Future[SubscribeResult] = {
 
     val subscribe = zuoraService.getFeatures map { features =>
 
+      val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
       val planId = joinData.planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
@@ -398,10 +397,10 @@ class MemberService(identityService: IdentityService,
               paymentMethod = CreditCardReferenceTransaction(customer.card.id, customer.id).some,
               address = joinData.zuoraAccountAddress,
               ratePlans = NonEmptyList(plan),
-              name = joinData.name)
+              name = nameData)
     }
 
-    subscribe.map(promoService.applyPromotion(_, joinData.suppliedPromoCode, joinData.zuoraAccountAddress.country.some))
+    subscribe.map(promoService.applyPromotion(_, joinData.promoCode, joinData.zuoraAccountAddress.country.some))
              .flatMap(zuoraService.createSubscription)
   }
 
