@@ -12,7 +12,8 @@ define(
         'use strict';
 
         var $PROMO_CODE_INPUT = $('#promo-code'),
-            $COUNTRY_SELECT = $('.js-country'),
+            $DELIVERY_COUNTRY_SELECT = $('#country-deliveryAddress'),
+            $BILLING_COUNTRY_SELECT = $('#country-billingAddress'),
             $TIER_ELEMENT = $('input[name="tier"]'),
             $APPLY_BUTTON = $('.js-promo-code-validate'),
             $FEEDBACK_CONTAINER = $('.js-promo-feedback-container');
@@ -79,7 +80,7 @@ define(
                 url: '/lookupPromotion',
                 data: {
                     promoCode: trimmedCode,
-                    country: $COUNTRY_SELECT.val(),
+                    country: $DELIVERY_COUNTRY_SELECT.val(),
                     tier: $TIER_ELEMENT.val()
                 }
             })
@@ -101,8 +102,11 @@ define(
                     return;
                 }
                 // revalidate the code if we change / click stuff
-                if ($COUNTRY_SELECT.length > 0) {
-                    bean.on($COUNTRY_SELECT[0], 'change', validatePromoCode);
+                if ($DELIVERY_COUNTRY_SELECT.length > 0) {
+                    bean.on($DELIVERY_COUNTRY_SELECT[0], 'change', validatePromoCode);
+                }
+                if ($BILLING_COUNTRY_SELECT.length > 0) {
+                    bean.on($BILLING_COUNTRY_SELECT[0], 'change', validatePromoCode);
                 }
                 if ($APPLY_BUTTON.length > 0) {
                     bean.on($APPLY_BUTTON[0], 'click', validatePromoCode);

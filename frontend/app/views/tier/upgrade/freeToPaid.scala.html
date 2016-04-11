@@ -69,7 +69,6 @@
 
                   <div class="form-group">
                       <h2 class="form-group__title">Billing</h2>
-                      @fragments.form.paymentOptions(targetPlans)
                       @fragments.form.billingAddress("Billing address")
                       @fragments.form.addressDetail(
                           countriesWithCurrencies = countriesWithCurrency,
@@ -83,6 +82,7 @@
                           postcode = userFields.billingPostcode,
                           county = userFields.billingAddress4
                       )
+                      @fragments.form.paymentOptions(targetPlans)
                       @fragments.form.cardDetail(targetPlans)
                   </div>
 
