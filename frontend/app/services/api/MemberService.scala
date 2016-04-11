@@ -4,6 +4,7 @@ import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.Subscription.{Plan, Paid, ProductRatePlanId}
 import com.gu.memsub._
+import com.gu.memsub.promo.PromoCode
 import com.gu.salesforce.{ContactId, PaidTier}
 import com.gu.services.model.BillingSchedule
 import com.gu.stripe.Stripe
@@ -12,7 +13,7 @@ import controllers.IdentityRequest
 import forms.MemberForm.{FreeMemberChangeForm, JoinForm, PaidMemberChangeForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
-import model.GenericSFContact
+import model.{PlanChoice, GenericSFContact}
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
@@ -28,22 +29,16 @@ trait MemberService {
                    fromEventId: Option[String],
                    campaignCode: Option[CampaignCode]): Future[ContactId]
 
-  def previewUpgradeSubscription(subscription: Subscription with Paid,
-                                 newPlanId: ProductRatePlanId): Future[MemberError \/ BillingSchedule]
+  def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[PromoCode])
+                                (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
-  def upgradeFreeSubscription(subscriber: FreeMember,
-                              newTier: PaidTier,
-                              form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest,
-                              campaignCode: Option[CampaignCode]): Future[MemberError \/ ContactId]
+  def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+                             (implicit identity: IdentityRequest): Future[MemberError \/ ContactId]
 
   def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit]
 
-  def upgradePaidSubscription(subscriber: PaidMember,
-                              newTier: PaidTier,
-                              form: PaidMemberChangeForm,
-                              identityRequest: IdentityRequest,
-                              campaignCode: Option[CampaignCode]): Future[MemberError \/ContactId]
+  def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
+                             (implicit id: IdentityRequest): Future[MemberError \/ ContactId]
 
   def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
 
@@ -83,5 +78,8 @@ object MemberService {
   }
   case class PendingAmendError(name: Subscription.Name) extends MemberError {
     override def getMessage = s"Subscription ${name.get} already has a pending amend"
+  }
+  case class NoCardError(name: Subscription.Name) extends MemberError {
+    override def getMessage = s"Subscription ${name.get} has no card"
   }
 }

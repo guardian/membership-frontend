@@ -187,7 +187,7 @@ object Config {
       campaignName = "Become a Partner for just £99/year",
       codes = PromoCodeSet(PromoCode("PARTNER99")),
       description = "",
-      expires = DateTime.parse("2016-04-01T01:00:00Z"),
+      expires = DateTime.parse("2017-04-01T01:00:00Z"),
       imageUrl = None,
       promotionType = PercentDiscount(
         durationMonths = None,
