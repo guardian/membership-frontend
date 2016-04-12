@@ -9,6 +9,7 @@
 @import com.gu.memsub.{Status, Current}
 @import com.gu.membership.PaidMembershipPlans
 @import com.gu.salesforce.PaidTier
+@import com.gu.memsub.promo.PromoCode
 
 @import com.gu.membership.MembershipCatalog
 @import views.support.PaidPlans
@@ -16,20 +17,21 @@
   targetPlans: PaidMembershipPlans[Current, PaidTier],
   countriesWithCurrency: List[CountryWithCurrency],
   userFields: com.gu.identity.play.PrivateFields,
-  pageInfo: PageInfo
+  pageInfo: PageInfo,
+  promoCode: Option[PromoCode]
 )(implicit token: csrf.CSRF.Token, request: RequestHeader)
 
 @import views.html.helper._
 
 @main("Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name, pageInfo = pageInfo) {
       <main role="main" class="page-content l-constrained">
-          <form action="@routes.TierController.upgrade(targetPlans.tier)" method="POST" id="payment-form"
+          <form action="@routes.TierController.upgrade(targetPlans.tier, None)" method="POST" id="payment-form"
           class="js-form" data-change-to-tier="@targetPlans.tier.name">
               @CSRF.formField
-
+              <input type="hidden" name="tier" disabled value="@targetPlans.tier.slug"/>
           <section class="page-header">
               <h1 class="page-headline">Become a @targetPlans.tier.name</h1>
-              <p class="page-intro"> Join as an annual Partner or Patron Member and get 2 months free</p>
+              <p class="page-intro">Support the independence of the Guardian and our award-winning journalism</p>
           </section>
 
           <section class="form-section form-section--no-padding">
@@ -65,6 +67,11 @@
                           postcode = userFields.postcode,
                           county = userFields.address4
                       )
+                  </div>
+
+                  <div class="form-group">
+                      <h2 class="form-group__title">Promotion</h2>
+                      @fragments.form.promoCode(promoCode)
                   </div>
 
                   <div class="form-group">

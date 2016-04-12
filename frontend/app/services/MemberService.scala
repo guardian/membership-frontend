@@ -1,7 +1,7 @@
 package services
 
 import com.gu.config.DiscountRatePlanIds
-import com.gu.i18n.{CountryGroup, Country, Currency}
+import com.gu.i18n.{CountryGroup, Currency}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
@@ -116,7 +116,7 @@ class MemberService(identityService: IdentityService,
           for {
             customer <- stripeService.Customer.create(user.id, paid.payment.token)
             cId <- createContact
-            subscription <- createPaidSubscription(cId, paid, customer, campaignCode)
+            subscription <- createPaidSubscription(cId, paid, paid.name, paid.tier, customer, campaignCode)
             updatedMember <- salesforceService.updateMemberStatus(user, tier, Some(customer))
           } yield cId
         case _ =>
@@ -153,20 +153,22 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  override def upgradeFreeSubscription(friend: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(sub.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(sub.contact, customer).liftM
-      memberId <- EitherT(upgradeSubscription(
-        sub.subscription,
-        contact = sub.contact,
-        planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
-        form = form,
-        customerOpt = Some(customer),
-        campaignCode = code
-      ))
-    } yield memberId).run
+      sub <- EitherT(subOrPendingAmendError(friend.subscription))
+      _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
+      customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
+      paymentResult <- createPaymentMethod(friend.contact, customer).liftM
+      subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
+    } yield {
+      track(MemberActivity("upgradeMembership", MemberData(
+        friend.contact.salesforceContactId,
+        friend.contact.identityId,
+        newTier)), friend.contact)
+      salesforceService.metrics.putUpgrade(newTier)
+      friend.contact}).run
+
   }
 
   override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
@@ -180,7 +182,13 @@ class MemberService(identityService: IdentityService,
         customerOpt = None,
         campaignCode = code
       ))
-    } yield memberId).run
+    } yield {
+      track(MemberActivity("upgradeMembership", MemberData(
+        sub.contact.salesforceContactId,
+        sub.contact.identityId,
+        sub.subscription.plan.tier)), sub.contact)
+      salesforceService.metrics.putUpgrade(newTier)
+      memberId}).run
 
   override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
@@ -199,7 +207,7 @@ class MemberService(identityService: IdentityService,
       salesforceService.metrics.putDowngrade(subscriber.subscription.plan.tier)
       track(
         MemberActivity(
-          "downgradeMembership",
+          "upgradeMembership",
           MemberData(
             salesforceContactId = subscriber.contact.salesforceContactId,
             identityId = subscriber.contact.identityId,
@@ -384,13 +392,16 @@ class MemberService(identityService: IdentityService,
   implicit private def features = zuoraService.getFeatures
 
   override def createPaidSubscription(contactId: ContactId,
-                                      joinData: PaidMemberJoinForm,
+                                      joinData: PaidMemberForm,
+                                      nameData: NameForm,
+                                      tier: PaidTier,
                                       customer: Stripe.Customer,
                                       campaignCode: Option[CampaignCode]): Future[SubscribeResult] = {
 
     val subscribe = zuoraService.getFeatures map { features =>
 
-      val planId = joinData.planChoice.productRatePlanId
+      val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
+      val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
 
@@ -398,10 +409,10 @@ class MemberService(identityService: IdentityService,
               paymentMethod = CreditCardReferenceTransaction(customer.card.id, customer.id).some,
               address = joinData.zuoraAccountAddress,
               ratePlans = NonEmptyList(plan),
-              name = joinData.name)
+              name = nameData)
     }
 
-    subscribe.map(promoService.applyPromotion(_, joinData.suppliedPromoCode, joinData.zuoraAccountAddress.country.some))
+    subscribe.map(promoService.applyPromotion(_, joinData.promoCode, joinData.zuoraAccountAddress.country.some))
              .flatMap(zuoraService.createSubscription)
   }
 
