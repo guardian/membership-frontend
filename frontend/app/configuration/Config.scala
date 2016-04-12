@@ -188,7 +188,7 @@ object Config {
       campaignName = "Become a Guardian Partner for just £99",
       codes = PromoCodeSet(PromoCode("PARTNER99")),
       description = "",
-      expires = new LocalDate(2016,4,30).toDateTime(LocalTime.Midnight, timezone),
+      expires = new LocalDate(2016,5,1).toDateTime(LocalTime.Midnight, timezone),
       imageUrl = None,
       promotionType = PercentDiscount(
         durationMonths = Some(12),
