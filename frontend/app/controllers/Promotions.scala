@@ -2,27 +2,24 @@ package controllers
 
 
 import actions.RichAuthRequest
-
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
-import com.gu.memsub.{Month, Year, BillingPeriod}
+import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.Promotion.AnyPromotion
 import com.gu.memsub.promo.Writers._
-import com.gu.memsub.promo._
+import com.gu.memsub.promo.{InvalidProductRatePlan, _}
+import com.gu.memsub.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
+import com.netaporter.uri.dsl._
 import model._
 import play.api.libs.json._
-import play.api.mvc.{Result, Controller}
-import play.mvc.Results.Redirect
+import play.api.mvc.{Controller, Result}
+import services.PromoSessionService._
 import services.TouchpointBackend
 import views.support.PageInfo
-import scalaz.syntax.either._
-import scalaz.{Monad, \/}
-import scalaz.syntax.std.option._
-import services.PromoSessionService._
-import com.gu.memsub.Subscription.ProductRatePlanId
-import com.gu.memsub.promo.InvalidProductRatePlan
 
+import scalaz.syntax.std.option._
+import scalaz.{Monad, \/}
 
 object Promotions extends Controller {
 
@@ -94,9 +91,8 @@ object Promotions extends Controller {
       }
 
     val promoCode = PromoCode(promoCodeStr)
-    val notFound = NotFound(views.html.error404())
+    val notFound = Redirect("/" ? ("INTCMP" -> s"FROM_P_${promoCode.get}"))
     val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
-
 
     type ResultDisjunction[A] = \/[Result,A]
     def failWhen(a:Boolean,b:Result) = Monad[ResultDisjunction].whenM(a)(\/.left(b))
