@@ -3,14 +3,15 @@ package controllers
 import actions.BackendProvider
 import com.gu.membership.{PaidMembershipPlans, MembershipCatalog}
 import com.gu.memsub.promo.PromoCode
+import controllers._
 import services.api.MemberService.{PendingAmendError, MemberError, NoCardError}
-import services.{IdentityApi, IdentityService, PromoSessionService}
+import services.{IdentityApi, IdentityService}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
 import com.gu.memsub.Subscriber.{PaidMember, FreeMember}
 import com.gu.memsub._
-import com.gu.memsub.BillingPeriod
+import com.gu.memsub.{BillingPeriod, Membership, PaymentCard, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -26,14 +27,16 @@ import play.filters.csrf.CSRF.Token.getToken
 import tracking.ActivityTracking
 import utils.{TierChangeCookies, CampaignCode}
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
-import scala.language.implicitConversions
-import scalaz.EitherT
+import scalaz.std.scalaFuture._
+import scalaz.syntax.std.option._
 import scala.concurrent.Future
+import scala.language.implicitConversions
+import scalaz.{OptionT, EitherT, \/}
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.\/
-import views.support.Pricing._
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -118,15 +121,14 @@ object TierController extends Controller with ActivityTracking
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)).run
   }
 
-  def upgrade(target: PaidTier, promoCode: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
+  def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
     val stripeKey = Some(stripeService.publicKey)
     val currency = sub.currency
+    val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
     val targetPlans = c.findPaid(target)
-    val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
-    val countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, currency)
 
     val identityUserFieldsF =
       IdentityService(IdentityApi)
@@ -148,10 +150,9 @@ object TierController extends Controller with ActivityTracking
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
-          countriesWithCurrencies,
+          countriesWithCurrency,
           privateFields,
-          pageInfo(privateFields, BillingPeriod.year),
-          promoCode orElse PromoSessionService.codeFromSession
+          pageInfo(privateFields, BillingPeriod.year)
         )(getToken, request))
       )
     }, { paidSubscriber =>
@@ -176,7 +177,7 @@ object TierController extends Controller with ActivityTracking
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target,None))
+        Redirect(routes.TierController.upgrade(target))
           .flashing("error" ->
             s"That password does not match our records. Please try again.")
       }
