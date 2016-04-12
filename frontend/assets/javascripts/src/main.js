@@ -22,11 +22,11 @@ require([
     'src/modules/form/processSubmit',
     'src/modules/identityPopup',
     'src/modules/identityPopupDetails',
-    'es6!src/modules/comparisonTable',
+    'src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
-    'es6!src/modules/giraffe',
-    'es6!src/modules/paidToPaid'
+    'src/modules/giraffe',
+    'src/modules/paidToPaid'
 ], function(
     ajax,
     raven,

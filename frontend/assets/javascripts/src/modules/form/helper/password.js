@@ -57,7 +57,7 @@ define(function () {
              * Async load in zxcvbn lib as it is ~700kb!
              * Loads as an AMD module as of version ~3.5
              */
-            require(['zxcvbn'], function(zxcvbn) {
+            curl(['zxcvbn'], function(zxcvbn) {
                 addListeners(zxcvbn, strengthIndicator, strengthInput);
             });
         }

@@ -1,7 +1,7 @@
 import * as display from 'src/modules/form/validation/display'
 import * as helper from 'src/utils/helper'
 import * as ajax from 'ajax'
-import * as $ from '$'
+import $ from '$'
 
 const ACTIVE_CLASS = 'active';
 const AMOUNT_CLASS = 'js-amount';

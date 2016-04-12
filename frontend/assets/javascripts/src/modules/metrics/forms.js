@@ -75,7 +75,7 @@ define([
     function init() {
         var formAction;
 
-        if (window.ga && formUtil) {
+        if (window.ga && typeof formUtil.elems != 'undefined') {
 
             formAction = formUtil.elem.getAttribute('action');
 

@@ -5,7 +5,7 @@ define(function() {
     var KRUX_ID = 'JglooLwn';
 
     function init() {
-        require(['js!https://cdn.krxd.net/controltag?confid=' + KRUX_ID]).then(null, function(err) {
+        curl(['js!https://cdn.krxd.net/controltag?confid=' + KRUX_ID]).then(null, function(err) {
             Raven.captureException(err);
         });
     }

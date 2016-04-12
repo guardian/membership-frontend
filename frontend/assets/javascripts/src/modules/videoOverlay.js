@@ -61,7 +61,7 @@ define(function() {
 
     function init() {
         if (playerEls.length) {
-            require(['js!//www.youtube.com/iframe_api?noext']);
+            curl(['js!//www.youtube.com/iframe_api?noext']);
         }
     }
 

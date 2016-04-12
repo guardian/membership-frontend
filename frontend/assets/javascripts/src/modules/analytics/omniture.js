@@ -9,7 +9,7 @@ define([
     var MEMBERSHIP_STRING = 'Membership';
 
     function init() {
-        require('js!omniture').then(onSuccess, function(e) {
+        curl('js!omniture').then(onSuccess, function(e) {
             Raven.captureException(e, {tags: { level: 'info' }});
         });
     }

@@ -71,7 +71,7 @@ define([
 
     var init = function () {
 
-        if (form) {
+        if (typeof form.elems != 'undefined') {
             validation.init();
             address.init();
             password.init();
@@ -82,7 +82,7 @@ define([
             promoCode.init();
 
             if (form.hasPayment) {
-                require('js!stripe').then(function() {
+                curl('js!stripe').then(function() {
                     payment.init();
                 });
             }

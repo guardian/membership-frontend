@@ -1,4 +1,4 @@
-/* global module: false, process: false */
+    /* global module: false, process: false */
 module.exports = function (grunt) {
     'use strict';
 
@@ -43,6 +43,27 @@ module.exports = function (grunt) {
                 bookmarklets: '<%= dirs.assets.root %>/bookmarklets',
                 javascripts: '<%= dirs.assets.root %>/javascripts',
                 images: '<%= dirs.assets.root %>/images'
+            }
+        },
+
+        /***********************************************************************
+         * Webpack
+         ***********************************************************************/
+
+        webpack: {
+            options: require('./webpack.conf.js')(isDev),
+            frontend: {
+                output: {
+                    path: 'public/',
+                    chunkFilename:  'webpack/[chunkhash].js',
+                    filename: "javascripts/[name].js",
+                    publicPath: '/assets/'
+                },
+
+                entry: {
+                    main: "./src/main",
+                    tools: './src/tools'
+                }
             }
         },
 
@@ -99,53 +120,6 @@ module.exports = function (grunt) {
             dist: { src: '<%= dirs.publicDir.stylesheets %>/*.css' }
         },
 
-        requirejs: {
-            compile: {
-                options: {
-                    name: 'src/main',
-                    baseUrl: '<%= dirs.assets.javascripts %>',
-                    // Keep these in sync with the paths found in the karma test-main.js paths
-                    paths: {
-                        '$': 'src/utils/$',
-                        'lodash': 'lib/bower-components/lodash-amd/modern',
-                        'bean': 'lib/bower-components/bean/bean',
-                        'bonzo': 'lib/bower-components/bonzo/bonzo',
-                        'qwery': 'lib/bower-components/qwery/qwery',
-                        'reqwest': 'lib/bower-components/reqwest/reqwest',
-                        'respimage': 'lib/bower-components/respimage/respimage',
-                        'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
-                        'raven': 'lib/bower-components/raven-js/dist/raven',
-                        'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
-                        'smoothScroll': 'lib/bower-components/smooth-scroll/dist/js/smooth-scroll',
-                        'ajax': 'src/utils/ajax',
-                        'text':'lib/bower-components/requirejs-text/text',
-                        'es6': "../../node_modules/requirejs-babel/es6",
-                        'babel': "../../node_modules/requirejs-babel/babel-5.8.34.min",
-                    },
-                    stubModules: ['babel', 'es6'],
-                    findNestedDependencies: false,
-                    wrapShim: true,
-                    optimize: isDev ? 'none' : 'uglify2',
-                    generateSourceMaps: true,
-                    preserveLicenseComments: false,
-                    waitSeconds: 120,
-                    out: '<%= dirs.publicDir.javascripts %>/main.js'
-                }
-            },
-            compileTools: {
-                options: {
-                    name: 'src/tools',
-                    baseUrl: '<%= dirs.assets.javascripts %>',
-                    findNestedDependencies: false,
-                    wrapShim: true,
-                    optimize: isDev ? 'none' : 'uglify2',
-                    generateSourceMaps: true,
-                    preserveLicenseComments: false,
-                    out: '<%= dirs.publicDir.javascripts %>/tools.js'
-                }
-            }
-        },
-
         /***********************************************************************
          * Copy & Clean
          ***********************************************************************/
@@ -163,8 +137,14 @@ module.exports = function (grunt) {
                 src: '<%= dirs.assets.javascripts %>/lib/polyfills.min.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/polyfills.min.js'
             },
+            bundles: {
+                src: '<%= dirs.publicDir.root %>/bundles/*.js',
+                dest: '<%= dirs.publicDir.root %>/dist/javascripts/bundles/',
+                expand: true,
+                flatten: true
+            },
             curl: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/curl/dist/curl-with-js-and-domReady/curl.js',
+                src: 'node_modules/curl-amd/dist/curl-with-js-and-domReady/curl.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/curl/',
                 expand: true,
                 flatten: true
@@ -208,6 +188,7 @@ module.exports = function (grunt) {
 
         clean: {
             bookmarklets: ['<%= dirs.publicDir.bookmarklets %>'],
+            webpack: ['<%= dirs.publicDir.root %>/webpack'],
             js: ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
             icons: ['<%= dirs.assets.images %>/inline-svgs/*.svg'],
@@ -221,17 +202,33 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         watch: {
+            clean_assetMap:{
+                files: ['conf/assets.map'],
+                tasks: ['clean:assetMap'],
+                options: {
+                    atBegin: true
+                }
+            },
             compile_css: {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
-                tasks: ['compile:css']
+                tasks: ['compile:css'],
+                options: {
+                    atBegin: true
+                }
             },
             compile_js: {
                 files: ['<%= dirs.assets.javascripts %>/**/*.js'],
-                tasks: ['compile:js']
+                tasks: ['compile:js'],
+                options: {
+                    atBegin: true
+                }
             },
             compile_images: {
                 files: ['<%= dirs.assets.images %>/**/*'],
-                tasks: ['compile:images']
+                tasks: ['compile:images'],
+                options: {
+                    atBegin: true
+                }
             }
         },
 
@@ -381,8 +378,7 @@ module.exports = function (grunt) {
         }
         grunt.task.run([
             'clean:js',
-            'requirejs:compile',
-            'requirejs:compileTools',
+            'webpack',
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
@@ -434,6 +430,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('clean:public', [
         'clean:bookmarklets',
+        'clean:webpack',
         'clean:js',
         'clean:css',
         'clean:images',

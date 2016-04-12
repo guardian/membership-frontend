@@ -2,7 +2,7 @@ define([], function() {
     'use strict';
 
     function init() {
-        require('js!uet');
+        curl('js!uet');
     }
 
     return {
