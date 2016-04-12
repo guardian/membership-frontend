@@ -34,8 +34,14 @@ define(
             if (isDiscountPromotion(promotion)) {
                 promotion.appliesTo.productRatePlanIds.forEach(function(productRatePlanId) {
                     guardian.membership.checkoutForm.billingPeriods.choices.forEach(function(choice) {
+                        var billingPeriod = guardian.membership.checkoutForm.billingPeriods[choice.inputValue];
                         if (choice.inputId === productRatePlanId) {
-                            guardian.membership.checkoutForm.billingPeriods[choice.inputValue].discount = promotion.promotionType.amount;
+                            if (promotion.promotionType.amount) {
+                                billingPeriod.discount = promotion.promotionType.amount;
+                            }
+                            if (promotion.promotionType.durationMonths) {
+                                billingPeriod.discountDurationMonths = promotion.promotionType.durationMonths;
+                            }
                             choice.classes.push('pseudo-radio--promotion');
                             choice.promoted = true;
                         }

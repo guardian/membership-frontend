@@ -86,7 +86,9 @@ object Promotions extends Controller {
               url = url,
               description = Some(promotion.description)
             ),
-            pageImages
+            pageImages,
+            promoCode,
+            promotion
           ))
         case _ => None
       }

@@ -154,6 +154,7 @@ object Config {
   def discountRatePlanIds(env: String): DiscountRatePlanIds =
     DiscountRatePlanIds.fromConfig(config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds"))
 
+  val timezone = DateTimeZone.forID("Europe/London")
 
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
@@ -184,18 +185,18 @@ object Config {
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerYearly
       )),
-      campaignName = "Become a Partner for just £99/year",
+      campaignName = "Become a Guardian Partner for just £99",
       codes = PromoCodeSet(PromoCode("PARTNER99")),
       description = "",
-      expires = DateTime.parse("2017-04-01T01:00:00Z"),
+      expires = new LocalDate(2016,5,1).toDateTime(LocalTime.Midnight, timezone),
       imageUrl = None,
       promotionType = PercentDiscount(
-        durationMonths = None,
+        durationMonths = Some(12),
         amount = 33.557046979866
       ),
-      roundelHtml = "<h1 class=\"roundel__title\">Become a Partner or just £99/year</h1>\n<p class=\"roundel__description\">before 31 March 2016</p>",
-      title = "Become a Partner for just £99/year"
-    ).some.filter(_ => env != "PROD")
+      roundelHtml = "Join</br>as an annual Partner Member before 30 April 2016 and save</br>£50",
+      title = "Become a Guardian Partner for just £99"
+    ).some
   }
 
   object Implicits {
