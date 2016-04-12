@@ -51,12 +51,6 @@
 .global-header__logo__link {
     display: block;
 }
-.js-on .global-header__logo__image img {
-    visibility: hidden;
-}
-.global-header__logo__image img.is-loaded {
-    visibility: visible;
-}
 
 /* Header - In App
    ========================================================================== */

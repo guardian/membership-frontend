@@ -2,7 +2,6 @@ package model
 
 import views.support.Asset
 import play.api.libs.json._
-import scala.util.Random
 
 object SVG {
 
@@ -26,13 +25,11 @@ object SVG {
 
   object Logos {
 
-    val membersLogos = for(index <- 1 to 4) yield SVGImage(
+    val membersLogo = SVGImage(
       "Guardian Membership",
-      s"images/logos/brand/guardian-members-$index.svg",
+      s"images/logos/brand/guardian-members.svg",
       width=300, height=90
     )
-
-    val membersLogoRandom = Random.shuffle(membersLogos.toList).head
 
     val guardianLive = SVGImage(
       "Guardian Live",
