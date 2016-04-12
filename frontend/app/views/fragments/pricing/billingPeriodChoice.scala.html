@@ -93,7 +93,7 @@
                     notes = [];
                 if (this.promoted) {
                     if(annual.discountDurationMonths > 0) {
-                        notes.unshift("Then " + formattedDiscountedPrice(checkoutForm.currency, annual.amount, 0) + ' @year.adverb');
+                        notes.unshift('Then ' + formattedDiscountedPrice(checkoutForm.currency, annual.amount, 0) + ' @year.adverb');
                     }
                 } else {
                     notes.unshift(annual.savingInfo[currency]);
