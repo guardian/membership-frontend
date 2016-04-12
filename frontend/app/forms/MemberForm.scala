@@ -37,13 +37,6 @@ object MemberForm {
     val planChoice: PlanChoice
   }
 
-  trait PaidMemberForm {
-    val featureChoice: Set[FeatureChoice]
-    val zuoraAccountAddress : Address
-    val promoCode: Option[PromoCode]
-    val payment: PaymentForm
-  }
-
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String]) extends JoinForm {
     override val planChoice: FreePlanChoice = FreePlanChoice(friend)
@@ -53,6 +46,7 @@ object MemberForm {
                             password: Option[String]) extends JoinForm {
     override val planChoice: FreePlanChoice = FreePlanChoice(staff)
   }
+
 
   case class PaidMemberJoinForm(tier: PaidTier,
                                 name: NameForm,
@@ -64,8 +58,8 @@ object MemberForm {
                                 casId: Option[String],
                                 subscriberOffer: Boolean,
                                 featureChoice: Set[FeatureChoice],
-                                promoCode: Option[PromoCode]
-                               ) extends JoinForm with PaidMemberForm {
+                                suppliedPromoCode: Option[PromoCode]
+                               ) extends JoinForm {
 
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
     override val planChoice: PaidPlanChoice = PaidPlanChoice(tier, payment.billingPeriod)
@@ -88,9 +82,8 @@ object MemberForm {
                                   billingAddress: Option[Address],
                                   featureChoice: Set[FeatureChoice],
                                   promoCode: Option[PromoCode]
-                                  ) extends MemberChangeForm with PaidMemberForm {
+                                  ) extends MemberChangeForm {
     val addressDetails = Some(AddressDetails(deliveryAddress, billingAddress))
-    lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
   }
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)

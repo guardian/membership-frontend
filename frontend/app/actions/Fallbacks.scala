@@ -14,7 +14,7 @@ object Fallbacks {
     redirectTo(controllers.routes.FrontPage.welcome)
 
   def tierChangeEnterDetails(tier: PaidTier)(implicit req: RequestHeader) =
-    redirectTo(controllers.routes.TierController.upgrade(tier, None))
+    redirectTo(controllers.routes.TierController.upgrade(tier))
 
   def notYetAMemberOn(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)

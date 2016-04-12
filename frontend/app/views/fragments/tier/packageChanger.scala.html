@@ -8,7 +8,7 @@
 
 @actionPath = {
   @tierPlans match {
-        case PaidPlans(plans) => { @routes.TierController.upgrade(plans.tier, None) }
+        case PaidPlans(plans) => { @routes.TierController.upgrade(plans.tier) }
         case FreePlan(_) => { @routes.TierController.downgradeToFriend() }
     }
  }

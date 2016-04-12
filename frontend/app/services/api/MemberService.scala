@@ -4,14 +4,13 @@ import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.Subscription.{Plan, Paid, ProductRatePlanId}
 import com.gu.memsub._
-import com.gu.salesforce.{Tier, ContactId, PaidTier}
 import com.gu.memsub.promo.PromoCode
 import com.gu.salesforce.{ContactId, PaidTier}
 import com.gu.services.model.BillingSchedule
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
-import forms.MemberForm._
+import forms.MemberForm.{FreeMemberChangeForm, JoinForm, PaidMemberChangeForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{PlanChoice, GenericSFContact}
@@ -63,9 +62,7 @@ trait MemberService {
   def createEBCode(subscriber: Member, event: RichEvent): Future[Option[EBCode]]
 
   def createPaidSubscription(contactId: ContactId,
-                             joinData: PaidMemberForm,
-                             nameData: NameForm,
-                             tier: PaidTier,
+                             joinData: PaidMemberJoinForm,
                              customer: Stripe.Customer,
                              campaignCode: Option[CampaignCode]): Future[SubscribeResult]
 

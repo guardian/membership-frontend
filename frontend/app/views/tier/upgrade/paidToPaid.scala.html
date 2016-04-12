@@ -15,7 +15,7 @@
 
 @main("Upgrade to " + summary.target.tier.name, pageInfo=pageInfo) {
       <main role="main" class="page-content l-constrained">
-          <form action="@routes.TierController.upgrade(summary.target.tier,None)" method="POST" class="js-form" id="payment-form">
+          <form action="@routes.TierController.upgrade(summary.target.tier)" method="POST" class="js-form" id="payment-form">
               @CSRF.formField
 
               @fragments.page.pageHeader("Great, glad to see you've decided to become a " + summary.target.tier.name, Some("Join as an annual Partner or Patron Member and get 2 months free"))
