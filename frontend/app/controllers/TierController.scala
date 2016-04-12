@@ -4,7 +4,7 @@ import actions.BackendProvider
 import com.gu.membership.{PaidMembershipPlans, MembershipCatalog}
 import com.gu.memsub.promo.PromoCode
 import services.api.MemberService.{PendingAmendError, MemberError, NoCardError}
-import services.{IdentityApi, IdentityService}
+import services.{IdentityApi, IdentityService, PromoSessionService}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
@@ -34,8 +34,6 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.\/
 import views.support.Pricing._
-
-
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -120,7 +118,7 @@ object TierController extends Controller with ActivityTracking
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)).run
   }
 
-  def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
+  def upgrade(target: PaidTier, promoCode: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
@@ -152,7 +150,8 @@ object TierController extends Controller with ActivityTracking
           targetPlans,
           countriesWithCurrencies,
           privateFields,
-          pageInfo(privateFields, BillingPeriod.year)
+          pageInfo(privateFields, BillingPeriod.year),
+          promoCode orElse PromoSessionService.codeFromSession
         )(getToken, request))
       )
     }, { paidSubscriber =>
@@ -177,7 +176,7 @@ object TierController extends Controller with ActivityTracking
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target))
+        Redirect(routes.TierController.upgrade(target,None))
           .flashing("error" ->
             s"That password does not match our records. Please try again.")
       }
