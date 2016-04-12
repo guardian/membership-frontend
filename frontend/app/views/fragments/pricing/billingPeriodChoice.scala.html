@@ -93,7 +93,7 @@
                     notes = [];
                 if (this.promoted) {
                     if(annual.discountDurationMonths > 0) {
-                        notes.unshift(formattedDiscountedPrice(checkoutForm.currency, annual.amount, 0) + '/year thereafter');
+                        notes.unshift("Then " + formattedDiscountedPrice(checkoutForm.currency, annual.amount, 0) + ' annually');
                     }
                 } else {
                     notes.unshift(annual.savingInfo[currency]);
@@ -104,7 +104,7 @@
                 var annual = checkoutForm.billingPeriods.annual,
                     suffix = '/year';
                 if (this.promoted && annual.discountDurationMonths > 0) {
-                    suffix = ' this year';
+                    suffix = ' today';
                 }
                 return annual.generateDisplayAmount() + suffix;
             },
