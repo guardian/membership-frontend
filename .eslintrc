@@ -5,6 +5,10 @@
         "browser": true,
         "node": true
     },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+    },
     "globals"   : {
         "guardian": true
     },

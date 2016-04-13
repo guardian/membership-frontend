@@ -22,7 +22,7 @@ require([
     'src/modules/form/processSubmit',
     'src/modules/identityPopup',
     'src/modules/identityPopupDetails',
-    'src/modules/comparisonTable',
+    'es6!src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
     'src/modules/giraffe'
