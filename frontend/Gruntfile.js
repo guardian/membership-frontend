@@ -118,8 +118,11 @@ module.exports = function (grunt) {
                         'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
                         'smoothScroll': 'lib/bower-components/smooth-scroll/dist/js/smooth-scroll',
                         'ajax': 'src/utils/ajax',
-                        'text':'lib/bower-components/requirejs-text/text'
+                        'text':'lib/bower-components/requirejs-text/text',
+                        'es6': "../../node_modules/requirejs-babel/es6",
+                        'babel': "../../node_modules/requirejs-babel/babel-5.8.34.min",
                     },
+                    stubModules: ['babel', 'es6'],
                     findNestedDependencies: false,
                     wrapShim: true,
                     optimize: isDev ? 'none' : 'uglify2',
