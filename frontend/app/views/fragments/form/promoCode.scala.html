@@ -1,6 +1,6 @@
 @import com.gu.memsub.promo.PromoCode
 
-@(promoCode: Option[PromoCode])
+@(trackingPromoCode: Option[PromoCode], promoCodeToDisplay: Option[PromoCode])
 
 <fieldset class="fieldset">
     <div class="fieldset__heading">
@@ -10,7 +10,8 @@
     <div class="fieldset__fields">
         <div class="form-field">
             <div class="promo-code">
-                <input id="promo-code" name="promoCode" value="@promoCode.map(_.get).getOrElse("")" class="input-text js-input promo-code__field"/>
+                <input id="promo-code-hidden" type="hidden" name="trackingPromoCode" value="@trackingPromoCode.map(_.get).getOrElse("")"/>
+                <input id="promo-code" name="promoCode" value="@promoCodeToDisplay.map(_.get).getOrElse("")" type="text" class="input-text js-input promo-code__field"/>
                 <button type="button" class="promo-code__apply action js-promo-code-validate">Apply</button>
             </div>
             <div class="js-promo-feedback-container"></div>

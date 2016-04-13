@@ -91,8 +91,10 @@ object Promotions extends Controller {
       }
 
     val promoCode = PromoCode(promoCodeStr)
-    val notFound = Redirect("/" ? ("INTCMP" -> s"FROM_P_${promoCode.get}"))
+    val homepageWithCampaignCode = "/" ? ("INTCMP" -> s"FROM_P_${promoCode.get}")
+    val notFound = Redirect(homepageWithCampaignCode)
     val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
+    val redirectToHomePage = Redirect(homepageWithCampaignCode).withCookies(sessionCookieFromCode(promoCode))
 
     type ResultDisjunction[A] = \/[Result,A]
     def failWhen(a:Boolean,b:Result) = Monad[ResultDisjunction].whenM(a)(\/.left(b))
@@ -104,6 +106,7 @@ object Promotions extends Controller {
         _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
         _ <- failWhen(promotion.starts.isAfterNow,notFound)
         _ <- failWhen(promotion.expires.isBeforeNow,notFound)
+        _ <- failWhen(promotion.whenTracking.isDefined,redirectToHomePage)
         html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
         response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
       } yield response

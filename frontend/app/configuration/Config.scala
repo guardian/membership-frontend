@@ -201,6 +201,23 @@ object Config {
     ).some
   }
 
+  def trackingPromo(env: String): Option[Promotion[Tracking.type]] = {
+    val prpIds = membershipRatePlanIds(env)
+    new Promotion(
+      appliesTo = AppliesTo.all(prpIds.productRatePlanIds),
+      campaignName = "Example tracking-only promo code",
+      codes = PromoCodeSet(PromoCode("TRACK01")),
+      description = "This will not affect the price, payment delay, or register for an incentive",
+      starts = new LocalDate(2016,4,1).toDateTime(LocalTime.Midnight, timezone),
+      expires = new LocalDate(2016,6,1).toDateTime(LocalTime.Midnight, timezone),
+      imageUrl = None,
+      promotionType = Tracking,
+      roundelHtml = "",
+      title = "Example tracking-only promo code"
+    ).some
+  }
+
+
   object Implicits {
     implicit val akkaSystem = Akka.system
   }

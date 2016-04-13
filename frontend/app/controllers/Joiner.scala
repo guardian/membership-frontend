@@ -6,7 +6,6 @@ import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.memsub.promo.PromoCode
-import com.gu.memsub.{Membership, ProductFamily}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -21,9 +20,10 @@ import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.PromoSessionService.codeFromSession
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
-import utils.{TestUsers, CampaignCode, TierChangeCookies}
+import utils.{CampaignCode, TierChangeCookies}
 import views.support
 import views.support.Pricing._
 import views.support.TierPlans._
@@ -32,7 +32,6 @@ import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
 import scala.concurrent.Future
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
-import PromoSessionService.codeFromSession
 
 object Joiner extends Controller with ActivityTracking
                                  with LazyLogging
@@ -97,7 +96,7 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, codeFromRequest: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
 
     for {
@@ -110,12 +109,16 @@ object Joiner extends Controller with ActivityTracking
         initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
       )
 
+      val promoCode = codeFromRequest orElse codeFromSession
+      val promotion = promoCode.flatMap(promoService.findPromotion)
+
       Ok(views.html.joiner.form.payment(
          plans = plans,
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          idUser = identityUser,
          pageInfo = pageInfo,
-         promoCode = promoCode orElse codeFromSession))
+         trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => promoCode),
+         promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => promoCode)))
     }
   }
 

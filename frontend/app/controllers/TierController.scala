@@ -1,16 +1,17 @@
 package controllers
 
+import _root_.services.PromoSessionService.codeFromSession
 import actions.BackendProvider
-import com.gu.membership.{PaidMembershipPlans, MembershipCatalog}
-import com.gu.memsub.promo.PromoCode
-import services.api.MemberService.{PendingAmendError, MemberError, NoCardError}
-import services.{IdentityApi, IdentityService, PromoSessionService}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub.Subscriber.{PaidMember, FreeMember}
-import com.gu.memsub._
-import com.gu.memsub.BillingPeriod
+import com.gu.membership.{MembershipCatalog, PaidMembershipPlans}
+import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
+import com.gu.memsub.promo.PromoCode
+import controllers.Joiner._
+import services.api.MemberService.{MemberError, NoCardError, PendingAmendError}
+import services.{IdentityApi, IdentityService}
+import com.gu.memsub.{BillingPeriod, _}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -24,16 +25,16 @@ import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import tracking.ActivityTracking
-import utils.{TierChangeCookies, CampaignCode}
+import utils.{CampaignCode, TierChangeCookies}
+import views.support.Pricing._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
-import scala.language.implicitConversions
-import scalaz.EitherT
+
 import scala.concurrent.Future
+import scala.language.implicitConversions
+import scalaz.{EitherT, \/}
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
-import scalaz.\/
-import views.support.Pricing._
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -118,7 +119,7 @@ object TierController extends Controller with ActivityTracking
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)).run
   }
 
-  def upgrade(target: PaidTier, promoCode: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
+  def upgrade(target: PaidTier, codeFromRequest: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
@@ -143,6 +144,9 @@ object TierController extends Controller with ActivityTracking
       PageInfo(initialCheckoutForm = formI18n, stripePublicKey = stripeKey)
     }
 
+    val promoCode = codeFromRequest orElse codeFromSession
+    val promotion = promoCode.flatMap(promoService.findPromotion)
+
     request.paidOrFreeSubscriber.fold({freeSubscriber =>
       identityUserFieldsF.map(privateFields =>
         Ok(views.html.tier.upgrade.freeToPaid(
@@ -151,7 +155,8 @@ object TierController extends Controller with ActivityTracking
           countriesWithCurrencies,
           privateFields,
           pageInfo(privateFields, BillingPeriod.year),
-          promoCode orElse PromoSessionService.codeFromSession
+          trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => promoCode),
+          promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => promoCode)
         )(getToken, request))
       )
     }, { paidSubscriber =>

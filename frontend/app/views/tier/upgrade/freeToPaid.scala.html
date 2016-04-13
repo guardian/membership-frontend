@@ -18,7 +18,8 @@
   countriesWithCurrency: List[CountryWithCurrency],
   userFields: com.gu.identity.play.PrivateFields,
   pageInfo: PageInfo,
-  promoCode: Option[PromoCode]
+  trackingPromoCode: Option[PromoCode],
+  promoCodeToDisplay: Option[PromoCode]
 )(implicit token: csrf.CSRF.Token, request: RequestHeader)
 
 @import views.html.helper._
@@ -71,7 +72,7 @@
 
                   <div class="form-group">
                       <h2 class="form-group__title">Promotion</h2>
-                      @fragments.form.promoCode(promoCode)
+                      @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
                   </div>
 
                   <div class="form-group">
