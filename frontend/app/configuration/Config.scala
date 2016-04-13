@@ -168,7 +168,8 @@ object Config {
       campaignName = "English Heritage Offer - Q4 FY2016",
       codes = PromoCodeSet(PromoCode("EH2016")),
       description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
-      expires = DateTime.parse("2016-04-01T01:00:00Z"),
+      starts = new LocalDate(2016,3,1).toDateTime(LocalTime.Midnight, timezone),
+      expires = new LocalDate(2016,4,1).toDateTime(LocalTime.Midnight, timezone),
       imageUrl = Some("https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png"),
       promotionType = Incentive(
         redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
@@ -188,6 +189,7 @@ object Config {
       campaignName = "Become a Guardian Partner for just £99",
       codes = PromoCodeSet(PromoCode("PARTNER99")),
       description = "",
+      starts = new LocalDate(2016,4,13).toDateTime(LocalTime.Midnight, timezone),
       expires = new LocalDate(2016,5,1).toDateTime(LocalTime.Midnight, timezone),
       imageUrl = None,
       promotionType = PercentDiscount(

@@ -102,6 +102,7 @@ object Promotions extends Controller {
       for {
         promotion <- promoService.findPromotion(promoCode) \/> notFound //if we can't find the promotion fail out of the for comprehension with a notFound
         _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
+        _ <- failWhen(promotion.starts.isAfterNow,notFound)
         _ <- failWhen(promotion.expires.isBeforeNow,notFound)
         html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
         response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
