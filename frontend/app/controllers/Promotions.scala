@@ -92,9 +92,9 @@ object Promotions extends Controller {
 
     val promoCode = PromoCode(promoCodeStr)
     val homepageWithCampaignCode = "/" ? ("INTCMP" -> s"FROM_P_${promoCode.get}")
-    val notFound = Redirect(homepageWithCampaignCode)
+    val redirectToHomepage = Redirect(homepageWithCampaignCode)
     val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
-    val redirectToHomePage = Redirect(homepageWithCampaignCode).withCookies(sessionCookieFromCode(promoCode))
+    val redirectToHomepageWithSession = Redirect(homepageWithCampaignCode).withCookies(sessionCookieFromCode(promoCode))
 
     type ResultDisjunction[A] = \/[Result,A]
     def failWhen(a:Boolean,b:Result) = Monad[ResultDisjunction].whenM(a)(\/.left(b))
@@ -102,12 +102,12 @@ object Promotions extends Controller {
 
     (
       for {
-        promotion <- promoService.findPromotion(promoCode) \/> notFound //if we can't find the promotion fail out of the for comprehension with a notFound
+        //if we can't find the promotion, or it's invalid or un-renderable fail out of the for comprehension with a redirectToHomepage
+        promotion <- promoService.findPromotion(promoCode) \/> redirectToHomepage
         _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
-        _ <- failWhen(promotion.starts.isAfterNow,notFound)
-        _ <- failWhen(promotion.expires.isBeforeNow,notFound)
-        _ <- failWhen(promotion.whenTracking.isDefined,redirectToHomePage)
-        html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> notFound
+        _ <- failWhen(promotion.starts.isAfterNow,redirectToHomepage)
+        _ <- failWhen(promotion.expires.isBeforeNow,redirectToHomepage)
+        html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> redirectToHomepageWithSession
         response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
       } yield response
      ).fold(identity, identity) //Whether or not the for comprehension succeeds, we have a result- which we want to return
