@@ -214,7 +214,7 @@ object Joiner extends Controller with ActivityTracking
         card,
         destination,
         upgrade,
-        promotion
+        promotion.filterNot(_.whenTracking.isDefined)
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
