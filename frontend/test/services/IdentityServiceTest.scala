@@ -64,6 +64,7 @@ class IdentityServiceTest extends Specification with Mockito {
         None,
         subscriberOffer = false,
         Set.empty,
+        None,
         None
       )
 
