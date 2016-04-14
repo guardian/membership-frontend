@@ -5,7 +5,7 @@ import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
-import com.gu.memsub.promo.PromoCode
+import com.gu.memsub.promo.{Tracking, PromoCode}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -110,7 +110,7 @@ object Joiner extends Controller with ActivityTracking
       )
 
       val providedPromoCode = promoCode orElse codeFromSession
-      val promotion = promoCode.flatMap(promoService.findPromotion)
+      val promotion = providedPromoCode.flatMap(promoService.findPromotion)
 
       Ok(views.html.joiner.form.payment(
          plans = plans,
