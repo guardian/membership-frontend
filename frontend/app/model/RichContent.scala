@@ -1,6 +1,6 @@
 package model
 
-import com.gu.contentapi.client.model.Content
+import com.gu.contentapi.client.model.v1.Content
 
 abstract class RichContent(content: Content) {
   val imgOpt = ResponsiveImageGroup.fromContent(content)

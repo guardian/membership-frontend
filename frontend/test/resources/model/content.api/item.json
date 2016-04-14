@@ -3,6 +3,7 @@
     "userTier": "internal",
     "total": 1,
     "content": {
+        "type": "article",
         "elements": [
             {
                 "id": "f0ed86f9d4c4e82d8e1fc8989b9e1dd37aaf8329",

@@ -8,8 +8,8 @@
     }
     <div class="article-snapshot__content">
         <h2 class="article-snapshot__title no-underline--override">@item.content.webTitle</h2>
-        @for(fields <- item.content.fields) {
-            <p class="article-snapshot__trail hidden-mobile">@Html(fields("trailText"))</p>
+        @for(fields <- item.content.fields; trailtext <- fields.trailText) {
+            <p class="article-snapshot__trail hidden-mobile">@Html(trailtext)</p>
         }
     </div>
 </a>

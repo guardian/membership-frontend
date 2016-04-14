@@ -87,7 +87,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         val request = createRequestWithSession("join-referrer" -> "http://www.theguardian.com/membership/2015/apr/17/guardian-live-diversity-in-the-arts")
 
         //mock the Content API response
-        val item = JsonParser.parseItem(Resource.get("model/content.api/item.json"))
+        val item = JsonParser.parseItemThrift(Resource.get("model/content.api/item.json"))
         destinationService.contentApiService.contentItemQuery("/membership/2015/apr/17/guardian-live-diversity-in-the-arts") returns Future.successful(item)
 
         //call the method under test
@@ -127,7 +127,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         val request = createRequestWithSession("join-referrer" -> "http://www.theguardian.com/membership/2015/apr/17/guardian-live-diversity-in-the-arts", "preJoinReturnUrl" -> "/event/0123456/buy")
 
         //mock the Content API response
-        val item = JsonParser.parseItem(Resource.get("model/content.api/item.json"))
+        val item = JsonParser.parseItemThrift(Resource.get("model/content.api/item.json"))
         destinationService.contentApiService.contentItemQuery("/membership/2015/apr/17/guardian-live-diversity-in-the-arts") returns Future.successful(item)
 
         //mock the Eventbrite response and discount creation

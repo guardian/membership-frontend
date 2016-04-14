@@ -1,6 +1,6 @@
 package services
 
-import com.gu.contentapi.client.model.{Asset, Content}
+import com.gu.contentapi.client.model.v1.{Asset, Content}
 import model.ResponsiveImageGroup
 
 import scala.util.matching.Regex
@@ -23,7 +23,7 @@ object MasterclassDataExtractor {
   }
 
   def scrapeEventbriteIdsFrom(content: Content): Seq[String] = for {
-    body <- content.fields.map(_("body")).toSeq
+    body <- content.fields.flatMap(_.body).toSeq
     eventId <- regex.findAllIn(body).map(_.split("-").last)
   } yield eventId
 }

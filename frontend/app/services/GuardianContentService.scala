@@ -1,7 +1,8 @@
 package services
 
+import com.gu.contentapi.client.model.{SearchQuery, ItemQuery}
+import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
-import com.gu.contentapi.client.model._
 import com.gu.memsub.util.ScheduledTask
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
@@ -42,7 +43,7 @@ trait GuardianContentService extends GuardianContent {
         for {
           response <- masterclassesQuery(nextPage)
         } yield {
-          val masterclassData = response.results.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
+          val masterclassData = response.results.toSeq.flatten.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
           val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
           Some(pagination.nextPageOpt, masterclassData)
 
@@ -53,9 +54,9 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def offersAndCompetitions: Future[Seq[Content]] = offersAndCompetitionsContentQuery(1).map(_.results)
+  private def offersAndCompetitions: Future[Seq[Content]] = offersAndCompetitionsContentQuery(1).map(_.results.toSeq.flatten)
 
-  private def membershipFront: Future[Seq[Content]] = membershipFrontContentQuery(1).map(_.results)
+  private def membershipFront: Future[Seq[Content]] = membershipFrontContentQuery(1).map(_.results.toSeq.flatten)
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
 
@@ -97,7 +98,7 @@ trait GuardianContent {
   val logAndRecord: PartialFunction[Try[_], Unit] = {
     case Success(_) =>
       ContentApiMetrics.putResponseCode(200, "GET content")
-    case Failure(GuardianContentApiError(status, message)) =>
+    case Failure(GuardianContentApiError(status, message, _)) =>
       ContentApiMetrics.putResponseCode(status, "GET content")
       Logger.error(s"Error response from Content API $status")
   }
