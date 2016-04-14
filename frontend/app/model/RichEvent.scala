@@ -1,7 +1,7 @@
 package model
 
 import com.github.nscala_time.time.Imports._
-import com.gu.contentapi.client.model.Content
+import com.gu.contentapi.client.model.v1.Content
 import com.gu.salesforce.Tier
 import configuration.Links
 import controllers.routes

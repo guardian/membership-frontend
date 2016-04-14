@@ -228,7 +228,7 @@ trait Info extends Controller {
 
     val results =
       GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
-        item.content.fields.map(_("membershipAccess")).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
+        item.content.fields.flatMap(_.membershipAccess).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
     Ok(views.html.info.offersAndCompetitions(TouchpointBackend.Normal.catalog, results))
   }

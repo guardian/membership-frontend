@@ -1,6 +1,6 @@
 package model
 
-import com.gu.contentapi.client.model.{Element, Content}
+import com.gu.contentapi.client.model.v1.{Element, Content}
 import views.support.Asset
 import model.RichEvent.GridImage
 
@@ -27,12 +27,13 @@ object ResponsiveImageGroup {
     elements <- content.elements
     element <- elements.find(hasConsistentAspectRatio)
   } yield ResponsiveImageGroup(
-    altText = element.assets.headOption.flatMap(_.typeData.get("altText")),
+    altText = element.assets.headOption.flatMap(_.typeData.flatMap(_.altText)),
     metadata = None,
     availableImages = for {
       asset <- element.assets
-      file <- asset.typeData.get("secureFile")
-      width <- asset.typeData.get("width")
+      typeData <- asset.typeData
+      file <- typeData.secureFile
+      width <- typeData.width
     } yield ResponsiveImage(file, width.toInt)
   )
 

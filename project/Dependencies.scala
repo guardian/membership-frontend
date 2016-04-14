@@ -10,7 +10,7 @@ object Dependencies {
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.184"
-  val contentAPI = "com.gu" %% "content-api-client" % "6.4"
+  val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
   val playCache = PlayImport.cache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
