@@ -60,14 +60,14 @@
             <div class="form__column">
                 <h3 class="form__column-heading headline-text--bolder"><span class="num">2</span> Your amount</h3>
                 <ul class="u-unstyled">
-                    <li id="currency_field" class="form-field" hidden>
+                    <li id="currency_field" class="form-field">
                         <label for="currency" class="label u-h">Currency</label>
                         <div class="input">
-                            <div class="button-group u-cf">
-                                <button type="button" tabindex="4" class="js-currency-switcher option-button active" data-currency="gbp" data-symbol="&pound;">&pound;&nbsp;GBP</button>
-                                <button type="button" tabindex="5" class="js-currency-switcher option-button" data-currency="usd" data-symbol="&#36;">&#36;&nbsp;USD</button>
-                                <button type="button" tabindex="6" class="js-currency-switcher option-button" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;CAD</button>
-                                <button type="button" tabindex="7" class="js-currency-switcher option-button" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
+                            <div class="js-button-group button-group u-cf">
+                                <button type="button" tabindex="4" class="js-currency-switcher js-button option-button active" data-currency="gbp" data-symbol="&pound;">&pound;&nbsp;GBP</button>
+                                <button type="button" tabindex="5" class="js-currency-switcher js-button option-button" data-currency="usd" data-symbol="&#36;">&#36;&nbsp;USD</button>
+                                <button type="button" tabindex="6" class="js-currency-switcher js-button option-button" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;CAD</button>
+                                <button type="button" tabindex="7" class="js-currency-switcher js-button option-button" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
                             </div>
                             <input type="hidden" id="currency" name="currency" class="js-currency-field" value="gbp">
                         </div>
@@ -76,17 +76,17 @@
                     <li id="amount_field" class="form-field">
                         <label for="amount" class="label u-h">Amount</label>
                         <div class="input">
-                            <div class="button-group u-cf">
-                                <button type="button" tabindex="8" class="option-button option-button--bold active" data-amount="5">
+                            <div class="js-button-group button-group u-cf">
+                                <button type="button" tabindex="8" class="js-button option-button option-button--bold active" data-amount="5">
                                     <span class="currency js-currency">&pound;</span>5
                                 </button>
-                                <button type="button" tabindex="9" class="option-button option-button--bold" data-amount="20">
+                                <button type="button" tabindex="9" class="js-button option-button option-button--bold" data-amount="20">
                                     <span class="currency js-currency">&pound;</span>20
                                 </button>
-                                <button type="button" tabindex="10" class="option-button option-button--bold" data-amount="50">
+                                <button type="button" tabindex="10" class="js-button option-button option-button--bold" data-amount="50">
                                     <span class="currency js-currency">&pound;</span>50
                                 </button>
-                                <button type="button" tabindex="11" class="option-button option-button--bold" data-amount="100">
+                                <button type="button" tabindex="11" class="js-button option-button option-button--bold" data-amount="100">
                                     <span class="currency js-currency">&pound;</span>100
                                 </button>
                             </div>

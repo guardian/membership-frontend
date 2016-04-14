@@ -25,7 +25,7 @@ require([
     'es6!src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
-    'src/modules/giraffe'
+    'es6!src/modules/giraffe'
 ], function(
     ajax,
     raven,
