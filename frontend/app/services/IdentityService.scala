@@ -31,9 +31,10 @@ case class IdentityService(identityApi: IdentityApi) {
   def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
     identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
       .map(_.getOrElse{
-          val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
-          val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
-          throw IdentityServiceError(s"Couldn't find user with ID ${user.id}. SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists")
+        val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
+        val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
+        val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
+        throw IdentityServiceError(s"Couldn't find user with ID ${user.id}. $errContext")
       })
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
