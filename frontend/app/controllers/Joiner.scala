@@ -3,6 +3,7 @@ package controllers
 import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
+import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.memsub.promo.PromoCode
@@ -55,7 +56,7 @@ object Joiner extends Controller with ActivityTracking
 
   def tierChooser = NoCacheAction { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
-    val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
+    val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
     val contentRefererOpt = request.headers.get(REFERER)
 
     val signInUrl = contentRefererOpt.map { referer =>
