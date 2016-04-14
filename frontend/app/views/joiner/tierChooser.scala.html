@@ -4,10 +4,11 @@
 
 @import views.support.PageInfo
 @import views.support.TierPlans._
+@import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
 @(catalog: MembershipCatalog,
   pageInfo: PageInfo,
   eventOpt: Option[model.RichEvent.RichEvent],
-  accessOpt: Option[model.MembershipAccess],
+  accessOpt: Option[ContentAccess],
   signInUrl: String
 )(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
@@ -21,8 +22,8 @@
 @sectionTitle = @{
     val defaultTitle = "Choose a membership tier to continue"
     accessOpt.map {
-        case i if i.isMembersOnly => "You need to be a Guardian member to view this page"
-        case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to view this page"
+        case ContentAccess.MembersOnly => "You need to be a Guardian member to view this page"
+        case ContentAccess.PaidMembersOnly => "You need to be a Partner or a Patron to view this page"
         case _ => defaultTitle
     }.getOrElse(eventOpt.fold(defaultTitle)(_.metadata.chooseTier.sectionTitle))
 }
