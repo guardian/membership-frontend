@@ -162,6 +162,7 @@ class MemberService(identityService: IdentityService,
       paymentResult <- createPaymentMethod(friend.contact, customer).liftM
       subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
     } yield {
+      form.addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(friend.contact.identityId, _))
       track(MemberActivity("upgradeMembership", MemberData(
         friend.contact.salesforceContactId,
         friend.contact.identityId,
