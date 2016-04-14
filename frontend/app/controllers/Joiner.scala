@@ -96,7 +96,7 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, codeFromRequest: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
 
     for {
@@ -109,7 +109,7 @@ object Joiner extends Controller with ActivityTracking
         initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
       )
 
-      val promoCode = codeFromRequest orElse codeFromSession
+      val providedPromoCode = promoCode orElse codeFromSession
       val promotion = promoCode.flatMap(promoService.findPromotion)
 
       Ok(views.html.joiner.form.payment(
@@ -117,8 +117,8 @@ object Joiner extends Controller with ActivityTracking
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          idUser = identityUser,
          pageInfo = pageInfo,
-         trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => promoCode),
-         promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => promoCode)))
+         trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode),
+         promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)))
     }
   }
 

@@ -101,8 +101,8 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription, request.subscriber.subscription.paidPlan.tier)).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
-  def upgradePreview(target: PaidTier, code: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
-    paymentSummary(request.subscriber, catalog.findPaid(target), code)(request, catalog, IdentityRequest(request))
+  def upgradePreview(target: PaidTier, promoCode: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
+    paymentSummary(request.subscriber, catalog.findPaid(target), promoCode)(request, catalog, IdentityRequest(request))
       .map(summary => handleResultErrors(summary.map(s => Ok(Json.toJson(s)))))
   }
 
@@ -119,7 +119,7 @@ object TierController extends Controller with ActivityTracking
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)).run
   }
 
-  def upgrade(target: PaidTier, codeFromRequest: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
+  def upgrade(target: PaidTier, promoCode: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
@@ -144,8 +144,8 @@ object TierController extends Controller with ActivityTracking
       PageInfo(initialCheckoutForm = formI18n, stripePublicKey = stripeKey)
     }
 
-    val promoCode = codeFromRequest orElse codeFromSession
-    val promotion = promoCode.flatMap(promoService.findPromotion)
+    val providedPromoCode = promoCode orElse codeFromSession
+    val promotion = providedPromoCode.flatMap(promoService.findPromotion)
 
     request.paidOrFreeSubscriber.fold({freeSubscriber =>
       identityUserFieldsF.map(privateFields =>
@@ -155,8 +155,8 @@ object TierController extends Controller with ActivityTracking
           countriesWithCurrencies,
           privateFields,
           pageInfo(privateFields, BillingPeriod.year),
-          trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => promoCode),
-          promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => promoCode)
+          trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode),
+          promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
         )(getToken, request))
       )
     }, { paidSubscriber =>
