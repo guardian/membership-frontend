@@ -8,15 +8,16 @@ import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
-import com.gu.memsub.promo.PromoCode
+import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
 import com.gu.services.model.BillingSchedule
 import com.gu.subscriptions.Discounter
 import com.gu.zuora.rest
 import com.gu.zuora.soap.models.Commands._
-import com.gu.zuora.soap.models.Commands.Lenses._
-import services.api.MemberService.{MemberError, PendingAmendError}
+import com.gu.memsub.promo.PromotionMatcher._
+import com.gu.memsub.promo.PromotionApplicator._
+import _root_.services.api.MemberService.{MemberPromoError, MemberError, PendingAmendError}
 import com.gu.memsub._
 import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
 import com.gu.salesforce.Tier.{Partner, Patron}
@@ -38,7 +39,6 @@ import tracking._
 import utils.CampaignCode
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
-
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalaz.std.scalaFuture._
@@ -89,8 +89,12 @@ class MemberService(identityService: IdentityService,
 
   implicit val catalog = catalogService.membershipCatalog
   implicit val productFamily = Membership
-
   private val logger = Logger(getClass)
+
+  def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
+    identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
+      .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
+      .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
 
   override def createMember(user: IdMinimalUser,
                             formData: JoinForm,
@@ -238,11 +242,12 @@ class MemberService(identityService: IdentityService,
     }).run
   }
 
-  override def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[PromoCode])
+  override def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
                                          (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule] = {
     (for {
       _ <- EitherT(subOrPendingAmendError(subscriber.subscription))
-      a <- EitherT(amend(subscriber.subscription, subscriber.contact, newPlan, Set.empty, code).map(\/.right))
+      country <- EitherT(country(subscriber.contact).map(\/.right))
+      a <- EitherT(amend(subscriber.subscription, newPlan, Set.empty, code).map(\/.right))
       result <- EitherT(zuoraService.upgradeSubscription(a.copy(previewMode = true)).map(\/.right))
     } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems).getOrElse(
       throw new IllegalStateException(s"Sub ${subscriber.subscription.id} upgrading to ${newPlan.tier} has no bills")
@@ -258,6 +263,7 @@ class MemberService(identityService: IdentityService,
       val targetCurrencies = newPlan.year.pricing.prices.map(_.currency).toSet
       !sub.isInTrialPeriod && targetCurrencies.contains(sub.currency) && newPlan.tier > currentPlan.tier
     }
+
   }
 
   override  def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
@@ -401,9 +407,10 @@ class MemberService(identityService: IdentityService,
                                       customer: Stripe.Customer,
                                       campaignCode: Option[CampaignCode]): Future[SubscribeResult] = {
 
+    val country = joinData.zuoraAccountAddress.country
+    val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures map { features =>
 
-      val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
@@ -415,7 +422,8 @@ class MemberService(identityService: IdentityService,
               name = nameData)
     }
 
-    subscribe.map(promoService.applyPromotion(_, joinData.promoCode.orElse(joinData.trackingPromoCode), joinData.zuoraAccountAddress.country))
+    val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
+    subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, sub, catalog.unsafeFindPaid, discountIds)))
              .flatMap(zuoraService.createSubscription)
   }
 
@@ -442,8 +450,8 @@ class MemberService(identityService: IdentityService,
   /**
     * Construct an Amend command
     */
-  private def amend(sub: MembershipSub, contact: Contact, planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[PromoCode])
-                   (implicit r: IdentityRequest): Future[Amend] = {
+  private def amend(sub: MembershipSub, planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[ValidPromotion[Upgrades]])
+                   (implicit r: IdentityRequest, applicator: PromotionApplicator[Upgrades, Amend]): Future[Amend] = {
 
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
     val tier = newPlan.tier
@@ -455,13 +463,10 @@ class MemberService(identityService: IdentityService,
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.productRatePlanId.get, None, fs.map(_.get)))
 
-    val country = identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
-      .map(_.privateFields.flatMap(_.country).flatMap(CountryGroup.countryByNameOrCode))
-
-    (country |@| newRatePlan |@| oldRest) { case (ctry, newPln, restSub) =>
+    (newRatePlan |@| oldRest) { case (newPln, restSub) =>
       val plansToRemove = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find, discountIds)
       val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
-      promoService.applyPromotion(upgrade, code, ctry)
+      code.fold(upgrade)(applicator(_, upgrade, catalog.unsafeFindPaid, discountIds))
     }
   }
 
@@ -478,7 +483,9 @@ class MemberService(identityService: IdentityService,
 
     (for {
       s <- EitherT(subOrPendingAmendError(sub))
-      command <- EitherT(amend(sub, contact, planChoice, form.featureChoice, form.promoCode.orElse(form.trackingPromoCode)).map(\/.right))
+      country <- EitherT(country(contact).map(\/.right))
+      promo = promoService.validateMany[Upgrades](country, planChoice.productRatePlanId)(form.promoCode, form.trackingPromoCode).toOption.flatten
+      command <- EitherT(amend(sub, planChoice, form.featureChoice, promo).map(\/.right))
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, customerOpt).liftM
       _ <- zuoraService.upgradeSubscription(command).liftM
     } yield {

@@ -1,15 +1,15 @@
 package controllers
 
-import _root_.services.PromoSessionService.codeFromSession
+import services.PromoSessionService.codeFromSession
 import actions.BackendProvider
+import com.gu.memsub.promo.{Upgrades, PromoCode}
+import _root_.services.api.MemberService._
 import com.gu.i18n.CountryGroup
+import com.gu.memsub.promo.Writers._
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
 import com.gu.membership.{MembershipCatalog, PaidMembershipPlans}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.promo.PromoCode
-import controllers.Joiner._
-import services.api.MemberService.{MemberError, NoCardError, PendingAmendError}
 import services.{IdentityApi, IdentityService}
 import com.gu.memsub.{BillingPeriod, _}
 import com.gu.salesforce._
@@ -42,7 +42,8 @@ object TierController extends Controller with ActivityTracking
                                          with SubscriptionServiceProvider
                                          with MemberServiceProvider
                                          with StripeServiceProvider
-                                         with PaymentServiceProvider {
+                                         with PaymentServiceProvider
+                                         with PromoServiceProvider {
 
   def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, catalog))
@@ -68,7 +69,7 @@ object TierController extends Controller with ActivityTracking
     implicit val c = catalog
     val isFreeSubscriber = request.paidOrFreeSubscriber.isLeft
     for {
-                               cg <- request.getIdentityCountryGroup
+      cg <- request.getIdentityCountryGroup
     } yield {
       if (cg.exists(_ != CountryGroup.UK) && isFreeSubscriber)
         Redirect(routes.Info.supporterRedirect)
@@ -110,9 +111,17 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription, request.subscriber.subscription.paidPlan.tier)).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
-  def upgradePreview(target: PaidTier, promoCode: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
-    paymentSummary(request.subscriber, catalog.findPaid(target), promoCode)(request, catalog, IdentityRequest(request))
-      .map(summary => handleResultErrors(summary.map(s => Ok(Json.toJson(s)))))
+  def upgradePreview(target: PaidTier, code: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
+    paymentSummary(request.subscriber, catalog.findPaid(target), code)(request, catalog, IdentityRequest(request)).map { summary => {
+      Ok(summary.fold({
+        case MemberPromoError(e) => Json.obj("error" -> e.msg)
+        case _ => Json.obj("error" -> "Unknown error")
+      },{ summary => Json.obj(
+        "summary" -> Json.toJson(summary),
+        "promotion" -> Json.toJson(code.flatMap(promoService.findPromotion))
+      )
+      }))
+    }}
   }
 
   def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[Current, PaidTier], code: Option[PromoCode])
@@ -123,8 +132,10 @@ object TierController extends Controller with ActivityTracking
     val sub = subscriber.subscription
 
     (for {
+      country <- EitherT(memberService.country(subscriber.contact).map(\/.right))
+      promo <- EitherT(Future.successful(promoService.validateMany[Upgrades](country, targetChoice.productRatePlanId)(code).leftMap[MemberError](MemberPromoError)))
       card <- EitherT(paymentService.getPaymentCard(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
-      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice, code))
+      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice, promo))
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)).run
   }
 
@@ -172,8 +183,14 @@ object TierController extends Controller with ActivityTracking
       val billingPeriod = paidSubscriber.subscription.plan.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
 
-      (identityUserFieldsF |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (fields, summary) =>
-        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, fields, pageInfo(fields, billingPeriod), flashError)(getToken, request)))
+      // get a valid promotion but don't apply it to the payment summary
+      val validPromo = memberService.country(paidSubscriber.contact).map { country =>
+        val planChoice = PaidPlanChoice(target, paidSubscriber.subscription.plan.billingPeriod)
+        (promoCode orElse codeFromSession).flatMap(promoService.validate[Upgrades](_, country, planChoice.productRatePlanId).toOption)
+      }
+
+      (validPromo |@| identityUserFieldsF |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (vp, fields, summary) =>
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, fields, pageInfo(fields, billingPeriod), flashError, vp)(getToken, request)))
       }.map(handleResultErrors)
     })
   }
@@ -190,7 +207,7 @@ object TierController extends Controller with ActivityTracking
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target,None))
+        Redirect(routes.TierController.upgrade(target,form.promoCode))
           .flashing("error" ->
             s"That password does not match our records. Please try again.")
       }
