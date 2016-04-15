@@ -52,7 +52,8 @@ object MemberForm {
   }
 
   case class StaffJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
-                            password: Option[String], trackingPromoCode: Option[PromoCode] = None) extends JoinForm {
+                            password: Option[String]) extends JoinForm {
+    val trackingPromoCode = None
     override val planChoice: FreePlanChoice = FreePlanChoice(staff)
   }
 
@@ -206,8 +207,7 @@ object MemberForm {
       "name" -> nameMapping,
       "deliveryAddress" -> nonPaidAddressMapping,
       "marketingChoices" -> marketingChoicesMapping,
-      "password" -> optional(nonEmptyText),
-      "trackingPromoCode" -> optional(trackingPromoCode)
+      "password" -> optional(nonEmptyText)
     )(StaffJoinForm.apply)(StaffJoinForm.unapply)
   )
 
