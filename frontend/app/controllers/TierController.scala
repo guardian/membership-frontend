@@ -25,16 +25,17 @@ import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import tracking.ActivityTracking
+import utils.RequestCountry._
 import utils.{CampaignCode, TierChangeCookies}
 import views.support.Pricing._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
-import scalaz.{EitherT, \/}
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
+import scalaz.{EitherT, \/}
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -62,10 +63,18 @@ object TierController extends Controller with ActivityTracking
       catalog.friend, startDate)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
-  def change() = SubscriptionAction { implicit request =>
+  def change() = SubscriptionAction.async { implicit request =>
     implicit val countryGroup = UK
     implicit val c = catalog
-    Ok(views.html.tier.change(request.subscriber.subscription.plan.tier, catalog))
+    val isFreeSubscriber = request.paidOrFreeSubscriber.isLeft
+    for {
+                               cg <- request.getIdentityCountryGroup
+    } yield {
+      if (cg.exists(_ != CountryGroup.UK) && isFreeSubscriber)
+        Redirect(routes.Info.supporterRedirect)
+      else
+        Ok(views.html.tier.change(request.subscriber.subscription.plan.tier, catalog))
+    }
   }
 
   def handleErrors(memberResult: Future[MemberError \/ _])(success: => Result): Future[Result] =
