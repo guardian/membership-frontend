@@ -5,20 +5,26 @@ import org.slf4j.LoggerFactory
 import scala.util.{Try, Failure, Success}
 
 object Config {
-  def logger = LoggerFactory.getLogger(this.getClass)
+  private def logger = LoggerFactory.getLogger(this.getClass)
 
   private val conf = ConfigFactory.load()
 
   val baseUrl = conf.getString("membership.url")
+
   val identityFrontendUrl = conf.getString("identity.webapp.url")
+
   val testUsersSecret = conf.getString("identity.test.users.secret")
+
   val webDriverRemoteUrl = Try(conf.getString("webDriverRemoteUrl")) match {
     case Success(url) => url
     case Failure(e) => ""
   }
+
   val screencastIdFile = conf.getString("screencastId.file")
 
-  def debug() = conf.root().render()
+  val waitTimout: Int = conf.getString("waitTimeout").toInt
+
+  def debug() { conf.root().render() }
 
   def printSummary(): Unit = {
     logger.info("Acceptance Test Configuration")
