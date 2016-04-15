@@ -128,6 +128,7 @@ module.exports = function (grunt) {
                     optimize: isDev ? 'none' : 'uglify2',
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
+                    waitSeconds: 120,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }
             },
