@@ -188,9 +188,6 @@ $_background-color: $c-neutral7;
     border-left: $_table-gutter solid $white;
 }
 .comparison-table__trail__action {
-    @include mq(desktop) {
-        //visibility: hidden;
-    }
     text-align: center;
     margin: $gs-baseline 0;
 
