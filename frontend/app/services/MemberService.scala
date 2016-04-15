@@ -413,7 +413,7 @@ class MemberService(identityService: IdentityService,
               name = nameData)
     }
 
-    subscribe.map(promoService.applyPromotion(_, joinData.promoCode, joinData.zuoraAccountAddress.country.some))
+    subscribe.map(promoService.applyPromotion(_, joinData.promoCode.orElse(joinData.trackingPromoCode), joinData.zuoraAccountAddress.country.some))
              .flatMap(zuoraService.createSubscription)
   }
 
@@ -476,7 +476,7 @@ class MemberService(identityService: IdentityService,
 
     (for {
       s <- EitherT(subOrPendingAmendError(sub))
-      command <- EitherT(amend(sub, contact, planChoice, form.featureChoice, form.promoCode).map(\/.right))
+      command <- EitherT(amend(sub, contact, planChoice, form.featureChoice, form.promoCode.orElse(form.trackingPromoCode)).map(\/.right))
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, customerOpt).liftM
       _ <- zuoraService.upgradeSubscription(command).liftM
     } yield {
