@@ -206,7 +206,8 @@ object MemberForm {
       "name" -> nameMapping,
       "deliveryAddress" -> nonPaidAddressMapping,
       "marketingChoices" -> marketingChoicesMapping,
-      "password" -> optional(nonEmptyText)
+      "password" -> optional(nonEmptyText),
+      "trackingPromoCode" -> optional(trackingPromoCode)
     )(StaffJoinForm.apply)(StaffJoinForm.unapply)
   )
 
