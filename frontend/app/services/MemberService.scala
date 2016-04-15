@@ -385,7 +385,8 @@ class MemberService(identityService: IdentityService,
         paymentMethod = None,
         ratePlans = NonEmptyList(RatePlan(planId.get, None)),
         name = joinData.name,
-        address = joinData.deliveryAddress
+        address = joinData.deliveryAddress,
+        promoCode = joinData.trackingPromoCode
       ))
     } yield result
   }
