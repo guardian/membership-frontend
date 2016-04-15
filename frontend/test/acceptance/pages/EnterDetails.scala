@@ -1,148 +1,80 @@
 package acceptance.pages
 
-import acceptance.util.{Browser, Config}
+import acceptance.util.{TestUser, Browser, Config}
 import Config.baseUrl
 import org.scalatest.selenium.Page
 
-class EnterDetails extends Page with Browser {
+case class EnterDetails(val testUser: TestUser) extends Page with Browser {
   val url = s"$baseUrl/join/partner/enter-details"
 
-  def userDisplayName: String = {
-    val selector = cssSelector(".js-user-displayname")
-    assert(pageHasElement(selector))
-    selector.element.text
-  }
+  def pageHasLoaded: Boolean = pageHasElement(id("cc-cvc"))
 
-  def becomePartner = {
-    val selector = cssSelector("a[href='/join/partner/enter-details']")
-    assert(pageHasElement(selector))
-    click on selector
-  }
+  def userIsSignedIn: Boolean = elementHasText(userDisplayName, testUser.username.toLowerCase)
 
-  def pageHasLoaded(): Boolean = {
-    pageHasElement(id("cc-cvc"))
-  }
+  def fillInDeliveryAddress() { DeliveryAddress.fillIn() }
 
-  def fillInDeliveryAddress() = {
-    DeliveryAddress.fillIn()
-  }
+  def fillInCardDetails() { CreditCard.fillIn() }
 
-  def fillInCardDetails() = {
-    CreditCard.fillIn()
-  }
+  def fillInCardDeclined() { CreditCard.fillInCardDeclined() }
 
-  def fillInCardDeclined(): Unit = {
-    CreditCard.fillInCardDeclined()
-  }
+  def fillInCardDeclinedFraud() { CreditCard.fillInCardDeclinedFraud() }
 
-  def fillInCardDeclinedFraud(): Unit = {
-    CreditCard.fillInCardDeclinedFraud()
-  }
+  def fillInCardDeclinedCvc() { CreditCard.fillInCardDeclinedCvc() }
 
-  def fillInCardDeclinedCvc(): Unit = {
-    CreditCard.fillInCardDeclinedCvc()
-  }
+  def fillInCardDeclinedExpired() { CreditCard.fillInCardDeclinedExpired() }
 
-  def fillInCardDeclinedExpired(): Unit = {
-    CreditCard.fillInCardDeclinedExpired()
-  }
+  def fillInCardDeclinedProcessError() { CreditCard.fillInCardDeclinedProcessError() }
 
-  def fillInCardDeclinedProcessError(): Unit = {
-    CreditCard.fillInCardDeclinedProcessError()
-  }
-
-  def pay() = {
-    val selector = className("js-submit-input")
-    assert(pageHasElement(selector))
-    click.on(selector)
-  }
-
-  private object Name {
-    lazy val first = textField(id("name-first"))
-    lazy val last = textField(id("name-last"))
-  }
+  def pay() { clickOn(payButton) }
 
   private object DeliveryAddress {
-    lazy val country = singleSel(id("country-deliveryAddress"))
-    lazy val addressLine1 = textField(id("address-line-one-deliveryAddress"))
-    lazy val town = textField(id("town-deliveryAddress"))
-    lazy val postCode = textField(id("postCode-deliveryAddress"))
+    val country = id("country-deliveryAddress")
+    val addressLine1 = id("address-line-one-deliveryAddress")
+    val town = id("town-deliveryAddress")
+    val postCode = id("postCode-deliveryAddress")
 
-    def fillIn(): Unit = {
-      assert(pageHasElement(id("postCode-deliveryAddress")))
-
-      country.value = "GB"
-      addressLine1.value = "Kings Place"
-      town.value = "London"
-      postCode.value = "N1 9GU"
+    def fillIn() {
+      setSingleSelectionValue(country, "GB")
+      setValue(addressLine1, "Kings Place")
+      setValue(town, "London")
+      setValue(postCode, "N1 9GU")
     }
   }
 
   private object CreditCard {
-    lazy val cardNumber = textField(id("cc-num"))
-    lazy val cardCvc = textField(id("cc-cvc"))
-    lazy val cardExpiryMonth = singleSel(id("cc-exp-month"))
-    lazy val cardExpiryYear = singleSel(id("cc-exp-year"))
+    val cardNumber = id("cc-num")
+    val cardCvc = id("cc-cvc")
+    val cardExpiryMonth = id("cc-exp-month")
+    val cardExpiryYear = id("cc-exp-year")
 
-    def fillIn(): Unit = {
-      assert(pageHasElement(id("cc-cvc")))
-
-      cardNumber.value = "4242424242424242"
-      cardCvc.value = "123"
-      cardExpiryMonth.value = "1"
-      cardExpiryYear.value = "2019"
+    private def fillInHelper(cardNum: String) {
+      setValue(cardNumber, cardNum)
+      setSingleSelectionValue(cardExpiryMonth, "10")
+      setSingleSelectionValue(cardExpiryYear, "2019")
+      setValue(cardCvc, "111")
     }
+
+    def fillIn() { fillInHelper("4242424242424242") }
 
     /* https://stripe.com/docs/testing */
 
     // Charge will be declined with a card_declined code.
-    def fillInCardDeclined(): Unit = {
-      assert(pageHasElement(id("cc-cvc")))
-
-      cardNumber.value = "4000000000000002"
-      cardExpiryMonth.value = "10"
-      cardExpiryYear.value = "2019"
-      cardCvc.value = "111"
-    }
+    def fillInCardDeclined(): Unit = fillInHelper("4000000000000002")
 
     // Charge will be declined with a card_declined code and a fraudulent reason.
-    def fillInCardDeclinedFraud(): Unit = {
-      assert(pageHasElement(id("cc-cvc")))
-
-      cardNumber.value = "4100000000000019"
-      cardExpiryMonth.value = "10"
-      cardExpiryYear.value = "2019"
-      cardCvc.value = "111"
-    }
+    def fillInCardDeclinedFraud(): Unit = fillInHelper("4100000000000019")
 
     // Charge will be declined with an incorrect_cvc code.
-    def fillInCardDeclinedCvc(): Unit = {
-      assert(pageHasElement(id("cc-cvc")))
-
-      cardNumber.value = "4000000000000127"
-      cardExpiryMonth.value = "10"
-      cardExpiryYear.value = "2019"
-      cardCvc.value = "111"
-    }
+    def fillInCardDeclinedCvc(): Unit = fillInHelper("4000000000000127")
 
     // Charge will be declined with an expired_card code.
-    def fillInCardDeclinedExpired(): Unit = {
-      assert(pageHasElement(id("cc-cvc")))
-
-      cardNumber.value = "4000000000000069"
-      cardExpiryMonth.value = "10"
-      cardExpiryYear.value = "2019"
-      cardCvc.value = "111"
-    }
+    def fillInCardDeclinedExpired(): Unit = fillInHelper("4000000000000069")
 
     // Charge will be declined with a processing_error code.
-    def fillInCardDeclinedProcessError(): Unit = {
-      assert(pageHasElement(id("cc-cvc")))
-
-      cardNumber.value = "4000000000000119"
-      cardExpiryMonth.value = "10"
-      cardExpiryYear.value = "2019"
-      cardCvc.value = "111"
-    }
+    def fillInCardDeclinedProcessError(): Unit = fillInHelper("4000000000000119")
   }
+
+  private val userDisplayName = cssSelector(".js-user-displayname")
+
+  private val payButton = className("js-submit-input")
 }

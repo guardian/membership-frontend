@@ -1,5 +1,6 @@
 package acceptance
 
+import acceptance.pages.ThankYou
 import acceptance.util._
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfter, FeatureSpec, GivenWhenThen}
 import org.slf4j.LoggerFactory
@@ -11,14 +12,12 @@ class JoinPartnerSpec extends FeatureSpec with Browser
 
   before { /* each test */ Driver.reset() }
 
-  override def beforeAll() = {
+  override def beforeAll() {
     Screencast.storeId()
     Config.printSummary()
   }
 
-  override def afterAll() = {
-    Driver.quit()
-  }
+  override def afterAll() { Driver.quit() }
 
   private def checkDependenciesAreAvailable = {
     assume(Dependencies.MembershipFrontend.isAvailable,
@@ -31,54 +30,49 @@ class JoinPartnerSpec extends FeatureSpec with Browser
   }
 
   feature("Become a Partner in UK") {
-    scenario("I join as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
+    scenario("User joins as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
       checkDependenciesAreAvailable
-
-      And("I have the opt out of the ID frontend AB test cookie. (FOR NOW)")
-      Driver.addCookie("GU_PROFILE_BETA","0")
 
       val testUser = new TestUser
 
-      Given("I clicked 'Become a Partner' button on Membership homepage")
+      Given("users click 'Become a Partner' button on Membership homepage")
 
-      When("I land on 'Identity Register' page")
-      val register = new pages.Register(testUser)
+      When("they land on 'Identity Frontend' page,")
+      val register = pages.Register(testUser)
       go.to(register)
-      assert(register.pageHasLoaded())
+      assert(register.pageHasLoaded)
 
-      And("I fill in personal details")
+      And("fill in personal details,")
       register.fillInPersonalDetails()
 
-      And("I submit the form to create my Identity account")
+      And("submit the form to create their Identity account,")
       register.submit()
 
-      Then("I should land on 'Enter Details' page")
-      val enterDetails = new pages.EnterDetails
-      assert(enterDetails.pageHasLoaded())
+      Then("they should land on 'Enter Details' page,")
+      val enterDetails = pages.EnterDetails(testUser)
+      assert(enterDetails.pageHasLoaded)
 
-      And("I should have Identity cookies")
+      And("should have Identity cookies,")
       Seq("GU_U", "SC_GU_U", "SC_GU_LA").foreach { idCookie =>
         assert(Driver.cookiesSet.map(_.getName).contains(idCookie)) }
 
-      And("I should be logged in with my Identity account.")
-      assert(elementHasText(
-        cssSelector(".js-user-displayname"), testUser.username.toLowerCase()))
+      And("should be logged in with their Identity account.")
+      assert(enterDetails.userIsSignedIn)
 
-      When("I fill in delivery address details")
+      When("Users fill in delivery address details,")
       enterDetails.fillInDeliveryAddress()
 
-      And("I fill in card details")
+      And("fill in card details,")
       enterDetails.fillInCardDetails()
 
-      And("I click 'Pay' button")
+      And("click 'Pay' button,")
       enterDetails.pay()
 
-      Then("I should land on 'Thank You' page")
-      val thankYou = new pages.ThankYou
-      assert(thankYou.pageHasLoaded())
+      Then("they should land on 'Thank You' page,")
+      assert(ThankYou.pageHasLoaded)
 
-      And("I should be signed in as Partner.")
-      assert(elementHasText(cssSelector(".js-user-tier"), "Partner"))
+      And("should be signed in as Partner.")
+      assert(ThankYou.userIsSignedInAsPartner)
     }
   }
 }
