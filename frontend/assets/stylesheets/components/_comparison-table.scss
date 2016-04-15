@@ -140,7 +140,7 @@ $_background-color: $c-neutral7;
     text-align: center;
     position: relative;
     border-left: $_table-gutter solid $white;
-    height: 120px;
+    height: $_table-tier-height - $_table-gutter;
     width: $_tier-col-width;
 }
 .comparison-table__checkmark__inner {
@@ -189,7 +189,7 @@ $_background-color: $c-neutral7;
 }
 .comparison-table__trail__action {
     @include mq(desktop) {
-        visibility: hidden;
+        //visibility: hidden;
     }
     text-align: center;
     margin: $gs-baseline 0;
