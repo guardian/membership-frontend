@@ -12,14 +12,11 @@ import views.support.{Asset, PageInfo}
 import com.netaporter.uri.dsl._
 import com.netaporter.uri.Uri
 import scala.concurrent.Future
+import utils.RequestCountry._
 
 trait Info extends Controller {
   def supporterRedirect = NoCacheAction { implicit request =>
-    val countryGroup =
-      request.headers
-        .get("X-GU-GeoIP-Country-Code")
-        .flatMap(CountryGroup.byFastlyCountryCode)
-        .getOrElse(CountryGroup.RestOfTheWorld)
+    val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
 
     val baseUrl: Uri = redirectToSupporterPage(countryGroup).absoluteURL
     val paramsToPropagate = Seq("INTCMP", "CMP")
