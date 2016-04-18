@@ -1,7 +1,8 @@
 package services
 
 import com.gu.config.DiscountRatePlanIds
-import com.gu.i18n.{CountryGroup, Currency}
+import com.gu.i18n.Country.UK
+import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
@@ -376,7 +377,7 @@ class MemberService(identityService: IdentityService,
   override def createFreeSubscription(contactId: ContactId,
                                       joinData: JoinForm): Future[SubscribeResult] = {
     val planId = joinData.planChoice.productRatePlanId
-    val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country)
+    val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
 
     for {
       zuoraFeatures <- zuoraService.getFeatures
@@ -404,7 +405,7 @@ class MemberService(identityService: IdentityService,
       val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
-      val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country)
+      val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
       Subscribe(account = Account.stripe(contactId = contactId, currency = currency, autopay = true),
               paymentMethod = CreditCardReferenceTransaction(customer.card.id, customer.id).some,
@@ -413,7 +414,7 @@ class MemberService(identityService: IdentityService,
               name = nameData)
     }
 
-    subscribe.map(promoService.applyPromotion(_, joinData.promoCode.orElse(joinData.trackingPromoCode), joinData.zuoraAccountAddress.country.some))
+    subscribe.map(promoService.applyPromotion(_, joinData.promoCode.orElse(joinData.trackingPromoCode), joinData.zuoraAccountAddress.country))
              .flatMap(zuoraService.createSubscription)
   }
 
