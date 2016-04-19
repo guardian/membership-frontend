@@ -3,6 +3,8 @@
 @(trackingPromoCode: Option[PromoCode], promoCodeToDisplay: Option[PromoCode])
 
 <fieldset class="fieldset">
+    @fragments.form.trackingPromoCode(trackingPromoCode)
+
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">Do you have a promo code?</h2>
     </div>
@@ -10,7 +12,6 @@
     <div class="fieldset__fields">
         <div class="form-field">
             <div class="promo-code">
-                <input id="promo-code-hidden" type="hidden" name="trackingPromoCode" value="@trackingPromoCode.map(_.get).getOrElse("")"/>
                 <input id="promo-code" name="promoCode" value="@promoCodeToDisplay.map(_.get).getOrElse("")" type="text" class="input-text js-input promo-code__field"/>
                 <button type="button" class="promo-code__apply action js-promo-code-validate">Apply</button>
             </div>

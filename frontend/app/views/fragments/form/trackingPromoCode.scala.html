@@ -1,0 +1,4 @@
+@import com.gu.memsub.promo.PromoCode
+
+@(trackingPromoCode: Option[PromoCode])
+<input id="promo-code-hidden" type="hidden" name="trackingPromoCode" value="@trackingPromoCode.map(_.get).getOrElse("")"/>

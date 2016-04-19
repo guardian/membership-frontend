@@ -8,11 +8,13 @@
 @import views.support.IdentityUser
 @import com.gu.membership.FreeMembershipPlan
 @import com.gu.memsub.Current
+@import com.gu.memsub.promo.PromoCode
 
 @import views.support.FreePlan
 @(friendPlan: FreeMembershipPlan[Current, Friend],
   idUser: IdentityUser,
-  pageInfo: PageInfo
+  pageInfo: PageInfo,
+  trackingPromoCode: Option[PromoCode]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Become a Friend", pageInfo) {
@@ -61,6 +63,7 @@
                             county = idUser.privateFields.address4
                         )
                         @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
+                        @fragments.form.trackingPromoCode(trackingPromoCode)
 
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()

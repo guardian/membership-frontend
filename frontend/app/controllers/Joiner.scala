@@ -123,15 +123,20 @@ object Joiner extends Controller with ActivityTracking
     }
   }
 
-  def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request: AuthRequest[_] =>
+  def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
+
+    val promoCode = codeFromSession // only take from the session
+    val trackingPromoCode = promoCode.flatMap(promoService.findPromotion).filter(_.whenTracking.isDefined).flatMap(p => promoCode)
+
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
         identityUser,
-        support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))))
+        support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None)),
+        trackingPromoCode))
     }
   }
 
