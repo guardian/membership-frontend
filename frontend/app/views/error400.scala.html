@@ -1,0 +1,18 @@
+@(req: RequestHeader, err: String)
+@main("Bad Request") {
+    <main role="main" class="page-content l-constrained">
+        @fragments.page.pageHeader("Error 400 – Bad Request")
+        <section class="page-section">
+            <div class="page-section__content copy">
+                <p>
+                    Sorry, there was an error with this page. Please contact support at: <a href="mailto:membershipsupport@@theguardian.com">membershipsupport@@theguardian.com</a>.
+                </p>
+
+                    <p>Please provide the following error code to help identify the issue.</p>
+                    <pre>Error: @err</pre>
+                    <pre>Path: @req.path</pre>
+
+            </div>
+        </section>
+    </main>
+}
