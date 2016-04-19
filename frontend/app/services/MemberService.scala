@@ -157,10 +157,10 @@ class MemberService(identityService: IdentityService,
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
       sub <- EitherT(subOrPendingAmendError(friend.subscription))
-      _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
       customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
       paymentResult <- createPaymentMethod(friend.contact, customer).liftM
       subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
+      _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
     } yield {
       form.addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(friend.contact.identityId, _))
       track(MemberActivity("upgradeMembership", MemberData(

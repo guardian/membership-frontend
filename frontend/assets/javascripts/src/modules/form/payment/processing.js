@@ -7,7 +7,7 @@ define([
     'src/modules/form/helper/loader',
     'config/paymentErrorMessages',
     'src/modules/form/validation/display'
-], function (ajax, utilsHelper, form, serializer, loader, paymentErrorMessages, display) {
+], function (ajax, utilsHelper, formUtil, serializer, loader, paymentErrorMessages, display) {
     'use strict';
 
     var CREDIT_CARD_NUMBER_ELEM = document.querySelector('.js-credit-card-number');
@@ -60,15 +60,18 @@ define([
                 handleError(userMessage, errorElement);
             }
         } else {
-            data = serializer(utilsHelper.toArray(form.elem.elements), { 'payment.token': response.id });
+            data = serializer(utilsHelper.toArray(formUtil.elem.elements), { 'payment.token': response.id });
 
             loader.setProcessingMessage('Checking card details...');
 
             ajax({
-                url: form.elem.action,
+                url: formUtil.elem.action,
                 method: 'post',
                 data: data,
                 success: function (successData) {
+                    if (typeof successData === 'undefined' || typeof successData.redirect === 'undefined') {
+                        Raven.captureMessage('Empty successData received');
+                    }
                     window.location.assign(successData.redirect);
                 },
                 error: function (err) {
