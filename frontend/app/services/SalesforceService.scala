@@ -1,5 +1,6 @@
 package services
 
+import com.gu.i18n.Country._
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
@@ -76,7 +77,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       Keys.MAILING_CITY -> formData.deliveryAddress.town,
       Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
       Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-      Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
+      Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.getOrElse(UK).alpha2,
       Keys.ALLOW_MEMBERSHIP_MAIL -> true
     )) ++ Map(
       Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
@@ -84,5 +85,5 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
     ).collect { case (k, Some(v)) => Json.obj(k -> v) }
   }.reduce(_ ++ _)
 
-  private def upsert(userId: UserId, value: JsObject) = repository.upsert(userId, value)
+  private def upsert(userId: UserId, value: JsObject) = repository.upsert(Some(userId), value)
 }

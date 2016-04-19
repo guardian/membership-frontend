@@ -96,7 +96,7 @@ case class IdentityService(identityApi: IdentityApi) {
       "address3" -> addressForm.town,
       "address4" -> addressForm.countyOrState,
       "postcode" -> addressForm.postCode,
-      "country" -> addressForm.country.name
+      "country" -> addressForm.country.fold(addressForm.countryName)(_.name)
     )
   }
 
@@ -107,7 +107,7 @@ case class IdentityService(identityApi: IdentityApi) {
       "billingAddress3" -> billingAddress.town,
       "billingAddress4" -> billingAddress.countyOrState,
       "billingPostcode" -> billingAddress.postCode,
-      "billingCountry" -> billingAddress.country.name
+      "billingCountry" -> billingAddress.country.fold(billingAddress.countryName)(_.name)
     )
   }
 }

@@ -3,6 +3,7 @@ package tracking
 import java.util.{Map => JMap}
 
 import com.github.t3hnar.bcrypt._
+import com.gu.i18n.Country._
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.{MembershipPlan, PaidMembershipPlan}
 import com.gu.memsub.{Subscription, PaymentStatus, BillingPeriod, Status}
@@ -232,7 +233,7 @@ trait ActivityTracking {
         subscriptionPaymentAnnual = subscriptionPaymentAnnual,
         marketingChoices = Some(formData.marketingChoices),
         city = Some(formData.deliveryAddress.town),
-        country = Some(formData.deliveryAddress.country.name),
+        country = Some(formData.deliveryAddress.country.fold(formData.deliveryAddress.countryName)(_.name)),
         campaignCode = campaignCode
       )
 
@@ -256,7 +257,7 @@ trait ActivityTracking {
           subscriptionPaymentAnnual = Some(newRatePlan.billingPeriod.annual),
           marketingChoices = None,
           city = addressDetails.map(_.deliveryAddress.town),
-          country = addressDetails.map(_.deliveryAddress.country.name),
+          country = addressDetails.map(addressDetails => addressDetails.deliveryAddress.country.fold(addressDetails.deliveryAddress.countryName)(_.name)),
           campaignCode = campaignCode
         )),
       member)
