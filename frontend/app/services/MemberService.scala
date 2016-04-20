@@ -169,7 +169,6 @@ class MemberService(identityService: IdentityService,
         newTier)), friend.contact)
       trackUpgrade(friend.contact, sub, catalog.unsafeFindPaid(PaidPlanChoice(newTier, form.payment.billingPeriod).productRatePlanId), form.addressDetails, code)
       salesforceService.metrics.putUpgrade(newTier)
-      salesforceService.metrics.putUpgrade(newTier)
       friend.contact}).run
 
   }
