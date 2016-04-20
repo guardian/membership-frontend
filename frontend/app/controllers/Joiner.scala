@@ -204,14 +204,18 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
+    val prpId = request.subscriber.subscription.productRatePlanId
+    implicit val idReq = IdentityRequest(request)
 
     val paymentCard = (for {
       card <- OptionT(paymentService.getPaymentCard(request.subscriber.subscription.accountId))
     } yield card).run
 
     for {
+      country <- memberService.country(request.subscriber.contact)
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
-      promotion = request.subscriber.subscription.promoCode.flatMap(promoService.findPromotion)
+      promotion = request.subscriber.subscription.promoCode.flatMap(c => promoService.findPromotion(c))
+      validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
       destination <- DestinationService.returnDestinationFor(request)
       card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
@@ -220,7 +224,7 @@ object Joiner extends Controller with ActivityTracking
         card,
         destination,
         upgrade,
-        promotion.filterNot(_.whenTracking.isDefined)
+        validPromotion.filterNot(_.whenTracking.isDefined)
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
