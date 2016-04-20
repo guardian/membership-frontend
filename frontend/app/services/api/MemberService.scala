@@ -1,11 +1,12 @@
 package services.api
 
+import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.Subscription.{Plan, Paid, ProductRatePlanId}
 import com.gu.memsub._
 import com.gu.salesforce.{Tier, ContactId, PaidTier}
-import com.gu.memsub.promo.PromoCode
+import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion, PromoCode}
 import com.gu.salesforce.{ContactId, PaidTier}
 import com.gu.services.model.BillingSchedule
 import com.gu.stripe.Stripe
@@ -24,13 +25,15 @@ import utils.CampaignCode
 trait MemberService {
   import MemberService._
 
+  def country(contact: GenericSFContact)(implicit i: IdentityRequest): Future[Country]
+
   def createMember(user: IdMinimalUser,
                    formData: JoinForm,
                    identityRequest: IdentityRequest,
                    fromEventId: Option[String],
                    campaignCode: Option[CampaignCode]): Future[ContactId]
 
-  def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[PromoCode])
+  def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
   def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
@@ -75,6 +78,10 @@ trait MemberService {
 
 object MemberService {
   sealed trait MemberError extends Throwable
+
+  case class MemberPromoError(get: PromoError) extends MemberError {
+    override def getMessage = s"Promo error: ${get.msg}"
+  }
 
   case class PaidSubscriptionExpected(name: Subscription.Name) extends MemberError {
     override def getMessage = s"Paid subscription expected. Got a free one instead: ${name.get} "

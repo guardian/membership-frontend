@@ -104,7 +104,7 @@ define(
 
         return {
             init: function() {
-                if ($PROMO_CODE_INPUT.length === 0) {
+                if ($PROMO_CODE_INPUT.length === 0 || $TIER_ELEMENT.length == 0) {
                     return;
                 }
                 // revalidate the code if we change / click stuff

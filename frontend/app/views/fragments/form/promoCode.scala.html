@@ -12,9 +12,10 @@
     <div class="fieldset__fields">
         <div class="form-field">
             <div class="promo-code">
-                <input id="promo-code" name="promoCode" value="@promoCodeToDisplay.map(_.get).getOrElse("")" type="text" class="input-text js-input promo-code__field"/>
-                <button type="button" class="promo-code__apply action js-promo-code-validate">Apply</button>
+              <input id="promo-code" name="promoCode" value="@promoCodeToDisplay.map(_.get).getOrElse("")" type="text" class="js-promocode-value input-text js-input promo-code__field"/>
+              <button type="button" class="js-promo-code-apply promo-code__apply action js-promo-code-validate">Apply</button>
             </div>
+            <div class="loader js-promo-loader">Validating</div>
             <div class="js-promo-feedback-container"></div>
         </div>
     </div>

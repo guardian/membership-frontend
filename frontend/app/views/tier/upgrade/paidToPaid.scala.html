@@ -6,11 +6,16 @@
 @import views.html.helper.CSRF
 
 @import views.support.PageInfo
+@import com.gu.memsub.promo.PromoCode
+@import com.gu.memsub.promo.ValidPromotion
+@import com.gu.memsub.promo.Upgrades
+@import com.gu.memsub.promo.Tracking
 @(
     summary: PaidToPaidUpgradeSummary,
     userFields: com.gu.identity.play.PrivateFields,
     pageInfo: PageInfo,
-    flashMessage: Option[model.FlashMessage]
+    flashMessage: Option[model.FlashMessage],
+    validPromo: Option[ValidPromotion[Upgrades]]
 )(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader)
 
 @main("Upgrade to " + summary.target.tier.name, pageInfo=pageInfo) {
@@ -39,6 +44,7 @@
                       <div class="form-group">
                           @fragments.form.benefitsFieldset(summary.target.tier.benefits)
                           @fragments.form.featureChoiceFieldset(summary.target.tier)
+                          @validPromo.filter(_.promotionType != Tracking).fold(fragments.form.promoCode(validPromo.map(_.code), None))(_ => fragments.form.promoCode(None, validPromo.map(_.code)))
                       </div>
                       <h2 class="h-section">What happens now</h2>
                       <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@summary.current.tier.name</strong>
@@ -93,11 +99,11 @@
                           </tr>
                           <tr role="row">
                               <th role="rowheader">First payment</th>
-                              <td id="qa-upgrade-new-first-payment">@summary.target.firstPayment.pretty <small>to be taken now</small></td>
+                              <td id="qa-upgrade-new-first-payment"><span class="js-first-payment">@summary.target.firstPayment.pretty</span> <small>to be taken now</small></td>
                           </tr>
                           <tr role="row">
                               <th role="rowheader">@{summary.billingPeriod.adjective.capitalize} payment</th>
-                              <td id="qa-upgrade-new-recurring-payment">@summary.target.nextPayment.pretty <small>next taken on date @summary.target.nextPaymentDate.pretty</small></td>
+                              <td id="qa-upgrade-new-recurring-payment"><span class="js-next-payment">@summary.target.nextPayment.pretty</span> <small>next taken on date @summary.target.nextPaymentDate.pretty</small></td>
                           </tr>
                       </table>
                   </div>
@@ -133,7 +139,7 @@
                       @fragments.user.cardSummary(summary.current.card)
                       <p class="text-note">
                           <strong>First payment:</strong>
-                          Your first payment of <strong>@summary.target.firstPayment.pretty</strong>
+                          Your first payment of <strong class="js-first-payment">@summary.target.firstPayment.pretty</strong>
                           will be taken today under the name Guardian Members.
                       </p>
                       <p class="text-note">
@@ -154,7 +160,7 @@
 
                       <div class="actions js-waiting-container">
                           <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">
-                              Pay @summary.target.firstPayment.pretty Now</button>
+                              Pay <span class="js-first-payment">@summary.target.firstPayment.pretty</span> Now</button>
                           <div class="loader js-loader"></div>
                       </div>
                   </div>
