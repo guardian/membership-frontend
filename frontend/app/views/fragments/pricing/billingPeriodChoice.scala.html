@@ -16,7 +16,7 @@
     }
 
     function formattedDiscountedPrice(currency, amount, discount) {
-        return checkoutForm.currencySymbols[currency] + discountedPriceFormatted(amount[currency], discount).toFixed(2).replace('.00','');
+        return checkoutForm.currencyIdentifiers[currency] + discountedPriceFormatted(amount[currency], discount).toFixed(2).replace('.00','');
     }
 
     function formattedDiscountedCharge(currency, amount, discount) {
