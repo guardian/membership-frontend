@@ -85,7 +85,7 @@ Fetch the developer AWS credentials, discuss how we do this with a team member.
 Download our private keys from the `membership-private` S3 bucket. If you have the AWS CLI set up you can run:
 
 ```
-sudo aws s3 cp s3://membership-private/DEV/membership-keys.conf ~/.gu/ --profile membership
+sudo aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu/ --profile membership
 ```
 
 ### Ubuntu setup
