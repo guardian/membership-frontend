@@ -165,6 +165,7 @@ class MemberService(identityService: IdentityService,
       customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
       paymentResult <- createPaymentMethod(friend.contact, customer).liftM
       subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(friend.contact.identityId, None), newTier, Some(customer)).liftM
       _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
     } yield {
       form.addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(friend.contact.identityId, _))
@@ -186,7 +187,6 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, sub.subscription.plan.billingPeriod),
         form = form,
-        customerOpt = None,
         campaignCode = code
       ))
     } yield {
@@ -475,7 +475,6 @@ class MemberService(identityService: IdentityService,
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
-                                  customerOpt: Option[Customer],
                                   campaignCode: Option[CampaignCode])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails
@@ -487,8 +486,8 @@ class MemberService(identityService: IdentityService,
       country <- EitherT(country(contact).map(\/.right))
       promo = promoService.validateMany[Upgrades](country, planChoice.productRatePlanId)(form.promoCode, form.trackingPromoCode).toOption.flatten
       command <- EitherT(amend(sub, planChoice, form.featureChoice, promo).map(\/.right))
-      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, customerOpt).liftM
       _ <- zuoraService.upgradeSubscription(command).liftM
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, None).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
       addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
