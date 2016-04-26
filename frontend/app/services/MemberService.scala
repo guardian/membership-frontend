@@ -165,6 +165,7 @@ class MemberService(identityService: IdentityService,
       customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
       paymentResult <- createPaymentMethod(friend.contact, customer).liftM
       subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(friend.contact.identityId, None), newTier, Some(customer)).liftM
       _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
     } yield {
       form.addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(friend.contact.identityId, _))
