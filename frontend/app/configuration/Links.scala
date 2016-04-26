@@ -41,7 +41,7 @@ object ProfileLinks {
       routes.FrontPage.welcome.url
     )
 
-    if(exclusions.contains(path)) {
+    if(!exclusions.contains(path)) {
       baseUrl ? ("returnUrl" -> Config.membershipUrl)
     } else baseUrl
 
