@@ -35,16 +35,7 @@ object ProfileLinks {
   val changePassword =  Config.idWebAppUrl / "password/change" ? Config.idMember
 
   def signOut(path: String) = {
-
-    val baseUrl = Config.idWebAppUrl / "signout" ? Config.idMember
-    val exclusions = Seq(
-      routes.FrontPage.welcome.url
-    )
-
-    if(exclusions.contains(path)) {
-      baseUrl ? ("returnUrl" -> Config.membershipUrl)
-    } else baseUrl
-
+    Config.idWebAppUrl / "signout" ? Config.idMember ? ("returnUrl" -> (Config.membershipUrl + path))
   }
 
 }
