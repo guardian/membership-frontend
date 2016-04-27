@@ -6,7 +6,8 @@ import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
-import com.gu.memsub.promo.{Tracking, PromoCode}
+import com.gu.memsub.BillingPeriod
+import com.gu.memsub.promo.{NewUsers, PromoCode}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -14,6 +15,7 @@ import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
+import controllers.TierController._
 import forms.MemberForm._
 import model._
 import play.api.Play.current
@@ -99,6 +101,7 @@ object Joiner extends Controller with ActivityTracking
 
   def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
+    implicit val c = catalog
 
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
@@ -111,32 +114,44 @@ object Joiner extends Controller with ActivityTracking
       )
 
       val providedPromoCode = promoCode orElse codeFromSession
-      val promotion = providedPromoCode.flatMap(promoService.findPromotion)
+
+      // is the providedPromoCode valid for the page being rendered (year is default billing period)
+      val planChoice = PaidPlanChoice(tier, BillingPeriod.year)
+      val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
+      val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
+
+      val validTrackingPromoCode = validPromotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+      val validDisplayablePromoCode = validPromotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
 
       Ok(views.html.joiner.form.payment(
          plans = plans,
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          idUser = identityUser,
          pageInfo = pageInfo,
-         trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode),
-         promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)))
+         trackingPromoCode = validTrackingPromoCode,
+         promoCodeToDisplay = validDisplayablePromoCode))
     }
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
-
-    val promoCode = codeFromSession // only take from the session
-    val trackingPromoCode = promoCode.flatMap(promoService.findPromotion).filter(_.whenTracking.isDefined).flatMap(p => promoCode)
+    implicit val c = catalog
 
     for {
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
+
+      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
+      val providedPromoCode = codeFromSession // only take from the session
+      val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.productRatePlanId).toOption)
+      val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
+      val validTrackingPromoCode = validPromotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
         identityUser,
-        support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None)),
-        trackingPromoCode))
+        pageInfo,
+        validTrackingPromoCode))
     }
   }
 
