@@ -15,7 +15,6 @@ import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
-import controllers.TierController._
 import forms.MemberForm._
 import model._
 import play.api.Play.current
