@@ -1,4 +1,4 @@
-/*global Stripe, s*/
+/*global Stripe*/
 define([
     'src/modules/form/validation/display'
 ], function (display) {
@@ -14,20 +14,16 @@ define([
     var giraffe = function (element) {
         var hiddenField = document.querySelector('.js-amount-hidden');
         var amount = parseFloat(element.value);
+        var hasMax = element.hasAttribute('data-max');
+        var max = element.getAttribute('data-max');
         if (element.value == '') {
             //Fixme
             amount = parseFloat(hiddenField.value);
             console.log(amount);
         }
-        //user has left prefill
-        if (amount > 500) {
-            //global omniture
-            if ((typeof s !== 'undefined') && s) {
-                s.tl(true, 'o', 'largeValue:' + amount);
-            }
-        }
-        if (amount <= 500 && amount >= 1) {
-            element.value = amount.toFixed(2);
+        element.value = amount.toFixed(2);
+
+        if (amount >= 1 && !hasMax || amount < max) {
             return true;
         }
         return false;
