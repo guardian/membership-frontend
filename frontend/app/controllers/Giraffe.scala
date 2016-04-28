@@ -25,6 +25,7 @@ object Giraffe extends Controller {
   val stripe = TouchpointBackend.Normal.giraffeStripeService
   val identity = TouchpointBackend.Normal.identityService
   val chargeId = "charge_id"
+  val maxAmount: Option[Int] = None
 
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
@@ -39,7 +40,7 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo))
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount))
   }
 
   def contributeUSA = CachedAction { implicit request =>
