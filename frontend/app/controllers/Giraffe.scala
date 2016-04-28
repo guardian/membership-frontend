@@ -53,7 +53,7 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contributeUSA(pageInfo))
+    Ok(views.html.giraffe.contributeUSA(pageInfo, maxAmount))
   }
 
   def contributeAustralia = CachedAction { implicit request =>
@@ -66,7 +66,7 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contributeAustralia(pageInfo))
+    Ok(views.html.giraffe.contributeAustralia(pageInfo, maxAmount))
   }
 
   def thanks = NoCacheAction { implicit request =>
