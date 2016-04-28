@@ -165,6 +165,11 @@ $gs-max-columns: 16;
         @content;
     }
 }
+@mixin clip-path-padded($key,$bottom-padding) {
+    @include clip-path($key){
+        padding-bottom: $bottom-padding - $gs-gutter * 2 - $gs-baseline;
+    }
+}
 
 @mixin clip-overlay($background-color: rgba(255,255,255,0.25)) {
     content: ' ';

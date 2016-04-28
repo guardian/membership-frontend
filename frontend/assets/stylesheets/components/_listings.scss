@@ -87,6 +87,9 @@ $full-gutter: $gs-gutter;
             }
         }
     }
+    .listing__content--no-top-padding{
+        padding-top: 0;
+    }
     .listing__text {
         @include fs-headline(2);
         @include mq(tablet) {

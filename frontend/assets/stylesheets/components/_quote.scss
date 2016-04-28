@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Promos: Quote
+   ========================================================================== */
+
+$quote-gutter: 30px;
+
+.promo-quote {
+    margin-bottom: $gs-baseline * 2;
+}
+
+
+.promo-quote__body {
+    @include clip-path-padded('quote-mobile',168px);
+    @include clearfix();
+    background-color: color(neutral-7);
+    padding: $gs-baseline ($gs-gutter / 2) 0;
+    @include mq(tablet) {
+        @include clip-path-padded('quote',84px);
+    }
+
+}
+
+.promo-quote__text {
+    @include mq(tablet) {
+        padding-left: 300px + $quote-gutter;
+    }
+}
+
+.promo-quote__cutout {
+    height:  gs-height(4);
+    clear: both;
+    position: absolute;
+    right: $quote-gutter + $gs-gutter;
+    bottom: -($gs-baseline *2);
+    @include mq(tablet) {
+        left: $quote-gutter + $gs-gutter;
+        height:  gs-height(6);
+    }
+    @include mq(mem-full) {
+        left: $quote-gutter;
+        height: gs-height(6);
+    }
+}
+
+
