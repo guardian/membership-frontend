@@ -17,13 +17,12 @@ define([
         var hasMax = element.hasAttribute('data-max');
         var max = element.getAttribute('data-max');
         if (element.value == '') {
-            //Fixme
             amount = parseFloat(hiddenField.value);
             console.log(amount);
         }
         element.value = amount.toFixed(2);
 
-        if (amount >= 1 && !hasMax || amount < max) {
+        if (amount >= 1 && !hasMax || amount <= max) {
             return true;
         }
         return false;
