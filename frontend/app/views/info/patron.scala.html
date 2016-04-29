@@ -24,17 +24,6 @@
                     <p>From campaigning on issues affecting the voices less heard to holding those in power to account, Patrons ensure the Guardian can continue to surface the information and ideas that shape the global conversation.</p>
                 </div>
                 @fragments.tier.packagePromoMinimal(patronPlans, countryGroup, showDescription = false, modifierClass = Some("package-promo--spread"))
-            }
-        </div>
-    }
-
-    @* ===== Ensuring our independence ===== *@
-    @for(img <- pageImages.find(_.name.contains("independence"))) {
-        <div class="page-slice page-slice--padded l-constrained">
-            @fragments.promos.promoQuote(
-                Asset.at("images/common/katharine-viner-cutout.png"),
-                "Katharine Viner, editor-in-chief of the Guardian"
-            ) {
                 <div class="text-feature">
                     <p>The Guardian has no proprietor. Our editor has total independence.</p>
                     <p>The support of Patrons helps to ensure that the Guardian can stand witness to the world, without interference.</p>
@@ -42,6 +31,8 @@
             }
         </div>
     }
+
+
 
     @* ===== Backstage Pass ===== *@
     @for(img <- pageImages.find(_.name.contains("backstage-pass"))) {
