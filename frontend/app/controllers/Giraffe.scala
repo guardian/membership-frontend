@@ -12,6 +12,7 @@ import services.{AuthenticationService, TouchpointBackend}
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import views.support._
+import scalaz.syntax.std.option._
 
 import scala.concurrent.Future
 
@@ -25,7 +26,7 @@ object Giraffe extends Controller {
   val stripe = TouchpointBackend.Normal.giraffeStripeService
   val identity = TouchpointBackend.Normal.identityService
   val chargeId = "charge_id"
-  val maxAmount: Option[Int] = None
+  val maxAmount: Option[Int] = 500.some
 
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
@@ -120,7 +121,7 @@ object Giraffe extends Controller {
         "email" -> f.email,
         "name" -> f.name
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
-      val res = stripe.Charge.create(Math.min(50000, (f.amount * 100).toInt), f.currency, f.email, "Your contribution", f.token, metadata)
+      val res = stripe.Charge.create(maxAmount.fold((f.amount*100).toInt)(max => Math.min(max * 100, (f.amount * 100).toInt)), f.currency, f.email, "Your contribution", f.token, metadata)
 
       AuthenticationService.authenticatedUserFor(request).map { user =>
         identity.updateUserMarketingPreferences(IdentityRequest(request), user, f.marketing)
