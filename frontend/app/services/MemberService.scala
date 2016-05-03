@@ -158,20 +158,25 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  override def upgradeFreeSubscription(friend: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(sub.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(sub.contact, customer).liftM
-      memberId <- EitherT(upgradeSubscription(
-        sub.subscription,
-        contact = sub.contact,
-        planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
-        form = form,
-        customerOpt = Some(customer),
-        campaignCode = code
-      ))
-    } yield memberId).run
+      sub <- EitherT(subOrPendingAmendError(friend.subscription))
+      customer <- stripeService.Customer.create(friend.contact.identityId, form.payment.token).liftM
+      paymentResult <- createPaymentMethod(friend.contact, customer).liftM
+      subRes <- createPaidSubscription(friend.contact,form,NameForm(friend.contact.firstName.getOrElse(""),friend.contact.lastName),newTier,customer,code).liftM
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(friend.contact.identityId, None), newTier, Some(customer)).liftM
+      _ <- zuoraService.cancelPlan(sub, DateTime.now.toLocalDate).liftM
+    } yield {
+      form.addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(friend.contact.identityId, _))
+      track(MemberActivity("upgradeMembership", MemberData(
+        friend.contact.salesforceContactId,
+        friend.contact.identityId,
+        newTier)), friend.contact)
+      trackUpgrade(friend.contact, sub, catalog.unsafeFindPaid(PaidPlanChoice(newTier, form.payment.billingPeriod).productRatePlanId), form.addressDetails, code)
+      salesforceService.metrics.putUpgrade(newTier)
+      friend.contact}).run
+
   }
 
   override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
@@ -182,7 +187,6 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, sub.subscription.plan.billingPeriod),
         form = form,
-        customerOpt = None,
         campaignCode = code
       ))
     } yield {
@@ -471,7 +475,6 @@ class MemberService(identityService: IdentityService,
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
-                                  customerOpt: Option[Customer],
                                   campaignCode: Option[CampaignCode])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails

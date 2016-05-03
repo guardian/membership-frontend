@@ -5,7 +5,7 @@ import actions.BackendProvider
 import com.gu.memsub.promo.{Upgrades, PromoCode}
 import _root_.services.api.MemberService._
 import com.gu.i18n.CountryGroup
-import com.gu.memsub.promo.Writers._
+import com.gu.memsub.promo.Formatters._
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
 import com.gu.membership.{MembershipCatalog, PaidMembershipPlans}
@@ -147,7 +147,7 @@ object TierController extends Controller with ActivityTracking
     val currency = sub.currency
     val targetPlans = c.findPaid(target)
     val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
-    val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
+    val countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, currency)
 
     val identityUserFieldsF =
       IdentityService(IdentityApi)
@@ -180,7 +180,7 @@ object TierController extends Controller with ActivityTracking
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
-          countriesWithCurrency,
+          countriesWithCurrencies,
           privateFields,
           pageInfo,
           validTrackingPromoCode,
