@@ -6,7 +6,7 @@ import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.Promotion.AnyPromotion
-import com.gu.memsub.promo.Writers._
+import com.gu.memsub.promo.Formatters._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}

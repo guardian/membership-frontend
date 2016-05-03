@@ -5,7 +5,7 @@ import actions.BackendProvider
 import com.gu.memsub.promo.{Upgrades, PromoCode}
 import _root_.services.api.MemberService._
 import com.gu.i18n.CountryGroup
-import com.gu.memsub.promo.Writers._
+import com.gu.memsub.promo.Formatters._
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
 import com.gu.membership.{MembershipCatalog, PaidMembershipPlans}
