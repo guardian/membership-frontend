@@ -156,7 +156,7 @@ object TierController extends Controller with ActivityTracking
 
     // Preselect the country from Identity fields
     // but the currency from Zuora account
-    def pageInfo(pf: PrivateFields, billingPeriod: BillingPeriod): PageInfo = {
+    def getPageInfo(pf: PrivateFields, billingPeriod: BillingPeriod): PageInfo = {
       val selectedCountry = pf.billingCountry.orElse(pf.country).flatMap { name =>
         CountryGroup.countries.find(_.name == name)
       }
@@ -165,20 +165,28 @@ object TierController extends Controller with ActivityTracking
     }
 
     val providedPromoCode = promoCode orElse codeFromSession
-    val promotion = providedPromoCode.flatMap(promoService.findPromotion)
 
     request.paidOrFreeSubscriber.fold({freeSubscriber =>
-      identityUserFieldsF.map(privateFields =>
+      identityUserFieldsF.map(privateFields => {
+
+        // is the promoCode valid for the page being rendered
+        val pageInfo = getPageInfo(privateFields, BillingPeriod.year)
+        val planChoice = PaidPlanChoice(target, BillingPeriod.year)
+        val validPromoCode = providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
+        val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
+        val validTrackingPromoCode = validPromotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+        val validDisplayablePromoCode = validPromotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
           countriesWithCurrency,
           privateFields,
-          pageInfo(privateFields, BillingPeriod.year),
-          trackingPromoCode = promotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode),
-          promoCodeToDisplay = promotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+          pageInfo,
+          validTrackingPromoCode,
+          validDisplayablePromoCode
         )(getToken, request))
-      )
+      })
     }, { paidSubscriber =>
       val billingPeriod = paidSubscriber.subscription.plan.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
@@ -190,7 +198,7 @@ object TierController extends Controller with ActivityTracking
       }
 
       (validPromo |@| identityUserFieldsF |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (vp, fields, summary) =>
-        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, fields, pageInfo(fields, billingPeriod), flashError, vp)(getToken, request)))
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, fields, getPageInfo(fields, billingPeriod), flashError, vp)(getToken, request)))
       }.map(handleResultErrors)
     })
   }
