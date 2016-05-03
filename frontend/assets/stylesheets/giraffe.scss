@@ -519,3 +519,16 @@ $desktop-col-padding-right: 16px;
         }
     }
 }
+
+[data-shown] {
+     display:none;
+}
+
+$currencies: gbp usd aud;
+@each $currency in $currencies {
+    .currency-#{$currency} {
+        [data-shown*=#{$currency}] {
+             display:initial!important;
+        }
+    }
+}

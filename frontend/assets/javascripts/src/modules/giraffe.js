@@ -45,7 +45,6 @@ export function init() {
     // Custom amount
     CUSTOM_AMOUNT.addEventListener('blur', ev => setAmount(ev.currentTarget.value));
 
-    initialCurrency();
     getStuffFromIdentity();
 }
 function initialCurrency(){
