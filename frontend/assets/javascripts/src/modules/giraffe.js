@@ -47,13 +47,7 @@ export function init() {
 
     getStuffFromIdentity();
 }
-function initialCurrency(){
-    let currency = CURRENCY_FIELD.value;
-    let currencyElem = document.querySelector('.js-currency-switcher[data-currency='+currency+']');
-    console.log('.js-currency-switcher[data-currency='+currency+']');
-    console.log(currencyElem);
-    selectCurrencyElement(currencyElem);
-}
+
 function select(el) {
     // if we had a real DOM manipulation library (i.e. jQuery) we could do:
     // $(el).closest('.js-button-group').find('.js-button').removeClass(ACTIVE_CLASS);
