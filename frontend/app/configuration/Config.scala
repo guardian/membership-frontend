@@ -158,63 +158,63 @@ object Config {
 
   def demoPromo(env: String) = {
     val prpIds = membershipRatePlanIds(env)
-    new Promotion[Incentive](
+    Promotion(
+      name = "Free English Heritage membership worth £88",
+      description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerMonthly,
         prpIds.partnerYearly,
         prpIds.patronYearly,
         prpIds.patronMonthly
       )),
-      campaignName = "English Heritage Offer - Q4 FY2016",
-      codes = PromoCodeSet(PromoCode("EH2016")),
-      description = "Free English Heritage membership worth £88 when you become a Partner or Patron Member",
+      campaign = Campaign("EH", "English Heritage Offer - Q4 FY2016"),
+      channelCodes = Map(Channel("web") -> Set(PromoCode("EH2016"))),
       starts = new LocalDate(2016,3,1).toDateTime(LocalTime.Midnight, timezone),
-      expires = new LocalDate(2016,4,1).toDateTime(LocalTime.Midnight, timezone),
-      imageUrl = Some("https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png"),
+      expires = Some(new LocalDate(2016,4,1).toDateTime(LocalTime.Midnight, timezone)),
       promotionType = Incentive(
         redemptionInstructions = "We'll send you an email with instructions on redeeming your English Heritage offer within 35 days.",
         termsAndConditions = ""
       ),
-      roundelHtml = "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>",
-      title = "Free English Heritage membership worth £88"
+      landingPage = Some(LandingPage(None, None, Some(
+        "<h1 class=\"roundel__title\">Free annual English Heritage membership</h1>\n<p class=\"roundel__description\">when you join as a Partner or Patron by 31 March</p>"
+      ), Some("https://s3-eu-west-1.amazonaws.com/memsub-promo-images/eh2016.png")))
     )
   }
 
-  def discountPromo(env: String): Option[Promotion[PercentDiscount]] = {
+  def discountPromo(env: String): Option[Promotion[PercentDiscount, Option]] = {
     val prpIds = membershipRatePlanIds(env)
-    new Promotion(
+    Promotion(
+      name = "Become a Guardian Partner for just £99",
+      description = "",
       appliesTo = AppliesTo.ukOnly(Set(
         prpIds.partnerYearly
       )),
-      campaignName = "Become a Guardian Partner for just £99",
-      codes = PromoCodeSet(PromoCode("PARTNER99")),
-      description = "",
+      campaign = Campaign("P99", "Become a Guardian Partner for just £99"),
+      channelCodes = Map(Channel("web") -> Set(PromoCode("PARTNER99"))),
       starts = new LocalDate(2016,4,13).toDateTime(LocalTime.Midnight, timezone),
-      expires = new LocalDate(2016,5,1).toDateTime(LocalTime.Midnight, timezone),
-      imageUrl = None,
+      expires = Some(new LocalDate(2016,5,1).toDateTime(LocalTime.Midnight, timezone)),
+      landingPage = Some(LandingPage(None, None, Some("Join</br>as an annual Partner Member before 30 April 2016 and save</br>£50"), None)),
       promotionType = PercentDiscount(
         durationMonths = Some(12),
         amount = 33.557046979866
-      ),
-      roundelHtml = "Join</br>as an annual Partner Member before 30 April 2016 and save</br>£50",
-      title = "Become a Guardian Partner for just £99"
+      )
     ).some
   }
 
-  def trackingPromo(env: String): Option[Promotion[Tracking.type]] = {
+  def trackingPromo(env: String): Option[Promotion[Tracking.type, Option]] = {
     val prpIds = membershipRatePlanIds(env)
-    new Promotion(
-      appliesTo = AppliesTo.all(prpIds.productRatePlanIds),
-      campaignName = "Example tracking-only promo code",
-      codes = PromoCodeSet(PromoCode("TRACK01")),
+    Promotion(
+      name = "Example tracking-only promo code",
       description = "This will not affect the price, payment delay, or register for an incentive",
+      appliesTo = AppliesTo.all(prpIds.productRatePlanIds),
+      campaign = Campaign("", "Example tracking-only promo code"),
+      channelCodes = Map(Channel("web") -> Set(PromoCode("TRACK01"))),
       starts = new LocalDate(2016,4,1).toDateTime(LocalTime.Midnight, timezone),
-      expires = new LocalDate(2016,6,1).toDateTime(LocalTime.Midnight, timezone),
-      imageUrl = None,
+      expires = Some(new LocalDate(2016,6,1).toDateTime(LocalTime.Midnight, timezone)),
       promotionType = Tracking,
-      roundelHtml = "",
-      title = "Example tracking-only promo code"
+      landingPage = None
     ).some
+
   }
 
 

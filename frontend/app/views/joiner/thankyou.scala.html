@@ -119,7 +119,7 @@
                     <h2 class="page-section__headline">Promotion applied</h2>
                 </div>
                 <div class="page-section__content">
-                    <p>@if(promo.description.isEmpty) { @promo.title } else { @promo.description }</p>
+                    <p>@if(promo.description.isEmpty) { @promo.name } else { @promo.description }</p>
                     @promo.whenIncentive.map {a => <p>@a.promotionType.redemptionInstructions</p> }
                 </div>
             </section>

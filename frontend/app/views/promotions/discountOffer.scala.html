@@ -9,20 +9,21 @@
 @import model.PackagePromo.CtaButton
 @import com.netaporter.uri.dsl._
 @import views.model.Roundel
+@import com.gu.memsub.promo.Promotion.AnyPromotionWithLandingPage
 
 @(partnerPlans: PaidMembershipPlans[Current, Partner],
     pageInfo: PageInfo,
     pageImages: Seq[model.ResponsiveImageGroup],
     promoCode: PromoCode,
-    promotion: AnyPromotion
+    promotion: AnyPromotionWithLandingPage
 )(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import views.support.Asset
 
 
-@main(promotion.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+@main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.common.roundel(Roundel(Seq(promotion.roundelHtml)),classModifier = Some("alt"))
+    @fragments.common.roundel(Roundel(promotion.landingPage.roundelHtml.toSeq)),classModifier = Some("alt"))
 
     @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
         Become a Guardian Partner for just £99
