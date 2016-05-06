@@ -5,7 +5,7 @@ import actions.RichAuthRequest
 import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.Subscription.ProductRatePlanId
-import com.gu.memsub.promo.Promotion.AnyPromotion
+import com.gu.memsub.promo.Promotion.{PromotionWithLandingPage, AnyPromotion}
 import com.gu.memsub.promo.Formatters._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
@@ -59,7 +59,7 @@ object Promotions extends Controller {
 
   def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
-    def findTemplateForPromotion(promoCode: PromoCode, promotion: AnyPromotion, url: String) =
+    def findTemplateForPromotion(promoCode: PromoCode, promotion: PromotionWithLandingPage[PromotionType], url: String) =
       promotion.promotionType match {
         case i: Incentive =>
           implicit val countryGroup = UK
@@ -67,7 +67,7 @@ object Promotions extends Controller {
           Some(views.html.promotions.englishHeritageOffer(
             TouchpointBackend.Normal.catalog.partner,
             PageInfo(
-              title = promotion.title,
+              title = promotion.landingPage.title.getOrElse(promotion.name),
               url = url,
               description = Some(promotion.description)
             ),
@@ -79,7 +79,7 @@ object Promotions extends Controller {
           Some(views.html.promotions.discountOffer(
             TouchpointBackend.Normal.catalog.partner,
             PageInfo(
-              title = promotion.title,
+              title = promotion.landingPage.title.getOrElse(promotion.name),
               url = url,
               description = Some(promotion.description)
             ),
@@ -106,8 +106,9 @@ object Promotions extends Controller {
         promotion <- promoService.findPromotion(promoCode) \/> redirectToHomepage
         _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
         _ <- failWhen(promotion.starts.isAfterNow,redirectToHomepage)
-        _ <- failWhen(promotion.expires.isBeforeNow,redirectToHomepage)
-        html <- findTemplateForPromotion(promoCode, promotion, request.path) \/> redirectToHomepageWithSession
+        _ <- failWhen(promotion.expires.exists(_.isBeforeNow),redirectToHomepage)
+        withLanding <- Promotion.withLandingPage(promotion) \/> redirectToHomepageWithSession
+        html <- findTemplateForPromotion(promoCode, withLanding, request.path) \/> redirectToHomepageWithSession
         response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
       } yield response
      ).fold(identity, identity) //Whether or not the for comprehension succeeds, we have a result- which we want to return
