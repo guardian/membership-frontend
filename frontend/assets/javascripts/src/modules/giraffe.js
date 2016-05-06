@@ -16,12 +16,16 @@ const CUSTOM_AMOUNT = document.querySelector('.js-amount-field');
 const EMAIL_FIELD = document.querySelector('.js-email');
 const NAME_FIELD = document.querySelector('.js-name');
 
+const SHOWN_ATTRIBUTE = 'shown';
+const SHOWABLE = $('[data-'+SHOWN_ATTRIBUTE+']');
+const HIDDEN_CLASS = 'is-hidden';
+
 export function init() {
     if (!document.querySelector('.container-global--giraffe .js-form')) {
         return;
     }
 
-    $CURRENCY_PICKER.each(el => el.addEventListener('click', ev => setCurrency(ev.currentTarget)));
+    $CURRENCY_PICKER.each(el => el.addEventListener('click', ev => selectCurrencyElement(ev.currentTarget)));
 
     // Preset amount
     $AMOUNT_PICKER.each(el => el.addEventListener('click', ev => {
@@ -51,15 +55,20 @@ function select(el) {
     $(el).addClass(ACTIVE_CLASS);
 }
 
-function setCurrency(el) {
+function selectCurrencyElement(el) {
     let currency = el.getAttribute('data-currency');
     let symbol = el.getAttribute('data-symbol');
     if (currency && symbol) {
+        let shown = $('[data-' + SHOWN_ATTRIBUTE + '*=' + currency + ']'); //Searching the entire DOM because we still don't have a really DOM library
         select(el);
         CURRENCY_FIELD.value = currency;
         $CURRENCY_DISPLAY.html(symbol);
+        $(SHOWABLE).addClass(HIDDEN_CLASS);
+        shown.removeClass(HIDDEN_CLASS);
     }
 }
+
+
 
 function setAmount(amount) {
     $('input.' + AMOUNT_CLASS).val(amount);

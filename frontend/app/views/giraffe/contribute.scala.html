@@ -2,7 +2,8 @@
 @import views.support.Asset
 @import configuration.Links
 
-@(pageInfo: PageInfo, maxAmount: Option[Int])
+@import com.gu.i18n.CountryGroup
+@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup)
 
 @giraffeMain(pageInfo) {
     <div class="l-constrained">
@@ -18,7 +19,7 @@
         </div>
     </div>
 
-    <div class="support-wrapper page-slice l-constrained">
+    <div class="support-wrapper page-slice l-constrained currency-@countryGroup.currency.toString.toLowerCase">
 
         <form id="form" class="form js-form" role="main" method="POST" autocomplete="on" novalidate action="@routes.Giraffe.pay()">
             <div class="form__column">
@@ -69,7 +70,7 @@
                                 <button type="button" tabindex="6" class="js-currency-switcher js-button option-button" data-currency="aud" data-symbol="&#36;">&#36;&nbsp;CAD</button>
                                 <button type="button" tabindex="7" class="js-currency-switcher js-button option-button" data-currency="eur" data-symbol="&euro;">&euro;&nbsp;EUR</button>
                             </div>
-                            <input type="hidden" id="currency" name="currency" class="js-currency-field" value="gbp">
+                             <input type="hidden" id="currency" name="currency" class="js-currency-field" value="@countryGroup.currency.toString.toLowerCase">
                         </div>
                     </li>
 
@@ -78,20 +79,20 @@
                         <div class="input">
                             <div class="js-button-group button-group u-cf">
                                 <button type="button" tabindex="8" class="js-button option-button option-button--bold active" data-amount="5">
-                                    <span class="currency js-currency">&pound;</span>5
+                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>5
                                 </button>
                                 <button type="button" tabindex="9" class="js-button option-button option-button--bold" data-amount="20">
-                                    <span class="currency js-currency">&pound;</span>20
+                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>20
                                 </button>
                                 <button type="button" tabindex="10" class="js-button option-button option-button--bold" data-amount="50">
-                                    <span class="currency js-currency">&pound;</span>50
+                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>50
                                 </button>
                                 <button type="button" tabindex="11" class="js-button option-button option-button--bold" data-amount="100">
-                                    <span class="currency js-currency">&pound;</span>100
+                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>100
                                 </button>
                             </div>
                             <div id="other_amount_field">
-                                <div class="other_amount_currency headline-text--bolder js-currency">&pound;</div>
+                                <div class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</div>
                                 <input type="number" id="other_amount" class="input-text js-amount js-amount-field" placeholder="Other amount" maxlength="10" tabindex="12" data-validation="giraffe" @maxAmount.fold{
                                 }{max =>
                                 data-max="@max"
@@ -105,7 +106,7 @@
                     } { max =>
                         <li>
                             <div class="security-note">
-                                We are presently only able to accept contributions of <span class="currency js-currency">&pound;</span>@max or less</div>
+                                We are presently only able to accept contributions of <span class="currency js-currency">@countryGroup.currency.glyph</span>@max or less</div>
                         </li>
                     }
                 </ul>
@@ -207,7 +208,10 @@
 
                     <div class="fieldset__note">
                         <p>By proceeding, you are agreeing to our
-                            <a href="@Links.giraffeTerms" class="text-link" target="_blank">Terms and Conditions</a> and
+                            <a href="@Links.giraffeTerms" class="text-link" target="_blank" data-shown="gbp">Terms and Conditions</a>
+                            <a href="@Links.giraffeTermsAustralia" class="text-link" target="_blank" data-shown="aud">Terms and Conditions</a>
+                            <a href="@Links.giraffeTermsUS" class="text-link" target="_blank" data-shown="usd">Terms and Conditions</a>
+                            and
                             <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
                         </p>
                     </div>
@@ -216,6 +220,7 @@
         </form>
 
         <div class="feedback">
+        <span data-shown="gbp">
             <p>If you have any questions about contributing to the Guardian, please
                 <a href="mailto:contribution.support@@theguardian.com" class="support-thanks__link">contact us here</a>.
             </p>
@@ -225,6 +230,30 @@
             <p>
                 Please note that your support of the Guardian’s journalism does not constitute a charitable donation, as such your contribution is not eligible for Gift Aid in the UK nor a tax-deduction elsewhere.
             </p>
+        </span>
+
+        <span data-shown="aud">
+            <p>If you have any questions about contributing to the Guardian, please
+                <a href="mailto:contribution.support@@theguardian.com" class="support-thanks__link">contact us here</a>.
+            </p>
+            <p>
+                The ultimate owner of the Guardian is The Scott Trust Limited, whose role it is to secure the editorial and financial independence of the Guardian in perpetuity. Reader contributions support the Guardian’s journalism.
+            </p>
+        </span>
+        <span data-shown="usd">
+            <p>If you have any questions about contributing to the Guardian, please
+                <a href="mailto:contribution.support@@theguardian.com" class="support-thanks__link">contact us here</a>.
+            </p>
+            <p>
+                The ultimate owner of the Guardian is The Scott Trust Limited, whose role it is to secure the editorial and financial independence of the Guardian in perpetuity. Reader contributions support the Guardian’s journalism.
+            </p>
+            <p>
+                Please note that the Guardian is not a charity, will not use your support for charitable
+                programs, and your support of the Guardian’s journalism does not constitute a
+                charitable donation. As such your contribution is not eligible to be treated as a
+                charitable deduction for federal or state taxes in the United States or elsewhere.
+            </p>
+            </span>
         </div>
     </div>
 }
