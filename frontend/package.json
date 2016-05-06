@@ -11,7 +11,8 @@
     "compileCss": "grunt compile:css --dev",
     "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
-    "test": "grunt validate && grunt karma"
+    "test": "grunt validate && grunt karma",
+    "postinstall": "npm run bowerSetup"
   },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",

@@ -1,5 +1,5 @@
 import * as bean from 'bean'
-import * as $ from '$'
+import $ from '$'
 
 'use strict';
 
