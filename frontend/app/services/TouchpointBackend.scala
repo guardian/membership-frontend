@@ -3,6 +3,7 @@ package services
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.MembershipCatalog
+import com.gu.memsub.promo.{PromotionCollection, DynamoPromoCollection}
 import com.gu.memsub.services.{api => memsubapi, PromoService, CatalogService, PaymentService}
 import com.gu.memsub
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
@@ -20,7 +21,6 @@ import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
 import tracking._
 import utils.TestUsers.isTestUser
-import configuration.Config.{demoPromo, discountPromo, trackingPromo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object TouchpointBackend {
@@ -58,9 +58,8 @@ object TouchpointBackend {
 
     val catalogService = CatalogService(zuoraRestClient, memRatePlanIds, digipackRatePlanIds, backendType.name)
     val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
-
-    val promoService = new PromoService(Seq(demoPromo(backend.zuoraEnvName)) ++ discountPromo(backend.zuoraEnvName) ++ trackingPromo(backend.zuoraEnvName),
-                                        catalogService.membershipCatalog, discounter)
+    val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
+    val promoService = new PromoService(promoCollection, catalogService.membershipCatalog, discounter)
 
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)
     val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
@@ -82,6 +81,7 @@ object TouchpointBackend {
       catalogService = catalogService,
       zuoraService = zuoraService,
       promoService = promoService,
+      promos = promoCollection,
       membershipRatePlanIds = memRatePlanIds,
       paymentService = paymentService,
       identityService = identityService
@@ -108,6 +108,7 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              catalogService: memsubapi.CatalogService,
                              zuoraService: ZuoraService,
                              membershipRatePlanIds: MembershipRatePlanIds,
+                             promos: PromotionCollection,
                              promoService: PromoService,
                              paymentService: PaymentService,
                              identityService: IdentityService) extends ActivityTracking {
