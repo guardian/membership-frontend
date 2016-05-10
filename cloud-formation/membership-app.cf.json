@@ -49,7 +49,10 @@
     "Mappings": {
         "StageVariables": {
             "PROD": {
-                "DynamoDBTable": "arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-PROD"
+                "DynamoDBTables": [
+                    "arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-PROD",
+                    "arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-UAT"
+                ]
             }
         }
     },
@@ -195,7 +198,7 @@
                                 "Resource": {
                                     "Fn::FindInMap": ["StageVariables", {
                                         "Ref": "Stage"
-                                    }, "DynamoDBTable"]
+                                    }, "DynamoDBTables"]
                                 }
                             }
                         ]
