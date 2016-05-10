@@ -46,6 +46,16 @@
             "Type": "String"
         }
     },
+    "Mappings": {
+        "StageVariables": {
+            "PROD": {
+                "DynamoDBTables": [
+                    "arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-PROD",
+                    "arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-UAT"
+                ]
+            }
+        }
+    },
     "Resources" : {
 
         "FrontendAutoScalingGroup" : {
@@ -172,6 +182,26 @@
                             "Action": ["logs:*"],
                             "Resource": ["arn:aws:logs:*:*:*"]
                         }]
+                    }
+                },
+                {
+                    "PolicyName": "DynamoPromotions",
+                    "PolicyDocument": {
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan",
+                                    "dynamodb:Query"
+                                ],
+                                "Resource": {
+                                    "Fn::FindInMap": ["StageVariables", {
+                                        "Ref": "Stage"
+                                    }, "DynamoDBTables"]
+                                }
+                            }
+                        ]
                     }
                 }]
             }

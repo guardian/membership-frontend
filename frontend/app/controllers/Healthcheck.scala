@@ -1,4 +1,3 @@
-
 package controllers
 
 import com.github.nscala_time.time.Imports._
@@ -18,12 +17,13 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
 }
 
 object Healthcheck extends Controller {
-  val zuoraSoapClient = TouchpointBackend.Normal.zuoraSoapClient
+  import TouchpointBackend.Normal._
 
   def tests = Seq(
     new BoolTest("Events", () => GuardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes))
+    new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes)),
+    new BoolTest("Promotions", () => promos.all.nonEmpty)
   )
 
   def healthcheck() = Action {
