@@ -10,7 +10,8 @@
         "sourceType": "module",
     },
     "globals"   : {
-        "guardian": true
+        "guardian": true,
+        "curl": true
     },
     "rules": {
         "curly": [2, "all"],
