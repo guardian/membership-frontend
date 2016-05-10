@@ -10,7 +10,7 @@ import play.api.http.HeaderNames._
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
-import services.AuthenticationService
+import services.{TouchpointBackend, AuthenticationService}
 import utils.GuMemCookie
 import utils.TestUsers.isTestUser
 
@@ -55,6 +55,14 @@ trait CommonActions {
   }
 
   val AuthenticatedAction = NoCacheAction andThen authenticated()
+
+  val OptionallyAuthenticatedAction = NoCacheAction andThen new ActionTransformer[Request, OptionallyAuthenticatedRequest]{
+    override protected def transform[A](request: Request[A]): Future[OptionallyAuthenticatedRequest[A]] = {
+      val user = AuthenticationService.authenticatedUserFor(request)
+      val touchpointBackend = user.fold(TouchpointBackend.Normal)(TouchpointBackend.forUser(_))
+      Future.successful(OptionallyAuthenticatedRequest[A](touchpointBackend,user,request))
+    }
+  }
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
 

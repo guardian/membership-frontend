@@ -5,7 +5,7 @@ import com.gu.salesforce._
 import com.gu.memsub.util.Timing
 import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest
-import play.api.mvc.{Cookie, WrappedRequest}
+import play.api.mvc.{Request, Cookie, WrappedRequest}
 import services._
 import scalaz.\/
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,6 +36,9 @@ package object actions {
     def this(other: SubscriptionRequest[A]) =
       this(other.touchpointBackend, other.request)
   }
+
+  case class OptionallyAuthenticatedRequest[A](touchpointBackend: TouchpointBackend, user: Option[AuthenticatedIdUser], request: Request[A])
+    extends WrappedRequest[A](request) with BackendProvider
 
   trait Subscriber {
     def paidOrFreeSubscriber: FreeMember \/ PaidMember

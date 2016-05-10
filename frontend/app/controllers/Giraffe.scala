@@ -28,6 +28,10 @@ object Giraffe extends Controller {
   val chargeId = "charge_id"
   val maxAmount: Option[Int] = 500.some
 
+  def stripePublicKey = OptionallyAuthenticatedAction { implicit request =>
+    Ok(request.touchpointBackend.giraffeStripeService.publicKey)
+  }
+
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
   // controllers & templates into a single one which varies on a number of parameters
