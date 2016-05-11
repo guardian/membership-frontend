@@ -23,34 +23,22 @@
         @fragments.common.jumpLink("Learn more", "#introducing-members")
     }
 
-    @* =========================================== *@
-    @* 1. Introducing Guardian Members             *@
-    @* =========================================== *@
-    <section class="page-slice page-slice--listing u-sticky-offset" id="introducing-members">
-
+    <section class="page-slice page-slice--listing u-sticky-offset">
         @fragments.page.navSections(Seq(
             BasicLink("#introducing-members", "Introducing Guardian&nbsp;Members"),
             BasicLink("#why-join", "Why join"),
             BasicLink("#join-now", "Join now")
         ))
-
-        <div class="listing listing--bordered l-constrained" id="introducing-members">
-            <div class="listing__lead-in">
-                <h3 class="h-intro">
-                    Introducing Guardian Members
-                </h3>
-            </div>
-            <div class="listing__content">
-                @fragments.media.videoPreview(
-                    configuration.Videos.whatIsMembership,
-                    "Polly Toynbee, Owen Jones, Ewen MacAskill and Hugh Muir introduce Guardian Members"
-                )
-                @fragments.common.jumpLink("Benefits of membership", "#why-join")
-            </div>
-        </div>
-
     </section>
 
+    @* =========================================== *@
+    @* 1. Introducing Guardian Members             *@
+    @* =========================================== *@
+    @fragments.page.section("Introducing Guardian Members", sectionId = Some("introducing-members")) {
+        @fragments.listing.introducingMembers(Some(fragments.common.jumpLink("Benefits of membership", "#why-join")))
+    }
+
+    @* TODO - convert the remaining sections into fragment sections if the above works *@
 
     @* =========================================== *@
     @* 2. Why join                                 *@

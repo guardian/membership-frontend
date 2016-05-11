@@ -1,0 +1,100 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.membership.PaidMembershipPlan
+@import com.gu.memsub.Month
+@import com.gu.memsub.Year
+@import com.gu.memsub.Status
+@import com.gu.memsub.BillingPeriod
+@import com.gu.memsub.Current
+@import com.gu.memsub.Price
+@import com.gu.memsub.promo.PromoCode
+@import com.gu.memsub.promo.PercentDiscount
+@import com.gu.memsub.promo.Promotion.PromotionWithLandingPage
+@import com.gu.salesforce.Tier.Partner
+@import com.gu.membership.PaidMembershipPlans
+@import views.support.PageInfo
+@import model.Highlights
+@import model.PackagePromo.CtaButton
+@import model.ResponsiveImageGroup
+@import com.netaporter.uri.dsl._
+@import views.model.Roundel
+@import com.gu.memsub.promo.Promotion.AnyPromotionWithLandingPage
+@import com.gu.salesforce.PaidTier
+@import views.model.Roundel
+@import views.support.PageInfo
+@import views.support.Asset
+
+@(pricePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
+    pricePlans: PaidMembershipPlans[Current, PaidTier],
+    pageInfo: PageInfo,
+    promotionImage: ResponsiveImageGroup,
+    promoCode: PromoCode,
+    promotion: PromotionWithLandingPage[PercentDiscount],
+    originalPrice: Price,
+    discountedPrice: Price
+)(implicit countryGroup: CountryGroup)
+
+@discountDuration = @{
+    pricePlan.billingPeriod match {
+        case Year() => promotion.promotionType.durationMonths.fold("year")(d => "first year")
+        case Month() => promotion.promotionType.durationMonths.fold("month")(d => s"first $d months")
+        case bp:BillingPeriod => bp.noun
+    }
+}
+
+@main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    @fragments.promotions.roundel(promotion.landingPage.roundelHtml)
+
+    @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
+        Become a Guardian @pricePlan.tier.name for just @discountedPrice / @discountDuration
+    } {
+        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
+    }()
+
+    @fragments.page.section(hasBorder = false) {
+        @fragments.tier.packagePromo(
+            pricePlans,
+            countryGroup,
+            promoCode = Some(promoCode.get),
+            modifierClass = Some("package-promo--clean"),
+            customPrice = Some(fragments.promos.discountedPrice(originalPrice, discountedPrice, discountDuration)),
+            secondaryButton = Some(CtaButton("Find out more", "/", Map.empty))
+        )
+    }
+
+    @fragments.page.section("Introducing Guardian Members") {
+        @fragments.listing.introducingMembers
+    }
+
+    @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
+        <div class="listing__text">
+            <p>For 200 years, the Guardian has been fearless and independent.</p>
+            <p>Our journalism shines a light on critical, under-reported stories across the globe and we have become the world’s most read, serious English-language newspaper, visited by 130 million unique browsers each month.</p>
+            <p>By becoming a Partner Member, your financial contribution will support our independence and our award-winning journalism and you’ll receive a host of benefits.</p>
+        </div>
+    }
+
+    @fragments.page.section("If you read the Guardian, join the Guardian",hasBottomPadding = false) {
+        @fragments.promos.promoQuote(
+            Asset.at("images/common/katharine-viner-cutout.png"),
+            "Katharine Viner, editor-in-chief of the Guardian"
+        ) {
+            <blockquote class="blockquote blockquote--feature">
+                With Guardian Members we have a profound opportunity to
+                defend the Guardian’s independent journalism and collaborate
+                together on a better, more informed future.
+                <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
+            </blockquote>
+        }
+    }
+
+    @fragments.page.section("What's included") {
+        @fragments.tier.packagePromo(
+            pricePlans,
+            countryGroup,
+            promoCode = Some(promoCode.get),
+            modifierClass = Some("package-promo--clean"),
+            customPrice = Some(fragments.promos.discountedPrice(originalPrice, discountedPrice, discountDuration))
+        )
+    }
+}

@@ -1,0 +1,12 @@
+@import views.model.Roundel
+@(roundelHtml: Option[String])
+@{
+    roundelHtml.map(h => {
+        val splits = h.split("<br/>")
+        if (splits.length == 2) {
+            fragments.common.roundel(Roundel(splits.slice(0, 1), splits.slice(1, 2)))
+        } else {
+            fragments.common.roundel(Roundel(Seq(h)))
+        }
+    })
+}
