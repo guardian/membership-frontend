@@ -1,5 +1,4 @@
-/* global Raven */
-define(['src/utils/user', 'raven'], function (user) {
+define(['src/utils/user', 'raven','raven-js'], function (user, Raven) {
     'use strict';
 
     function init(dsn) {
@@ -28,7 +27,8 @@ define(['src/utils/user', 'raven'], function (user) {
         }).install();
     }
 
-    return {
-        init: init
+    return{
+        init: init,
+        Raven: Raven
     };
 });

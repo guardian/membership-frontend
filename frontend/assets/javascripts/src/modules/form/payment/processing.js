@@ -1,4 +1,4 @@
-/*global Raven, Stripe */
+/*global Stripe */
 define([
     'ajax',
     'src/utils/helper',
@@ -6,10 +6,12 @@ define([
     'src/modules/form/helper/serializer',
     'src/modules/form/helper/loader',
     'config/paymentErrorMessages',
-    'src/modules/form/validation/display'
-], function (ajax, utilsHelper, formUtil, serializer, loader, paymentErrorMessages, display) {
+    'src/modules/form/validation/display',
+    'raven'
+], function (ajax, utilsHelper, formUtil, serializer, loader, paymentErrorMessages, display,raven) {
     'use strict';
 
+    var Raven = raven.Raven;
     var CREDIT_CARD_NUMBER_ELEM = document.querySelector('.js-credit-card-number');
     var CREDIT_CARD_CVC_ELEM = document.querySelector('.js-credit-card-cvc');
     var CREDIT_CARD_MONTH_ELEM = document.querySelector('.js-credit-card-exp-month');

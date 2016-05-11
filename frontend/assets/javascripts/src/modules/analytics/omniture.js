@@ -1,7 +1,8 @@
-/*global Raven, s_gi */
+/*global s_gi */
 define([
-    'src/utils/user'
-], function (user) {
+    'src/utils/user',
+    'raven'
+], function (user,raven) {
     'use strict';
 
     var GU_ID_STRING = 'GUID';
@@ -10,7 +11,7 @@ define([
 
     function init() {
         curl('js!omniture').then(onSuccess, function(e) {
-            Raven.captureException(e, {tags: { level: 'info' }});
+            raven.Raven.captureException(e, {tags: { level: 'info' }});
         });
     }
 

@@ -1,5 +1,5 @@
-/* global Raven, YT */
-define(function() {
+/* global YT */
+define(['raven'],function(raven) {
     'use strict';
 
     var SELECTOR_PLAYER = '.js-video';
@@ -46,7 +46,7 @@ define(function() {
                 try {
                     playerApi.playVideo();
                 } catch(e) {
-                    Raven.captureException(e, {tags: { level: 'info' }});
+                    raven.Raven.captureException(e, {tags: { level: 'info' }});
                 }
             }
             player.classList.add(CLASSNAME_IS_PLAYING);
