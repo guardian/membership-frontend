@@ -54,7 +54,7 @@
     "mkdirp": "^0.5.1",
     "phantomjs": "~1.9.17",
     "qwery": "~4.0.0",
-    "raven-js": "~1.1.16",
+    "raven-js": "^3.0.4",
     "reqwest": "~1.1.0",
     "respimage": "~1.4.0",
     "rimraf": "^2.4.3",
