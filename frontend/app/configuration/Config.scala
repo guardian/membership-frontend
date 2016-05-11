@@ -102,10 +102,13 @@ object Config {
     "https://profile.theguardian.com",
     // theguardian.com
     "http://www.thegulocal.com",
+    "https://www.thegulocal.com",
     "http://m.code.dev-theguardian.com",
+    "https://m.code.dev-theguardian.com",
     "http://preview.gutools.co.uk",
     "https://preview.gutools.co.uk",
     "http://www.theguardian.com",
+    "https://www.theguardian.com",
     // composer
     "https://composer.gutools.co.uk",
     "https://composer.code.dev-gutools.co.uk",
