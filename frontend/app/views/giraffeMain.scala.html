@@ -181,7 +181,16 @@
                 </div>
             </div>
         </footer>
-        @fragments.javaScriptRequireJS()
+        <script>
+            (function(isModern) {
+                if (isModern) {
+                    // only load JS if the browser cuts the mustard
+                    var newElm = document.createElement('script');
+                    newElm.src = '@Asset.at("javascripts/giraffeMain.js")';
+                    document.getElementsByTagName("head")[0].appendChild(newElm);
+                }
+            })(guardian.isModernBrowser);
+        </script>
         @fragments.analytics.googleRemarketing()
         @fragments.analytics.sessionCam()
         <!-- build-commit-id: @app.BuildInfo.gitCommitId -->
