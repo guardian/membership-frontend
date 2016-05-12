@@ -7,7 +7,7 @@ define([
     'src/modules/form/helper/loader',
     'config/paymentErrorMessages',
     'src/modules/form/validation/display',
-    'raven'
+    'src/modules/raven'
 ], function (ajax, utilsHelper, formUtil, serializer, loader, paymentErrorMessages, display,raven) {
     'use strict';
 
