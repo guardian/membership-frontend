@@ -3,7 +3,7 @@
 define(['lodash/collection/forEach'], function(forEach) {
     'use strict';
 
-    var FACEBOOK_PROPERTY_ID = '869473446445427';
+    var FACEBOOK_PROPERTY_ID = '279880532344561';
 
     var URL_MAPPINGS = {
         '/join/supporter/thankyou': recordConversion
