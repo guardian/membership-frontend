@@ -1,5 +1,5 @@
 /* global YT */
-define(['raven'],function(raven) {
+define(['src/modules/raven'],function(raven) {
     'use strict';
 
     var SELECTOR_PLAYER = '.js-video';

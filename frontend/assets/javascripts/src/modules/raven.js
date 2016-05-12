@@ -1,4 +1,4 @@
-define(['src/utils/user', 'raven','raven-js'], function (user, Raven) {
+define(['src/utils/user','raven-js'], function (user, Raven) {
     'use strict';
 
     function init(dsn) {

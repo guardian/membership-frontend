@@ -1,4 +1,4 @@
-define(['raven'],function(raven) {
+define(['src/modules/raven'],function(raven) {
     'use strict';
 
     function init() {

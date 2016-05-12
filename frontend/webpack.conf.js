@@ -13,7 +13,6 @@ module.exports = function(debug) { return {
             'reqwest': 'reqwest/reqwest',
             'respimage': 'respimage/respimage',
             'lazySizes': 'lazysizes/lazysizes',
-            'raven': 'raven-js/dist/raven',
             'gumshoe': 'gumshoe/dist/js/gumshoe',
             'smoothScroll': 'smooth-scroll/dist/js/smooth-scroll',
             'ajax': 'src/utils/ajax'

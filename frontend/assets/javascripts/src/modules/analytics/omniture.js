@@ -1,7 +1,7 @@
 /*global s_gi */
 define([
     'src/utils/user',
-    'raven'
+    'src/modules/raven'
 ], function (user,raven) {
     'use strict';
 
