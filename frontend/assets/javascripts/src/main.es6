@@ -13,8 +13,7 @@ import filterLiveSearch from "src/modules/filterLiveSearch";
 import * as comparisonTable from "src/modules/comparisonTable";
 import patterns from "src/modules/patterns";
 import * as paidToPaid from "src/modules/paidToPaid";
-import * as common from "src/common";
-
+import common from "src/common";
 
 // Global
 common.init();
