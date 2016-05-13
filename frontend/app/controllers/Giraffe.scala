@@ -23,19 +23,16 @@ object Giraffe extends Controller {
     Facebook("http://www.theguardian.com/news/series/panama-papers?CMP=fb_contribute")
   )
 
-  val stripe = TouchpointBackend.Normal.giraffeStripeService
-  val identity = TouchpointBackend.Normal.identityService
+
   val chargeId = "charge_id"
   val maxAmount: Option[Int] = 500.some
-
-  def stripePublicKey = OptionallyAuthenticatedAction { implicit request =>
-    Ok(request.touchpointBackend.giraffeStripeService.publicKey)
-  }
 
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
   // controllers & templates into a single one which varies on a number of parameters
-  def contribute = CachedAction { implicit request =>
+  def contribute = OptionallyAuthenticatedAction { implicit request =>
+    val stripe = request.touchpointBackend.giraffeStripeService
+    val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
       url = request.path,
@@ -45,10 +42,12 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,CountryGroup.UK))
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,CountryGroup.UK,isUAT))
   }
 
-  def contributeUSA = CachedAction { implicit request =>
+  def contributeUSA = OptionallyAuthenticatedAction { implicit request =>
+    val stripe = request.touchpointBackend.giraffeStripeService
+    val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
       url = request.path,
@@ -58,10 +57,12 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo, maxAmount, CountryGroup.US))
+    Ok(views.html.giraffe.contribute(pageInfo, maxAmount, CountryGroup.US, isUAT))
   }
 
-  def contributeAustralia = CachedAction { implicit request =>
+  def contributeAustralia = OptionallyAuthenticatedAction { implicit request =>
+    val stripe = request.touchpointBackend.giraffeStripeService
+    val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
       url = request.path,
@@ -71,7 +72,7 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo, maxAmount, CountryGroup.Australia))
+    Ok(views.html.giraffe.contribute(pageInfo, maxAmount, CountryGroup.Australia, isUAT))
   }
 
   def thanks = NoCacheAction { implicit request =>
@@ -116,7 +117,9 @@ object Giraffe extends Controller {
     )
   }
 
-  def pay = NoCacheAction.async { implicit request =>
+  def pay = OptionallyAuthenticatedAction.async { implicit request =>
+    val stripe = request.touchpointBackend.giraffeStripeService
+    val identity = request.touchpointBackend.identityService
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
     },{ f =>
