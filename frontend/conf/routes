@@ -129,13 +129,12 @@ GET            /english-heritage                      controllers.Default.redire
 GET            /currencies                            controllers.PricingApi.currencies
 
 # Giraffe
-GET            /contribute                            controllers.Giraffe.contribute
+GET            /contribute                            controllers.Giraffe.contributeUK
 GET            /us/contribute                         controllers.Giraffe.contributeUSA
 GET            /au/contribute                         controllers.Giraffe.contributeAustralia
 
-GET            /contribute/thank-you                  controllers.Giraffe.thanks
+GET            /contribute/thank-you                  controllers.Giraffe.thanksUK
 GET            /us/contribute/thank-you               controllers.Giraffe.thanksUSA
 GET            /au/contribute/thank-you               controllers.Giraffe.thanksAustralia
 
 POST           /contribute/pay                        controllers.Giraffe.pay
-GET            /contribute/stripekey                  controllers.Giraffe.stripePublicKey

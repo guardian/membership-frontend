@@ -3,7 +3,7 @@
 @import configuration.Links
 
 @import com.gu.i18n.CountryGroup
-@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup)
+@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean)
 
 @giraffeMain(pageInfo) {
     <div class="l-constrained">
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     <li id="submit_field" class="form-field">
-                        <button class="action action--contribute js-submit-input" type="submit" tabindex="17">Pay <span class="js-currency">&pound;</span><span class="js-amount">5</span></button>
+                        <button class="action action--contribute js-submit-input" type="submit" tabindex="17">Pay <span class="js-currency">&pound;</span><span class="js-amount">5</span>@if(isUAT){ (UAT)}</button>
                         <div class="loader js-loader"></div>
                     </li>
 
