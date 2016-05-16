@@ -25,7 +25,6 @@ require([
     'src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
-    'src/modules/giraffe',
     'src/modules/paidToPaid'
 ], function(
     ajax,
@@ -54,7 +53,6 @@ require([
     comparisonTable,
     metrics,
     patterns,
-    giraffe,
     paidToPaid
 ) {
     'use strict';
@@ -100,6 +98,5 @@ require([
     patterns.init();
 
 
-    giraffe.init();
     paidToPaid.init();
 });
