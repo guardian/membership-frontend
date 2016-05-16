@@ -50,6 +50,7 @@ object Giraffe extends Controller {
   def contributeAustralia = contribute(CountryGroup.Australia)
 
 
+
   def thanksUK = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
       Redirect(routes.Giraffe.contributeUSA().url, SEE_OTHER)
