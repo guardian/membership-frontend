@@ -49,11 +49,12 @@ object Giraffe extends Controller {
   def contributeUSA = contribute(CountryGroup.US)
   def contributeAustralia = contribute(CountryGroup.Australia)
 
-  def thanks = NoCacheAction { implicit request =>
+
+  def thanksUK = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
-      Redirect(routes.Giraffe.contributeUK().url, SEE_OTHER)
+      Redirect(routes.Giraffe.contributeUSA().url, SEE_OTHER)
     )( id =>
-      Ok(views.html.giraffe.thankyou(PageInfo(
+      Ok(views.html.giraffe.thankyouUSA(PageInfo(
         title = "Thank you for supporting the Guardian",
         url = request.path,
         image = None,
@@ -111,7 +112,7 @@ object Giraffe extends Controller {
       val redirect = f.currency match {
         case USD => routes.Giraffe.thanksUSA().url
         case AUD => routes.Giraffe.thanksAustralia().url
-        case _ => routes.Giraffe.thanks().url
+        case _ => routes.Giraffe.thanksUK().url
       }
 
       res.map { charge =>
