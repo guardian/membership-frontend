@@ -9,11 +9,9 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
 import play.api.mvc.{Controller, Result}
 import services.{AuthenticationService, TouchpointBackend}
-import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import views.support._
 import scalaz.syntax.std.option._
-
 import scala.concurrent.Future
 
 object Giraffe extends Controller {
@@ -45,53 +43,30 @@ object Giraffe extends Controller {
     Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT))
   }
 
+  def thanks(countryGroup: CountryGroup, redirectUrl: String) = NoCacheAction { implicit request =>
+    request.session.get(chargeId).fold(
+      Redirect(redirectUrl, SEE_OTHER)
+    )( id =>
+      Ok(views.html.giraffe.thankyou(PageInfo(
+        title = "Thank you for supporting the Guardian",
+        url = request.path,
+        image = None,
+        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
+        navigation = Seq.empty
+      ), id, social, countryGroup))
+    )
+  }
+
+
   def contributeUK = contribute(CountryGroup.UK)
   def contributeUSA = contribute(CountryGroup.US)
   def contributeAustralia = contribute(CountryGroup.Australia)
 
+  def thanksUK = thanks(CountryGroup.UK, routes.Giraffe.contributeUK().url)
+  def thanksUSA = thanks(CountryGroup.US, routes.Giraffe.contributeUSA().url)
+  def thanksAustralia = thanks(CountryGroup.Australia, routes.Giraffe.contributeAustralia().url)
 
 
-  def thanksUK = NoCacheAction { implicit request =>
-    request.session.get(chargeId).fold(
-      Redirect(routes.Giraffe.contributeUSA().url, SEE_OTHER)
-    )( id =>
-      Ok(views.html.giraffe.thankyouUSA(PageInfo(
-        title = "Thank you for supporting the Guardian",
-        url = request.path,
-        image = None,
-        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
-        navigation = Seq.empty
-      ), id, social))
-    )
-  }
-
-  def thanksUSA = NoCacheAction { implicit request =>
-    request.session.get(chargeId).fold(
-      Redirect(routes.Giraffe.contributeUSA().url, SEE_OTHER)
-    )( id =>
-      Ok(views.html.giraffe.thankyouUSA(PageInfo(
-        title = "Thank you for supporting the Guardian",
-        url = request.path,
-        image = None,
-        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
-        navigation = Seq.empty
-      ), id, social))
-    )
-  }
-
-  def thanksAustralia = NoCacheAction { implicit request =>
-    request.session.get(chargeId).fold(
-      Redirect(routes.Giraffe.contributeAustralia().url, SEE_OTHER)
-    )( id =>
-      Ok(views.html.giraffe.thankyouAustralia(PageInfo(
-        title = "Thank you for supporting the Guardian",
-        url = request.path,
-        image = None,
-        description = Some("Your contribution is much appreciated, and will help us to maintain our independent, investigative journalism."),
-        navigation = Seq.empty
-      ), id, social))
-    )
-  }
 
   def pay = OptionallyAuthenticatedAction.async { implicit request =>
     val stripe = request.touchpointBackend.giraffeStripeService
