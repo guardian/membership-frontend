@@ -30,7 +30,7 @@ object Giraffe extends Controller {
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
   // controllers & templates into a single one which varies on a number of parameters
-  def contribute = OptionallyAuthenticatedAction { implicit request =>
+  def contribute(countryGroup: CountryGroup) = OptionallyAuthenticatedAction { implicit request =>
     val stripe = request.touchpointBackend.giraffeStripeService
     val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
     val pageInfo = PageInfo(
@@ -42,44 +42,20 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,CountryGroup.UK,isUAT))
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT))
   }
 
-  def contributeUSA = OptionallyAuthenticatedAction { implicit request =>
-    val stripe = request.touchpointBackend.giraffeStripeService
-    val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
-    val pageInfo = PageInfo(
-      title = "Support the Guardian | Contribute today",
-      url = request.path,
-      image = Some("https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg"),
-      stripePublicKey = Some(stripe.publicKey),
-      description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
-      navigation = Seq.empty,
-      customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
-    )
-    Ok(views.html.giraffe.contribute(pageInfo, maxAmount, CountryGroup.US, isUAT))
-  }
+  def contributeUK = contribute(CountryGroup.UK)
+  def contributeUSA = contribute(CountryGroup.US)
+  def contributeAustralia = contribute(CountryGroup.Australia)
 
-  def contributeAustralia = OptionallyAuthenticatedAction { implicit request =>
-    val stripe = request.touchpointBackend.giraffeStripeService
-    val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
-    val pageInfo = PageInfo(
-      title = "Support the Guardian | Contribute today",
-      url = request.path,
-      image = Some("https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg"),
-      stripePublicKey = Some(stripe.publicKey),
-      description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
-      navigation = Seq.empty,
-      customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
-    )
-    Ok(views.html.giraffe.contribute(pageInfo, maxAmount, CountryGroup.Australia, isUAT))
-  }
 
-  def thanks = NoCacheAction { implicit request =>
+
+  def thanksUK = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
-      Redirect(routes.Giraffe.contribute().url, SEE_OTHER)
+      Redirect(routes.Giraffe.contributeUSA().url, SEE_OTHER)
     )( id =>
-      Ok(views.html.giraffe.thankyou(PageInfo(
+      Ok(views.html.giraffe.thankyouUSA(PageInfo(
         title = "Thank you for supporting the Guardian",
         url = request.path,
         image = None,
@@ -137,7 +113,7 @@ object Giraffe extends Controller {
       val redirect = f.currency match {
         case USD => routes.Giraffe.thanksUSA().url
         case AUD => routes.Giraffe.thanksAustralia().url
-        case _ => routes.Giraffe.thanks().url
+        case _ => routes.Giraffe.thanksUK().url
       }
 
       res.map { charge =>
