@@ -203,8 +203,9 @@ object Joiner extends Controller with ActivityTracking
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
     implicit val bp: BackendProvider = request
-    memberService.createMember(request.user, formData, IdentityRequest(request), eventId, CampaignCode.fromRequest)
-      .map(_ => onSuccess) recover {
+    val idRequest = IdentityRequest(request)
+    memberService.createMember(request.user, formData, idRequest, eventId, CampaignCode.fromRequest)
+      .map{_ => onSuccess} recover {
         case error: Stripe.Error =>
           logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
@@ -212,7 +213,7 @@ object Joiner extends Controller with ActivityTracking
         case error: PaymentGatewayError => handlePaymentGatewayError(error, request.user.id)
 
         case error =>
-          logger.error(s"User ${request.user.id} could not become a member: ", error)
+          logger.error(s"User ${request.user.id} could not become a member: ${idRequest.trackingParameters}", error)
           Forbidden
     }
   }
