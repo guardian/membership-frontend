@@ -7,10 +7,11 @@ import com.gu.stripe.Stripe.Serializer._
 import forms.MemberForm.supportForm
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
-import play.api.mvc.{Controller, Result}
+import play.api.mvc.{Controller, Cookie, Result}
 import services.{AuthenticationService, TouchpointBackend}
 import com.netaporter.uri.dsl._
-import views.support._
+import views.support.{TestTrait, _}
+
 import scalaz.syntax.std.option._
 import scala.concurrent.Future
 
@@ -25,12 +26,19 @@ object Giraffe extends Controller {
   val chargeId = "charge_id"
   val maxAmount: Option[Int] = 500.some
 
+
+  def createCookie(variant: TestTrait#Variant): Cookie = {
+    Cookie(variant.testName+"_GIRAFFE_TEST", variant.slug)
+  }
+
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
   // controllers & templates into a single one which varies on a number of parameters
   def contribute(countryGroup: CountryGroup) = OptionallyAuthenticatedAction { implicit request =>
     val stripe = request.touchpointBackend.giraffeStripeService
     val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
+
+    val chosenVariants: ChosenVariants = Test.getContributePageVariants(request)
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
       url = request.path,
@@ -40,7 +48,8 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT))
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants))
+      .withCookies(createCookie(chosenVariants.v1), createCookie(chosenVariants.v2))
   }
 
   def thanks(countryGroup: CountryGroup, redirectUrl: String) = NoCacheAction { implicit request =>
@@ -77,7 +86,8 @@ object Giraffe extends Controller {
       val metadata = Map(
         "marketing-opt-in" -> f.marketing.toString,
         "email" -> f.email,
-        "name" -> f.name
+        "name" -> f.name,
+        "abTests" -> f.abTests.toString
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
       val res = stripe.Charge.create(maxAmount.fold((f.amount*100).toInt)(max => Math.min(max * 100, (f.amount * 100).toInt)), f.currency, f.email, "Your contribution", f.token, metadata)
 

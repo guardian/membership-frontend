@@ -45,6 +45,13 @@ export function init() {
     // Custom amount
     CUSTOM_AMOUNT.addEventListener('blur', ev => setAmount(ev.currentTarget.value));
 
+    var hiddenAmount = $('.js-amount-hidden')[0].value;
+    $('.js-pay').html(hiddenAmount);
+    if(!hiddenAmount){
+        $('.js-currency-pay').addClass(HIDDEN_CLASS);
+    }
+
+
     getStuffFromIdentity();
 }
 
@@ -73,6 +80,7 @@ function selectCurrencyElement(el) {
 function setAmount(amount) {
     $('input.' + AMOUNT_CLASS).val(amount);
     $('.' + AMOUNT_CLASS + ':not(input)').html(amount);
+    $('.js-currency-pay').addClass(SHOWN_ATTRIBUTE).removeClass(HIDDEN_CLASS);
 }
 
 function getStuffFromIdentity() {

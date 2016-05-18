@@ -1,14 +1,17 @@
 define(['src/modules/raven'],function(raven) {
     'use strict';
 
+    var ophanUrl = '//j.ophan.co.uk/membership.js';
+    var ophan = curl(ophanUrl);
+
     function init() {
-        var ophanUrl = '//j.ophan.co.uk/ophan.membership.js';
-        curl('js!' + ophanUrl).then(null, function(err) {
+        ophan.then(null, function(err) {
             raven.Raven.captureException(err);
         });
     }
 
     return {
-        init: init
+        init: init,
+        ophan: ophan
     };
 });

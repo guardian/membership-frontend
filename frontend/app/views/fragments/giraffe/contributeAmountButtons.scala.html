@@ -1,9 +1,17 @@
 @import com.gu.i18n.CountryGroup
-@(amounts: List[Integer], activeAmount: Option[Integer])(countryGroup: CountryGroup)
+@(amounts: List[Int], activeAmount: Option[Int])(countryGroup: CountryGroup,  maxAmount: Option[Int])
 <div class="js-button-group button-group u-cf">
     @for(amount <- amounts) {
         <button type="button" tabindex="8" class="js-button option-button option-button--bold @if(activeAmount.contains(amount)){ active }" data-amount=@amount>
             <span class="currency js-currency">@countryGroup.currency.glyph</span>@amount
         </button>
     }
+</div>
+<div id="other_amount_field">
+    <div class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</div>
+    <input type="number" id="other_amount" class="input-text js-amount js-amount-field" placeholder="Other amount" maxlength="10" tabindex="12" data-validation="giraffe" @maxAmount.fold{
+    }{max =>
+    data-max="@max"
+    }>
+    <input type="hidden" name="amount" class="js-amount js-amount-hidden" value=@activeAmount>
 </div>

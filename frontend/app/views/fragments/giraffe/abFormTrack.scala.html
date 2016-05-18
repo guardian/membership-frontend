@@ -1,0 +1,9 @@
+@import views.support.ChosenVariants
+@import java.net.URLEncoder
+@(chosenVariants: ChosenVariants)
+
+
+    <input type="hidden" name="abTest" class="js-ab-test" value="@URLEncoder.encode(chosenVariants.asJson,"UTF8")">
+<script>
+    abTests = @Html(chosenVariants.asJson);
+</script>

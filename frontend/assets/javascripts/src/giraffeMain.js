@@ -13,7 +13,8 @@ require([
     'src/modules/identityPopup',
     'src/modules/identityPopupDetails',
     'src/modules/metrics',
-    'src/modules/giraffe'
+    'src/modules/giraffe',
+    'src/modules/abTests'
 ], function(
     ajax,
     raven,
@@ -29,7 +30,9 @@ require([
     identityPopup,
     identityPopupDetails,
     metrics,
-    giraffe) {
+    giraffe,
+    abTests
+) {
     'use strict';
 
     ajax.init({page: {ajaxUrl: ''}});
@@ -57,6 +60,6 @@ require([
     metrics.init();
 
 
-
     giraffe.init();
+    abTests.init();
 });

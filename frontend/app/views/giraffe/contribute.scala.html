@@ -1,9 +1,9 @@
 @import views.support.PageInfo
 @import views.support.Asset
 @import configuration.Links
-
 @import com.gu.i18n.CountryGroup
-@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean)
+@import views.support.ChosenVariants
+@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants)
 
 @giraffeMain(pageInfo) {
     <div class="l-constrained">
@@ -22,6 +22,7 @@
     <div class="support-wrapper page-slice l-constrained currency-@countryGroup.currency.toString.toLowerCase">
 
         <form id="form" class="form js-form" role="main" method="POST" autocomplete="on" novalidate action="@routes.Giraffe.pay()">
+            @fragments.giraffe.abFormTrack(chosenVariants)
             <div class="form__column">
                 <h3 class="form__column-heading form__column-heading--first headline-text--bolder"><span class="num">1</span>
                     Your details</h3>
@@ -77,15 +78,7 @@
                     <li id="amount_field" class="form-field">
                         <label for="amount" class="label u-h">Amount</label>
                         <div class="input">
-                            @fragments.giraffe.contributeAmountButtons(List(5,25,100,500), Some(5))(countryGroup)
-                             <div id="other_amount_field">
-                                <div class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</div>
-                                <input type="number" id="other_amount" class="input-text js-amount js-amount-field" placeholder="Other amount" maxlength="10" tabindex="12" data-validation="giraffe" @maxAmount.fold{
-                                }{max =>
-                                data-max="@max"
-                                }>
-                                <input type="hidden" name="amount" class="js-amount js-amount-hidden" value="5.00">
-                            </div>
+                            @chosenVariants.v1.render(countryGroup, maxAmount)
                             @fragments.form.errorMessage("Please enter a valid amount.")
                         </div>
                     </li>
@@ -189,7 +182,7 @@
                         </div>
                     </div>
                     <li id="submit_field" class="form-field">
-                        <button class="action action--contribute js-submit-input" type="submit" tabindex="17">Pay <span class="js-currency">@countryGroup.currency.glyph</span><span class="js-amount">5</span>@if(isUAT){ (UAT)}</button>
+                        <button class="action action--contribute js-submit-input" type="submit" tabindex="17">Pay <span class="js-currency-pay">@countryGroup.currency.glyph</span><span class="js-pay"></span>@if(isUAT){ (UAT)}</button>
                         <div class="loader js-loader"></div>
                     </li>
 
