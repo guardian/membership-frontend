@@ -111,9 +111,6 @@ class MemberService(identityService: IdentityService,
       } yield contactId
 
     Timing.record(salesforceService.metrics, "createMember") {
-      formData.password.foreach(
-        identityService.updateUserPassword(_, identityRequest, user.id))
-
       formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id))
 
       val contactId = formData match {
