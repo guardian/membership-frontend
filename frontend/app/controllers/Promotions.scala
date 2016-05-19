@@ -6,6 +6,7 @@ import com.gu.i18n.Country
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.Promotion.{PromotionWithLandingPage, AnyPromotion}
+import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.Formatters._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
