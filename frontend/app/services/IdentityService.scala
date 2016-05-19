@@ -15,6 +15,7 @@ import views.support.IdentityUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -152,6 +153,14 @@ trait IdentityApi {
       val response = requestHolder.post(data.getOrElse(JsNull))
       response.foreach(r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
       response.map(_.status)
+        .andThen {
+          case Success(status) =>
+            if ((status / 100) != 2) // non 2xx code
+              Logger.error(s"Identity API error: POST ${Config.idApiUrl}/$endpoint STATUS $status")
+
+          case Failure(e) =>
+            Logger.error(s"Identity API error: POST ${Config.idApiUrl}/$endpoint", e)
+        }
     }
   }
 

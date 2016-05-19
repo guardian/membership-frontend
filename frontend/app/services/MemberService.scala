@@ -26,6 +26,7 @@ import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
+import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -105,10 +106,10 @@ class MemberService(identityService: IdentityService,
     val tier = formData.planChoice.tier
 
     val createContact: Future[ContactId] =
-      for {
+      (for {
         user <- identityService.getFullUserDetails(user)(identityRequest)
         contactId <- salesforceService.upsert(user, formData)
-      } yield contactId
+      } yield contactId).andThen { case Failure(e) => logger.error(s"Could not create Salesforce contact for user ${user.id}")}
 
     Timing.record(salesforceService.metrics, "createMember") {
       formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id))
@@ -121,6 +122,7 @@ class MemberService(identityService: IdentityService,
             subscription <- createPaidSubscription(cId, paid, paid.name, paid.tier, customer, campaignCode)
             updatedMember <- salesforceService.updateMemberStatus(user, tier, Some(customer))
           } yield cId
+
         case _ =>
           for {
             cId <- createContact
@@ -151,7 +153,9 @@ class MemberService(identityService: IdentityService,
           track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
         }
 
-      case Failure(error) => salesforceService.metrics.putFailSignUp(tier)
+      case Failure(error) => // do not log payment errors due to user's card
+        if (!(error.isInstanceOf[PaymentGatewayError] || error.isInstanceOf[Stripe.Error]))
+          salesforceService.metrics.putFailSignUp(tier)
     }
   }
 
@@ -379,7 +383,7 @@ class MemberService(identityService: IdentityService,
     val planId = joinData.planChoice.productRatePlanId
     val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
 
-    for {
+    (for {
       zuoraFeatures <- zuoraService.getFeatures
       result <- zuoraService.createSubscription(Subscribe(
         account = Account.stripe(contactId, currency, autopay = false),
@@ -389,7 +393,7 @@ class MemberService(identityService: IdentityService,
         address = joinData.deliveryAddress,
         promoCode = joinData.trackingPromoCode
       ))
-    } yield result
+    } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e)}
   }
 
   implicit private def features = zuoraService.getFeatures
@@ -403,7 +407,7 @@ class MemberService(identityService: IdentityService,
 
     val country = joinData.zuoraAccountAddress.country
     val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
-    val subscribe = zuoraService.getFeatures map { features =>
+    val subscribe = zuoraService.getFeatures.map { features =>
 
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
@@ -414,11 +418,12 @@ class MemberService(identityService: IdentityService,
               address = joinData.zuoraAccountAddress,
               ratePlans = NonEmptyList(plan),
               name = nameData)
-    }
+    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
     subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, sub, catalog.unsafeFindPaid, discountIds)))
              .flatMap(zuoraService.createSubscription)
+             .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
   }
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {

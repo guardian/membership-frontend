@@ -32,6 +32,7 @@ import views.support.TierPlans._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
 
 import scala.concurrent.Future
+import scala.util.Failure
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
 
@@ -102,8 +103,10 @@ object Joiner extends Controller with ActivityTracking
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog
 
-    for {
-      identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
+    val identityRequest = IdentityRequest(request)
+
+    (for {
+      identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
@@ -129,7 +132,7 @@ object Joiner extends Controller with ActivityTracking
          pageInfo = pageInfo,
          trackingPromoCode = validTrackingPromoCode,
          promoCodeToDisplay = validDisplayablePromoCode))
-    }
+    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
@@ -205,7 +208,7 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     memberService.createMember(request.user, formData, idRequest, eventId, CampaignCode.fromRequest)
-      .map{_ => onSuccess} recover {
+      .map{_ => onSuccess} recover { // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
           logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
