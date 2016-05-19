@@ -46,7 +46,7 @@
     @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
     @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
-        Become a Guardian @pricePlan.tier.name for just @discountedPrice.pretty / @discountDuration
+        Become a Guardian @pricePlan.tier.name for just @discountedPrice.pretty today
     } {
         Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
     }()
@@ -66,11 +66,10 @@
         @fragments.listing.introducingMembers()
     }
 
-    @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
+    @fragments.page.sectionCardStack(promotionImage) {
         <div class="listing__text">
-            <p>
-                @Html(promotion.landingPage.description.getOrElse(promotion.description))
-            </p>
+            @promotion.landingPage.title.map { t => <p>@t</p> }
+            <p>@Html(promotion.landingPage.description.getOrElse(promotion.description))</p>
             <p>
                 <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlan.tier)}?countryGroup=@countryGroup.id">Become a @pricePlan.tier.name</a>
             </p>

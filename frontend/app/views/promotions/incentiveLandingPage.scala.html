@@ -46,9 +46,8 @@
 
     @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
         <div class="listing__text">
-            <p>
-                @Html(promotion.landingPage.description.getOrElse(promotion.description))
-            </p>
+            @promotion.landingPage.title.map { t => <p>@t</p> }
+            <p>@Html(promotion.landingPage.description.getOrElse(promotion.description))</p>
             <p>
                 <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlans.tier)}?countryGroup=@countryGroup.id">Become a @pricePlans.tier.name</a>
             </p>
