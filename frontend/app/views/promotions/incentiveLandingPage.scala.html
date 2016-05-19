@@ -22,7 +22,7 @@
 
 @main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.promotions.roundel(promotion.landingPage.roundelHtml)
+    @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
     @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
         Become a Guardian @pricePlans.tier.name
@@ -40,13 +40,18 @@
         )
     }
 
-    @fragments.page.section("Introducing Guardian Members") {
-        @fragments.listing.introducingMembers
+    @fragments.page.section("Introducing Guardian Members", isNarrow = false) {
+        @fragments.listing.introducingMembers()
     }
 
     @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
         <div class="listing__text">
-            @Html(promotion.landingPage.description.getOrElse(promotion.name))
+            <p>
+                @Html(promotion.landingPage.description.getOrElse(promotion.description))
+            </p>
+            <p>
+                <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlans.tier)}?countryGroup=@countryGroup.id">Become a @pricePlans.tier.name</a>
+            </p>
         </div>
     }
 

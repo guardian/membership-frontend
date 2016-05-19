@@ -43,10 +43,10 @@
 
 @main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.promotions.roundel(promotion.landingPage.roundelHtml)
+    @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
     @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
-        Become a Guardian @pricePlan.tier.name for just @discountedPrice / @discountDuration
+        Become a Guardian @pricePlan.tier.name for just @discountedPrice.pretty / @discountDuration
     } {
         Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
     }()
@@ -62,19 +62,22 @@
         )
     }
 
-    @fragments.page.section("Introducing Guardian Members") {
-        @fragments.listing.introducingMembers
+    @fragments.page.section("Introducing Guardian Members", isNarrow = false) {
+        @fragments.listing.introducingMembers()
     }
 
     @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
         <div class="listing__text">
-            <p>For 200 years, the Guardian has been fearless and independent.</p>
-            <p>Our journalism shines a light on critical, under-reported stories across the globe and we have become the world’s most read, serious English-language newspaper, visited by 130 million unique browsers each month.</p>
-            <p>By becoming a Partner Member, your financial contribution will support our independence and our award-winning journalism and you’ll receive a host of benefits.</p>
+            <p>
+                @Html(promotion.landingPage.description.getOrElse(promotion.description))
+            </p>
+            <p>
+                <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlan.tier)}?countryGroup=@countryGroup.id">Become a @pricePlan.tier.name</a>
+            </p>
         </div>
     }
 
-    @fragments.page.section("If you read the Guardian, join the Guardian",hasBottomPadding = false) {
+    @fragments.page.section("If you read the Guardian, join the Guardian") {
         @fragments.promos.promoQuote(
             Asset.at("images/common/katharine-viner-cutout.png"),
             "Katharine Viner, editor-in-chief of the Guardian"

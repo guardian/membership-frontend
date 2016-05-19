@@ -11,16 +11,20 @@
 (function() {
     'use strict';
 
-    function discountedPriceFormatted(price, discount) {
+    function numberAsCurrencyString(num) {
+        return (Math.round(num * 100) / 100).toFixed(2).replace('.00','');
+    }
+
+    function discountedPrice(price, discount) {
         return price * ((100 - discount) / 100);
     }
 
     function formattedDiscountedPrice(currency, amount, discount) {
-        return checkoutForm.currencyIdentifiers[currency] + discountedPriceFormatted(amount[currency], discount).toFixed(2).replace('.00','');
+        return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
     }
 
     function formattedDiscountedCharge(currency, amount, discount) {
-        return checkoutForm.currencyIdentifiers[currency] + discountedPriceFormatted(amount[currency], discount).toFixed(2);
+        return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
     }
 
     var checkoutForm = guardian.membership.checkoutForm;
