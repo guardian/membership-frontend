@@ -1,0 +1,80 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.Current
+@import com.gu.salesforce.PaidTier
+@import com.gu.membership.PaidMembershipPlans
+@import views.support.PageInfo
+@import views.model.Roundel
+@import model.Highlights
+@import model.PackagePromo.CtaButton
+@import com.netaporter.uri.dsl._
+@import com.gu.memsub.promo.Incentive
+@import com.gu.memsub.promo.Promotion.PromotionWithLandingPage
+@import com.gu.memsub.promo.PromoCode
+@import views.support.Asset
+
+@(pricePlans: PaidMembershipPlans[Current, PaidTier],
+    pageInfo: PageInfo,
+    promotionImage: model.ResponsiveImageGroup,
+    promoCode: PromoCode,
+    promotion: PromotionWithLandingPage[Incentive]
+)(implicit countryGroup: CountryGroup)
+
+
+@main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
+
+    @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
+        Become a Guardian @pricePlans.tier.name
+    } {
+        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
+    }()
+
+    @fragments.page.section(hasBorder = false) {
+        @fragments.tier.packagePromo(
+            pricePlans,
+            countryGroup,
+            promoCode = Some(promoCode.get),
+            modifierClass = Some("package-promo--clean"),
+            button = Some(CtaButton("Find out more", "/", Map.empty))
+        )
+    }
+
+    @fragments.page.section("Introducing Guardian Members", isNarrow = false) {
+        @fragments.listing.introducingMembers()
+    }
+
+    @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
+        <div class="listing__text">
+            @promotion.landingPage.title.map { t => <p>@t</p> }
+            <p>@Html(promotion.landingPage.description.getOrElse(promotion.description))</p>
+            <p>
+                <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlans.tier)}?countryGroup=@countryGroup.id">Become a @pricePlans.tier.name</a>
+            </p>
+        </div>
+    }
+
+    @fragments.page.section("If you read the Guardian, join the Guardian") {
+        @fragments.promos.promoQuote(
+            Asset.at("images/common/katharine-viner-cutout.png"),
+            "Katharine Viner, editor-in-chief of the Guardian"
+        ) {
+            <blockquote class="blockquote">
+                With Guardian Members we have a profound opportunity to
+                defend the Guardian’s independent journalism and collaborate
+                together on a better, more informed future.
+                <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
+            </blockquote>
+        }
+    }
+
+    @fragments.page.section("What's included") {
+        @fragments.tier.packagePromo(
+            pricePlans,
+            countryGroup,
+            promoCode = Some(promoCode.get),
+            modifierClass = Some("package-promo--clean"),
+            button = Some(CtaButton("Find out more", "/", Map.empty))
+        )
+    }
+}

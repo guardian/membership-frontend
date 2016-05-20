@@ -2,12 +2,11 @@ package controllers
 
 
 import actions.RichAuthRequest
-import com.gu.i18n.Country
-import com.gu.i18n.CountryGroup._
+import com.gu.i18n.{Country, CountryGroup}
 import com.gu.memsub.Subscription.ProductRatePlanId
-import com.gu.memsub.promo.Promotion.{PromotionWithLandingPage, AnyPromotion}
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.Formatters._
+import com.gu.memsub.promo.Promotion.AnyPromotionWithLandingPage
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
@@ -15,6 +14,7 @@ import com.netaporter.uri.dsl._
 import model._
 import play.api.libs.json._
 import play.api.mvc.{Controller, Result}
+import play.twirl.api.Html
 import services.PromoSessionService._
 import services.TouchpointBackend
 import views.support.PageInfo
@@ -24,8 +24,9 @@ import scalaz.{Monad, \/}
 
 object Promotions extends Controller {
 
-  import TouchpointBackend.Normal.promoService
-  val pageImages = Seq(
+  import TouchpointBackend.TestUser.{catalog, promoService}
+
+  private val pageImages = Seq(
     ResponsiveImageGroup(
       name=Some("fearless"),
       metadata=Some(Grid.Metadata(
@@ -37,59 +38,80 @@ object Promotions extends Controller {
         id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
         sizes=List(1000,500)
       )
-    ),    ResponsiveImageGroup(
+    ),
+    ResponsiveImageGroup(
       name=Some("kingsplace"),
       metadata=None,
       availableImages=ResponsiveImageGenerator(
         id="8bd255e0063f8c089ce9dd2124fcb4e3ff242395/0_68_1020_612",
         sizes=List(1000,500)
       )
-    ),
-    ResponsiveImageGroup(
-      name=Some("stonehenge"),
-      metadata=None,
-      availableImages=ResponsiveImageGenerator(
-        id="628e2a9c2ff25d1bdc6ead32d0d4407f0efcfd25/0_1048_2773_1663",
-        sizes=List(800,500)
-      ) ++ ResponsiveImageGenerator(
-        id="628e2a9c2ff25d1bdc6ead32d0d4407f0efcfd25/0_693_2773_1662",
-        sizes=List(2773,2000,1000)
-      )
     )
   )
 
-  def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
+  private def getCheapestPaidMembershipPlan(promotion: AnyPromotionWithLandingPage) = {
+    // flatMap gives a type mismatch compile error so using map and flatten instead
+    promotion.appliesTo.productRatePlanIds
+      .map(catalog.findPaid)
+      .flatten
+      .toSeq
+      .sortBy(paidTier => paidTier.priceGBP.amount)
+      .headOption
+  }
 
-    def findTemplateForPromotion(promoCode: PromoCode, promotion: PromotionWithLandingPage[PromotionType], url: String) =
-      promotion.promotionType match {
-        case i: Incentive =>
-          implicit val countryGroup = UK
+  private def getTypeOfPaidTier(paidTier: PaidTier) = {
+    catalog.findPaid(paidTier)
+  }
 
-          Some(views.html.promotions.englishHeritageOffer(
-            TouchpointBackend.Normal.catalog.partner,
-            PageInfo(
-              title = promotion.landingPage.title.getOrElse(promotion.name),
-              url = url,
-              description = Some(promotion.description)
-            ),
-            pageImages
-          ))
-        case p: PercentDiscount =>
-          implicit val countryGroup = UK
+  private def getImageForPromotionLandingPage(promotion: AnyPromotionWithLandingPage) = {
+    ResponsiveImageGroup(
+      metadata = None,
+      availableImages = promotion.landingPage.imageUrl.map(uri => ResponsiveImage(uri.toString, uri.pathParts.last.part.replace(".jpg", "").toInt)).toSeq
+    )
+  }
 
-          Some(views.html.promotions.discountOffer(
-            TouchpointBackend.Normal.catalog.partner,
-            PageInfo(
-              title = promotion.landingPage.title.getOrElse(promotion.name),
-              url = url,
-              description = Some(promotion.description)
-            ),
-            pageImages,
-            promoCode,
-            promotion
-          ))
-        case _ => None
+  private def getPageInfo(promotion: AnyPromotionWithLandingPage, url: String) = PageInfo(
+    title = promotion.landingPage.title.getOrElse(promotion.name),
+    url = url,
+    description = promotion.landingPage.description orElse Some(promotion.description)
+  )
+
+  private def findTemplateForPromotion(promoCode: PromoCode, promotion: AnyPromotionWithLandingPage, url: String)() = {
+
+    implicit val countryGroup = CountryGroup.UK
+
+    getCheapestPaidMembershipPlan(promotion).fold(Option.empty[Html]) {
+      paidMembershipPlan => {
+        promotion.promotionType match {
+          case i: Incentive =>
+            Some(views.html.promotions.incentiveLandingPage(
+              getTypeOfPaidTier(paidMembershipPlan.tier),
+              getPageInfo(promotion, url),
+              getImageForPromotionLandingPage(promotion),
+              promoCode,
+              promotion.copy(promotionType = i)
+            ))
+          case p: PercentDiscount =>
+            val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
+            val discountedPrice = promotion.applyDiscountToPrice(originalPrice, paidMembershipPlan.billingPeriod)
+
+            Some(views.html.promotions.discountLandingPage(
+              paidMembershipPlan,
+              getTypeOfPaidTier(paidMembershipPlan.tier),
+              getPageInfo(promotion, url),
+              getImageForPromotionLandingPage(promotion),
+              promoCode,
+              promotion.copy(promotionType = p),
+              originalPrice,
+              discountedPrice
+            ))
+          case _ => Option.empty[Html]
+        }
       }
+    }
+  }
+
+  def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
     val promoCode = PromoCode(promoCodeStr)
     val homepageWithCampaignCode = "/" ? ("INTCMP" -> s"FROM_P_${promoCode.get}")

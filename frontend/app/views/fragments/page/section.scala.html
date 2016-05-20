@@ -5,10 +5,11 @@
     hasBottomPadding: Boolean = true,
     hasTopPadding: Boolean = true,
     contentHasBottomPadding: Boolean = true,
-    contentHasTopPadding: Boolean = true
+    contentHasTopPadding: Boolean = true,
+    sectionId: Option[String] = None
 )(content: Html)
 
-<section class="page-slice page-slice--listing @if(!hasBottomPadding) {listing--no-bottom-padding} @if(!hasTopPadding) {listing--no-top-padding}">
+<section @sectionId.map { id => id="@id" } class="page-slice page-slice--listing @if(!hasBottomPadding) {listing--no-bottom-padding} @if(!hasTopPadding) {listing--no-top-padding}">
     <div class="l-constrained">
         <div class="
             listing

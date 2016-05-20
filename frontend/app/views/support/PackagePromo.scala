@@ -27,7 +27,7 @@ object PackagePromo {
       "data-metric-action" -> t.slug
     )
 
-    CtaButton("Become a " + t.slug, to = link, attributes = attrs)
+    CtaButton("Become a " + t.name, to = link, attributes = attrs)
   }
 
   implicit class AttrsToHtml(attrs: Map[String, String]) {

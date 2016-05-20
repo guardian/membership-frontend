@@ -110,13 +110,6 @@
         background-image: url(/assets/images/join-challenger/s_ROW_hero01_1280x800.jpg);
     }
 }
-// english heritage promo
-.hero-banner--eng-heritage {
-    background-attachment: unset;
-    background-image: url(/assets/images/join-challenger/hm_hero01_980x980.jpg);
-
-    @include fixed-desktop-background(url(/assets/images/join-challenger/hm_hero01_1280x800.jpg),100%,bottom);
-}
 .hero-banner__inner {
     position: relative;
     height: 100%;
