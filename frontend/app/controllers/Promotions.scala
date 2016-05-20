@@ -24,7 +24,7 @@ import scalaz.{Monad, \/}
 
 object Promotions extends Controller {
 
-  import TouchpointBackend.TestUser.{catalog, promoService}
+  import TouchpointBackend.Normal.{catalog, promoService}
 
   private val pageImages = Seq(
     ResponsiveImageGroup(

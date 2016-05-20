@@ -1,6 +1,7 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.Current
 @import com.gu.salesforce.PaidTier
+@import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
 @import views.model.Roundel
@@ -25,7 +26,7 @@
     @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
     @fragments.page.heroBanner("hero-banner--newsroom hero-banner--alt-accent") {
-        Become a Guardian @pricePlans.tier.name
+        @promotion.landingPage.title.getOrElse(promotion.name)
     } {
         Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
     }()
@@ -36,7 +37,7 @@
             countryGroup,
             promoCode = Some(promoCode.get),
             modifierClass = Some("package-promo--clean"),
-            button = Some(CtaButton("Find out more", "/", Map.empty))
+            button = if (pricePlans.tier != Supporter()) Some(CtaButton("Find out more", "/", Map.empty)) else None
         )
     }
 
@@ -46,7 +47,6 @@
 
     @fragments.page.sectionCardStack(promotionImage, promotion.landingPage.title orElse Some(promotion.name)) {
         <div class="listing__text">
-            @promotion.landingPage.title.map { t => <p>@t</p> }
             <p>@Html(promotion.landingPage.description.getOrElse(promotion.description))</p>
             <p>
                 <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlans.tier)}?countryGroup=@countryGroup.id">Become a @pricePlans.tier.name</a>
@@ -74,7 +74,7 @@
             countryGroup,
             promoCode = Some(promoCode.get),
             modifierClass = Some("package-promo--clean"),
-            button = Some(CtaButton("Find out more", "/", Map.empty))
+            button = if (pricePlans.tier != Supporter()) Some(CtaButton("Find out more", "/", Map.empty)) else None
         )
     }
 }
