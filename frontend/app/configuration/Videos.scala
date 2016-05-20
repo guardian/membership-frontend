@@ -41,7 +41,7 @@ object Videos {
   )
 
   val supportersUSA =  Video(
-    srcUrl="//www.youtube.com/embed/CAzEi7vDxcg?enablejsapi=1&wmode=transparent",
+    srcUrl="//www.youtube.com/embed/MsZL6dhyXW8?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
