@@ -1,0 +1,16 @@
+@import com.gu.i18n.CountryGroup
+@(activeAmount: Option[Int])(countryGroup: CountryGroup)
+<div class="js-button-group button-group u-cf">
+    <button type="button" tabindex="8" class="js-button option-button option-button--bold @if(activeAmount.contains(5)){ active }" data-amount="5">
+        <span class="currency js-currency">@countryGroup.currency.glyph</span>5
+    </button>
+    <button type="button" tabindex="9" class="js-button option-button option-button--bold @if(activeAmount.contains(20)){ active }" data-amount="20">
+        <span class="currency js-currency">@countryGroup.currency.glyph</span>20
+    </button>
+    <button type="button" tabindex="10" class="js-button option-button option-button--bold @if(activeAmount.contains(50)){ active }" data-amount="50">
+        <span class="currency js-currency">@countryGroup.currency.glyph</span>50
+    </button>
+    <button type="button" tabindex="11" class="js-button option-button option-button--bold @if(activeAmount.contains(5)){ active }" data-amount="100">
+        <span class="currency js-currency">@countryGroup.currency.glyph</span>100
+    </button>
+</div>
