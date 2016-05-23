@@ -77,7 +77,7 @@
                     <li id="amount_field" class="form-field">
                         <label for="amount" class="label u-h">Amount</label>
                         <div class="input">
-                            @fragments.giraffe.contributeAmountButtons(Some(5))(countryGroup)
+                            @fragments.giraffe.contributeAmountButtons(List(5,25,100,500), Some(5))(countryGroup)
                              <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</div>
                                 <input type="number" id="other_amount" class="input-text js-amount js-amount-field" placeholder="Other amount" maxlength="10" tabindex="12" data-validation="giraffe" @maxAmount.fold{
