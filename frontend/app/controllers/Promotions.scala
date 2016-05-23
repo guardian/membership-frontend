@@ -1,16 +1,16 @@
 package controllers
 
-
 import actions.RichAuthRequest
 import com.gu.i18n.{Country, CountryGroup}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.Formatters._
-import com.gu.memsub.promo.Promotion.AnyPromotionWithLandingPage
+import com.gu.memsub.promo.Promotion._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import com.netaporter.uri.dsl._
+import configuration.Config
 import model._
 import play.api.libs.json._
 import play.api.mvc.{Controller, Result}
@@ -50,11 +50,7 @@ object Promotions extends Controller {
   )
 
   private def getCheapestPaidMembershipPlan(promotion: AnyPromotionWithLandingPage) = {
-    // flatMap gives a type mismatch compile error so using map and flatten instead
-    promotion.appliesTo.productRatePlanIds
-      .map(catalog.findPaid)
-      .flatten
-      .toSeq
+    promotion.appliesTo.productRatePlanIds.toList.flatMap(rp => catalog.findPaid(rp))
       .sortBy(paidTier => paidTier.priceGBP.amount)
       .headOption
   }
@@ -137,6 +133,12 @@ object Promotions extends Controller {
      ).fold(identity, identity) //Whether or not the for comprehension succeeds, we have a result- which we want to return
   }
 
+
+  def preview(json: Option[String]) = GoogleAuthenticatedStaffAction { implicit request =>
+    json.flatMap(j => Json.fromJson[AnyPromotion](Json.parse(j)).asOpt).flatMap(Promotion.withLandingPage)
+      .flatMap(p => findTemplateForPromotion(p.codes.head, p, request.path))
+      .fold[Result](NotFound)(p => Ok(p))
+  }
 
   def validatePromoCode(promoCode: PromoCode, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>
     implicit val catalog = request.touchpointBackend.catalog
