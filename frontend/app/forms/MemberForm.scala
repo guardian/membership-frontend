@@ -16,7 +16,8 @@ object MemberForm {
   case class NameForm(first: String, last: String) extends FullName
 
   case class SupportForm(
-    name: String,
+    firstName: String,
+    lastName: String,
     currency: Currency,
     amount: BigDecimal,
     email: String,
@@ -260,7 +261,8 @@ object MemberForm {
 
   val supportForm: Form[SupportForm] = Form(
     mapping(
-      "name" -> nonEmptyText,
+      "firstName" -> nonEmptyText,
+      "lastName" -> nonEmptyText,
       "currency" -> of[Currency],
       "amount" -> bigDecimal(10, 2),
       "email" -> email,
