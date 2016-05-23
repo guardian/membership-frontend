@@ -15,7 +15,7 @@
     position: relative;
     top: 0;
     background-size: cover;
-    background-image: url('https://media.guim.co.uk/727ed45d0601dc4fe85df56f6b24140c68145c16/0_0_2200_1320/1000.jpg');
+    background-color: color(news-support-2);
     height: 360px;
     @include mq(desktop) {
         height: 440px;
