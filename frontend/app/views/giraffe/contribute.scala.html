@@ -77,21 +77,8 @@
                     <li id="amount_field" class="form-field">
                         <label for="amount" class="label u-h">Amount</label>
                         <div class="input">
-                            <div class="js-button-group button-group u-cf">
-                                <button type="button" tabindex="8" class="js-button option-button option-button--bold active" data-amount="5">
-                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>5
-                                </button>
-                                <button type="button" tabindex="9" class="js-button option-button option-button--bold" data-amount="20">
-                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>20
-                                </button>
-                                <button type="button" tabindex="10" class="js-button option-button option-button--bold" data-amount="50">
-                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>50
-                                </button>
-                                <button type="button" tabindex="11" class="js-button option-button option-button--bold" data-amount="100">
-                                    <span class="currency js-currency">@countryGroup.currency.glyph</span>100
-                                </button>
-                            </div>
-                            <div id="other_amount_field">
+                            @fragments.giraffe.contributeAmountButtons(List(5,25,100,500), Some(5))(countryGroup)
+                             <div id="other_amount_field">
                                 <div class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</div>
                                 <input type="number" id="other_amount" class="input-text js-amount js-amount-field" placeholder="Other amount" maxlength="10" tabindex="12" data-validation="giraffe" @maxAmount.fold{
                                 }{max =>

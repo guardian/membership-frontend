@@ -1,0 +1,9 @@
+@import com.gu.i18n.CountryGroup
+@(amounts: List[Integer], activeAmount: Option[Integer])(countryGroup: CountryGroup)
+<div class="js-button-group button-group u-cf">
+    @for(amount <- amounts) {
+        <button type="button" tabindex="8" class="js-button option-button option-button--bold @if(activeAmount.contains(amount)){ active }" data-amount=@amount>
+            <span class="currency js-currency">@countryGroup.currency.glyph</span>@amount
+        </button>
+    }
+</div>
