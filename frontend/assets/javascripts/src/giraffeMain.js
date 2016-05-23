@@ -3,6 +3,7 @@ require([
     'src/modules/raven',
     'src/modules/analytics/setup',
     'src/modules/images',
+    'src/modules/toggle',
     'src/modules/dropdown',
     'src/modules/navigation',
     'src/modules/userDetails',
@@ -18,6 +19,7 @@ require([
     raven,
     analytics,
     images,
+    toggle,
     dropdown,
     navigation,
     userDetails,
@@ -37,6 +39,7 @@ require([
 
     // Global
     images.init();
+    toggle.init();
     dropdown.init();
     identityPopup.init();
     identityPopupDetails.init();
