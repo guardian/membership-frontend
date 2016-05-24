@@ -17,8 +17,8 @@ import scala.concurrent.Future
 object Giraffe extends Controller {
 
   val social: Set[Social] = Set(
-    Twitter("The Panama Papers: how the world's rich and famous hide their money offshore http://www.theguardian.com/news/series/panama-papers?CMP=twt_contribute #panamapapers"),
-    Facebook("http://www.theguardian.com/news/series/panama-papers?CMP=fb_contribute")
+    Twitter("I've just contributed to the Guardian. Join me in supporting independent journalism https://membership.theguardian.com/contribute"),
+    Facebook("https://membership.theguardian.com/contribute")
   )
 
 
