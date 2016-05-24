@@ -136,7 +136,7 @@ object Promotions extends Controller {
 
   def preview(json: Option[String]) = GoogleAuthenticatedStaffAction { implicit request =>
     json.flatMap(j => Json.fromJson[AnyPromotion](Json.parse(j)).asOpt).flatMap(Promotion.withLandingPage)
-      .flatMap(p => findTemplateForPromotion(p.codes.head, p, request.path))
+      .flatMap(p => findTemplateForPromotion(p.codes.headOption.getOrElse(PromoCode("NO-CODE")), p, request.path))
       .fold[Result](NotFound)(p => Ok(p))
   }
 
