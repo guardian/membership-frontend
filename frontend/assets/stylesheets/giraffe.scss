@@ -52,12 +52,16 @@ $desktop-form-width: 936px;
         bottom: 5px;
         top: 15px;
         margin: 0 auto;
-        padding-left: 10px;
         padding-top: 10px;
 
         @include mq(tablet) {
             width: $tablet-form-width;
         }
+
+        @include mq($until:tablet) {
+            padding-left: 10px;
+        }
+
 
         @include mq(desktop) {
             width: $desktop-form-width;
