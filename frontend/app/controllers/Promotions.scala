@@ -26,29 +26,6 @@ object Promotions extends Controller {
 
   import TouchpointBackend.Normal.{catalog, promoService}
 
-  private val pageImages = Seq(
-    ResponsiveImageGroup(
-      name=Some("fearless"),
-      metadata=Some(Grid.Metadata(
-        description = Some("The Counted: people killed by police in the United States in 2015"),
-        byline = Some("The Guardian US"),
-        credit = None
-      )),
-      availableImages=ResponsiveImageGenerator(
-        id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
-        sizes=List(1000,500)
-      )
-    ),
-    ResponsiveImageGroup(
-      name=Some("kingsplace"),
-      metadata=None,
-      availableImages=ResponsiveImageGenerator(
-        id="8bd255e0063f8c089ce9dd2124fcb4e3ff242395/0_68_1020_612",
-        sizes=List(1000,500)
-      )
-    )
-  )
-
   private def getCheapestPaidMembershipPlan(promotion: AnyPromotionWithLandingPage) = {
     promotion.appliesTo.productRatePlanIds.toList.flatMap(rp => catalog.findPaid(rp))
       .sortBy(paidTier => paidTier.priceGBP.amount)
@@ -79,19 +56,10 @@ object Promotions extends Controller {
     getCheapestPaidMembershipPlan(promotion).fold(Option.empty[Html]) {
       paidMembershipPlan => {
         promotion.promotionType match {
-          case i: Incentive =>
-            Some(views.html.promotions.incentiveLandingPage(
-              getTypeOfPaidTier(paidMembershipPlan.tier),
-              getPageInfo(promotion, url),
-              getImageForPromotionLandingPage(promotion),
-              promoCode,
-              promotion.copy(promotionType = i)
-            ))
           case p: PercentDiscount =>
             val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
             val discountedPrice = promotion.applyDiscountToPrice(originalPrice, paidMembershipPlan.billingPeriod)
-
-            Some(views.html.promotions.discountLandingPage(
+            Some(views.html.promotions.singlePricePlanDiscountLandingPage(
               paidMembershipPlan,
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
@@ -101,7 +69,14 @@ object Promotions extends Controller {
               originalPrice,
               discountedPrice
             ))
-          case _ => Option.empty[Html]
+          case _ =>
+            Some(views.html.promotions.singleTierLandingPage(
+              getTypeOfPaidTier(paidMembershipPlan.tier),
+              getPageInfo(promotion, url),
+              getImageForPromotionLandingPage(promotion),
+              promoCode,
+              promotion
+            ))
         }
       }
     }
