@@ -23,7 +23,7 @@ object Giraffe extends Controller {
 
 
   val chargeId = "charge_id"
-  val maxAmount: Option[Int] = 500.some
+  val maxAmount: Option[Int] = 1000.some
 
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
