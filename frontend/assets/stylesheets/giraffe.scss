@@ -11,27 +11,32 @@
     - wide:             @media all and (min-width: 81.25em) {}
 */
 
+$banner-yellow: #FFC931;
+$tablet-form-width: map_get($max-widths, max-tablet);
+$desktop-form-width: 936px;
+
 .promo-primary__image.promo-primary__image--giraffe {
     position: relative;
     top: 0;
     background-size: cover;
-    background-color: color(news-support-2);
-    height: 360px;
+    background-color: $banner-yellow;
+    height: 130px;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
     @include mq(desktop) {
-        height: 440px;
+        height: 130px;
     }
 
     @include mq($from: desktop) {
         .primary__heading {
-            left: 80px;
-            right: 40%;
+            margin: 0 auto;
+            padding-left: 0;
         }
         .primary__heading--main {
-            font-size: 42px;
+            font-size: 34px;
             line-height: 46px;
         }
         .primary__heading--sub {
-            font-size: 42px;
+            font-size: 34px;
         }
         .primary__heading--text {
             @include fs-headline(3);
@@ -43,25 +48,30 @@
     }
 
     .primary__heading {
-        left: 10px;
         font-size: 24px;
         bottom: 5px;
-        right: 10px;
-        top: 120px;
+        top: 15px;
+        margin: 0 auto;
+        padding-top: 10px;
 
         @include mq(tablet) {
-            left: $gs-gutter;
-            width: 510px;
+            width: $tablet-form-width;
         }
 
+        @include mq($until:tablet) {
+            padding-left: 10px;
+        }
+
+
         @include mq(desktop) {
-            left: 74px;
+            width: $desktop-form-width;
         }
 
         @include mq($from: mem-full) {
-            left: 150px;
         }
     }
+
+
 
     @include mq($until: desktop) {
         .primary__heading--main {
@@ -90,27 +100,22 @@
     }
 
     .primary__heading {
-        position: absolute;
         z-index: 2;
     }
 
     .primary__heading--main {
         font-family: $f-serif-headline;
-        font-weight: 500;
-        color: white;
+        font-weight: 700;
+        color: black;
     }
 
     .primary__heading--sub {
         font-family: $f-serif-headline;
-        font-weight: 500;
-        color: #ffce4b;
+        font-weight: 700;
+        color: white;
     }
 
     .primary__heading--sub:after {
-        border-bottom: 1px solid white;
-        display: block;
-        height: 1px;
-        content: '';
     }
 
     .primary__heading--text {
@@ -207,7 +212,7 @@
     @include fs-headline(9);
     font-size: 48px;
     font-weight: 500;
-    color: color(news-main-2);
+    color: $banner-yellow;
 }
 
 .support-wrapper__title {
@@ -219,7 +224,7 @@
 }
 
 /* desktop */
-$tablet-form-width: map_get($max-widths, max-tablet);
+
 $tablet-col-padding-left: $gs-gutter/2;
 $tablet-col-padding-right: ($gs-gutter/2) + 1;
 @include mq(tablet) {
@@ -423,7 +428,8 @@ $desktop-col-padding-right: 16px;
     }
 
     &.active {
-        background-color: color(news-support-1);
+        background-color: $banner-yellow;
+        font-family: $f-serif-headline;
     }
 }
 
@@ -439,10 +445,10 @@ $desktop-col-padding-right: 16px;
 .action--contribute {
     width: 100%;
     border: none;
-    background-color: #00558C;
+    background-color: #328A3E;
 
     &:hover, &:focus {
-        background-color: darken(#00558C, 10%);
+        background-color: darken(#328A3E, 10%);
     }
 
     &:focus {
