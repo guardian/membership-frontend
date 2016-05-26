@@ -38,7 +38,7 @@ object Giraffe extends Controller {
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
       url = request.path,
-      image = Some("https://media.guim.co.uk/8b73fe626bc3dcea847354c09b525b9e198676d9/0_0_1920_1152/1000.jpg"),
+      image = Some("https://media.guim.co.uk/5719a2b724efd8944e0222d57c839a7d2b6e39b3/0_0_1440_864/1000.jpg"),
       stripePublicKey = Some(stripe.publicKey),
       description = Some("By making a contribution, you'll be supporting independent journalism that speaks truth to power"),
       navigation = Seq.empty,
