@@ -5,8 +5,8 @@ export function init(){
     if (abTests){
             var data = {};
             for (var test of abTests){
-                data[test.testName] = {
-                    'variantName': test.slug,
+                data[test.testSlug] = {
+                    'variantName': test.variantSlug,
                     'complete': 'true'
                 }
             }
