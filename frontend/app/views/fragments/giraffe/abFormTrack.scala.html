@@ -3,7 +3,7 @@
 @(chosenVariants: ChosenVariants)
 
 
-    <input type="hidden" name="abTest" class="js-ab-test" value="@URLEncoder.encode(chosenVariants.asJson,"UTF8")">
+<input type="hidden" name="abTest" class="js-ab-test" value="@chosenVariants.encodeUTF8">
 <script>
     abTests = @Html(chosenVariants.asJson);
 </script>

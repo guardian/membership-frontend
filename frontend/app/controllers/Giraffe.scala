@@ -27,10 +27,6 @@ object Giraffe extends Controller {
   val maxAmount: Option[Int] = 500.some
 
 
-  def createCookie(variant: TestTrait#Variant): Cookie = {
-    Cookie(variant.testName+"_GIRAFFE_TEST", variant.slug)
-  }
-
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
   // controllers & templates into a single one which varies on a number of parameters
@@ -49,7 +45,7 @@ object Giraffe extends Controller {
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
     Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants))
-      .withCookies(createCookie(chosenVariants.v1), createCookie(chosenVariants.v2))
+      .withCookies(Test.createCookie(chosenVariants.v1), Test.createCookie(chosenVariants.v2))
   }
 
   def thanks(countryGroup: CountryGroup, redirectUrl: String) = NoCacheAction { implicit request =>

@@ -2,6 +2,9 @@ package views.support
 
 
 
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 import com.gu.i18n.CountryGroup
 import play.api.libs.json._
 import play.api.mvc.{Cookie, Request}
@@ -46,6 +49,7 @@ object MessageCopyTest extends TestTrait {
 case class ChosenVariants(v1: AmountHighlightTest.Variant, v2: MessageCopyTest.Variant) {
   def asList: Seq[TestTrait#Variant] = Seq(v1,v2) //this makes me very sad
   def asJson = Json.toJson(asList).toString()
+  def encodeUTF8 = URLEncoder.encode(asJson, StandardCharsets.UTF_8.name())
   implicit val writesVariant: Writes[TestTrait#Variant] = new Writes[TestTrait#Variant]{
     def writes(variant: TestTrait#Variant) =  Json.obj(
       "testName" -> variant.testName,
@@ -69,6 +73,10 @@ object Test {
 
   def pickVariant[A](request: Request[A], test: TestTrait) : test.Variant = {
     pickByQueryStringOrCookie(request, test).getOrElse(pickRandomly(test))
+  }
+
+  def createCookie(variant: TestTrait#Variant): Cookie = {
+    Cookie(variant.testName+"_GIRAFFE_TEST", variant.slug, maxAge = Some(1209600))
   }
 
   def getContributePageVariants[A](request: Request[A]) = {

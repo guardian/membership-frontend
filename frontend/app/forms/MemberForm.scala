@@ -1,6 +1,7 @@
 package forms
 
 import java.net.{URLDecoder, URLEncoder}
+import java.nio.charset.StandardCharsets
 
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod._
@@ -107,8 +108,7 @@ object MemberForm {
 
   val abTestFormatter: Formatter[JsValue] = new Formatter[JsValue] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError],JsValue] = {
-      printf(key)
-      val parse: JsValue = Json.parse(URLDecoder.decode(data(key),"UTF8"))
+      val parse: JsValue = Json.parse(URLDecoder.decode(data(key),StandardCharsets.UTF_8.name()))
       Right(parse)
     }
     override def unbind(key: String, data: JsValue): Map[String,String] = Map()
