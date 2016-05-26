@@ -1,7 +1,6 @@
 package views.support
 
 
-import java.net.URLEncoder
 
 import com.gu.i18n.CountryGroup
 import play.api.libs.json._
@@ -31,20 +30,16 @@ object AmountHighlightTest extends TestTrait {
   override type VariantFn = (CountryGroup, Option[Int]) => Html
 
   def variants = NonEmptyList(
-    Variant("Amount test - 5 highlight","test1a",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(5))),
-    Variant("Amount test - 25 highlight","test1b",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(25))),
-    Variant("Amount test - No highlight","test1c",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),None))
-  )
+    Variant("Amount test - 5 highlight a","test1a",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(5))),
+    Variant("Amount test - 5 highlight b","test1b",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(5))))
 }
 
 object MessageCopyTest extends TestTrait {
   def name = "MessageCopyTest"
   override type VariantFn = () => Html
     def variants = NonEmptyList(
-    Variant("Copy Test - Support","test2a",1,views.html.fragments.giraffe.contributeMessage("Support the Guardian")),
-    Variant("Copy Test - Powerful", "test2b",1,views.html.fragments.giraffe.contributeMessage("The powerful won't investigate themselves")),
-    Variant("Copy Test - Mutual","test2c",1,views.html.fragments.giraffe.contributeMessage("Can't live without us? The feeling's mutual")),
-    Variant("Copy Test - Hell","test2d",1,views.html.fragments.giraffe.contributeMessage("Give us money - we'll give 'em hell"))
+    Variant("Copy Test - a","test2a",1,views.html.fragments.giraffe.contributeMessage("Support the Guardian")),
+    Variant("Copy Test - b", "test2b",1,views.html.fragments.giraffe.contributeMessage("Support the Guardian"))
   )
 }
 
@@ -59,10 +54,6 @@ case class ChosenVariants(v1: AmountHighlightTest.Variant, v2: MessageCopyTest.V
     )
   }
 }
-
-
-
-
 
 object Test {
   def pickRandomly(test: TestTrait): test.Variant = {
