@@ -7,7 +7,7 @@ export function init(){
             for (var test of abTests){
                 data[test.testName] = {
                     'variantName': test.slug,
-                    'complete': true
+                    'complete': 'true'
                 }
             }
             ophan.ophan.then(function(o){
