@@ -1,5 +1,8 @@
 package forms
 
+import java.net.{URLDecoder, URLEncoder}
+import java.nio.charset.StandardCharsets
+
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod._
 import com.gu.memsub.Subscription.ProductRatePlanId
@@ -10,7 +13,8 @@ import com.gu.salesforce.{PaidTier, Tier}
 import model.{FeatureChoice, FreePlanChoice, PaidPlanChoice, PlanChoice}
 import play.api.data.Forms._
 import play.api.data.format.Formatter
-import play.api.data.{Form, FormError, Mapping}
+import play.api.data.{FieldMapping, Form, FormError, Mapping}
+import play.api.libs.json.{JsValue, Json}
 
 object MemberForm {
   case class NameForm(first: String, last: String) extends FullName
@@ -22,7 +26,8 @@ object MemberForm {
     email: String,
     token: String,
     marketing: Boolean,
-    postCode: Option[String]
+    postCode: Option[String],
+    abTests: JsValue
   )
 
   case class PaymentForm(billingPeriod: BillingPeriod, token: String)
@@ -100,6 +105,15 @@ object MemberForm {
   }
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
+
+  val abTestFormatter: Formatter[JsValue] = new Formatter[JsValue] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError],JsValue] = {
+      val parse: JsValue = Json.parse(URLDecoder.decode(data(key),StandardCharsets.UTF_8.name()))
+      Right(parse)
+    }
+    override def unbind(key: String, data: JsValue): Map[String,String] = Map()
+
+  }
 
   implicit val productFeaturesFormatter: Formatter[Set[FeatureChoice]] = new Formatter[Set[FeatureChoice]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Set[FeatureChoice]] = {
@@ -266,7 +280,8 @@ object MemberForm {
       "email" -> email,
       "payment.token" -> nonEmptyText,
       "guardian-opt-in" -> boolean,
-      "postcode" -> optional(nonEmptyText)
+      "postcode" -> optional(nonEmptyText),
+      "abTest" -> FieldMapping[JsValue]()(abTestFormatter)
     )(SupportForm.apply)(SupportForm.unapply)
   )
 }
