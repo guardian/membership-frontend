@@ -49,7 +49,7 @@ object MessageCopyTest extends TestTrait {
 case class ChosenVariants(v1: AmountHighlightTest.Variant, v2: MessageCopyTest.Variant) {
   def asList: Seq[TestTrait#Variant] = Seq(v1,v2) //this makes me very sad
   def asJson = Json.toJson(asList).toString()
-  def encodeUTF8 = URLEncoder.encode(asJson, StandardCharsets.UTF_8.name())
+  def encodeURL = URLEncoder.encode(asJson, StandardCharsets.UTF_8.name())
   implicit val writesVariant: Writes[TestTrait#Variant] = new Writes[TestTrait#Variant]{
     def writes(variant: TestTrait#Variant) =  Json.obj(
       "testName" -> variant.testName,
