@@ -32,7 +32,7 @@ case class IdentityService(identityApi: IdentityApi) {
       }
 
   def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
-    retry.Backoff(max = 3, delay = 3.seconds, base = 2){ () =>
+    retry.Backoff(max = 3, delay = 2.seconds, base = 2){ () =>
       identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
     }.map(_.getOrElse{
       val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
