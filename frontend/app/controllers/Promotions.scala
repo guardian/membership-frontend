@@ -5,12 +5,10 @@ import com.gu.i18n.{Country, CountryGroup}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.Formatters._
-import com.gu.memsub.promo.Promotion._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import com.netaporter.uri.dsl._
-import configuration.Config
 import model._
 import play.api.libs.json._
 import play.api.mvc.{Controller, Result}
@@ -18,7 +16,8 @@ import play.twirl.api.Html
 import services.PromoSessionService._
 import services.TouchpointBackend
 import views.support.PageInfo
-
+import com.gu.memsub.promo.PercentDiscount._
+import com.gu.memsub.promo.Promotion._
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 
@@ -26,7 +25,7 @@ object Promotions extends Controller {
 
   import TouchpointBackend.Normal.{catalog, promoService}
 
-  private def getCheapestPaidMembershipPlan(promotion: AnyPromotionWithLandingPage) = {
+  private def getCheapestPaidMembershipPlan(promotion: PromoWithMembershipLandingPage) = {
     promotion.appliesTo.productRatePlanIds.toList.flatMap(rp => catalog.findPaid(rp))
       .sortBy(paidTier => paidTier.priceGBP.amount)
       .headOption
@@ -36,20 +35,20 @@ object Promotions extends Controller {
     catalog.findPaid(paidTier)
   }
 
-  private def getImageForPromotionLandingPage(promotion: AnyPromotionWithLandingPage) = {
+  private def getImageForPromotionLandingPage(promotion: PromoWithMembershipLandingPage) = {
     ResponsiveImageGroup(
       metadata = None,
       availableImages = promotion.landingPage.imageUrl.map(uri => ResponsiveImage(uri.toString, uri.pathParts.last.part.replace(".jpg", "").toInt)).toSeq
     )
   }
 
-  private def getPageInfo(promotion: AnyPromotionWithLandingPage, url: String) = PageInfo(
+  private def getPageInfo(promotion: PromoWithMembershipLandingPage, url: String) = PageInfo(
     title = promotion.landingPage.title.getOrElse(promotion.name),
     url = url,
     description = promotion.landingPage.description orElse Some(promotion.description)
   )
 
-  private def findTemplateForPromotion(promoCode: PromoCode, promotion: AnyPromotionWithLandingPage, url: String)() = {
+  private def findTemplateForPromotion(promoCode: PromoCode, promotion: PromoWithMembershipLandingPage, url: String)() = {
 
     implicit val countryGroup = CountryGroup.UK
 
@@ -58,7 +57,7 @@ object Promotions extends Controller {
         promotion.promotionType match {
           case p: PercentDiscount =>
             val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
-            val discountedPrice = promotion.applyDiscountToPrice(originalPrice, paidMembershipPlan.billingPeriod)
+            val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.billingPeriod)
             Some(views.html.promotions.singlePricePlanDiscountLandingPage(
               paidMembershipPlan,
               getTypeOfPaidTier(paidMembershipPlan.tier),
@@ -101,7 +100,7 @@ object Promotions extends Controller {
         _ <- failWhen(promoCodeStr.toUpperCase != promoCodeStr,redirectToUpperCase)
         _ <- failWhen(promotion.starts.isAfterNow,redirectToHomepage)
         _ <- failWhen(promotion.expires.exists(_.isBeforeNow),redirectToHomepage)
-        withLanding <- Promotion.withLandingPage(promotion) \/> redirectToHomepageWithSession
+        withLanding <- promotion.asMembership \/> redirectToHomepageWithSession
         html <- findTemplateForPromotion(promoCode, withLanding, request.path) \/> redirectToHomepageWithSession
         response <- \/.right(Ok(html).withCookies(sessionCookieFromCode(promoCode)))
       } yield response
@@ -110,7 +109,7 @@ object Promotions extends Controller {
 
 
   def preview(json: Option[String]) = GoogleAuthenticatedStaffAction { implicit request =>
-    json.flatMap(j => Json.fromJson[AnyPromotion](Json.parse(j)).asOpt).flatMap(Promotion.withLandingPage)
+    json.flatMap(j => Json.fromJson[AnyPromotion](Json.parse(j)).asOpt).flatMap(_.asMembership)
       .flatMap(p => findTemplateForPromotion(p.codes.headOption.getOrElse(PromoCode("NO-CODE")), p, request.path))
       .fold[Result](NotFound)(p => Ok(p))
   }

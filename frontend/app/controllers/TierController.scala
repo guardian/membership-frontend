@@ -174,8 +174,8 @@ object TierController extends Controller with ActivityTracking
         val planChoice = PaidPlanChoice(target, BillingPeriod.year)
         val validPromoCode = providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
         val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
-        val validTrackingPromoCode = validPromotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
-        val validDisplayablePromoCode = validPromotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+        val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
+        val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
