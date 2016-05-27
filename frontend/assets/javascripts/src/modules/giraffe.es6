@@ -40,10 +40,16 @@ export function init() {
             elem: CUSTOM_AMOUNT
         });
         setAmount(amount);
+        $('.js-amount-field').val("")
+
     }));
 
     // Custom amount
-    CUSTOM_AMOUNT.addEventListener('blur', ev => setAmount(ev.currentTarget.value));
+    CUSTOM_AMOUNT.addEventListener('keyup', ev => setAmount(ev.currentTarget.value));
+    CUSTOM_AMOUNT.addEventListener('focus', ev => {
+        $('.js-button').removeClass(ACTIVE_CLASS);
+    });
+
 
     var hiddenAmount = $('.js-amount-hidden')[0].value;
     $('.js-pay').html(hiddenAmount);
