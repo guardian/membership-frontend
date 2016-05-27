@@ -20,12 +20,13 @@ object Dependencies {
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.1.1"
   val selenium = "org.seleniumhq.selenium" % "selenium-java" % "2.52.0" % "test"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.6" % "test"
+  val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
 
   //projects
 
   val frontendDependencies = Seq(memsubCommonPlayAuth, scalaUri, membershipCommon,
     contentAPI, playWS, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz,
-    PlayImport.specs2 % "test", specs2Extra)
+    PlayImport.specs2 % "test", specs2Extra, dispatch)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, memsubCommonPlayAuth)
 

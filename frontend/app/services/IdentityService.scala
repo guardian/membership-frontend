@@ -15,7 +15,9 @@ import views.support.IdentityUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.util.{Failure, Success}
+import dispatch._, Defaults.timer
 
 case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -30,13 +32,14 @@ case class IdentityService(identityApi: IdentityApi) {
       }
 
   def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
-    identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
-      .map(_.getOrElse{
-        val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
-        val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
-        val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
-        throw IdentityServiceError(s"Couldn't find user with ID ${user.id}. $errContext")
-      })
+    retry.Backoff(max = 3, delay = 3.seconds, base = 2){ () =>
+      identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+    }.map(_.getOrElse{
+      val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
+      val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
+      val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
+      throw IdentityServiceError(s"Couldn't get user's ${user.id} full details. $errContext")
+    })
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     identityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
