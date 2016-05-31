@@ -44,6 +44,10 @@
         "ImageId": {
             "Description": "AMI ID",
             "Type": "String"
+        },
+        "ELBSSLCertificate": {
+            "Description": "ELB SSL Certificate ARN",
+            "Type": "String"
         }
     },
     "Mappings": {
@@ -223,7 +227,7 @@
                     "LoadBalancerPort": "443",
                     "InstancePort": 9000,
                     "Protocol": "HTTPS",
-                    "SSLCertificateId" : { "Fn::Join" : [ "", [ "arn:aws:iam::", {"Ref":"AWS::AccountId"}, ":server-certificate/", { "Ref" : "SiteDomain" } ] ] }
+                    "SSLCertificateId" : { "Ref" : "ELBSSLCertificate" }
                 }],
                 "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
                 "Subnets" : { "Ref" : "Subnets" },
