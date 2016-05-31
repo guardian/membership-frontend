@@ -122,8 +122,8 @@ object Joiner extends Controller with ActivityTracking
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
 
-      val validTrackingPromoCode = validPromotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
-      val validDisplayablePromoCode = validPromotion.filterNot(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+      val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
+      val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
       Ok(views.html.joiner.form.payment(
          plans = plans,
@@ -147,7 +147,7 @@ object Joiner extends Controller with ActivityTracking
       val providedPromoCode = codeFromSession // only take from the session
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.productRatePlanId).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
-      val validTrackingPromoCode = validPromotion.filter(_.whenTracking.isDefined).flatMap(p => providedPromoCode)
+      val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
@@ -242,7 +242,7 @@ object Joiner extends Controller with ActivityTracking
         card,
         destination,
         upgrade,
-        validPromotion.filterNot(_.whenTracking.isDefined)
+        validPromotion.filterNot(_.asTracking.isDefined)
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 

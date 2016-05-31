@@ -8,7 +8,8 @@
 @import com.gu.memsub.Price
 @import com.gu.memsub.promo.PromoCode
 @import com.gu.memsub.promo.PercentDiscount
-@import com.gu.memsub.promo.Promotion.PromotionWithLandingPage
+@import com.gu.memsub.promo.Promotion
+@import com.gu.memsub.promo.Promotion._
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
@@ -17,18 +18,19 @@
 @import model.ResponsiveImageGroup
 @import com.netaporter.uri.dsl._
 @import views.model.Roundel
-@import com.gu.memsub.promo.Promotion.AnyPromotionWithLandingPage
 @import com.gu.salesforce.PaidTier
 @import views.model.Roundel
 @import views.support.PageInfo
 @import views.support.Asset
+@import scalaz.Id._
 
+@import com.gu.memsub.promo.MembershipLandingPage
 @(pricePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
     pricePlans: PaidMembershipPlans[Current, PaidTier],
     pageInfo: PageInfo,
     promotionImage: ResponsiveImageGroup,
     promoCode: PromoCode,
-    promotion: PromotionWithLandingPage[PercentDiscount],
+    promotion: Promotion[PercentDiscount, Id, MembershipLandingPage],
     originalPrice: Price,
     discountedPrice: Price
 )(implicit countryGroup: CountryGroup)
