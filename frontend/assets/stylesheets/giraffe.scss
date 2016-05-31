@@ -20,13 +20,11 @@ $desktop-form-width: 936px;
     top: 0;
     background-size: cover;
     background-color: $banner-yellow;
-    height: 130px;
-    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
-    @include mq(desktop) {
+    padding-bottom: 34px;
+    box-shadow: 0 3px 3px -3px rgba(0,0,0,0.75);
+    @include mq(tablet) {
         height: 130px;
-    }
-
-    @include mq($from: desktop) {
+        padding-bottom: unset;
         .primary__heading {
             margin: 0 auto;
             padding-left: 0;
