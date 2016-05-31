@@ -63,7 +63,7 @@ object MembersDataAPI {
               Logger.debug(s"$prefix MATCH")
               MembersDataAPIMetrics.put("members-data-api-match", 1)
             }
-          case Failure(err) => Logger.error(s"Failed while querying the members-data-api (OK in dev)", err)
+          case Failure(err) => Logger.error(s"Failed to get membership attributes from membership-data-api for user ${memberRequest.user.id} (OK in dev)", err)
         }
       case _ => Logger.error(s"Unexpected credentials! ${memberRequest.user.credentials}")
     }
