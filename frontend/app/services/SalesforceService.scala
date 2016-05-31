@@ -89,7 +89,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
 
   private def upsert(userId: UserId, value: JsObject) =
   // upsert is POST request but safe to retry
-  retry.Backoff(max = 3, delay = 2.seconds, base = 2) { () =>
+  retry.Backoff(max = 2, delay = 2.seconds, base = 2) { () =>
     repository.upsert(Some(userId), value).either
   }.map {
     case Left(e) => throw new SalesforceServiceError(s"User $userId could not be upsert in Salesforce", e)
