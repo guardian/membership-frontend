@@ -17,6 +17,8 @@ import play.api.libs.json._
 import services.FrontendMemberRepository._
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
+import dispatch._, Defaults.timer
 
 object FrontendMemberRepository {
   type UserId = String
@@ -85,5 +87,14 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
     ).collect { case (k, Some(v)) => Json.obj(k -> v) }
   }.reduce(_ ++ _)
 
-  private def upsert(userId: UserId, value: JsObject) = repository.upsert(Some(userId), value)
+  private def upsert(userId: UserId, value: JsObject) =
+  // upsert is POST request but safe to retry
+  retry.Backoff(max = 2, delay = 2.seconds, base = 2) { () =>
+    repository.upsert(Some(userId), value).either
+  }.map {
+    case Left(e) => throw new SalesforceServiceError(s"User $userId could not be upsert in Salesforce", e)
+    case Right(contactId) => contactId
+  }
 }
+
+case class SalesforceServiceError(msg: String, cause: Throwable) extends Throwable(msg, cause)
