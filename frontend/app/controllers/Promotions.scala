@@ -116,8 +116,6 @@ object Promotions extends Controller {
 
 
   def preview(json: Option[String]) = GoogleAuthenticatedStaffAction { implicit request =>
-    json.foreach(j => println(Json.fromJson[AnyPromotion](Json.parse(j))))
-
     json.flatMap(j => Json.fromJson[AnyPromotion](Json.parse(j)).asOpt).flatMap(_.asMembership)
       .flatMap(p => findTemplateForPromotion(p.codes.headOption.getOrElse(PromoCode("NO-CODE")), p, request.path))
       .fold[Result](NotFound)(p => Ok(p))
