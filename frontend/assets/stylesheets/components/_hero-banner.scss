@@ -13,23 +13,7 @@
     }
 }
 
-.hero-banner--image.hero-banner--image__top {
-    align-items: flex-start;
-}
-
-.hero-banner--image.hero-banner--image__bottom {
-    align-items: flex-end;
-}
-
-.hero-banner--image.hero-banner--image__left {
-    justify-content: flex-start;
-}
-
-.hero-banner--image.hero-banner--image__right {
-    justify-content: flex-end;
-}
-
-.hero-banner--image {
+.hero-banner__image {
     will-change: transform;
     overflow: hidden;
     position: fixed;
@@ -58,6 +42,14 @@
     @include mq(tablet) {
         height: calc(460px + #{$global-header-height});
     }
+}
+
+.hero-banner__image--top {
+    align-items: flex-start;
+}
+
+.hero-banner__image--bottom {
+    align-items: flex-end;
 }
 
 .hero-banner__inner {

@@ -48,7 +48,7 @@
 
     @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
-    @fragments.page.heroBanner(heroImages) {
+    @fragments.page.heroBanner(heroImages, modifierClass = "hero-banner--alt-accent") {
         @promotion.landingPage.title.getOrElse(promotion.name)
     } {
         Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits

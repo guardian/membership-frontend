@@ -1,8 +1,8 @@
 @import model.OrientatedImages
-@(image: OrientatedImages, modifierClass: String = "")(title: Html)(description: Html)(action: Html = Html(""))
+@(image: OrientatedImages, imageModifierClass: String = "", modifierClass: String = "")(title: Html)(description: Html)(action: Html = Html(""))
 
-<div class="hero-banner">
-    <picture class="hero-banner--image @modifierClass">
+<div class="hero-banner @modifierClass">
+    <picture class="hero-banner--image @imageModifierClass">
         <source media="(max-width: 740px)" srcset="@image.portrait.srcset"/>
         <source srcset="@image.landscape.srcset"/>
         <img src="@image.landscape.defaultImage" sizes="100vw"/>
