@@ -12,6 +12,8 @@ object ResponsiveImageGenerator {
   }
 }
 
+case class OrientatedImages(portrait: ResponsiveImageGroup, landscape: ResponsiveImageGroup)
+
 object ResponsiveImageGroup {
 
   /* The "main" image element of articles can have a variety of different

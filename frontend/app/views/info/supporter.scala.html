@@ -6,13 +6,13 @@
 @import configuration.Videos
 @import views.support.Asset
 
-@(supporterPlans: PaidMembershipPlans[Current, Supporter],
+@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
   pageInfo: PageInfo,
   pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @* ===== About Supporters ===== *@
-    @fragments.page.heroBanner("hero-banner--uk-supporter") {
+    @fragments.page.heroBannerNew(heroImage) {
         Become a Guardian&nbsp;Supporter
     } {
         Supporters keep our journalism fearless and free to tell the stories other news organisations won’t

@@ -5,7 +5,7 @@ import model.RichEvent.EventBrandCollection
 import model._
 import play.api.mvc.Controller
 import services._
-import views.support.PageInfo
+import views.support.{Asset, PageInfo}
 
 trait FrontPage extends Controller {
   val liveEvents: EventbriteService
@@ -14,6 +14,15 @@ trait FrontPage extends Controller {
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK
+    val heroImagePortrait = ResponsiveImageGroup(availableImages = Seq(
+      ResponsiveImage(Asset.at("images/join-challenger/hm_hero01_980x980.jpg"), 980)
+    ))
+
+    val heroImageLandscape = ResponsiveImageGroup(availableImages = Seq(
+      ResponsiveImage(Asset.at("images/join-challenger/hm_hero01_1280x800.jpg"), 1280)
+    ))
+
+    val orientated = OrientatedImages(portrait = heroImagePortrait, landscape = heroImageLandscape)
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
@@ -33,6 +42,7 @@ trait FrontPage extends Controller {
     )
 
     Ok(views.html.index(
+      orientated,
       TouchpointBackend.Normal.catalog,
       pageImages,
       eventCollections))

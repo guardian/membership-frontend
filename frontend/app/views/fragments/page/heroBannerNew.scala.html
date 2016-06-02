@@ -1,0 +1,24 @@
+@import model.OrientatedImages
+@(image: OrientatedImages, modifierClass: String = "")(title: Html)(description: Html)(action: Html = Html(""))
+
+<div class="hero-banner">
+    <picture class="hero-banner--image @modifierClass">
+        <source media="(max-width: 740px)" srcset="@image.portrait.srcset"/>
+        <source srcset="@image.landscape.srcset"/>
+        <img src="@image.landscape.defaultImage" sizes="100vw"/>
+    </picture>
+
+    <div class="hero-banner__inner">
+        <div class="l-constrained">
+            <div class="hero-banner__sections">
+                <div class="hero-banner__accent"></div>
+                <div class="hero-banner__secondary_accent"></div>
+                <div class="hero-banner__content">
+                    <h1 class="hero-banner__title">@title</h1>
+                    <p class="hero-banner__description">@description</p>
+                    <div class="hero-banner__action">@action</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
