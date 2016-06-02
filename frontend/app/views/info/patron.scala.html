@@ -10,7 +10,7 @@
   partnerPlans: PaidMembershipPlans[Current, Partner],
   pageInfo: PageInfo,
   countryGroup: CountryGroup,
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+  pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 
 @main("Patrons", pageInfo=pageInfo) {

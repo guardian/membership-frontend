@@ -5,7 +5,7 @@
 @import views.support.PageInfo
 @(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
     pageInfo: PageInfo,
-    pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import configuration.Videos
 @import views.support.Asset

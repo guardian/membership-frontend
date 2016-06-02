@@ -8,7 +8,7 @@
 
 @(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
   pageInfo: PageInfo,
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+  pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @* ===== About Supporters ===== *@

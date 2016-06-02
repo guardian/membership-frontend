@@ -1,8 +1,8 @@
 package model
 
 import model.EventbriteTestObjects._
-import model.Grid.{GridResult, Metadata}
-import model.GridDeserializer._
+import com.gu.memsub.images.Grid.{GridResult}
+import com.gu.memsub.images.GridDeserializer._
 import model.RichEvent.{GuLiveEvent, GridImage}
 import org.specs2.mock.Mockito
 import play.api.test.PlaySpecification

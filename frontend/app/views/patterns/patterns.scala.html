@@ -12,7 +12,7 @@
 
 @(catalog: MembershipCatalog,
   events: Seq[model.RichEvent.RichEvent],
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+  pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">

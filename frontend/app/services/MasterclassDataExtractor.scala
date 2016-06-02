@@ -1,7 +1,7 @@
 package services
 
 import com.gu.contentapi.client.model.v1.{Asset, Content}
-import model.ResponsiveImageGroup
+import com.gu.memsub.images.ResponsiveImageGroup
 
 import scala.util.matching.Regex
 
@@ -19,7 +19,7 @@ object MasterclassDataExtractor {
 
     val eventbriteIds = (eventbriteIdsFromRefs ++ scrapeEventbriteIdsFrom(content)).distinct
 
-    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, ResponsiveImageGroup.fromContent(content)))
+    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, model.ResponsiveImageGroup.fromContent(content)))
   }
 
   def scrapeEventbriteIdsFrom(content: Content): Seq[String] = for {

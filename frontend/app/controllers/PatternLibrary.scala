@@ -2,9 +2,10 @@ package controllers
 
 import com.gu.i18n.GBP
 import com.gu.i18n.CountryGroup._
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
+import com.gu.memsub.images.ResponsiveImageGenerator
+import com.gu.memsub.images.ResponsiveImageGroup
 import play.api.mvc.Controller
-import services.{TouchpointBackend, GuardianLiveEventService, EventbriteService}
+import services.{EventbriteService, GuardianLiveEventService, TouchpointBackend}
 import play.api.libs.concurrent.Execution.Implicits._
 
 trait PatternLibrary extends Controller {

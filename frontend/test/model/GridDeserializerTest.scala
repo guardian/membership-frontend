@@ -1,9 +1,9 @@
 package model
 
-import model.Grid.GridResult
+import com.gu.memsub.images.Grid.GridResult
 import play.api.test.PlaySpecification
 import utils.Resource
-import model.GridDeserializer._
+import com.gu.memsub.images.GridDeserializer._
 
 class GridDeserializerTest extends PlaySpecification {
 
