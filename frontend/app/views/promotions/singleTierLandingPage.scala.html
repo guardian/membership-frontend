@@ -27,7 +27,7 @@
 @main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
-    @fragments.page.heroBannerNew(headerImage, "hero-banner--image__top") {
+    @fragments.page.heroBanner(headerImage, "hero-banner--image__top") {
         @promotion.landingPage.title.getOrElse(promotion.name)
     } {
         Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
