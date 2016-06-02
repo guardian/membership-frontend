@@ -14,15 +14,12 @@ trait FrontPage extends Controller {
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK
-    val heroImagePortrait = ResponsiveImageGroup(availableImages = Seq(
-      ResponsiveImage(Asset.at("images/join-challenger/hm_hero01_980x980.jpg"), 980)
-    ))
 
-    val heroImageLandscape = ResponsiveImageGroup(availableImages = Seq(
-      ResponsiveImage(Asset.at("images/join-challenger/hm_hero01_1280x800.jpg"), 1280)
-    ))
-
-    val orientated = OrientatedImages(portrait = heroImagePortrait, landscape = heroImageLandscape)
+    val heroImages = OrientatedImages(
+      portrait = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("5f18c6428e9f31394b14215fe3c395b8f7b4238a/1124_117_1721_1722", Seq(2000, 1000, 500))),
+      landscape = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("5f18c6428e9f31394b14215fe3c395b8f7b4238a/0_0_2878_999", Seq(2000, 1000, 500))))
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
@@ -42,7 +39,7 @@ trait FrontPage extends Controller {
     )
 
     Ok(views.html.index(
-      orientated,
+      heroImages,
       TouchpointBackend.Normal.catalog,
       pageImages,
       eventCollections))

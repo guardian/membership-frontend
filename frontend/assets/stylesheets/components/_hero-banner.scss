@@ -44,6 +44,14 @@
     }
 }
 
+.hero-banner__image--left {
+    justify-content: flex-start;
+}
+
+.hero-banner__image--right {
+    justify-content: flex-end;
+}
+
 .hero-banner__image--top {
     align-items: flex-start;
 }
