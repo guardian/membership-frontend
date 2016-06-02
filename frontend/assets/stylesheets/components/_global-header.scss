@@ -10,7 +10,6 @@ $global-header-height-mobile: 116px;
     // we need to know the exact header height
     // hence using the variable to enforce it
     height: $global-header-height-mobile;
-    overflow: hidden;
 
     @include mq($from: tablet) {
         height: $global-header-height;
