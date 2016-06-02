@@ -32,7 +32,7 @@
     }
 
     // mobile
-    height: calc(74vh + #{$global-header-height-mobile});
+    height: calc(70vh + #{$global-header-height-mobile});
 
     @include mq(mobileLandscape) {
         height: calc(74vh + #{$global-header-height-mobile});

@@ -102,13 +102,12 @@ trait Info extends Controller {
       )
     )
 
-    val heroImagesLandscape = ResponsiveImageGroup(None, None, None,
-      ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
-
-    val heroImagesPortrait = ResponsiveImageGroup(None, None, None,
-      ResponsiveImageGenerator("201d2893398d948190b0bb403ffb896f6f6bd18d/843_216_1782_1781", Seq(1782, 1000, 500)))
-
-    val heroImages = OrientatedImages(portrait = heroImagesPortrait, landscape = heroImagesLandscape)
+    val heroImages = OrientatedImages(
+      portrait = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/1066_0_1866_2333", Seq(1866, 1600, 800))),
+      landscape = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
+    )
 
     Ok(
       views.html.info.supporterUSA(
@@ -129,8 +128,8 @@ trait Info extends Controller {
     implicit val countryGroup = Europe
 
     val hero = OrientatedImages(
-      portrait = ResponsiveImageGroup(availableImages = Seq(
-        ResponsiveImage(Asset.at("images/join-challenger/s_EU_hero01_980x980.jpg"), 980))),
+      portrait = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("201d2893398d948190b0bb403ffb896f6f6bd18d/843_216_1782_1781", Seq(1782, 1000, 500))),
       landscape = ResponsiveImageGroup(availableImages =
         ResponsiveImageGenerator("201d2893398d948190b0bb403ffb896f6f6bd18d/562_349_2438_989", Seq(2000, 1000, 500)))
     )
