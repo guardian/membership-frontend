@@ -14,6 +14,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
+import play.api.mvc.Cookie
 
 import scala.util.{Failure, Success}
 
@@ -41,17 +42,17 @@ object MembersDataAPI {
     (JsPath \ "details").read[String]
   )(ApiError)
 
-  case class Helper(cookies: AccessCredentials.Cookies) extends WebServiceHelper[Attributes, ApiError] {
+  case class Helper(cookies: Seq[Option[Cookie]]) extends WebServiceHelper[Attributes, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader(
-      "Cookie", cookies.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
+      "Cookie", cookies.flatten.map(c => s"${c.name}=${c.value}").mkString("; "))
     override val wsMetrics: StatusMetrics = MembersDataAPIMetrics
   }
 
   object Service  {
     def checkMatchesResolvedMemberIn(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
-        get(cookies).onComplete {
+        get(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U"))).onComplete {
           case Success(memDataApiAttrs) =>
             val prefix = s"members-data-api-check identity=${memberRequest.user.id} salesforce=${memberRequest.subscriber.contact.salesforceContactId} : "
             val salesforceAttrs = Attributes.fromMember(memberRequest.subscriber)
@@ -68,6 +69,6 @@ object MembersDataAPI {
       case _ => Logger.error(s"Unexpected credentials! ${memberRequest.user.credentials}")
     }
 
-    private def get(cookies: AccessCredentials.Cookies) = Helper(cookies).get[Attributes]("user-attributes/me/membership")
+    private def get(cookies: Seq[Option[Cookie]]) = Helper(cookies).get[Attributes]("user-attributes/me/membership")
   }
 }
