@@ -3,13 +3,13 @@ package controllers
 import actions.RichAuthRequest
 import com.gu.i18n.{Country, CountryGroup}
 import com.gu.memsub.Subscription.ProductRatePlanId
+import com.gu.memsub.images.{ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.Formatters._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
 import com.gu.memsub.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import com.netaporter.uri.dsl._
-import model._
 import play.api.libs.json._
 import play.api.mvc.{Controller, Result}
 import play.twirl.api.Html
@@ -18,6 +18,8 @@ import services.TouchpointBackend
 import views.support.PageInfo
 import com.gu.memsub.promo.PercentDiscount._
 import com.gu.memsub.promo.Promotion._
+import model.{FreePlanChoice, OrientatedImages, PaidPlanChoice}
+
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 

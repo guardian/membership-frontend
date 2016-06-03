@@ -6,8 +6,10 @@ import com.gu.salesforce.Tier
 import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
-import model.Eventbrite.{EBTicketClass, EBOrder, EBEvent}
-import model.Grid.Asset
+import model.Eventbrite.{EBEvent, EBOrder, EBTicketClass}
+import com.gu.memsub.images._
+import com.gu.memsub.images.Grid
+import com.gu.memsub.images.Grid.Asset
 import org.joda.time.LocalDate
 import services.MasterclassData
 import utils.StringUtils._
@@ -65,7 +67,7 @@ object RichEvent {
     val event: EBEvent
     val detailsUrl: String
     val logoOpt: Option[ProviderLogo]
-    val imgOpt: Option[model.ResponsiveImageGroup]
+    val imgOpt: Option[ResponsiveImageGroup]
     val socialImgUrl: Option[String]
     val gridImgUrl: Option[String]
     val schema: EventSchema

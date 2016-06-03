@@ -1,8 +1,9 @@
 package controllers
 
 import com.gu.i18n.CountryGroup._
+import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
+import model.OrientatedImages
 import model.RichEvent.EventBrandCollection
-import model._
 import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}

@@ -1,7 +1,8 @@
 package configuration
 
+import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.netaporter.uri.dsl._
-import model.{Video, ResponsiveImageGroup, ResponsiveImageGenerator}
+import model.Video
 
 object Videos {
 

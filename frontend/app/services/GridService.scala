@@ -1,14 +1,15 @@
 package services
 
 import akka.agent.Agent
+import com.gu.memsub.images.Grid
+import com.gu.memsub.images.GridDeserializer._
+import com.gu.memsub.images.Grid.{Export, GridObject, GridResult}
 import com.gu.memsub.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri
 import com.squareup.okhttp.Request
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
-import model.Grid._
-import model.GridDeserializer._
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
 import play.api.libs.json.Json
@@ -16,7 +17,8 @@ import play.api.libs.json.Json
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging {
+object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLogging {
+
 
   val gridUrl: String = "https://media.gutools.co.uk/images/"
   val CropQueryParam = "crop"
@@ -62,7 +64,7 @@ object GridService extends WebServiceHelper[GridObject, Error] with LazyLogging 
   } // We should return no image, rather than die
 
   private [services] def getGrid(gridId: ImageIdWithCrop): Future[GridResult] =
-    get[GridResult](gridId.id, CropQueryParam -> gridId.crop)
+    get[Grid.GridResult](gridId.id, CropQueryParam -> gridId.crop)
 
   private [services] def findExport(exports: List[Export], cropId: String): Option[Export] = exports.find(_.id == cropId)
 

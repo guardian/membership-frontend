@@ -2,8 +2,8 @@ package controllers.rest
 
 import EventApi.EventsResponse
 import model.Eventbrite.{EBAddress, EBEvent, EBRichText, EBVenue}
-import model.Grid
-import model.Grid.{Dimensions, Asset}
+import com.gu.memsub.images.Grid
+import com.gu.memsub.images.Grid.{Dimensions, Asset}
 import model.RichEvent.{GridImage, GuLiveEvent}
 import org.joda.time.DateTimeUtils._
 import org.joda.time.DateTimeZone.UTC

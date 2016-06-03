@@ -1,4 +1,4 @@
-@(metadata: model.Grid.Metadata, isBlock: Boolean = false, baseClass:String = "captioned-image", position:Option[String]=None)
+@(metadata: com.gu.memsub.images.Grid.Metadata, isBlock: Boolean = false, baseClass:String = "captioned-image", position:Option[String]=None)
 @for(description <- metadata.description) {
     <figcaption class="@{baseClass}__detail @{position.fold("")(baseClass + "__detail--" + _)}">
         <div class="@{baseClass}__caption">

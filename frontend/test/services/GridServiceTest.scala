@@ -2,8 +2,8 @@ package services
 
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
-import model.Grid.GridResult
-import model.GridDeserializer._
+import com.gu.memsub.images.Grid.GridResult
+import com.gu.memsub.images.GridDeserializer._
 import org.specs2.mutable.Specification
 import services.GridService.ImageIdWithCrop.fromGuToolsUri
 import utils.Resource

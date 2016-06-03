@@ -1,4 +1,4 @@
-@(img: model.ResponsiveImageGroup, sizes: Option[String] = None, lazyLoad: Boolean = true)
+@(img: com.gu.memsub.images.ResponsiveImageGroup, sizes: Option[String] = None, lazyLoad: Boolean = true)
 
 <img
     @if(lazyLoad){data-srcset="@img.srcset"} else {src="@img.defaultImage" srcset="@img.srcset"}
