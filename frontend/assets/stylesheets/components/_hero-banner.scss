@@ -44,6 +44,12 @@
     }
 }
 
+.hero-banner__image--eu {
+    @include mq($from: mem-full) {
+        margin-top: -100px; //hopefully temporary
+    }
+}
+
 .hero-banner__image--left {
     justify-content: flex-start;
 }

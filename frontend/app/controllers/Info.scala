@@ -128,10 +128,10 @@ trait Info extends Controller {
     implicit val countryGroup = Europe
 
     val hero = OrientatedImages(
-      portrait = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("201d2893398d948190b0bb403ffb896f6f6bd18d/843_216_1782_1781", Seq(1782, 1000, 500))),
-      landscape = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("201d2893398d948190b0bb403ffb896f6f6bd18d/562_349_2438_989", Seq(2000, 1000, 500)))
+      portrait = ResponsiveImageGroup(availableImages = Seq(
+        ResponsiveImage(Asset.at("images/join-challenger/s_EU_hero01_980x980.jpg"), 980))),
+      landscape = ResponsiveImageGroup(availableImages = Seq(
+        ResponsiveImage(Asset.at("images/join-challenger/s_EU_hero01_1280x800.jpg"), 1280)))
     )
 
     val pageImages = Seq(
