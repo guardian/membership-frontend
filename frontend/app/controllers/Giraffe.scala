@@ -83,7 +83,8 @@ object Giraffe extends Controller {
         "marketing-opt-in" -> f.marketing.toString,
         "email" -> f.email,
         "name" -> f.name,
-        "abTests" -> f.abTests.toString
+        "abTests" -> f.abTests.toString,
+        "ophanId" -> f.ophanId
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
       val res = stripe.Charge.create(maxAmount.fold((f.amount*100).toInt)(max => Math.min(max * 100, (f.amount * 100).toInt)), f.currency, f.email, "Your contribution", f.token, metadata)
 

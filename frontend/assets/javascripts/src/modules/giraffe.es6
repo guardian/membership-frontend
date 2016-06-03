@@ -2,6 +2,7 @@ import * as display from 'src/modules/form/validation/display'
 import * as helper from 'src/utils/helper'
 import * as ajax from 'ajax'
 import $ from '$'
+import {ophan} from 'src/modules/analytics/ophan';
 
 const ACTIVE_CLASS = 'active';
 const AMOUNT_CLASS = 'js-amount';
@@ -20,10 +21,15 @@ const SHOWN_ATTRIBUTE = 'shown';
 const SHOWABLE = $('[data-'+SHOWN_ATTRIBUTE+']');
 const HIDDEN_CLASS = 'is-hidden';
 
+const $OPHAN = $('.js-ophan-id');
+
+
 export function init() {
     if (!document.querySelector('.container-global--giraffe .js-form')) {
         return;
     }
+
+    ophanId();
 
     $CURRENCY_PICKER.each(el => el.addEventListener('click', ev => selectCurrencyElement(ev.currentTarget)));
 
@@ -101,5 +107,11 @@ function getStuffFromIdentity() {
             EMAIL_FIELD.value = resp.user.primaryEmailAddress;
             NAME_FIELD.value = resp.user.publicFields.displayName;
         }
+    })
+}
+
+function ophanId(){
+    ophan.then(o => {
+        $OPHAN.val(o.viewId);
     })
 }
