@@ -17,7 +17,7 @@ trait FrontPage extends Controller {
 
     val heroImages = OrientatedImages(
       portrait = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("5f18c6428e9f31394b14215fe3c395b8f7b4238a/1124_117_1721_1722", Seq(2000, 1000, 500))),
+        ResponsiveImageGenerator("5f18c6428e9f31394b14215fe3c395b8f7b4238a/1124_117_1721_1722", Seq(1721, 1000, 500))),
       landscape = ResponsiveImageGroup(availableImages =
         ResponsiveImageGenerator("5f18c6428e9f31394b14215fe3c395b8f7b4238a/0_0_2878_999", Seq(2000, 1000, 500))))
 
