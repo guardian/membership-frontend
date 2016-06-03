@@ -32,21 +32,21 @@ trait Info extends Controller {
   def supporterUK = CachedAction { implicit request =>
     implicit val countryGroup = UK
 
+    val heroImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("""|People from all walks of life gather in Westminster
+                             | on 17 June, in London, England, to demand the parliament backs
+                             | action on climate change""".stripMargin),
+        byline = None,
+        credit = Some("John Phillips/Getty Images")
+      )),
+      availableImages=ResponsiveImageGenerator("17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457", Seq(2000, 1000))
+    )
+
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
     val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("intro"),
-        metadata=Some(Grid.Metadata(
-          description = Some("""|People from all walks of life gather in Westminster
-            | on 17 June, in London, England, to demand the parliament backs
-            | action on climate change""".stripMargin),
-          byline = None,
-          credit = Some("John Phillips/Getty Images")
-        )),
-        availableImages=Seq(ResponsiveImage(
-          Asset.at("images/temp/supporter-intro.jpg"),
-          1000
-        ))
-      ),
       ResponsiveImageGroup(
         name=Some("fearless"),
         metadata=Some(Grid.Metadata(
@@ -74,6 +74,7 @@ trait Info extends Controller {
     )
 
     Ok(views.html.info.supporter(
+      heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(
         title = CopyConfig.copyTitleSupporters,
@@ -101,8 +102,16 @@ trait Info extends Controller {
       )
     )
 
+    val heroImages = OrientatedImages(
+      portrait = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/1066_0_1866_2333", Seq(1866, 1600, 800))),
+      landscape = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
+    )
+
     Ok(
       views.html.info.supporterUSA(
+        heroImages,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
@@ -118,6 +127,13 @@ trait Info extends Controller {
   def supporterEurope = CachedAction { implicit request =>
     implicit val countryGroup = Europe
 
+    val hero = OrientatedImages(
+      portrait = ResponsiveImageGroup(availableImages = Seq(
+        ResponsiveImage(Asset.at("images/join-challenger/s_EU_hero01_980x980.jpg"), 980))),
+      landscape = ResponsiveImageGroup(availableImages = Seq(
+        ResponsiveImage(Asset.at("images/join-challenger/s_EU_hero01_1280x800.jpg"), 1280)))
+    )
+
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("fearless"),
@@ -130,6 +146,7 @@ trait Info extends Controller {
 
     Ok(
       views.html.info.supporterEurope(
+        hero,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
@@ -143,6 +160,14 @@ trait Info extends Controller {
   }
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAction { implicit request =>
+
+    val hero = OrientatedImages(
+      portrait = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("6e2613b6442f1af7109e349eec38cffc0c54df6d/1872_0_3742_3744", Seq(2000, 1000, 500))),
+      landscape = ResponsiveImageGroup(availableImages =
+        ResponsiveImageGenerator("6e2613b6442f1af7109e349eec38cffc0c54df6d/0_0_5611_1979", Seq(2000, 1000, 500)))
+    )
+
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("fearless"),
@@ -155,6 +180,7 @@ trait Info extends Controller {
 
     Ok(
       views.html.info.supporterInternational(
+        hero,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,

@@ -2,27 +2,7 @@
    Hero Banner
    ========================================================================== */
 .hero-banner {
-    background: no-repeat top -90px center;
-    background-size: cover;
-
-    // All iOS devices and at least some other mobile devices ignore
-    // background-attachment: fixed.
-    // https://twitter.com/paul_irish/status/306818591196602368
-    //
-    // Worse than this, on iOS devices the combination of background-size: cover
-    // and background-attachment: fixed causes the browser to calculate the background size
-    // relative to the height of the entire page rather than the height of the viewport,
-    // resulting in a grossly oversized image.
-    // See 'Known Issues' on http://caniuse.com/#feat=background-attachment
-    //
-    // So what we want is to set background-attachment: fixed on desktop devices regardless of width,
-    // and to leave background-attachment to its default value (scroll) on all mobile/tablet devices,
-    // also regardless of width. So I've used min-device-width in this particular case.
-    @media (min-device-width: 800px) {
-        background-attachment: fixed;
-    }
     height: 70vh;
-
     @include mq(mobileLandscape) {
         background-position: center center;
         height: 74vh;
@@ -30,86 +10,62 @@
 
     @include mq(tablet) {
         height: 460px;
-        background-position: center top -100px;
-    }
-
-    //noinspection ALL
-    @include mq(desktop) {
-        background-position: center top -13px;
-    }
-
-    @include mq(mem-full) {
-        background-position: center top -113px;
-    }
-}
-//Slightly more performant background:fixed for desktop users.
-@mixin fixed-desktop-background($url, $height, $position){
-    @include mq(mem-full) {
-        background: unset;
-        overflow: hidden; // added for pseudo-element
-        position: relative; // added for pseudo-element
-
-        // Fixed-position background image thanks to: http://fourkitchens.com/blog/article/fix-scrolling-performance-css-will-change-property
-        &::before {
-            content: ' ';
-            position: fixed; // instead of background-attachment
-            width: 100%;
-            height: $height;
-            top: 0;
-            left: 0;
-            background-position: $position;
-            background-size: cover;
-            will-change: transform; // creates a new paint layer
-            z-index: -1;
-            background-image: $url;
-            min-height: 820px;
-            max-height: 100%;
-        }
     }
 }
 
+.hero-banner__image {
+    will-change: transform;
+    overflow: hidden;
+    position: fixed;
+    display: flex;
+    z-index: -1;
+    top: 0;
 
-.hero-banner--newsroom {
-    height: 590px;
-    background-attachment: unset;
-    background-image: url(https://media.guim.co.uk/5821a16dc3d05611212d2692037ecc82384ef7e2/0_0_5376_3180/1000.jpg);
-    background-position: bottom;
-    @include fixed-desktop-background(url(https://media.guim.co.uk/5821a16dc3d05611212d2692037ecc82384ef7e2/0_0_5376_3180/2000.jpg),70vh, top);
-}
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 
-.hero-banner--uk-supporter {
-    background-attachment: unset;
-    background-image: url(https://media.guim.co.uk/17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457/1000.jpg);
+    > img {
+        min-width: 100%;
+        min-height: 100%;
+        flex: none;
+    }
 
-    @include fixed-desktop-background(url(https://media.guim.co.uk/17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457/2000.jpg),70vh, center);
-}
-.hero-banner--homepage {
-    background-image: url(/assets/images/join-challenger/hm_hero01_980x980.jpg);
-    @include mq(desktop) {
-        background-image: url(/assets/images/join-challenger/hm_hero01_1280x800.jpg);
+    // mobile
+    height: calc(70vh + #{$global-header-height-mobile});
+
+    @include mq(mobileLandscape) {
+        height: calc(74vh + #{$global-header-height-mobile});
+    }
+
+    // tablet & above
+    @include mq(tablet) {
+        height: calc(460px + #{$global-header-height});
     }
 }
 
-.hero-banner--us-supporter {
-    background-image: url(/assets/images/join-challenger/s_US_hero01_980x980.jpg);
-    @include mq(desktop) {
-        background-image: url(https://media.guim.co.uk/8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_203_3500_2100/1000.jpg);
-    }
-    @include fixed-desktop-background(url(https://media.guim.co.uk/8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_203_3500_2100/2000.jpg),78vh,bottom);
-}
-.hero-banner--eu-supporter {
-    background-image: url(/assets/images/join-challenger/s_EU_hero01_980x980.jpg);
-    @include mq(desktop) {
-        background-image: url(/assets/images/join-challenger/s_EU_hero01_1280x800.jpg);
+.hero-banner__image--eu {
+    @include mq($from: mem-full) {
+        margin-top: -100px; //hopefully temporary
     }
 }
-// rest of world
-.hero-banner--row-supporter {
-    background-image: url(/assets/images/join-challenger/s_ROW_hero01_980x980.jpg);
-    @include mq(desktop) {
-        background-image: url(/assets/images/join-challenger/s_ROW_hero01_1280x800.jpg);
-    }
+
+.hero-banner__image--left {
+    justify-content: flex-start;
 }
+
+.hero-banner__image--right {
+    justify-content: flex-end;
+}
+
+.hero-banner__image--top {
+    align-items: flex-start;
+}
+
+.hero-banner__image--bottom {
+    align-items: flex-end;
+}
+
 .hero-banner__inner {
     position: relative;
     height: 100%;

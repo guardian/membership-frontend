@@ -52,6 +52,11 @@ object Promotions extends Controller {
 
     implicit val countryGroup = CountryGroup.UK
 
+    val newsroom =
+      ResponsiveImageGroup(None, None, None,
+      ResponsiveImageGenerator("5821a16dc3d05611212d2692037ecc82384ef7e2/0_0_5376_2280", Seq(2000, 1000, 500))
+    )
+
     getCheapestPaidMembershipPlan(promotion).fold(Option.empty[Html]) {
       paidMembershipPlan => {
         promotion.promotionType match {
@@ -59,6 +64,7 @@ object Promotions extends Controller {
             val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
             val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.billingPeriod)
             Some(views.html.promotions.singlePricePlanDiscountLandingPage(
+              OrientatedImages(portrait = newsroom, landscape = newsroom),
               paidMembershipPlan,
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
@@ -72,6 +78,7 @@ object Promotions extends Controller {
             Some(views.html.promotions.singleTierLandingPage(
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
+              OrientatedImages(portrait = newsroom, landscape = newsroom),
               getImageForPromotionLandingPage(promotion),
               promoCode,
               promotion

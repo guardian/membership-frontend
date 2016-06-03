@@ -2,7 +2,19 @@
    Global Header
    ========================================================================== */
 
+$global-header-height: 130px;
+$global-header-height-mobile: 116px;
+
 .global-header {
+
+    // we need to know the exact header height
+    // hence using the variable to enforce it
+    height: $global-header-height-mobile;
+
+    @include mq($from: tablet) {
+        height: $global-header-height;
+    }
+
     background-color: color(brand-supporting-2);
     position: relative;
     z-index: 3;

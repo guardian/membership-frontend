@@ -6,6 +6,7 @@
 @import model.PackagePromo
 @import views.model.Roundel
 @(
+  images: model.OrientatedImages,
   catalog: MembershipCatalog,
   pageImages: Seq[model.ResponsiveImageGroup],
   eventCollection: model.RichEvent.EventBrandCollection
@@ -15,7 +16,7 @@
 @import views.support.Asset
 
 @main(PageInfo().title) {
-    @fragments.page.heroBanner("hero-banner--homepage") {
+    @fragments.page.heroBanner(images, "hero-banner__image--bottom hero-banner__image--right") {
         Become a Guardian&nbsp;Member
     } {
         Join Guardian Members to support our journalism, and enjoy a programme of fantastic member events
