@@ -19,7 +19,6 @@ import views.support.PageInfo
 import com.gu.memsub.promo.PercentDiscount._
 import com.gu.memsub.promo.Promotion._
 import model.{FreePlanChoice, OrientatedImages, PaidPlanChoice}
-
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 
@@ -37,12 +36,8 @@ object Promotions extends Controller {
     catalog.findPaid(paidTier)
   }
 
-  private def getImageForPromotionLandingPage(promotion: PromoWithMembershipLandingPage) = {
-    ResponsiveImageGroup(
-      metadata = None,
-      availableImages = promotion.landingPage.imageUrl.map(uri => ResponsiveImage(uri.toString, uri.pathParts.last.part.replace(".jpg", "").toInt)).toSeq
-    )
-  }
+  private def getImageForPromotionLandingPage(promotion: PromoWithMembershipLandingPage) =
+    promotion.landingPage.image.getOrElse(ResponsiveImageGroup(availableImages = Seq.empty))
 
   private def getPageInfo(promotion: PromoWithMembershipLandingPage, url: String) = PageInfo(
     title = promotion.landingPage.title.getOrElse(promotion.name),
@@ -59,14 +54,18 @@ object Promotions extends Controller {
       ResponsiveImageGenerator("5821a16dc3d05611212d2692037ecc82384ef7e2/0_0_5376_2280", Seq(2000, 1000, 500))
     )
 
+    val hero = OrientatedImages(
+      portrait = promotion.landingPage.heroImage.map(_.image).getOrElse(newsroom),
+      landscape = promotion.landingPage.heroImage.map(_.image).getOrElse(newsroom)
+    )
+
     getCheapestPaidMembershipPlan(promotion).fold(Option.empty[Html]) {
       paidMembershipPlan => {
         promotion.promotionType match {
           case p: PercentDiscount =>
             val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
             val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.billingPeriod)
-            Some(views.html.promotions.singlePricePlanDiscountLandingPage(
-              OrientatedImages(portrait = newsroom, landscape = newsroom),
+            Some(views.html.promotions.singlePricePlanDiscountLandingPage(hero,
               paidMembershipPlan,
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
@@ -80,7 +79,7 @@ object Promotions extends Controller {
             Some(views.html.promotions.singleTierLandingPage(
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
-              OrientatedImages(portrait = newsroom, landscape = newsroom),
+              hero,
               getImageForPromotionLandingPage(promotion),
               promoCode,
               promotion
