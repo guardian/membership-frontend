@@ -15,6 +15,7 @@ import services.MasterclassData
 import utils.StringUtils._
 
 import scala.collection.immutable.SortedMap
+import com.netaporter.uri.dsl._
 
 object RichEvent {
 
@@ -105,7 +106,7 @@ object RichEvent {
     val hasLargeImage = true
     val canHavePriorityBooking = true
     val imgOpt = image.flatMap(ResponsiveImageGroup.fromGridImage)
-    val socialImgUrl = imgOpt.map(_.defaultImage)
+    val socialImgUrl = imgOpt.map(_.defaultImage.toString)
     val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup.fromContent)
     val schema = EventSchema.from(this)
     val tags = Nil
@@ -154,7 +155,7 @@ object RichEvent {
     val hasLargeImage = false
     val canHavePriorityBooking = false
     val imgOpt = data.flatMap(_.images)
-    val socialImgUrl = imgOpt.map(_.defaultImage)
+    val socialImgUrl = imgOpt.map(_.defaultImage.toString)
     val schema = EventSchema.from(this)
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = EventMetadata.masterclassMetadata

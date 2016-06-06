@@ -3,6 +3,7 @@ package model
 import com.gu.contentapi.client.model.v1.{Content, Element}
 import com.gu.memsub.images.{ResponsiveImage, ResponsiveImageGroup => RIG}
 import model.RichEvent.GridImage
+import com.netaporter.uri.dsl._
 
 case class OrientatedImages(portrait: RIG, landscape: RIG)
 
