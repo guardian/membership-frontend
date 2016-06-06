@@ -122,7 +122,9 @@ GET            /assets/*assetFile                     controllers.CachedAssets.a
 
 # Promotions
 GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
-GET            /q                                     controllers.Promotions.preview(json: Option[String])
+
+# NOCSRF
+POST           /q                                     controllers.Promotions.preview
 GET            /english-heritage                      controllers.Default.redirect(to="/p/EH2016")
 
 # REST
