@@ -19,6 +19,8 @@ import views.support.PageInfo
 import com.gu.memsub.promo.PercentDiscount._
 import com.gu.memsub.promo.Promotion._
 import model.{FreePlanChoice, OrientatedImages, PaidPlanChoice}
+import play.api.data.{Form, Forms}
+
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 
@@ -116,10 +118,12 @@ object Promotions extends Controller {
   }
 
 
-  def preview(json: Option[String]) = GoogleAuthenticatedStaffAction { implicit request =>
-    json.flatMap(j => Json.fromJson[AnyPromotion](Json.parse(j)).asOpt).flatMap(_.asMembership)
-      .flatMap(p => findTemplateForPromotion(p.codes.headOption.getOrElse(PromoCode("NO-CODE")), p, request.path))
-      .fold[Result](NotFound)(p => Ok(p))
+  def preview() = GoogleAuthenticatedStaffAction { implicit request =>
+    Form(Forms.single("promoJson" -> Forms.text)).bindFromRequest().fold(_ => NotFound, { jsString =>
+      Json.fromJson[AnyPromotion](Json.parse(jsString)).asOpt.flatMap(_.asMembership)
+        .flatMap(p => findTemplateForPromotion(p.codes.headOption.getOrElse(PromoCode("NO-CODE")), p, request.path))
+        .fold[Result](NotFound)(p => Ok(p))
+    })
   }
 
   def validatePromoCode(promoCode: PromoCode, tier: Tier, country: Country) = AuthenticatedAction { implicit request =>

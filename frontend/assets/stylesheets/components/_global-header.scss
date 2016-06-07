@@ -40,6 +40,11 @@ $global-header-height-mobile: 116px;
 .global-header__primary {
     float: left;
     padding-right: ($gs-gutter / 2);
+
+    @include mq(tablet) {
+        margin-right: -25px;
+    }
+
 }
 .global-header__logo {
     float: right;
