@@ -68,6 +68,7 @@ object Promotions extends Controller {
             val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
             val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.billingPeriod)
             Some(views.html.promotions.singlePricePlanDiscountLandingPage(hero,
+              promotion.landingPage.heroImage.fold[HeroImageAlignment](Centre)(_.alignment),
               paidMembershipPlan,
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
@@ -82,6 +83,7 @@ object Promotions extends Controller {
               getTypeOfPaidTier(paidMembershipPlan.tier),
               getPageInfo(promotion, url),
               hero,
+              promotion.landingPage.heroImage.fold[HeroImageAlignment](Centre)(_.alignment),
               getImageForPromotionLandingPage(promotion),
               promoCode,
               promotion

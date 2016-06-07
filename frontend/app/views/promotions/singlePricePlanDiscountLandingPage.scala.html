@@ -25,7 +25,10 @@
 @import scalaz.Id._
 
 @import com.gu.memsub.promo.MembershipLandingPage
+@import com.gu.memsub.promo.HeroImageAlignment
+@import views.support.HeroImageAlignment._
 @(  heroImages: model.OrientatedImages,
+    heroImageAlignment: HeroImageAlignment,
     pricePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
     pricePlans: PaidMembershipPlans[Current, PaidTier],
     pageInfo: PageInfo,
@@ -48,7 +51,7 @@
 
     @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
-    @fragments.page.heroBanner(heroImages, modifierClass = "hero-banner--alt-accent") {
+    @fragments.page.heroBanner(heroImages, imageModifierClass = heroImageAlignment.cssName, modifierClass = "hero-banner--alt-accent") {
         @promotion.landingPage.title.getOrElse(promotion.name)
     } {
         Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
