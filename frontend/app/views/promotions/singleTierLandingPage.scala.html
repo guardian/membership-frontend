@@ -13,11 +13,13 @@
 @import com.gu.memsub.promo._
 @import views.support.Asset
 @import scalaz.Id._
+@import views.support.HeroImageAlignment._
 
 @import com.gu.memsub.promo.MembershipLandingPage
 @(pricePlans: PaidMembershipPlans[Current, PaidTier],
     pageInfo: PageInfo,
     headerImage: model.OrientatedImages,
+    heroImageAlignment: HeroImageAlignment,
     promotionImage: com.gu.memsub.images.ResponsiveImageGroup,
     promoCode: PromoCode,
     promotion: Promotion[PromotionType, Id, MembershipLandingPage]
@@ -27,10 +29,10 @@
 @main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
     @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
 
-    @fragments.page.heroBanner(headerImage, modifierClass = "hero-banner--alt-accent", imageModifierClass = "hero-banner--image__top") {
+    @fragments.page.heroBanner(headerImage, modifierClass = "hero-banner--alt-accent", imageModifierClass = heroImageAlignment.cssName) {
         @promotion.landingPage.title.getOrElse(promotion.name)
     } {
-        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
+        @promotion.landingPage.subtitle.getOrElse("Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits")
     }()
 
     @fragments.page.section(hasBorder = false) {
