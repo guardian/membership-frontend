@@ -56,7 +56,7 @@
     @fragments.page.heroBanner(heroImages, imageModifierClass = heroImageAlignment.cssName, modifierClass = "hero-banner--alt-accent") {
         @promotion.landingPage.title.getOrElse(promotion.name)
     } {
-        Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits
+        @promotion.landingPage.subtitle.getOrElse("Support the independence of the Guardian and our award-winning journalism, plus enjoy a host of benefits")
     }()
 
     @fragments.page.section(hasBorder = false) {
