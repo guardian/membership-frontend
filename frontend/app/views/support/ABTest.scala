@@ -45,13 +45,17 @@ object MessageCopyTest extends TestTrait {
   def name = "MessageCopyTest"
   def slug = "mcopy"
   override type VariantFn = () => Html
-    def variants = NonEmptyList(
-    Variant("Copy - control","control",1,views.html.fragments.giraffe.contributeMessage("Support the Guardian")),
-    Variant("Copy - support","support",0,views.html.fragments.giraffe.contributeMessage("Support the Guardian")),
-    Variant("Copy - power","power",0,views.html.fragments.giraffe.contributeMessage("The powerful won't investigate themselves. That's why we need you.")),
-    Variant("Copy - mutual","mutual",0,views.html.fragments.giraffe.contributeMessage("Can't live without us? The feeling's mutual.")),
-    Variant("Copy - everyone","everyone",0,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure."))
-    )
+
+  def variants = NonEmptyList(
+    Variant("Copy - control", "control", 1, views.html.fragments.giraffe.contributeMessage("Support the Guardian")),
+    Variant("Copy - support", "support", 0, views.html.fragments.giraffe.contributeMessage("Support the Guardian")),
+    Variant("Copy - power", "power", 0, views.html.fragments.giraffe.contributeMessage("The powerful won't investigate themselves. That's why we need you.")),
+    Variant("Copy - mutual", "mutual", 0, views.html.fragments.giraffe.contributeMessage("Can't live without us? The feeling's mutual.")),
+    Variant("Copy - everyone", "everyone", 0, views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
+    Variant("Copy - expensive", "expensive", 0, views.html.fragments.giraffe.contributeMessage("Producing the Guardian is expensive. Supporting it isn't.")),
+    Variant("Copy - british", "british", 0, views.html.fragments.giraffe.contributeMessage("It's not very British to talk about money. So we'll just ask for it instead.")),
+    Variant("Copy - powerless", "powerless", 0, views.html.fragments.giraffe.contributeMessage("Don't let the powerless pay the price. Make your contribution"))
+  )
 }
 
 case class ChosenVariants(v1: AmountHighlightTest.Variant, v2: MessageCopyTest.Variant) {
