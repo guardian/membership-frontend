@@ -6,7 +6,6 @@
 @import views.html.helper.CSRF
 
 @import views.support.PageInfo
-@import com.gu.memsub.promo.PromoCode
 @import com.gu.memsub.promo.ValidPromotion
 @import com.gu.memsub.promo.Upgrades
 @import com.gu.memsub.promo.Tracking
@@ -44,7 +43,7 @@
                       <div class="form-group">
                           @fragments.form.benefitsFieldset(summary.target.tier.benefits)
                           @fragments.form.featureChoiceFieldset(summary.target.tier)
-                          @validPromo.filter(_.promotionType != Tracking).fold(fragments.form.promoCode(validPromo.map(_.code), None))(_ => fragments.form.promoCode(None, validPromo.map(_.code)))
+                          @validPromo.filter(_.promotion.promotionType != Tracking).fold(fragments.form.promoCode(validPromo.map(_.code), None))(_ => fragments.form.promoCode(None, validPromo.map(_.code)))
                       </div>
                       <h2 class="h-section">What happens now</h2>
                       <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@summary.current.tier.name</strong>
