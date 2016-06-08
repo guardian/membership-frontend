@@ -19,8 +19,9 @@ import views.support.PageInfo
 import com.gu.memsub.promo.PercentDiscount._
 import com.gu.memsub.promo.Promotion._
 import model.{FreePlanChoice, OrientatedImages, PaidPlanChoice}
+import org.pegdown.PegDownProcessor
 import play.api.data.{Form, Forms}
-
+import org.pegdown.Extensions._
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 
@@ -61,6 +62,7 @@ object Promotions extends Controller {
       landscape = promotion.landingPage.heroImage.map(_.image).getOrElse(newsroom)
     )
 
+    val pegdown = new PegDownProcessor(SUPPRESS_ALL_HTML)
     getCheapestPaidMembershipPlan(promotion).fold(Option.empty[Html]) {
       paidMembershipPlan => {
         promotion.promotionType match {
@@ -76,7 +78,8 @@ object Promotions extends Controller {
               promoCode,
               promotion.copy(promotionType = p),
               originalPrice,
-              discountedPrice
+              discountedPrice,
+              pegdown
             ))
           case _ =>
             Some(views.html.promotions.singleTierLandingPage(
@@ -86,7 +89,8 @@ object Promotions extends Controller {
               promotion.landingPage.heroImage.fold[HeroImageAlignment](Centre)(_.alignment),
               getImageForPromotionLandingPage(promotion),
               promoCode,
-              promotion
+              promotion,
+              pegdown
             ))
         }
       }

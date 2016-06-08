@@ -23,10 +23,11 @@
 @import views.support.PageInfo
 @import views.support.Asset
 @import scalaz.Id._
-
 @import com.gu.memsub.promo.MembershipLandingPage
 @import com.gu.memsub.promo.HeroImageAlignment
 @import views.support.HeroImageAlignment._
+@import org.pegdown.PegDownProcessor
+
 @(  heroImages: model.OrientatedImages,
     heroImageAlignment: HeroImageAlignment,
     pricePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
@@ -36,7 +37,8 @@
     promoCode: PromoCode,
     promotion: Promotion[PercentDiscount, Id, MembershipLandingPage],
     originalPrice: Price,
-    discountedPrice: Price
+    discountedPrice: Price,
+    pd: PegDownProcessor
 )(implicit countryGroup: CountryGroup)
 
 @discountDuration = @{
@@ -49,7 +51,7 @@
 
 @main(pageInfo.title, pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.promotions.roundel(promotion.landingPage.roundelHtml, classModifier = Some("alt"))
+    @fragments.promotions.roundel(promotion.landingPage.roundelHtml.map(pd.markdownToHtml), classModifier = Some("alt"))
 
     @fragments.page.heroBanner(heroImages, imageModifierClass = heroImageAlignment.cssName, modifierClass = "hero-banner--alt-accent") {
         @promotion.landingPage.title.getOrElse(promotion.name)
@@ -74,7 +76,7 @@
 
     @fragments.page.sectionCardStack(promotionImage) {
         <div class="listing__text">
-            <p>@Html(promotion.landingPage.description.getOrElse(promotion.description))</p>
+            <p>@Html(pd.markdownToHtml(promotion.landingPage.description.getOrElse(promotion.description)))</p>
             <p>
                 <a class="action" href="@{routes.Joiner.enterPaidDetails(pricePlan.tier)}?countryGroup=@countryGroup.id">Become a @pricePlan.tier.name</a>
             </p>
