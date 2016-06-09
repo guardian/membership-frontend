@@ -25,7 +25,8 @@ require([
     'src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
-    'src/modules/paidToPaid'
+    'src/modules/paidToPaid',
+    'src/modules/memstatus'
 ], function(
     ajax,
     raven,
@@ -53,7 +54,8 @@ require([
     comparisonTable,
     metrics,
     patterns,
-    paidToPaid
+    paidToPaid,
+    memstatus
 ) {
     'use strict';
 
@@ -99,4 +101,6 @@ require([
 
 
     paidToPaid.init();
+
+    memstatus.init();
 });

@@ -139,3 +139,5 @@ GET            /us/contribute/thank-you               controllers.Giraffe.thanks
 GET            /au/contribute/thank-you               controllers.Giraffe.thanksAustralia
 
 POST           /contribute/pay                        controllers.Giraffe.pay
+
+GET            /change-mem-status-permission          controllers.MembershipStatus.load

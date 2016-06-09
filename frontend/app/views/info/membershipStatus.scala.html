@@ -1,0 +1,10 @@
+@()(implicit token: play.filters.csrf.CSRF.Token)
+
+@import views.html.helper.CSRF
+
+@main("Change Membership Status Permission") {
+
+    <main role="main" class="page-content l-constrained">
+        <label><input class="memCheck" id="memCheck" type='checkbox'>Display Membership status when commenting</label>
+    </main>
+}
