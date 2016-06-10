@@ -6,15 +6,13 @@ import $ from '$'
 
 
 function ajaxRequest(allowP){
-    alert("its " + allowP);
 
     ajax({
         url: 'https://members-data-api.thegulocal.com/user-attributes/tier/public',
         method: 'POST',
-        crossOrigin: true,
         withCredentials: true,
         data: {
-            allowPublic: allowP
+            allowPublic: allowP                                                                         
         }
     });
 }
