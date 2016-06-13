@@ -36,9 +36,9 @@ object AmountHighlightTest extends TestTrait {
   override type VariantFn = (CountryGroup, Option[Int]) => Html
 
   def variants = NonEmptyList(
-    Variant("Amount - 5 highlight","5",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(5))),
+    Variant("Amount - 5 highlight","5",0,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(5))),
     Variant("Amount - 25 highlight","25",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(25))),
-    Variant("Amount - no highlight","None",1,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100), None)))
+    Variant("Amount - no highlight","None",0,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100), None)))
 }
 
 object MessageCopyTest extends TestTrait {
