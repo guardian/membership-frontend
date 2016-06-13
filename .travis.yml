@@ -13,4 +13,4 @@ before_cache:
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete -print
 before_install:
   - export TZ=Europe/London
-script: sbt ++$TRAVIS_SCALA_VERSION assembly
+script: sbt ++$TRAVIS_SCALA_VERSION fast-test assembly

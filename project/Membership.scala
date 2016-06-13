@@ -46,6 +46,7 @@ trait Membership {
         val oldStrategy = (assemblyMergeStrategy in assembly).value
         oldStrategy(x)
     },
+    test in assembly := {}, // skip tests during assembly
     javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf",
     testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
   ) ++ buildInfoPlugin
