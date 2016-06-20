@@ -52,9 +52,20 @@ object MessageCopyTest extends TestTrait {
     Variant("Copy - power", "power", 0, views.html.fragments.giraffe.contributeMessage("The powerful won't investigate themselves. That's why we need you.")),
     Variant("Copy - mutual", "mutual", 0, views.html.fragments.giraffe.contributeMessage("Can't live without us? The feeling's mutual.")),
     Variant("Copy - everyone", "everyone", 0, views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
+    Variant("Copy - everyone", "everyoneinline", 0, views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
     Variant("Copy - expensive", "expensive", 0, views.html.fragments.giraffe.contributeMessage("Producing the Guardian is expensive. Supporting it isn't.")),
+    Variant("Copy - expensive inline", "expensiveinline", 0, views.html.fragments.giraffe.contributeMessage("Producing the Guardian is expensive. Supporting it isn't.")),
     Variant("Copy - british", "british", 0, views.html.fragments.giraffe.contributeMessage("It's not very British to talk about money. So we'll just ask for it instead.")),
-    Variant("Copy - powerless", "powerless", 0, views.html.fragments.giraffe.contributeMessage("Don't let the powerless pay the price. Make your contribution"))
+    Variant("Copy - british inline", "britishinline", 0, views.html.fragments.giraffe.contributeMessage("It's not very British to talk about money. So we'll just ask for it instead.")),
+    Variant("Copy - powerless", "powerless", 0, views.html.fragments.giraffe.contributeMessage("Don't let the powerless pay the price. Make your contribution")),
+    Variant("Copy - powerless inline", "powerlessinline", 0, views.html.fragments.giraffe.contributeMessage("Don't let the powerless pay the price. Make your contribution")),
+    Variant("Copy - coffee inline", "costofnewswithyourcoffeeinline", 0, views.html.fragments.giraffe.contributeMessage("Do you want the news with your coffee or do you just want coffee? Quality journalism costs. Please contribute.")),
+    Variant("Copy - coffee", "costofnewswithyourcoffee", 0, views.html.fragments.giraffe.contributeMessage("Do you want the news with your coffee or do you just want coffee? Quality journalism costs. Please contribute.")),
+    Variant("Copy - heritage inline", "heritageinline", 0, views.html.fragments.giraffe.contributeMessage("From the Peterloo massacre to phone hacking and the Panama Papers, we've been there - on your side for almost 200 years. Contribute to the Guardian today")),
+    Variant("Copy - heritage", "heritage", 0, views.html.fragments.giraffe.contributeMessage("From the Peterloo massacre to phone hacking and the Panama Papers, we've been there - on your side for almost 200 years. Contribute to the Guardian today")), Variant("Copy - global beijing inline", "global-beijing-inline", 0, views.html.fragments.giraffe.contributeMessage("By the time you've had your morning tea, reporters in Rio, Beijing, Moscow, Berlin, Paris, Johannesburg have already filed their stories. Covering the world's news isn't cheap. Please chip in a few pounds.")),
+    Variant("Copy - global beijing inline", "global-beijing-inline", 0, views.html.fragments.giraffe.contributeMessage("By the time you've had your morning tea, reporters in Rio, Beijing, Moscow, Berlin, Paris, Johannesburg have already filed their stories. Covering the world's news isn't cheap. Please chip in a few pounds.")),
+    Variant("Copy - global beijing", "global-beijing", 0, views.html.fragments.giraffe.contributeMessage("By the time you've had your morning tea, reporters in Rio, Beijing, Moscow, Berlin, Paris, Johannesburg have already filed their stories. Covering the world's news isn't cheap. Please chip in a few pounds."))
+
   )
 }
 
