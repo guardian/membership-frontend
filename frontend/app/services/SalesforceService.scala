@@ -5,8 +5,6 @@ import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import com.gu.memsub.util.FutureSupplier
-import configuration.Config
 import forms.MemberForm.JoinForm
 import model.GenericSFContact
 import monitoring.MemberMetrics
@@ -15,7 +13,6 @@ import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import services.FrontendMemberRepository._
-
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import dispatch._, Defaults.timer
@@ -24,36 +21,18 @@ object FrontendMemberRepository {
   type UserId = String
 }
 
-class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends ContactRepository {
-  import scala.concurrent.duration._
-  val metrics = new MemberMetrics(salesforceConfig.envName)
-
-  val salesforce = new Scalaforce {
-    val consumerKey = salesforceConfig.consumerKey
-    val consumerSecret = salesforceConfig.consumerSecret
-
-    val apiURL = salesforceConfig.apiURL.toString()
-    val apiUsername = salesforceConfig.apiUsername
-    val apiPassword = salesforceConfig.apiPassword
-    val apiToken = salesforceConfig.apiToken
-
-    val stage = Config.stage
-    val application = "Frontend"
-
-    override val authSupplier: FutureSupplier[Authentication] =
-      new FutureSupplier[Authentication](getAuthentication)
-
-    Akka.system.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
-  }
-}
-
 class SalesforceService(salesforceConfig: SalesforceConfig) extends api.SalesforceService {
-  private val repository = new FrontendMemberRepository(salesforceConfig)
+
+  private implicit val system = Akka.system
+
+  val metricsVal = new MemberMetrics(salesforceConfig.envName)
+
+  private val repository = new SimpleContactRepository(salesforceConfig, system.scheduler, "Frontend")
 
   override def getMember(userId: UserId): Future[Option[GenericSFContact]] =
     repository.get(userId)
 
-  override def metrics = repository.metrics
+  override def metrics = metricsVal
 
   override def upsert(user: IdUser, joinData: JoinForm): Future[ContactId] =
     upsert(user.id, initialData(user, joinData))
