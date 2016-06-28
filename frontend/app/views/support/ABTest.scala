@@ -28,7 +28,6 @@ sealed trait TestTrait {
   val weightedVariants = cdf.zip(variants.list)
 }
 
-
 object AmountHighlightTest extends TestTrait {
 
   def name = "AmountHighlightTest"
@@ -53,6 +52,7 @@ object MessageCopyTest extends TestTrait {
     Variant("Copy - mutual", "mutual", 0, views.html.fragments.giraffe.contributeMessage("Can't live without us? The feeling's mutual.")),
     Variant("Copy - everyone", "everyone", 0, views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
     Variant("Copy - everyone", "everyoneinline", 0, views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
+    Variant("Copy - everyone editorial", "everyone-editorial", 0, views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
     Variant("Copy - expensive", "expensive", 0, views.html.fragments.giraffe.contributeMessage("Producing the Guardian is expensive. Supporting it isn't.")),
     Variant("Copy - expensive inline", "expensiveinline", 0, views.html.fragments.giraffe.contributeMessage("Producing the Guardian is expensive. Supporting it isn't.")),
     Variant("Copy - british", "british", 0, views.html.fragments.giraffe.contributeMessage("It's not very British to talk about money. So we'll just ask for it instead.")),
