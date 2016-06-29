@@ -4,6 +4,7 @@ import com.gu.i18n._
 import com.gu.stripe.Stripe
 import configuration.Config
 import com.gu.stripe.Stripe.Serializer._
+import com.netaporter.uri.Uri
 import forms.MemberForm.supportForm
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
@@ -11,6 +12,10 @@ import play.api.mvc.{Controller, Cookie, Result}
 import services.{AuthenticationService, TouchpointBackend}
 import com.netaporter.uri.dsl._
 import views.support.{TestTrait, _}
+import utils.RequestCountry._
+import controllers.Redirects.redirectToGiraffe
+
+
 
 import scalaz.syntax.std.option._
 import scala.concurrent.Future
@@ -62,6 +67,19 @@ object Giraffe extends Controller {
     )
   }
 
+  def contributeRedirect = NoCacheAction { implicit request =>
+    val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
+
+    val baseUrl: Uri = redirectToGiraffe(countryGroup).absoluteURL
+    val paramsToPropagate = Seq("INTCMP", "CMP")
+    val urlWithParams = paramsToPropagate.foldLeft[Uri](baseUrl) { (url, param) =>
+      // No need to filter out the params that aren't present because if the `?` method gets a key-value tuple
+      // with value of None, that parameter will not be rendered when toString is called
+      url ? (param -> request.getQueryString(param))
+    }
+
+    Redirect(urlWithParams, SEE_OTHER)
+  }
 
   def contributeUK = contribute(CountryGroup.UK)
   def contributeUSA = contribute(CountryGroup.US)
