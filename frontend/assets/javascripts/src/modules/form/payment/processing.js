@@ -55,7 +55,7 @@ define([
     var stripeResponseHandler = function (status, response) {
         var data;
         if (response.error) {
-            Raven.captureMessage(response.error.code + ' ' + response.error.message);
+            Raven.captureMessage(response.error.type + '; ' + response.error.code + '; ' + response.error.message + '; ' + response.error.param);
             var userMessage = paymentErrorMessages.getMessage(response.error);
             var errorElement = paymentErrorMessages.getElement(response.error);
             if (userMessage) {
