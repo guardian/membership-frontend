@@ -24,7 +24,7 @@ object Giraffe extends Controller {
 
 
   val chargeId = "charge_id"
-  val maxAmount: Option[Int] = 1000.some
+  val maxAmount: Option[Int] = 2000.some
 
 
   // Once things have settled down and we have a reasonable idea of what might
