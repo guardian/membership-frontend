@@ -113,6 +113,7 @@ object Giraffe extends Controller {
       val redirect = f.currency match {
         case USD => routes.Giraffe.thanksUSA().url
         case AUD => routes.Giraffe.thanksAustralia().url
+        case EUR => routes.Giraffe.thanksEurope().url
         case _ => routes.Giraffe.thanksUK().url
       }
 

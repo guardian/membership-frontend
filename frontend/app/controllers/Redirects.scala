@@ -25,6 +25,7 @@ trait Redirects extends Controller {
       case CountryGroup.UK => routes.Giraffe.contributeUK()
       case CountryGroup.US => routes.Giraffe.contributeUSA()
       case CountryGroup.Australia => routes.Giraffe.contributeAustralia()
+      case CountryGroup.Europe => routes.Giraffe.contributeEurope()
       case _ => routes.Giraffe.contributeUK()
     }
   }
