@@ -19,6 +19,18 @@ trait Redirects extends Controller {
       case _ => routes.Info.supporterFor(countryGroup)
     }
   }
+
+  def redirectToGiraffe(countryGroup: CountryGroup): Call = {
+    countryGroup match {
+      case CountryGroup.UK => routes.Giraffe.contributeUK()
+      case CountryGroup.US => routes.Giraffe.contributeUSA()
+      case CountryGroup.Australia => routes.Giraffe.contributeAustralia()
+      case CountryGroup.Europe => routes.Giraffe.contributeEurope()
+      case _ => routes.Giraffe.contributeUK()
+    }
+  }
+
+
 }
 
 object Redirects extends Redirects
