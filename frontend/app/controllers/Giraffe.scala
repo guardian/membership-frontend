@@ -82,10 +82,12 @@ object Giraffe extends Controller {
   def contributeUK = contribute(CountryGroup.UK)
   def contributeUSA = contribute(CountryGroup.US)
   def contributeAustralia = contribute(CountryGroup.Australia)
+  def contributeEurope = contribute(CountryGroup.Europe)
 
-  def thanksUK = thanks(CountryGroup.UK, routes.Giraffe.contributeUK().url)
-  def thanksUSA = thanks(CountryGroup.US, routes.Giraffe.contributeUSA().url)
-  def thanksAustralia = thanks(CountryGroup.Australia, routes.Giraffe.contributeAustralia().url)
+  def thanksUK = thanks(CountryGroup.UK, routes.Giraffe.contributeRedirect().url)
+  def thanksUSA = thanks(CountryGroup.US, routes.Giraffe.contributeRedirect().url)
+  def thanksAustralia = thanks(CountryGroup.Australia, routes.Giraffe.contributeRedirect().url)
+  def thanksEurope = thanks(CountryGroup.Europe, routes.Giraffe.contributeRedirect().url)
 
 
 
