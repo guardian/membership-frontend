@@ -71,10 +71,8 @@ object Giraffe extends Controller {
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
 
     val baseUrl: Uri = redirectToGiraffe(countryGroup).absoluteURL
-    val paramsToPropagate = Seq("INTCMP", "CMP")
+    val paramsToPropagate = request.queryString.map { case (k,v) => k }.toSeq
     val urlWithParams = paramsToPropagate.foldLeft[Uri](baseUrl) { (url, param) =>
-      // No need to filter out the params that aren't present because if the `?` method gets a key-value tuple
-      // with value of None, that parameter will not be rendered when toString is called
       url ? (param -> request.getQueryString(param))
     }
 
