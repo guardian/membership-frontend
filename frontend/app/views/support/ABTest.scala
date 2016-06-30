@@ -9,7 +9,6 @@ import com.gu.i18n.CountryGroup
 import play.api.libs.json._
 import play.api.mvc.{Cookie, Request}
 import play.twirl.api.Html
-import views.support.TestTrait.Variant
 
 import scalaz.NonEmptyList
 
