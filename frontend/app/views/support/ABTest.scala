@@ -38,9 +38,11 @@ object AmountHighlightTest extends TestTrait {
     Variant("Amount - 5 highlight","5",0,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(5))),
     Variant("Amount - 25 highlight","25",0,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100),Some(25))),
     Variant("Amount - no highlight","None",0,views.html.fragments.giraffe.contributeAmountButtons(List(5,25,50,100), None)),
-    Variant("Amount -  35 highlight","35",0.5,views.html.fragments.giraffe.contributeAmountButtons(List(10,35,65,100),Some(35))),
+    Variant("Amount -  35 highlight","35",0,views.html.fragments.giraffe.contributeAmountButtons(List(10,35,65,100),Some(35))),
     Variant("Amount -  35 highlight descending","35-descending",0,views.html.fragments.giraffe.contributeAmountButtons(List(100,65,35,10),Some(35))),
-    Variant("Amount -  50 highlight","50",0.5,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,100,250),Some(50)))
+    Variant("Amount -  50 highlight","50",0.33,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,100,250),Some(50))),
+    Variant("Amount -  75 highlight","75",0.33,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,75,150),Some(75))),
+    Variant("Amount -  100 highlight","100",0.33,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,100,250),Some(100)))
   )
 }
 
