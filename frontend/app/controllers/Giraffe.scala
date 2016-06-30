@@ -33,7 +33,8 @@ object Giraffe extends Controller {
   def contribute(countryGroup: CountryGroup) = OptionallyAuthenticatedAction { implicit request =>
     val stripe = request.touchpointBackend.giraffeStripeService
     val isUAT = (request.touchpointBackend == TouchpointBackend.TestUser)
-
+    val cmp = request.getQueryString("CMP")
+    val intCmp = request.getQueryString("INTCMP")
     val chosenVariants: ChosenVariants = Test.getContributePageVariants(request)
     val pageInfo = PageInfo(
       title = "Support the Guardian | Contribute today",
@@ -44,7 +45,7 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants))
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants, cmp, intCmp))
       .withCookies(Test.createCookie(chosenVariants.v1), Test.createCookie(chosenVariants.v2))
   }
 
@@ -79,12 +80,16 @@ object Giraffe extends Controller {
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
     },{ f =>
+      println(f.cmp.mkString)
+      println(f.intcmp.mkString)
       val metadata = Map(
         "marketing-opt-in" -> f.marketing.toString,
         "email" -> f.email,
         "name" -> f.name,
         "abTests" -> f.abTests.toString,
-        "ophanId" -> f.ophanId
+        "ophanId" -> f.ophanId,
+        "cmp" -> f.cmp,
+        "intcmp" -> f.intcmp
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
       val res = stripe.Charge.create(maxAmount.fold((f.amount*100).toInt)(max => Math.min(max * 100, (f.amount * 100).toInt)), f.currency, f.email, "Your contribution", f.token, metadata)
 

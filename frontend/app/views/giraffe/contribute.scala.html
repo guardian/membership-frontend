@@ -3,7 +3,7 @@
 @import configuration.Links
 @import com.gu.i18n.CountryGroup
 @import views.support.ChosenVariants
-@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants)
+@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants, cmpCode: Option[String], intCmpCode: Option[String])
 
 @giraffeMain(pageInfo) {
     <div class="l-constrained">
@@ -194,6 +194,8 @@
                 </ul>
             </div>
             <input type="hidden" name="ophanId" class="js-ophan-id">
+            <input type="hidden" name="cmp" value="@cmpCode.mkString">
+            <input type="hidden" name="intcmp" value="@intCmpCode.mkString">
         </form>
 
         <div class="feedback">
