@@ -28,7 +28,10 @@ object MemberForm {
     marketing: Boolean,
     postCode: Option[String],
     abTests: JsValue,
-    ophanId: String
+    ophanId: String,
+    cmp: Option[String],
+    intcmp: Option[String]
+
   )
 
   case class PaymentForm(billingPeriod: BillingPeriod, token: String)
@@ -283,7 +286,9 @@ object MemberForm {
       "guardian-opt-in" -> boolean,
       "postcode" -> optional(nonEmptyText),
       "abTest" -> FieldMapping[JsValue]()(abTestFormatter),
-      "ophanId" -> text
+      "ophanId" -> text,
+      "cmp" -> optional(text),
+      "intcmp" -> optional(text)
     )(SupportForm.apply)(SupportForm.unapply)
   )
 }
