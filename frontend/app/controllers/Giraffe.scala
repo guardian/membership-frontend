@@ -66,10 +66,12 @@ object Giraffe extends Controller {
   def contributeUK = contribute(CountryGroup.UK)
   def contributeUSA = contribute(CountryGroup.US)
   def contributeAustralia = contribute(CountryGroup.Australia)
+  def contributeEurope = contribute(CountryGroup.Europe)
 
   def thanksUK = thanks(CountryGroup.UK, routes.Giraffe.contributeUK().url)
   def thanksUSA = thanks(CountryGroup.US, routes.Giraffe.contributeUSA().url)
   def thanksAustralia = thanks(CountryGroup.Australia, routes.Giraffe.contributeAustralia().url)
+  def thanksEurope = thanks(CountryGroup.Europe, routes.Giraffe.contributeEurope().url)
 
 
 
@@ -95,6 +97,7 @@ object Giraffe extends Controller {
       val redirect = f.currency match {
         case USD => routes.Giraffe.thanksUSA().url
         case AUD => routes.Giraffe.thanksAustralia().url
+        case EUR => routes.Giraffe.thanksEurope().url
         case _ => routes.Giraffe.thanksUK().url
       }
 
