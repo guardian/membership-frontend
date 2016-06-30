@@ -135,10 +135,12 @@ GET            /currencies                            controllers.PricingApi.cur
 GET            /contribute                            controllers.Giraffe.contributeUK
 GET            /us/contribute                         controllers.Giraffe.contributeUSA
 GET            /au/contribute                         controllers.Giraffe.contributeAustralia
+GET            /eu/contribute                         controllers.Giraffe.contributeEurope
 
 GET            /contribute/thank-you                  controllers.Giraffe.thanksUK
 GET            /us/contribute/thank-you               controllers.Giraffe.thanksUSA
 GET            /au/contribute/thank-you               controllers.Giraffe.thanksAustralia
+GET            /eu/contribute/thank-you               controllers.Giraffe.thanksEurope
 
 POST           /contribute/pay                        controllers.Giraffe.pay
 
