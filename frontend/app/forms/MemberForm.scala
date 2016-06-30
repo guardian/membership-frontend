@@ -29,8 +29,8 @@ object MemberForm {
     postCode: Option[String],
     abTests: JsValue,
     ophanId: String,
-    cmp: String,
-    intcmp: String
+    cmp: Option[String],
+    intcmp: Option[String]
 
   )
 
@@ -287,8 +287,8 @@ object MemberForm {
       "postcode" -> optional(nonEmptyText),
       "abTest" -> FieldMapping[JsValue]()(abTestFormatter),
       "ophanId" -> text,
-      "cmp" -> text,
-      "intcmp" -> text
+      "cmp" -> optional(text),
+      "intcmp" -> optional(text)
     )(SupportForm.apply)(SupportForm.unapply)
   )
 }
