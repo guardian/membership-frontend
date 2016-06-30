@@ -5,9 +5,6 @@ import org.scalatest.FunSuite
 import org.specs2.mutable.Specification
 import play.api.test.FakeRequest
 
-/**
-  * Created by jrankin on 30/06/2016.
-  */
 class MakeURL$Test extends Specification {
 
   "No parameters" in {
@@ -32,7 +29,7 @@ class MakeURL$Test extends Specification {
   "US" in {
     val fakeRequest = FakeRequest("GET", "/contribute?test1=a&test2=b")
 
-    MakeURL(fakeRequest, CountryGroup.Europe) must_== "/us/contribute?test1=a&test2=b"
+    MakeURL(fakeRequest, CountryGroup.US) must_== "/us/contribute?test1=a&test2=b"
   }
 
   "Europe" in {
