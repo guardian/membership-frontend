@@ -10,7 +10,7 @@ class MakeURL$Test extends Specification {
   "No parameters" in {
     val fakeRequest = FakeRequest("GET", "/contribute")
 
-    MakeURL(fakeRequest, CountryGroup.UK) must_== "/uk/contribute?"
+    MakeURL(fakeRequest, CountryGroup.UK) must_== "/uk/contribute"
   }
 
   "One parameter" in {

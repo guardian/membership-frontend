@@ -121,7 +121,12 @@ object Giraffe extends Controller {
 
 object MakeURL {
   def apply(request: Request[AnyContent], countryGroup: CountryGroup) = {
-    redirectToGiraffe(countryGroup) + "?" + request.rawQueryString
+    val queryString = request.rawQueryString match {
+      case("") => ""
+      case _ => "?" + request.rawQueryString
+    }
+
+    redirectToGiraffe(countryGroup) + queryString
   }
 
 }
