@@ -44,22 +44,6 @@ object AmountHighlightTest extends TestTrait {
   )
 }
 
-object CMPTest extends TestTrait {
-
-  def name = "CMPTest"
-  def slug = "CMP"
-  override type VariantFn = () => Html
-
-  def variants = NonEmptyList(
-    Variant("CMP","none",1,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
-    Variant("CMP","ema-3325",0,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
-    Variant("CMP","ema-3324",0,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
-    Variant("CMP","ema-3323",0,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
-    Variant("CMP","ema-3322",0,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure.")),
-    Variant("CMP","ema-3321",0,views.html.fragments.giraffe.contributeMessage("If everyone who sees this chipped in the Guardian's future would be more secure."))
-  )
-}
-
 object MessageCopyTest extends TestTrait {
   def name = "MessageCopyTest"
   def slug = "mcopy"
@@ -89,8 +73,8 @@ object MessageCopyTest extends TestTrait {
   )
 }
 
-case class ChosenVariants(v1: AmountHighlightTest.Variant, v2: MessageCopyTest.Variant, v3: CMPTest.Variant) {
-  def asList: Seq[TestTrait#Variant] = Seq(v1,v2,v3) //this makes me very sad
+case class ChosenVariants(v1: AmountHighlightTest.Variant, v2: MessageCopyTest.Variant) {
+  def asList: Seq[TestTrait#Variant] = Seq(v1,v2) //this makes me very sad
   def asJson = Json.toJson(asList).toString()
   def encodeURL = URLEncoder.encode(asJson, StandardCharsets.UTF_8.name())
   implicit val writesVariant: Writes[TestTrait#Variant] = new Writes[TestTrait#Variant]{
@@ -124,7 +108,7 @@ object Test {
   }
 
   def getContributePageVariants[A](request: Request[A]) = {
-    ChosenVariants(pickVariant(request, AmountHighlightTest), pickVariant(request, MessageCopyTest), pickVariant(request, CMPTest))
+    ChosenVariants(pickVariant(request, AmountHighlightTest), pickVariant(request, MessageCopyTest))
   }
 }
 
