@@ -7,13 +7,15 @@ import com.gu.stripe.Stripe.Serializer._
 import forms.MemberForm.supportForm
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
-import play.api.mvc.{Controller, Cookie, Result}
+import play.api.mvc._
 import services.{AuthenticationService, TouchpointBackend}
 import com.netaporter.uri.dsl._
 import views.support.{TestTrait, _}
 
 import scalaz.syntax.std.option._
 import scala.concurrent.Future
+import utils.RequestCountry._
+import controllers.Redirects.redirectToGiraffe
 
 object Giraffe extends Controller {
 
@@ -26,6 +28,12 @@ object Giraffe extends Controller {
   val chargeId = "charge_id"
   val maxAmount: Option[Int] = 2000.some
 
+
+  def contributeRedirect = NoCacheAction { implicit request =>
+    val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
+    val url = MakeURL(request, countryGroup)
+    Redirect(url, SEE_OTHER)
+  }
 
   // Once things have settled down and we have a reasonable idea of what might
   // and might not vary between different countries, we should merge these country-specific
@@ -109,4 +117,11 @@ object Giraffe extends Controller {
       }
     })
   }
+}
+
+object MakeURL {
+  def apply(request: Request[AnyContent], countryGroup: CountryGroup) = {
+    redirectToGiraffe(countryGroup) + "?" + request.rawQueryString
+  }
+
 }
