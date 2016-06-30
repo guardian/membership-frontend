@@ -20,7 +20,7 @@ trait Info extends Controller {
   def supporterRedirect = NoCacheAction { implicit request =>
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
 
-    val baseUrl: Uri = redirectToSupporterPage(countryGroup).absoluteURL
+    val baseUrl: Uri = redirectToSupporterPage(countryGroup).absoluteURL.withScheme("https")
     val paramsToPropagate = Seq("INTCMP", "CMP")
     val urlWithParams = paramsToPropagate.foldLeft[Uri](baseUrl) { (url, param) =>
       // No need to filter out the params that aren't present because if the `?` method gets a key-value tuple
