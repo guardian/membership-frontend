@@ -80,8 +80,6 @@ object Giraffe extends Controller {
     supportForm.bindFromRequest().fold[Future[Result]]({ withErrors =>
       Future.successful(BadRequest(JsArray(withErrors.errors.map(k => JsString(k.key)))))
     },{ f =>
-      println(f.cmp.mkString)
-      println(f.intcmp.mkString)
       val metadata = Map(
         "marketing-opt-in" -> f.marketing.toString,
         "email" -> f.email,
