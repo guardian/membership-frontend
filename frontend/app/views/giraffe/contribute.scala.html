@@ -82,7 +82,7 @@
                     } { max =>
                         <li>
                             <div class="security-note">
-                                We are presently only able to accept contributions of <span class="currency js-currency">@countryGroup.currency.glyph</span>@max or less</div>
+                                We are presently only able to accept contributions of <span class="currency js-currency">@countryGroup.currency.prefix@countryGroup.currency.glyph</span>@max or less</div>
                         </li>
                     }
                 </ul>
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                     <li id="submit_field" class="form-field">
-                        <button class="action action--contribute js-submit-input" type="submit" tabindex="17">Pay <span class="js-currency-pay">@countryGroup.currency.glyph</span><span class="js-amount js-pay"></span>@if(isUAT){ (UAT)}</button>
+                        <button class="action action--contribute js-submit-input" type="submit" tabindex="17">Pay <span class="js-currency-pay">@countryGroup.currency.prefix@countryGroup.currency.glyph</span><span class="js-amount js-pay"></span>@if(isUAT){ (UAT)}</button>
                         <div class="loader js-loader"></div>
                     </li>
 
