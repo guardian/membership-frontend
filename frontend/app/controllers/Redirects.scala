@@ -27,7 +27,7 @@ trait Redirects extends Controller {
       case CountryGroup.US => CountryGroup.US
       case CountryGroup.Australia => CountryGroup.Australia
       case CountryGroup.Europe => CountryGroup.Europe
-      case _ => CountryGroup.US
+      case _ => CountryGroup.UK
     }
   }
 
