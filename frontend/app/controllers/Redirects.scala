@@ -1,7 +1,8 @@
 package controllers
 
 import com.gu.i18n.CountryGroup
-import play.api.mvc.{Result, Call, Controller}
+import com.netaporter.uri.{PathPart, Uri}
+import play.api.mvc._
 
 trait Redirects extends Controller {
 
@@ -19,6 +20,17 @@ trait Redirects extends Controller {
       case _ => routes.Info.supporterFor(countryGroup)
     }
   }
+
+  def getRedirectCountryCodeGiraffe(countryGroup: CountryGroup): CountryGroup = {
+    countryGroup match {
+      case CountryGroup.UK => CountryGroup.UK
+      case CountryGroup.US => CountryGroup.US
+      case CountryGroup.Australia => CountryGroup.Australia
+      case CountryGroup.Europe => CountryGroup.Europe
+      case _ => CountryGroup.US
+    }
+  }
+
 }
 
 object Redirects extends Redirects

@@ -132,7 +132,9 @@ GET            /english-heritage                      controllers.Default.redire
 GET            /currencies                            controllers.PricingApi.currencies
 
 # Giraffe
-GET            /contribute                            controllers.Giraffe.contributeUK
+GET            /contribute                            controllers.Giraffe.contributeRedirect
+
+GET            /uk/contribute                         controllers.Giraffe.contributeUK
 GET            /us/contribute                         controllers.Giraffe.contributeUSA
 GET            /au/contribute                         controllers.Giraffe.contributeAustralia
 GET            /eu/contribute                         controllers.Giraffe.contributeEurope
