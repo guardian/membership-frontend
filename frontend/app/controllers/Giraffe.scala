@@ -15,7 +15,9 @@ import views.support.{TestTrait, _}
 import scalaz.syntax.std.option._
 import scala.concurrent.Future
 import utils.RequestCountry._
-import controllers.Redirects.redirectToGiraffe
+import com.netaporter.uri.dsl._
+import com.netaporter.uri.{PathPart, Uri}
+import Redirects.getRedirectCountryCodeGiraffe
 
 object Giraffe extends Controller {
 
@@ -31,7 +33,7 @@ object Giraffe extends Controller {
 
   def contributeRedirect = NoCacheAction { implicit request =>
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
-    val url = MakeURL(request, countryGroup)
+    val url = MakeGiraffeRedirectURL(request, countryGroup)
     Redirect(url, SEE_OTHER)
   }
 
@@ -119,14 +121,10 @@ object Giraffe extends Controller {
   }
 }
 
-object MakeURL {
+object MakeGiraffeRedirectURL {
   def apply(request: Request[AnyContent], countryGroup: CountryGroup) = {
-    val queryString = request.rawQueryString match {
-      case("") => ""
-      case _ => "?" + request.rawQueryString
-    }
-
-    redirectToGiraffe(countryGroup) + queryString
+    val x = Uri.parse(request.uri).withScheme("https")
+    x.copy(pathParts = Seq(PathPart(getRedirectCountryCodeGiraffe(countryGroup).id)) ++ x.pathParts)
   }
-
 }
+
