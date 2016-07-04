@@ -21,7 +21,7 @@ trait Info extends Controller {
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
 
     val baseUrl: Uri = redirectToSupporterPage(countryGroup).absoluteURL.withScheme("https")
-    val paramsToPropagate = Seq("INTCMP", "CMP")
+    val paramsToPropagate = Seq("INTCMP", "CMP", "mcopy")
     val urlWithParams = paramsToPropagate.foldLeft[Uri](baseUrl) { (url, param) =>
       // No need to filter out the params that aren't present because if the `?` method gets a key-value tuple
       // with value of None, that parameter will not be rendered when toString is called
