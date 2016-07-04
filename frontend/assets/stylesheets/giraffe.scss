@@ -512,7 +512,7 @@ $desktop-col-padding-right: 16px;
     display: none !important;
 }
 
-$currencies: gbp usd aud eur;
+$currencies: gbp usd aud eur cad;
 @each $currency in $currencies {
     .currency-#{$currency} {
         [data-shown*=#{$currency}] {

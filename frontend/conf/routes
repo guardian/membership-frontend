@@ -138,11 +138,13 @@ GET            /uk/contribute                         controllers.Giraffe.contri
 GET            /us/contribute                         controllers.Giraffe.contributeUSA
 GET            /au/contribute                         controllers.Giraffe.contributeAustralia
 GET            /eu/contribute                         controllers.Giraffe.contributeEurope
+GET            /ca/contribute                         controllers.Giraffe.contributeCanada
 
 GET            /contribute/thank-you                  controllers.Giraffe.thanksUK
 GET            /us/contribute/thank-you               controllers.Giraffe.thanksUSA
 GET            /au/contribute/thank-you               controllers.Giraffe.thanksAustralia
 GET            /eu/contribute/thank-you               controllers.Giraffe.thanksEurope
+GET            /ca/contribute/thank-you               controllers.Giraffe.thanksCanada
 
 POST           /contribute/pay                        controllers.Giraffe.pay
 
