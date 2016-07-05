@@ -1,4 +1,5 @@
 require([
+    'babel-polyfill',
     'ajax',
     'src/modules/raven',
     'src/modules/analytics/setup',
@@ -16,6 +17,7 @@ require([
     'src/modules/giraffe',
     'src/modules/abTests'
 ], function(
+    b,
     ajax,
     raven,
     analytics,
