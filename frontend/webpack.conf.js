@@ -27,7 +27,8 @@ module.exports = function(debug) { return {
                 loader: 'babel',
                 query: {
                     presets: ['es2015'],
-                    cacheDirectory: ''
+                    cacheDirectory: '',
+                    plugins: ['transform-runtime']
                 }
             }
         ]
