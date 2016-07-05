@@ -8,10 +8,10 @@
     }
 </div>
 <div id="other_amount_field">
-    <div class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</div>
     <input type="number" id="other_amount" class="input-text js-amount js-amount-field" placeholder="Other amount" maxlength="10" tabindex="12" data-validation="giraffe" @maxAmount.fold{
     }{max =>
     data-max="@max"
     }>
+    <span class="other_amount_currency headline-text--bolder js-currency">@countryGroup.currency.glyph</span>
     <input type="hidden" name="amount" class="js-amount js-amount-hidden" value=@activeAmount>
 </div>

@@ -4,7 +4,7 @@
 @import com.gu.i18n.CountryGroup
 @(pageInfo: PageInfo, reference: String, social: Set[Social], countryGroup: CountryGroup)
 @giraffeMain(pageInfo) {
-    <div class="support-wrapper page-slice l-constrained support-thanks currency-@countryGroup.currency.toString.toLowerCase">
+    <div class="support-wrapper l-constrained support-thanks currency-@countryGroup.currency.toString.toLowerCase">
         <h1 class="support-thanks__title">@pageInfo.title</h1>
 
         <p class="support-thanks__message">@pageInfo.description</p>

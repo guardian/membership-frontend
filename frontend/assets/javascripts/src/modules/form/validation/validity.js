@@ -11,10 +11,12 @@ define([
      * @param elem
      */
     var check = function (elem) {
+        var valid = testValidity(elem);
         display.toggleErrorState({
             isValid: testValidity(elem),
             elem: elem
         });
+        return valid;
     };
 
     /**
