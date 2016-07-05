@@ -20,7 +20,7 @@ define([
         });
     };
 
-    var getFormElem = function () {
+    var  getFormElem = function () {
         return document.querySelector('.js-form');
     };
 

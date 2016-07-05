@@ -26,18 +26,20 @@ define([
 
         if (!result.isValid) {
             formFieldElem.classList.add(FORM_FIELD_ERROR_CLASSNAME);
+            if (errMessageElem!=null) {
 
-            // use the msg provided or fallback to default message
-            errMessageElem.textContent = result.msg ? result.msg : errMessageElem.getAttribute('data-default-msg');
-            errMessageElem.classList.remove(IS_HIDDEN_CLASSNAME);
-
+                // use the msg provided or fallback to default message
+                errMessageElem.textContent = result.msg ? result.msg : errMessageElem.getAttribute('data-default-msg');
+                errMessageElem.classList.remove(IS_HIDDEN_CLASSNAME);
+            }
             if (errIndex === -1) {
                 form.errs.push(errId);
             }
         } else {
             formFieldElem.classList.remove(FORM_FIELD_ERROR_CLASSNAME);
-            errMessageElem.classList.add(IS_HIDDEN_CLASSNAME);
-
+            if (errMessageElem!=null) {
+                errMessageElem.classList.add(IS_HIDDEN_CLASSNAME);
+            }
             if (errIndex >= 0) {
                 form.errs.splice(errIndex, 1);
             }
