@@ -1,5 +1,7 @@
 package controllers
 
+import java.util.Calendar
+
 import com.gu.i18n._
 import com.gu.stripe.Stripe
 import configuration.Config
@@ -30,7 +32,6 @@ object Giraffe extends Controller {
   val chargeId = "charge_id"
   val maxAmount: Option[Int] = 2000.some
 
-
   def contributeRedirect = NoCacheAction { implicit request =>
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
     val url = MakeGiraffeRedirectURL(request, countryGroup)
@@ -55,7 +56,7 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants, cmp, intCmp))
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants, cmp, intCmp, CreditCardExpiryYears(java.time.LocalDate.now().getYear, 10)))
       .withCookies(Test.createCookie(chosenVariants.v1), Test.createCookie(chosenVariants.v2))
   }
 
@@ -128,6 +129,14 @@ object MakeGiraffeRedirectURL {
   def apply(request: Request[AnyContent], countryGroup: CountryGroup) = {
     val x = Uri.parse(request.uri).withScheme("https")
     x.copy(pathParts = Seq(PathPart(getRedirectCountryCodeGiraffe(countryGroup).id)) ++ x.pathParts)
+  }
+}
+
+object CreditCardExpiryYears {
+  def apply(currentYear: Int, offset: Int): List[Int] = {
+    val currentYearShortened = currentYear % 100
+    val subsequentYears = (currentYearShortened to currentYearShortened + offset - 2) map { _ + 1}
+    currentYearShortened :: subsequentYears.toList
   }
 }
 
