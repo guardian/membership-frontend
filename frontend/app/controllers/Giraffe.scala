@@ -1,7 +1,5 @@
 package controllers
 
-import java.util.Calendar
-
 import com.gu.i18n._
 import com.gu.stripe.Stripe
 import configuration.Config
