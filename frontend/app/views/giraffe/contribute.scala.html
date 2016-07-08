@@ -3,7 +3,7 @@
 @import configuration.Links
 @import com.gu.i18n.CountryGroup
 @import views.support.ChosenVariants
-@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants, cmpCode: Option[String], intCmpCode: Option[String])
+@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants, cmpCode: Option[String], intCmpCode: Option[String], years: List[Int])
 
 @giraffeMain(pageInfo){
 <div class="support-wrapper__outer__a">
@@ -153,12 +153,9 @@
                                 <span>/</span>
                                 <label for="card_expiry_year" class="u-h form-field__note form-field__note--sub">Year</label>
                                 <select id="card_expiry_year" data-stripe="exp-year" tabindex="15" aria-required="true" class="js-credit-card-exp-year" data-validation="validCreditCardYear">
-                                    <option value="16">16</option>
-                                    <option value="17">17</option>
-                                    <option value="18">18</option>
-                                    <option value="19">19</option>
-                                    <option value="20">20</option>
-                                    <option value="21">21</option>
+                                    @for(year <- years) {
+                                        <option value="@year">@year</option>
+                                    }
                                 </select>
                             </div>
                             @fragments.form.errorMessage("Sorry, the expiry date that you have entered is invalid. Please check and re-enter.")
