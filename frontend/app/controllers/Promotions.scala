@@ -100,7 +100,9 @@ object Promotions extends Controller {
   def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
     val promoCode = PromoCode(promoCodeStr)
-    val homepageWithCampaignCode = "/" ? ("INTCMP" -> s"FROM_P_${promoCode.get}")
+    // Any provided internal campaign code takes precidence over the "From Promo Code" version.
+    val internalCampaignCode = request.getQueryString("INTCMP").getOrElse(s"FROM_P_${promoCode.get}")
+    val homepageWithCampaignCode = "/" ? ("INTCMP" -> internalCampaignCode)
     val redirectToHomepage = Redirect(homepageWithCampaignCode)
     val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
     val redirectToHomepageWithSession = Redirect(homepageWithCampaignCode).withCookies(sessionCookieFromCode(promoCode))
