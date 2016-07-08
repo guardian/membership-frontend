@@ -100,7 +100,7 @@ object Promotions extends Controller {
   def promotionPage(promoCodeStr: String) = CachedAction { implicit request =>
 
     val promoCode = PromoCode(promoCodeStr)
-    // Any provided internal campaign code takes precidence over the "From Promo Code" version.
+    // Any provided internal campaign code takes precedence over the "From Promo Code" version.
     val internalCampaignCode = request.getQueryString("INTCMP").getOrElse(s"FROM_P_${promoCode.get}")
     val homepageWithCampaignCode = "/" ? ("INTCMP" -> internalCampaignCode)
     val redirectToHomepage = Redirect(homepageWithCampaignCode)
