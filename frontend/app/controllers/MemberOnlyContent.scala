@@ -18,8 +18,8 @@ object MemberOnlyContent extends Controller with ActivityTracking
 
   val contentApiService = GuardianContentService
 
-  def membershipContent(referringContent: String) = NoCacheAction.async { implicit request =>
-    val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
+  def membershipContent(referringContent: String, membershipAccess: String) = NoCacheAction.async { implicit request =>
+    val accessOpt = ContentAccess.valueOf(membershipAccess)
     contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
 
       val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referringContent) ? ("skipConfirmation" -> "true")).toString

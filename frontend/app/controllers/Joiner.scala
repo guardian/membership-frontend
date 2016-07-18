@@ -73,9 +73,12 @@ object Joiner extends Controller with ActivityTracking
       customSignInUrl=Some(signInUrl)
     )
 
-    contentRefererOpt.filter(Uri.parse(_).host.exists(_ == "www.theguardian.com")).map { contentURL =>
-      Redirect(routes.MemberOnlyContent.membershipContent(contentURL))
-    }.getOrElse(
+    (for {
+      contentURL <- contentRefererOpt if Uri.parse(contentURL).host.exists(_ == "www.theguardian.com")
+      access <- accessOpt
+    } yield {
+      Redirect(routes.MemberOnlyContent.membershipContent(contentURL, access.name))
+    }).getOrElse (
       Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
     ).withSession(
       request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _))
