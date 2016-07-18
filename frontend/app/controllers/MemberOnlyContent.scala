@@ -32,10 +32,18 @@ object MemberOnlyContent extends Controller with ActivityTracking
         customSignInUrl = Some(signInUrl)
       )
 
-      response.content.map { c =>
-        Ok(views.html.joiner.membershipContent(TouchpointBackend.Normal.catalog, pageInfo, accessOpt, signInUrl, CapiContent(c)))
-          .withSession(request.session.copy(data = request.session.data + (Joiner.JoinReferrer -> referringContent)))
-      }.getOrElse(Redirect(routes.Joiner.tierChooser()))
+      (for {
+        content <- response.content
+      } yield {
+        if (content.fields.exists(_.membershipAccess.nonEmpty)) {
+          Ok(views.html.joiner.membershipContent(TouchpointBackend.Normal.catalog, pageInfo, accessOpt, signInUrl, CapiContent(content)))
+            .withSession(request.session.copy(data = request.session.data + (Joiner.JoinReferrer -> referringContent)))
+        } else {
+          Redirect(referringContent)
+        }
+      }).getOrElse(
+        Redirect(routes.Joiner.tierChooser())
+      )
     }
   }
 }
