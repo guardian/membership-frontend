@@ -8,16 +8,19 @@ import forms.MemberForm.supportForm
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
 import play.api.mvc._
-import services.{AuthenticationService, TouchpointBackend}
-import com.netaporter.uri.dsl._
-import views.support.{TestTrait, _}
+import services.{AuthenticationService, IdentityApi, IdentityService, TouchpointBackend}
+import views.support._
 
 import scalaz.syntax.std.option._
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import utils.RequestCountry._
 import com.netaporter.uri.dsl._
 import com.netaporter.uri.{PathPart, Uri}
 import Redirects.getRedirectCountryCodeGiraffe
+import actions.OptionallyAuthenticatedRequest
+
+
+import scala.concurrent.duration.Duration
 
 object Giraffe extends Controller {
 
@@ -34,6 +37,20 @@ object Giraffe extends Controller {
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
     val url = MakeGiraffeRedirectURL(request, countryGroup)
     Redirect(url, SEE_OTHER)
+  }
+
+  def getIdUser(request: OptionallyAuthenticatedRequest[AnyContent]): Option[Future[IdentityUser]]  = {
+    val identityService = IdentityService(IdentityApi)
+    val identityRequest = IdentityRequest(request)
+    for {
+      user <- request.user
+    } yield {
+      for {
+        idUser <- identityService.getIdentityUserView(user.user, identityRequest)
+      } yield {
+        idUser
+      }
+    }
   }
 
   // Once things have settled down and we have a reasonable idea of what might
@@ -54,9 +71,12 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants, cmp, intCmp, CreditCardExpiryYears(java.time.LocalDate.now().getYear, 10)))
+    val idUser = getIdUser(request).fold(Option.empty[IdentityUser])(Await.result(_, Duration("Inf")).some)
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmount, idUser, countryGroup,isUAT, chosenVariants, cmp, intCmp, CreditCardExpiryYears(java.time.LocalDate.now().getYear, 10)))
       .withCookies(Test.createCookie(chosenVariants.v1), Test.createCookie(chosenVariants.v2))
   }
+
+
 
   def thanks(countryGroup: CountryGroup, redirectUrl: String) = NoCacheAction { implicit request =>
     request.session.get(chargeId).fold(
@@ -94,7 +114,8 @@ object Giraffe extends Controller {
       val metadata = Map(
         "marketing-opt-in" -> f.marketing.toString,
         "email" -> f.email,
-        "name" -> f.name,
+        "firstName" -> f.firstName,
+        "lastName" -> f.lastName,
         "abTests" -> f.abTests.toString,
         "ophanId" -> f.ophanId,
         "cmp" -> f.cmp.mkString,
