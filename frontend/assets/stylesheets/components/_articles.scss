@@ -157,3 +157,109 @@
         @include fs-headline(3, true);
     }
 }
+
+
+/* Article styling for restricted content bounce page */
+.content__headline {
+    @include fs-headline(5);
+    padding-top: $gs-baseline/6;
+    padding-bottom: $gs-baseline*2;
+
+    @include mq(mobileLandscape) {
+        @include fs-headline(7, true);
+    }
+
+    a {
+        &,
+        &:hover,
+        &:active,
+        &:focus {
+            color: color(neutral-1);
+        }
+    }
+
+    em {
+        font-style: normal;
+    }
+
+    strong {
+        font-weight: normal;
+    }
+}
+
+.content__standfirst {
+    @include fs-headline(2);
+    margin-bottom: $gs-baseline/2;
+    color: color(neutral-2);
+
+    @include mq(tablet) {
+        @include font-size(18px, 22px);
+    }
+
+    > ul,
+    > ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > li {
+            position: relative;
+        }
+
+        * {
+            margin-bottom: $gs-baseline / 2;
+        }
+    }
+
+    > ol {
+        counter-reset: li;
+
+        >li {
+            text-indent: 18px;
+
+            @include mq(tablet) {
+                text-indent: 20px;
+            }
+        }
+
+        > li:before {
+            @include fs-header(1, true);
+            position: absolute;
+            left: -16px;
+            content: counter(li);
+            counter-increment: li;
+            color: color(neutral-3);
+
+            @include mq(tablet) {
+                @include fs-header(3, true);
+                left: -20px;
+                top: -2px;
+            }
+        }
+    }
+}
+
+.content__section-label {
+    @include fs-header(1);
+    float: left;
+    padding-right: $gs-gutter/3;
+
+    @include mq(tablet) {
+        @include fs-header(4);
+        line-height: get-line-height(header, 2);
+        float: none;
+        padding-right: 0;
+    }
+}
+
+.content__labels {
+    box-sizing: border-box;
+    padding: $gs-baseline/2 0;
+    position: relative;
+    z-index: 1; // bring-to-front fix to make it clickable
+    overflow: hidden;
+}
+
+.content__section-label__link {
+    color: color(news-main-1);
+}

@@ -99,3 +99,20 @@
     padding: rem($gs-baseline * 2);
     margin-bottom: rem($gs-baseline * 2);
 }
+
+/* Challenge for member content */
+.challenge--panel {
+    background-color: $c-neutral6;
+    padding-top: rem($gs-baseline * 2 / 3);
+    margin-bottom: rem($gs-baseline * 2 / 3);
+}
+
+.challenge--accent {
+    width: 257px;
+    height: 50px;
+
+    @include mq(tablet) {
+        width: 412px;
+        height: 80px;
+    }
+}

@@ -1,0 +1,92 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.salesforce.Tier._
+@import com.gu.membership.MembershipCatalog
+@import model.CapiContent
+
+@import views.support.PageInfo
+@import views.support.TierPlans._
+@import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
+
+@(catalog: MembershipCatalog,
+    pageInfo: PageInfo,
+    accessOpt: Option[ContentAccess],
+    signInUrl: String,
+    content: CapiContent
+)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@actionAttrs = {
+    href="@{routes.Joiner.enterPaidDetails(Supporter())}"
+    data-metric-trigger="click"
+    data-metric-category="join"
+    data-metric-action="@Supporter.toString.toLowerCase"
+}
+
+@main("Join Choose Tier", pageInfo=pageInfo) {
+
+    <main role="main">
+        <div class="l-constrained">
+            <section class="page-section">
+                <div class="page-section__lead-in u-inset">
+                    <div class="content__labels">
+                        <div class="content__section-label">
+                            <a class="content__section-label__link" data-link-name="article section" href="@content.primaryTag.webUrl">
+                                @Html(content.primaryTag.webTitle)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-section__content">
+                    <h1 class="content__headline">@Html(content.headline)</h1>
+                    @for(trail <- content.trailText) {
+                        <p class="content__standfirst">@Html(trail)</p>
+                    }
+                    @for(picture <- content.mainPicture) {
+                        <img src="@picture.defaultImage" srcset="@picture.srcset" sizes="25vw" alt="@picture.altText" class="responsive-img"/>
+                    }
+                </div>
+            </section>
+        </div>
+        <div class="challenge--panel u-cf">
+            <div class="l-constrained">
+                <div class="page-section__content">
+                    <h3>
+                        <svg height="47" width="120">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-hello"></use>
+                        </svg>
+                    </h3>
+                    <p class="h-intro promo-tertiary__description">
+                        This content is exclusive to Guardian Members. Get closer
+                        to our journalists, our journalism and other members, and
+                        access behind-the-scenes insights into the Guardian by
+                        joining us today.
+                    </p>
+                    <div class="u-cf">
+                        <a class="action action--no-icon u-no-bottom-margin qa-package-@supporter.slug u-align-left" @actionAttrs>
+                            Become a member
+                            <svg class="icon-inline action__icon action__icon--right u-no-float">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
+                            </svg>
+                        </a>
+                        <svg class="u-align-right challenge--accent">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-angle-up"></use>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="l-constrained">
+            <div class="page-section__content">
+                <p class="h-intro promo-tertiary__description">
+                    Already a member?
+                </p>
+                <p>
+                    <a class="action action--secondary action--no-icon u-no-bottom-margin qa-package-@supporter.slug" href="@signInUrl">
+                        Sign in
+                        <svg class="icon-inline action__icon action__icon--right u-no-float">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
+                        </svg>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+}
