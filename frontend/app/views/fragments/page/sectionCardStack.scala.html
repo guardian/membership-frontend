@@ -1,4 +1,4 @@
-@(img: com.gu.memsub.images.ResponsiveImageGroup, leadIn: Option[String] = None)(content: Html)
+@(img: com.gu.memsub.images.ResponsiveImageGroup, leadIn: Option[String] = None, topPadding : Boolean = true)(content: Html)
 
 <section class="page-slice page-slice--listing page-slice--slim">
     <div class="l-constrained">
@@ -10,7 +10,7 @@
         <div class="listing listing--narrow listing--card-stack @if(leadIn.isEmpty){listing--empty-lead-in}">
             @* If lead-in is empty we still need its containing div for column alignment at larger widths *@
             <div class="listing__lead-in u-hidden-until-mem-full">@if(!leadIn.isEmpty){<h3 class="h-intro">@leadIn.get</h3>}</div>
-            <div class="listing__content">
+            <div class="listing__content @if(!topPadding){listing__content--no-top-padding}">
                 <div class="listing--card-stack__card-one"></div>
                 <div class="listing--card-stack__card-two"></div>
                 <div class="listing--card-stack__card-three"></div>

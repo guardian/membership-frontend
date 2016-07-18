@@ -86,6 +86,60 @@ trait Info extends Controller {
       pageImages))
   }
 
+  def supporterAustralia = CachedAction { implicit request =>
+    implicit val countryGroup = Australia
+
+    val heroImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
+        byline = None,
+        credit = Some("Carol Cho/AAP")
+      )),
+      availableImages=ResponsiveImageGenerator("460e093384cd9ef4202179e716f9916045090b6e/0_0_3549_2130", Seq(2000, 1000))
+    )
+
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("coral"),
+        metadata=Some(Grid.Metadata(
+          description = Some("the Ocean Agency. 7 June 2016: Dying and dead coral after bleaching at Lizard Island, north of Cooktown, on Australia's Great Barrier Reef. The image on the left from March 2016 is the coral after bleaching, the one on the right from May 2016 shows it after it has died and been blanketed by seaweed."),
+          byline = None,
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("join"),
+        metadata=Some(Grid.Metadata(
+          description = Some("Polly Toynbee, Guardian columnist"),
+          byline = None,
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="17a31ff294d3c77274091c5e078713fc06ef5cd2/0_0_1999_1200",
+          sizes=List(1000, 500)
+        )
+      )
+    )
+
+    Ok(views.html.info.supporterAustralia(
+      heroOrientated,
+      TouchpointBackend.Normal.catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters)
+      ),
+      pageImages))
+  }
+
+
   def supporterUSA = CachedAction { implicit request =>
     implicit val countryGroup = US
 
