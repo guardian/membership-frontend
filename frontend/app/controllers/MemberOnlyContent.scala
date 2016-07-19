@@ -10,15 +10,13 @@ import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services.{GuardianContentService, _}
-import tracking.ActivityTracking
 import views.support.PageInfo
 
-object MemberOnlyContent extends Controller with ActivityTracking
-                                 with LazyLogging {
+object MemberOnlyContent extends Controller with LazyLogging {
 
   val contentApiService = GuardianContentService
 
-  def membershipContent(referringContent: String, membershipAccess: String) = NoCacheAction.async { implicit request =>
+  def membershipContent(referringContent: String, membershipAccess: String) = CachedAction.async { implicit request =>
     val accessOpt = ContentAccess.valueOf(membershipAccess)
     contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
 
@@ -37,7 +35,6 @@ object MemberOnlyContent extends Controller with ActivityTracking
       } yield {
         if (content.fields.exists(_.membershipAccess.nonEmpty)) {
           Ok(views.html.joiner.membershipContent(TouchpointBackend.Normal.catalog, pageInfo, accessOpt, signInUrl, CapiContent(content)))
-            .withSession(request.session.copy(data = request.session.data + (Joiner.JoinReferrer -> referringContent)))
         } else {
           Redirect(referringContent)
         }
