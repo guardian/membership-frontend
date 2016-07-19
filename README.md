@@ -93,7 +93,7 @@ sudo aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu/ --profi
 In an ideal world, your Ubuntu package install would be:
 
 ```
-sudo apt-get install nginx openjdk-7-jdk nodejs npm
+sudo apt-get install nginx openjdk-8-jdk nodejs npm
 ```
 
 #### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
