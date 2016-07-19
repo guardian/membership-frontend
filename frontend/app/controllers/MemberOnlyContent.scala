@@ -34,7 +34,7 @@ object MemberOnlyContent extends Controller with LazyLogging {
         content <- response.content
       } yield {
         if (content.fields.exists(_.membershipAccess.nonEmpty)) {
-          Ok(views.html.joiner.membershipContent(TouchpointBackend.Normal.catalog, pageInfo, accessOpt, signInUrl, CapiContent(content)))
+          Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, CapiContent(content)))
         } else {
           Redirect(referringContent)
         }

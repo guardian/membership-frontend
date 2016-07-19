@@ -7,8 +7,7 @@
 @import views.support.TierPlans._
 @import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
 
-@(catalog: MembershipCatalog,
-    pageInfo: PageInfo,
+@(pageInfo: PageInfo,
     accessOpt: Option[ContentAccess],
     signInUrl: String,
     content: CapiContent
