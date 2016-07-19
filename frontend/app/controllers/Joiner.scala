@@ -3,7 +3,7 @@ package controllers
 import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
-import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
+import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.memsub.BillingPeriod
@@ -12,6 +12,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
+import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
@@ -72,8 +73,16 @@ object Joiner extends Controller with ActivityTracking
       customSignInUrl=Some(signInUrl)
     )
 
-    Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
-      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+    (for {
+      contentURL <- contentRefererOpt if Uri.parse(contentURL).host.exists(_ == "www.theguardian.com")
+      access <- accessOpt
+    } yield {
+      Redirect(routes.MemberOnlyContent.membershipContent(contentURL, access.name))
+    }).getOrElse (
+      Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
+    ).withSession(
+      request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _))
+    )
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
