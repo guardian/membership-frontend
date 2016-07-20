@@ -41,9 +41,9 @@ object AmountHighlightTest extends TestTrait {
     Variant("Amount - 35 highlight","35",0,views.html.fragments.giraffe.contributeAmountButtons(List(10,35,65,100),Some(35))),
     Variant("Amount - 35 highlight descending","35-descending",0,views.html.fragments.giraffe.contributeAmountButtons(List(100,65,35,10),Some(35))),
     Variant("Amount - 100 highlight","100",0,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,100,250),Some(100))),
-    Variant("Amount - 50 highlight","50",0.33,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,100,250),Some(50))),
-    Variant("Amount - 15","15",0.33,views.html.fragments.giraffe.contributeAmountButtons(List(15,35,65,100),Some(35))),
-    Variant("Amount - 40 highlight","40",0.33,views.html.fragments.giraffe.contributeAmountButtons(List(20,40,75,100),Some(40)))
+    Variant("Amount - 50 highlight","50",1,views.html.fragments.giraffe.contributeAmountButtons(List(25,50,100,250),Some(50))),
+    Variant("Amount - 15","15",0,views.html.fragments.giraffe.contributeAmountButtons(List(15,35,65,100),Some(35))),
+    Variant("Amount - 40 highlight","40",0,views.html.fragments.giraffe.contributeAmountButtons(List(20,40,75,100),Some(40)))
   )
 }
 
