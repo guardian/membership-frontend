@@ -7,10 +7,10 @@ Install nginx:
 - Linux: `sudo apt-get install nginx`
 - Mac OSX: `brew install nginx`
 
-Make sure you have a `sites-enabled/` folder under your nginx home. This varies depending on your setup but should be under:
+The ngninx home directory will contain the nginx configuration and will need to be modified for membership. Depending on your system it founs under:
 
-- Linux: `/etc/nginx/sites-enabled`
-- Mac OSX: `/usr/local/etc/nginx/sites-enabled`
+- Linux: `/etc/nginx/`
+- Mac OSX: `/usr/local/etc/nginx/`
 
 Make sure your `nginx.conf` (found in your nginx home) contains the following line in the `http{...}` block:
 
@@ -24,7 +24,7 @@ If you want an automated setup run (from the project root):
 ./nginx/setup.sh
 ```
 
-Or follow the steps in that file.
+Or follow the steps in that file. This will create a `site-enabled directory` in you nginx home directory.
 
 ### Update your hosts file
 
@@ -36,7 +36,7 @@ Add the following to your hosts file in `/etc/hosts`:
 ```
 
 ### Start NGINX
-`./nginx/setup.sh` will start nginx as its final step. To manually start it run `sudo nginx`.
+`./nginx/setup.sh` will start nginx as its final step. To manually start it run `sudo nginx` or `sudo systemctl nginx start` depending on your system.
 
 ### NGINX error messages
 
