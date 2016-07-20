@@ -15,7 +15,7 @@ The ngninx home directory will contain the nginx configuration and will need to 
 Make sure your `nginx.conf` (found in your nginx home) contains the following line in the `http{...}` block:
 
 ```
-include sites-enabled/*
+include sites-enabled/*;
 ```
 
 If you want an automated setup run (from the project root):
