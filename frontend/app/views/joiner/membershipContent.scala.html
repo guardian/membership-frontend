@@ -25,7 +25,7 @@
     <main role="main">
         <div class="l-constrained">
             <section class="page-section">
-                <div class="page-section__lead-in u-inset">
+                <div class="page-section__lead-in u-horizontal-inset">
                     <div class="content__labels">
                         <div class="content__section-label">
                             <a class="content__section-label__link" data-link-name="article section" href="@content.primaryTag.webUrl">
@@ -34,10 +34,11 @@
                     </div>
                 </div>
                 <div class="page-section__content">
-                    <h1 class="content__headline">@Html(content.headline)</h1>
+                    <h1 class="content__headline u-mobile-gutter">@Html(content.headline)</h1>
                     @for(trail <- content.trailText) {
-                        <p class="content__standfirst">@Html(trail)</p>
+                        <p class="content__standfirst u-mobile-gutter">@Html(trail)</p>
                     }
+                </div><div class="page-section__content">
                     @for(picture <- content.mainPicture) {
                         <img src="@picture.defaultImage" srcset="@picture.srcset" sizes="25vw" alt="@picture.altText" class="responsive-img"/>
                     }
@@ -47,18 +48,18 @@
         <div class="challenge-panel u-cf">
             <div class="l-constrained">
                 <div class="page-section__content">
-                    <h3>
+                    <h3 class="u-mobile-gutter">
                         <svg height="47" width="120">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-hello"></use>
                         </svg>
                     </h3>
-                    <p class="h-intro promo-tertiary__description">
+                    <p class="h-intro promo-tertiary__description u-mobile-gutter">
                         This content is exclusive to Guardian Members. Get closer
                         to our journalists, our journalism and other members, and
                         access behind-the-scenes insights into the Guardian by
                         joining us today.
                     </p>
-                    <div class="u-cf">
+                    <div class="u-cf u-mobile-gutter">
                         <a class="action action--no-icon u-no-bottom-margin qa-package-@supporter.slug u-align-left" @actionAttrs>
                             Become a member
                             <svg class="icon-inline action__icon action__icon--right u-no-float">
@@ -74,10 +75,10 @@
         </div>
         <div class="l-constrained">
             <div class="page-section__content">
-                <p class="h-intro promo-tertiary__description">
+                <p class="h-intro promo-tertiary__description u-mobile-gutter">
                     Already a member?
                 </p>
-                <p>
+                <p class="u-mobile-gutter">
                     <a class="action action--secondary action--no-icon u-no-bottom-margin qa-package-@supporter.slug" href="@signInUrl">
                         Sign in
                         <svg class="icon-inline action__icon action__icon--right u-no-float">
