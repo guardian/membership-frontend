@@ -96,6 +96,21 @@
     }
 }
 
+.u-horizontal-inset {
+    padding-left: $gs-gutter/2;
+    padding-right: $gs-gutter/2;
+}
+
+.u-mobile-gutter {
+    padding-left: $gs-gutter/2;
+    padding-right: $gs-gutter/2;
+
+    @include mq(tablet) {
+        padding: 0;
+    }
+}
+
+
 /**
  * Margin resets
  */
