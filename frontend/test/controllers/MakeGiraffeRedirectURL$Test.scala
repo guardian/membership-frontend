@@ -47,7 +47,7 @@ class MakeGiraffeRedirectURL$Test extends Specification {
   "Canada" in {
     val fakeRequest = FakeRequest("GET", "/contribute?test1=a&test2=b")
 
-    MakeGiraffeRedirectURL(fakeRequest, CountryGroup.Canada).toString() must_== "/uk/contribute?test1=a&test2=b"
+    MakeGiraffeRedirectURL(fakeRequest, CountryGroup.Canada).toString() must_== "/ca/contribute?test1=a&test2=b"
   }
 
   "Rest of world" in {
