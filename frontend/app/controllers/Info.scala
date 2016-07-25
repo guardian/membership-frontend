@@ -113,20 +113,7 @@ trait Info extends Controller {
           id="03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
           sizes=List(1000,500)
         )
-      ),
-      ResponsiveImageGroup(
-        name=Some("join"),
-        metadata=Some(Grid.Metadata(
-          description = Some("Polly Toynbee, Guardian columnist"),
-          byline = None,
-          credit = None
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="17a31ff294d3c77274091c5e078713fc06ef5cd2/0_0_1999_1200",
-          sizes=List(1000, 500)
-        )
-      )
-    )
+      ))
 
     Ok(views.html.info.supporterAustralia(
       heroOrientated,
