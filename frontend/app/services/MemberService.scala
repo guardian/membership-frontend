@@ -17,7 +17,7 @@ import com.gu.zuora.rest
 import com.gu.zuora.soap.models.Commands._
 import com.gu.memsub.promo.PromotionMatcher._
 import com.gu.memsub.promo.PromotionApplicator._
-import _root_.services.api.MemberService.{MemberPromoError, MemberError, PendingAmendError}
+import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.memsub._
 import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
 import com.gu.salesforce.Tier.{Partner, Patron}
@@ -26,22 +26,22 @@ import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
-import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
+import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{PaidSubscription, _}
 import org.joda.time.{DateTimeZone, DateTime}
-import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.CampaignCode
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
+
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.util.Failure
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
 import scalaz.syntax.std.option._
@@ -83,14 +83,14 @@ class MemberService(identityService: IdentityService,
                     promoService: PromoService,
                     paymentService: PaymentService,
                     discounter: Discounter,
-                    discountIds: DiscountRatePlanIds) extends api.MemberService with ActivityTracking {
+                    discountIds: DiscountRatePlanIds)
+    extends api.MemberService with ActivityTracking with LazyLogging  {
 
   import EventbriteService._
   import MemberService._
 
   implicit val catalog = catalogService.membershipCatalog
   implicit val productFamily = Membership
-  private val logger = Logger(getClass)
 
   def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
     identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
@@ -101,62 +101,48 @@ class MemberService(identityService: IdentityService,
                             formData: JoinForm,
                             identityRequest: IdentityRequest,
                             fromEventId: Option[String],
-                            campaignCode: Option[CampaignCode]): Future[ContactId] = {
+                            campaignCode: Option[CampaignCode],
+                            tier: Tier): Future[(ContactId, ZuoraSubName)] = {
 
-    val tier = formData.planChoice.tier
-
-    val createContact: Future[ContactId] =
+    def createSalesforceContact(): Future[ContactId] =
       (for {
         user <- identityService.getFullUserDetails(user)(identityRequest)
         contactId <- salesforceService.upsert(user, formData)
       } yield contactId).andThen { case Failure(e) => logger.error(s"Could not create Salesforce contact for user ${user.id}")}
 
-    Timing.record(salesforceService.metrics, "createMember") {
-      formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id))
+    def createStripeCustomer(paid: PaidMemberJoinForm): Future[Customer] =
+      stripeService.Customer.create(user.id, paid.payment.token).andThen {
+        case Failure(e) => logger.error(s"Could not create Stripe customer for user ${user.id}")}
 
-      val contactId = formData match {
+    def createZuoraSubscription(sfContact: ContactId): Future[String] = {
+      (formData match {
         case paid: PaidMemberJoinForm =>
           for {
-            customer <- stripeService.Customer.create(user.id, paid.payment.token)
-            cId <- createContact
-            subscription <- createPaidSubscription(cId, paid, paid.name, paid.tier, customer, campaignCode)
-            updatedMember <- salesforceService.updateMemberStatus(user, tier, Some(customer))
-          } yield cId
+            stripeCustomer <- createStripeCustomer(paid)
+            zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode)
+            _ <- salesforceService.updateMemberStatus(user, tier, Some(stripeCustomer)) // FIXME: This should go!
+          } yield zuoraSub.subscriptionName
 
         case _ =>
           for {
-            cId <- createContact
-            subscription <- createFreeSubscription(cId, formData)
-            updatedMember <- salesforceService.updateMemberStatus(user, tier, None)
-          } yield cId
-      }
-
-      contactId.map { cId =>
-        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
-
-        salesforceService.metrics.putSignUp(tier)
-        trackRegistration(formData, tier, cId, user, campaignCode)
-        cId
-      }
-    }.andThen {
-      case Success(contactId) =>
-        logger.debug(s"createMember() success user=${user.id} memberAccount=$contactId")
-        fromEventId.flatMap(EventbriteService.getBookableEvent).foreach { event =>
-          event.service.wsMetrics.put(s"join-${tier.name}-event", 1)
-
-          val memberData = MemberData(
-            salesforceContactId = contactId.salesforceContactId,
-            identityId = user.id,
-            tier = tier,
-            campaignCode = campaignCode)
-
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
-        }
-
-      case Failure(error) => // do not log payment errors due to user's card
-        if (!(error.isInstanceOf[PaymentGatewayError] || error.isInstanceOf[Stripe.Error]))
-          salesforceService.metrics.putFailSignUp(tier)
+            zuoraSub <- createFreeSubscription(sfContact, formData)
+            _ <- salesforceService.updateMemberStatus(user, tier, None) // FiXME: This should go!
+          } yield zuoraSub.subscriptionName
+      }).andThen { case Failure(e) => logger.error(s"Could not create Zuora subscription for user ${user.id}")}
     }
+
+    def updateIdentity(): Future[Unit] = {
+      Future {
+        formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // 2. Update user password (social signin)
+        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // 4. Update Identity user details in MongoDB
+      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}")}
+    }
+
+    for {
+      sfContact     <- createSalesforceContact()
+      zuoraSubName  <- createZuoraSubscription(sfContact)
+      _             <- updateIdentity()
+    } yield (sfContact, zuoraSubName)
   }
 
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
