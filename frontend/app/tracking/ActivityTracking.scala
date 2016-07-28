@@ -20,6 +20,7 @@ import model.GenericSFContact
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
+import services.EventbriteService
 import utils.CampaignCode
 import utils.TestUsers.isTestUser
 
@@ -238,6 +239,28 @@ trait ActivityTracking {
       )
 
     track(MemberActivity("membershipRegistration", trackingInfo), user)
+  }
+
+  def trackRegistrationViaEvent(
+      contactId: ContactId,
+      user: IdMinimalUser,
+      fromEventId: Option[String],
+      campaignCode: Option[CampaignCode],
+      tier: Tier) {
+
+    import EventbriteService._
+
+    fromEventId.flatMap(EventbriteService.getBookableEvent).foreach { event =>
+      event.service.wsMetrics.put(s"join-${tier.name}-event", 1)
+
+      val memberData = MemberData(
+        salesforceContactId = contactId.salesforceContactId,
+        identityId = user.id,
+        tier = tier,
+        campaignCode = campaignCode)
+
+      track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
+    }
   }
 
   def trackUpgrade(member: GenericSFContact, subscription: Subscription with PaymentStatus[MembershipPlan[Status, Tier]],

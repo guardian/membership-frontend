@@ -25,13 +25,16 @@ import utils.CampaignCode
 trait MemberService {
   import MemberService._
 
+  type ZuoraSubName = String
+
   def country(contact: GenericSFContact)(implicit i: IdentityRequest): Future[Country]
 
   def createMember(user: IdMinimalUser,
                    formData: JoinForm,
                    identityRequest: IdentityRequest,
                    fromEventId: Option[String],
-                   campaignCode: Option[CampaignCode]): Future[ContactId]
+                   campaignCode: Option[CampaignCode],
+                   tier: Tier): Future[(ContactId, ZuoraSubName)]
 
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]

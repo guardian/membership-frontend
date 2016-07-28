@@ -8,6 +8,7 @@ import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.{CountryGroup, GBP}
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.promo.{NewUsers, PromoCode}
+import com.gu.memsub.util.Timing
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -213,11 +214,20 @@ object Joiner extends Controller with ActivityTracking
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+    logger.info(s"User ${request.user.id} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
-    memberService.createMember(request.user, formData, idRequest, eventId, CampaignCode.fromRequest)
-      .map{_ => onSuccess} recover { // errors due to user's card are logged at WARN level as they are not logic errors
+
+    Timing.record(salesforceService.metrics, "createMember") {
+      memberService.createMember(request.user, formData, idRequest, eventId, CampaignCode.fromRequest, tier).map {
+        case (sfContactId, zuoraSubName) =>
+          logger.info(s"User ${request.user.id} successfully became ${tier.name} $zuoraSubName.")
+          salesforceService.metrics.putSignUp(tier)
+          trackRegistration(formData, tier, sfContactId, request.user, CampaignCode.fromRequest)
+          trackRegistrationViaEvent(sfContactId, request.user, eventId, CampaignCode.fromRequest, tier)
+          onSuccess
+      }.recover { // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
           logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
@@ -225,8 +235,10 @@ object Joiner extends Controller with ActivityTracking
         case error: PaymentGatewayError => handlePaymentGatewayError(error, request.user.id)
 
         case error =>
-          logger.error(s"User ${request.user.id} could not become a member: ${idRequest.trackingParameters}", error)
+          salesforceService.metrics.putFailSignUp(tier)
+          logger.error(s"User ${request.user.id} could not become ${tier.name} member: ${idRequest.trackingParameters}", error)
           Forbidden
+      }
     }
   }
 
