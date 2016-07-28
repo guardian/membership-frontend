@@ -108,11 +108,11 @@ class MemberService(identityService: IdentityService,
       (for {
         user <- identityService.getFullUserDetails(user)(identityRequest)
         contactId <- salesforceService.upsert(user, formData)
-      } yield contactId).andThen { case Failure(e) => logger.error(s"Could not create Salesforce contact for user ${user.id}")}
+      } yield contactId).andThen { case Failure(e) => logger.error(s"Could not create Salesforce contact for user ${user.id}", e)}
 
     def createStripeCustomer(paid: PaidMemberJoinForm): Future[Customer] =
       stripeService.Customer.create(user.id, paid.payment.token).andThen {
-        case Failure(e) => logger.error(s"Could not create Stripe customer for user ${user.id}")}
+        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)}
 
     def createZuoraSubscription(sfContact: ContactId): Future[String] = {
       (formData match {
@@ -128,14 +128,14 @@ class MemberService(identityService: IdentityService,
             zuoraSub <- createFreeSubscription(sfContact, formData)
             _ <- salesforceService.updateMemberStatus(user, tier, None) // FiXME: This should go!
           } yield zuoraSub.subscriptionName
-      }).andThen { case Failure(e) => logger.error(s"Could not create Zuora subscription for user ${user.id}")}
+      }).andThen { case Failure(e) => logger.error(s"Could not create Zuora subscription for user ${user.id}", e)}
     }
 
     def updateIdentity(): Future[Unit] = {
       Future {
         formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // 2. Update user password (social signin)
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // 4. Update Identity user details in MongoDB
-      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}")}
+      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e)}
     }
 
     for {
