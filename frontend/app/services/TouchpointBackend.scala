@@ -62,7 +62,7 @@ object TouchpointBackend {
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
     val promoService = new PromoService(promoCollection, catalogService.membershipCatalog, discounter)
 
-    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient, memRatePlanIds)
+    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient)
     val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
     val paymentService = new PaymentService(stripeService, zuoraService, catalogService)
     val salesforceService = new SalesforceService(backend.salesforce)
