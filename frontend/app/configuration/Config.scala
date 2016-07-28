@@ -1,22 +1,16 @@
 package configuration
-
-import com.github.nscala_time.time.Imports._
 import com.gu.config._
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
-import com.gu.memsub.promo._
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import com.getsentry.raven.dsn.Dsn
-import com.gu.memsub.Paper
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
-
-import scalaz.syntax.std.option._
 import services._
 
 import scala.util.Try
@@ -159,8 +153,9 @@ object Config {
   def discountRatePlanIds(env: String): DiscountRatePlanIds =
     DiscountRatePlanIds.fromConfig(config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds"))
 
-  def paperRatePlanIds(env: String) =
-    PaperRatePlanIds(ProductFamilyRatePlanIds.config(Some(config))(env, Paper))
+  def subsProductIds(env: String): SubscriptionsProductIds =
+    SubscriptionsProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds.subscriptions"))
+
 
   object Implicits {
     implicit val akkaSystem = Akka.system
