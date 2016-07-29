@@ -3,7 +3,7 @@ package services
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
 import com.gu.i18n.{Country, CountryGroup, Currency}
-import com.gu.identity.play.IdMinimalUser
+import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.MembershipCatalog
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
@@ -97,52 +97,68 @@ class MemberService(identityService: IdentityService,
       .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
       .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
 
-  override def createMember(user: IdMinimalUser,
-                            formData: JoinForm,
-                            identityRequest: IdentityRequest,
-                            fromEventId: Option[String],
-                            campaignCode: Option[CampaignCode],
-                            tier: Tier): Future[(ContactId, ZuoraSubName)] = {
+  override def createMember(
+      user: IdMinimalUser,
+      formData: JoinForm,
+      identityRequest: IdentityRequest,
+      fromEventId: Option[String],
+      campaignCode: Option[CampaignCode],
+      tier: Tier): Future[(ContactId, ZuoraSubName)] = {
 
-    def createSalesforceContact(): Future[ContactId] =
-      (for {
-        user <- identityService.getFullUserDetails(user)(identityRequest)
-        contactId <- salesforceService.upsert(user, formData)
-      } yield contactId).andThen { case Failure(e) => logger.error(s"Could not create Salesforce contact for user ${user.id}", e)}
+    def getIdentityUserDetails(): Future[IdUser] =
+      identityService.getFullUserDetails(user)(identityRequest).andThen { case Failure(e) =>
+        logger.error(s"Could not get Identity user details for user ${user.id}", e)}
+
+    def createSalesforceContact(user: IdUser): Future[ContactId] =
+      salesforceService.upsert(user, formData).andThen { case Failure(e) =>
+        logger.error(s"Could not create Salesforce contact for user ${user.id}", e)}
 
     def createStripeCustomer(paid: PaidMemberJoinForm): Future[Customer] =
       stripeService.Customer.create(user.id, paid.payment.token).andThen {
         case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)}
 
-    def createZuoraSubscription(sfContact: ContactId): Future[String] = {
-      (formData match {
-        case paid: PaidMemberJoinForm =>
-          for {
-            stripeCustomer <- createStripeCustomer(paid)
-            zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode)
-            _ <- salesforceService.updateMemberStatus(user, tier, Some(stripeCustomer)) // FIXME: This should go!
-          } yield zuoraSub.subscriptionName
-
-        case _ =>
-          for {
-            zuoraSub <- createFreeSubscription(sfContact, formData)
-            _ <- salesforceService.updateMemberStatus(user, tier, None) // FiXME: This should go!
-          } yield zuoraSub.subscriptionName
-      }).andThen { case Failure(e) => logger.error(s"Could not create Zuora subscription for user ${user.id}", e)}
-    }
-
-    def updateIdentity(): Future[Unit] = {
+    def updateIdentity(): Future[Unit] =
       Future {
-        formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // 2. Update user password (social signin)
-        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // 4. Update Identity user details in MongoDB
+        formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // Update user password (social signin)
+        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // Update Identity user details in MongoDB
       }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e)}
-    }
 
-    for {
-      sfContact     <- createSalesforceContact()
-      zuoraSubName  <- createZuoraSubscription(sfContact)
-      _             <- updateIdentity()
-    } yield (sfContact, zuoraSubName)
+    def createPaidZuoraSubscription(sfContact: ContactId, stripeCustomer: Customer, paid: PaidMemberJoinForm): Future[String] =
+      (for {
+        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode)
+      } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
+        logger.error(s"Could not create paid Zuora subscription for user ${user.id}", e)}
+
+    def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm) =
+      (for {
+        zuoraSub <- createFreeSubscription(sfContact, formData)
+      } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
+        logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)}
+
+    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
+      salesforceService.updateMemberStatus(user, tier, stripeCustomer).andThen { case Failure(e) =>
+        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)}
+
+    formData match {
+      case paid: PaidMemberJoinForm => //
+        for {
+          stripeCustomer  <- createStripeCustomer(paid)
+          idUser          <- getIdentityUserDetails
+          sfContact       <- createSalesforceContact(idUser)
+          zuoraSubName    <- createPaidZuoraSubscription(sfContact, stripeCustomer, paid)
+          _               <- updateSalesforceContactWithMembership(Some(stripeCustomer))  // FIXME: This should go!
+          _               <- updateIdentity()
+        } yield (sfContact, zuoraSubName)
+
+      case _ =>
+        for {
+          idUser          <- getIdentityUserDetails
+          sfContact       <- createSalesforceContact(idUser)
+          zuoraSubName    <- createFreeZuoraSubscription(sfContact, formData)
+          _               <- updateSalesforceContactWithMembership(None)                  // FIXME: This should go!
+          _               <- updateIdentity()
+        } yield (sfContact, zuoraSubName)
+    }
   }
 
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
