@@ -108,6 +108,7 @@ function setAmount(amount) {
 }
 
 function getStuffFromIdentity() {
+    //let IDENTITY_API = 'https://idapi-code-proxy.thegulocal.com/user/me/'
     let IDENTITY_API = 'https://idapi.theguardian.com/user/me/';
     ajax.reqwest({
         url: IDENTITY_API,
@@ -117,7 +118,6 @@ function getStuffFromIdentity() {
     }).then(function (resp) {
         if (resp.user) {
             EMAIL_FIELD.value = resp.user.primaryEmailAddress;
-            NAME_FIELD.value = resp.user.publicFields.displayName;
         }
     })
 }

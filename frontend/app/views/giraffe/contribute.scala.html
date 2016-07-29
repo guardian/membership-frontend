@@ -3,7 +3,8 @@
 @import configuration.Links
 @import com.gu.i18n.CountryGroup
 @import views.support.ChosenVariants
-@(pageInfo: PageInfo, maxAmount: Option[Int], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants, cmpCode: Option[String], intCmpCode: Option[String], years: List[Int])
+@import views.support.IdentityUser
+@(pageInfo: PageInfo, maxAmount: Option[Int], idUser: Option[IdentityUser], countryGroup: CountryGroup, isUAT: Boolean, chosenVariants: ChosenVariants, cmpCode: Option[String], intCmpCode: Option[String], years: List[Int])
 
 @giraffeMain(pageInfo){
 <div class="support-wrapper__outer__a">
@@ -71,9 +72,23 @@
                         Your details</h3>
                     <ul class="u-unstyled">
                         <li class="form-field">
-                            <label for="name" class="label">Full name</label>
+                            <label for="firstName" class="label">First Name</label>
                             <div class="input">
-                                <input type="text" id="name" class="input-text js-name" name="name" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" required>
+                                @idUser.fold {
+                                    <input type="text" id="firstName" class="input-text js-name" name="firstName" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" required>
+                                } { id =>
+                                <input type="text" id="firstName" class="input-text js-name" name="firstName" value=@id.privateFields.firstName  tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" required>
+                                }
+                             </div>
+                        </li>
+                        <li class="form-field">
+                            <label for="lastName" class="label">Last Name</label>
+                            <div class="input">
+                                @idUser.fold {
+                                    <input type="text" id="lastName" class="input-text js-name" name="lastName" tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" required>
+                                } { id =>
+                                    <input type="text" id="lastName" class="input-text js-name" name="lastName" value=@id.privateFields.secondName tabindex="1" aria-required="true" spellcheck="false" autocorrect="off" autocapitalize="off" required>
+                                }
                             </div>
                         </li>
                         <li id="email_field" class="form-field">
