@@ -1,0 +1,67 @@
+@import views.support.PageInfo
+@import com.gu.i18n.CountryGroup
+@import com.gu.membership.PaidMembershipPlans
+@import com.gu.salesforce.Tier.Supporter
+@import com.gu.memsub.Current
+@import views.support.Asset
+
+@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
+  pageInfo: PageInfo,
+  pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+    @* ===== About Supporters ===== *@
+    @fragments.page.heroBanner(heroImage) {
+        Become a Guardian&nbsp;Supporter
+    } {
+        Supporters keep our journalism fearless and free to tell the stories other news organizations won’t
+    }()
+
+
+    @fragments.page.section(hasBorder = false) {
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+    }
+    @fragments.page.section(hasBorder = false, hasBottomPadding = false){
+        <div class="listing__text">
+            <p>The Guardian shines a light on critical, under-reported stories across Australia and the globe.</p>
+            <p>
+                Support stories and projects such as the <a href="http://www.theguardian.com/australia-news/series/healthcare-in-detention">Healthcare in Detention</a>, where Guardian Australia exposed failing​s by​ International Health and Medical Services, the contracted provider of healthcare to asylum seekers ​that ​Australia has detained on the mainland and offshore on Christmas Island, Manus Island and Nauru.​
+            </p>
+
+        </div>
+    }
+
+    @* ===== Ensuring our independence ===== *@
+    @for(img <- pageImages.find(_.name.contains("coral"))) {
+        @fragments.page.sectionCardStack(img, topPadding = false) {
+            <div class="listing__text">
+                <p>
+                    Or, our <a href="http://www.theguardian.com/australia-news/series/reef-on-the-brink">Reef on the brink</a> series, featuring new data
+                    and exclusive photographs mapping the increase in water temperatures causing the mass
+                    coral bleaching on the Great Barrier Reef.
+                </p>
+                <p>Our independence allows us to produce award-winning journalism free from outside influence. Your support is invaluable for us to maintain this.</p>
+                <p>
+                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">Become a Supporter</a>
+                </p>
+            </div>
+        }
+    }
+    @* ===== Join The Guardian and support The Guardian ===== *@
+    @fragments.page.section("If you read the Guardian, join the Guardian",contentHasTopPadding = false) {
+        @fragments.promos.promoQuote(
+            Asset.at("images/common/lenore-taylor-cutout.png"),
+            "Lenore Taylor, Editor, Guardian Australia"
+        ) {
+            <blockquote class="blockquote">
+                By becoming a Guardian Australia Member you join the community of readers who support our independent, fearless journalism and help us continue to cover the important stories, the ones that make a difference but so often don't get told.
+                <cite class="blockquote__citation">Lenore Taylor, Editor, Guardian Australia</cite>
+            </blockquote>
+        }
+    }
+
+    @* ===== Join Today ===== *@
+    @fragments.page.section("What's included") {
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+    }
+}

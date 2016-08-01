@@ -95,6 +95,7 @@ GET            /supporter                             controllers.Info.supporter
 GET            /uk/supporter                          controllers.Info.supporterUK
 GET            /us/supporter                          controllers.Info.supporterUSA
 GET            /eu/supporter                          controllers.Info.supporterEurope
+GET            /au/supporter                          controllers.Info.supporterAustralia
 GET            /:countryGroup/supporter               controllers.Info.supporterFor(countryGroup: CountryGroup)
 GET            /help                                  controllers.Info.help
 GET            /feedback                              controllers.Info.feedback

@@ -86,6 +86,48 @@ trait Info extends Controller {
       pageImages))
   }
 
+  def supporterAustralia = CachedAction { implicit request =>
+    implicit val countryGroup = Australia
+
+    val heroImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
+        byline = None,
+        credit = Some("Carol Cho/AAP")
+      )),
+      availableImages=ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
+    )
+
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("coral"),
+        metadata=Some(Grid.Metadata(
+          description = Some("the Ocean Agency. 7 June 2016: Dying and dead coral after bleaching at Lizard Island, north of Cooktown, on Australia's Great Barrier Reef. The image on the left from March 2016 is the coral after bleaching, the one on the right from May 2016 shows it after it has died and been blanketed by seaweed."),
+          byline = None,
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
+          sizes=List(1000,500)
+        )
+      ))
+
+    Ok(views.html.info.supporterAustralia(
+      heroOrientated,
+      TouchpointBackend.Normal.catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters),
+        navigation = Nav.internationalLandingPageNavigation
+      ),
+      pageImages))
+  }
+
+
   def supporterUSA = CachedAction { implicit request =>
     implicit val countryGroup = US
 

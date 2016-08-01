@@ -65,7 +65,7 @@
             </a>
             <nav id="js-country-switcher" role="navigation" class="js-dropdown-menu nav-popup is-hidden" aria-label="Country switcher">
                 <ul class="nav-popup__list">
-                    @for(countryGroup <- Seq(UK, Europe, US, Canada, RestOfTheWorld)) {
+                    @for(countryGroup <- Seq(UK, Europe, US, Canada, Australia, RestOfTheWorld)) {
                         <li class="nav-popup__item">
                             <a href="@routes.Info.supporterFor(countryGroup)" class="nav-popup__link">@countryGroup.name (@countryGroup.currency.identifier)</a>
                         </li>
