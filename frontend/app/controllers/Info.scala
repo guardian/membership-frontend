@@ -96,7 +96,7 @@ trait Info extends Controller {
         byline = None,
         credit = Some("Carol Cho/AAP")
       )),
-      availableImages=ResponsiveImageGenerator("460e093384cd9ef4202179e716f9916045090b6e/0_0_3549_2130", Seq(2000, 1000))
+      availableImages=ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
@@ -121,7 +121,8 @@ trait Info extends Controller {
       PageInfo(
         title = CopyConfig.copyTitleSupporters,
         url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters)
+        description = Some(CopyConfig.copyDescriptionSupporters),
+        navigation = Nav.internationalLandingPageNavigation
       ),
       pageImages))
   }
