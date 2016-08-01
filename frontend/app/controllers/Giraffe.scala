@@ -28,7 +28,11 @@ object Giraffe extends Controller {
 
 
   val chargeId = "charge_id"
-  val maxAmount: Option[Int] = 2000.some
+
+  def maxAmount(currency: Currency): Option[Int] = currency match {
+    case CountryGroup.Australia.currency => 3500.some
+    case _ => 2000.some
+  }
 
   def contributeRedirect = NoCacheAction { implicit request =>
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
@@ -54,7 +58,8 @@ object Giraffe extends Controller {
       navigation = Seq.empty,
       customSignInUrl = Some((Config.idWebAppUrl / "signin") ? ("skipConfirmation" -> "true"))
     )
-    Ok(views.html.giraffe.contribute(pageInfo,maxAmount,countryGroup,isUAT, chosenVariants, cmp, intCmp, CreditCardExpiryYears(java.time.LocalDate.now().getYear, 10)))
+    val maxAmountInLocalCurrency = maxAmount(countryGroup.currency)
+    Ok(views.html.giraffe.contribute(pageInfo,maxAmountInLocalCurrency,countryGroup,isUAT, chosenVariants, cmp, intCmp, CreditCardExpiryYears(java.time.LocalDate.now().getYear, 10)))
       .withCookies(Test.createCookie(chosenVariants.v1), Test.createCookie(chosenVariants.v2))
   }
 
@@ -100,7 +105,8 @@ object Giraffe extends Controller {
         "cmp" -> f.cmp.mkString,
         "intcmp" -> f.intcmp.mkString
       ) ++ AuthenticationService.authenticatedUserFor(request).map("idUser" -> _.user.id) ++ f.postCode.map("postcode" -> _)
-      val res = stripe.Charge.create(maxAmount.fold((f.amount*100).toInt)(max => Math.min(max * 100, (f.amount * 100).toInt)), f.currency, f.email, "Your contribution", f.token, metadata)
+
+      val res = stripe.Charge.create(maxAmount(f.currency).fold((f.amount*100).toInt)(max => Math.min(max * 100, (f.amount * 100).toInt)), f.currency, f.email, "Your contribution", f.token, metadata)
 
       AuthenticationService.authenticatedUserFor(request).map { user =>
         identity.updateUserMarketingPreferences(IdentityRequest(request), user, f.marketing)
