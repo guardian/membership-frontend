@@ -5,12 +5,18 @@ import play.api.mvc._
 
 object Giraffe extends Controller {
 
-  def redirectToContributions() = CachedAction { implicit request =>
-    MovedPermanently("https://contribute.theguardian.com/")
+  val CampaignCodesToForward = Set("INT", "CMP", "mcopy")
+
+  def redirectWithCampaignCodes(contributionsUrl: String)(implicit request: RequestHeader): Result = {
+    Redirect(contributionsUrl, request.queryString.filterKeys(CampaignCodesToForward), MOVED_PERMANENTLY)
   }
 
-  def redirectToContributionsFor(countryGroup: CountryGroup) = CachedAction { implicit request =>
-    MovedPermanently(s"https://contribute.theguardian.com/${countryGroup.id}")
+  def redirectToContributions() = NoCacheAction { implicit request =>
+    redirectWithCampaignCodes("https://contribute.theguardian.com/")
+  }
+
+  def redirectToContributionsFor(countryGroup: CountryGroup) = NoCacheAction { implicit request =>
+    redirectWithCampaignCodes(s"https://contribute.theguardian.com/${countryGroup.id}")
   }
 
 }
