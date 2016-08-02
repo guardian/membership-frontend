@@ -62,7 +62,6 @@ module.exports = function (grunt) {
 
                 entry: {
                     main: "./src/main",
-                    giraffeMain: "./src/giraffeMain",
                     tools: './src/tools'
                 }
             }
