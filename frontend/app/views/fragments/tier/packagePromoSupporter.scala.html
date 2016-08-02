@@ -1,4 +1,4 @@
-@import com.gu.i18n.Currency
+@import model.Benefits
 @import com.gu.memsub.Current
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
@@ -29,8 +29,9 @@
             <p>Support the independence of the Guardian and our award-winning journalism</p>
             <h4 class="u-margin-top">Benefits:</h4>
             <ul class="o-bulleted-list">
-                <li>Welcome pack, card and gift</li>
-                <li>Regular Members updates</li>
+                @for(benefit <- Benefits.promoForCountry(cg)){
+                    <li>@benefit.title</li>
+                }
             </ul>
         </div>
         <div class="package-promo__actions">
