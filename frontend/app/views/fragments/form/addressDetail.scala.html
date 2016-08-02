@@ -78,7 +78,7 @@
         </div>
 
         <div class="form-field">
-            <label class="label @if(!addressRequired){optional-marker}" for="town-@(formType)">Town</label>
+            <label class="label js-town-label @if(!addressRequired){optional-marker}" for="town-@(formType)">Town</label>
             <input type="text"
                    name="@(formType).town"
                    value="@town"
