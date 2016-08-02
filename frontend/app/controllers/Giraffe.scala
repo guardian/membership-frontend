@@ -5,7 +5,7 @@ import play.api.mvc._
 
 object Giraffe extends Controller {
 
-  val CampaignCodesToForward = Set("INT", "CMP", "mcopy")
+  val CampaignCodesToForward = Set("INTCMP", "CMP", "mcopy")
 
   def redirectWithCampaignCodes(contributionsUrl: String)(implicit request: RequestHeader): Result = {
     Redirect(contributionsUrl, request.queryString.filterKeys(CampaignCodesToForward), MOVED_PERMANENTLY)
