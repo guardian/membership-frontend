@@ -9,26 +9,6 @@ define([
     };
 
     /**
-     * is a number less than fifty (for giraffe)
-     */
-    var giraffe = function (element) {
-        var hiddenField = document.querySelector('.js-amount-hidden');
-        var amount = parseFloat(element.value);
-        var hasMax = element.hasAttribute('data-max');
-        var max = element.getAttribute('data-max');
-        if (element.value == '') {
-            amount = parseFloat(hiddenField.value);
-            console.log(amount);
-        }
-        element.value = amount.toFixed(2);
-
-        if (amount >= 1 && !hasMax || amount <= max) {
-            return true;
-        }
-        return false;
-    };
-
-    /**
      * use stripe lib utility to check for a valid looking credit card number
      * @param cardElem
      * @returns {*}
@@ -94,7 +74,6 @@ define([
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,
         validCreditCardYear: validCreditCardYear,
-        giraffe: giraffe,
         native: native
     };
 });
