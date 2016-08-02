@@ -13,6 +13,7 @@ import views.support.Pricing._
 object DisplayText {
   implicit class TierCopy(tier: Tier) {
     def benefits = Benefits.forTier(tier)
+    def benefitsForCountry(countryGroup: CountryGroup) = Benefits.forTierAndCountry(tier,countryGroup)
     def benefitsExcluding(tierOpt: Option[Tier]) = {
       val exclude = tierOpt.map(t => t.benefits).getOrElse(Seq())
       benefits.filter(!exclude.contains(_))

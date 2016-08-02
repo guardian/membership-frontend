@@ -1,5 +1,6 @@
 package model
 
+import com.gu.i18n.CountryGroup
 import com.gu.salesforce.Tier
 import com.gu.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
@@ -14,11 +15,22 @@ object Benefits {
     case Patron() => Benefits.patron
   }
 
+  def promoForCountry(cg: CountryGroup) = cg match {
+    case CountryGroup.Australia => ausSupporter
+    case _ => supporterMinimal
+  }
+
+  def forTierAndCountry(tier: Tier, cg: CountryGroup) = (tier,cg) match {
+    case (Supporter(), CountryGroup.Australia) => ausSupporter
+    case (tier,CountryGroup.UK) => forTier(tier)
+    case (tier,_) => forTier(tier).filterNot(b=>marketedOnlyToUK.contains(b))
+  }
   val DiscountTicketTiers = Set[Tier](Staff(), Partner(), Patron())
   val PriorityBookingTiers = DiscountTicketTiers
   val ComplimentaryTicketTiers = Set[Tier](Partner(), Patron())
 
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
+  val welcomeDog = Benefit("welcome_pack", "Welcome letter and First Dog on the Moon certificate")
   val accessTicket = Benefit("access_tickets", "Access to tickets")
   val liveStream = Benefit("live_stream", "Access to live stream")
   val emailUpdates = Benefit("email_updates", "Regular member emails")
@@ -45,6 +57,16 @@ object Benefits {
     liveStream,
     accessTicket,
     offersCompetitions,
+    emailUpdates
+  )
+
+  val ausSupporter = Seq(
+    welcomeDog,
+    emailUpdates
+  )
+
+  val supporterMinimal = Seq(
+    welcomePack,
     emailUpdates
   )
   val partner = Seq(
