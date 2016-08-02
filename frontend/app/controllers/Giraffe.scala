@@ -2,21 +2,16 @@ package controllers
 
 import com.gu.i18n._
 import play.api.mvc._
+import tracking.RedirectWithCampaignCodes._
 
 object Giraffe extends Controller {
 
-  val CampaignCodesToForward = Set("INTCMP", "CMP", "mcopy")
-
-  def redirectWithCampaignCodes(contributionsUrl: String)(implicit request: RequestHeader): Result = {
-    Redirect(contributionsUrl, request.queryString.filterKeys(CampaignCodesToForward), MOVED_PERMANENTLY)
-  }
-
   def redirectToContributions() = NoCacheAction { implicit request =>
-    redirectWithCampaignCodes("https://contribute.theguardian.com/")
+    redirectWithCampaignCodes("https://contribute.theguardian.com/", MOVED_PERMANENTLY)
   }
 
   def redirectToContributionsFor(countryGroup: CountryGroup) = NoCacheAction { implicit request =>
-    redirectWithCampaignCodes(s"https://contribute.theguardian.com/${countryGroup.id}")
+    redirectWithCampaignCodes(s"https://contribute.theguardian.com/${countryGroup.id}", MOVED_PERMANENTLY)
   }
 
 }
