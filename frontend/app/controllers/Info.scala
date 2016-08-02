@@ -122,7 +122,7 @@ trait Info extends Controller {
         title = CopyConfig.copyTitleSupporters,
         url = request.path,
         description = Some(CopyConfig.copyDescriptionSupporters),
-        navigation = Nav.internationalLandingPageNavigation
+        navigation = Nil
       ),
       pageImages))
   }
