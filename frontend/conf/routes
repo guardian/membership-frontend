@@ -116,7 +116,7 @@ GET            /subscriber-offer                      controllers.Redirects.home
 GET            /about                                 controllers.Redirects.homepageRedirect
 GET            /founder                               controllers.VanityUrl.redirect
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
-GET            /join                                  controllers.Redirects.homepageRedirect
+GET            /join                                  controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 
 GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 
