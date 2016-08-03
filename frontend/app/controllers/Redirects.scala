@@ -9,7 +9,7 @@ trait Redirects extends Controller {
   def homepageRedirect = CachedAction(MovedPermanently("/"))
 
   def supporterRedirect = CachedAction {
-    MovedPermanently(routes.Info.supporterRedirect.path)
+    MovedPermanently(routes.Info.supporterRedirect(None).path)
   }
 
   def redirectToSupporterPage(countryGroup: CountryGroup): Call = {
@@ -17,17 +17,8 @@ trait Redirects extends Controller {
       case CountryGroup.UK => routes.Info.supporterUK()
       case CountryGroup.US => routes.Info.supporterUSA()
       case CountryGroup.Europe => routes.Info.supporterEurope()
+      case CountryGroup.Australia => routes.Info.supporterAustralia()
       case _ => routes.Info.supporterFor(countryGroup)
-    }
-  }
-
-  def getRedirectCountryCodeGiraffe(countryGroup: CountryGroup): CountryGroup = {
-    countryGroup match {
-      case CountryGroup.UK => CountryGroup.UK
-      case CountryGroup.US => CountryGroup.US
-      case CountryGroup.Australia => CountryGroup.Australia
-      case CountryGroup.Europe => CountryGroup.Europe
-      case _ => CountryGroup.UK
     }
   }
 

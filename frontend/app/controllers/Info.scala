@@ -18,10 +18,9 @@ import scala.concurrent.Future
 import utils.RequestCountry._
 
 trait Info extends Controller {
-  def supporterRedirect = NoCacheAction { implicit request =>
-    val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
-
-    redirectWithCampaignCodes(redirectToSupporterPage(countryGroup).url, SEE_OTHER)
+  def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
+    val determinedCountryGroup = (countryGroup orElse request.getFastlyCountry).getOrElse(CountryGroup.RestOfTheWorld)
+    redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
   }
 
   def supporterUK = CachedAction { implicit request =>
