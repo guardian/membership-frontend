@@ -12,6 +12,7 @@ import services.{AuthenticationService, EmailService, GuardianContentService, To
 import views.support.{Asset, PageInfo}
 import com.netaporter.uri.dsl._
 import com.netaporter.uri.Uri
+import tracking.RedirectWithCampaignCodes._
 
 import scala.concurrent.Future
 import utils.RequestCountry._
@@ -20,15 +21,7 @@ trait Info extends Controller {
   def supporterRedirect = NoCacheAction { implicit request =>
     val countryGroup = request.getFastlyCountry.getOrElse(CountryGroup.RestOfTheWorld)
 
-    val baseUrl: Uri = redirectToSupporterPage(countryGroup).absoluteURL.withScheme("https")
-    val paramsToPropagate = Seq("INTCMP", "CMP", "mcopy")
-    val urlWithParams = paramsToPropagate.foldLeft[Uri](baseUrl) { (url, param) =>
-      // No need to filter out the params that aren't present because if the `?` method gets a key-value tuple
-      // with value of None, that parameter will not be rendered when toString is called
-      url ? (param -> request.getQueryString(param))
-    }
-
-    Redirect(urlWithParams, SEE_OTHER)
+    redirectWithCampaignCodes(redirectToSupporterPage(countryGroup).url, SEE_OTHER)
   }
 
   def supporterUK = CachedAction { implicit request =>
