@@ -98,7 +98,7 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("coral"),
         metadata=Some(Grid.Metadata(
-          description = Some("the Ocean Agency. 7 June 2016: Dying and dead coral after bleaching at Lizard Island, north of Cooktown, on Australia's Great Barrier Reef. The image on the left from March 2016 is the coral after bleaching, the one on the right from May 2016 shows it after it has died and been blanketed by seaweed."),
+          description = Some("The impact of coral bleaching at Lizard Island on the Great Barrier Reef: (left) the coral turns white, known as 'bleaching', in March 2016; (right) the dead coral is blanketed by seaweed in May 2016"),
           byline = None,
           credit = None
         )),
