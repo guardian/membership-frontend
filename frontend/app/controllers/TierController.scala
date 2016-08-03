@@ -72,7 +72,7 @@ object TierController extends Controller with ActivityTracking
       cg <- request.getIdentityCountryGroup
     } yield {
       if (cg.exists(_ != CountryGroup.UK) && isFreeSubscriber)
-        Redirect(routes.Info.supporterRedirect)
+        Redirect(routes.Info.supporterRedirect(cg))
       else
         Ok(views.html.tier.change(request.subscriber.subscription.plan.tier, catalog))
     }
