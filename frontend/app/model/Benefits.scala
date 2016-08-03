@@ -30,7 +30,7 @@ object Benefits {
   val ComplimentaryTicketTiers = Set[Tier](Partner(), Patron())
 
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
-  val welcomeDog = Benefit("welcome_pack", "Welcome letter and First Dog on the Moon certificate")
+  val welcomeDog = Benefit("welcome_pack", "Welcome pack")
   val accessTicket = Benefit("access_tickets", "Access to tickets")
   val liveStream = Benefit("live_stream", "Access to live stream")
   val emailUpdates = Benefit("email_updates", "Regular member emails")
