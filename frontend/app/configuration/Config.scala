@@ -31,6 +31,7 @@ object Config {
   val guardianShortDomain = config.getString("guardian.shortDomain")
 
   val membershipUrl = config.getString("membership.url")
+  val membershipSupporterUrl = config.getString("membership.supporter.url")
   val membershipHost = Uri.parse(Config.membershipUrl).host.get
 
   val membersDataAPIUrl = config.getString("members-data-api.url")

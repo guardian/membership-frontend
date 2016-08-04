@@ -60,8 +60,8 @@ object Social {
   )
 
   val joinThankyou: Set[Social] = Set(
-    Email("I'm the newest Guardian member", s"I'm the newest Guardian member ${Config.membershipUrl}"),
-    Twitter(s"I'm the newest Guardian member ${Config.membershipUrl} ${SocialConfig.twitterHashtag}"),
-    Facebook(Config.membershipUrl)
+    Email("I'm the newest Guardian member", s"I'm the newest Guardian member ${Config.membershipSupporterUrl}"),
+    Twitter(s"I'm the newest Guardian member ${Config.membershipSupporterUrl} ${SocialConfig.twitterHashtag}"),
+    Facebook(Config.membershipSupporterUrl)
   )
 }
