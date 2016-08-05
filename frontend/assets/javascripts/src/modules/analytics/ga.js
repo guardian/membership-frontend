@@ -3,8 +3,7 @@ define(['src/utils/user'], function(user) {
     'use strict';
 
     var dimensions = {
-        signedIn: 'dimension1',
-        member: 'dimension2'
+        signedIn: 'dimension1'
     };
 
     function init() {
@@ -34,6 +33,9 @@ define(['src/utils/user'], function(user) {
 
         ga('set', dimensions.signedIn, isLoggedIn.toString());
 
+        ga('send', 'pageview');
+
+        /* Removed till we know what dimension name will identify the membership tier.
         if(isLoggedIn) {
             user.getMemberDetail(function(memberDetail, hasTier) {
                 ga('set', dimensions.member, hasTier.toString());
@@ -43,6 +45,7 @@ define(['src/utils/user'], function(user) {
             ga('set', dimensions.member, 'false');
             ga('send', 'pageview');
         }
+        */
     }
 
     return {
