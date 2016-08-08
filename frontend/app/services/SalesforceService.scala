@@ -1,10 +1,9 @@
 package services
 
 import com.gu.i18n.Country._
-import com.gu.identity.play.{IdMinimalUser, IdUser}
+import com.gu.identity.play.IdUser
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
-import com.gu.stripe.Stripe.Customer
 import forms.MemberForm.JoinForm
 import model.GenericSFContact
 import monitoring.MemberMetrics
@@ -36,18 +35,6 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
 
   override def upsert(user: IdUser, joinData: JoinForm): Future[ContactId] =
     upsert(user.id, initialData(user, joinData))
-
-  override def updateMemberStatus(user: IdMinimalUser, tier: Tier, customer: Option[Customer]): Future[ContactId] =
-    upsert(user.id, memberData(tier, customer))
-
-  private def memberData(tier: Tier, customerOpt: Option[Customer]): JsObject = Json.obj(
-    Keys.TIER -> tier.name
-  ) ++ customerOpt.map { customer =>
-    Json.obj(
-      Keys.STRIPE_CUSTOMER_ID -> customer.id,
-      Keys.DEFAULT_CARD_ID -> customer.card.id
-    )
-  }.getOrElse(Json.obj())
 
   private def initialData(user: IdUser, formData: JoinForm): JsObject = {
     Seq(Json.obj(
