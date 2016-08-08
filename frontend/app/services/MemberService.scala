@@ -135,6 +135,10 @@ class MemberService(identityService: IdentityService,
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
         logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)}
 
+    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
+      salesforceService.updateMemberStatus(user, tier, stripeCustomer).andThen { case Failure(e) =>
+        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)}
+
     formData match {
       case paid: PaidMemberJoinForm => //
         for {
@@ -142,6 +146,7 @@ class MemberService(identityService: IdentityService,
           idUser          <- getIdentityUserDetails
           sfContact       <- createSalesforceContact(idUser)
           zuoraSubName    <- createPaidZuoraSubscription(sfContact, stripeCustomer, paid)
+          _               <- updateSalesforceContactWithMembership(Some(stripeCustomer))  // FIXME: This should go!
           _               <- updateIdentity()
         } yield (sfContact, zuoraSubName)
 
@@ -150,6 +155,7 @@ class MemberService(identityService: IdentityService,
           idUser          <- getIdentityUserDetails
           sfContact       <- createSalesforceContact(idUser)
           zuoraSubName    <- createFreeZuoraSubscription(sfContact, formData)
+          _               <- updateSalesforceContactWithMembership(None)                  // FIXME: This should go!
           _               <- updateIdentity()
         } yield (sfContact, zuoraSubName)
     }
@@ -482,6 +488,7 @@ class MemberService(identityService: IdentityService,
       promo = promoService.validateMany[Upgrades](country, planChoice.productRatePlanId)(form.promoCode, form.trackingPromoCode).toOption.flatten
       command <- EitherT(amend(sub, planChoice, form.featureChoice, promo).map(\/.right))
       _ <- zuoraService.upgradeSubscription(command).liftM
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, None).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
       addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
