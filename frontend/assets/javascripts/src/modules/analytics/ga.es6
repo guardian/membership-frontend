@@ -12,18 +12,6 @@ const dimensions = {
 };
 
 function create(){
-    const tracker = 'membershipPropertyTracker';
-    ga('create', guardian.googleAnalytics.trackingId, {
-        'allowLinker': true,
-        'name': tracker,
-        'cookieDomain': guardian.googleAnalytics.cookieDomain
-    });
-    return (a,b,c) => ga(tracker+ '.' + a,b,c);
-}
-
-export function init() {
-    let guardian = window.guardian;
-
     /*eslint-disable */
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
@@ -37,7 +25,17 @@ export function init() {
         m.parentNode.insertBefore(a, m)
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
     /*eslint-enable */
+    const tracker = 'membershipPropertyTracker';
+    window.ga('create', guardian.googleAnalytics.trackingId, {
+        'allowLinker': true,
+        'name': tracker,
+        'cookieDomain': guardian.googleAnalytics.cookieDomain
+    });
+    return (a,b,c) => window.ga(tracker+ '.' + a,b,c);
+}
 
+export function init() {
+    let guardian = window.guardian;
     let ga = create();
 
     ga('require', 'linker');
