@@ -29,6 +29,7 @@ export function init() {
 
     ga('create', guardian.googleAnalytics.trackingId, {
         'allowLinker': true,
+        'name': 'membershipPropertyTracker',
         'cookieDomain': guardian.googleAnalytics.cookieDomain
     });
 
