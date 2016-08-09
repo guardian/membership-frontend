@@ -12,6 +12,7 @@ const dimensions = {
 };
 
 function create(){
+    const tracker = 'membershipPropertyTracker';
     /*eslint-disable */
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
@@ -25,7 +26,6 @@ function create(){
         m.parentNode.insertBefore(a, m)
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
     /*eslint-enable */
-    const tracker = 'membershipPropertyTracker';
     window.ga('create', guardian.googleAnalytics.trackingId, {
         'allowLinker': true,
         'name': tracker,
