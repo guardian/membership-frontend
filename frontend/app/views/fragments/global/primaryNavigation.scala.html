@@ -14,12 +14,14 @@
 <nav role="navigation" class="global-navigation js-global-nav">
     <div class="global-navigation__scroll l-constrained">
         <ul class="global-navigation__list">
-            <li class="global-navigation__item global-navigation__item--home">
-                <a href="@if(isMembershipBranded) {/} else {http://theguardian.com/}" class="global-navigation__link js-nav-link-home">
-                    @fragments.inlineIcon("home")
-                    <span class="u-h">Home</span>
-                </a>
-            </li>
+            @if(!countryGroup.contains(CountryGroup.Australia)) {
+                <li class="global-navigation__item global-navigation__item--home">
+                    <a href="@if(isMembershipBranded) {/} else {http://theguardian.com/}" class="global-navigation__link js-nav-link-home">
+                        @fragments.inlineIcon("home")
+                        <span class="u-h">Home</span>
+                    </a>
+                </li>
+            }
             @for(navItem <- pageInfo.navigation if !navItem.isPrivate) {
                 <li class="global-navigation__item">
                     <a href="@navItem.href" class="global-navigation__link" id="qa-nav-@navItem.id">@navItem.title</a>
@@ -31,7 +33,7 @@
                 }
             }
             <li class="global-navigation__item global-navigation__item--right">
-                @if(isMembershipBranded && countryGroup.forall(_ != CountryGroup.Australia)){
+                @if(isMembershipBranded && !countryGroup.contains(CountryGroup.Australia)){
                     <a href="@Links.membershipFront" class="global-navigation__link global-navigation__link--last js-members-area is-hidden">Members' Area</a>
                 }
             </li>
