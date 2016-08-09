@@ -7,7 +7,7 @@ Install nginx:
 - Linux: `sudo apt-get install nginx`
 - Mac OSX: `brew install nginx`
 
-The ngninx home directory will contain the nginx configuration and will need to be modified for membership. Depending on your system it founs under:
+The ngninx home directory will contain the nginx configuration and will need to be modified for membership. Depending on your system it should be under:
 
 - Linux: `/etc/nginx/`
 - Mac OSX: `/usr/local/etc/nginx/`
