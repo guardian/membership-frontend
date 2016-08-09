@@ -37,7 +37,7 @@ define([
     function setupAnalytics() {
         ophan.init();
         omniture.init();
-        ga.init();
+        ophan.loaded.then(ga.init,ga.init);
         uet.init();
     }
 
