@@ -10,6 +10,17 @@ const dimensions = {
     identityId: 'dimension6',
     isLoggedOn: 'dimension7'
 };
+
+function create(){
+    const tracker = 'membershipPropertyTracker';
+    ga('create', guardian.googleAnalytics.trackingId, {
+        'allowLinker': true,
+        'name': tracker,
+        'cookieDomain': guardian.googleAnalytics.cookieDomain
+    });
+    return (a,b,c) => ga(tracker+ '.' + a,b,c);
+}
+
 export function init() {
     let guardian = window.guardian;
 
@@ -27,11 +38,7 @@ export function init() {
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
     /*eslint-enable */
 
-    ga('create', guardian.googleAnalytics.trackingId, {
-        'allowLinker': true,
-        'name': 'membershipPropertyTracker',
-        'cookieDomain': guardian.googleAnalytics.cookieDomain
-    });
+    let ga = create();
 
     ga('require', 'linker');
 
