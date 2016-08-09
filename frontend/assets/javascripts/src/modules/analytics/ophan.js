@@ -12,6 +12,6 @@ define(['src/modules/raven'],function(raven) {
 
     return {
         init: init,
-        ophan: ophan
+        loaded: ophan
     };
 });
