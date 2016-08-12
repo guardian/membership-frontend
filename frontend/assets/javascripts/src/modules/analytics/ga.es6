@@ -8,7 +8,12 @@ const dimensions = {
     ophanBrowserId: 'dimension4',
     platform: 'dimension5',
     identityId: 'dimension6',
-    isLoggedOn: 'dimension7'
+    isLoggedOn: 'dimension7',
+    stripeId: 'dimension8',
+    zouraId: 'dimension9',
+    membershipNumber: 'dimension10',
+    productPurchased: 'dimension11',
+    intcmp: 'dimension12'
 };
 
 function create(){
@@ -60,6 +65,10 @@ export function init() {
     }
     if (guardian.ophan) {
         ga('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
+    }
+    if("productData" in window) {
+        ga('set',dimensions.membershipNumber,productData.regNumber);
+        ga('set',dimensions.productPurchased,productData.tier);
     }
     ga('set', dimensions.ophanBrowserId, cookie.getCookie('bwid'));
     //Send the pageview.
