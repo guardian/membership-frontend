@@ -183,7 +183,7 @@ For a reminder on why we do this, here's @tackley on the subject:
 
 By default the Identity frontend in theguardian.com (which handles sign-in and registration) will talk to a staging instance of the Identity API called `CODE`. If you need a local instance of the Identity API, follow the instructions below.
 
-**Identity repo**: [https://github.com/guardian/identity-frontend](https://github.com/guardian/identity-frontend)
+**Identity repo**: [https://github.com/guardian/identity](https://github.com/guardian/identity)
 
 Run through the set up instructions; once complete you will need to run:
 
