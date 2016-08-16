@@ -128,8 +128,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
   private def addEventBriteGACrossDomainParam(uri: Uri)(implicit request: Request[AnyContent]): Uri = {
     // https://www.eventbrite.co.uk/support/articles/en_US/Troubleshooting/how-to-enable-cross-domain-and-ecommerce-tracking-with-google-universal-analytics
-    val crossDomainParam = request.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", ""))
-    crossDomainParam.fold(uri)(value => uri & ("_eboga", value))
+    request.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
   }
 
   private def redirectToEventbrite(event: RichEvent)(implicit request: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
