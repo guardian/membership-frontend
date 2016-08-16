@@ -71,6 +71,12 @@ export function init() {
         ga('set',dimensions.productPurchased,guardian.productData.tier);
     }
     ga('set', dimensions.ophanBrowserId, cookie.getCookie('bwid'));
+
+    let intcmp = new RegExp('INTCMP=([^&]*)').exec(location.search);
+    if (intcmp && intcmp[1]){
+        ga('set',dimensions.intcmp,intcmp[1]);
+    }
+
     //Send the pageview.
     ga('send', 'pageview');
 
