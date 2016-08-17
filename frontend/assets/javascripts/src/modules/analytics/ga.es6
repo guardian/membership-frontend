@@ -8,7 +8,12 @@ const dimensions = {
     ophanBrowserId: 'dimension4',
     platform: 'dimension5',
     identityId: 'dimension6',
-    isLoggedOn: 'dimension7'
+    isLoggedOn: 'dimension7',
+    stripeId: 'dimension8',
+    zouraId: 'dimension9',
+    membershipNumber: 'dimension10',
+    productPurchased: 'dimension11',
+    intcmp: 'dimension12'
 };
 
 function create(){
@@ -61,7 +66,17 @@ export function init() {
     if (guardian.ophan) {
         ga('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
     }
+    if("productData" in guardian) {
+        ga('set',dimensions.membershipNumber,guardian.productData.regNumber);
+        ga('set',dimensions.productPurchased,guardian.productData.tier);
+    }
     ga('set', dimensions.ophanBrowserId, cookie.getCookie('bwid'));
+
+    let intcmp = new RegExp('INTCMP=([^&]*)').exec(location.search);
+    if (intcmp && intcmp[1]){
+        ga('set',dimensions.intcmp,intcmp[1]);
+    }
+
     //Send the pageview.
     ga('send', 'pageview');
 

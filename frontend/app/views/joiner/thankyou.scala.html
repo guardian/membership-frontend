@@ -51,7 +51,12 @@
 }
 
 @main(title) {
-
+<script type="text/javascript">
+   guardian.productData = {
+       regNumber: '@member.contact.regNumber.getOrElse("")',
+       tier: '@member.subscription.plan.tier.name'
+   };
+</script>
     <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.contact.email}"),classes = Seq("sessioncamhidetext"))
