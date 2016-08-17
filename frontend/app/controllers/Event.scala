@@ -126,6 +126,11 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
+  private def addEventBriteGACrossDomainParam(uri: Uri)(implicit request: Request[AnyContent]): Uri = {
+    // https://www.eventbrite.co.uk/support/articles/en_US/Troubleshooting/how-to-enable-cross-domain-and-ecommerce-tracking-with-google-universal-analytics
+    request.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
+  }
+
   private def redirectToEventbrite(event: RichEvent)(implicit request: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.subscriber.subscription.plan.tier}") {
 
@@ -140,7 +145,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
 
-        Found(eventUrl)
+        Found(addEventBriteGACrossDomainParam(eventUrl))
           .withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
     }
