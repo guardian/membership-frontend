@@ -48,6 +48,10 @@
         "ELBSSLCertificate": {
             "Description": "ELB SSL Certificate ARN",
             "Type": "String"
+        },
+        "VulnerabilityScanningSecurityGroup": {
+            "Description": "Security group that grants access to the account's Vulnerability Scanner",
+            "Type": "AWS::EC2::SecurityGroup::Id"
         }
     },
     "Mappings": {
@@ -86,7 +90,10 @@
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
                 "ImageId" : { "Ref": "ImageId" },
-                "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+                "SecurityGroups" : [
+                  { "Ref" : "InstanceSecurityGroup" },
+                  { "Ref" : "VulnerabilityScanningSecurityGroup" }
+                ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "IamInstanceProfile": { "Ref" : "MembershipAppInstanceProfile" },
