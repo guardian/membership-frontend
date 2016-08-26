@@ -20,7 +20,7 @@ object MemberOnlyContent extends Controller with LazyLogging {
     val accessOpt = ContentAccess.valueOf(membershipAccess)
     contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
 
-      val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referringContent) ? ("skipConfirmation" -> "true")).toString
+      val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> ("https://theguardian.com/" + referringContent)) ? ("skipConfirmation" -> "true")).toString
 
       implicit val countryGroup = UK
       val pageInfo = PageInfo(
