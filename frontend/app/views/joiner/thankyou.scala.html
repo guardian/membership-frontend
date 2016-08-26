@@ -163,7 +163,7 @@
   
             }
             case contentDestination: model.ContentDestination => {
-                @getStarted("Go to article") {
+                @getStarted("Rerturn to article") {
                     @fragments.content.articleSnapshot(contentDestination.item)
                     <a class="action" href="@contentDestination.item.content.webUrl">View now</a>
                 }
