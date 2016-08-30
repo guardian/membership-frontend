@@ -11,7 +11,7 @@ import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlan
 import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
-import com.gu.services.model.BillingSchedule
+import com.gu.memsub.BillingSchedule
 import com.gu.subscriptions.Discounter
 import com.gu.zuora.rest
 import com.gu.zuora.soap.models.Commands._
@@ -249,7 +249,7 @@ class MemberService(identityService: IdentityService,
       country <- EitherT(country(subscriber.contact).map(\/.right))
       a <- EitherT(amend(subscriber.subscription, newPlan, Set.empty, code).map(\/.right))
       result <- EitherT(zuoraService.upgradeSubscription(a.copy(previewMode = true)).map(\/.right))
-    } yield BillingSchedule.fromPreviewInvoiceItems(result.invoiceItems).getOrElse(
+    } yield BillingSchedule.fromPreviewInvoiceItems(_ => None)(result.invoiceItems).getOrElse(
       throw new IllegalStateException(s"Sub ${subscriber.subscription.id} upgrading to ${newPlan.tier} has no bills")
     )).run
   }

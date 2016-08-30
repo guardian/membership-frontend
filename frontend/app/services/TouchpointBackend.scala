@@ -2,9 +2,8 @@ package services
 
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.MembershipCatalog
-import com.gu.memsub.promo.{PromotionCollection, DynamoPromoCollection}
-import com.gu.memsub.services.{api => memsubapi, PromoService, CatalogService, PaymentService}
+import com.gu.memsub.promo.{DynamoPromoCollection, PromotionCollection}
+import com.gu.memsub.services.{CatalogService, PaymentService, PromoService, api => memsubapi}
 import com.gu.memsub
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.salesforce._
@@ -13,7 +12,7 @@ import com.gu.subscriptions.Discounter
 import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.ClientWithFeatureSupplier
-import com.gu.zuora.{ZuoraService => ZuoraServiceImpl, rest, soap}
+import com.gu.zuora.{rest, soap, ZuoraService => ZuoraServiceImpl}
 import com.netaporter.uri.Uri
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
@@ -22,6 +21,10 @@ import monitoring.TouchpointBackendMetrics
 import tracking._
 import utils.TestUsers.isTestUser
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import com.gu.memsub.subsv2
+import com.gu.zuora.rest.{RequestRunners, SimpleClient}
+import scalaz.std.scalaFuture._
+import scala.concurrent.Future
 
 object TouchpointBackend {
 
@@ -61,8 +64,13 @@ object TouchpointBackend {
     val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
     val promoService = new PromoService(promoCollection, catalogService.membershipCatalog, discounter)
-
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient)
+
+    val pids = Config.productIds(restBackendConfig.envName)
+    val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, client)
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, newCatalogService.catalog.map(_.map(_.map)), client, zuoraService.getAccountIds)
+
     val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
     val paymentService = new PaymentService(stripeService, zuoraService, catalogService)
     val salesforceService = new SalesforceService(backend.salesforce)
@@ -78,8 +86,8 @@ object TouchpointBackend {
       zuoraSoapClient = zuoraSoapClient,
       zuoraRestClient = zuoraRestClient,
       memberService = memberService,
-      subscriptionService = subscriptionService,
-      catalogService = catalogService,
+      subscriptionService = newSubsService,
+      catalogService = newCatalogService,
       zuoraService = zuoraService,
       promoService = promoService,
       promos = promoCollection,
@@ -105,8 +113,8 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              zuoraSoapClient: soap.ClientWithFeatureSupplier,
                              zuoraRestClient: rest.Client,
                              memberService: api.MemberService,
-                             subscriptionService: memsubapi.SubscriptionService[MembershipCatalog],
-                             catalogService: memsubapi.CatalogService,
+                             subscriptionService: subsv2.services.SubscriptionService[Future],
+                             catalogService: subsv2.services.CatalogService[Future],
                              zuoraService: ZuoraService,
                              membershipRatePlanIds: MembershipRatePlanIds,
                              promos: PromotionCollection,
@@ -114,5 +122,5 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              paymentService: PaymentService,
                              identityService: IdentityService) extends ActivityTracking {
 
-  def catalog: MembershipCatalog = catalogService.membershipCatalog
+  //def catalog: MembershipCatalog = catalogService.membershipCatalog
 }

@@ -3,8 +3,10 @@
 @import com.gu.membership.PaidMembershipPlans
 @import com.gu.memsub.Current
 @import views.support.Pricing._
-
-@(paidPlan: PaidMembershipPlans[Current, PaidTier],
+@import views.support.MembershipCompat._
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.Catalog.PaidMember
+@(paidPlan: MonthYearPlans[PaidMember],
   cg: CountryGroup,
   showDescription: Boolean = true,
   descriptionAnchor: Option[String] = None,

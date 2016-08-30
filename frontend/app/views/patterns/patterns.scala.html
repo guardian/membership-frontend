@@ -9,8 +9,9 @@
 @import com.gu.i18n.GBP
 @import com.gu.salesforce.Tier
 @import views.support.TierPlans._
+@import com.gu.memsub.subsv2.Catalog
 
-@(catalog: MembershipCatalog,
+@(catalog: Catalog,
   events: Seq[model.RichEvent.RichEvent],
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

@@ -27,7 +27,7 @@ import scalaz.{Monad, \/}
 
 object Promotions extends Controller {
 
-  import TouchpointBackend.Normal.{catalog, promoService}
+  import TouchpointBackend.Normal.{catalogService, promoService}
 
   private def getCheapestPaidMembershipPlan(promotion: PromoWithMembershipLandingPage) = {
     promotion.appliesTo.productRatePlanIds.toList.flatMap(rp => catalog.findPaid(rp))

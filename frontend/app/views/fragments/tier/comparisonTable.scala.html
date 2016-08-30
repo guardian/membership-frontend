@@ -7,7 +7,10 @@
 @import com.gu.membership.MembershipCatalog
 @import views.support.Pricing._
 @import com.gu.salesforce.PaidTier
-@(catalog: MembershipCatalog)(implicit countryGroup: CountryGroup)
+@import com.gu.memsub.subsv2.Catalog
+@import views.support.MembershipCompat._
+
+@(catalog: Catalog)(implicit countryGroup: CountryGroup)
 
 
 @comparisonHeader(tier: PaidTier, currency: Currency, isActive: Boolean = false) = {

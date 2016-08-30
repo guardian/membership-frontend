@@ -36,6 +36,7 @@ import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
+import views.support.MembershipCompat._
 
 object TierController extends Controller with ActivityTracking
                                          with CatalogProvider
@@ -45,8 +46,8 @@ object TierController extends Controller with ActivityTracking
                                          with PaymentServiceProvider
                                          with PromoServiceProvider {
 
-  def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
-    Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, catalog))
+  def downgradeToFriend() = PaidSubscriptionAction.async { implicit request =>
+    catalog.map(c => Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, c)))
   }
 
   def downgradeToFriendConfirm = PaidSubscriptionAction.async { implicit request => // POST
@@ -60,7 +61,7 @@ object TierController extends Controller with ActivityTracking
     implicit val c = catalog
     Ok(views.html.tier.downgrade.summary(
       request.subscriber.subscription,
-      request.subscriber.subscription.paidPlan,
+      request.subscriber.subscription.plan,
       catalog.friend, startDate)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
@@ -112,16 +113,18 @@ object TierController extends Controller with ActivityTracking
   }
 
   def upgradePreview(target: PaidTier, code: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
-    paymentSummary(request.subscriber, catalog.findPaid(target), code)(request, catalog, IdentityRequest(request)).map { summary => {
-      Ok(summary.fold({
-        case MemberPromoError(e) => Json.obj("error" -> e.msg)
-        case _ => Json.obj("error" -> "Unknown error")
-      },{ summary => Json.obj(
-        "summary" -> Json.toJson(summary),
-        "promotion" -> Json.toJson(code.flatMap(promoService.findPromotion))
-      )
-      }))
-    }}
+    catalog.map(_.findPaid(target)).flatMap { plan =>
+      paymentSummary(request.subscriber, plan, code)(request, catalog, IdentityRequest(request)).map { summary => {
+        Ok(summary.fold({
+          case MemberPromoError(e) => Json.obj("error" -> e.msg)
+          case _ => Json.obj("error" -> "Unknown error")
+        }, { summary => Json.obj(
+          "summary" -> Json.toJson(summary),
+          "promotion" -> Json.toJson(code.flatMap(promoService.findPromotion))
+        )
+        }))
+      }}
+    }
   }
 
   def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[Current, PaidTier], code: Option[PromoCode])
@@ -145,7 +148,7 @@ object TierController extends Controller with ActivityTracking
     val sub = request.subscriber.subscription
     val stripeKey = Some(stripeService.publicKey)
     val currency = sub.currency
-    val targetPlans = c.findPaid(target)
+    val targetPlans = c.map(_.findPaid(target))
     val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
 
@@ -205,7 +208,7 @@ object TierController extends Controller with ActivityTracking
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val identityRequest = IdentityRequest(request)
-
+    request.session
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, CampaignCode.fromRequest)
       handleErrors(upgrade) {

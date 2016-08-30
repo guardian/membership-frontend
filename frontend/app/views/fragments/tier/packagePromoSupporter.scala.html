@@ -2,8 +2,11 @@
 @import com.gu.memsub.Current
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
+@import views.support.MembershipCompat._
 @import com.gu.i18n.CountryGroup
-@(supporterPlans: PaidMembershipPlans[Current, Supporter], cg: CountryGroup)
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.Catalog.PaidMember
+@(supporterPlans: MonthYearPlans[PaidMember], cg: CountryGroup)
 
 @import com.gu.salesforce.Tier._
 

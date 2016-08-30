@@ -1,13 +1,14 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.membership.PaidMembershipPlans
 @import com.gu.memsub.Current
-@import com.gu.salesforce.Tier
-@import com.gu.salesforce.Tier.{Supporter, Partner, Patron}
 @import views.support.{Asset, PageInfo, PaidPlans}
+@import com.gu.salesforce.Tier
+@import com.gu.memsub.subsv2.Catalog._
 
-@(patronPlans: PaidMembershipPlans[Current, Patron],
-  supporterPlans: PaidMembershipPlans[Current, Supporter],
-  partnerPlans: PaidMembershipPlans[Current, Partner],
+@import com.gu.memsub.subsv2.MonthYearPlans
+@(patronPlans: MonthYearPlans[Patron],
+  supporterPlans: MonthYearPlans[Supporter],
+  partnerPlans: MonthYearPlans[Partner],
   pageInfo: PageInfo,
   countryGroup: CountryGroup,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)

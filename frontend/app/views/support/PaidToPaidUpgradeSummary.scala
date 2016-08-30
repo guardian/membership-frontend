@@ -5,12 +5,13 @@ import com.gu.membership.MembershipCatalog
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub._
 import com.gu.salesforce.PaidTier
-import com.gu.services.model.BillingSchedule
+import com.gu.memsub.BillingSchedule
 import model.PaidSubscription
 import model.SubscriptionOps._
 import org.joda.time.{DateTime, LocalDate}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+
 
 case class CurrentSummary(tier: PaidTier, startDate: LocalDate, payment: Price, card: PaymentCard)
 

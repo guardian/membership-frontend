@@ -3,8 +3,10 @@
 @import com.gu.memsub.Current
 @import views.support.Pricing._
 @import com.gu.memsub.BillingPeriod._
+@import com.gu.memsub.subsv2.Catalog.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
 
-@(plans: PaidMembershipPlans[Current, PaidTier])
+@(plans: MonthYearPlans[PaidMember])
 
 
 <script type="text/javascript">

@@ -1,9 +1,12 @@
+@import com.gu.memsub.Status
+@import com.gu.memsub.subsv2._
 @import com.gu.salesforce._
 @import views.support.DisplayText._
 @import views.support.{FreePlan, PaidPlans, TierPlans}
 @import com.gu.i18n.CountryGroup
 @import scalaz.NonEmptyList
 @import views.support.PackagePromo._
+@import views.support.MembershipCompat._
 
 @import model.PackagePromo.CtaButton
 @import model.PackagePromo
@@ -21,7 +24,9 @@
   secondaryButton: Option[CtaButton] = None,
   customPrice: Option[Html] = None
 )
+@tier = @{
 
+}
 @promoButton = @{
     button.getOrElse(forCountryTier(plans.tier, cg, promoCode))
 }

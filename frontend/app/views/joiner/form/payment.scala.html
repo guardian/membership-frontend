@@ -9,8 +9,11 @@
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.memsub.promo.PromoCode
 @import views.support.PaidPlans
+@import views.support.MembershipCompat._
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.Catalog.PaidMember
 
-@(plans: PaidMembershipPlans[Current, PaidTier],
+@(plans: MonthYearPlans[PaidMember],
   countriesWithCurrencies: List[CountryWithCurrency],
   idUser: IdentityUser,
   pageInfo: PageInfo,

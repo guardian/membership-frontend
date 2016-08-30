@@ -1,8 +1,6 @@
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.PaidTier
-@import com.gu.memsub.Current
-
-@(plans: PaidMembershipPlans[Current, PaidTier])
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.Catalog.PaidMember
+@(plans: MonthYearPlans[PaidMember])
 
 <fieldset class="fieldset js-payment-options-container">
 

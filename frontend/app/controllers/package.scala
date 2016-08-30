@@ -1,8 +1,8 @@
 import actions._
-import com.gu.membership.MembershipCatalog
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.services.PromoService
-import com.gu.memsub.services.api.{PaymentService, SubscriptionService}
+import com.gu.memsub.services.api.PaymentService
+import com.gu.memsub.subsv2.Catalog
 import com.gu.stripe.StripeService
 import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
@@ -12,6 +12,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{RequestHeader, Result}
 import services.api.{MemberService, SalesforceService}
+import com.gu.memsub.subsv2.services._
 
 import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}
@@ -34,8 +35,8 @@ package object controllers extends CommonActions with LazyLogging{
   }
 
   trait CatalogProvider {
-    def catalog(implicit request: BackendProvider): MembershipCatalog =
-      request.touchpointBackend.catalogService.membershipCatalog
+    def catalog(implicit request: BackendProvider): Future[Catalog] =
+      request.touchpointBackend.catalogService.unsafeCatalog
   }
 
   trait StripeServiceProvider {
@@ -54,7 +55,7 @@ package object controllers extends CommonActions with LazyLogging{
   }
 
   trait SubscriptionServiceProvider {
-    def subscriptionService(implicit request: BackendProvider): SubscriptionService[MembershipCatalog] =
+    def subscriptionService(implicit request: BackendProvider): SubscriptionService[Future] =
       request.touchpointBackend.subscriptionService
   }
 

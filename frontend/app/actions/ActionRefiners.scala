@@ -3,8 +3,9 @@ package actions
 import actions.Fallbacks._
 import com.gu.googleauth.UserIdentity
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
-import com.gu.memsub.Subscriber.{Member, FreeMember, PaidMember}
+import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
 import com.gu.memsub.Subscription.{FreeMembershipSub, PaidMembershipSub}
+import com.gu.memsub.subsv2.{FreeBenefit, MembershipPlan, PaidBenefit}
 import com.gu.memsub.util.Timing
 import configuration.Config.googleGroupChecker
 import services._
@@ -56,7 +57,7 @@ object ActionRefiners extends LazyLogging {
 
     (for {
       member <- OptionT(request.forMemberOpt(identity))
-      subscription <- OptionT(tp.subscriptionService.getEither(member))
+      subscription <- OptionT(tp.subscriptionService.either[MembershipPlan[FreeBenefit[Friend.type], Current], MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Current]](member))
     } yield new SubscriptionRequest[A](tp, request) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run

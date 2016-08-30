@@ -1,6 +1,9 @@
 @import com.gu.salesforce.PaidTier
 @import com.gu.membership.MembershipCatalog
-@(currentTier: PaidTier, catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token)
+@import com.gu.memsub.subsv2.Catalog
+@import views.support.MembershipCompat._
+
+@(currentTier: PaidTier, catalog: Catalog)(implicit token: play.filters.csrf.CSRF.Token)
 @import views.html.helper._
 @import views.support.DisplayText._
 

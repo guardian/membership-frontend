@@ -8,7 +8,7 @@ import com.gu.memsub._
 import com.gu.salesforce.{Tier, ContactId, PaidTier}
 import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion, PromoCode}
 import com.gu.salesforce.{ContactId, PaidTier}
-import com.gu.services.model.BillingSchedule
+import com.gu.memsub.BillingSchedule
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest

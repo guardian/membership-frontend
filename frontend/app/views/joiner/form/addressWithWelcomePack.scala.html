@@ -3,10 +3,12 @@
 @import views.support.IdentityUser
 @import com.gu.membership.FreeMembershipPlan
 @import com.gu.memsub.Current
-@import com.gu.salesforce.Tier.Staff
+@import com.gu.memsub.subsv2._
+@import com.gu.memsub.Staff
+@import com.gu.salesforce.Tier.{Staff => SFStaff}
 
 @import views.support.FreePlan
-@(staffPlan: FreeMembershipPlan[Current, Staff],
+@(staffPlan: MembershipPlan[FreeBenefit[Staff.type], Current],
   idUser: IdentityUser,
   flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
