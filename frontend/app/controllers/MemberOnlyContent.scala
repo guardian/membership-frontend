@@ -35,7 +35,7 @@ object MemberOnlyContent extends Controller with LazyLogging {
       } yield {
         if (content.fields.exists(_.membershipAccess.nonEmpty)) {
           Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, CapiContent(content))).
-            withSession(request.session + DestinationService.JoinReferrer -> ("https://theguardian.com/" + referringContent))
+            withSession(request.session +  (DestinationService.JoinReferrer -> ("https://" + Config.guardianHost +"/" + referringContent)))
         } else {
           Redirect(("https://theguardian.com/" + referringContent))
         }
