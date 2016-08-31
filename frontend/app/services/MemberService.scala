@@ -2,24 +2,26 @@ package services
 
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
-import com.gu.i18n.{Country, CountryGroup, Currency}
+import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
-import com.gu.membership.MembershipCatalog
+import com.gu.memsub.subsv2.Benefit
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{Feature, MembershipSub, Plan, ProductRatePlanId}
+import com.gu.memsub.Subscription.{Feature, ProductRatePlanId}
 import com.gu.memsub.promo._
+import com.gu.memsub.{Subscription => _, _}
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
-import com.gu.memsub.BillingSchedule
 import com.gu.subscriptions.Discounter
 import com.gu.zuora.rest
 import com.gu.zuora.soap.models.Commands._
 import com.gu.memsub.promo.PromotionMatcher._
 import com.gu.memsub.promo.PromotionApplicator._
 import _root_.services.api.MemberService.{MemberError, PendingAmendError}
-import com.gu.memsub._
-import com.gu.memsub.services.api.{CatalogService, PaymentService, SubscriptionService}
+import com.gu.memsub.subsv2._
+import com.gu.memsub.services.api.PaymentService
+import com.gu.memsub.subsv2.{FreeBenefit, MembershipPlan, PaidBenefit}
+import com.gu.memsub.subsv2.services._
 import com.gu.salesforce.Tier.{Partner, Patron}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
@@ -32,13 +34,14 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
-import model.{PaidSubscription, _}
-import org.joda.time.{DateTimeZone, DateTime}
+import model.PaidSubscription
+import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.CampaignCode
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
+import model.{Benefit => _, _}
 
 import scala.concurrent.Future
 import scala.util.Failure
@@ -46,6 +49,8 @@ import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
 import scalaz.syntax.std.option._
 import scalaz.syntax.monad._
+import views.support.MembershipCompat._
+
 import scalaz._
 
 object MemberService {
@@ -78,8 +83,8 @@ class MemberService(identityService: IdentityService,
                     salesforceService: api.SalesforceService,
                     zuoraService: ZuoraService,
                     stripeService: StripeService,
-                    subscriptionService: SubscriptionService[MembershipCatalog],
-                    catalogService: CatalogService,
+                    subscriptionService: SubscriptionService[Future],
+                    catalogService: CatalogService[Future],
                     promoService: PromoService,
                     paymentService: PaymentService,
                     discounter: Discounter,
@@ -89,8 +94,7 @@ class MemberService(identityService: IdentityService,
   import EventbriteService._
   import MemberService._
 
-  implicit val catalog = catalogService.membershipCatalog
-  implicit val productFamily = Membership
+  implicit val catalog = catalogService.unsafeCatalog
 
   def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
     identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
@@ -183,7 +187,7 @@ class MemberService(identityService: IdentityService,
       memberId <- EitherT(upgradeSubscription(
         sub.subscription,
         contact = sub.contact,
-        planChoice = PaidPlanChoice(newTier, sub.subscription.plan.billingPeriod),
+        planChoice = PaidPlanChoice(newTier, sub.subscription.plan.benefit.billingPeriod),
         form = form,
         customerOpt = None,
         campaignCode = code
@@ -199,14 +203,15 @@ class MemberService(identityService: IdentityService,
   override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
-    def effectiveFrom(sub: model.PaidSubscription) = sub.chargedThroughDate.getOrElse(sub.firstPaymentDate)
+    def effectiveFrom(sub: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]]) = sub.chargedThroughDate.getOrElse(sub.startDate)
 
     val friendRatePlanId = catalog.friend.productRatePlanId
 
     (for {
       paidSub <- EitherT(subOrPendingAmendError(subscriber.subscription))
       result <- zuoraService.downgradePlan(
-        subscription = paidSub,
+        subscription = paidSub.id,
+        currentRatePlanId = paidSub.ratePlanId,
         futureRatePlanId = friendRatePlanId,
         effectiveFrom = effectiveFrom(paidSub)).liftM
     } yield {
@@ -225,13 +230,14 @@ class MemberService(identityService: IdentityService,
   }
 
   override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
+
+    val cancelDate = subscriber.subscription.plan.benefit match {
+      case PaidBenefit(_, _, _) => subscriber.subscription.termEndDate
+      case _ => DateTime.now.toLocalDate
+    }
+
     (for {
-      sub <- EitherT(subOrPendingAmendError(subscriber.subscription))
-      cancelDate = sub match {
-        case p: Subscription with PaidPS[Plan] => p.chargedThroughDate.getOrElse(DateTime.now.toLocalDate)
-        case _ => DateTime.now.toLocalDate
-      }
-      _ <- zuoraService.cancelPlan(sub, cancelDate).liftM
+      _ <- zuoraService.cancelPlan(subscriber.subscription.id, subscriber.subscription.ratePlanId, cancelDate).liftM
     } yield {
       salesforceService.metrics.putCancel(subscriber.subscription.plan.tier)
       track(MemberActivity("cancelMembership", MemberData(
@@ -254,81 +260,57 @@ class MemberService(identityService: IdentityService,
     )).run
   }
 
-  def subscriptionUpgradableTo(sub: Subscription with PaymentStatus[Plan], newTier: PaidTier): Boolean = {
+  def subscriptionUpgradableTo(sub: Subscription[MembershipPlan[Benefit, Status]], newTier: PaidTier): Boolean = {
     import model.TierOrdering.upgradeOrdering
-    catalog.find(sub.productRatePlanId) exists { currentPlan =>
+    catalog.find(sub.plan.productRatePlanId).exists({currentPlan =>
       val newPlan = catalog.findPaid(newTier)
 
       // The year and month plans are guaranteed to have the same currencies
-      val targetCurrencies = newPlan.year.pricing.prices.map(_.currency).toSet
-      !sub.isInTrialPeriod && targetCurrencies.contains(sub.currency) && newPlan.tier > currentPlan.tier
-    }
+      val targetCurrencies = newPlan.year.benefit.pricingSummary.prices.map(_.currency).toSet
+      targetCurrencies.contains(sub.currency) && newPlan.tier > currentPlan.tier
+    })
 
   }
 
-  override  def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
-    val latestSubEither = subscriptionService.getEither(contact).map(_.get)
+  override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
+
+    type Free = MembershipPlan[FreeBenefit[Product[Tangibility]], Status]
+    type Paid = MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]
+
+    val latestSubEither = subscriptionService.either[Free, Paid](contact).map(_.get)
     val latestSubF = latestSubEither.map(_.fold(identity,identity))
-
-    def price(amount: Float)(implicit currency: Currency) = Price(amount, currency)
-    def plan(sub: Subscription): (Price, BillingPeriod) = sub match {
-      case p: PaidSubscription => (p.recurringPrice, p.plan.billingPeriod)
-      case _ => (Price(0, sub.currency), year)
-    }
-
-    def getSummaryViaInvoice =
-      for {
-        payment <- getPaymentSummary(contact)
-        sub <- latestSubF
-      } yield {
-        implicit val currency = sub.currency
-        val (planAmount, bp) = plan(sub)
-        val nextPayment = Some(NextPayment(price(payment.current.price), payment.current.nextPaymentDate))
-
-        ThankyouSummary(
-          startDate = payment.current.serviceStartDate,
-          amountPaidToday = price(payment.totalPrice),
-          planAmount = planAmount,
-          nextPayment = nextPayment,
-          renewalDate = Some(payment.current.nextPaymentDate),
-          initialFreePeriodOffer = false,
-          billingPeriod = bp
-        )
-      }
 
     def getSummaryViaPreview =
       for {
         sub <- latestSubF
         subEither <- latestSubEither
-        paymentDetails <- paymentService.paymentDetails(subEither)
+        paymentDetails <- paymentService.billingSchedule(sub.id)
       } yield {
         implicit val currency = sub.currency
-        val (planAmount, bp) = plan(sub)
         def price(amount: Float) = Price(amount, sub.currency)
 
         val nextPayment = for {
-          amount <- paymentDetails.nextPaymentPrice
-          date <- paymentDetails.nextPaymentDate
+          amount <- paymentDetails.map(_.first.amount)
+          date <- paymentDetails.map(_.first.date)
         } yield NextPayment(price(amount), date)
 
         ThankyouSummary(
           startDate = sub.startDate,
           amountPaidToday = price(0f),
-          planAmount = planAmount,
+          planAmount = subEither.fold(_ => Price(0.0f, GBP), _.plan.benefit.pricingSummary.prices.head),
           nextPayment = nextPayment,
-          renewalDate = Some(paymentDetails.termEndDate.plusDays(1)),
-          sub.isInTrialPeriod,
-          bp
+          renewalDate = Some(sub.termEndDate.plusDays(1)),
+          initialFreePeriodOffer = false, // todo maybe sort this out
+          subEither.fold(_ => BillingPeriod.year, _.plan.benefit.billingPeriod) // TODO what
         )
       }
 
     for {
-      userInvoiced <- latestSubF.map(_.userHasBeenInvoiced)
-      summary <- if (userInvoiced) getSummaryViaInvoice else getSummaryViaPreview
+      summary <- getSummaryViaPreview
     } yield summary
   }
 
-  override def getUsageCountWithinTerm(subscription: Subscription, unitOfMeasure: String): Future[Option[Int]] = {
+  override def getUsageCountWithinTerm(subscription: Subscription[Plan], unitOfMeasure: String): Future[Option[Int]] = {
     val features = subscription.features
     val startDate = subscription.startDate.toDateTimeAtStartOfDay(DateTimeZone.forID("America/Los_Angeles"))
     zuoraService.getUsages(subscription.name, unitOfMeasure, startDate).map { usages =>
@@ -337,7 +319,7 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def recordFreeEventUsage(subs: Subscription, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
+  override def recordFreeEventUsage(subs: Subscription[Plan], event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
     val description = s"event-id:${event.id};order-id:${order.id}"
 
     for {
@@ -353,7 +335,7 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def retrieveComplimentaryTickets(sub: Subscription, event: RichEvent): Future[Seq[EBTicketClass]] = {
+  override def retrieveComplimentaryTickets(sub: Subscription[Plan], event: RichEvent): Future[Seq[EBTicketClass]] = {
     Timing.record(salesforceService.metrics, "retrieveComplimentaryTickets") {
       for {
         usageCount <- getUsageCountWithinTerm(sub, FreeEventTickets.unitOfMeasure)
@@ -423,7 +405,7 @@ class MemberService(identityService: IdentityService,
     }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
-    subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, sub, catalog.unsafeFindPaid, discountIds)))
+    subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, sub, catalog.unsafeFindPaid(_).benefit.billingPeriod, discountIds)))
              .flatMap(zuoraService.createSubscription)
              .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
   }
@@ -451,7 +433,7 @@ class MemberService(identityService: IdentityService,
   /**
     * Construct an Amend command
     */
-  private def amend(sub: MembershipSub, planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[ValidPromotion[Upgrades]])
+  private def amend(sub: Subscription[MembershipPlan[Benefit, Status]], planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[ValidPromotion[Upgrades]])
                    (implicit r: IdentityRequest, applicator: PromotionApplicator[Upgrades, Amend]): Future[Amend] = {
 
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
@@ -467,11 +449,11 @@ class MemberService(identityService: IdentityService,
     (newRatePlan |@| oldRest) { case (newPln, restSub) =>
       val plansToRemove = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find, discountIds)
       val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
-      code.fold(upgrade)(applicator(_, upgrade, catalog.unsafeFindPaid, discountIds))
+      code.fold(upgrade)(applicator(_, upgrade, catalog.unsafeFindPaid(_).benefit.billingPeriod, discountIds))
     }
   }
 
-  private def upgradeSubscription(sub: MembershipSub,
+  private def upgradeSubscription(sub: Subscription[MembershipPlan[Benefit, Status]],
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
@@ -500,11 +482,11 @@ class MemberService(identityService: IdentityService,
   private def createPaymentMethod(contactId: ContactId,
                                   customer: Stripe.Customer): Future[UpdateResult] =
     for {
-      sub <- subscriptionService.unsafeGet(contactId)
+      sub <- subscriptionService.current[MembershipPlan[Benefit, Status]](contactId).map(_.head)
       result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer)
     } yield result
 
-  private def subOrPendingAmendError[P <: Subscription](sub: P): Future[MemberError \/ P] =
+  private def subOrPendingAmendError[P <: Subscription[Plan]](sub: P): Future[MemberError \/ P] =
     for {
       restSub <- zuoraService.getRestSubscription(sub.name).map(
         _.getOrElse(throw new Exception(s"Sub ${sub.name} not found with rest"))
@@ -517,7 +499,7 @@ class MemberService(identityService: IdentityService,
     }
 
   private def getPaymentSummary(memberId: ContactId): Future[PaymentSummary] =
-    subscriptionService.unsafeGet(memberId).flatMap { sub =>
+    subscriptionService.current[MembershipPlan[Benefit, Status]](memberId).map(_.head).flatMap { sub =>
       zuoraService.getPaymentSummary(sub.name, sub.currency)
     }
 }

@@ -35,7 +35,7 @@ package object controllers extends CommonActions with LazyLogging{
   }
 
   trait CatalogProvider {
-    def catalog(implicit request: BackendProvider): Future[Catalog] =
+    def catalog(implicit request: BackendProvider): Catalog =
       request.touchpointBackend.catalogService.unsafeCatalog
   }
 

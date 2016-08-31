@@ -17,6 +17,8 @@ import play.api.libs.json._
 import play.api.mvc.Cookie
 
 import scala.util.{Failure, Success}
+import views.support.MembershipCompat._
+
 
 object MembersDataAPI {
   implicit val tierReads = Reads[Tier] {

@@ -8,6 +8,7 @@ import play.api.libs.json._
 import play.api.mvc.Controller
 import services.MembersDataAPI
 import utils.GuMemCookie
+import views.support.MembershipCompat._
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC

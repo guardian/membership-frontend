@@ -23,6 +23,7 @@ import utils.CampaignCode
 import views.support.PageInfo
 
 import scala.concurrent.Future
+import views.support.MembershipCompat._
 
 trait Event extends Controller with MemberServiceProvider with ActivityTracking {
 

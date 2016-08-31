@@ -32,7 +32,7 @@ import views.support
 import views.support.Pricing._
 import views.support.TierPlans._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
-
+import views.support.MembershipCompat._
 import scala.concurrent.Future
 import scala.util.Failure
 import scalaz.OptionT
@@ -243,7 +243,7 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
-    val prpId = request.subscriber.subscription.productRatePlanId
+    val prpId = request.subscriber.subscription.plan.productRatePlanId
     implicit val idReq = IdentityRequest(request)
 
     val paymentCard = (for {

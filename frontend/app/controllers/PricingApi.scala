@@ -1,12 +1,14 @@
 package controllers
 
 import com.gu.i18n._
-import com.gu.membership.MembershipCatalog
+import com.gu.memsub.subsv2.Catalog
 import com.gu.salesforce.PaidTier
-import play.api.libs.json.{JsArray, JsString, JsValue, Writes, Json}
+import play.api.libs.json.{JsArray, JsString, JsValue, Json, Writes}
 import play.api.mvc.Controller
 import services.TouchpointBackend
-import views.support.{Pricing, CountryWithCurrency}
+import views.support.{CountryWithCurrency, Pricing}
+import views.support.Pricing._
+import views.support.MembershipCompat._
 
 case class MembershipPlan(tier: PaidTier, prices: List[Pricing])
 
@@ -54,7 +56,7 @@ object PricingApi extends Controller {
   import PricingFormats._
   import views.support.Pricing._
 
-  val membersCatalog: MembershipCatalog = TouchpointBackend.Normal.catalog
+  val membersCatalog: Catalog = TouchpointBackend.Normal.catalog
 
   def currencies = CachedAction {
     Ok(Json.toJson(CountryWithCurrency.all))

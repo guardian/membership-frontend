@@ -1,9 +1,14 @@
-@import views.support.Dates._
 @import org.joda.time.DateTime
-@import model.SubscriptionOps._
-
+@import views.support.Dates._
+@import views.support.MembershipCompat._
+@import com.gu.memsub.subsv2._
 @import com.gu.salesforce.Tier
-@(subscription: model.PaidSubscription, tier: Tier)
+@import com.gu.memsub.Tangibility
+@import com.gu.memsub.Product
+@import com.gu.memsub.BillingPeriod
+@import com.gu.memsub.Status
+
+@(subscription: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]])
 
 <table class="table table--striped" role="grid">
     <tr role="row">
@@ -11,7 +16,7 @@
             Tier
         </th>
         <td id="qa-tier-summary-tier">
-            @tier.name
+            @subscription.plan.tier.name
         </td>
     </tr>
 
@@ -20,29 +25,16 @@
             End date
         </th>
         <td id="qa-tier-summary-end">
-            @if(!subscription.isInTrialPeriod) {
-                @subscription.chargedThroughDate.map(_.pretty)
-            } else {
-                @DateTime.now.pretty
-            }
+            subscription.termEndDate.pretty
         </td>
     </tr>
 
     <tr role="row">
         <th role="rowheader">
-            @subscription.plan.billingPeriod.adjective.capitalize payment
+            @subscription.plan.benefit.billingPeriod.adjective.capitalize payment
         </th>
         <td id="qa-tier-summary-recurring">
-            @subscription.recurringPrice.pretty
+            @subscription.plan.benefit.pricingSummary.prices.head.pretty
         </td>
     </tr>
-    @*TODO What is expected here?*@
-    @*<tr role="row">*@
-    @*<th role="rowheader">*@
-    @*Last payment*@
-    @*</th>*@
-    @*<td id="qa-tier-summary-start">*@
-    @*subscription.startDate.pretty*@
-    @*</td>*@
-    @*</tr>*@
 </table>

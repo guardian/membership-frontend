@@ -22,9 +22,12 @@ import tracking._
 import utils.TestUsers.isTestUser
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import com.gu.memsub.subsv2
+import com.gu.memsub.subsv2.Catalog
 import com.gu.zuora.rest.{RequestRunners, SimpleClient}
+
+import scala.concurrent.duration._
 import scalaz.std.scalaFuture._
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 
 object TouchpointBackend {
 
@@ -68,7 +71,7 @@ object TouchpointBackend {
 
     val pids = Config.productIds(restBackendConfig.envName)
     val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
-    val newCatalogService = new subsv2.services.CatalogService[Future](pids, client)
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds))
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, newCatalogService.catalog.map(_.map(_.map)), client, zuoraService.getAccountIds)
 
     val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
@@ -76,7 +79,7 @@ object TouchpointBackend {
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, subscriptionService, catalogService, promoService, paymentService, discounter,
+      identityService, salesforceService, zuoraService, stripeService, newSubsService, newCatalogService, promoService, paymentService, discounter,
         Config.discountRatePlanIds(backend.zuoraEnvName))
 
     TouchpointBackend(
@@ -122,5 +125,5 @@ case class TouchpointBackend(salesforceService: api.SalesforceService,
                              paymentService: PaymentService,
                              identityService: IdentityService) extends ActivityTracking {
 
-  //def catalog: MembershipCatalog = catalogService.membershipCatalog
+  lazy val catalog: Catalog = catalogService.unsafeCatalog
 }

@@ -1,35 +1,31 @@
 @import configuration.Config.idWebAppUrl
-@import com.gu.membership.MembershipCatalog
-@import model.PaidSubscription
 @import org.joda.time.DateTime
 @import views.support.Dates._
-@import com.gu.membership.PaidMembershipPlan
-@import com.gu.salesforce.PaidTier
 @import com.gu.memsub.BillingPeriod
 @import com.gu.memsub.Status
-
-@import com.gu.membership.FreeMembershipPlan
-@import com.gu.salesforce.Tier.Friend
+@import com.gu.memsub.subsv2._
 @import com.gu.memsub.Current
-@(subscription: PaidSubscription,
-  currentPlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
-  friendPlan: FreeMembershipPlan[Current, Friend],
+@import com.gu.memsub.Product
+@import com.gu.memsub.Friend
+@import views.support.MembershipCompat._
+
+@import com.gu.memsub.Tangibility
+@(subscription: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]],
+  friendPlan: MembershipPlan[FreeBenefit[Friend.type], Current],
   friendTierStartDate: DateTime
 )
 
-@main(s"Change Tier Summary |  ${friendPlan.tier.name} from ${currentPlan.tier.name}") {
+@main(s"Change Tier Summary |  ${friendPlan.tier.name} from ${subscription.plan.tier.name}") {
     <main role="main" class="page-content l-constrained">
 
-        @subscription.chargedThroughDate.map { endDate =>
-            @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.pretty))
-        }
+        @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + subscription.termEndDate.pretty))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
                 <h2 class="page-section__headline">Current Membership summary</h2>
             </div>
             <div class="page-section__content">
-                @fragments.tier.summary(subscription, currentPlan.tier)
+                @fragments.tier.summary(subscription)
             </div>
         </section>
 

@@ -7,6 +7,7 @@ import model.{ContentDestination, ContentItem, Destination, EventDestination}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
+import views.support.MembershipCompat._
 
 trait DestinationService {
 

@@ -1,6 +1,9 @@
 @import com.gu.membership.MembershipCatalog
+@import com.gu.memsub.subsv2._
+@import views.support.MembershipCompat._
+
 @(
-  catalog: MembershipCatalog,
+  catalog: Catalog,
   staffEmail: model.StaffEmails,
   displayName: Option[String],
   avatarUrl: Option[String],

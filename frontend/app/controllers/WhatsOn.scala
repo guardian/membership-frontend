@@ -11,6 +11,8 @@ import tracking.ActivityTracking
 import views.support.PageInfo
 import play.api.libs.concurrent.Execution.Implicits._
 
+import scala.concurrent.Future
+
 trait WhatsOn extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
@@ -34,7 +36,8 @@ trait WhatsOn extends Controller with ActivityTracking {
     getCitiesWithCount(allEvents).map(FilterItem.tupled)
   }
 
-  private val normalCatalog = TouchpointBackend.Normal.catalogService.unsafeCatalog
+  private val normalCatalog =
+    Future.successful(TouchpointBackend.Normal.catalogService.unsafeCatalog)
 
   def list = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(

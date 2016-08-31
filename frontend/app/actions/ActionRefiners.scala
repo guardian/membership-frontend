@@ -5,7 +5,7 @@ import com.gu.googleauth.UserIdentity
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
 import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
 import com.gu.memsub.Subscription.{FreeMembershipSub, PaidMembershipSub}
-import com.gu.memsub.subsv2.{FreeBenefit, MembershipPlan, PaidBenefit}
+import com.gu.memsub.subsv2.{FreeBenefit, MembershipPlan, PaidBenefit, Subscription}
 import com.gu.memsub.util.Timing
 import configuration.Config.googleGroupChecker
 import services._
@@ -22,7 +22,7 @@ import play.api.mvc._
 import scala.concurrent.Future
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
-
+import views.support.MembershipCompat._
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
@@ -52,8 +52,8 @@ object ActionRefiners extends LazyLogging {
   private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
     val tp = request.touchpointBackend
-    val FreeSubscriber = Subscriber[FreeMembershipSub] _
-    val PaidSubscriber = Subscriber[PaidMembershipSub] _
+    val FreeSubscriber = Subscriber[Subscription[MembershipPlan[FreeBenefit[Product[Tangibility]], SubStatus]]] _
+    val PaidSubscriber = Subscriber[Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], SubStatus]]] _
 
     (for {
       member <- OptionT(request.forMemberOpt(identity))

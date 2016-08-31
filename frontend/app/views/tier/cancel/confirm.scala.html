@@ -1,5 +1,7 @@
 @import com.gu.salesforce.Tier
-@(tier: Tier, catalog: com.gu.membership.MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token)
+@import views.support.MembershipCompat._
+@import com.gu.memsub.subsv2.Catalog
+@(tier: Tier, catalog: Catalog)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.salesforce.Tier.Friend
 @import views.html.helper._
