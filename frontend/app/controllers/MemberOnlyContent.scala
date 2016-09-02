@@ -34,8 +34,9 @@ object MemberOnlyContent extends Controller with LazyLogging {
           val pageInfo = PageInfo(
             title = headline,
             url = request.path,
-            description = Some(CopyConfig.copyDescriptionChooseTier),
-            customSignInUrl = Some(signInUrl)
+            description = capiContent.trailText,
+            customSignInUrl = Some(signInUrl),
+            image = capiContent.mainPicture.map(_.defaultImage)
           )
           Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, capiContent, s"Exclusive Members Content: $headline")).
             withSession(request.session +  (DestinationService.JoinReferrer -> ("https://" + Config.guardianHost +"/" + referringContent)))
