@@ -2,8 +2,9 @@
 @import com.gu.i18n.CountryGroup
 @(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
-    countryGroup: Option[CountryGroup] = None
-)(content: Html)
+    countryGroup: Option[CountryGroup] = None,
+        titleOverride: Option[String] = None
+    )(content: Html)
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
 @import views.support.Asset
@@ -11,7 +12,7 @@
 <html lang="en-GB" class="js-off id--signed-out">
     <head>
         <meta charset="utf-8">
-        <title>@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }</title>
+        <title>@if(!titleOverride.isEmpty){@titleOverride.get}else{@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }}</title>
 
         @fragments.meta.mobile()
         <meta name="description" content="@pageInfo.description"/>
