@@ -29,7 +29,7 @@ object PaidToPaidUpgradeSummary {
   def apply(invoices: BillingSchedule, sub: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]], targetId: ProductRatePlanId, card: PaymentCard)(implicit catalog: Catalog): PaidToPaidUpgradeSummary = {
     val plan = catalog.unsafeFindPaid(targetId)
     lazy val upgradeError = UpgradeSummaryError(sub.name, plan.tier) _
-    val accountCurrency = sub.currency
+    val accountCurrency = sub.plan.currency
     val firstPayment = Price(invoices.first.amount, accountCurrency)
 
 

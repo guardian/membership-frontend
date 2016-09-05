@@ -267,7 +267,7 @@ class MemberService(identityService: IdentityService,
 
       // The year and month plans are guaranteed to have the same currencies
       val targetCurrencies = newPlan.year.benefit.pricingSummary.prices.map(_.currency).toSet
-      targetCurrencies.contains(sub.currency) && newPlan.tier > currentPlan.tier
+      targetCurrencies.contains(sub.plan.currency) && newPlan.tier > currentPlan.tier
     })
 
   }
@@ -286,18 +286,21 @@ class MemberService(identityService: IdentityService,
         subEither <- latestSubEither
         paymentDetails <- paymentService.billingSchedule(sub.id)
       } yield {
-        implicit val currency = sub.currency
-        def price(amount: Float) = Price(amount, sub.currency)
+        implicit val currency = sub.plan.currency
+        def price(amount: Float) = Price(amount, sub.plan.currency)
 
         val nextPayment = for {
           amount <- paymentDetails.map(_.first.amount)
           date <- paymentDetails.map(_.first.date)
         } yield NextPayment(price(amount), date)
 
+        val planAmount = subEither.fold(_ => Price(0.0f, GBP), _.plan.benefit.pricingSummary.prices.head)
+        println(planAmount, sub.chargedThroughDate)
+
         ThankyouSummary(
-          startDate = sub.startDate,
-          amountPaidToday = price(0f),
-          planAmount = subEither.fold(_ => Price(0.0f, GBP), _.plan.benefit.pricingSummary.prices.head),
+          startDate = sub.termStartDate,
+          amountPaidToday = sub.chargedThroughDate.fold(price(0.0f))(_ => planAmount),
+          planAmount = planAmount,
           nextPayment = nextPayment,
           renewalDate = Some(sub.termEndDate.plusDays(1)),
           initialFreePeriodOffer = false, // todo maybe sort this out
@@ -500,6 +503,6 @@ class MemberService(identityService: IdentityService,
 
   private def getPaymentSummary(memberId: ContactId): Future[PaymentSummary] =
     subscriptionService.current[MembershipPlan[Benefit, Status]](memberId).map(_.head).flatMap { sub =>
-      zuoraService.getPaymentSummary(sub.name, sub.currency)
+      zuoraService.getPaymentSummary(sub.name, sub.plan.currency)
     }
 }

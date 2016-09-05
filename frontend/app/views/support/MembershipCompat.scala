@@ -19,6 +19,12 @@ object MembershipCompat {
 
   }
   implicit class GenericMembership(in: MembershipPlan[Benefit, Status]) {
+
+    def currency: Currency = in.benefit match {
+      case PaidBenefit(_, pricing, _) => pricing.prices.head.currency
+      case FreeBenefit(_, currencies) => currencies.head
+    }
+
     def tier: Tier = in.benefit match {
       case PaidBenefit(com.gu.memsub.Supporter, _, _) => Tier.supporter
       case PaidBenefit(com.gu.memsub.Partner, _, _) => Tier.partner

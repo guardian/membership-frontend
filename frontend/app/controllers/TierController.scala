@@ -8,7 +8,6 @@ import com.gu.i18n.CountryGroup
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.membership.{MembershipCatalog, PaidMembershipPlans}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.subsv2.{Catalog, MonthYearPlans}
 import services.{IdentityApi, IdentityService}
@@ -18,7 +17,6 @@ import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
 import forms.MemberForm._
-import model.SubscriptionOps._
 import model._
 import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -144,7 +142,7 @@ object TierController extends Controller with ActivityTracking
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
     val stripeKey = Some(stripeService.publicKey)
-    val currency = sub.currency
+    val currency = sub.plan.currency
     val targetPlans = c.findPaid(target)
     val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
@@ -205,7 +203,7 @@ object TierController extends Controller with ActivityTracking
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val identityRequest = IdentityRequest(request)
-    request.session
+
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, CampaignCode.fromRequest)
       handleErrors(upgrade) {
