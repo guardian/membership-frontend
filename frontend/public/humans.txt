@@ -10,6 +10,11 @@ Twitter: @svillafe
 From: Bs As
 Location: London, England
 
+Developer: Alex Ware
+Twitter: @mostfoolhardy
+Location: London, 🇪🇺
+Human: Probably
+
 /* ALUMNI */
 
 Senior Developer: Chris Finch
