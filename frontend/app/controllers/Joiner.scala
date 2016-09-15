@@ -232,7 +232,8 @@ object Joiner extends Controller with ActivityTracking
           logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
 
-        case error: PaymentGatewayError => handlePaymentGatewayError(error, request.user.id)
+        case error: PaymentGatewayError =>
+          handlePaymentGatewayError(error, request.user.id, tier.name, idRequest.trackingParameters, formData.deliveryAddress.countryName)
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
@@ -269,17 +270,16 @@ object Joiner extends Controller with ActivityTracking
 
   def thankyouStaff = thankyou(Tier.partner)
 
-  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String) = {
+  private def handlePaymentGatewayError(
+      e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String,String)], country: String) = {
 
     def handleError(msg: String, errType: String) = {
-      logger.warn(s"${msg}: \n\t${e} \n\tuser=${userId}")
+      logger.warn(s"User ${userId} could not become $tier member due to payment gateway failed transaction: \n\terror=${e} \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
       Forbidden(Json.obj("type" -> errType, "message" -> msg))
     }
 
     // TODO: Does Zuora provide a guarantee the message is safe to display to users directly?
     // For now providing custom message to make sure no sensitive information is revealed.
-
-    logger.warn(s"User ${userId} could not become a member due to payment gateway failed transaction.")
 
     e.errType match {
       case InsufficientFunds =>
