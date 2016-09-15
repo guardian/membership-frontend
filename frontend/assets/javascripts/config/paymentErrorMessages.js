@@ -60,6 +60,36 @@ define(function () {
                 msg: 'Sorry, we\'ve found some problems with your details. Please check and retype.'
             }
         },
+        PaymentGatewayError: { // errors from Zuora Payment Gateway after Stripe is happy
+            Fraudulent: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because card\'s bank rejected the transaction. Please use a different card or contact your bank to find the cause.'
+            },
+            TransactionNotAllowed: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because your card does not support this type of purchase. Please use a different card or contact your bank to find the cause.'
+            },
+            DoNotHonor: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because card\'s bank rejected the transaction. Please use a different card or contact your bank to find the cause.'
+            },
+            InsufficientFunds: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because card has insufficient funds. Please use a different card or contact your bank to find the cause.'
+            },
+            RevocationOfAuthorization: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because cardholder has requested all payments to be stopped on this card. Please use a different card or contact your bank to find the cause.'
+            },
+            GenericDecline: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because card\'s bank rejected the transaction. Please use a different card or contact your bank to find the cause.'
+            },
+            UknownPaymentError: {
+                elem: CREDIT_CARD_NUMBER_ELEM,
+                msg: 'Sorry we could not take your payment because card\'s bank rejected the transaction. Please use a different card or contact your bank to find the cause.'
+            }
+        },
         generic_error: {
             elem: CREDIT_CARD_NUMBER_ELEM,
             msg: 'Sorry, we weren\'t able to process your payment this time around. Please try again.'

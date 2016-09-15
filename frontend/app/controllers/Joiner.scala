@@ -273,28 +273,19 @@ object Joiner extends Controller with ActivityTracking
   private def handlePaymentGatewayError(
       e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String,String)], country: String) = {
 
-    def handleError(msg: String, errType: String) = {
+    def handleError(code: String) = {
       logger.warn(s"User ${userId} could not become $tier member due to payment gateway failed transaction: \n\terror=${e} \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
-      Forbidden(Json.obj("type" -> errType, "message" -> msg))
+      Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
     }
 
-    // TODO: Does Zuora provide a guarantee the message is safe to display to users directly?
-    // For now providing custom message to make sure no sensitive information is revealed.
-
     e.errType match {
-      case InsufficientFunds =>
-        handleError("Your card has insufficient funds", "InssufficientFunds")
-
-      case TransactionNotAllowed =>
-        handleError("Your card does not support this type of purchase", "TransactionNotAllowed")
-
-      case RevocationOfAuthorization =>
-        handleError(
-          "Cardholder has requested all payments to be stopped on this card",
-          "RevocationOfAuthorization")
-
-      case _ =>
-        handleError("Your card was declined", "PaymentGatewayError")
+      case Fraudulent => handleError("Fraudulent")
+      case TransactionNotAllowed => handleError("TransactionNotAllowed")
+      case DoNotHonor => handleError("DoNotHonor")
+      case InsufficientFunds => handleError("InsufficientFunds")
+      case RevocationOfAuthorization => handleError("RevocationOfAuthorization")
+      case GenericDecline => handleError("GenericDecline")
+      case _ => handleError("UknownPaymentError")
     }
   }
 }
