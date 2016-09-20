@@ -7,9 +7,9 @@ import model.RichEvent.RichEvent
 import model.{ContentDestination, ContentItem, Destination, EventDestination}
 import scalaz.syntax.monadPlus._
 import play.api.mvc.Session
-
 import scala.language.higherKinds
 import scalaz.{Monad, OptionT}
+
 object DestinationService {
   val JoinReferrer = "join-referrer" //session key
 }
