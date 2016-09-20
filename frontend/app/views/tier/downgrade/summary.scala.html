@@ -5,13 +5,11 @@
 @import com.gu.memsub.Status
 @import com.gu.memsub.subsv2._
 @import com.gu.memsub.Current
-@import com.gu.memsub.Product
 @import com.gu.memsub.Friend
 @import views.support.MembershipCompat._
 
-@import com.gu.memsub.Tangibility
-@(subscription: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]],
-  friendPlan: MembershipPlan[FreeBenefit[Friend.type], Current],
+@(subscription: Subscription[SubscriptionPlan.PaidMember],
+  friendPlan: CatalogPlan.Friend,
   friendTierStartDate: DateTime
 )
 

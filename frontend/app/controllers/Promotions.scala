@@ -33,7 +33,7 @@ object Promotions extends Controller {
 
   private def getCheapestPaidMembershipPlan(promotion: PromoWithMembershipLandingPage) = {
     promotion.appliesTo.productRatePlanIds.toList.flatMap(rp => catalog.findPaid(rp))
-      .sortBy(paidTier => paidTier.benefit.pricingSummary.getPrice(GBP).get.amount)
+      .sortBy(paidTier => paidTier.charges.price.getPrice(GBP).get.amount)
       .headOption
   }
 
@@ -69,8 +69,8 @@ object Promotions extends Controller {
       paidMembershipPlan => {
         promotion.promotionType match {
           case p: PercentDiscount =>
-            val originalPrice = paidMembershipPlan.benefit.pricingSummary.getPrice(countryGroup.currency).get
-            val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.benefit.billingPeriod)
+            val originalPrice = paidMembershipPlan.charges.price.getPrice(countryGroup.currency).get
+            val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.charges.billingPeriod)
             Some(views.html.promotions.singlePricePlanDiscountLandingPage(hero,
               promotion.landingPage.heroImage.fold[HeroImageAlignment](Centre)(_.alignment),
               paidMembershipPlan,

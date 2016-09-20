@@ -63,19 +63,17 @@ object TouchpointBackend {
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
 
-    val catalogService = CatalogService(zuoraRestClient, paperRatePlanIds, memRatePlanIds, digipackRatePlanIds, backendType.name)
     val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
-    val promoService = new PromoService(promoCollection, catalogService.membershipCatalog, discounter)
+    val promoService = new PromoService(promoCollection, discounter)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient)
 
     val pids = Config.productIds(restBackendConfig.envName)
     val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
-    val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds))
-    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, newCatalogService.catalog.map(_.map(_.map)), client, zuoraService.getAccountIds)
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds), restBackendConfig.envName)
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, newCatalogService.catalog.map(_.leftMap(_.list.mkString).map(_.map)), client, zuoraService.getAccountIds)
 
-    val subscriptionService = new memsub.services.SubscriptionService(zuoraService, stripeService, catalogService.membershipCatalog)
-    val paymentService = new PaymentService(stripeService, zuoraService, catalogService)
+    val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(backend.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(

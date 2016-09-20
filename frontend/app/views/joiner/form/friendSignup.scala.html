@@ -10,7 +10,7 @@
 @import com.gu.memsub.promo.PromoCode
 
 @import views.support.FreePlan
-@(friendPlan: MembershipPlan[FreeBenefit[Friend.type], Current],
+@(friendPlan: CatalogPlan.Friend,
   idUser: IdentityUser,
   pageInfo: PageInfo,
   trackingPromoCode: Option[PromoCode]

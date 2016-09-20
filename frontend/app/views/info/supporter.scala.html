@@ -8,7 +8,8 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import views.support.MembershipCompat._
 
-@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[Supporter],
+@import com.gu.memsub.subsv2.CatalogPlan
+@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
   pageInfo: PageInfo,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

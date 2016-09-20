@@ -4,7 +4,7 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.membership.PaidMembershipPlans
 import com.gu.memsub.Current
-import com.gu.memsub.subsv2.Catalog.PaidMember
+import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 import com.gu.memsub.subsv2.MonthYearPlans
 import com.gu.salesforce.Tier._
 import com.gu.salesforce.{PaidTier, Tier}

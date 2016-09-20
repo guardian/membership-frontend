@@ -1,12 +1,10 @@
 @import configuration.Config
-@import com.gu.memsub.Tangibility
 @import com.gu.memsub.subsv2._
 @import com.gu.memsub.BillingPeriod
 @import com.gu.memsub.Status
-@import com.gu.memsub.Product
 @import views.support.Dates._
 
-@(subscription: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]])
+@(subscription: Subscription[SubscriptionPlan.PaidMember])
 
 @main("Cancel Tier summary") {
     <main role="main" class="page-content l-constrained">

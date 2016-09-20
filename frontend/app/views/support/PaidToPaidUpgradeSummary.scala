@@ -26,24 +26,24 @@ object PaidToPaidUpgradeSummary {
     override def getMessage = s"Failure while trying to display an upgrade summary for the subscription $subNumber to $targetTier: $msg"
   }
 
-  def apply(invoices: BillingSchedule, sub: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]], targetId: ProductRatePlanId, card: PaymentCard)(implicit catalog: Catalog): PaidToPaidUpgradeSummary = {
+  def apply(invoices: BillingSchedule, sub: Subscription[SubscriptionPlan.PaidMember], targetId: ProductRatePlanId, card: PaymentCard)(implicit catalog: Catalog): PaidToPaidUpgradeSummary = {
     val plan = catalog.unsafeFindPaid(targetId)
     lazy val upgradeError = UpgradeSummaryError(sub.name, plan.tier) _
     val accountCurrency = sub.plan.currency
     val firstPayment = Price(invoices.first.amount, accountCurrency)
 
 
-    val billingPeriod = sub.plan.benefit.billingPeriod
+    val billingPeriod = sub.plan.charges.billingPeriod
 
-    val targetPrice = plan.benefit.pricingSummary.getPrice(accountCurrency).getOrElse(
-      throw upgradeError(s"Could not find a price for currency $accountCurrency for rate plan ${plan.productRatePlanId.get}")
+    val targetPrice = plan.charges.price.getPrice(accountCurrency).getOrElse(
+      throw upgradeError(s"Could not find a price for currency $accountCurrency for rate plan ${plan.id.get}")
     )
 
     val currentSummary =
       CurrentSummary(
         tier = sub.plan.tier,
         startDate = sub.startDate,
-        payment = sub.plan.benefit.pricingSummary.prices.head,
+        payment = sub.plan.charges.price.prices.head,
         card = card
       )
 
@@ -55,7 +55,7 @@ object PaidToPaidUpgradeSummary {
         nextPaymentDate = billingPeriod match {
           case Year() => LocalDate.now().plusYears(1)
           case Month() => LocalDate.now().plusMonths(1)
-          case _ => throw new IllegalStateException(s"Unreachable code: the plan ${plan.productRatePlanId} was expected to be either yearly or monthly")
+          case _ => throw new IllegalStateException(s"Unreachable code: the plan ${plan.id} was expected to be either yearly or monthly")
         }
       )
 

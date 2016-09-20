@@ -18,7 +18,7 @@
 @import com.gu.memsub.promo.MembershipLandingPage
 @import org.pegdown.PegDownProcessor
 @import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.Catalog.PaidMember
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import views.support.MembershipCompat._
 
 @(pricePlans: MonthYearPlans[PaidMember],
@@ -27,7 +27,7 @@
     heroImageAlignment: HeroImageAlignment,
     promotionImage: com.gu.memsub.images.ResponsiveImageGroup,
     promoCode: PromoCode,
-    promotion: Promotion[PromotionType, Id, MembershipLandingPage],
+    promotion: Promotion[PromotionType[PromoContext], Id, MembershipLandingPage],
     pd: PegDownProcessor
 )(implicit countryGroup: CountryGroup)
 

@@ -17,8 +17,6 @@ import model.RichEvent.RichEvent
 import model.{PlanChoice, GenericSFContact}
 import views.support.ThankyouSummary
 import com.gu.memsub.subsv2._
-import com.gu.memsub.subsv2.reads.NewReads._
-
 import scala.concurrent.Future
 import scalaz.\/
 import utils.CampaignCode
@@ -50,7 +48,7 @@ trait MemberService {
 
   def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
 
-  def subscriptionUpgradableTo(subscription: Subscription[MembershipPlan[Benefit, Status]], newTier: PaidTier): Boolean
+  def subscriptionUpgradableTo(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
 
   def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary]
 
@@ -58,14 +56,14 @@ trait MemberService {
    * If the member is entitled to complimentary tickets return its Zuora account's corresponding usage records count.
    * Returns none otherwise
    */
-  def getUsageCountWithinTerm(subscription: Subscription[Plan], unitOfMeasure: String): Future[Option[Int]]
+  def getUsageCountWithinTerm(subscription: Subscription[SubscriptionPlan.Member], unitOfMeasure: String): Future[Option[Int]]
 
-  def recordFreeEventUsage(subs: Subscription[Plan],
+  def recordFreeEventUsage(subs: Subscription[SubscriptionPlan.Member],
                            event: RichEvent,
                            order: EBOrder,
                            quantity: Int): Future[CreateResult]
 
-  def retrieveComplimentaryTickets(subscription: Subscription[Plan], event: RichEvent): Future[Seq[EBTicketClass]]
+  def retrieveComplimentaryTickets(subscription: Subscription[SubscriptionPlan.Member], event: RichEvent): Future[Seq[EBTicketClass]]
 
   def createEBCode(subscriber: Member, event: RichEvent): Future[Option[EBCode]]
 

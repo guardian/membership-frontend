@@ -3,12 +3,10 @@
 @import views.support.MembershipCompat._
 @import com.gu.memsub.subsv2._
 @import com.gu.salesforce.Tier
-@import com.gu.memsub.Tangibility
-@import com.gu.memsub.Product
 @import com.gu.memsub.BillingPeriod
 @import com.gu.memsub.Status
 
-@(subscription: Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]])
+@(subscription: Subscription[SubscriptionPlan.PaidMember])
 
 <table class="table table--striped" role="grid">
     <tr role="row">
@@ -31,10 +29,10 @@
 
     <tr role="row">
         <th role="rowheader">
-            @subscription.plan.benefit.billingPeriod.adjective.capitalize payment
+            @subscription.plan.charges.billingPeriod.adjective.capitalize payment
         </th>
         <td id="qa-tier-summary-recurring">
-            @subscription.plan.benefit.pricingSummary.prices.head.pretty
+            @subscription.plan.charges.price.prices.head.pretty
         </td>
     </tr>
 </table>

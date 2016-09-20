@@ -13,12 +13,12 @@ sealed trait PlanChoice {
 
 case class FreePlanChoice(tier: FreeTier) extends PlanChoice {
   override def productRatePlanId(implicit catalog: Catalog) =
-    catalog.findFree(tier).productRatePlanId
+    catalog.findFree(tier).id
 }
 case class PaidPlanChoice(tier: PaidTier, billingPeriod: BillingPeriod) extends PlanChoice {
   override def productRatePlanId(implicit catalog: Catalog) = billingPeriod match {
-    case Year() => catalog.findPaid(tier).year.productRatePlanId
-    case Month() => catalog.findPaid(tier).month.productRatePlanId
+    case Year() => catalog.findPaid(tier).year.id
+    case Month() => catalog.findPaid(tier).month.id
     case _ => throw new IllegalStateException(s"Unreachable code: Expected plan choice ${this} to be either annual or monthly, but found a ${billingPeriod.noun} billing period")
   }
 }

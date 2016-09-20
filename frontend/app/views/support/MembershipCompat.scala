@@ -1,8 +1,9 @@
 package views.support
 import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
 import com.gu.memsub.Subscription.ProductRatePlanId
-import com.gu.memsub._
-import com.gu.memsub.subsv2.Catalog.PaidMember
+import com.gu.memsub.{Subscription => _, _}
+import com.gu.memsub.subsv2.CatalogPlan
+import com.gu.memsub.subsv2.ZProduct.Membership
 import com.gu.memsub.subsv2._
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 
@@ -14,60 +15,56 @@ import scala.util.Try
   */
 object MembershipCompat {
 
-  implicit class MonthYearMembership[P <: Product[Tangibility]](in: MonthYearPlans[PaidMember]) {
+  implicit class MonthYearMembership(in: MonthYearPlans[CatalogPlan.PaidMember]) {
     def tier: PaidTier = in.month.tier
-
   }
-  implicit class GenericMembership(in: MembershipPlan[Benefit, Status]) {
 
-    def currency: Currency = in.benefit match {
-      case PaidBenefit(_, pricing, _) => pricing.prices.head.currency
-      case FreeBenefit(_, currencies) => currencies.head
-    }
+  implicit class GenericMembership(in: Plan[Membership, ChargeList with SingleBenefit[MemberTier]]) {
 
-    def tier: Tier = in.benefit match {
-      case PaidBenefit(com.gu.memsub.Supporter, _, _) => Tier.supporter
-      case PaidBenefit(com.gu.memsub.Partner, _, _) => Tier.partner
-      case PaidBenefit(com.gu.memsub.Patron, _, _) => Tier.patron
-      case FreeBenefit(com.gu.memsub.Friend, _) => Tier.friend
-      case FreeBenefit(com.gu.memsub.Staff, _) => Tier.staff
+    def currency: Currency = in.charges.currencies.head
+
+    def tier: Tier = in.charges.benefit match {
+      case Supporter => Tier.supporter
+      case Partner => Tier.partner
+      case Patron => Tier.patron
+      case Friend => Tier.friend
+      case Staff => Tier.staff
 
     }
   }
 
-  implicit class PaidMembership(in: MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Status]) {
+  implicit class PaidMembership(in: Plan[Membership, PaidCharge[PaidMemberTier, BillingPeriod]]) {
 
     def currencyOrGBP(cg: Country): Currency = CountryGroup
       .byCountryCode(cg.alpha2).map(_.currency)
-      .filter(in.benefit.pricingSummary.currencies.contains)
+      .filter(in.charges.price.currencies.contains)
       .getOrElse(GBP)
 
-    def tier: PaidTier = in.benefit match {
-      case PaidBenefit(com.gu.memsub.Supporter, _, _) => Tier.supporter
-      case PaidBenefit(com.gu.memsub.Partner, _, _) => Tier.partner
-      case PaidBenefit(com.gu.memsub.Patron, _, _) => Tier.patron
+    def tier: PaidTier = in.charges.benefit match {
+      case Supporter => Tier.supporter
+      case Partner => Tier.partner
+      case Patron => Tier.patron
     }
   }
 
-  implicit class YMPlans(in: MonthYearPlans[PaidMember]) {
+  implicit class YMPlans(in: MonthYearPlans[CatalogPlan.PaidMember]) {
 
-    def get(b: BillingPeriod): PaidMember[BillingPeriod] = b match {
+    def get(b: BillingPeriod): CatalogPlan.PaidMember[BillingPeriod] = b match {
       case Month() => in.month
       case Year() => in.year
     }
   }
 
-  implicit class FreeMembership(in: MembershipPlan[FreeBenefit[Product[Tangibility]], Status]) {
-
+  implicit class FreeMembership(in: CatalogPlan.FreeMember) {
 
     def currencyOrGBP(cg: Country): Currency = CountryGroup
       .byCountryCode(cg.alpha2).map(_.currency)
-      .filter(in.benefit.currencies.contains)
+      .filter(in.charges.currencies.contains)
       .getOrElse(GBP)
 
-    def tier: FreeTier = in.benefit match {
-      case FreeBenefit(com.gu.memsub.Friend, _) => Tier.friend
-      case FreeBenefit(com.gu.memsub.Staff, _) => Tier.staff
+    def tier: FreeTier = in.charges.benefit match {
+      case Friend => Tier.friend
+      case Staff => Tier.staff
     }
   }
 
@@ -75,25 +72,25 @@ object MembershipCompat {
 
     def find(prpId: ProductRatePlanId) =
       Seq(in.friend, in.supporter.month, in.supporter.year, in.partner.month, in.partner.year, in.patron.month, in.patron.year)
-        .find(_.productRatePlanId == prpId)
+        .find(_.id == prpId)
 
-    def unsafeFind(prpId: ProductRatePlanId) = find(prpId).getOrElse(throw new Exception(s"no plan with $prpId"))
+    def unsafeFind(prpId: ProductRatePlanId) =
+      find(prpId).getOrElse(throw new Exception(s"no plan with $prpId"))
 
-    def unsafeFindPaid(prpId: ProductRatePlanId): MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Current] =
+    def unsafeFindPaid(prpId: ProductRatePlanId): CatalogPlan.PaidMember[BillingPeriod] =
       Seq(in.supporter.month, in.supporter.year, in.partner.month, in.partner.year, in.patron.month, in.patron.year)
-        .find(_.productRatePlanId == prpId).getOrElse(throw new Exception(s"no paid plan with id $prpId"))
+        .find(_.id == prpId).getOrElse(throw new Exception(s"no paid plan with id $prpId"))
 
-    def unsafeFindFree(prpId: ProductRatePlanId): MembershipPlan[FreeBenefit[Product[Tangibility]], Current] =
-      Seq(in.friend)
-        .find(_.productRatePlanId == prpId).getOrElse(throw new Exception(s"no free plan with id $prpId"))
+    def unsafeFindFree(prpId: ProductRatePlanId): CatalogPlan.FreeMember = Seq(in.friend, in.staff)
+        .find(_.id == prpId).getOrElse(throw new Exception(s"no free plan with id $prpId"))
 
-    def findPaid(p: PaidTier): MonthYearPlans[PaidMember] = p match {
+    def findPaid(p: PaidTier): MonthYearPlans[CatalogPlan.PaidMember] = p match {
       case Tier.Supporter() => in.supporter
       case Tier.Partner() => in.partner
       case Tier.Patron() => in.patron
     }
 
-    def findPaid(p: ProductRatePlanId): Option[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Current]] =
+    def findPaid(p: ProductRatePlanId): Option[CatalogPlan.PaidMember[BillingPeriod]] =
       Try(unsafeFindPaid(p)).toOption
 
     def findFree(f: FreeTier) = f match {

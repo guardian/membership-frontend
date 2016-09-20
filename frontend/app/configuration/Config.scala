@@ -157,7 +157,7 @@ object Config {
   def subsProductIds(env: String): SubscriptionsProductIds =
     SubscriptionsProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds.subscriptions"))
 
-  def productIds(env: String): com.gu.memsub.subsv2.reads.NewReads.ProductIds =
+  def productIds(env: String): com.gu.memsub.subsv2.reads.ChargeListReads.ProductIds =
     SubsV2ProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds"))
 
 

@@ -55,7 +55,7 @@ object TierController extends Controller with ActivityTracking
   }
 
   def downgradeToFriendSummary = PaidSubscriptionAction { implicit request =>
-    val startDate = request.subscriber.subscription.chargedThroughDate.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
+    val startDate = request.subscriber.subscription.plan.chargedThrough.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
     implicit val c = catalog
     Ok(views.html.tier.downgrade.summary(
       request.subscriber.subscription,
@@ -92,7 +92,7 @@ object TierController extends Controller with ActivityTracking
 
   def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
     handleErrors(memberService.cancelSubscription(request.subscriber)) {
-      if(request.subscriber.subscription.isPaid) {
+      if(request.subscriber.subscription.plan.isPaid) {
         Redirect(routes.TierController.cancelFreeTierSummary())
       } else {
         Redirect(routes.TierController.cancelPaidTierSummary())
@@ -122,11 +122,11 @@ object TierController extends Controller with ActivityTracking
       }}
   }
 
-  def paymentSummary(subscriber: PaidMember, targetPlans: MonthYearPlans[com.gu.memsub.subsv2.Catalog.PaidMember], code: Option[PromoCode])
+  def paymentSummary(subscriber: PaidMember, targetPlans: MonthYearPlans[com.gu.memsub.subsv2.CatalogPlan.PaidMember], code: Option[PromoCode])
                     (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
 
-    val targetPlan = targetPlans.get(subscriber.subscription.plan.benefit.billingPeriod)
-    val targetChoice = PaidPlanChoice(targetPlan.tier, targetPlan.benefit.billingPeriod)
+    val targetPlan = targetPlans.get(subscriber.subscription.plan.charges.billingPeriod)
+    val targetChoice = PaidPlanChoice(targetPlan.tier, targetPlan.charges.billingPeriod)
     val sub = subscriber.subscription
 
     (for {
@@ -186,12 +186,12 @@ object TierController extends Controller with ActivityTracking
         )(getToken, request))
       })
     }, { paidSubscriber =>
-      val billingPeriod = paidSubscriber.subscription.plan.benefit.billingPeriod
+      val billingPeriod = paidSubscriber.subscription.plan.charges.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
 
       // get a valid promotion but don't apply it to the payment summary
       val validPromo = memberService.country(paidSubscriber.contact).map { country =>
-        val planChoice = PaidPlanChoice(target, paidSubscriber.subscription.plan.benefit.billingPeriod)
+        val planChoice = PaidPlanChoice(target, paidSubscriber.subscription.plan.charges.billingPeriod)
         (promoCode orElse codeFromSession).flatMap(promoService.validate[Upgrades](_, country, planChoice.productRatePlanId).toOption)
       }
 

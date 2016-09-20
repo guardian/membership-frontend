@@ -8,11 +8,11 @@
 @import com.gu.memsub.subsv2._
 @import views.support.PaidPlans
 @import com.gu.memsub.Friend
-@import com.gu.memsub.subsv2.Catalog.PaidMember
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import views.support.MembershipCompat._
 
-@(currentPlan: MembershipPlan[FreeBenefit[Friend.type], Status],
+@(currentPlan: CatalogPlan.Member,
   targetPlans: MonthYearPlans[PaidMember],
   countriesWithCurrency: List[CountryWithCurrency],
   userFields: com.gu.identity.play.PrivateFields,

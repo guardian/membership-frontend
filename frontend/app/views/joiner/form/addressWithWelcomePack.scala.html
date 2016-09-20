@@ -8,7 +8,7 @@
 @import com.gu.salesforce.Tier.{Staff => SFStaff}
 
 @import views.support.FreePlan
-@(staffPlan: MembershipPlan[FreeBenefit[Staff.type], Current],
+@(staffPlan: CatalogPlan.Staff,
   idUser: IdentityUser,
   flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)

@@ -2,7 +2,7 @@ package views.support
 
 import com.gu.i18n.{Currency, GBP}
 import com.gu.membership.PaidMembershipPlans
-import com.gu.memsub.subsv2.Catalog.PaidMember
+import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 import com.gu.memsub.subsv2.MonthYearPlans
 import com.gu.memsub.{Current, Price}
 import com.gu.salesforce.PaidTier
@@ -27,19 +27,19 @@ object Pricing {
 
     def unsafePriceByCurrency(currency: Currency) = pricing(currency).getOrElse {
       throw new NoSuchElementException(
-        s"Cannot find a $currency price for tier ${plans.month.benefit}")
+        s"Cannot find a $currency price for tier ${plans.month.charges.benefit}")
     }
 
     def gbpPricing = Pricing(
-      plans.year.benefit.pricingSummary.getPrice(GBP).get, //fixme
-      plans.month.benefit.pricingSummary.getPrice(GBP).get
+      plans.year.charges.gbpPrice,
+      plans.month.charges.gbpPrice
     )
 
     def pricingByCurrencyOrGBP(currency: Currency) = pricing(currency).getOrElse(gbpPricing)
 
     private def pricing(c: Currency): Option[Pricing] = {
-      plans.year.benefit.pricingSummary.getPrice(c)
-        .zip(plans.month.benefit.pricingSummary.getPrice(c))
+      plans.year.charges.price.getPrice(c)
+        .zip(plans.month.charges.price.getPrice(c))
         .map((Pricing.apply _).tupled)
         .headOption
     }

@@ -6,9 +6,10 @@
 @import com.gu.memsub.subsv2.Catalog._
 
 @import com.gu.memsub.subsv2.MonthYearPlans
-@(patronPlans: MonthYearPlans[Patron],
-  supporterPlans: MonthYearPlans[Supporter],
-  partnerPlans: MonthYearPlans[Partner],
+@import com.gu.memsub.subsv2.CatalogPlan
+@(patronPlans: MonthYearPlans[CatalogPlan.Patron],
+  supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+  partnerPlans: MonthYearPlans[CatalogPlan.Partner],
   pageInfo: PageInfo,
   countryGroup: CountryGroup,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)

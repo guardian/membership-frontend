@@ -5,10 +5,10 @@ import com.gu.googleauth.UserIdentity
 import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
 import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
 import com.gu.memsub.Subscription.{FreeMembershipSub, PaidMembershipSub}
-import com.gu.memsub.subsv2.{FreeBenefit, MembershipPlan, PaidBenefit, Subscription}
+import com.gu.memsub.subsv2.{Subscription, Membership => _, _}
 import com.gu.memsub.util.Timing
 import configuration.Config.googleGroupChecker
-import services._
+import _root_.services._
 import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
 import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
@@ -18,7 +18,8 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
-
+import com.gu.memsub.subsv2.reads.SubPlanReads._
+import com.gu.memsub.subsv2.reads.ChargeListReads._
 import scala.concurrent.Future
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
@@ -52,12 +53,12 @@ object ActionRefiners extends LazyLogging {
   private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
     val tp = request.touchpointBackend
-    val FreeSubscriber = Subscriber[Subscription[MembershipPlan[FreeBenefit[Product[Tangibility]], SubStatus]]] _
-    val PaidSubscriber = Subscriber[Subscription[MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], SubStatus]]] _
+    val FreeSubscriber = Subscriber[Subscription[SubscriptionPlan.FreeMember]] _
+    val PaidSubscriber = Subscriber[Subscription[SubscriptionPlan.PaidMember]] _
 
     (for {
       member <- OptionT(request.forMemberOpt(identity))
-      subscription <- OptionT(tp.subscriptionService.either[MembershipPlan[FreeBenefit[Friend.type], Current], MembershipPlan[PaidBenefit[Product[Tangibility], BillingPeriod], Current]](member))
+      subscription <- OptionT(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
     } yield new SubscriptionRequest[A](tp, request) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run
