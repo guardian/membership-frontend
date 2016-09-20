@@ -13,9 +13,7 @@ import model.{ContentDestination, EventDestination}
 import org.joda.time.LocalDate
 import org.specs2.mutable.Specification
 import play.api.mvc.Session
-import play.api.test.FakeRequest
 import utils.Resource
-
 import scalaz.Id._
 
 class DestinationServiceTest extends Specification {
@@ -75,10 +73,9 @@ class DestinationServiceTest extends Specification {
     "should return either content or event destination if both are supplied" in {
       val (request, member) = createRequestWithSession("join-referrer" -> "http://www.theguardian.com/membership/2015/apr/17/guardian-live-diversity-in-the-arts", "preJoinReturnUrl" -> "/event/0123456/buy")
 
-      destinationService.returnDestinationFor(request, member) match {
-        case Some(EventDestination(event, _)) => event.id mustEqual "0123456"
-        case Some(ContentDestination(item)) => item.content.id mustEqual "membership/2015/apr/17/guardian-live-diversity-in-the-arts"
-        case _ => 1 mustEqual 0 // surely this can be improved!
+      destinationService.returnDestinationFor(request, member).get match {
+        case EventDestination(event, _) => event.id mustEqual "0123456"
+        case ContentDestination(item) => item.content.id mustEqual "membership/2015/apr/17/guardian-live-diversity-in-the-arts"
       }
     }
   }

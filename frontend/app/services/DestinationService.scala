@@ -44,6 +44,6 @@ class DestinationService[M[+_] : Monad](
   def eventDestinationFor(session: Session, member: Member): M[Option[EventDestination]] = (for {
     eventId <- OptionT(PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(session).point[M])
     event <- OptionT(getBookableEvent(eventId).point[M]) if event.isBookableByTier(member.subscription.plan.tier)
-    eventDiscount <- OptionT(createCode(member, event))
-  } yield EventDestination(event, Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> eventDiscount.code))).run
+    eventDiscount <- OptionT(createCode(member, event).map[Option[Option[EBCode]]](opt => Some(opt))) // this is perhaps a bit silly
+  } yield EventDestination(event, Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> eventDiscount.map(_.code)))).run
 }
