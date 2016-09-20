@@ -1,6 +1,6 @@
 package services
 
-import play.api.mvc.RequestHeader
+import play.api.mvc.{RequestHeader, Session}
 
 object EventIdExtractor {
   def apply(url: String): Option[String] = {
@@ -14,9 +14,9 @@ object EventIdExtractor {
 }
 
 object PreMembershipJoiningEventFromSessionExtractor {
-  def eventIdFrom(request: RequestHeader): Option[String] = {
+  def eventIdFrom(session: Session): Option[String] = {
     for {
-      url <- request.session.get("preJoinReturnUrl")
+      url <- session.get("preJoinReturnUrl")
       eventId <- EventIdExtractor(url)
     }  yield eventId
   }
