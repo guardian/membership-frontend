@@ -5,10 +5,9 @@ import com.gu.identity.play.{PrivateFields, StatusFields}
 import com.gu.membership.{PaidMembershipPlan, PaidMembershipPlans}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub._
-import com.gu.salesforce.Tier
-import com.gu.salesforce.Tier.Partner
 import org.specs2.mutable.Specification
 import TierPlans._
+import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans, PaidCharge, ZProduct}
 
 class CheckoutFormTest extends Specification {
   val billingAddress = PrivateFields(
@@ -36,9 +35,9 @@ class CheckoutFormTest extends Specification {
     EUR -> Price(3.5f, EUR)
   ))
 
-  val plans = PaidMembershipPlans[Current, Partner](
-    month = PaidMembershipPlan[Current, Partner, Month](Status.current, Tier.partner, BillingPeriod.month, ProductRatePlanId("month"), pricingSummary),
-    year = PaidMembershipPlan[Current, Partner, Year](Status.current, Tier.partner, BillingPeriod.year, ProductRatePlanId("year"), pricingSummary)
+  val plans = MonthYearPlans[CatalogPlan.Partner](
+    month = CatalogPlan(ProductRatePlanId(""), subsv2.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.month, pricingSummary), Status.current),
+    year = CatalogPlan(ProductRatePlanId(""), subsv2.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.year, pricingSummary), Status.current)
   )
 
   implicit class checkoutForm2Tuple2(form: CheckoutForm) {

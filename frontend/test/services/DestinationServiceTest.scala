@@ -63,7 +63,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         isPaid = true
       ) with PaidPS[PaidMembershipPlan[Status, PaidTier, BillingPeriod]] {
 
-        override def recurringPrice: Price = new Price(0.1f, GBP)
+        override def recurringPrice: Price = Price(0.1f, GBP)
         override def firstPaymentDate: LocalDate = new LocalDate("2015-01-01")
         override def chargedThroughDate: Option[LocalDate] = None
         override def priceAfterTrial: Price = recurringPrice
