@@ -58,7 +58,7 @@ object Joiner extends Controller with ActivityTracking
   val identityService = IdentityService(IdentityApi)
 
   def tierChooser = NoCacheAction { implicit request =>
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(EventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
     val contentRefererOpt = request.headers.get(REFERER)
 
@@ -215,7 +215,7 @@ object Joiner extends Controller with ActivityTracking
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
     logger.info(s"User ${request.user.id} attempting to become ${tier.name}...")
-    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
 
@@ -256,7 +256,7 @@ object Joiner extends Controller with ActivityTracking
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       promotion = request.subscriber.subscription.promoCode.flatMap(c => promoService.findPromotion(c))
       validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
-      destination <- DestinationService.returnDestinationFor(request)
+      destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
         request.subscriber,
