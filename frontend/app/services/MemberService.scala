@@ -42,7 +42,7 @@ import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.util.Failure
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
 import scalaz.syntax.std.option._
