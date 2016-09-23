@@ -3,18 +3,22 @@ import * as cookie from 'src/utils/cookie'
 
 const tracker = 'membershipPropertyTracker';
 const dimensions = {
-    signedIn: 'dimension1',
-    signedOut: 'dimension2',
-    ophanPageViewId: 'dimension3',
-    ophanBrowserId: 'dimension4',
-    platform: 'dimension5',
-    identityId: 'dimension6',
-    isLoggedOn: 'dimension7',
-    stripeId: 'dimension8',
-    zouraId: 'dimension9',
-    membershipNumber: 'dimension10',
-    productPurchased: 'dimension11',
-    intcmp: 'dimension12'
+    signedIn: 'dimension1', // User
+    signedOut: 'dimension2', // User
+    ophanPageViewId: 'dimension3', // Hit
+    ophanBrowserId: 'dimension4', // User
+    platform: 'dimension5', // Hit
+    identityId: 'dimension6', // User
+    isLoggedOn: 'dimension7', // Hit
+    stripeId: 'dimension8', // Session
+    zouraId: 'dimension9', // Session
+    membershipNumber: 'dimension10', // User
+    productPurchased: 'dimension11', // Session
+    intcmp: 'dimension12', // Session
+    customerAgent: 'dimension13', // Hit
+    CamCodeBusinessUnit: 'dimension14', // Session
+    CamCodeTeam: 'dimension15' // Session
+
 };
 const metrics = {
     join: {
@@ -115,8 +119,15 @@ export function init() {
     if (intcmp && intcmp[1]){
         wrappedGa('set',dimensions.intcmp,intcmp[1]);
     }
+    let cmpBunit = new RegExp('CMP_BUNIT=([^&]*)').exec(location.search);
+    if (cmpBunit && cmpBunit[1]){
+        ga('set',dimensions.CamCodeBusinessUnit,cmpBunit[1]);
+    }
+    let cmpTu = new RegExp('CMP_TU=([^&]*)').exec(location.search);
+    if (cmpTu && cmpTu[1]){
+        ga('set',dimensions.CamCodeTeam,cmpTu[1]);
+    }
 
-    //Send the pageview.
     wrappedGa('send', 'pageview');
 
 }

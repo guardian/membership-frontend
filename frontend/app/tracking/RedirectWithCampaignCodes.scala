@@ -22,6 +22,8 @@ object RedirectWithCampaignCodes {
     "mcopy"
   )
 
+  val internalCampaignCode = "INTCMP"
+
   def redirectWithCampaignCodes(url: String, status: Int)(implicit request: RequestHeader): Result =
     Redirect(url, request.queryString.filterKeys(CampaignCodesToForward), status)
 }

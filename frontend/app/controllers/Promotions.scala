@@ -23,7 +23,7 @@ import org.pegdown.PegDownProcessor
 import play.api.data.{Form, Forms}
 import org.pegdown.Extensions._
 import views.support.MembershipCompat._
-
+import tracking.RedirectWithCampaignCodes.internalCampaignCode
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 
@@ -103,8 +103,8 @@ object Promotions extends Controller {
 
     val promoCode = PromoCode(promoCodeStr)
     // Any provided internal campaign code takes precedence over the "From Promo Code" version.
-    val internalCampaignCode = request.getQueryString("INTCMP").getOrElse(s"FROM_P_${promoCode.get}")
-    val homepageWithCampaignCode = "/" ? ("INTCMP" -> internalCampaignCode)
+    val campaignCode = request.getQueryString(internalCampaignCode).getOrElse(s"FROM_P_${promoCode.get}")
+    val homepageWithCampaignCode = "/" ? (internalCampaignCode -> campaignCode)
     val redirectToHomepage = Redirect(homepageWithCampaignCode)
     val redirectToUpperCase = Redirect("/p/" + promoCodeStr.toUpperCase)
     val redirectToHomepageWithSession = Redirect(homepageWithCampaignCode).withCookies(sessionCookieFromCode(promoCode))
