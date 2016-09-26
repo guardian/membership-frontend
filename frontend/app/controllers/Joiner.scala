@@ -58,7 +58,7 @@ object Joiner extends Controller with ActivityTracking
   val identityService = IdentityService(IdentityApi)
 
   def tierChooser = NoCacheAction { implicit request =>
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(EventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
     val contentRefererOpt = request.headers.get(REFERER)
 
@@ -215,7 +215,7 @@ object Joiner extends Controller with ActivityTracking
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
     logger.info(s"User ${request.user.id} attempting to become ${tier.name}...")
-    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
 
@@ -232,7 +232,8 @@ object Joiner extends Controller with ActivityTracking
           logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
 
-        case error: PaymentGatewayError => handlePaymentGatewayError(error, request.user.id)
+        case error: PaymentGatewayError =>
+          handlePaymentGatewayError(error, request.user.id, tier.name, idRequest.trackingParameters, formData.deliveryAddress.countryName)
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
@@ -255,7 +256,7 @@ object Joiner extends Controller with ActivityTracking
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       promotion = request.subscriber.subscription.promoCode.flatMap(c => promoService.findPromotion(c))
       validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
-      destination <- DestinationService.returnDestinationFor(request)
+      destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
         request.subscriber,
@@ -269,32 +270,22 @@ object Joiner extends Controller with ActivityTracking
 
   def thankyouStaff = thankyou(Tier.partner)
 
-  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String) = {
+  private def handlePaymentGatewayError(
+      e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String,String)], country: String) = {
 
-    def handleError(msg: String, errType: String) = {
-      logger.warn(s"${msg}: \n\t${e} \n\tuser=${userId}")
-      Forbidden(Json.obj("type" -> errType, "message" -> msg))
+    def handleError(code: String) = {
+      logger.warn(s"User ${userId} could not become $tier member due to payment gateway failed transaction: \n\terror=${e} \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
+      Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
     }
 
-    // TODO: Does Zuora provide a guarantee the message is safe to display to users directly?
-    // For now providing custom message to make sure no sensitive information is revealed.
-
-    logger.warn(s"User ${userId} could not become a member due to payment gateway failed transaction.")
-
     e.errType match {
-      case InsufficientFunds =>
-        handleError("Your card has insufficient funds", "InssufficientFunds")
-
-      case TransactionNotAllowed =>
-        handleError("Your card does not support this type of purchase", "TransactionNotAllowed")
-
-      case RevocationOfAuthorization =>
-        handleError(
-          "Cardholder has requested all payments to be stopped on this card",
-          "RevocationOfAuthorization")
-
-      case _ =>
-        handleError("Your card was declined", "PaymentGatewayError")
+      case Fraudulent => handleError("Fraudulent")
+      case TransactionNotAllowed => handleError("TransactionNotAllowed")
+      case DoNotHonor => handleError("DoNotHonor")
+      case InsufficientFunds => handleError("InsufficientFunds")
+      case RevocationOfAuthorization => handleError("RevocationOfAuthorization")
+      case GenericDecline => handleError("GenericDecline")
+      case _ => handleError("UknownPaymentError")
     }
   }
 }

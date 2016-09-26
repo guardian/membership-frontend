@@ -20,23 +20,28 @@ object MemberOnlyContent extends Controller with LazyLogging {
     val accessOpt = ContentAccess.valueOf(membershipAccess)
     contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
 
-      val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referringContent) ? ("skipConfirmation" -> "true")).toString
+      val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> ("https://theguardian.com/" + referringContent)) ? ("skipConfirmation" -> "true")).toString
 
       implicit val countryGroup = UK
-      val pageInfo = PageInfo(
-        title = CopyConfig.copyTitleChooseTier,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionChooseTier),
-        customSignInUrl = Some(signInUrl)
-      )
+
 
       (for {
         content <- response.content
       } yield {
         if (content.fields.exists(_.membershipAccess.nonEmpty)) {
-          Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, CapiContent(content)))
+          val capiContent: CapiContent = CapiContent(content)
+          val headline: String = capiContent.headline
+          val pageInfo = PageInfo(
+            title = headline,
+            url = request.path,
+            description = capiContent.trailText,
+            customSignInUrl = Some(signInUrl),
+            image = capiContent.mainPicture.map(_.defaultImage)
+          )
+          Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, capiContent, s"Exclusive Members Content: $headline")).
+            withSession(request.session +  (DestinationService.JoinReferrer -> ("https://" + Config.guardianHost +"/" + referringContent)))
         } else {
-          Redirect(referringContent)
+          Redirect(("https://theguardian.com/" + referringContent))
         }
       }).getOrElse(
         Redirect(routes.Joiner.tierChooser())

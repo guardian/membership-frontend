@@ -241,12 +241,20 @@
 
 .content__section-label {
     @include fs-header(1);
+    @include f-header;
     float: left;
     padding-right: $gs-gutter/3;
 
-    @include mq(tablet) {
-        @include fs-header(4);
-        line-height: get-line-height(header, 2);
+    @include mq(wide) {
+        font-size: 22px;
+        line-height: 24px;
+        float: none;
+        padding-right: 0;
+    }
+
+    @include mq(mem-full, wide) {
+        font-size: 20px;
+        line-height: 24px;
         float: none;
         padding-right: 0;
     }

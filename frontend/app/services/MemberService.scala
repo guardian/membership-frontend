@@ -28,6 +28,7 @@ import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
+import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
@@ -131,8 +132,10 @@ class MemberService(identityService: IdentityService,
     def createPaidZuoraSubscription(sfContact: ContactId, stripeCustomer: Customer, paid: PaidMemberJoinForm): Future[String] =
       (for {
         zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode)
-      } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
-        logger.error(s"Could not create paid Zuora subscription for user ${user.id}", e)}
+      } yield zuoraSub.subscriptionName).andThen {
+        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
+        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
+      }
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm) =
       (for {

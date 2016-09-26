@@ -10,17 +10,18 @@
 @(pageInfo: PageInfo,
     accessOpt: Option[ContentAccess],
     signInUrl: String,
-    content: CapiContent
+    content: CapiContent,
+    titleOverride: String
 )(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @actionAttrs = {
-    href="@{routes.Joiner.enterPaidDetails(Supporter())}"
+    href="@{routes.Info.supporterRedirect(None)}"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@Supporter.toString.toLowerCase"
 }
 
-@main("Exclusive Guardian Members content", pageInfo=pageInfo) {
+@main("Exclusive Guardian Members content", pageInfo=pageInfo, titleOverride = Some(titleOverride)) {
 
     <main role="main">
         <div class="l-constrained">
