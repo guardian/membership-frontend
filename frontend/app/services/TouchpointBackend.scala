@@ -3,37 +3,30 @@ package services
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.promo.{DynamoPromoCollection, PromotionCollection}
-import com.gu.memsub.services.{CatalogService, PaymentService, PromoService, api => memsubapi}
-import com.gu.membership.MembershipCatalog
-import com.gu.memsub.promo.{DynamoPromoCollection, PromotionCollection}
-import com.gu.memsub.services.{CatalogService, PaymentService, PromoService, api => memsubapi}
-import com.gu.memsub
+import com.gu.memsub.services.{PaymentService, PromoService, api => memsubapi}
+import com.gu.memsub.subsv2
+import com.gu.memsub.subsv2.Catalog
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
 import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
+import com.gu.zuora.rest.{RequestRunners, SimpleClient}
 import com.gu.zuora.soap.ClientWithFeatureSupplier
-import scalaz.std.scalaFuture._
-import com.gu.zuora.{rest, soap, ZuoraService => ZuoraServiceImpl}
-import com.gu.zuora.{rest, soap, ZuoraService => ZuoraServiceImpl}
+import com.gu.zuora.{ZuoraService => ZuoraServiceImpl, rest, soap}
 import com.netaporter.uri.Uri
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.TestUsers.isTestUser
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import com.gu.memsub.subsv2
-import com.gu.memsub.subsv2.Catalog
-import com.gu.zuora.rest.{RequestRunners, SimpleClient}
 
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scalaz.std.scalaFuture._
-import scala.concurrent.{Await, Future}
-import scala.concurrent.Future
 
 object TouchpointBackend {
 

@@ -235,7 +235,7 @@ class MemberService(identityService: IdentityService,
   override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
 
     val cancelDate = subscriber.subscription.plan match {
-      case PaidSubscriptionPlan(_, _, _, _, _, _, chargedThrough) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
+      case PaidSubscriptionPlan(_, _, _, _, _, _, _, chargedThrough) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
       case _ => DateTime.now.toLocalDate
     }
 
@@ -269,7 +269,9 @@ class MemberService(identityService: IdentityService,
 
     // The year and month plans are guaranteed to have the same currencies
     val targetCurrencies = newPlan.year.charges.price.prices.map(_.currency).toSet
-    targetCurrencies.toSet.contains(sub.plan.charges.currencies) && newPlan.month.tier > sub.plan.tier
+    val currencyIsAvailable = targetCurrencies.toSet.contains(sub.plan.currency)
+    val higherTier = newPlan.month.tier > sub.plan.tier
+    currencyIsAvailable && higherTier
   }
 
   override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
@@ -311,7 +313,10 @@ class MemberService(identityService: IdentityService,
   }
 
   override def getUsageCountWithinTerm(subscription: Subscription[SubscriptionPlan.Member], unitOfMeasure: String): Future[Option[Int]] = {
-    val features = subscription.features
+    val features = subscription.plan match {
+      case plan: PaidSubscriptionPlan[_, _] => plan.features
+      case _ => List.empty
+    }
     val startDate = subscription.startDate.toDateTimeAtStartOfDay(DateTimeZone.forID("America/Los_Angeles"))
     zuoraService.getUsages(subscription.name, unitOfMeasure, startDate).map { usages =>
       val hasComplimentaryTickets = features.map(_.code).contains(FreeEventTickets.zuoraCode)

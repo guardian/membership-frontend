@@ -11,7 +11,8 @@ import scala.language.higherKinds
 import scala.util.Try
 
 /**
-  * Created by tverran on 30/08/2016.
+  * this is a temporary situation until membership is refactored more properly to understand the new membership-common models
+  * please delete me and refactor all the things properly!
   */
 object MembershipCompat {
 
@@ -52,6 +53,7 @@ object MembershipCompat {
     def get(b: BillingPeriod): CatalogPlan.PaidMember[BillingPeriod] = b match {
       case Month() => in.month
       case Year() => in.year
+      case _ => throw new RuntimeException("can't have quarterly membership")
     }
   }
 

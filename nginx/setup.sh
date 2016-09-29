@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 GU_KEYS="${HOME}/.gu/keys"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

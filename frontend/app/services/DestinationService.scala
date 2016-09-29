@@ -9,6 +9,7 @@ import scalaz.syntax.monadPlus._
 import play.api.mvc.Session
 import scala.language.higherKinds
 import scalaz.{Monad, OptionT}
+import views.support.MembershipCompat._
 
 object DestinationService {
   val JoinReferrer = "join-referrer" //session key
