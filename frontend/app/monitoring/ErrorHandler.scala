@@ -1,5 +1,7 @@
 package monitoring
 
+import java.lang.Long
+import java.lang.System.currentTimeMillis
 import javax.inject._
 
 import com.gu.googleauth.UserIdentity
@@ -45,7 +47,8 @@ class ErrorHandler @Inject() (
     Future.successful(NoCache(InternalServerError(views.html.error500(exception))))
 
   override protected def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
-    logServerError(request, new PlayException("Bad request","A very bad request was received!"))
-    Future.successful(NoCache(BadRequest(views.html.error400(request,message))))
+    val reference = Long.toString(currentTimeMillis(), 36).toUpperCase
+    logServerError(request, new PlayException("Bad request", s"A bad request was received. URI: ${request.uri}, Reference: $reference"))
+    Future.successful(NoCache(BadRequest(views.html.error400(request, s"Bad request received. Reference: $reference"))))
   }
 }
