@@ -98,7 +98,13 @@ object ActionRefiners extends LazyLogging {
 
   def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result = selectedTier match {
     case t: PaidTier if t > req.subscriber.subscription.plan.tier => tierChangeEnterDetails(t)(req)
-    case _ => Ok(views.html.tier.upgrade.unavailable(req.subscriber.subscription.plan.tier, selectedTier))
+    case _ => {
+      // Log cancelled members attempting to re-join.
+      if (req.subscriber.subscription.isCancelled) {
+        logger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
+      }
+      Ok(views.html.tier.upgrade.unavailable(req.subscriber.subscription.plan.tier, selectedTier))
+    }
   }
 
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
