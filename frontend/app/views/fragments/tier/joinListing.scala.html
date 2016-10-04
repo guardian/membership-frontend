@@ -1,8 +1,9 @@
-@import com.gu.membership.MembershipCatalog
-
+@import com.gu.memsub.subsv2.Catalog
+@import views.support.MembershipCompat._
 @import com.gu.salesforce.PaidTier
 @import com.gu.i18n.CountryGroup
-@(catalog: MembershipCatalog)(implicit countryGroup: CountryGroup)
+
+@(catalog: Catalog)(implicit countryGroup: CountryGroup)
 
 <section class="listing listing--basic tone-tint">
     <div class="l-constrained">

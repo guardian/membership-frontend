@@ -1,10 +1,11 @@
 package views.support
-
-import com.gu.i18n.{Country, Currency}
-import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlans}
-import com.gu.memsub.Current
-import com.gu.salesforce.{FreeTier, PaidTier, Tier}
-
+import com.gu.i18n.{Country, CountryGroup, Currency}
+import com.gu.memsub._
+import com.gu.memsub.subsv2.CatalogPlan.{PaidMember, Partner}
+import com.gu.memsub.subsv2._
+import com.gu.salesforce.Tier
+import views.support.MembershipCompat._
+import scala.language.implicitConversions
 /**
   * Hack to unify FreeMembershipPlan and PaidMembershipPlans in views
   * Can't use type classes as Twirl functions cannot accept type parameters
@@ -16,23 +17,23 @@ sealed trait TierPlans {
   def currency(country: Country): Option[Currency]
 }
 
-case class FreePlan(plan: FreeMembershipPlan[Current, FreeTier]) extends TierPlans {
+case class FreePlan(plan: CatalogPlan.FreeMember) extends TierPlans {
   override def tier = plan.tier
-  override def currencies = plan.currencies
-  override def currency(country: Country): Option[Currency] = plan.currency(country)
+  override def currencies = plan.charges.currencies
+  override def currency(country: Country): Option[Currency] = CountryGroup.availableCurrency(currencies)(country)
 }
 
-case class PaidPlans(plans: PaidMembershipPlans[Current, PaidTier]) extends TierPlans {
-  override def tier = plans.tier
-  override def currencies = plans.currencies
-  override def currency(country: Country): Option[Currency] = plans.month.currency(country)
+case class PaidPlans[M <: MonthYearPlans[PaidMember]](plans: M) extends TierPlans {
+  override def tier = plans.month.tier
+  override def currencies = plans.month.charges.price.currencies.intersect(plans.year.charges.price.currencies)
+  override def currency(country: Country): Option[Currency] = CountryGroup.availableCurrency(currencies)(country)
 }
 
 object TierPlans {
-  implicit def fromFreeMembershipPlan(plan: FreeMembershipPlan[Current, FreeTier]): TierPlans =
+  implicit def fromFreeMembershipPlan(plan: CatalogPlan.FreeMember): TierPlans =
     FreePlan(plan)
 
-  implicit def fromPaidMembershipPlan(plans: PaidMembershipPlans[Current, PaidTier]): TierPlans = {
+  implicit def fromPaidMembershipPlan(plans: MonthYearPlans[CatalogPlan.PaidMember]): TierPlans = {
     PaidPlans(plans)
   }
 }

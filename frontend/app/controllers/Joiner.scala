@@ -32,7 +32,7 @@ import views.support
 import views.support.Pricing._
 import views.support.TierPlans._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
-
+import views.support.MembershipCompat._
 import scala.concurrent.Future
 import scala.util.Failure
 import scalaz.OptionT
@@ -155,7 +155,7 @@ object Joiner extends Controller with ActivityTracking
 
       val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
       val providedPromoCode = codeFromSession // only take from the session
-      val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.productRatePlanId).toOption)
+      val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
       val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
@@ -244,7 +244,7 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
-    val prpId = request.subscriber.subscription.productRatePlanId
+    val prpId = request.subscriber.subscription.plan.productRatePlanId
     implicit val idReq = IdentityRequest(request)
 
     val paymentCard = (for {

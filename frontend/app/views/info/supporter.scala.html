@@ -1,12 +1,15 @@
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
 @import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.Tier.Supporter
 @import com.gu.memsub.Current
 @import configuration.Videos
+@import com.gu.memsub.subsv2.Catalog._
 @import views.support.Asset
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import views.support.MembershipCompat._
 
-@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
+@import com.gu.memsub.subsv2.CatalogPlan
+@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
   pageInfo: PageInfo,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

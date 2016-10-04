@@ -1,17 +1,16 @@
 @import views.support.PageInfo
 @import com.gu.i18n.GBP
 @import views.support.CountryWithCurrency
-@import com.gu.salesforce.Tier.Friend
-@import com.gu.salesforce.Tier.friend
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.IdentityUser
-@import com.gu.membership.FreeMembershipPlan
 @import com.gu.memsub.Current
+@import com.gu.memsub.Friend
+@import com.gu.memsub.subsv2._
 @import com.gu.memsub.promo.PromoCode
 
 @import views.support.FreePlan
-@(friendPlan: FreeMembershipPlan[Current, Friend],
+@(friendPlan: CatalogPlan.Friend,
   idUser: IdentityUser,
   pageInfo: PageInfo,
   trackingPromoCode: Option[PromoCode]
@@ -43,7 +42,7 @@
                 <div class="form-section__content">
 
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(friend.benefits)
+                        @fragments.form.benefitsFieldset(com.gu.salesforce.Tier.friend.benefits)
                     </div>
 
                     <div class="form-group">

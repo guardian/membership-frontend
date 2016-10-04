@@ -3,8 +3,10 @@
 @import com.gu.memsub.Current
 @import views.support.Pricing._
 @import com.gu.memsub.BillingPeriod._
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
 
-@(plans: PaidMembershipPlans[Current, PaidTier])
+@(plans: MonthYearPlans[PaidMember])
 
 
 <script type="text/javascript">
@@ -112,7 +114,7 @@
                 }
                 return annual.generateDisplayAmount() + suffix;
             },
-            inputId: '@plans.year.productRatePlanId.get',
+            inputId: '@plans.year.id.get',
             inputValue: '@year.adjective',
             promoted: false
         },
@@ -131,7 +133,7 @@
             generateDisplayAmount: function() {
                 return checkoutForm.billingPeriods.monthly.generateDisplayAmount() + '/month';
             },
-            inputId: '@plans.month.productRatePlanId.get',
+            inputId: '@plans.month.id.get',
             inputValue: '@month.adjective',
             promoted: false
         }

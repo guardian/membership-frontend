@@ -1,22 +1,22 @@
 @import configuration.Config
+@import com.gu.memsub.subsv2._
+@import com.gu.memsub.BillingPeriod
+@import com.gu.memsub.Status
 @import views.support.Dates._
 
-@import com.gu.salesforce.PaidTier
-@(subscription: model.PaidSubscription, tier: PaidTier)
+@(subscription: Subscription[SubscriptionPlan.PaidMember])
 
 @main("Cancel Tier summary") {
     <main role="main" class="page-content l-constrained">
 
-        @subscription.chargedThroughDate.map { endDate =>
-            @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.toDateTimeAtCurrentTime().pretty))
-        }
+        @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + subscription.termEndDate.toDateTimeAtCurrentTime.pretty))
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
                 <h2 class="page-section__headline">Current Membership summary</h2>
             </div>
             <div class="page-section__content">
 
-                @fragments.tier.summary(subscription, tier)
+                @fragments.tier.summary(subscription)
 
                 <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community.</p>
 

@@ -4,11 +4,14 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.membership.PaidMembershipPlans
 import com.gu.memsub.Current
+import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+import com.gu.memsub.subsv2.MonthYearPlans
 import com.gu.salesforce.Tier._
 import com.gu.salesforce.{PaidTier, Tier}
 import model.Benefits.marketedOnlyToUK
-import model.{Highlights, Benefits}
+import model.{Benefits, Highlights}
 import views.support.Pricing._
+import views.support.MembershipCompat._
 
 object DisplayText {
   implicit class TierCopy(tier: Tier) {
@@ -44,7 +47,7 @@ object DisplayText {
     val chooseTierPatron = List(Highlight("Get all partner benefits, 6 tickets and 4 books plus invitations  to exclusive behind-the-scenes functions"))
   }
 
-  implicit class PaidTierDetailsCopy(paidPlans: PaidMembershipPlans[Current, PaidTier]) {
+  implicit class PaidTierDetailsCopy(paidPlans: MonthYearPlans[PaidMember]) {
     private val pricing = paidPlans.gbpPricing
 
     val yearlySavingNote: Option[String] = paidPlans.tier match {

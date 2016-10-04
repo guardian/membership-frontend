@@ -3,12 +3,11 @@ package services.api
 import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
-import com.gu.memsub.Subscription.{Plan, Paid, ProductRatePlanId}
-import com.gu.memsub._
+import com.gu.memsub.{Subscription => S, _}
 import com.gu.salesforce.{Tier, ContactId, PaidTier}
 import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion, PromoCode}
 import com.gu.salesforce.{ContactId, PaidTier}
-import com.gu.services.model.BillingSchedule
+import com.gu.memsub.BillingSchedule
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
@@ -17,7 +16,7 @@ import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{PlanChoice, GenericSFContact}
 import views.support.ThankyouSummary
-
+import com.gu.memsub.subsv2._
 import scala.concurrent.Future
 import scalaz.\/
 import utils.CampaignCode
@@ -49,7 +48,7 @@ trait MemberService {
 
   def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
 
-  def subscriptionUpgradableTo(subscription: Subscription with PaymentStatus[Plan], newTier: PaidTier): Boolean
+  def subscriptionUpgradableTo(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
 
   def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary]
 
@@ -57,14 +56,14 @@ trait MemberService {
    * If the member is entitled to complimentary tickets return its Zuora account's corresponding usage records count.
    * Returns none otherwise
    */
-  def getUsageCountWithinTerm(subscription: Subscription, unitOfMeasure: String): Future[Option[Int]]
+  def getUsageCountWithinTerm(subscription: Subscription[SubscriptionPlan.Member], unitOfMeasure: String): Future[Option[Int]]
 
-  def recordFreeEventUsage(subs: Subscription,
+  def recordFreeEventUsage(subs: Subscription[SubscriptionPlan.Member],
                            event: RichEvent,
                            order: EBOrder,
                            quantity: Int): Future[CreateResult]
 
-  def retrieveComplimentaryTickets(subscription: Subscription, event: RichEvent): Future[Seq[EBTicketClass]]
+  def retrieveComplimentaryTickets(subscription: Subscription[SubscriptionPlan.Member], event: RichEvent): Future[Seq[EBTicketClass]]
 
   def createEBCode(subscriber: Member, event: RichEvent): Future[Option[EBCode]]
 
@@ -86,13 +85,13 @@ object MemberService {
     override def getMessage = s"Promo error: ${get.msg}"
   }
 
-  case class PaidSubscriptionExpected(name: Subscription.Name) extends MemberError {
+  case class PaidSubscriptionExpected(name: S.Name) extends MemberError {
     override def getMessage = s"Paid subscription expected. Got a free one instead: ${name.get} "
   }
-  case class PendingAmendError(name: Subscription.Name) extends MemberError {
+  case class PendingAmendError(name: S.Name) extends MemberError {
     override def getMessage = s"Subscription ${name.get} already has a pending amend"
   }
-  case class NoCardError(name: Subscription.Name) extends MemberError {
+  case class NoCardError(name: S.Name) extends MemberError {
     override def getMessage = s"Subscription ${name.get} has no card"
   }
 }

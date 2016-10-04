@@ -5,7 +5,8 @@
 @import views.support.PageInfo
 @import views.support.TierPlans._
 @import com.gu.contentapi.client.model.v1.{MembershipTier=>ContentAccess}
-@(catalog: MembershipCatalog,
+@import com.gu.memsub.subsv2.Catalog
+@(catalog: Catalog,
   pageInfo: PageInfo,
   eventOpt: Option[model.RichEvent.RichEvent],
   accessOpt: Option[ContentAccess],

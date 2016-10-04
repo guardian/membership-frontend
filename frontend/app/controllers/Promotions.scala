@@ -1,7 +1,7 @@
 package controllers
 
 import actions.RichAuthRequest
-import com.gu.i18n.{Country, CountryGroup}
+import com.gu.i18n.{Country, CountryGroup, GBP}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.images.{ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
@@ -22,16 +22,18 @@ import model.{FreePlanChoice, OrientatedImages, PaidPlanChoice}
 import org.pegdown.PegDownProcessor
 import play.api.data.{Form, Forms}
 import org.pegdown.Extensions._
+import views.support.MembershipCompat._
+
 import scalaz.syntax.std.option._
 import scalaz.{Monad, \/}
 
 object Promotions extends Controller {
 
-  import TouchpointBackend.Normal.{catalog, promoService}
+  import TouchpointBackend.Normal.{catalogService, promoService, catalog}
 
   private def getCheapestPaidMembershipPlan(promotion: PromoWithMembershipLandingPage) = {
     promotion.appliesTo.productRatePlanIds.toList.flatMap(rp => catalog.findPaid(rp))
-      .sortBy(paidTier => paidTier.priceGBP.amount)
+      .sortBy(paidTier => paidTier.charges.price.getPrice(GBP).get.amount)
       .headOption
   }
 
@@ -67,8 +69,8 @@ object Promotions extends Controller {
       paidMembershipPlan => {
         promotion.promotionType match {
           case p: PercentDiscount =>
-            val originalPrice = paidMembershipPlan.pricing.getPrice(countryGroup.currency).get
-            val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.billingPeriod)
+            val originalPrice = paidMembershipPlan.charges.price.getPrice(countryGroup.currency).get
+            val discountedPrice = p.applyDiscount(originalPrice, paidMembershipPlan.charges.billingPeriod)
             Some(views.html.promotions.singlePricePlanDiscountLandingPage(hero,
               promotion.landingPage.heroImage.fold[HeroImageAlignment](Centre)(_.alignment),
               paidMembershipPlan,

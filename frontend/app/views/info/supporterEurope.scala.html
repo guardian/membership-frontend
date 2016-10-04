@@ -3,7 +3,11 @@
 @import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
-@(images: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import views.support.MembershipCompat._
+
+@(images: model.OrientatedImages, supporterPlans: MonthYearPlans[PaidMember],
     pageInfo: PageInfo,
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

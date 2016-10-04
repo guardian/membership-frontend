@@ -3,9 +3,9 @@
 @import com.gu.salesforce.{Tier,PaidTier,FreeTier}
 @import com.gu.i18n.CountryGroup
 @import views.support.TierPlans._
-
-@(currentTier: Tier,
-  catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+@import views.support.MembershipCompat._
+@import com.gu.memsub.subsv2.Catalog
+@(currentTier: Tier, catalog: Catalog)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Change Tier") {
 

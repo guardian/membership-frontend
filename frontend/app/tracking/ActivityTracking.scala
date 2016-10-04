@@ -1,12 +1,8 @@
 package tracking
-
 import java.util.{Map => JMap}
-
 import com.github.t3hnar.bcrypt._
-import com.gu.i18n.Country._
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.{MembershipPlan, PaidMembershipPlan}
-import com.gu.memsub.{Subscription, PaymentStatus, BillingPeriod, Status}
+import com.gu.memsub.BillingPeriod
 import com.gu.salesforce._
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
@@ -23,7 +19,8 @@ import play.api.mvc.RequestHeader
 import services.EventbriteService
 import utils.CampaignCode
 import utils.TestUsers.isTestUser
-
+import com.gu.memsub.subsv2._
+import views.support.MembershipCompat._
 import scala.collection.JavaConversions._
 
 
@@ -263,8 +260,8 @@ trait ActivityTracking {
     }
   }
 
-  def trackUpgrade(member: GenericSFContact, subscription: Subscription with PaymentStatus[MembershipPlan[Status, Tier]],
-                   newRatePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
+  def trackUpgrade(member: GenericSFContact, subscription: Subscription[SubscriptionPlan.Member],
+                   newRatePlan: CatalogPlan.PaidMember[BillingPeriod],
                    addressDetails: Option[AddressDetails],
                    campaignCode: Option[CampaignCode]): Unit = {
 
@@ -277,7 +274,7 @@ trait ActivityTracking {
           tierAmendment = Some(UpgradeAmendment(subscription.plan.tier, newRatePlan.tier)),
           deliveryPostcode = addressDetails.map(_.deliveryAddress.postCode),
           billingPostcode = addressDetails.flatMap(f => f.billingAddress.map(_.postCode)).orElse(addressDetails.map(_.deliveryAddress.postCode)),
-          subscriptionPaymentAnnual = Some(newRatePlan.billingPeriod.annual),
+          subscriptionPaymentAnnual = Some(newRatePlan.charges.billingPeriod.annual),
           marketingChoices = None,
           city = addressDetails.map(_.deliveryAddress.town),
           country = addressDetails.map(addressDetails => addressDetails.deliveryAddress.country.fold(addressDetails.deliveryAddress.countryName)(_.name)),

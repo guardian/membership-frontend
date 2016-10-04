@@ -46,7 +46,6 @@ class MemberServiceTest extends Specification {
     val manualPrpId = ProductRatePlanId("A manual discount")
     val discountPrpChargeId = ProductRatePlanChargeId("discount")
 
-    val plan = FreeMembershipPlan(Status.current, Tier.friend, Set.empty, partnerPrpId)
     val discounts = DiscountRatePlanIds(DiscountRatePlan(discountPrpId, discountPrpChargeId))
 
     val current = Seq(
@@ -56,7 +55,7 @@ class MemberServiceTest extends Specification {
     )
 
     "Remove any rate plans in the product catalog with discounts, leaving off any others" in {
-      MemberService.getRatePlanIdsToRemove(current, a => if(a == partnerPrpId) Some(plan) else None, discounts) mustEqual Seq("id1", "id2")
+      MemberService.getRatePlanIdsToRemove(current, _ == partnerPrpId, discounts) mustEqual Seq("id1", "id2")
     }
   }
 }

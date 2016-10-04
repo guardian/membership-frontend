@@ -1,9 +1,11 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.Current
-@import com.gu.salesforce.Tier.Supporter
 @import com.gu.membership.PaidMembershipPlans
 @import views.support.PageInfo
-@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Current, Supporter],
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.CatalogPlan._
+@import views.support.MembershipCompat._
+@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[Supporter],
     pageInfo: PageInfo,
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

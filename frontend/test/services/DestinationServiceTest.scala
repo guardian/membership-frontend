@@ -1,11 +1,10 @@
 package services
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.i18n.{Currency, GBP}
-import com.gu.membership.PaidMembershipPlan
-import com.gu.memsub.Subscription.{PaidMembershipSub, ProductRatePlanId}
+import com.gu.i18n.GBP
+import com.gu.memsub.Subscription.{ProductRatePlanId, RatePlanId}
 import com.gu.memsub._
-import com.gu.salesforce.Tier.Partner
+import com.gu.memsub.subsv2.{PaidCharge, PaidSubscriptionPlan, Subscription, SubscriptionPlan}
 import com.gu.salesforce._
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
@@ -14,6 +13,7 @@ import org.joda.time.LocalDate
 import org.specs2.mutable.Specification
 import play.api.mvc.Session
 import utils.Resource
+
 import scalaz.Id._
 
 class DestinationServiceTest extends Specification {
@@ -28,31 +28,24 @@ class DestinationServiceTest extends Specification {
 
     def createRequestWithSession(newSessions: (String, String)*) = {
 
-      val testMember = Contact("id", None, Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId")
-      val testSub: PaidMembershipSub = new Subscription(
-        id = Subscription.Id(""),
-        name = Subscription.Name(""),
-        accountId = Subscription.AccountId(""),
-        currency = Currency.all.head,
-        productRatePlanId = Subscription.ProductRatePlanId(""),
-        productName = "productName",
+      val testMember = Contact("id", None, None, Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId")
+      val partnerCharge: PaidCharge[com.gu.memsub.Partner.type, Month] = PaidCharge[com.gu.memsub.Partner.type, Month](com.gu.memsub.Partner, Month(), PricingSummary(Map(GBP -> Price(0.1f, GBP))))
+      val testSub: Subscription[SubscriptionPlan.Member] = new Subscription[SubscriptionPlan.Partner](
+        id = com.gu.memsub.Subscription.Id(""),
+        name = com.gu.memsub.Subscription.Name(""),
+        accountId = com.gu.memsub.Subscription.AccountId(""),
         startDate = new LocalDate("2015-01-01"),
         termStartDate = new LocalDate("2015-01-01"),
+        firstPaymentDate = new LocalDate("2015-01-01"),
         termEndDate = new LocalDate("2016-01-01"),
-        features = Nil,
         promoCode = None,
         casActivationDate = None,
         isCancelled = false,
-        ratePlanId = "",
-        isPaid = true
-      ) with PaidPS[PaidMembershipPlan[Status, PaidTier, BillingPeriod]] {
-        override def recurringPrice: Price = new Price(0.1f, GBP)
-        override def firstPaymentDate: LocalDate = new LocalDate("2015-01-01")
-        override def chargedThroughDate: Option[LocalDate] = None
-        override def priceAfterTrial: Price = recurringPrice
-        override def hasPendingAmendment: Boolean = false
-        override def plan = new PaidMembershipPlan[Current, Partner, Month](Current(), Tier.Partner(), Month(), ProductRatePlanId(""), PricingSummary(Map(GBP -> Price(0.1f, GBP))))
-      }
+        plan = new PaidSubscriptionPlan[Product.Membership, PaidCharge[com.gu.memsub.Partner.type, Month]](
+          id = RatePlanId(""), productRatePlanId = ProductRatePlanId(""), name = "name", product = Product.Membership, description = "", features = Nil,
+          charges = partnerCharge,
+          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2016-01-01"))
+      )
 
       val testSubscriber: Subscriber.Member = Subscriber(testSub, testMember)
       (Session(newSessions.toMap), testSubscriber)

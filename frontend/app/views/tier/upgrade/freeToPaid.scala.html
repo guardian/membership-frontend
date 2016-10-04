@@ -3,18 +3,17 @@
 @import views.support.DisplayText._
 @import views.support.PageInfo
 @import views.support.CountryWithCurrency
-@import com.gu.i18n.Currency
-@import com.gu.membership.MembershipPlan
-@import com.gu.salesforce.Tier.Friend
 @import com.gu.memsub.{Status, Current}
-@import com.gu.membership.PaidMembershipPlans
-@import com.gu.salesforce.PaidTier
 @import com.gu.memsub.promo.PromoCode
-
-@import com.gu.membership.MembershipCatalog
+@import com.gu.memsub.subsv2._
 @import views.support.PaidPlans
-@(currentPlan: MembershipPlan[Status, Friend],
-  targetPlans: PaidMembershipPlans[Current, PaidTier],
+@import com.gu.memsub.Friend
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import views.support.MembershipCompat._
+
+@(currentPlan: CatalogPlan.Member,
+  targetPlans: MonthYearPlans[PaidMember],
   countriesWithCurrency: List[CountryWithCurrency],
   userFields: com.gu.identity.play.PrivateFields,
   pageInfo: PageInfo,

@@ -1,13 +1,15 @@
 @import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
-@import com.gu.membership.MembershipCatalog
+@import views.support.MembershipCompat._
 @import views.support.PaidPlans
 @import com.gu.salesforce.PaidTier
+@import com.gu.memsub.subsv2.Catalog
 @import model.PackagePromo
 @import views.model.Roundel
+
 @(
   images: model.OrientatedImages,
-  catalog: MembershipCatalog,
+  catalog: Catalog,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup],
   eventCollection: model.RichEvent.EventBrandCollection
 )(implicit countryGroup: CountryGroup)

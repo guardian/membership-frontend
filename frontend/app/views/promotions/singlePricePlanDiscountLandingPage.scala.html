@@ -27,11 +27,15 @@
 @import com.gu.memsub.promo.HeroImageAlignment
 @import views.support.HeroImageAlignment._
 @import org.pegdown.PegDownProcessor
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import views.support.MembershipCompat._
 
+@import com.gu.memsub.subsv2.CatalogPlan
 @(  heroImages: model.OrientatedImages,
     heroImageAlignment: HeroImageAlignment,
-    pricePlan: PaidMembershipPlan[Status, PaidTier, BillingPeriod],
-    pricePlans: PaidMembershipPlans[Current, PaidTier],
+    pricePlan: CatalogPlan.PaidMember[BillingPeriod],
+    pricePlans: MonthYearPlans[PaidMember],
     pageInfo: PageInfo,
     promotionImage: ResponsiveImageGroup,
     promoCode: PromoCode,
@@ -42,7 +46,7 @@
 )(implicit countryGroup: CountryGroup)
 
 @discountDuration = @{
-    pricePlan.billingPeriod match {
+    pricePlan.charges.billingPeriod match {
         case Year() => promotion.promotionType.durationMonths.fold("year")(d => "first year")
         case Month() => promotion.promotionType.durationMonths.fold("month")(d => s"first $d months")
         case bp:BillingPeriod => bp.noun
