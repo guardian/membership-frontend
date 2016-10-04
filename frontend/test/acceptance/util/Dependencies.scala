@@ -1,14 +1,16 @@
 package acceptance.util
 
 import java.security.cert.X509Certificate
-import javax.net.ssl.{X509TrustManager, SSLContext, SSLSession, HostnameVerifier}
+import javax.net.ssl.{HostnameVerifier, SSLContext, SSLSession, X509TrustManager}
+
 import com.gu.lib.okhttpscala._
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request.Builder
+import okhttp3.OkHttpClient
+import okhttp3.Request.Builder
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.Try
 import scala.language.postfixOps
+import scala.util.Try
 
 object Dependencies {
 
@@ -40,9 +42,9 @@ object Dependencies {
   private object InsecureOkHttpClient {
 
    def apply() =
-     new OkHttpClient().setSslSocketFactory(SSL.InsecureSocketFactory).setHostnameVerifier(new HostnameVerifier {
+     client.newBuilder().sslSocketFactory(SSL.InsecureSocketFactory).hostnameVerifier(new HostnameVerifier {
        override def verify(hostname: String, sslSession: SSLSession): Boolean = true
-     })
+     }).build()
 
     private object SSL {
       val InsecureSocketFactory = {

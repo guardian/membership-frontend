@@ -1,10 +1,9 @@
 package views.support
 import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
+import com.gu.memsub.Product.Membership
 import com.gu.memsub.Subscription.ProductRatePlanId
+import com.gu.memsub.subsv2.{CatalogPlan, _}
 import com.gu.memsub.{Subscription => _, _}
-import com.gu.memsub.subsv2.CatalogPlan
-import com.gu.memsub.subsv2.ZProduct.Membership
-import com.gu.memsub.subsv2._
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 
 import scala.language.higherKinds

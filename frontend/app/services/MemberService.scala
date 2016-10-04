@@ -235,7 +235,7 @@ class MemberService(identityService: IdentityService,
   override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
 
     val cancelDate = subscriber.subscription.plan match {
-      case PaidSubscriptionPlan(_, _, _, _, _, _, _, chargedThrough) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
+      case PaidSubscriptionPlan(_, _, _, _, _, _, _, chargedThrough, _, _) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
       case _ => DateTime.now.toLocalDate
     }
 
@@ -276,40 +276,36 @@ class MemberService(identityService: IdentityService,
 
   override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
 
-
     val latestSubEither = subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](contact).map(_.get)
     val latestSubF = latestSubEither.map(_.fold(identity,identity))
 
-    def getSummaryViaPreview =
-      for {
-        sub <- latestSubF
-        subEither <- latestSubEither
-        paymentDetails <- paymentService.billingSchedule(sub.id)
-      } yield {
-        implicit val currency = sub.plan.charges.currencies.head
-        def price(amount: Float) = Price(amount, sub.plan.charges.currencies.head)
-
-        val nextPayment = for {
-          amount <- paymentDetails.map(_.first.amount)
-          date <- paymentDetails.map(_.first.date)
-        } yield NextPayment(price(amount), date)
-
-        val planAmount = subEither.fold(_ => Price(0.0f, GBP), _.plan.charges.price.prices.head)
-
-        ThankyouSummary(
-          startDate = sub.termStartDate,
-          amountPaidToday = subEither.fold(_ => price(0.0f), _ => planAmount),
-          planAmount = planAmount,
-          nextPayment = nextPayment,
-          renewalDate = Some(sub.termEndDate.plusDays(1)),
-          initialFreePeriodOffer = false, // todo maybe sort this out
-          subEither.fold(_ => BillingPeriod.year, _.plan.charges.billingPeriod) // TODO what
-        )
-      }
-
     for {
-      summary <- getSummaryViaPreview
-    } yield summary
+      sub <- latestSubF
+      subEither <- latestSubEither
+      upcomingPaymentDetails <- paymentService.billingSchedule(sub.id)// shows things you'll pay assuming infinite term
+      paymentToday <- zuoraService.getPaymentSummary(sub.name, sub.plan.charges.currencies.head).map(Some.apply).recover({case _ => None})
+    } yield {
+      implicit val currency = sub.plan.charges.currencies.head
+      def price(amount: Float) = Price(amount, sub.plan.charges.currencies.head)
+
+      val nextPayment = for {
+        amount <- upcomingPaymentDetails.map(_.first.amount)
+        date <- upcomingPaymentDetails.map(_.first.date)
+      } yield NextPayment(price(amount), date)
+
+      val planAmount = subEither.fold(_ => Price(0.0f, GBP), _.plan.charges.price.prices.head)
+
+      ThankyouSummary(
+        startDate = sub.termStartDate,
+        amountPaidToday = Price(paymentToday.map(_.totalPrice).getOrElse(0f), planAmount.currency),
+        planAmount = planAmount,
+        nextPayment = nextPayment,
+        renewalDate = Some(sub.termEndDate.plusDays(1)),
+        initialFreePeriodOffer = subEither.fold(_ => false, _.plan.chargedThrough.isEmpty),
+        subEither.fold(_ => BillingPeriod.year, _.plan.charges.billingPeriod) // TODO should be optional for free plans?
+      )
+    }
+
   }
 
   override def getUsageCountWithinTerm(subscription: Subscription[SubscriptionPlan.Member], unitOfMeasure: String): Future[Option[Int]] = {
@@ -503,8 +499,4 @@ class MemberService(identityService: IdentityService,
         sub.right
     }
 
-  private def getPaymentSummary(memberId: ContactId): Future[PaymentSummary] =
-    subscriptionService.current[SubscriptionPlan.Member](memberId).map(_.head).flatMap { sub =>
-      zuoraService.getPaymentSummary(sub.name, sub.plan.currency)
-    }
 }

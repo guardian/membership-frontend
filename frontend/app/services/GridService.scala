@@ -2,16 +2,18 @@ package services
 
 import akka.agent.Agent
 import com.gu.memsub.images.Grid
-import com.gu.memsub.images.GridDeserializer._
 import com.gu.memsub.images.Grid.{Export, GridObject, GridResult}
+import com.gu.memsub.images.GridDeserializer._
 import com.gu.memsub.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
+import com.gu.okhttp.RequestRunners
+import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import com.netaporter.uri.Uri
-import com.squareup.okhttp.Request
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
+import okhttp3.Request
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -72,7 +74,7 @@ object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLog
 
   override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader("X-Gu-Media-Key", Config.gridConfig.key)
 
-  override val wsMetrics: StatusMetrics = GridApiMetrics
+  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(GridApiMetrics)
 }
 
 case class GridConfig(apiUrl: String, key: String)

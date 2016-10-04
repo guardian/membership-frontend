@@ -1,6 +1,7 @@
 package views.support
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.memsub._
+import com.gu.memsub.subsv2.CatalogPlan.{PaidMember, Partner}
 import com.gu.memsub.subsv2._
 import com.gu.salesforce.Tier
 import views.support.MembershipCompat._
@@ -22,7 +23,7 @@ case class FreePlan(plan: CatalogPlan.FreeMember) extends TierPlans {
   override def currency(country: Country): Option[Currency] = CountryGroup.availableCurrency(currencies)(country)
 }
 
-case class PaidPlans(plans: MonthYearPlans[CatalogPlan.PaidMember]) extends TierPlans {
+case class PaidPlans[M <: MonthYearPlans[PaidMember]](plans: M) extends TierPlans {
   override def tier = plans.month.tier
   override def currencies = plans.month.charges.price.currencies.intersect(plans.year.charges.price.currencies)
   override def currency(country: Country): Option[Currency] = CountryGroup.availableCurrency(currencies)(country)

@@ -4,20 +4,22 @@ import actions.ActionRefiners.SubReqWithSub
 import com.gu.identity.play.AccessCredentials
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.WebServiceHelper
-import com.gu.monitoring.StatusMetrics
+import com.gu.okhttp.RequestRunners
+import com.gu.okhttp.RequestRunners._
 import com.gu.salesforce.Tier
-import com.squareup.okhttp.Request
 import configuration.Config
 import monitoring.MembersDataAPIMetrics
+import okhttp3.Request
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc.Cookie
-
-import scala.util.{Failure, Success}
 import views.support.MembershipCompat._
+
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 
 object MembersDataAPI {
@@ -48,7 +50,9 @@ object MembersDataAPI {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader(
       "Cookie", cookies.flatten.map(c => s"${c.name}=${c.value}").mkString("; "))
-    override val wsMetrics: StatusMetrics = MembersDataAPIMetrics
+
+    override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(MembersDataAPIMetrics)
+
   }
 
   object Service  {

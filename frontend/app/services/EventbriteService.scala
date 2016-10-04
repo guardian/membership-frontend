@@ -2,7 +2,10 @@ package services
 
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
-import com.squareup.okhttp.Request
+import com.gu.monitoring.{StatusMetrics, ServiceMetrics}
+import com.gu.okhttp.RequestRunners
+import com.gu.okhttp.RequestRunners.LoggingHttpClient
+import okhttp3.Request
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.Eventbrite._
@@ -24,6 +27,10 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
 
+  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
+
+  def wsMetrics: StatusMetrics
+
   override val wsUrl = Config.eventbriteApiUrl
   override def wsPreExecute(builder: Request.Builder): Request.Builder = {
     val req = builder.build()
@@ -34,7 +41,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     // In order to avoid this, we force okhttp to append a
     // trailing slash to the request path
     val url =
-      req.httpUrl().newBuilder()
+      req.url().newBuilder()
         .addPathSegment("")
         .addQueryParameter("token", apiToken).build()
 

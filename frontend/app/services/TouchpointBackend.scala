@@ -6,13 +6,15 @@ import com.gu.memsub.promo.{DynamoPromoCollection, PromotionCollection}
 import com.gu.memsub.services.{PaymentService, PromoService, api => memsubapi}
 import com.gu.memsub.subsv2
 import com.gu.memsub.subsv2.Catalog
+import com.gu.memsub.subsv2.services.SubscriptionService.CatalogMap
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
+import com.gu.okhttp.RequestRunners
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
 import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
-import com.gu.zuora.rest.{RequestRunners, SimpleClient}
+import com.gu.zuora.rest.SimpleClient
 import com.gu.zuora.soap.ClientWithFeatureSupplier
 import com.gu.zuora.{ZuoraService => ZuoraServiceImpl, rest, soap}
 import com.netaporter.uri.Uri
@@ -24,8 +26,8 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.TestUsers.isTestUser
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scalaz.std.scalaFuture._
 
 object TouchpointBackend {
@@ -45,14 +47,14 @@ object TouchpointBackend {
   }
 
   def apply(backend: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
-    val stripeService = new StripeService(backend.stripe, new TouchpointBackendMetrics with StatusMetrics {
+    val stripeService = new StripeService(backend.stripe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = backend.stripe.envName
       val service = "Stripe"
-    })
-    val giraffeStripeService = new StripeService(backend.giraffe, new TouchpointBackendMetrics with StatusMetrics {
+    }))
+    val giraffeStripeService = new StripeService(backend.giraffe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = backend.stripe.envName
       val service = "Stripe Giraffe"
-    })
+    }))
 
     val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
 
@@ -60,7 +62,8 @@ object TouchpointBackend {
     val paperRatePlanIds = Config.subsProductIds(restBackendConfig.envName)
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"))
+    val runner = RequestRunners.loggingRunner(backend.zuoraMetrics("zuora-soap-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, runner, runner/*not sure what the extended one is for*/)
 
     val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
@@ -70,7 +73,8 @@ object TouchpointBackend {
     val pids = Config.productIds(restBackendConfig.envName)
     val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds), restBackendConfig.envName)
-    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, newCatalogService.catalog.map(_.leftMap(_.list.mkString).map(_.map)), client, zuoraService.getAccountIds)
+    val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds)
 
     val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(backend.salesforce)

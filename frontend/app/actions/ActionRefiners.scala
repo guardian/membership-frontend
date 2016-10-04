@@ -1,14 +1,11 @@
 package actions
 
-import actions.Fallbacks._
-import com.gu.googleauth.UserIdentity
-import com.gu.membership.{FreeMembershipPlan, PaidMembershipPlan}
-import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
-import com.gu.memsub.Subscription.{FreeMembershipSub, PaidMembershipSub}
-import com.gu.memsub.subsv2.{Subscription, Membership => _, _}
-import com.gu.memsub.util.Timing
-import configuration.Config.googleGroupChecker
 import _root_.services._
+import actions.Fallbacks._
+import com.gu.memsub.subsv2.reads.ChargeListReads._
+import com.gu.memsub.subsv2.reads.SubPlanReads._
+import com.gu.memsub.subsv2.{Subscription, _}
+import com.gu.memsub.util.Timing
 import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
 import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
@@ -18,12 +15,11 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
-import com.gu.memsub.subsv2.reads.SubPlanReads._
-import com.gu.memsub.subsv2.reads.ChargeListReads._
+import views.support.MembershipCompat._
+
 import scala.concurrent.Future
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
-import views.support.MembershipCompat._
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
