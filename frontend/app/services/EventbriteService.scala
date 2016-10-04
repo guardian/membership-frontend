@@ -27,8 +27,6 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
 
-  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
-
   def wsMetrics: StatusMetrics
 
   override val wsUrl = Config.eventbriteApiUrl
@@ -150,6 +148,8 @@ object GuardianLiveEventService extends LiveService {
   val maxDiscountQuantityAvailable = 4
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
+  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
+
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
     for {
       ordering <- WS.url(Config.eventOrderingJsonUrl).get()
@@ -173,6 +173,8 @@ object LocalEventService extends LiveService {
   val maxDiscountQuantityAvailable = 2
   val wsMetrics = new EventbriteMetrics("Local")
 
+  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
+
   def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
     yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
@@ -195,6 +197,8 @@ object MasterclassEventService extends EventbriteService {
   val maxDiscountQuantityAvailable = 1
 
   val wsMetrics = new EventbriteMetrics("Masterclasses")
+
+  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
 
   val contentApiService = GuardianContentService
 
