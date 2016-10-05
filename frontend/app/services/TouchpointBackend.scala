@@ -63,7 +63,9 @@ object TouchpointBackend {
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
     val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val runner = RequestRunners.loggingRunner(backend.zuoraMetrics("zuora-soap-client"))
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, runner, runner/*not sure what the extended one is for*/)
+    // extendedRunner sets the configurable read timeout, which is used for the createSubscription call.
+    val extendedRunner = RequestRunners.configurableLoggingRunner(20.seconds, backend.zuoraMetrics("zuora-soap-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, runner, extendedRunner)
 
     val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
