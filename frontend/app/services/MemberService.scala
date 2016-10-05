@@ -35,7 +35,6 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
-import model.PaidSubscription
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
@@ -440,6 +439,9 @@ class MemberService(identityService: IdentityService,
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
     val tier = newPlan.tier
 
+    List(sub.plan.id)
+
+
     val oldRest = zuoraService.getRestSubscription(sub.name).map(_.getOrElse(
       throw new Exception(s"REST sub not found for ${sub.id}")
     ))
@@ -448,6 +450,8 @@ class MemberService(identityService: IdentityService,
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.id.get, None, fs.map(_.get)))
 
     (newRatePlan |@| oldRest) { case (newPln, restSub) =>
+
+      /// this is what is blocking the merging of the membership common deletion PR
       val plansToRemove = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find(_).isDefined, discountIds)
       val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
       code.fold(upgrade)(applicator(_, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(upgrade))

@@ -16,12 +16,13 @@ import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.rest.SimpleClient
 import com.gu.zuora.soap.ClientWithFeatureSupplier
-import com.gu.zuora.{ZuoraService => ZuoraServiceImpl, rest, soap}
+import com.gu.zuora.{rest, soap, ZuoraService => ZuoraServiceImpl}
 import com.netaporter.uri.Uri
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
+import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.TestUsers.isTestUser
@@ -61,7 +62,6 @@ object TouchpointBackend {
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
     val paperRatePlanIds = Config.subsProductIds(restBackendConfig.envName)
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
-    val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
     val runner = RequestRunners.loggingRunner(backend.zuoraMetrics("zuora-soap-client"))
     // extendedRunner sets the configurable read timeout, which is used for the createSubscription call.
     val extendedRunner = RequestRunners.configurableLoggingRunner(20.seconds, backend.zuoraMetrics("zuora-soap-client"))
@@ -70,13 +70,13 @@ object TouchpointBackend {
     val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
     val promoService = new PromoService(promoCollection, discounter)
-    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient, zuoraRestClient)
+    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient)
 
     val pids = Config.productIds(restBackendConfig.envName)
     val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
-    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds)
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds, () => LocalDate.now)
 
     val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(backend.salesforce)
