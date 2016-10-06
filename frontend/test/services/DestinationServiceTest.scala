@@ -44,7 +44,8 @@ class DestinationServiceTest extends Specification {
         plan = new PaidSubscriptionPlan[Product.Membership, PaidCharge[com.gu.memsub.Partner.type, Month]](
           id = RatePlanId(""), productRatePlanId = ProductRatePlanId(""), name = "name", product = Product.Membership, description = "", features = Nil,
           charges = partnerCharge,
-          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2016-01-01"))
+          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2016-01-01"), productName = ""),
+        hasPendingFreePlan = false
       )
 
       val testSubscriber: Subscriber.Member = Subscriber(testSub, testMember)
