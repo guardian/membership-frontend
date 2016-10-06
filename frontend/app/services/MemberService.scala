@@ -235,7 +235,7 @@ class MemberService(identityService: IdentityService,
   override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
 
     val cancelDate = subscriber.subscription.plan match {
-      case PaidSubscriptionPlan(_, _, _, _, _, _, _, chargedThrough, _, _) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
+      case PaidSubscriptionPlan(_, _, _, _, _, _, _, _, chargedThrough, _, _) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
       case _ => DateTime.now.toLocalDate
     }
 

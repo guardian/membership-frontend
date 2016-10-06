@@ -25,7 +25,7 @@ import monitoring.TouchpointBackendMetrics
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.TestUsers.isTestUser
-
+import org.joda.time.LocalDate
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scalaz.std.scalaFuture._
@@ -76,7 +76,7 @@ object TouchpointBackend {
     val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
-    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds)
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds, () => LocalDate.now)
 
     val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(backend.salesforce)
