@@ -7,5 +7,5 @@ import configuration.Config
 trait Metrics extends CloudWatch {
   val region = Region.getRegion(Regions.EU_WEST_1)
   val stage = Config.stage
-  val application = "Frontend"
+  val application = "membership" // This sets the namespace for Custom Metrics in AWS (see CloudWatch)
 }
