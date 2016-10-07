@@ -129,7 +129,7 @@
         .global-navigation__scroll,
         .global-navigation__list,
         .global-navigation__item {
-            display: block;
+            display: block !important;
             height: auto;
             padding: 0;
         }
@@ -472,6 +472,7 @@
     text-decoration: none;
     color: $white;
     background-color: color(brand-main);
+    display: block !important;
 }
 @include mq($until: tablet) {
     .nav-sections__item:last-child .nav-sections__link {

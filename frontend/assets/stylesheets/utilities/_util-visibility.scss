@@ -62,11 +62,18 @@
     }
 }
 
+
 .tablet-only {
     @include mq($until: tablet) {
         display: none !important;
     }
     @include mq($from: desktop) {
+        display: none !important;
+    }
+}
+
+.desktop-only {
+    @include mq($until: tablet) {
         display: none !important;
     }
 }
