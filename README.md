@@ -164,7 +164,7 @@ For the Membership project, we put both `DEV` and `PROD` credentials in `members
 
 You can download and update credentials like this
 
-    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
+    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
     aws s3 cp /etc/gu/membership-keys.conf s3://membership-private/DEV/
 
 For a reminder on why we do this, here's @tackley on the subject:
