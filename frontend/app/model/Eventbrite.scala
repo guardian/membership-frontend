@@ -358,7 +358,7 @@ object EventbriteDeserializer {
   import Eventbrite._
 
   private def ebResponseReads[T](namespace: String)(implicit reads: Reads[Seq[T]]): Reads[EBResponse[T]] =
-    ((JsPath \ "pagination").read[EBPagination] and
+    ((JsPath \ "pagination").read[EBPagination](ebPaginationReads) and
       (JsPath \ namespace).read[Seq[T]])(EBResponse[T] _)
 
   private def convertInstantText(utc: String): Instant =

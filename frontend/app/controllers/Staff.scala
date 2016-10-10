@@ -1,8 +1,5 @@
 package controllers
 
-import com.gu.memsub.services.CatalogService
-import configuration.Config.Implicits.akkaSystem
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
 

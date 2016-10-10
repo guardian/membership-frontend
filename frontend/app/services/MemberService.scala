@@ -234,7 +234,7 @@ class MemberService(identityService: IdentityService,
   override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
 
     val cancelDate = subscriber.subscription.plan match {
-      case PaidSubscriptionPlan(_, _, _, _, _, _, _, chargedThrough, _, _) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
+      case PaidSubscriptionPlan(_, _, _, _, _, _, _, _, chargedThrough, _, _) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
       case _ => DateTime.now.toLocalDate
     }
 
@@ -452,7 +452,7 @@ class MemberService(identityService: IdentityService,
     (newRatePlan |@| oldRest) { case (newPln, restSub) =>
 
       /// this is what is blocking the merging of the membership common deletion PR
-      val plansToRemove = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find(_).isDefined, discountIds)
+      val plansToRemove: Seq[String] = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find(_).isDefined, discountIds)
       val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
       code.fold(upgrade)(applicator(_, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(upgrade))
     }
