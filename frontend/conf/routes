@@ -47,7 +47,6 @@ GET            /staff/event-overview                  controllers.Staff.eventOve
 GET            /staff/event-overview/local            controllers.Staff.eventOverviewLocal
 GET            /staff/event-overview/masterclasses    controllers.Staff.eventOverviewMasterclasses
 GET            /staff/event-overview/details          controllers.Staff.eventOverviewDetails
-GET            /staff/catalog                         controllers.Staff.catalogDiagnostics
 
 # Subscription
 GET            /subscription/remaining-tickets        controllers.Subscription.remainingTickets
