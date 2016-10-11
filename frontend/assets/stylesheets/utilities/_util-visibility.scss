@@ -62,7 +62,6 @@
     }
 }
 
-
 .tablet-only {
     @include mq($until: tablet) {
         display: none !important;
@@ -71,6 +70,7 @@
         display: none !important;
     }
 }
+
 .mobile-portrait-only {
     @include mq(mobileLandscape) {
         display: none !important;
