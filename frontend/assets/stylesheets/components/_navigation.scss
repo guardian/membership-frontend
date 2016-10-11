@@ -60,18 +60,17 @@
 .global-navigation__list {
     margin: 0;
     list-style: none;
-    display: table-row;
+    display: none;
 
-    @include mq(desktop) {
+    @include mq(tablet) {
         display: block;
     }
 }
 .global-navigation__item {
-    display: table-cell;
     vertical-align: middle;
     text-transform: lowercase;
 
-    @include mq(desktop) {
+    @include mq(tablet) {
         display: block;
         float: left;
     }
@@ -129,7 +128,7 @@
         .global-navigation__scroll,
         .global-navigation__list,
         .global-navigation__item {
-            display: block !important;
+            display: block;
             height: auto;
             padding: 0;
         }
@@ -472,7 +471,6 @@
     text-decoration: none;
     color: $white;
     background-color: color(brand-main);
-    display: block !important;
 }
 @include mq($until: tablet) {
     .nav-sections__item:last-child .nav-sections__link {

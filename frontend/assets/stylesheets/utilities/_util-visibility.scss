@@ -71,13 +71,6 @@
         display: none !important;
     }
 }
-
-.desktop-only {
-    @include mq($until: tablet) {
-        display: none !important;
-    }
-}
-
 .mobile-portrait-only {
     @include mq(mobileLandscape) {
         display: none !important;
