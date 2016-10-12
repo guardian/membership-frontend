@@ -13,7 +13,7 @@ define([
 
     function init() {
         var trackingElems = document.querySelectorAll('[' + METRIC_ATTRS.trigger + ']');
-        if (window.ga && trackingElems) {
+        if (trackingElems) {
             configureListeners(trackingElems);
         }
     }
