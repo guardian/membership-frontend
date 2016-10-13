@@ -1,7 +1,8 @@
 define([
     'lodash/function/debounce',
-    'src/modules/metrics/logger'
-], function (debounce, logMetric) {
+    'src/modules/metrics/logger',
+    'src/modules/analytics/setup'
+], function (debounce, logMetric,analytics) {
     'use strict';
 
     var METRIC_ATTRS = {
@@ -13,7 +14,7 @@ define([
 
     function init() {
         var trackingElems = document.querySelectorAll('[' + METRIC_ATTRS.trigger + ']');
-        if (trackingElems) {
+        if (analytics.enabled && trackingElems) {
             configureListeners(trackingElems);
         }
     }

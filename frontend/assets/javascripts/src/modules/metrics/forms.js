@@ -1,8 +1,9 @@
 define([
     'bean',
     'src/modules/metrics/logger',
-    'src/modules/form/helper/formUtil'
-], function (bean, logMetric, formUtil) {
+    'src/modules/form/helper/formUtil',
+    'src/modules/analytics/setup'
+], function (bean, logMetric, formUtil, analytics) {
     'use strict';
 
     /**
@@ -75,7 +76,7 @@ define([
     function init() {
         var formAction;
 
-        if (window.ga && typeof formUtil.elems != 'undefined') {
+        if (analytics.enabled && typeof formUtil.elems != 'undefined') {
 
             formAction = formUtil.elem.getAttribute('action');
 
