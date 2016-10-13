@@ -73,7 +73,7 @@ Install the awscli:
 brew install awscli
 ```
 
-Fetch the developer AWS credentials, discuss how we do this with a team member (or, if you are aware of how [Janus](https://github.com/guardian/janus) works, get yourself set up with membership developer permissions).
+Setup membership developer AWS credentials using [Janus](https://github.com/guardian/janus) (you will need access to the Janus repo).
 
 ### Setup NGINX
 
