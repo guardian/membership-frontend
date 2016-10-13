@@ -24,7 +24,7 @@ If you want an automated setup run (from the project root):
 ./nginx/setup.sh
 ```
 
-Or follow the steps in that file. This will create a `site-enabled directory` in you nginx home directory.
+Or follow the steps in that file. This will create a `site-enabled directory` in you nginx home directory. Make sure you get your AWS credentials set up before you run this.
 
 ### Update your hosts file
 

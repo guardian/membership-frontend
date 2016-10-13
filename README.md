@@ -66,10 +66,6 @@ npm run watch
 
 **Pattern Library**: A library of common patterns used across the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
 
-### Setup NGINX
-
-Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this project.
-
 ### Setup AWS credentials
 
 Install the awscli:
@@ -77,8 +73,11 @@ Install the awscli:
 brew install awscli
 ```
 
-Fetch the developer AWS credentials, discuss how we do this with a team member.
+Setup membership developer AWS credentials using [Janus](https://github.com/guardian/janus) (you will need access to the Janus repo).
 
+### Setup NGINX
+
+Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this project. Make sure you get your AWS credentials set up first.
 
 ### Download private keys
 
