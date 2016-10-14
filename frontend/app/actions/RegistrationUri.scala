@@ -4,6 +4,7 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.RestOfTheWorld
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
+import com.netaporter.uri.dsl._
 import configuration.Config
 import play.api.mvc.RequestHeader
 
@@ -33,10 +34,10 @@ object RegistrationUri {
     controllers.routes.Joiner.joinFriend().path -> "FRI"
   )
 
-  def parse(request: RequestHeader) = {
+  def parse(request: RequestHeader): String = {
     val redirectUrl: String = Config.idWebAppRegisterUrl(request.uri)
     val campaignCode = extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
-    redirectUrl.concat(s"&INTCMP=$campaignCode")
+    (redirectUrl ? ("INTCMP" -> campaignCode)).toString
   }
 
   private def extractCampaignCode(refererOpt: Option[String], path: String) : String = {
