@@ -21,7 +21,7 @@
         Supporters keep our journalism fearless and free to tell the stories that matter
     }()
     @fragments.page.section(hasBorder = false) {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Top Button")
     }
     @fragments.page.section("Support independent journalism", isNarrow = false, hasBottomPadding = false) {
         <div class="video-preview video-preview--plain">
@@ -70,6 +70,6 @@
 
     @* ===== Join Today ===== *@
     @fragments.page.section("What's included") {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Bottom Button")
     }
 }
