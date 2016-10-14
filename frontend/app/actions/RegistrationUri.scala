@@ -36,9 +36,8 @@ object RegistrationUri {
 
   def parse(request: RequestHeader): String = {
     val campaignCode = extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
-    val returnUri: String = (request.uri ? ("INTCMP" -> campaignCode))
-    val redirectUrl: String = Config.idWebAppRegisterUrl(returnUri)
-    (redirectUrl ? ("INTCMP" -> campaignCode)).toString
+    val returnHereUrl: String = (request.uri ? ("INTCMP" -> campaignCode))
+    Config.idWebAppRegisterUrl(returnHereUrl)
   }
 
   private def extractCampaignCode(refererOpt: Option[String], path: String) : String = {
