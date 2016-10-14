@@ -9,9 +9,6 @@
             <a class="social-action social-action--@{Social.metricAction(social)}"
             target="_blank"
             href="@{Social.link(social)}"
-            data-metric-trigger="click"
-            data-metric-category="social"
-            data-metric-action="@{Social.metricAction(social)}"
             >
                 <span class="u-h">@{Social.tooltip(social)}</span>
                 @fragments.inlineIcon(Social.icon(social))

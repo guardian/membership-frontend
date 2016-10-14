@@ -6,15 +6,16 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@(supporterPlans: MonthYearPlans[PaidMember], cg: CountryGroup)
+@(supporterPlans: MonthYearPlans[PaidMember], cg: CountryGroup, metricLabel: String)
 
 @import com.gu.salesforce.Tier._
 
 @actionAttrs = {
     href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@cg.id"
     data-metric-trigger="click"
-    data-metric-category="join"
-    data-metric-action="@Supporter.toString.toLowerCase"
+    data-metric-category="Supporter Landing Page @cg.id"
+    data-metric-action="cta click"
+    data-metric-label="@metricLabel"
 }
 
 <div class="package-promo package-promo--landing-page tone-border-supporter">
