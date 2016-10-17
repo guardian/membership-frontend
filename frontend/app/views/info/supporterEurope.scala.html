@@ -50,7 +50,12 @@
                     and our award-winning journalism.
                 </p>
                 <p>
-                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">Become a Supporter</a>
+                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id"
+                                      data-metric-trigger="click"
+                                      data-metric-category="Supporter Landing Page @countryGroup.id"
+                                      data-metric-action="cta click"
+                                      data-metric-label="Middle Button"
+                                      >Become a Supporter</a>
                 </p>
             </div>
         }
