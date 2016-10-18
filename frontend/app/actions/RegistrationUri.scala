@@ -7,7 +7,6 @@ import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import configuration.Config
 import play.api.mvc.RequestHeader
-import play.utils.UriEncoding
 import utils.CampaignCode
 
 import scala.util.Try
