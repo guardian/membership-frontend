@@ -1,12 +1,12 @@
 package utils
 
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.utils.UriEncoding
 
 case class CampaignCode(get: String)
 
 object CampaignCode {
-  def fromRequest(implicit request: Request[_]): Option[CampaignCode] =
+  def fromRequest(implicit request: RequestHeader): Option[CampaignCode] =
     for {
       cookie <- request.cookies.get("s_sess")
       decodedCookie = UriEncoding.decodePathSegment(cookie.value, "utf-8")
