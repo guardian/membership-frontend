@@ -7,6 +7,7 @@ import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import configuration.Config
 import play.api.mvc.RequestHeader
+import utils.CampaignCode
 
 import scala.util.Try
 
@@ -35,7 +36,12 @@ object RegistrationUri {
   )
 
   def parse(request: RequestHeader): String = {
-    val campaignCode = extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
+
+    val campaignCode = CampaignCode.fromRequest(request) match {
+      case Some(CampaignCode(code)) => code
+      case None => extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
+    }
+
     val returnHereUrl: String = (request.uri ? ("INTCMP" -> campaignCode))
     Config.idWebAppRegisterUrl(returnHereUrl)
   }
