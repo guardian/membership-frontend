@@ -4,8 +4,10 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.RestOfTheWorld
 import com.gu.salesforce.Tier
 import com.netaporter.uri.Uri
+import com.netaporter.uri.dsl._
 import configuration.Config
 import play.api.mvc.RequestHeader
+import utils.CampaignCode
 
 import scala.util.Try
 
@@ -33,10 +35,15 @@ object RegistrationUri {
     controllers.routes.Joiner.joinFriend().path -> "FRI"
   )
 
-  def parse(request: RequestHeader) = {
-    val redirectUrl: String = Config.idWebAppRegisterUrl(request.uri)
-    val campaignCode = extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
-    redirectUrl.concat(s"&INTCMP=$campaignCode")
+  def parse(request: RequestHeader): String = {
+
+    val campaignCode = CampaignCode.fromRequest(request) match {
+      case Some(CampaignCode(code)) => code
+      case None => extractCampaignCode(request.headers.get(REFERRER_HEADER), request.path)
+    }
+
+    val returnHereUrl: String = (request.uri ? ("INTCMP" -> campaignCode))
+    Config.idWebAppRegisterUrl(returnHereUrl)
   }
 
   private def extractCampaignCode(refererOpt: Option[String], path: String) : String = {

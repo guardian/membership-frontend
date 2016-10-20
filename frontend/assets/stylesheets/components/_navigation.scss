@@ -60,18 +60,17 @@
 .global-navigation__list {
     margin: 0;
     list-style: none;
-    display: table-row;
+    display: none;
 
-    @include mq(desktop) {
+    @include mq(tablet) {
         display: block;
     }
 }
 .global-navigation__item {
-    display: table-cell;
     vertical-align: middle;
     text-transform: lowercase;
 
-    @include mq(desktop) {
+    @include mq(tablet) {
         display: block;
         float: left;
     }

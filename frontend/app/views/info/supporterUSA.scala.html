@@ -20,7 +20,7 @@
     }()
 
     @fragments.page.section(hasBorder = false) {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Top Buttom")
     }
 
     @fragments.page.section("Support independent journalism", isNarrow = false, hasBottomPadding = false) {
@@ -44,7 +44,12 @@
                 </p>
                 <p>Our independence allows us to produce award-winning journalism free from outside influence.</p>
                 <p>
-                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">Become a Supporter</a>
+                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id"
+                    data-metric-trigger="click"
+                    data-metric-category="Supporter Landing Page @countryGroup.id"
+                    data-metric-action="cta click"
+                    data-metric-label="Middle Button"
+                    >Become a Supporter</a>
                 </p>
             </div>
         }
@@ -66,6 +71,6 @@
     }
 
     @fragments.page.section("What's included") {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Bottom Button")
     }
 }

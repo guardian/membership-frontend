@@ -96,7 +96,7 @@ object MembershipCompat {
 
     def findFree(f: FreeTier) = f match {
       case Tier.Friend() => in.friend
-      case Tier.Staff() => in.friend // fix
+      case Tier.Staff() => in.staff
     }
   }
 

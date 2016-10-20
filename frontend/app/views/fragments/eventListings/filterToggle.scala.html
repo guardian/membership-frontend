@@ -11,9 +11,6 @@
 @for((label, title, icon) <- action) {
     <a class="action action--slim"
        href="@linkTo" aria-title="@title" title="@title"
-       data-metric-trigger="click"
-       data-metric-category="events"
-       data-metric-action="toggle view"
     >
         @fragments.actionIcon(icon, leftIcon=true)
         @label

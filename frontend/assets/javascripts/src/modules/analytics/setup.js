@@ -58,6 +58,7 @@ define([
     }
 
     return {
-        init: init
+        init: init,
+        enabled: analyticsEnabled
     };
 });

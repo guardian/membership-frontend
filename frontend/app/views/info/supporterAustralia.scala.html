@@ -21,7 +21,7 @@
         Supporters keep our journalism fearless and free to tell the stories that matter
     }()
     @fragments.page.section(hasBorder = false) {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Top Button")
     }
     @fragments.page.section("Support independent journalism", isNarrow = false, hasBottomPadding = false) {
         <div class="video-preview video-preview--plain">
@@ -50,7 +50,12 @@
                 <p>We've led the way on discussion of <a href="https://www.theguardian.com/commentisfree/2015/jul/30/i-can-tell-you-how-adam-goodes-feels-every-indigenous-person-has-felt-it">discrimination against Indigenous people</a>. In our fearless politics coverage, we've reported scoops that have <a href="https://www.theguardian.com/world/2013/nov/18/australia-tried-to-monitor-indonesian-presidents-phone">dominated national debate</a>. We've also told the story <a href="https://www.theguardian.com/society/2015/sep/28/im-not-a-hypochondriac-i-have-a-disease-all-these-things-that-are-wrong-with-me-are-real-they-are-endometriosis">of the suffering of millions of women living with endometriosis</a>.</p>
                 <p>Our independence allows us to produce award-winning journalism free from outside influence. Your support is invaluable for us to maintain this.</p>
                 <p>
-                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">Become a Supporter</a>
+                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id"
+                                      data-metric-trigger="click"
+                                      data-metric-category="Supporter Landing Page @countryGroup.id"
+                                      data-metric-action="cta click"
+                                      data-metric-label="Middle Button"
+                                      >Become a Supporter</a>
                 </p>
             </div>
         }
@@ -70,6 +75,6 @@
 
     @* ===== Join Today ===== *@
     @fragments.page.section("What's included") {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup)
+        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Bottom Button")
     }
 }

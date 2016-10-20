@@ -1,5 +1,4 @@
-/* global ga */
-define(['lodash/object/extend'], function (extend) {
+define(['lodash/object/extend','src/modules/analytics/ga'], function (extend, ga) {
     'use strict';
 
     return function(options) {
@@ -8,7 +7,7 @@ define(['lodash/object/extend'], function (extend) {
             metricData = extend({
                 'hitType': 'event'
             }, options);
-            ga('send', metricData);
+            ga.wrappedGa('send', metricData);
         }
     };
 });

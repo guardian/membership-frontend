@@ -26,7 +26,7 @@ import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.TestUsers.isTestUser
-
+import org.joda.time.LocalDate
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scalaz.std.scalaFuture._
