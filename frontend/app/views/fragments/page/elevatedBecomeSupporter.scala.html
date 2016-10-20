@@ -1,0 +1,16 @@
+@import model.OrientatedImages
+@(image: OrientatedImages)
+
+<section>
+    @fragments.page.elevatedBanner(image) {
+        Become a Guardian&nbsp;Supporter
+    } {
+        Be part of the Guardian's future, by helping to secure it
+    }{
+        Become a Supporter for a month
+    }
+
+    @fragments.page.elevatedBecomeSupporterBody()
+    @fragments.page.elevatedFooterButton()
+</section>
+

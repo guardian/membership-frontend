@@ -67,7 +67,7 @@ trait Info extends Controller {
       )
     )
 
-    Ok(views.html.info.supporter(
+    Ok(views.html.info.elevatedSupporter(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(

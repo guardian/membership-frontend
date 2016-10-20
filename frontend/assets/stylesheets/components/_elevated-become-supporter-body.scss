@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Elevated become supporter body
+   ========================================================================== */
+.elevated-become-supporter-body {    
+    background: guss-colour(neutral-6);
+    padding-left: 95px;
+    padding-right: 95px;
+}
+
+.elevated-become-supporter-body__col {
+	/* Mobile First */
+    margin-top: 24px;
+    width: 100%;
+
+    @include mq($from: desktop) {   
+        width: 50%;
+        display: inline-block;
+    }    
+}
+
+.elevated-become-supporter-body__video {
+	vertical-align: top;
+}
+
+.elevated-become-supporter-body__p {
+	@include fs-header(3);
+	font-weight: normal;
+	color : guss-colour(neutral-1);
+	padding-right: 5%
+}
+
