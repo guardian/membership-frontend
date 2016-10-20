@@ -1,6 +1,5 @@
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
-@import com.gu.i18n.CountryGroup._
 @(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
 
 @import configuration.Config
@@ -65,7 +64,7 @@
             </a>
             <nav id="js-country-switcher" role="navigation" class="js-dropdown-menu nav-popup is-hidden" aria-label="Country switcher">
                 <ul class="nav-popup__list">
-                    @for(countryGroup <- Seq(UK, Europe, US, Canada, Australia, RestOfTheWorld)) {
+                    @for(countryGroup <- model.ActiveCountryGroups.all) {
                         <li class="nav-popup__item">
                             <a href="@routes.Info.supporterFor(countryGroup)" class="nav-popup__link">@countryGroup.name (@countryGroup.currency.identifier)</a>
                         </li>

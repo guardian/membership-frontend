@@ -5,6 +5,7 @@
 GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt")
 GET            /humans.txt                            controllers.CachedAssets.at(path="/public", file="humans.txt")
 GET            /favicon.ico                           controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
+GET            /sitemap.xml                           controllers.SiteMap.sitemap()
 
 # Home page
 GET            /                                      controllers.FrontPage.index
