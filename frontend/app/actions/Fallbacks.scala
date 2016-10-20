@@ -4,6 +4,7 @@ import com.gu.salesforce.PaidTier
 import play.api.mvc.Results._
 import play.api.mvc.{Call, RequestHeader}
 import play.twirl.api.Html
+import configuration.Config
 
 
 object Fallbacks {
@@ -19,7 +20,7 @@ object Fallbacks {
   def notYetAMemberOn(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
 
-  def chooseRegister(implicit request: RequestHeader) = SeeOther(RegistrationUri.parse(request))
+  def chooseRegister(implicit request: RequestHeader) = SeeOther(Config.idWebAppRegisterUrl(request.uri))
 
   def joinStaffMembership(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.staff())
