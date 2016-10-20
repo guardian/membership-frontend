@@ -1,10 +1,10 @@
 package services
 
 import com.gu.config.{DiscountRatePlan, DiscountRatePlanIds}
-import com.gu.membership.FreeMembershipPlan
 import com.gu.memsub.Status
 import com.gu.memsub.Subscription.Feature.{Code, Id}
-import com.gu.memsub.Subscription.{ProductRatePlanChargeId, ProductRatePlanId}
+import com.gu.memsub.Subscription.{RatePlanId, ProductRatePlanChargeId, ProductRatePlanId}
+import com.gu.memsub.subsv2.services.SubIds
 import com.gu.salesforce.Tier
 import com.gu.salesforce.Tier.{friend, partner, patron, supporter}
 import com.gu.zuora.rest
@@ -49,13 +49,13 @@ class MemberServiceTest extends Specification {
     val discounts = DiscountRatePlanIds(DiscountRatePlan(discountPrpId, discountPrpChargeId))
 
     val current = Seq(
-      rest.RatePlan("id1", "prod", partnerPrpId.get, "", List.empty, List.empty),
-      rest.RatePlan("id2", "discount", discountPrpId.get, "", List.empty, List.empty),
-      rest.RatePlan("id3", "discount", manualPrpId.get, "", List.empty, List.empty)
+      SubIds(RatePlanId("id1"), partnerPrpId),
+      SubIds(RatePlanId("id2"), discountPrpId),
+      SubIds(RatePlanId("id3"), manualPrpId)
     )
 
     "Remove any rate plans in the product catalog with discounts, leaving off any others" in {
-      MemberService.getRatePlanIdsToRemove(current, _ == partnerPrpId, discounts) mustEqual Seq("id1", "id2")
+      MemberService.getRatePlanIdsToRemove(current, _ == partnerPrpId, discounts).map(_.get) mustEqual Seq("id1", "id2")
     }
   }
 }
