@@ -8,8 +8,9 @@ import com.gu.memsub.Benefit
 import com.gu.memsub.subsv2.SubscriptionPlan
 import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{Feature, ProductRatePlanId}
+import com.gu.memsub.Subscription.{RatePlanId, Feature, ProductRatePlanId}
 import com.gu.memsub.promo._
+import com.gu.memsub.subsv2.services.SubIds
 import com.gu.memsub.{Subscription => _, _}
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.util.Timing
@@ -72,11 +73,11 @@ object MemberService {
     }
   }
 
-  def getRatePlanIdsToRemove(current: Seq[rest.RatePlan],
+  def getRatePlanIdsToRemove(current: Seq[SubIds],
                              planFinder: ProductRatePlanId => Boolean,
-                             discounts: DiscountRatePlanIds) = current.collect {
-    case discount if discount.productRatePlanId == discounts.percentageDiscount.planId.get => discount.id
-    case plan if planFinder(ProductRatePlanId(plan.productRatePlanId)) => plan.id
+                             discounts: DiscountRatePlanIds): Seq[RatePlanId] = current.collect {
+    case discount if discount.productRatePlanId == discounts.percentageDiscount.planId => discount.ratePlanId
+    case plan if planFinder(plan.productRatePlanId) => plan.ratePlanId
   }
 }
 
@@ -210,7 +211,7 @@ class MemberService(identityService: IdentityService,
     val friendRatePlanId = catalog.friend.id
 
     (for {
-      paidSub <- EitherT(subOrPendingAmendError(subscriber.subscription))
+      paidSub <- EitherT(Future.successful(subOrPendingAmendError(subscriber.subscription)))
       result <- zuoraService.downgradePlan(
         subscription = paidSub.id,
         currentRatePlanId = paidSub.plan.id,
@@ -253,7 +254,7 @@ class MemberService(identityService: IdentityService,
   override def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
                                          (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule] = {
     (for {
-      _ <- EitherT(subOrPendingAmendError(subscriber.subscription))
+      _ <- EitherT(Future.successful(subOrPendingAmendError(subscriber.subscription)))
       country <- EitherT(country(subscriber.contact).map(\/.right))
       a <- EitherT(amend(subscriber.subscription, newPlan, Set.empty, code).map(\/.right))
       result <- EitherT(zuoraService.upgradeSubscription(a.copy(previewMode = true)).map(\/.right))
@@ -442,18 +443,17 @@ class MemberService(identityService: IdentityService,
     List(sub.plan.id)
 
 
-    val oldRest = zuoraService.getRestSubscription(sub.name).map(_.getOrElse(
-      throw new Exception(s"REST sub not found for ${sub.id}")
-    ))
+    val ids = subscriptionService.backdoorRatePlanIds(sub.name).map(_.fold({ error =>
+      throw new Exception(s"REST sub not found for ${sub.id}: $error")
+    }, identity))
 
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.id.get, None, fs.map(_.get)))
 
-    (newRatePlan |@| oldRest) { case (newPln, restSub) =>
+    (newRatePlan |@| ids) { case (newPln, restSub) =>
 
-      /// this is what is blocking the merging of the membership common deletion PR
-      val plansToRemove: Seq[String] = getRatePlanIdsToRemove(restSub.ratePlans, catalog.find(_).isDefined, discountIds)
-      val upgrade = Amend(sub.id.get, plansToRemove, NonEmptyList(newPln), sub.promoCode)
+      val plansToRemove = getRatePlanIdsToRemove(restSub, catalog.find(_).isDefined, discountIds)
+      val upgrade = Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), sub.promoCode)
       code.fold(upgrade)(applicator(_, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(upgrade))
     }
   }
@@ -470,7 +470,7 @@ class MemberService(identityService: IdentityService,
     val tier = newPlan.tier
 
     (for {
-      s <- EitherT(subOrPendingAmendError(sub))
+      s <- EitherT(Future.successful(subOrPendingAmendError(sub)))
       country <- EitherT(country(contact).map(\/.right))
       promo = promoService.validateMany[Upgrades](country, planChoice.productRatePlanId)(form.promoCode, form.trackingPromoCode).toOption.flatten
       command <- EitherT(amend(sub, planChoice, form.featureChoice, promo).map(\/.right))
@@ -491,16 +491,10 @@ class MemberService(identityService: IdentityService,
       result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer)
     } yield result
 
-  private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): Future[MemberError \/ P] =
-    for {
-      restSub <- zuoraService.getRestSubscription(sub.name).map(
-        _.getOrElse(throw new Exception(s"Sub ${sub.name} not found with rest"))
-      )
-    } yield {
-      if (restSub.hasPendingAmendment() || restSub.isCancelled)
+  private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
+      if (sub.hasPendingFreePlan || sub.isCancelled)
         PendingAmendError(sub.name).left
       else
         sub.right
-    }
 
 }
