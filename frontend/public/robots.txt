@@ -5,3 +5,5 @@ Disallow: /whats-on
 Disallow: /join-challenger
 
 Allow: /
+
+Sitemap: https://membership.theguardian.com/sitemap.xml
