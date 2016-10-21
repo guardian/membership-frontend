@@ -440,9 +440,6 @@ class MemberService(identityService: IdentityService,
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
     val tier = newPlan.tier
 
-    List(sub.plan.id)
-
-
     val ids = subscriptionService.backdoorRatePlanIds(sub.name).map(_.fold({ error =>
       throw new Exception(s"REST sub not found for ${sub.id}: $error")
     }, identity))
