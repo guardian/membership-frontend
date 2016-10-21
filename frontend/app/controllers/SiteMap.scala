@@ -16,12 +16,11 @@ object SiteMap extends Controller with LazyLogging {
   } yield countryGroup -> defaultCountry).toMap
 
   def sitemap() = CachedAction { implicit request =>
-
     val foo = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
                       xmlns:xhtml="http://www.w3.org/1999/xhtml">
       {supporterPages}
       <url>
-        <loc>{routes.FrontPage.index.absoluteURL()}</loc>
+        <loc>{routes.FrontPage.index.absoluteURL(secure = true)}</loc>
         <priority>0.8</priority>
       </url>
     </urlset>
@@ -33,7 +32,7 @@ object SiteMap extends Controller with LazyLogging {
   } yield {
     <url>
       <loc>
-        {routes.Info.supporterFor(countryGroup).absoluteURL()}
+        {routes.Info.supporterFor(countryGroup).absoluteURL(secure = true)}
       </loc>
       <priority>1.0</priority>
       {alternatePages()}
@@ -46,6 +45,6 @@ object SiteMap extends Controller with LazyLogging {
       <xhtml:link
       rel="alternate"
       hreflang={s"en-${country.alpha2.toLowerCase}"}
-      href={routes.Info.supporterFor(countrySpecificGroup).absoluteURL()}/>
+      href={routes.Info.supporterFor(countrySpecificGroup).absoluteURL(secure = true)}/>
   }
 }
