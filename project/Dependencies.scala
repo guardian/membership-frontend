@@ -18,7 +18,9 @@ object Dependencies {
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.1.1"
-  val selenium = "org.seleniumhq.selenium" % "selenium-java" % "2.53.1" % "test"
+  val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.0.1" % "test"
+  val seleniumHtmlUnitDriver ="org.seleniumhq.selenium" % "htmlunit-driver" % "2.23" % "test"
+  val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "1.4.10" % "test"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.6" % "test"
   val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
@@ -29,6 +31,6 @@ object Dependencies {
     contentAPI, playWS, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch)
 
-  val acceptanceTestDependencies = Seq(scalaTest, selenium, memsubCommonPlayAuth)
+  val acceptanceTestDependencies = Seq(scalaTest, selenium, memsubCommonPlayAuth, seleniumHtmlUnitDriver, seleniumManager)
 
 }
