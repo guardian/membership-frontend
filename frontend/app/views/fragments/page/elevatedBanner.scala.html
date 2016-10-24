@@ -8,7 +8,7 @@
         <div class="elevated-banner__content">
             <h1 class="elevated-banner__title">@title</h1>
             <p class="elevated-banner__tagline">@tagLine</p>
-            <a class="elevated-banner__button action action--no-icon u-no-bottom-margin">
+            <a class="elevated-banner__button action action--no-icon">
                 @buttonText
                 <svg class="icon-inline action__icon action__icon--right u-no-float">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
@@ -17,9 +17,5 @@
         </div>
     </div><div class="elevated-banner__col elevated-banner__col--img">
         <img class="elevated-banner__col__img" src="http://media.guim.co.uk/f0fbaea3d68853945e47374de8eb3fc9c91be6a4/0_0_1280_632/1280.png"/>
-    </div><div class="elevated-banner__bottom-border">
-        @for(icon <- Asset.inlineSvg("triangle_neutral1")) {
-            @icon
-        }
     </div>
 </div>
