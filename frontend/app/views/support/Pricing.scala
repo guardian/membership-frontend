@@ -1,7 +1,6 @@
 package views.support
 
 import com.gu.i18n.{Currency, GBP}
-import com.gu.membership.PaidMembershipPlans
 import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 import com.gu.memsub.subsv2.MonthYearPlans
 import com.gu.memsub.{Current, Price}

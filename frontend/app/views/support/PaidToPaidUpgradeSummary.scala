@@ -1,13 +1,11 @@
 package views.support
 
 import com.gu.i18n.Currency
-import com.gu.membership.MembershipCatalog
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.{Subscription => S, _}
 import com.gu.memsub.subsv2._
 import com.gu.salesforce.PaidTier
 import com.gu.memsub.BillingSchedule
-import model.SubscriptionOps._
 import org.joda.time.{DateTime, LocalDate}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
