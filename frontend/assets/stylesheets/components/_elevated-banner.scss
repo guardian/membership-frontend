@@ -120,12 +120,15 @@
     }
 }
 
-.elevated-banner__bottom-border {
-    background: #4bc6df;
+.elevated-banner__button__text {
+    display: inline;
+    width: 50%;
 }
 
-
-
+.elevated-banner__button__icon {
+    display: inline;
+    width: 50%;
+}
 
 
 .elevated-banner__image {

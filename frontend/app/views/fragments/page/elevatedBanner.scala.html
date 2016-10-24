@@ -9,10 +9,14 @@
             <h1 class="elevated-banner__title">@title</h1>
             <p class="elevated-banner__tagline">@tagLine</p>
             <a class="elevated-banner__button action action--no-icon">
-                @buttonText
-                <svg class="icon-inline action__icon action__icon--right u-no-float">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-arrow-right"></use>
-                </svg>
+                <div class="elevated-banner__button__text">
+                    @buttonText
+                </div>
+                <div class="elevated-banner__button__icon">
+                    @for(icon <- Asset.inlineSvg("arrow-right-button")) {
+                         @icon
+                     }
+                </div>
             </a>
         </div>
     </div><div class="elevated-banner__col elevated-banner__col--img">
