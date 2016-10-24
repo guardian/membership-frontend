@@ -1,0 +1,15 @@
+@import views.support.Asset
+
+@(buttonText: Html)
+<a class="elevated-button action action--no-icon">
+    <div class="elevated-button__text">
+        @buttonText
+    </div>
+    <div class="elevated-button__icon">
+        <div class="elevated-button__icon__border">
+            @for(icon <- Asset.inlineSvg("arrow-right-button")) {
+             @icon
+         }
+        </div>
+    </div>
+</a>

@@ -1,7 +1,7 @@
 @import model.OrientatedImages
 @(image: OrientatedImages)
 
-<section>
+<section class="elevated-become-supporter-section">
     @fragments.page.elevatedBanner(image) {
         Become a Guardian&nbsp;Supporter
     } {
@@ -11,6 +11,7 @@
     }
 
     @fragments.page.elevatedBecomeSupporterBody()
-    @fragments.page.elevatedFooterButton()
+    
+    @fragments.page.elevatedFooterButton{Become a Supporter for a month}
 </section>
 

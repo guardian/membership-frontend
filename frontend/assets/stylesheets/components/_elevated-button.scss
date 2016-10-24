@@ -1,0 +1,46 @@
+.elevated-button {
+    @include fs-textSans(3);
+    font-size: 20px;
+    font-weight: normal;
+
+    background-color: guss-colour(news-main-1);
+    border-color: guss-colour(news-main-1);
+
+    
+    width: gs-span(3.8);
+    
+    &:hover {
+        background-color: darken(guss-colour(news-main-1), 10%);
+        border-color:  darken(guss-colour(news-main-1), 10%);
+    }
+}
+
+.elevated-button__text {
+    width: 90%;
+    display: block;
+    padding-top: 7px;    /*To vertically align the button's text*/
+    padding-bottom: 7px; /*To vertically align the button's text*/
+    padding-left: 24px;  /*To horizontally align the button's text*/
+    float: left;
+  
+}
+
+.elevated-button__icon {
+    width: 10%;
+    display: block;
+    float: left;
+    margin-top: 7px; /*To vertically align the button's border*/
+}
+
+.elevated-button__icon__border{
+    height: 35px;
+    width: 35px;
+    border-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 50%;  
+    text-align: center;  
+    > svg {
+        margin-top: 7px; /*To vertically align the button's logo*/
+    }
+}

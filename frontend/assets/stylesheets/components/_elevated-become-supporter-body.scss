@@ -3,16 +3,12 @@
    ========================================================================== */
 .elevated-become-supporter-body {     
     background: guss-colour(neutral-6);
-    padding-top: 56px;
     padding-left: 95px;
     padding-right: 95px;
     
-    @supports (clip-path : polygon(0% 100%, 0% 13%, 100% 2%, 100% 100%)){
+    /*@supports (clip-path : polygon(0% 100%, 0% 13%, 100% 2%, 100% 100%)){
         clip-path : polygon(0% 100%, 0% 8%, 100% 3%, 100% 100%);
-        margin-top: -3.5% !important;    
-    }
-   
-
+    }*/
 }
 
 .elevated-become-supporter-body__col {

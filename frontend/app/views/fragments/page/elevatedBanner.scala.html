@@ -1,4 +1,3 @@
-@import views.support.Asset
 @import model.OrientatedImages
 @(image: OrientatedImages, imageModifierClass: String = "", modifierClass: String = "")(title: Html)(tagLine: Html)(buttonText: Html)
 
@@ -7,17 +6,12 @@
     <div class="elevated-banner__col">
         <div class="elevated-banner__content">
             <h1 class="elevated-banner__title">@title</h1>
+            
             <p class="elevated-banner__tagline">@tagLine</p>
-            <a class="elevated-banner__button action action--no-icon">
-                <div class="elevated-banner__button__text">
-                    @buttonText
-                </div>
-                <div class="elevated-banner__button__icon">
-                    @for(icon <- Asset.inlineSvg("arrow-right-button")) {
-                         @icon
-                     }
-                </div>
-            </a>
+            
+            <div class="elevated-banner__button">
+            	@fragments.page.elevatedButton(buttonText)
+            </div>
         </div>
     </div><div class="elevated-banner__col elevated-banner__col--img">
         <img class="elevated-banner__col__img" src="http://media.guim.co.uk/f0fbaea3d68853945e47374de8eb3fc9c91be6a4/0_0_1280_632/1280.png"/>
