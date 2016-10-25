@@ -72,10 +72,12 @@ trait MemberService {
                              nameData: NameForm,
                              tier: PaidTier,
                              customer: Stripe.Customer,
-                             campaignCode: Option[CampaignCode]): Future[SubscribeResult]
+                             campaignCode: Option[CampaignCode],
+                             email: String): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
-                             joinData: JoinForm): Future[SubscribeResult]
+                             joinData: JoinForm,
+                             email: String): Future[SubscribeResult]
 }
 
 object MemberService {
