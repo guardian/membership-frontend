@@ -1,0 +1,23 @@
+.elevated-footer-button {
+    background: #4bc6df;
+    
+    @include mq(tablet) {   /*740px*/
+    }
+
+    @include mq(desktop) { /*980px*/
+    }
+
+    @include mq(mem-full) { /*1140px*/
+    }
+
+    @include mq(wide) { /*1300px*/
+    }
+    
+    
+}
+
+.elevated-footer-button__button {
+	margin-left: 100px;
+	padding-top: 12px;
+	padding-bottom: 48px;
+}

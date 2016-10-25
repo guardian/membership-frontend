@@ -5,7 +5,7 @@
 .elevated-become-supporter-section {     
     background: guss-colour(neutral-6);
     
-    /*@supports (clip-path : polygon(0% 100%, 0% 13%, 100% 2%, 100% 100%)){
-        clip-path : polygon(0% 100%, 0% 8%, 100% 3%, 100% 100%);
-    }*/
+    @supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
+        clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%);
+    }
 }
