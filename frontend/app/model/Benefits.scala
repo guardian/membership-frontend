@@ -32,10 +32,8 @@ object Benefits {
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
   val welcomeDog = Benefit("welcome_pack", "Welcome pack")
   val accessTicket = Benefit("access_tickets", "Access to tickets")
-  val liveStream = Benefit("live_stream", "Access to live stream")
   val emailUpdates = Benefit("email_updates", "Regular member emails")
   var app = Benefit("app","Free access to the premium tier of the Guardian app (includes crosswords and has no adverts)")
-  val offersCompetitions = Benefit("offers_competitions", "Offers and competitions")
   val priorityBooking = Benefit("priority_booking", "48hrs priority booking")
   val noBookingFees = Benefit("no_booking_fees", "No booking fees")
   val guest = Benefit("guest", "Bring a guest")
@@ -45,20 +43,17 @@ object Benefits {
   val discount = Benefit("discount", "20% discount for you and a guest")
   val uniqueExperiences = Benefit("unique_experiences", "Exclusive behind-the-scenes functions")
 
-  val marketedOnlyToUK = Set[Benefit](liveStream, accessTicket, offersCompetitions)
+  val marketedOnlyToUK = Set[Benefit](accessTicket)
 
   val friend = Seq(
     accessTicket,
-    offersCompetitions,
     emailUpdates
   )
 
   val supporter = Seq(
     welcomePack,
-    liveStream,
     app,
     accessTicket,
-    offersCompetitions,
     emailUpdates
   )
 
@@ -80,9 +75,7 @@ object Benefits {
     discount,
     guest,
     welcomePack,
-    liveStream,
     app,
-    offersCompetitions,
     emailUpdates
   )
   val patron = Seq(
@@ -93,18 +86,14 @@ object Benefits {
     discount,
     guest,
     welcomePack,
-    liveStream,
     app,
-    offersCompetitions,
     emailUpdates
   )
 
   val comparisonBasicList = Seq(
     welcomePack,
-    liveStream,
     app,
     accessTicket,
-    offersCompetitions,
     emailUpdates
   )
 
