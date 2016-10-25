@@ -1,13 +1,13 @@
 /* ==========================================================================
-   Elevated become supporter section
+   Elevated why support us section
    ========================================================================== */
 
-.elevated-become-supporter-section {     
+.elevated-why-support-section {     
     background: guss-colour(neutral-6);
-
     margin-top: 12px !important;
+    margin-bottom: 12px !important;
     
     @supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
-        clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%);
+        clip-path : polygon(0% 95%, 0% 0%, 100% 0%, 100% 98%);
     }
 }

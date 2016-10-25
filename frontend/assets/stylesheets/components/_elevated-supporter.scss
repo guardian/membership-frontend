@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Elevated Supporter
+   ========================================================================== */
+
+.elevated-supporter {
+    background-color: rgba(255,255,255, 0.9);
+    margin-left : 10px;
+    margin-right: 10px;
+    
+    @include mq(desktop) {
+        margin-left : 0px;
+        margin-right: 0px;
+    }
+}
+
+// TODO: Replace l- with u- prefix
+.elevated-supporter {
+    &:before,
+    &:after {
+        background: white;
+        content: '';
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        height: 100%;
+        width: 0;
+        @include side-margins-calc('width');
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}

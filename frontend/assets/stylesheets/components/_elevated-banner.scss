@@ -1,43 +1,18 @@
 /* ==========================================================================
    Elevated Banner
    ========================================================================== */
-.elevated-supporter {
-    background-color: rgba(255,255,255, 0.9);
-}
-
-
-
-// TODO: Replace l- with u- prefix
-.elevated-supporter {
-    &:before,
-    &:after {
-        background: white;
-        content: '';
-        position: absolute;
-        z-index: 10;
-        top: 0;
-        height: 100%;
-        width: 0;
-        @include side-margins-calc('width');
-    }
-    &:before {
-        left: 0;
-    }
-    &:after {
-        right: 0;
-    }
-}
-
 .elevated-banner {
-
-    background: #4bc6df;
-    margin-top: 12px !important;
-    height: 316px;
+    @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+        clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
+    }   
     
     @include mq(tablet) {   /*740px*/
     }
 
     @include mq(desktop) { /*980px*/
+        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+            clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
+        }
     }
 
     @include mq(mem-full) { /*1140px*/
@@ -45,38 +20,22 @@
 
     @include mq(wide) { /*1300px*/
     }
-    
-    @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-        clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%);
-    }
 }
 
 .elevated-banner__col {
-    /* Mobile First */
+    /* In mobile the width of the columns is 100% */
     width: 100%;
-
+    background: #4bc6df;
     
     @include mq($from: desktop) {   
         width: 50%;
         display: block;
-        float : left;
+        float:left;
     } 
 }
 
-.elevated-banner__col--img {
-    display: none;   
-
-    @include mq($from: desktop) {   
-        display: inline-block;
-    }
-}
-
-.elevated-banner__col__img {
-    height: 316px;
-}
-
 .elevated-banner__content {
-    margin-top: 6px;
+    margin-top: 3px;
     padding-left: 15px;
     @include mq(desktop) {
         margin-top: 6px;
@@ -84,24 +43,54 @@
     }
 }
 
-.elevated-banner__button {
-    @include mq(desktop) {
-        margin-top: 35px;    
-    }
-}
-
 .elevated-banner__title {
     
     @include fs-header(5);
-
-    font-size: 48px;
-    line-height: 47px;
+    font-size: 30px;
+    line-height: 30px;
     color: #ffffff;
+
+    @include mq(desktop){
+        font-size: 48px;
+        line-height: 47px;
+    }
+
 }
  
 .elevated-banner__tagline {
     @include fs-header(5);
-    line-height: 34px;
+    line-height: 26px;
     font-weight: 500;
     color : guss-colour(guardian-brand-dark);
+    margin-top: 5px;
+
+    @include mq(desktop){
+        line-height: 34px;
+    }
+}
+
+.elevated-banner__button {
+    margin-top: 30px;
+    padding-bottom: 34px;
+
+    @include mq(desktop) {
+        margin-top: 35px;
+    }
+}
+
+
+.elevated-banner__col--img {
+    /*In mobile we do not show the hero image*/
+    display: none;   
+
+    @include mq($from: desktop) {   
+        display: block;           
+        overflow: hidden;
+    }
+}
+
+.elevated-banner__col__img {
+    @include mq($from: desktop) {   
+        height: 316px;
+    }
 }
