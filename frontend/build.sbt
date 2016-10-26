@@ -53,6 +53,8 @@ javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf"
 
 testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
 
+useNativeZip
+
 playArtifactDistSettings
 
 magentaPackageName := "frontend"
