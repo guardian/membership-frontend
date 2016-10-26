@@ -3,8 +3,13 @@
    ========================================================================== */
 .elevated-why-support-body {     
     background: guss-colour(neutral-6);
-    padding-left: 95px;
-    padding-right: 95px;
+    padding-left: 12px;
+
+    @include mq(desktop){
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+    
 }
 
 .elevated-why-support-body__col {
@@ -15,17 +20,48 @@
     @include mq($from: desktop) {   
         width: 50%;
         display: inline-block;
+        vertical-align: middle;
     }    
+}
+
+.elevated-why-support-body__col--img {
+    
+    @include mq($from: desktop) {   
+        float: right;
+    }    
+}
+
+.elevated-why-support-body__title {
+    padding-top: 6px;
+
+    @include mq(desktop){
+        width:100%;
+    }
+}
+
+.elevated-why-support-body__title__h1 {
+    @include fs-header(5);
+    line-height: 26px;
+    font-weight: 500;
+    color:guss-colour(news-main-1);
+}
+
+.elevated-why-support-body__p {
+    @include fs-header(3);
+    font-weight: normal;
+    color : guss-colour(neutral-1);
+    padding-right: 5%
 }
 
 .elevated-why-support-body__col__img {
 	width: 100%;
 }
 
-.elevated-why-support-body__p {
-	@include fs-header(3);
-	font-weight: normal;
-	color : guss-colour(neutral-1);
-	padding-right: 5%
+.elevated-why-support-body__caption {
+    @include fs-textSans(1);
+    color : guss-colour(neutral-2);
+    margin-top: -20px;
 }
+
+
 

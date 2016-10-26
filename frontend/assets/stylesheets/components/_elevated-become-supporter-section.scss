@@ -7,7 +7,14 @@
 
     margin-top: 12px !important;
     
-    @supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
-        clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%);
+    @supports (clip-path : polygon(0% 97%, 0% 0%, 100% 0%, 100% 100%)) {
+        clip-path : polygon(0% 97%, 0% 0%, 100% 0%, 100% 100%);
     }
+
+    @include mq(desktop) {
+    	@supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
+        	clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%);
+    	}
+    }
+    
 }

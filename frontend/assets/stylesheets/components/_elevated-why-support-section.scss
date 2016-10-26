@@ -5,9 +5,16 @@
 .elevated-why-support-section {     
     background: guss-colour(neutral-6);
     margin-top: 12px !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 36px !important;
     
-    @supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
-        clip-path : polygon(0% 95%, 0% 0%, 100% 0%, 100% 98%);
+    @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 100%)) {
+    	clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 100%);
+	}	
+
+    @include mq(desktop){
+    	@supports (clip-path : polygon(0% 95%, 0% 0%, 100% 0%, 100% 98%)) {
+        	clip-path : polygon(0% 95%, 0% 0%, 100% 0%, 100% 98%);
+    	}
     }
+    
 }
