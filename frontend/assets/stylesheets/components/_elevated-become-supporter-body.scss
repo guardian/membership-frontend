@@ -1,15 +1,8 @@
 /* ==========================================================================
    Elevated become supporter body
    ========================================================================== */
-.elevated-become-supporter-body {     
-    
+.elevated-become-supporter-body { 
     background: guss-colour(neutral-6);
-    padding-left: 5px;
-
-    @include mq(desktop) {
-        padding-left :  100px;
-        padding-right:  100px;
-    }
 }
 
 .elevated-become-supporter-body__col {

@@ -36,10 +36,8 @@
 
 .elevated-banner__content {
     margin-top: 3px;
-    padding-left: 5px;
     @include mq(desktop) {
         margin-top: 6px;
-        padding-left: 100px;
     }
 }
 

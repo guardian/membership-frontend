@@ -18,11 +18,7 @@
 
 .elevated-footer-button__button {
 	
-    padding-left: 5px;
+    
 	padding-top: 12px;
 	padding-bottom: 48px;
-
-    @include mq(desktop) { /*980px*/
-        margin-left: 100px;   
-    }
 }

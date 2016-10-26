@@ -9,20 +9,21 @@
 @import views.support.MembershipCompat._
 
 @import com.gu.memsub.subsv2.CatalogPlan
-@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
-    
+
     <section class="elevated-supporter">
         @* ===== Become a Guardian Supporter ===== *@
-        @fragments.page.elevatedBecomeSupporter(heroImage)
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false)
 
         @* ===== Supporters get closer to the Guardian ===== *@
-        @fragments.page.elevatedCloserTheGuardian()
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false)
 
         @* ===== Why do we need our Supporters ===== *@
-        @fragments.page.elevatedWhySupport()
+        @fragments.page.elevatedWhySupport(supporterPlans, countryGroup, showCurrencyPrefix = false)
     </section>
 }
