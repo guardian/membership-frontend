@@ -11,7 +11,7 @@
     @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
         <a class="elevated-button action action--no-icon">
             <div class="elevated-button__text">
-                Become a Supporter for @if(showCurrencyPrefix) {
+                Become a Supporter <br/>for @if(showCurrencyPrefix) {
                 @pricing.monthly.pretty
             } else {
                 @pricing.monthly.prettyWithoutCurrencyPrefix

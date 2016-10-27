@@ -1,3 +1,6 @@
+.elevated-button:hover {
+    background-color: orange;
+}
 .elevated-button {
     @include fs-textSans(3);
     font-size: 20px;
@@ -18,9 +21,9 @@
 .elevated-button__text {
     width: 90%;
     display: block;
-    padding-top: 7px;    /*To vertically align the button's text*/
-    padding-bottom: 7px; /*To vertically align the button's text*/
-    padding-left: 24px;  /*To horizontally align the button's text*/
+    padding-top: 1px;    /*To vertically align the button's text*/
+    padding-bottom: 1px; /*To vertically align the button's text*/
+    padding-left: 4px;  /*To horizontally align the button's text*/
     float: left;
   
 }
@@ -29,7 +32,7 @@
     width: 10%;
     display: block;
     float: left;
-    margin-top: 7px; /*To vertically align the button's border*/
+    margin-top: 3px; /*To vertically align the button's border*/
 }
 
 .elevated-button__icon__border{
