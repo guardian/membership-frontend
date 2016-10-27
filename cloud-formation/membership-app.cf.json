@@ -108,9 +108,9 @@
 
                         "adduser --system --home /membership --disabled-password membership",
 
-                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip /tmp"]]},
+                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/frontend-1.0-SNAPSHOT.tgz/tmp"]]},
 
-                        "unzip -d /membership /tmp/app.zip",
+                        "unzip -d /membership /tmp/frontend-1.0-SNAPSHOT.tgz",
 
                         "mkdir /etc/gu",
 

@@ -55,9 +55,18 @@ testOptions in Test += Tests.Argument("-oD") // display execution times in Scala
 
 useNativeZip
 
-playArtifactDistSettings
+riffRaffPackageType := (packageZipTarball in Universal).value
 
-magentaPackageName := "frontend"
+riffRaffBuildIdentifier := env("BUILD_NUMBER", "DEV")
+
+riffRaffManifestBranch := env("BRANCH_NAME", "unknown_branch")
+
+riffRaffManifestVcsUrl  := "git@github.com:guardian/membership-frontend.git"
+
+riffRaffUploadArtifactBucket := Option("riffraff-artifact")
+
+riffRaffUploadManifestBucket := Option("riffraff-builds")
+
 
 play.sbt.routes.RoutesKeys.routesImport ++= Seq(
     "com.gu.salesforce.Tier",
