@@ -1,13 +1,15 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import model.OrientatedImages
 
-@(  supporterPlans: MonthYearPlans[PaidMember],
+@(  image: OrientatedImages,
+	supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     showCurrencyPrefix: Boolean)
 
-<section class="elevated-why-support-section">
-    @fragments.page.elevatedWhySupportBody()
+<section class="elevated-why-support-section l-constrained">
+    @fragments.page.elevatedWhySupportBody(image)
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, showCurrencyPrefix)
 </section>
 

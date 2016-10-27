@@ -45,7 +45,7 @@ trait Info extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 648))
+      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 1000))
     )
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
