@@ -46,8 +46,8 @@ function flushEventQueue () {
 
     _EVENT_QUEUE.forEach(function (obj) {
         var upgrading = (obj.eventLabel === 'Rate Plan Change' && guardian.pageInfo.productData.initialProduct !== guardian.pageInfo.productData.productPurchasing) ? 1 : 0;
-        ga('membershipPropertyTracker.send', 'event', {
-            eventCategory: 'Subscriptions Checkout',
+        ga(`${tracker}.send`, 'event', {
+            eventCategory: 'Membership Acquisition',
             eventAction:  guardian.pageInfo.productData.productType,
             eventLabel: obj.eventLabel,
             dimension11: guardian.pageInfo.productData.productType + ' - ' + guardian.pageInfo.productData.productPurchasing,
