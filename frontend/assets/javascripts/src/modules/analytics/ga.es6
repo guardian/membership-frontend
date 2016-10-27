@@ -16,6 +16,7 @@ const dimensions = {
     productPurchased: 'dimension11',
     intcmp: 'dimension12'
 };
+let _EVENT_QUEUE = [];
 
 function create(){
     /*eslint-disable */
@@ -37,6 +38,29 @@ function create(){
         'cookieDomain': guardian.googleAnalytics.cookieDomain
     });
 }
+
+// Once GA is loaded, sends the events off to Google's servers.
+function flushEventQueue () {
+
+    if (typeof(ga) === 'undefined') { return; }
+
+    _EVENT_QUEUE.forEach(function (obj) {
+        var upgrading = (obj.eventLabel === 'Rate Plan Change' && guardian.pageInfo.productData.initialProduct !== guardian.pageInfo.productData.productPurchasing) ? 1 : 0;
+        ga('membershipPropertyTracker.send', 'event', {
+            eventCategory: 'Subscriptions Checkout',
+            eventAction:  guardian.pageInfo.productData.productType,
+            eventLabel: obj.eventLabel,
+            dimension11: guardian.pageInfo.productData.productType + ' - ' + guardian.pageInfo.productData.productPurchasing,
+            dimension13: !!guardian.supplierCode,
+            metric1: upgrading,
+            metric2: obj.elapsedTime
+        });
+    });
+
+    _EVENT_QUEUE = [];
+
+}
+
 export function wrappedGa(a,b,c){
     return window.ga(tracker+ '.' + a,b,c);
 
@@ -82,5 +106,13 @@ export function init() {
     //Send the pageview.
     wrappedGa('send', 'pageview');
 
+
+}
+
+// Queues up tracked events on the page, attempts to send to Google.
+export function trackEvent (eventLabel, elapsedTime) {
+
+    _EVENT_QUEUE.push({ eventLabel: eventLabel, elapsedTime: elapsedTime });
+    flushEventQueue();
 
 }
