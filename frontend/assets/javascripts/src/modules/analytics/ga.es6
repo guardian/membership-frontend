@@ -16,6 +16,19 @@ const dimensions = {
     productPurchased: 'dimension11',
     intcmp: 'dimension12'
 };
+const metrics = {
+    join: {
+        Friend: 'metric3',
+        Supporter: 'metric4',
+        Partner: 'metric5',
+        Patron: 'metric6'
+    },
+    upgrade: {
+        Supporter: 'metric7',
+        Partner: 'metric8',
+        Patron: 'metric9'
+    }
+};
 let _EVENT_QUEUE = [];
 
 function create(){
@@ -44,17 +57,8 @@ function flushEventQueue () {
 
     if (typeof(ga) === 'undefined') { return; }
 
-    _EVENT_QUEUE.forEach(function (obj) {
-        var upgrading = (obj.eventLabel === 'Rate Plan Change' && guardian.pageInfo.productData.initialProduct !== guardian.pageInfo.productData.productPurchasing) ? 1 : 0;
-        ga(`${tracker}.send`, 'event', {
-            eventCategory: 'Membership Acquisition',
-            eventAction:  guardian.pageInfo.productData.productType,
-            eventLabel: obj.eventLabel,
-            dimension11: guardian.pageInfo.productData.productType + ' - ' + guardian.pageInfo.productData.productPurchasing,
-            dimension13: !!guardian.supplierCode,
-            metric1: upgrading,
-            metric2: obj.elapsedTime
-        });
+    _EVENT_QUEUE.forEach(function (eventData) {
+        ga(`${tracker}.send`, 'event', eventData);
     });
 
     _EVENT_QUEUE = [];
@@ -110,9 +114,19 @@ export function init() {
 }
 
 // Queues up tracked events on the page, attempts to send to Google.
-export function trackEvent (eventLabel, elapsedTime) {
+export function acquisitionEvent () {
 
-    _EVENT_QUEUE.push({ eventLabel: eventLabel, elapsedTime: elapsedTime });
+    let event = {
+        eventCategory: 'Membership Acquisition'
+    };
+
+    if (guardian.productData.upgrade) {
+        event[metrics.upgrade[guardian.productData.tier]] = 1;
+    } else {
+        event[metrics.join[guardian.productData.tier]] = 1;
+    }
+
+    _EVENT_QUEUE.push(event);
     flushEventQueue();
 
 }
