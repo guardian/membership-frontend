@@ -50,7 +50,7 @@
 	vertical-align: top;
 }
 
-.elevated-closer-guardian-body__caption {
+/*.elevated-closer-guardian-body__caption {
     @include fs-textSans(1);
     color : guss-colour(neutral-2);
     margin-top: -20px;
@@ -60,7 +60,7 @@
         margin-right: auto;
         margin-left: auto;
     }
-}
+}*/
 
 .elevated-closer-guardian-body__text {
     @include mq(desktop){
