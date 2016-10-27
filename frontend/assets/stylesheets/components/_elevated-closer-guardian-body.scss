@@ -55,7 +55,7 @@
     color : guss-colour(neutral-2);
     margin-top: -20px;
 
-    @include mq($from: tablet){
+    @include mq($from: tablet, $until: desktop) {
         width: 460px;
         margin-right: auto;
         margin-left: auto;
@@ -70,6 +70,24 @@
 
 .elevated-closer-guardian-body__list {
     margin-top: 12px;
+}
+
+.elevated-closer-guardian-body__ul {
+    list-style-type: none;
+}
+
+.elevated-closer-guardian-body__list_dot {
+    background-color: #4CC6DE;
+    border-radius: 50%;
+    display: inline-block;
+    height: 7px;
+    vertical-align: middle;
+    width: 7px;
+    
+    @include mq(tablet){
+        height: 14px;
+        width: 14px;
+    }
 }
 
 .elevated-closer-guardian-body__list_p {
