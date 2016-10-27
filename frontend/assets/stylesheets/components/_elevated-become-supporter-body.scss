@@ -10,24 +10,15 @@
     background: guss-colour(neutral-6);
     width: 100%;
 
+    @include mq(tablet){
+        margin-top: 18px;   
+    }
+
     @include mq($from: desktop) {
         width: 50%;
         margin-top: 24px;
         display: inline-block;
         vertical-align: middle;
-    }    
-}
-
-.elevated-become-supporter-body__p {
-	@include fs-header(1);
-    font-weight: normal;
-	color : guss-colour(neutral-1);
-
-    @include mq($from: desktop) {   
-        @include fs-header(3);
-        font-weight: normal;
-        color : guss-colour(neutral-1);
-        padding-right:  10px;
     }    
 }
 
@@ -41,5 +32,15 @@
     @include fs-textSans(1);
     color : guss-colour(neutral-2);
     margin-top: -20px;
+
+    @include mq(tablet) {
+        width: 460px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    @include mq(desktop) {
+        width: 620px;
+    }
 }
 

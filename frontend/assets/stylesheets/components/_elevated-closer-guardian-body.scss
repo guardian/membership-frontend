@@ -4,27 +4,33 @@
 .elevated-closer-guardian-body {     
     
     background: guss-colour(neutral-6);
+    padding-bottom: 18px;
+    
+    @include mq(tablet){
+        padding-bottom: 36px;
+    }
 }
 
 .elevated-closer-guardian-body__title {
     padding-top: 6px;
     padding-bottom: 18px;
 
-    @include mq($from: desktop) {   
+    @include mq($from: tablet) {   
         padding-top: 10px;
+        padding-bottom: 36px;
     }    
 }
 
 .elevated-closer-guardian-body__title__h1 {
-    @include fs-header(6);
+    @include fs-header(5);
     font-weight: 500;
     line-height: 26px;
     color : guss-colour(news-main-1);
 
-    @include mq($from: desktop) {   
-        padding-top: 10px;
+    @include mq($from: tablet) {   
         @include fs-headline(6);
         line-height: 34px;
+        font-weight: 500;
     }    
 }
 
@@ -45,9 +51,15 @@
 }
 
 .elevated-closer-guardian-body__caption {
-     @include fs-textSans(1);
+    @include fs-textSans(1);
     color : guss-colour(neutral-2);
     margin-top: -20px;
+
+    @include mq($from: tablet){
+        width: 460px;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }
 
 .elevated-closer-guardian-body__text {
@@ -61,14 +73,18 @@
 }
 
 .elevated-closer-guardian-body__list_p {
-    @include fs-header(2);
-    font-weight: normal;
-    color: guss-colour(neutral-1);
+    @include mq(tablet) {   
+        margin-bottom: 0;
+    }    
 }
 
 .elevated-closer-guardian-body__list_item {
     @include fs-header(1);
     color : guss-colour(neutral-1);
+
+    @include mq(tablet){
+        @include fs-header(3);
+    }
 }
 
 .elevated-closer-guardian-body__list_line {

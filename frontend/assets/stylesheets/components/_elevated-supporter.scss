@@ -73,3 +73,15 @@
     }
 
 }
+
+.u-responsive-p {
+    @include fs-header(1);
+    font-weight: normal;
+    color : guss-colour(neutral-1);
+
+    @include mq(tablet) {   
+        @include fs-header(3);
+        font-weight: normal;
+        color : guss-colour(neutral-1);
+    }
+}

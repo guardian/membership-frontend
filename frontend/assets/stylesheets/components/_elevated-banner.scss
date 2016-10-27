@@ -36,23 +36,22 @@
 
 .elevated-banner__content {
     margin-top: 3px;
-    @include mq(desktop) {
+    
+    @include mq(tablet) {
         margin-top: 6px;
     }
 }
 
-.elevated-banner__title {
-    
+.elevated-banner__title__h1 {
     @include fs-header(5);
     font-size: 30px;
     line-height: 30px;
-    color: #ffffff;
+    color: #FFF;
 
-    @include mq(desktop){
+    @include mq(tablet){
         font-size: 48px;
         line-height: 47px;
     }
-
 }
  
 .elevated-banner__tagline {
@@ -62,8 +61,16 @@
     color : guss-colour(guardian-brand-dark);
     margin-top: 5px;
 
-    @include mq(desktop){
+    @include mq($from: mobileLandscape){
+        max-width: 350px;
+    }
+
+    @include mq($from: tablet){
+        font-size: 32px;
         line-height: 34px;
+        max-width: 460px;
+        margin-top: 2px;
+
     }
 }
 

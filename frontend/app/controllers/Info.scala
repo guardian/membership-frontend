@@ -29,43 +29,26 @@ trait Info extends Controller {
     val heroImage = ResponsiveImageGroup(
       name=Some("intro"),
       metadata=Some(Grid.Metadata(
-        description = Some("""|People from all walks of life gather in Westminster
-                             | on 17 June, in London, England, to demand the parliament backs
-                             | action on climate change""".stripMargin),
+        description = Some("Montage of The Guardian Headlines"),
         byline = None,
-        credit = Some("John Phillips/Getty Images")
+        credit = None
       )),
-      availableImages=ResponsiveImageGenerator("17d84a219397dc81ec8d456ff0e97bf326d74015/0_127_4094_2457", Seq(2000, 1000))
+      availableImages=ResponsiveImageGenerator("1cc958628a26fa42347858c801975abf73de21dc/0_0_1280_632", Seq(1280, 1000), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("fearless"),
-        metadata=Some(Grid.Metadata(
-          description = Some("Editors in the Guardian newsroom, London"),
-          byline = None,
-          credit = None
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="8cc033c84791f1583fc52f337d3c6c3ffb368f8e/0_0_1999_1200",
-          sizes=List(1000,500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("join"),
-        metadata=Some(Grid.Metadata(
-          description = Some("Polly Toynbee, Guardian columnist"),
-          byline = None,
-          credit = None
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="17a31ff294d3c77274091c5e078713fc06ef5cd2/0_0_1999_1200",
-          sizes=List(1000, 500)
-        )
-      )
+    val detailImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("A scene in The Guardian editorial office."),
+        byline = None,
+        credit = None
+      )),
+      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 648))
     )
+
+    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
     Ok(views.html.info.elevatedSupporter(
       heroOrientated,
@@ -75,7 +58,7 @@ trait Info extends Controller {
         url = request.path,
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
-      pageImages))
+      detailImageOrientated))
   }
 
   def supporterAustralia = CachedAction { implicit request =>

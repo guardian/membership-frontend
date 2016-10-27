@@ -12,7 +12,7 @@
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
-    pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
