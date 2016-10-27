@@ -1,7 +1,7 @@
 'use strict';
 
 const metrics = {
-	purchase: {
+	join: {
 		friend: 'metric3',
 		supporter: 'metric4',
 		partner: 'metric5',
@@ -15,16 +15,16 @@ const metrics = {
 };
 
 // Builds the data for the analytics event.
-export function eventData (tier, transactionType) {
+export function eventData (tier) {
 
 	let event = {
 		eventCategory: 'Membership Acquisition'
 	};
 
-	if (transactionType === 'purchase') {
-		event[metrics.purchase[tier]] = 1;
-	} else if (transactionType === 'upgrade') {
+	if (guardian.productData.upgrade) {
 		event[metrics.upgrade[tier]] = 1;
+	} else {
+		event[metrics.join[tier]] = 1;
 	}
 
 }
