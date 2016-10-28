@@ -1,20 +1,18 @@
-.elevated-button:hover {
-    background-color: orange;
-}
+
 .elevated-button {
     @include fs-textSans(3);
     font-size: 20px;
     font-weight: normal;
 
-    background-color: guss-colour(news-main-1);
-    border-color: guss-colour(news-main-1);
+    background-color : #005689;
+    border-color : #005689;
 
     
     width: gs-span(3.8);
     
     &:hover {
-        background-color: darken(guss-colour(news-main-1), 10%);
-        border-color:  darken(guss-colour(news-main-1), 10%);
+        background-color: #003557;
+        border-color: #003557;
     }
 }
 
