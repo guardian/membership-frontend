@@ -103,8 +103,12 @@ export function init() {
         wrappedGa('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
     }
     if("productData" in guardian) {
+
         wrappedGa('set',dimensions.membershipNumber,guardian.productData.regNumber);
         wrappedGa('set',dimensions.productPurchased,guardian.productData.tier);
+        // Send analytics after acquisition (on thank you page).
+        acquisitionEvent();
+
     }
     wrappedGa('set', dimensions.ophanBrowserId, cookie.getCookie('bwid'));
 
@@ -115,7 +119,5 @@ export function init() {
 
     //Send the pageview.
     wrappedGa('send', 'pageview');
-    // Send analytics after acquisition (on thank you page).
-    if ('productData' in guardian) acquisitionEvent();
 
 }
