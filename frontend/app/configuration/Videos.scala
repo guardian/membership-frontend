@@ -46,6 +46,16 @@ object Videos {
     )
   )
 
+  val scottTrustExplained = Video(
+    srcUrl="//www.youtube.com/embed/jn4wAy1Xs5M?enablejsapi=1&wmode=transparent",
+    posterImage=Some(
+      ResponsiveImageGroup(
+        altText=Some("If you read the Guardian, join the Guardian"),
+        availableImages=supportersPlaceholder
+      )
+    )
+  )
+
   val supportersUSA =  Video(
     srcUrl="//www.youtube.com/embed/MsZL6dhyXW8?enablejsapi=1&wmode=transparent",
     posterImage=Some(

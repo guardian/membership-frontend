@@ -1,7 +1,8 @@
-@import views.support.Asset
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import views.support.Asset
+@import views.support.MembershipCompat._
 @import views.support.Pricing._
 
 @(  supporterPlans: MonthYearPlans[PaidMember],
@@ -9,7 +10,7 @@
     showCurrencyPrefix: Boolean = true)
 
     @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
-        <a class="elevated-button action action--no-icon">
+        <a class="elevated-button action action--no-icon" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
             <div class="elevated-button__text">
                 Become a Supporter <br/>for @if(showCurrencyPrefix) {
                 @pricing.monthly.pretty
