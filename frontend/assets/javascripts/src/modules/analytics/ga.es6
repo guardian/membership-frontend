@@ -52,16 +52,20 @@ function create(){
     });
 }
 
-// Once GA is loaded, sends the events off to Google's servers.
-function flushEventQueue () {
+// Queues up tracked events on the page, attempts to send to Google.
+function acquisitionEvent () {
 
-    if (typeof(ga) === 'undefined') { return; }
+    let event = {
+        eventCategory: 'Membership Acquisition'
+    };
 
-    _EVENT_QUEUE.forEach(function (eventData) {
-        ga(`${tracker}.send`, 'event', eventData);
-    });
+    if (guardian.productData.upgrade) {
+        event[metrics.upgrade[guardian.productData.tier]] = 1;
+    } else {
+        event[metrics.join[guardian.productData.tier]] = 1;
+    }
 
-    _EVENT_QUEUE = [];
+    wrappedGa('send', 'event', event);
 
 }
 
@@ -69,6 +73,7 @@ export function wrappedGa(a,b,c){
     return window.ga(tracker+ '.' + a,b,c);
 
 }
+
 export function init() {
     let guardian = window.guardian;
     create();
@@ -109,24 +114,7 @@ export function init() {
 
     //Send the pageview.
     wrappedGa('send', 'pageview');
-
-
-}
-
-// Queues up tracked events on the page, attempts to send to Google.
-export function acquisitionEvent () {
-
-    let event = {
-        eventCategory: 'Membership Acquisition'
-    };
-
-    if (guardian.productData.upgrade) {
-        event[metrics.upgrade[guardian.productData.tier]] = 1;
-    } else {
-        event[metrics.join[guardian.productData.tier]] = 1;
-    }
-
-    _EVENT_QUEUE.push(event);
-    flushEventQueue();
+    // Send analytics after acquisition (on thank you page).
+    if (guardian.productData) acquisitionEvent();
 
 }
