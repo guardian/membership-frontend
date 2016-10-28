@@ -16,6 +16,19 @@ const dimensions = {
     productPurchased: 'dimension11',
     intcmp: 'dimension12'
 };
+const metrics = {
+    join: {
+        Friend: 'metric3',
+        Supporter: 'metric4',
+        Partner: 'metric5',
+        Patron: 'metric6'
+    },
+    upgrade: {
+        Supporter: 'metric7',
+        Partner: 'metric8',
+        Patron: 'metric9'
+    }
+};
 
 function create(){
     /*eslint-disable */
@@ -37,10 +50,30 @@ function create(){
         'cookieDomain': guardian.googleAnalytics.cookieDomain
     });
 }
+
+// Queues up tracked events on the page, attempts to send to Google.
+function acquisitionEvent () {
+
+    let event = {
+        eventCategory: 'Membership Acquisition',
+        eventAction: guardian.productData.upgrade ? 'Upgrade' : 'Join'
+    };
+
+    if (guardian.productData.upgrade) {
+        event[metrics.upgrade[guardian.productData.tier]] = 1;
+    } else {
+        event[metrics.join[guardian.productData.tier]] = 1;
+    }
+
+    wrappedGa('send', 'event', event);
+
+}
+
 export function wrappedGa(a,b,c){
     return window.ga(tracker+ '.' + a,b,c);
 
 }
+
 export function init() {
     let guardian = window.guardian;
     create();
@@ -69,8 +102,12 @@ export function init() {
         wrappedGa('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
     }
     if("productData" in guardian) {
+
         wrappedGa('set',dimensions.membershipNumber,guardian.productData.regNumber);
         wrappedGa('set',dimensions.productPurchased,guardian.productData.tier);
+        // Send analytics after acquisition (on thank you page).
+        acquisitionEvent();
+
     }
     wrappedGa('set', dimensions.ophanBrowserId, cookie.getCookie('bwid'));
 
@@ -81,6 +118,5 @@ export function init() {
 
     //Send the pageview.
     wrappedGa('send', 'pageview');
-
 
 }
