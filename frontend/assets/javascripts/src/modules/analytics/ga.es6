@@ -29,7 +29,6 @@ const metrics = {
         Patron: 'metric9'
     }
 };
-let _EVENT_QUEUE = [];
 
 function create(){
     /*eslint-disable */
