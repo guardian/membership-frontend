@@ -27,6 +27,10 @@ $global-header-height-mobile: 116px;
         padding-bottom: $gs-gutter;
         background-position: 50% 0%;
     }
+
+    @include mq(tablet, desktop){
+        height : 100%;
+    }
 }
 .global-header__branding {
     @include clearfix();
@@ -59,6 +63,10 @@ $global-header-height-mobile: 116px;
     height: 50px;
 
     @include mq(tablet) {
+        height: 55px;
+    }
+
+    @include mq(desktop){
         height: 90px;
     }
 }
