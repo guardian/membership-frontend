@@ -56,7 +56,8 @@ function create(){
 function acquisitionEvent () {
 
     let event = {
-        eventCategory: 'Membership Acquisition'
+        eventCategory: 'Membership Acquisition',
+        eventAction: guardian.productData.upgrade ? 'Upgrade' : 'Join'
     };
 
     if (guardian.productData.upgrade) {
@@ -115,6 +116,6 @@ export function init() {
     //Send the pageview.
     wrappedGa('send', 'pageview');
     // Send analytics after acquisition (on thank you page).
-    if (guardian.productData) acquisitionEvent();
+    if ('productData' in guardian) acquisitionEvent();
 
 }
