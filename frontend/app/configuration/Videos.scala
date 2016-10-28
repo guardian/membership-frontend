@@ -25,6 +25,16 @@ object Videos {
     sizes=List(1000, 500)
   )
 
+  private val scottTrustPlaceholder = ResponsiveImageGenerator(
+    id="48d528d9851d8de20997863f68dff2443c1725e2/0_0_2000_1125",
+    sizes=List(2000, 1000)
+  )
+
+  private val membershipPlaceholder = ResponsiveImageGenerator(
+    id="d6e58ef1af3c7f06477c1f0709c823613bc21f3e/0_0_2000_1125",
+    sizes=List(2000, 1000)
+  )
+
   private val supportersUSAPlaceholder = ResponsiveImageGenerator(
     id="d9e217dbfa10f4c6b352ff2abac13379994a992f/0_0_960_540",
     sizes=List(960, 500)
@@ -51,7 +61,17 @@ object Videos {
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
-        availableImages=supportersPlaceholder
+        availableImages=scottTrustPlaceholder
+      )
+    )
+  )
+
+  val membershipExplained = Video(
+    srcUrl="//www.youtube.com/embed/E3uaUH2XGtE?enablejsapi=1&wmode=transparent",
+    posterImage=Some(
+      ResponsiveImageGroup(
+        altText=Some("If you read the Guardian, join the Guardian"),
+        availableImages=membershipPlaceholder
       )
     )
   )
