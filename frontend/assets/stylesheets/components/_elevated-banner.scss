@@ -2,24 +2,53 @@
    Elevated Banner
    ========================================================================== */
 .elevated-banner {
-    @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-        clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
-    }   
     
-    @include mq(tablet) {   /*740px*/
-    }
+  /*Mobile 320px*/
+  @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%)) {
+      clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%);
+  }
 
-    @include mq(desktop) { /*980px*/
-        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-            clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
-        }
-    }
+  /*Mobile Landscape 480px*/
+/*  @include mq(mobileLandscape) { 
+      @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+          clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
+      }
+  }*/
 
-    @include mq(mem-full) { /*1140px*/
+  /*Phablet 660px*/
+/*  @include mq(phablet) {   
+  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+      clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
     }
+  }*/
 
-    @include mq(wide) { /*1300px*/
+  /*Tablet 740px*/
+/*  @include mq(tablet) {   
+  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+      clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
+    }	
+  }*/
+
+	/*Desktop 980px*/
+/*  @include mq(desktop) { 
+    @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+      clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
     }
+  }*/
+
+  /*Left Col 1140px*/
+/*  @include mq(mem-full) {
+  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+      clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
+    }
+  }*/
+
+  /*Wide 1300*/
+/*  @include mq(wide) {
+  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+      clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
+    }
+  }*/
 }
 
 .elevated-banner__col {
@@ -75,8 +104,9 @@
 }
 
 .elevated-banner__button {
-    margin-top: 30px;
+    margin-top: 42;
     padding-bottom: 34px;
+    margin-bottom: 14px;
 
     @include mq(desktop) {
         margin-top: 35px;
