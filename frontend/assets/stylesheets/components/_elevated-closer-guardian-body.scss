@@ -48,6 +48,9 @@
 
 .elevated-closer-guardian-body__video {
 	vertical-align: top;
+    @include mq($from: desktop, $until: mem-full){
+        float: left;
+    }
 }
 
 /*.elevated-closer-guardian-body__caption {
@@ -63,13 +66,13 @@
 }*/
 
 .elevated-closer-guardian-body__text {
-    @include mq(desktop){
+    @include mq(mem-full){
         float: right;
     }
 }
 
 .elevated-closer-guardian-body__list {
-    margin-top: 12px;
+    
 }
 
 .elevated-closer-guardian-body__ul {
