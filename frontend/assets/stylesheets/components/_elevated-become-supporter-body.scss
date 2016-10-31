@@ -33,14 +33,10 @@
     color : guss-colour(neutral-2);
     margin-top: -20px;
 
-    @include mq(tablet) {
+    @include mq(tablet, desktop) {
         width: 460px;
         margin-left: auto;
         margin-right: auto;
-    }
-    
-    @include mq(desktop) {
-        width: 620px;
     }
 }
 
