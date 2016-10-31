@@ -7,10 +7,18 @@
 
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean = true)
+    showCurrencyPrefix: Boolean = true,
+    dataLabel : String)
 
     @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
-        <a class="elevated-button action action--no-icon" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
+        <a class="elevated-button action action--no-icon"
+
+            data-metric-trigger="click"
+            data-metric-category="Supporter Landing Page @countryGroup.id"
+            data-metric-action="cta click"
+            data-metric-label="@dataLabel"
+
+            href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
             <div class="elevated-button__text">
                 Become a Supporter <br/>for @if(showCurrencyPrefix) {
                 @pricing.monthly.pretty
