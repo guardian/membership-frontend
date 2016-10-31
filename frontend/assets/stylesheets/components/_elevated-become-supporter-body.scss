@@ -3,12 +3,12 @@
    ========================================================================== */
 .elevated-become-supporter-body { 
     padding-top: 12px;
-    background: guss-colour(neutral-6);
+    background: guss-colour(neutral-8);
 }
 
 .elevated-become-supporter-body__col {
 	/* Mobile First */
-    background: guss-colour(neutral-6);
+    background: guss-colour(neutral-8);
     width: 100%;
 
     @include mq(tablet){

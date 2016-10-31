@@ -106,10 +106,10 @@
 .elevated-banner__button {
     margin-top: 42;
     padding-bottom: 34px;
-    margin-bottom: 21px;
-
+    
     @include mq(desktop) {
         margin-top: 35px;
+        margin-bottom: 21px;
     }
 }
 
