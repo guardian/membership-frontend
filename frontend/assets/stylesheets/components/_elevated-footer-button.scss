@@ -25,11 +25,6 @@
 
 .elevated-footer--right-diagonal {
 
-    @include mq(desktop){
-      padding-left: 48%;  
-    }
-    
-
     @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 82.2%)) {
         clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 82.2%);
     }
@@ -42,9 +37,11 @@
     }
 
     @include mq(desktop) { /*980px*/
+        padding-left: 480px;
     }
 
     @include mq(mem-full) { /*1140px*/
+        padding-left: 560px;
     }
 
     @include mq(wide) { /*1300px*/

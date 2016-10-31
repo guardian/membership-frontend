@@ -40,7 +40,6 @@
 
     @include mq($from: desktop) {   
         width: 50%;
-        margin-top: 24px;
         display: inline-block;
         vertical-align: middle;
     }    
@@ -68,6 +67,10 @@
 .elevated-closer-guardian-body__text {
     margin-top: -8px;
 
+    @include mq(tablet){
+        margin-top: -6px;
+    }
+
     @include mq(desktop){
         margin-top: 0px;
     }
@@ -91,7 +94,7 @@
     border-radius: 50%;
     display: inline-block;
     height: 11px;
-    vertical-align: middle;
+    vertical-align: baseline;
     width: 11px;
     
     @include mq(tablet){
