@@ -4,7 +4,7 @@
 .elevated-closer-guardian-body {     
     
     background: guss-colour(neutral-8);
-    padding-bottom: 18px;
+    padding-bottom: 6px;
     
     @include mq(tablet){
         padding-bottom: 36px;
@@ -66,7 +66,14 @@
 }*/
 
 .elevated-closer-guardian-body__text {
+    margin-top: -8px;
+
+    @include mq(desktop){
+        margin-top: 0px;
+    }
+
     @include mq(mem-full){
+
         float: right;
     }
 }
@@ -83,9 +90,9 @@
     background-color: #4CC6DE;
     border-radius: 50%;
     display: inline-block;
-    height: 7px;
+    height: 11px;
     vertical-align: middle;
-    width: 7px;
+    width: 11px;
     
     @include mq(tablet){
         height: 14px;
@@ -114,5 +121,12 @@
     color: #333;
     height: 1px;
     width: 80px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+
+    @include mq(tablet){
+        margin-top: 7px;
+        margin-bottom: 7px;        
+    }
 }
 

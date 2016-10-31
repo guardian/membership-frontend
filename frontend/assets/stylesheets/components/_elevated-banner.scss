@@ -64,10 +64,10 @@
 }
 
 .elevated-banner__content {
-    margin-top: 3px;
+    padding-top: 3px;
     
     @include mq(tablet) {
-        margin-top: 6px;
+        padding-top: 6px;
     }
 }
 
