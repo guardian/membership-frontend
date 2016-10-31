@@ -2,19 +2,6 @@
    Elevated Closer The Guardian Section
    ========================================================================== */
 
-.elevated-close-guardian-section {     
-    background: guss-colour(neutral-6);
-    margin-top: 11px !important;
-    
-    @supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
-    	clip-path : polygon(0% 99%, 0% 0%, 100% 0%, 100% 95%);
-	}
-    
-    @include mq(desktop){
-    	margin-top: 12px;
-    	@supports (clip-path : polygon(0% 97%, 0% 0%, 100% 0%, 100% 88%)) {
-        	clip-path : polygon(0% 97%, 0% 0%, 100% 0%, 100% 88%);
-    	}	
-    }
-    
+.elevated-close-guardian-section {
+    margin-top: 11px !important;    
 }

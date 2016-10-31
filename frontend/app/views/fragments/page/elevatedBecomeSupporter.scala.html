@@ -9,8 +9,11 @@
     showCurrencyPrefix: Boolean)
 
 <section class="elevated-become-supporter-section l-constrained">
-    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix)
-    @fragments.page.elevatedBecomeSupporterBody()
-    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, showCurrencyPrefix, "Middle Button 1")
+
+    <div class="u-section-div">
+	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix)
+	    @fragments.page.elevatedBecomeSupporterBody()
+    </div>
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix)
 </section>
 

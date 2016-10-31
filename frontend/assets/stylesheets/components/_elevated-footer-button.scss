@@ -1,5 +1,9 @@
 .elevated-footer-button {
     background: #4bc6df;
+
+    @supports (clip-path : polygon(0% 97%, 0% 0%, 100% 0%, 100% 100%)) {
+        clip-path : polygon(0% 80%, 0% 0%, 100% 0%, 100% 100%);
+    }
     
     @include mq(tablet) {   /*740px*/
     }
@@ -16,9 +20,88 @@
     
 }
 
-.elevated-footer-button__button {
-	
+.elevated-footer--right-diagonal {
+
+    @include mq(desktop){
+      padding-left: 48%;  
+    }
     
+
+    @supports (clip-path : polygon(0% 97%, 0% 0%, 100% 0%, 100% 100%)) {
+        clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 80%);
+    }
+    
+    @include mq(tablet) {   /*740px*/
+    }
+
+    @include mq(desktop) { /*980px*/
+    }
+
+    @include mq(mem-full) { /*1140px*/
+    }
+
+    @include mq(wide) { /*1300px*/
+    }
+}
+
+.elevated-footer-button__button {
 	padding-top: 12px;
 	padding-bottom: 48px;
 }
+
+
+
+/*
+
+    @include mq(desktop) {
+        @supports (clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%)) {
+            clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 100%);
+        }
+    }*/
+
+    /*Mobile 320px
+    @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%)) {
+        clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%);
+    }
+
+    /*Mobile Landscape 480px*/
+    /*  @include mq(mobileLandscape) { 
+          @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+              clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
+          }
+      }*/
+
+      /*Phablet 660px*/
+    /*  @include mq(phablet) {   
+        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+          clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
+        }
+      }*/
+
+      /*Tablet 740px*/
+    /*  @include mq(tablet) {   
+        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+          clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
+        }   
+      }*/
+
+        /*Desktop 980px
+      @include mq(desktop) { 
+        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 88.61%)) {
+          clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 88.61%);
+        }
+      }
+
+      /*Left Col 1140px*/
+    /*  @include mq(mem-full) {
+        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+          clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
+        }
+      }*/
+
+      /*Wide 1300*/
+    /*  @include mq(wide) {
+        @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
+          clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
+        }
+      }*/

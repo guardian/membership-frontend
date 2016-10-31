@@ -3,6 +3,7 @@
    ========================================================================== */
 .elevated-become-supporter-body { 
     padding-top: 12px;
+    background: guss-colour(neutral-6);
 }
 
 .elevated-become-supporter-body__col {
@@ -31,7 +32,9 @@
 .elevated-become-supporter-body__caption {
     @include fs-textSans(1);
     color : guss-colour(neutral-2);
-    margin-top: -20px;
+    margin-top : -20px;
+    margin-bottom : 0px;
+    padding-bottom : 16px;
 
     @include mq(tablet, desktop) {
         width: 460px;
