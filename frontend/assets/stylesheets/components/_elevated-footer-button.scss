@@ -38,9 +38,16 @@
 
 .elevated-footer-button__button {
     padding-top: 12px;
-	padding-bottom: 28px;
 
-    @include mq($from: tablet) {  
-    padding-bottom: 48px;
+    @supports not (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 67.3%)) {
+        padding-bottom: 12px;
+    }
+    
+    @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 67.3%)) {     
+        padding-bottom: 28px;
+
+        @include mq($from: tablet) {
+            padding-bottom: 48px; 
+        }
     }
 }
