@@ -1,7 +1,6 @@
 package controllers
 
-import com.gu.i18n.CountryGroup.NewZealand
-import com.gu.i18n.{Country, CountryGroup}
+import com.gu.i18n.CountryGroup
 import com.typesafe.scalalogging.LazyLogging
 import model.ActiveCountryGroups
 import play.api.mvc._
@@ -9,11 +8,6 @@ import play.api.mvc._
 import scala.xml.Elem
 
 object SiteMap extends Controller with LazyLogging {
-
-  val countrySpecificGroups: Map[CountryGroup, Country] = (for {
-    countryGroup: CountryGroup <- ActiveCountryGroups.all
-    defaultCountry <- countryGroup.defaultCountry
-  } yield countryGroup -> defaultCountry).toMap
 
   def sitemap() = CachedAction { implicit request =>
     val foo = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -28,23 +22,23 @@ object SiteMap extends Controller with LazyLogging {
   }
 
   def supporterPages()(implicit req: RequestHeader): Iterable[Elem] = for {
-    countryGroup <- countrySpecificGroups.keys
+    countryGroup <- ActiveCountryGroups.all
   } yield {
     <url>
       <loc>
         {routes.Info.supporterFor(countryGroup).absoluteURL(secure = true)}
       </loc>
       <priority>1.0</priority>
-      {alternatePages()}
+      {alternatePages(ActiveCountryGroups.all.filterNot(_ == countryGroup))}
     </url>
   }
 
-  def alternatePages()(implicit req: RequestHeader) = for {
-    (countrySpecificGroup, country) <- countrySpecificGroups
+  def alternatePages(alternateCountryGroups: Seq[CountryGroup])(implicit req: RequestHeader) = for {
+    countryGroup <- alternateCountryGroups
   } yield {
       <xhtml:link
       rel="alternate"
-      hreflang={s"en-${country.alpha2.toLowerCase}"}
-      href={routes.Info.supporterFor(countrySpecificGroup).absoluteURL(secure = true)}/>
+      hreflang={countryGroup.defaultCountry.map(c => s"en-${c.alpha2.toLowerCase}").getOrElse("en")}
+      href={routes.Info.supporterFor(countryGroup).absoluteURL(secure = true)}/>
   }
 }
