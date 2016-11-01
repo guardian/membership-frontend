@@ -16,7 +16,7 @@
 .elevated-banner__col {
     /* In mobile the width of the columns is 100% */
     width: 100%;
-    background: #4bc6df;
+    background: guss-colour(news-main-2);
     
     @include mq($from: desktop) {   
         width: 50%;
@@ -37,7 +37,7 @@
     @include fs-header(5);
     font-size: 30px;
     line-height: 30px;
-    color: #FFF;
+    color: #ffffff;
 
     @include mq($from: tablet) {
         font-size: 48px;
@@ -49,7 +49,7 @@
     @include fs-header(5);
     line-height: 26px;
     font-weight: 500;
-    color : guss-colour(guardian-brand-dark);
+    color: guss-colour(guardian-brand-dark);
     margin-top: 5px;
 
     @include mq($from: mobileLandscape) {
