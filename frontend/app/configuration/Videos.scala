@@ -27,12 +27,12 @@ object Videos {
 
   private val scottTrustPlaceholder = ResponsiveImageGenerator(
     id="9ceb00d8369cad62a9b7f261bfc1eecd622e1515/0_0_2000_1125",
-    sizes=List(2000, 1000)
+    sizes=List(2000, 500)
   )
 
   private val membershipPlaceholder = ResponsiveImageGenerator(
     id="d6e58ef1af3c7f06477c1f0709c823613bc21f3e/0_0_2000_1125",
-    sizes=List(2000, 1000)
+    sizes=List(2000, 500)
   )
 
   private val supportersUSAPlaceholder = ResponsiveImageGenerator(
