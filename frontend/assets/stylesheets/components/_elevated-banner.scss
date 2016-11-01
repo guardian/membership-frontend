@@ -8,47 +8,12 @@
       clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%);
   }
 
-  /*Mobile Landscape 480px*/
-/*  @include mq(mobileLandscape) { 
-      @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-          clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
-      }
-  }*/
-
-  /*Phablet 660px*/
-/*  @include mq(phablet) {   
-  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-      clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
-    }
-  }*/
-
-  /*Tablet 740px*/
-/*  @include mq(tablet) {   
-  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-      clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 95%);
-    }	
-  }*/
-
 	/*Desktop 980px*/
   @include mq(desktop) { 
     @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 88.61%)) {
       clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 88.61%);
     }
   }
-
-  /*Left Col 1140px*/
-/*  @include mq(mem-full) {
-  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-      clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
-    }
-  }*/
-
-  /*Wide 1300*/
-/*  @include mq(wide) {
-  	@supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 87%)) {
-      clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 87%);
-    }
-  }*/
 }
 
 .elevated-banner__col {
