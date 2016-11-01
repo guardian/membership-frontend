@@ -2,10 +2,6 @@ import Dependencies._
 
 def env(key: String, default: String): String = Option(System.getenv(key)).getOrElse(default)
 
-buildInfoSettings
-
-sourceGenerators in Compile <+= buildInfo
-
 buildInfoKeys := Seq[BuildInfoKey](
     name,
     BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),
@@ -16,6 +12,8 @@ buildInfoKeys := Seq[BuildInfoKey](
         case e: Exception => "unknown"
     }))
 )
+
+buildInfoOptions += BuildInfoOption.ToMap
 
 buildInfoPackage := "app"
 
