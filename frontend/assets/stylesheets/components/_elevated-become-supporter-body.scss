@@ -16,8 +16,8 @@
 
     @include mq($from: desktop) {
         width: 50%;
-        margin-top    : 12px;
-        margin-bottom : 22px;
+        margin-top: 12px;
+        margin-bottom: 22px;
         display: inline-block;
         vertical-align: top;
     }    
@@ -49,7 +49,10 @@
 .elevated-become-supporter-body__caption {
     @include fs-textSans(1);
     color : guss-colour(neutral-2);
-    margin-top : -14px;
+    /* This is to move the caption closer to the video. 
+       It was not possible to change the video margin because 
+       that is part of the old codebase.*/
+    margin-top : -14px; 
     margin-bottom : 0px;
     padding-bottom : 18px;
 
