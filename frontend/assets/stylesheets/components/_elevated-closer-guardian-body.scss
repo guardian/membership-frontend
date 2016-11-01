@@ -1,12 +1,11 @@
 /* ==========================================================================
    Elevated become supporter body
    ========================================================================== */
-.elevated-closer-guardian-body {     
-    
+.elevated-closer-guardian-body { 
     background: guss-colour(neutral-8);
     padding-bottom: 6px;
     
-    @include mq(tablet){
+    @include mq($from: tablet) {
         padding-bottom: 36px;
     }
 }
@@ -52,37 +51,20 @@
     }
 }
 
-/*.elevated-closer-guardian-body__caption {
-    @include fs-textSans(1);
-    color : guss-colour(neutral-2);
-    margin-top: -20px;
-
-    @include mq($from: tablet, $until: desktop) {
-        width: 460px;
-        margin-right: auto;
-        margin-left: auto;
-    }
-}*/
-
 .elevated-closer-guardian-body__text {
     margin-top: -8px;
 
-    @include mq(tablet){
+    @include mq($from: tablet) {
         margin-top: -6px;
     }
 
-    @include mq(desktop){
+    @include mq($from: desktop) {
         margin-top: 0px;
     }
 
-    @include mq(mem-full){
-
+    @include mq($from: mem-full) {
         float: right;
     }
-}
-
-.elevated-closer-guardian-body__list {
-    
 }
 
 .elevated-closer-guardian-body__ul {
@@ -90,21 +72,22 @@
 }
 
 .elevated-closer-guardian-body__list_dot {
-    background-color: #4CC6DE;
+    background-color: #4cc6de;
     border-radius: 50%;
     display: inline-block;
     height: 11px;
     vertical-align: baseline;
     width: 11px;
     
-    @include mq(tablet){
+    @include mq($from: tablet){
         height: 14px;
         width: 14px;
     }
 }
 
 .elevated-closer-guardian-body__list_p {
-    @include mq(tablet) {   
+    
+    @include mq($from: tablet) {   
         margin-bottom: 0;
     }    
 }
@@ -113,23 +96,22 @@
     @include fs-header(1);
     color : guss-colour(neutral-1);
 
-    @include mq(tablet){
+    @include mq($from: tablet){
         @include fs-header(3);
     }
 }
 
 .elevated-closer-guardian-body__list_line {
     border: none;
-    border-top:1px dotted #333;
-    color: #333;
+    border-top:1px dotted #333333;
+    color: #333333;
     height: 1px;
     width: 80px;
     margin-top: 6px;
     margin-bottom: 6px;
 
-    @include mq(tablet){
+    @include mq($from: tablet) {
         margin-top: 7px;
         margin-bottom: 7px;        
     }
 }
-

@@ -7,11 +7,10 @@
 }
 
 .elevated-become-supporter-body__col {
-	/* Mobile First */
     background: guss-colour(neutral-8);
     width: 100%;
 
-    @include mq(tablet){
+    @include mq($from: tablet) {
         margin-top: 18px;   
     }
 
@@ -34,15 +33,15 @@
     display: block;
     position: relative;
 
-    @include mq(tablet) {
+    @include mq($from: tablet) {
         width: 540px;
     }
 
-    @include mq(desktop) {
+    @include mq($from: desktop) {
         width: 460px;
     }
 
-    @include mq(mem-full) {
+    @include mq($from: mem-full) {
         width: 540px;
     }
 }
@@ -54,11 +53,10 @@
     margin-bottom : 0px;
     padding-bottom : 18px;
 
-    @include mq(tablet, desktop) {
+    @include mq($from: tablet, $until: desktop) {
         width: 540px;
         padding-bottom: 36px;
         margin-left: auto;
         margin-right: auto;
     }
 }
-

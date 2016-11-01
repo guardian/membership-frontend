@@ -27,7 +27,7 @@
 .elevated-why-support-body__title {
     padding-top: 6px;
 
-    @include mq(desktop){
+    @include mq($from: desktop) {
         width:100%;
     }
 }

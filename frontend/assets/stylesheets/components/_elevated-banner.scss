@@ -2,14 +2,11 @@
    Elevated Banner
    ========================================================================== */
 .elevated-banner {
-    
-  /*Mobile 320px*/
   @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%)) {
       clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%);
   }
 
-	/*Desktop 980px*/
-  @include mq(desktop) { 
+  @include mq($from: desktop) { 
     @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 88.61%)) {
       clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 88.61%);
     }
@@ -31,7 +28,7 @@
 .elevated-banner__content {
     padding-top: 3px;
     
-    @include mq(tablet) {
+    @include mq($from: tablet) {
         padding-top: 6px;
     }
 }
@@ -42,7 +39,7 @@
     line-height: 30px;
     color: #FFF;
 
-    @include mq(tablet){
+    @include mq($from: tablet) {
         font-size: 48px;
         line-height: 47px;
     }
@@ -55,11 +52,11 @@
     color : guss-colour(guardian-brand-dark);
     margin-top: 5px;
 
-    @include mq($from: mobileLandscape){
+    @include mq($from: mobileLandscape) {
         max-width: 350px;
     }
 
-    @include mq($from: tablet){
+    @include mq($from: tablet) {
         font-size: 32px;
         line-height: 34px;
         max-width: 460px;
@@ -72,15 +69,13 @@
     margin-top: 42;
     padding-bottom: 34px;
     
-    @include mq(desktop) {
+    @include mq($from: desktop) {
         margin-top: 35px;
         padding-bottom: 48px;
     }
 }
 
-
 .elevated-banner__col--img {
-    /*In mobile we do not show the hero image*/
     display: none;   
 
     @include mq($from: desktop) {   
@@ -91,6 +86,7 @@
 }
 
 .elevated-banner__col__img {
+
     @include mq($from: desktop) {   
         height: 316px;
         overflow: hidden;
