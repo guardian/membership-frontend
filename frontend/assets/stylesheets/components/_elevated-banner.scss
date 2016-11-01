@@ -21,15 +21,17 @@
     @include mq($from: desktop) {   
         width: 50%;
         display: inline-block;
-        float:left;
     } 
 }
+
+
 
 .elevated-banner__content {
     padding-top: 3px;
     
     @include mq($from: tablet) {
         padding-top: 6px;
+        height: 316px;
     }
 }
 
@@ -81,6 +83,7 @@
         display: inline-block;           
         overflow: hidden;
         height: 316px;
+        float: right;
     }
 }
 

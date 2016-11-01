@@ -4,6 +4,10 @@
 .elevated-become-supporter-body { 
     padding-top: 12px;
     background: guss-colour(neutral-8);
+
+    @include mq($from: desktop) {
+        padding-top: 5px;
+    }
 }
 
 .elevated-become-supporter-body__col {
