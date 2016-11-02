@@ -8,12 +8,12 @@
 
 <header class="simple-header hidden-print js-header" role="banner">
     <div class="simple-header__inner">
-        <div class="global-header__branding l-constrained">
-            <div class="global-header__primary">
+        <div class="simple-header__branding l-constrained">
+            <div class="simple-header__primary">
                 @fragments.global.controlNavigation(pageInfo, countryGroup, mainSiteLink = false)
             </div>
             @* Branding *@
-            <div class="global-header__logo">
+            <div class="simple-header__logo">
                 <a href="/" class="simple-header__logo__link" id="qa-header-logo">
                     <span class="u-h">@Config.siteTitle</span>
                     @fragments.common.inlineSvgImage(Logos.membersLogo, List("simple-header__logo__image"))

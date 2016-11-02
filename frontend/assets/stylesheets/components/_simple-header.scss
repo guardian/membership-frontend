@@ -1,46 +1,32 @@
 /* ==========================================================================
-   Global Header
+   Simple Header
    ========================================================================== */
 
-$global-header-height: 130px;
 $simple-header-height: 72px;
-$global-header-height-mobile: 116px;
 
-.global-header, .simple-header {
+.simple-header {
 
     // we need to know the exact header height
     // hence using the variable to enforce it
-    height: $global-header-height-mobile;
-
-    @include mq($from: tablet) {
-        height: $global-header-height;
-    }
+    height: $simple-header-height;
 
     background-color: color(brand-supporting-2);
     position: relative;
     z-index: 3;
 }
-.simple-header {
-    height: $simple-header-height;
-}
-.global-header__inner, .simple-header__inner {
-    background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
+.simple-header__inner {
+    background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
     background-position: 45% 60%;
 
     @include mq(tablet) {
-        padding-bottom: $gs-gutter;
         background-position: 50% 0%;
     }
 
-    @include mq(tablet, desktop){
+    @include mq(tablet, desktop) {
         height : 100%;
     }
 }
-.simple-header__inner {
-    background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
-    padding-bottom: 0;
-}
-.global-header__branding, .simple-header__branding {
+.simple-header__branding {
     @include clearfix();
     padding: ($gs-gutter / 2);
     padding-bottom: $gs-gutter;
@@ -49,10 +35,7 @@ $global-header-height-mobile: 116px;
         padding: ($gs-gutter / 2) $gs-gutter;
     }
 }
-.simple-header__branding {
-    padding-bottom: 0;
-}
-.global-header__primary {
+.simple-header__primary {
     float: left;
     padding-right: ($gs-gutter / 2);
 
@@ -61,7 +44,7 @@ $global-header-height-mobile: 116px;
     }
 
 }
-.global-header__logo {
+.simple-header__logo {
     float: right;
     width: auto;
 
@@ -69,26 +52,14 @@ $global-header-height-mobile: 116px;
         margin-right: -20px;
     }
 }
-.global-header__logo__image,
-.global-header__logo__link {
-    height: 50px;
-
-    @include mq(tablet) {
-        height: 55px;
-    }
-
-    @include mq(desktop){
-        height: 90px;
-    }
-}
 .simple-header__logo__image,
 .simple-header__logo__link {
     height: 52px;
 }
-.global-header__logo__image, .simple-header__logo__image {
+.simple-header__logo__image {
     width: auto;
 }
-.global-header__logo__link, .simple-header__logo__link {
+.simple-header__logo__link {
     display: block;
 }
 
@@ -96,7 +67,7 @@ $global-header-height-mobile: 116px;
    ========================================================================== */
 
 body.in-app {
-    .global-header {
+    .simple-header {
         display: none;
     }
 }
