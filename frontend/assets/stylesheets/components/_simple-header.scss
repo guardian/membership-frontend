@@ -25,6 +25,12 @@ $simple-header-height: 72px;
     @include mq(tablet, desktop) {
         height : 100%;
     }
+
+    @include mq($until: tablet) {
+        background-position: -1010px 0%;
+        background-position-x: -1010px;
+    }
+
 }
 .simple-header__branding {
     @include clearfix();
@@ -61,6 +67,16 @@ $simple-header-height: 72px;
 .simple-header__logo__link {
     display: block;
 }
+@include mq($until: tablet) {
+    .simple-header__branding .control .control__icon {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    .simple-header__branding .control .control__icon:hover {
+        border-color: #fff;
+    }
+}
+
 
 /* Header - In App
    ========================================================================== */
