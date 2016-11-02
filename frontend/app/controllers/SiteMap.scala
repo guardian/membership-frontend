@@ -16,12 +16,13 @@ object SiteMap extends Controller with LazyLogging {
       <url>
         <loc>{routes.FrontPage.index.absoluteURL(secure = true)}</loc>
         <priority>0.8</priority>
+        {alternatePage(routes.FrontPage.index.absoluteURL(secure = true), "x-default")}
       </url>
     </urlset>
     Ok(foo)
   }
 
-  def supporterPages()(implicit req: RequestHeader): Iterable[Elem] = for {
+  private def supporterPages()(implicit req: RequestHeader): Iterable[Elem] = for {
     countryGroup <- ActiveCountryGroups.all
   } yield {
     <url>
@@ -29,16 +30,20 @@ object SiteMap extends Controller with LazyLogging {
         {routes.Info.supporterFor(countryGroup).absoluteURL(secure = true)}
       </loc>
       <priority>1.0</priority>
-      {alternatePages(ActiveCountryGroups.all.filterNot(_ == countryGroup))}
+      {alternatePages(ActiveCountryGroups.all)}
+      {alternatePage(routes.Info.supporterFor(countryGroup).absoluteURL(secure = true), "x-default")}
     </url>
   }
 
-  def alternatePages(alternateCountryGroups: Seq[CountryGroup])(implicit req: RequestHeader) = for {
+  private def alternatePages(alternateCountryGroups: Seq[CountryGroup])(implicit req: RequestHeader) = for {
     countryGroup <- alternateCountryGroups
   } yield {
-      <xhtml:link
-      rel="alternate"
-      hreflang={countryGroup.defaultCountry.map(c => s"en-${c.alpha2.toLowerCase}").getOrElse("en")}
-      href={routes.Info.supporterFor(countryGroup).absoluteURL(secure = true)}/>
+      alternatePage(
+        routes.Info.supporterFor(countryGroup).absoluteURL(secure = true),
+        countryGroup.defaultCountry.map(c => s"en-${c.alpha2.toUpperCase}").getOrElse("en")
+      )
   }
+
+  private def alternatePage(href: String, hreflang: String) =
+      <xhtml:link rel="alternate" hreflang={hreflang} href={href} />
 }
