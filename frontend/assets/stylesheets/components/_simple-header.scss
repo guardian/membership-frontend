@@ -14,6 +14,7 @@ $simple-header-height: 72px;
     position: relative;
     z-index: 3;
 }
+
 .simple-header__inner {
     background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
     background-position: 45% 60%;
@@ -32,6 +33,7 @@ $simple-header-height: 72px;
     }
 
 }
+
 .simple-header__branding {
     @include clearfix();
     padding: ($gs-gutter / 2);
@@ -40,6 +42,7 @@ $simple-header-height: 72px;
         padding: ($gs-gutter / 2) $gs-gutter;
     }
 }
+
 .simple-header__primary {
     float: left;
     padding-right: ($gs-gutter / 2);
@@ -49,6 +52,7 @@ $simple-header-height: 72px;
     }
 
 }
+
 .simple-header__logo {
     float: right;
     width: auto;
@@ -57,16 +61,20 @@ $simple-header-height: 72px;
         margin-right: -20px;
     }
 }
+
 .simple-header__logo__image,
 .simple-header__logo__link {
     height: 52px;
 }
+
 .simple-header__logo__image {
     width: auto;
 }
+
 .simple-header__logo__link {
     display: block;
 }
+
 @include mq($until: tablet) {
     .simple-header__branding .control .control__icon {
         color: #fff;
