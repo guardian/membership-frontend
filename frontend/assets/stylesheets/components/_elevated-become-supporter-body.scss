@@ -30,6 +30,7 @@
 .elevated-become-supporter-body__video {
     @include mq($from: desktop) {   
         padding-left: 10px;
+        float: right;
     }
 }
 
