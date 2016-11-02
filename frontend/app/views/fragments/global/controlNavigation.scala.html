@@ -1,6 +1,8 @@
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
-@(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
+@(pageInfo: PageInfo,
+  countryGroup: Option[CountryGroup],
+  mainSiteLink: Boolean = true)
 
 @import configuration.Config
 @import configuration.ProfileLinks
@@ -73,14 +75,16 @@
             </nav>
         </li>
     }
-    <li class="nav-control__item nav-control__item--last hidden-mobile">
-        <a class="control" href="http://theguardian.com/" role="menuitem">
-            <span class="control__item">
-                @fragments.inlineIcon("g-mark", List("icon-inline--large"))
-            </span>
-            <span class="control__item">
-                <span class="control__info">the guardian</span>
-            </span>
-        </a>
-    </li>
+    @if(mainSiteLink) {
+        <li class="nav-control__item nav-control__item--last hidden-mobile">
+            <a class="control" href="http://theguardian.com/" role="menuitem">
+                <span class="control__item">
+                    @fragments.inlineIcon("g-mark", List("icon-inline--large"))
+                </span>
+                <span class="control__item">
+                    <span class="control__info">the guardian</span>
+                </span>
+            </a>
+        </li>
+    }
 </ul>
