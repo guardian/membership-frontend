@@ -3,10 +3,9 @@
    ========================================================================== */
 
 $global-header-height: 130px;
-$simple-header-height: 72px;
 $global-header-height-mobile: 116px;
 
-.global-header, .simple-header {
+.global-header {
 
     // we need to know the exact header height
     // hence using the variable to enforce it
@@ -20,10 +19,7 @@ $global-header-height-mobile: 116px;
     position: relative;
     z-index: 3;
 }
-.simple-header {
-    height: $simple-header-height;
-}
-.global-header__inner, .simple-header__inner {
+.global-header__inner {
     background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
     background-position: 45% 60%;
 
@@ -36,11 +32,7 @@ $global-header-height-mobile: 116px;
         height : 100%;
     }
 }
-.simple-header__inner {
-    background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
-    padding-bottom: 0;
-}
-.global-header__branding, .simple-header__branding {
+.global-header__branding {
     @include clearfix();
     padding: ($gs-gutter / 2);
     padding-bottom: $gs-gutter;
@@ -48,9 +40,6 @@ $global-header-height-mobile: 116px;
     @include mq(tablet) {
         padding: ($gs-gutter / 2) $gs-gutter;
     }
-}
-.simple-header__branding {
-    padding-bottom: 0;
 }
 .global-header__primary {
     float: left;
@@ -81,14 +70,10 @@ $global-header-height-mobile: 116px;
         height: 90px;
     }
 }
-.simple-header__logo__image,
-.simple-header__logo__link {
-    height: 52px;
-}
-.global-header__logo__image, .simple-header__logo__image {
+.global-header__logo__image {
     width: auto;
 }
-.global-header__logo__link, .simple-header__logo__link {
+.global-header__logo__link {
     display: block;
 }
 
