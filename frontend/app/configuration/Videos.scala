@@ -26,7 +26,7 @@ object Videos {
   )
 
   private val scottTrustPlaceholder = ResponsiveImageGenerator(
-    id="9ceb00d8369cad62a9b7f261bfc1eecd622e1515/0_0_2000_1125",
+    id="82dbcf960aa2dd780b51ec2829fa3a15304cf921/0_0_2000_1125",
     sizes=List(2000, 500)
   )
 
