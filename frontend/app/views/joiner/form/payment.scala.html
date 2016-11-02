@@ -21,7 +21,7 @@
   promoCodeToDisplay: Option[PromoCode]
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main(plans.tier.cta, pageInfo=pageInfo) {
+@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
     <main class="page-content l-constrained">
 
