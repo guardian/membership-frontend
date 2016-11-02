@@ -3,9 +3,10 @@
    ========================================================================== */
 
 $global-header-height: 130px;
+$simple-header-height: 72px;
 $global-header-height-mobile: 116px;
 
-.global-header {
+.global-header, .simple-header {
 
     // we need to know the exact header height
     // hence using the variable to enforce it
@@ -19,7 +20,10 @@ $global-header-height-mobile: 116px;
     position: relative;
     z-index: 3;
 }
-.global-header__inner {
+.simple-header {
+    height: $simple-header-height;
+}
+.global-header__inner, .simple-header__inner {
     background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
     background-position: 45% 60%;
 
@@ -31,6 +35,9 @@ $global-header-height-mobile: 116px;
     @include mq(tablet, desktop){
         height : 100%;
     }
+}
+.simple-header__inner {
+    background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
 }
 .global-header__branding {
     @include clearfix();

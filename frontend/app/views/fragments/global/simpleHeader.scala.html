@@ -6,17 +6,17 @@
 @import configuration.Config
 @import model.SVG.Logos
 
-<header class="global-header hidden-print js-header" role="banner">
-    <div class="global-header__inner">
+<header class="simple-header hidden-print js-header" role="banner">
+    <div class="simple-header__inner">
         <div class="global-header__branding l-constrained">
             <div class="global-header__primary">
                 @fragments.global.controlNavigation(pageInfo, countryGroup, mainSiteLink = false)
             </div>
             @* Branding *@
             <div class="global-header__logo">
-                <a href="/" class="global-header__logo__link" id="qa-header-logo">
+                <a href="/" class="simple-header__logo__link" id="qa-header-logo">
                     <span class="u-h">@Config.siteTitle</span>
-                    @fragments.common.inlineSvgImage(Logos.membersLogo, List("global-header__logo__image"))
+                    @fragments.common.inlineSvgImage(Logos.membersLogo, List("simple-header__logo__image"))
                 </a>
             </div>
         </div>
