@@ -36,7 +36,7 @@ Add the following to your hosts file in `/etc/hosts`:
 ```
 
 ### Start NGINX
-`./nginx/setup.sh` will start nginx as its final step. To manually start it run `sudo nginx` or `sudo systemctl nginx start` depending on your system.
+`./nginx/setup.sh` will start nginx as its final step. To manually start it run `sudo nginx` or `sudo systemctl start nginx` depending on your system.
 
 ### NGINX error messages
 
