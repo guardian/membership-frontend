@@ -3,7 +3,8 @@
 @(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None,
-        titleOverride: Option[String] = None
+        titleOverride: Option[String] = None,
+    simpleHeader: Boolean = false
     )(content: Html)
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
