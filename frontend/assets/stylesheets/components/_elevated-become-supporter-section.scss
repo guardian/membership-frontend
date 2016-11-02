@@ -1,0 +1,10 @@
+/* ==========================================================================
+   Elevated become supporter section
+   ========================================================================== */
+
+.elevated-become-supporter-section {     
+    /* !important is being used here because we cannot override the default css classes without it. 
+	These css classes were imported after this file so this propersty (without the !important) is 
+	being override. */
+    margin-top: 12px !important;
+}

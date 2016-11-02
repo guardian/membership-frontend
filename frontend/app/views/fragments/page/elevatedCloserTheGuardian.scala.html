@@ -1,0 +1,13 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+
+@(  supporterPlans: MonthYearPlans[PaidMember],
+    countryGroup: CountryGroup,
+    showCurrencyPrefix: Boolean)
+
+<section class="elevated-close-guardian-section">
+    @fragments.page.elevatedCloserGuardianBody()
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 2", showCurrencyPrefix, showRightDiagonal = true)
+</section>
+

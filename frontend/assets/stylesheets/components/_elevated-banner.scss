@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Elevated Banner
+   ========================================================================== */
+.elevated-banner {
+  @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%)) {
+      clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%);
+  }
+
+  @include mq($from: desktop) { 
+    @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 88.61%)) {
+      clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 88.61%);
+    }
+  }
+}
+
+.elevated-banner__col {
+    /* In mobile the width of the columns is 100% */
+    width: 100%;
+    background: guss-colour(news-main-2);
+    
+    @include mq($from: desktop) {   
+        width: 50%;
+        display: inline-block;
+    } 
+}
+
+
+
+.elevated-banner__content {
+    padding-top: 3px;
+    
+    @include mq($from: tablet) {
+        padding-top: 6px;
+        height: 316px;
+    }
+}
+
+.elevated-banner__title__h1 {
+    @include fs-header(5);
+    font-size: 30px;
+    line-height: 30px;
+    color: #ffffff;
+
+    @include mq($from: tablet) {
+        font-size: 48px;
+        line-height: 47px;
+    }
+}
+ 
+.elevated-banner__tagline {
+    @include fs-header(5);
+    line-height: 26px;
+    font-weight: 500;
+    color: guss-colour(guardian-brand-dark);
+    margin-top: 5px;
+
+    @include mq($from: mobileLandscape) {
+        max-width: 350px;
+    }
+
+    @include mq($from: tablet) {
+        font-size: 32px;
+        line-height: 34px;
+        max-width: 460px;
+        margin-top: 2px;
+
+    }
+}
+
+.elevated-banner__button {
+    padding-bottom: 34px;
+    
+    @include mq($from: desktop) {
+        margin-top: 35px;
+        padding-bottom: 48px;
+    }
+}
+
+.elevated-banner__col--img {
+    display: none;   
+
+    @include mq($from: desktop) {   
+        display: inline-block;           
+        overflow: hidden;
+        height: 316px;
+        float: right;
+    }
+}
+
+.elevated-banner__col__img {
+
+    @include mq($from: desktop) {   
+        height: 316px;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Elevated Footer Button
+   ========================================================================== */
+.elevated-footer-button {
+    background: #4bc6df;
+
+    @supports (clip-path : polygon(0% 82.2%, 0% 0%, 100% 0%, 100% 100%)) {
+        clip-path : polygon(0% 82.2%, 0% 0%, 100% 0%, 100% 100%);
+    }
+    
+    @include mq($from: tablet) {   /*740px*/
+      @supports (clip-path : polygon(0% 67.3%, 0% 0%, 100% 0%, 100% 100%)) {
+        clip-path : polygon(0% 67.3%, 0% 0%, 100% 0%, 100% 100%);
+      }
+    }
+}
+
+.elevated-footer--right-diagonal {
+
+    @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 82.2%)) {
+        clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 82.2%);
+    }
+    
+    @include mq($from: tablet) {   /*740px*/
+      @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 67.3%)) {
+        clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 67.3%);
+      }
+    }
+
+    @include mq($from: desktop) { /*980px*/
+        padding-left: 480px;
+    }
+
+    @include mq($from: mem-full) { /*1140px*/
+        padding-left: 560px;
+    }
+}
+
+.elevated-footer-button__button {
+    padding-top: 12px;
+
+    @supports not (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 67.3%)) {
+        padding-bottom: 12px;
+    }
+    
+    @supports (clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 67.3%)) {     
+        padding-bottom: 28px;
+
+        @include mq($from: tablet) {
+            padding-bottom: 48px; 
+        }
+    }
+}

@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Elevated become supporter body
+   ========================================================================== */
+.elevated-closer-guardian-body { 
+    background: guss-colour(neutral-8);
+    padding-bottom: 6px;
+    
+    @include mq($from: tablet) {
+        padding-bottom: 36px;
+    }
+}
+
+.elevated-closer-guardian-body__title {
+    padding-top: 6px;
+    padding-bottom: 18px;
+
+    @include mq($from: tablet) {   
+        padding-top: 10px;
+        padding-bottom: 36px;
+    }    
+}
+
+.elevated-closer-guardian-body__title__h1 {
+    @include fs-header(5);
+    font-weight: 500;
+    line-height: 26px;
+    color : guss-colour(news-main-1);
+
+    @include mq($from: tablet) {   
+        @include fs-headline(6);
+        line-height: 34px;
+        font-weight: 500;
+    }    
+}
+
+.elevated-closer-guardian-body__col {
+	/* Mobile First */
+    width: 100%;
+
+    @include mq($from: desktop) {   
+        width: 50%;
+        display: inline-block;
+        vertical-align: middle;
+    }    
+}
+
+.elevated-closer-guardian-body__video {
+	vertical-align: top;
+    @include mq($from: desktop, $until: mem-full){
+        float: left;
+    }
+}
+
+.elevated-closer-guardian-body__text {
+    margin-top: -8px;
+
+    @include mq($from: tablet) {
+        margin-top: -6px;
+    }
+
+    @include mq($from: desktop) {
+        margin-top: 0px;
+    }
+
+    @include mq($from: mem-full) {
+        float: right;
+    }
+}
+
+.elevated-closer-guardian-body__ul {
+    list-style-type: none;
+}
+
+.elevated-closer-guardian-body__list_dot {
+    background-color: #4cc6de;
+    border-radius: 50%;
+    display: inline-block;
+    height: 11px;
+    vertical-align: baseline;
+    width: 11px;
+    
+    @include mq($from: tablet){
+        height: 14px;
+        width: 14px;
+    }
+}
+
+.elevated-closer-guardian-body__list_p {
+    
+    @include mq($from: tablet) {   
+        margin-bottom: 0;
+    }    
+}
+
+.elevated-closer-guardian-body__list_item {
+    @include fs-header(1);
+    color : guss-colour(neutral-1);
+
+    @include mq($from: tablet){
+        @include fs-header(3);
+    }
+}
+
+.elevated-closer-guardian-body__list_line {
+    border: none;
+    border-top:1px dotted #333333;
+    color: #333333;
+    height: 1px;
+    width: 80px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+
+    @include mq($from: tablet) {
+        margin-top: 7px;
+        margin-bottom: 7px;        
+    }
+}

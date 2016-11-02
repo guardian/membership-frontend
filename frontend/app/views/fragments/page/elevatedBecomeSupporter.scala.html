@@ -1,0 +1,19 @@
+@import model.OrientatedImages
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+
+@(  image: OrientatedImages,
+    supporterPlans: MonthYearPlans[PaidMember],
+    countryGroup: CountryGroup,
+    showCurrencyPrefix: Boolean)
+
+<section class="elevated-become-supporter-section l-constrained">
+
+    <div class="u-section-div">
+	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix)
+	    @fragments.page.elevatedBecomeSupporterBody()
+    </div>
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix)
+</section>
+

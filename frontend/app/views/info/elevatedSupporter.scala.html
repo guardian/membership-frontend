@@ -1,0 +1,16 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
+@import views.support.PageInfo
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+    pageInfo: PageInfo,
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    <section class="elevated-supporter">
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false)
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false)
+        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false)
+    </section>
+}

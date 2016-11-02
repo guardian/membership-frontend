@@ -1,0 +1,37 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import views.support.Asset
+@import views.support.MembershipCompat._
+@import views.support.Pricing._
+
+@(  supporterPlans: MonthYearPlans[PaidMember],
+    countryGroup: CountryGroup,
+    dataLabel : String,
+    showCurrencyPrefix: Boolean = true )
+
+    @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
+        <a class="elevated-button action action--no-icon"
+
+            data-metric-trigger="click"
+            data-metric-category="Supporter Landing Page @countryGroup.id"
+            data-metric-action="cta click"
+            data-metric-label="@dataLabel"
+
+            href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
+            <div class="elevated-button__text">
+                Become a Supporter <br/>for @if(showCurrencyPrefix) {
+                @pricing.monthly.pretty
+            } else {
+                @pricing.monthly.prettyWithoutCurrencyPrefix
+            } a month
+            </div>
+            <div class="elevated-button__icon">
+                <div class="elevated-button__icon__border">
+                @for(icon <- Asset.inlineSvg("arrow-right-button")) {
+                    @icon
+                }
+                </div>
+            </div>
+        </a>
+    }
