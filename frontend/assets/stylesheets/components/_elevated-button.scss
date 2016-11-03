@@ -7,9 +7,9 @@
     background-color : guss-colour(guardian-brand);
     border-color : guss-colour(guardian-brand);
 
-    
+
     width: gs-span(3.8);
-    
+
     &:hover {
         background-color: #003557;
         border-color: #003557;
@@ -23,7 +23,7 @@
     padding-bottom: 1px; /*To vertically align the button's text*/
     padding-left: 4px;   /*To horizontally align the button's text*/
     float: left;
-  
+
 }
 
 .elevated-button__icon {
@@ -39,9 +39,13 @@
     border-color: white;
     border-style: solid;
     border-width: 1px;
-    border-radius: 50%;  
-    text-align: center;  
+    border-radius: 50%;
+    text-align: center;
     > svg {
         margin-top: 7px; /*To vertically align the button's logo*/
     }
+}
+
+.elevated-button__icon__border svg {
+    fill : #FFFFFF;
 }
