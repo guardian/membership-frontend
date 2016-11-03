@@ -19,11 +19,11 @@ $simple-header-height: 72px;
     background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
     background-position: 45% 60%;
 
-    @include mq(tablet) {
+    @include mq($from: tablet) {
         background-position: 50% 0%;
     }
 
-    @include mq(tablet, desktop) {
+    @include mq($from: tablet, $until: desktop) {
         height : 100%;
     }
 
@@ -38,7 +38,7 @@ $simple-header-height: 72px;
     @include clearfix();
     padding: ($gs-gutter / 2);
 
-    @include mq(tablet) {
+    @include mq($from: tablet) {
         padding: ($gs-gutter / 2) $gs-gutter;
     }
 }
@@ -47,7 +47,7 @@ $simple-header-height: 72px;
     float: left;
     padding-right: ($gs-gutter / 2);
 
-    @include mq(tablet) {
+    @include mq($from: tablet) {
         margin-right: -25px;
     }
 
@@ -57,7 +57,7 @@ $simple-header-height: 72px;
     float: right;
     width: auto;
 
-    @include mq(tablet) {
+    @include mq($from: tablet) {
         margin-right: -20px;
     }
 }
