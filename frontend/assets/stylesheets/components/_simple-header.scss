@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Simple Header
+   ========================================================================== */
+
+$simple-header-height: 72px;
+
+.simple-header {
+
+    // we need to know the exact header height
+    // hence using the variable to enforce it
+    height: $simple-header-height;
+
+    background-color: color(brand-supporting-2);
+    position: relative;
+    z-index: 3;
+}
+
+.simple-header__inner {
+    background: color(brand-main) url(/assets/images/common/bg-masthead-short.png) no-repeat;
+    background-position: 45% 60%;
+
+    @include mq($from: tablet) {
+        background-position: 50% 0%;
+    }
+
+    @include mq($from: tablet, $until: desktop) {
+        height : 100%;
+    }
+
+    @include mq($until: tablet) {
+        background-position: -1010px 0%;
+        background-position-x: -1010px;
+    }
+
+}
+
+.simple-header__branding {
+    @include clearfix();
+    padding: ($gs-gutter / 2);
+
+    @include mq($from: tablet) {
+        padding: ($gs-gutter / 2) $gs-gutter;
+    }
+}
+
+.simple-header__primary {
+    float: left;
+    padding-right: ($gs-gutter / 2);
+
+    @include mq($from: tablet) {
+        margin-right: -25px;
+    }
+
+}
+
+.simple-header__logo {
+    float: right;
+    width: auto;
+
+    @include mq($from: tablet) {
+        margin-right: -20px;
+    }
+}
+
+.simple-header__logo__image,
+.simple-header__logo__link {
+    height: 52px;
+}
+
+.simple-header__logo__image {
+    width: auto;
+}
+
+.simple-header__logo__link {
+    display: block;
+}
+
+@include mq($until: tablet) {
+    .simple-header__branding .control .control__icon {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    .simple-header__branding .control .control__icon:hover {
+        border-color: #fff;
+    }
+}
+
+
+/* Header - In App
+   ========================================================================== */
+
+body.in-app {
+    .simple-header {
+        display: none;
+    }
+}

@@ -1,0 +1,26 @@
+@import model.SVG.Logos
+@import views.support.PageInfo
+@import com.gu.i18n.CountryGroup
+@(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
+
+@import configuration.Config
+@import model.SVG.Logos
+
+<header class="simple-header hidden-print js-header" role="banner">
+    <div class="simple-header__inner">
+        <div class="simple-header__branding l-constrained">
+            <div class="simple-header__primary">
+                @fragments.global.controlNavigation(pageInfo, countryGroup, mainSiteLink = false)
+            </div>
+            @* Branding *@
+            <div class="simple-header__logo">
+                <a href="/" class="simple-header__logo__link" id="qa-header-logo">
+                    <span class="u-h">@Config.siteTitle</span>
+                    @fragments.common.inlineSvgImage(Logos.membersLogoTightcrop, List("simple-header__logo__image"))
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+@fragments.global.secondaryNavigation(pageInfo)
