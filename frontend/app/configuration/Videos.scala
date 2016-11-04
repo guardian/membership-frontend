@@ -74,7 +74,8 @@ object Videos {
         availableImages=membershipPlaceholder
       )
     ),
-    autoplay=true
+    autoplay=true,
+    loop=true
   )
 
   val supportersUSA =  Video(

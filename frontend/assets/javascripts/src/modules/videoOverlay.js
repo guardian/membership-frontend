@@ -64,13 +64,14 @@ define(['src/modules/raven'],function(raven) {
 
     }
 
+    // Sets up click-to-play on overlay, or autoplays if applicable.
     function playerReady(player, playerApi, playerOverlay, autoplay) {
 
         playerOverlay.addEventListener('click', function(event) {
 
             event.preventDefault();
             playVideo(player, playerApi, playerOverlay);
-            
+
         });
 
         if (autoplay) {
