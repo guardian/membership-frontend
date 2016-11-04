@@ -11,6 +11,9 @@ object Fallbacks {
 
   def changeTier(implicit req: RequestHeader) = redirectTo(controllers.routes.TierController.change())
 
+  def maintenance(implicit request: RequestHeader) =
+    TemporaryRedirect(controllers.routes.Outages.maintenanceMessage.absoluteURL(secure=true))
+
   def memberHome(implicit request: RequestHeader) =
     redirectTo(controllers.routes.FrontPage.welcome)
 

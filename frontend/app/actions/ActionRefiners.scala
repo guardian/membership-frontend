@@ -15,6 +15,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
+import utils.PlannedOutage
 import views.support.MembershipCompat._
 
 import scala.concurrent.Future
@@ -58,6 +59,10 @@ object ActionRefiners extends LazyLogging {
     } yield new SubscriptionRequest[A](tp, request) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run
+  }
+
+  val PlannedOutageProtection = new ActionFilter[Request] {
+    override def filter[A](request: Request[A]) = Future.successful(PlannedOutage.currentOutage.map(_ => maintenance(request)))
   }
 
   def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {

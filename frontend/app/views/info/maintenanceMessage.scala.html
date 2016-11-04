@@ -1,0 +1,28 @@
+@import views.support.Asset
+@main("We're down for maintenance") {
+    <main role="main" class="page-content l-constrained">
+        @fragments.page.pageHeader("We'll be back soon...", Some("...we're currently down for maintenance"))
+
+        <section class="page-section">
+            <div class="page-section__content">
+                <p class="text-lead">Right now, the best way you can help us is to
+                    contribute here:</p>
+                <a class="elevated-button action action--no-icon"
+                href="https://contribute.theguardian.com/?INTCMP=mem_maint">
+                    <div class="elevated-button__text">
+                        Make a one-off Contribution
+                    </div>
+                    <div class="elevated-button__icon">
+                        <div class="elevated-button__icon__border">
+                        @for(icon <- Asset.inlineSvg("arrow-right-button")) {
+                            @icon
+                        }
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+}

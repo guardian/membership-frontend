@@ -43,6 +43,9 @@ GET            /staff/login                           controllers.OAuth.login
 GET            /staff/loginAction                     controllers.OAuth.loginAction
 GET            /oauth2callback                        controllers.OAuth.oauth2Callback
 
+GET            /maintenance                           controllers.Outages.maintenanceMessage
+GET            /planned-outages                       controllers.Outages.summary
+
 # Staff event page to show discounted events
 GET            /staff/event-overview                  controllers.Staff.eventOverview
 GET            /staff/event-overview/local            controllers.Staff.eventOverviewLocal
