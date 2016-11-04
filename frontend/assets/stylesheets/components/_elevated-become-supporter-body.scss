@@ -2,11 +2,18 @@
    Elevated become supporter body
    ========================================================================== */
 .elevated-become-supporter-body { 
-    padding-top: 12px;
     background: guss-colour(neutral-8);
+    padding-top: 12px;
+    padding-bottom: 36px;
+
+    @include mq($from: tablet) {
+        margin-top: 18px;   
+    }
 
     @include mq($from: desktop) {
-        padding-top: 5px;
+        margin-top: 12px;
+        padding-bottom: 36px;
+        padding-top: 17px;
     }
 }
 
@@ -14,23 +21,17 @@
     background: guss-colour(neutral-8);
     width: 100%;
 
-    @include mq($from: tablet) {
-        margin-top: 18px;   
-    }
-
     @include mq($from: desktop) {
-        width: 50%;
-        margin-top: 12px;
-        margin-bottom: 22px;
         display: inline-block;
         vertical-align: top;
+        width: 50%;
     }    
 }
 
 .elevated-become-supporter-body__video {
-    @include mq($from: desktop) {   
-        padding-left: 10px;
+    @include mq($from: desktop) {
         float: right;
+        padding-left: 10px;
     }
 }
 
@@ -63,8 +64,15 @@
 
     @include mq($from: tablet, $until: desktop) {
         width: 540px;
-        padding-bottom: 36px;
         margin-left: auto;
         margin-right: auto;
     }
+
+    @include mq($from: tablet) {
+        padding-bottom: 36px;
+    }
+}
+
+.elevated-become-supporter-body__paragraph--last {
+    margin-bottom: 0;
 }
