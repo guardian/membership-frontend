@@ -27,36 +27,56 @@ define(['src/modules/raven'],function(raven) {
             var playerApi;
 
             if(playerIframe && playerOverlay) {
+
+                var autoplay = playerIframe.classList.contains('autoplay');
+
                 playerApi = new YT.Player(playerIframe, {
                     events: {
                         'onReady': function() {
-                            playerReady(player, playerApi, playerOverlay);
+                            playerReady(player, playerApi, playerOverlay, autoplay);
                         }
                     }
                 });
+
             }
         });
     };
 
-    function playerReady(player, playerApi, playerOverlay) {
-        playerOverlay.addEventListener('click', function(event) {
-            event.preventDefault();
+    // Plays the video and hides the overlay.
+    function playVideo (player, playerApi, playerOverlay) {
 
-            if(!iOSDevice()) {
-                try {
-                    playerApi.playVideo();
-                } catch(e) {
-                    raven.Raven.captureException(e, {tags: { level: 'info' }});
-                }
+        if(!iOSDevice()) {
+            try {
+                playerApi.playVideo();
+            } catch(e) {
+                raven.Raven.captureException(e, {tags: { level: 'info' }});
             }
-            player.classList.add(CLASSNAME_IS_PLAYING);
-            setTimeout(function() {
-                var parentNode = playerOverlay.parentNode;
-                if (parentNode) {
-                    parentNode.removeChild(playerOverlay);
-                }
-            }, 2000);
+        }
+
+        player.classList.add(CLASSNAME_IS_PLAYING);
+
+        setTimeout(function() {
+            var parentNode = playerOverlay.parentNode;
+            if (parentNode) {
+                parentNode.removeChild(playerOverlay);
+            }
+        }, 2000);
+
+    }
+
+    function playerReady(player, playerApi, playerOverlay, autoplay) {
+
+        playerOverlay.addEventListener('click', function(event) {
+
+            event.preventDefault();
+            playVideo(player, playerApi, playerOverlay);
+            
         });
+
+        if (autoplay) {
+            playVideo(player, playerApi, playerOverlay, autoplay);
+        }
+
     }
 
     function init() {
