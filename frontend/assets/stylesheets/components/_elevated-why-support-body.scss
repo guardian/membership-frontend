@@ -41,8 +41,10 @@
 
 .elevated-why-support-body__paragraph {
     padding-right: 5%;
-    padding-bottom: 16px;
-    margin-bottom: 0px;
+}
+
+.elevated-why-support-body__paragraph:last-child {
+    margin-bottom: 0;
 }
 
 .elevated-why-support-body__col--img {
@@ -53,10 +55,6 @@
 
 .elevated-why-support-body__col__img {
 	width: 100%;
-}
-
-.elevated-why-support-body__paragraph--last {
-    margin-bottom: 0;
 }
 
 .elevated-why-support-body__caption {
