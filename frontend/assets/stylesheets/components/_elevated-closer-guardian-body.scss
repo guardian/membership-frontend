@@ -67,7 +67,7 @@
     }
 
     @include mq($from: desktop) {
-        margin-top: 0px;
+        margin-top: 0;
     }
 
     @include mq($from: mem-full) {
@@ -78,6 +78,7 @@
 .elevated-closer-guardian-body__list_item {
     @include fs-header(1);
     color : guss-colour(neutral-1);
+    margin-bottom: 18px;
 
     @include mq($from: tablet){
         @include fs-header(3);
@@ -97,6 +98,15 @@
         height: 14px;
         width: 14px;
     }
+}
+
+.elevated-closer-guardian-body__list_item::after {
+    content:"";
+    display:block;
+    width:80px;
+    margin-top: 8px;
+    position:absolute;
+    border-top:1px dotted #333333;
 }
 
 .elevated-closer-guardian-body__list_line {
