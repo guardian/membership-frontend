@@ -29,14 +29,23 @@ define(['src/modules/raven'],function(raven) {
             if(playerIframe && playerOverlay) {
 
                 var autoplay = playerIframe.classList.contains('autoplay');
+                var loop = playerIframe.classList.contains('autoplay');
 
-                playerApi = new YT.Player(playerIframe, {
-                    events: {
-                        'onReady': function() {
-                            playerReady(player, playerApi, playerOverlay, autoplay);
+                var events = {
+                    onReady: function() {
+                        playerReady(player, playerApi, playerOverlay, autoplay);
+                    }
+                };
+
+                if (loop) {
+                    events.onStateChange = function (e) {
+                        if (e.data === YT.PlayerState.ENDED) {
+                            playerApi.playVideo();
                         }
                     }
-                });
+                }
+
+                playerApi = new YT.Player(playerIframe, { events: events });
 
             }
         });
