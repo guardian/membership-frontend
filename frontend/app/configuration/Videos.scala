@@ -73,7 +73,8 @@ object Videos {
         altText=Some("If you read the Guardian, join the Guardian"),
         availableImages=membershipPlaceholder
       )
-    )
+    ),
+    autoplay=true
   )
 
   val supportersUSA =  Video(
