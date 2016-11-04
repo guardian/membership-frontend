@@ -39,11 +39,7 @@
     }
 }
 
-.elevated-why-support-body__paragraph {
-    padding-right: 5%;
-}
-
-.elevated-why-support-body__paragraph:last-child {
+.elevated-why-support-body > div:last-child > p:last-child {
     margin-bottom: 0;
 }
 
