@@ -4,10 +4,11 @@
 .elevated-become-supporter-body { 
     background: guss-colour(neutral-8);
     padding-top: 12px;
-    padding-bottom: 36px;
+    padding-bottom: 18px;
 
     @include mq($from: tablet) {
-        margin-top: 18px;   
+        margin-top: 18px;
+        padding-bottom: 36px;
     }
 
     @include mq($from: desktop) {
@@ -69,7 +70,7 @@
     }
 
     @include mq($from: tablet) {
-        padding-bottom: 36px;
+        padding-bottom: 24px;
     }
 }
 

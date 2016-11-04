@@ -3,8 +3,8 @@
    ========================================================================== */
 .elevated-closer-guardian-body {
     background: guss-colour(neutral-8);
-    padding-bottom: 6px;
-
+    padding-bottom: 18px;
+    
     @include mq($from: tablet) {
         padding-bottom: 36px;
     }
@@ -103,6 +103,10 @@
     margin-top: 8px;
     position: absolute;
     border-top: 1px dotted #333333;
+}
+
+.elevated-closer-guardian-body__paragraph--last {
+    margin-bottom: 0;
 }
 
 .elevated-closer-guardian-body__list_line {

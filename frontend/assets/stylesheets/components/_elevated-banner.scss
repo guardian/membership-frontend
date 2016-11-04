@@ -61,8 +61,9 @@
     @include mq($from: tablet) {
         font-size: 32px;
         line-height: 34px;
-        max-width: 460px;
+        margin-bottom: 42px;
         margin-top: 2px;
+        max-width: 460px;
 
     }
 }

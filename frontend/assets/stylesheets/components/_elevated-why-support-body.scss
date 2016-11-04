@@ -3,6 +3,7 @@
    ========================================================================== */
 .elevated-why-support-body {     
     background: guss-colour(neutral-8);
+    padding-bottom: 18px;
 
     @include mq($from: tablet) {
         padding-bottom: 36px;
