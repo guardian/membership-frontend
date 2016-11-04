@@ -1,0 +1,28 @@
+@import utils.PlannedOutage
+@import org.joda.time._
+@import views.support.Dates._
+
+@main("Planned outages") {
+
+    <main class="page-content l-constrained" role="main">
+        <section class="page-section">
+            <div class="page-section__content copy">
+            @PlannedOutage.currentOutage match {
+                case Some(currentOutage) => { It's all on at
+                    <b>@currentOutage.getStart.prettyWithTime</b> - <b>@currentOutage.getEnd.prettyWithTime</b>
+                     }
+                case None => {
+                    @PlannedOutage.nextOrCurrentOutage match {
+                        case Some(nextOutage) => {
+                            Next planned outage is
+                            <div><b>@nextOutage.getStart.prettyWithTime</b> - <b>@nextOutage.getEnd.prettyWithTime</b></div>
+                            starting in
+                            <div><b>@(new Duration(DateTime.now(), nextOutage.getStart).toPeriod().pretty)</b></div>  }
+                        case None => { No upcoming planned outages }
+                    }
+                }
+            }
+            </div>
+        </section>
+    </main>
+}

@@ -1,5 +1,6 @@
 package controllers
 
+import actions.ActionRefiners.PlannedOutageProtection
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
@@ -23,7 +24,9 @@ trait Info extends Controller {
     redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
   }
 
-  def supporterUK = CachedAction { implicit request =>
+  val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
+
+  def supporterUK = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = UK
 
     val heroImage = ResponsiveImageGroup(
@@ -61,7 +64,7 @@ trait Info extends Controller {
       detailImageOrientated))
   }
 
-  def supporterAustralia = CachedAction { implicit request =>
+  def supporterAustralia = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -103,7 +106,7 @@ trait Info extends Controller {
   }
 
 
-  def supporterUSA = CachedAction { implicit request =>
+  def supporterUSA = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = US
 
     val pageImages = Seq(
@@ -143,7 +146,7 @@ trait Info extends Controller {
     )
   }
 
-  def supporterEurope = CachedAction { implicit request =>
+  def supporterEurope = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = Europe
 
     val hero = OrientatedImages(
@@ -178,7 +181,7 @@ trait Info extends Controller {
     )
   }
 
-  def supporterFor(implicit countryGroup: CountryGroup) = CachedAction { implicit request =>
+  def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
 
     val hero = OrientatedImages(
       portrait = ResponsiveImageGroup(availableImages =
@@ -212,7 +215,7 @@ trait Info extends Controller {
     )
   }
 
-  def patron() = CachedAction { implicit request =>
+  def patron() = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = UK
 
     val pageInfo = PageInfo(
