@@ -9,6 +9,16 @@ define(['src/modules/raven'],function(raven) {
 
     var playerEls = document.querySelectorAll(SELECTOR_PLAYER);
 
+    // Adds a class to an element, backwards compat for IE.
+    function addClass (elem, newClass) {
+        elem.className += ' ' + newClass;
+    }
+
+    // Checks for the presence of a class in an element, IE backwards compat.
+    function containsClass (elem, className) {
+        return elem.className.split(' ').indexOf(className) > -1;
+    }
+
     /**
      * Nasty UA detection but calling `playVideo` on iOS
      * results in blank player.
@@ -28,8 +38,8 @@ define(['src/modules/raven'],function(raven) {
 
             if(playerIframe && playerOverlay) {
 
-                var autoplay = playerIframe.classList.contains('autoplay');
-                var loop = playerIframe.classList.contains('autoplay');
+                var autoplay = containsClass(playerIframe, 'autoplay');
+                var loop = containsClass(playerIframe, 'loop');
 
                 var events = {
                     onReady: function() {
@@ -62,7 +72,7 @@ define(['src/modules/raven'],function(raven) {
             }
         }
 
-        player.classList.add(CLASSNAME_IS_PLAYING);
+        addClass(player, CLASSNAME_IS_PLAYING);
 
         setTimeout(function() {
             var parentNode = playerOverlay.parentNode;
