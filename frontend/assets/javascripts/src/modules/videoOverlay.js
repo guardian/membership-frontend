@@ -83,7 +83,7 @@ define(['src/modules/raven'],function(raven) {
 
         });
 
-        if (autoplay) {
+        if (autoplay && !iOSDevice()) {
             playVideo(player, playerApi, playerOverlay, autoplay);
         }
 
