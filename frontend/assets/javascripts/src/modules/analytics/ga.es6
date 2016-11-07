@@ -15,7 +15,7 @@ const dimensions = {
     membershipNumber: 'dimension10', // User
     productPurchased: 'dimension11', // Session
     intcmp: 'dimension12', // Session
-    customerAgent: 'dimension13', // Hit
+    customerAgent: 'dimension13', // Session
     CamCodeBusinessUnit: 'dimension14', // Session
     CamCodeTeam: 'dimension15' // Session
 
