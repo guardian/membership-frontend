@@ -3,6 +3,12 @@
    ========================================================================== */
 .elevated-footer-button {
     background: #4bc6df;
+    
+    /*The following two lines are to fix a rendering issue which only takes place in Safari and iPad
+      http://stackoverflow.com/questions/1844207/how-to-make-a-div-to-wrap-two-float-divs-inside*/
+    display: block; 
+    clear: both;
+
 
     @supports (clip-path : polygon(0% 82.2%, 0% 0%, 100% 0%, 100% 100%)) {
         clip-path : polygon(0% 82.2%, 0% 0%, 100% 0%, 100% 100%);

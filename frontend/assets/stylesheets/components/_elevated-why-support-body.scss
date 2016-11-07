@@ -1,54 +1,52 @@
 /* ==========================================================================
-   Elevated why support
+   Elevated why support us
    ========================================================================== */
 .elevated-why-support-body {     
     background: guss-colour(neutral-8);
+    padding-bottom: 18px;
+
+    @include mq($from: tablet) {
+        padding-bottom: 36px;
+    }
 }
 
 .elevated-why-support-body__col {
-	/* Mobile First */
     margin-top: 24px;
     width: 100%;
 
     @include mq($from: desktop) {   
-        width: 50%;
         display: inline-block;
         vertical-align: middle;
-    }    
-}
-
-.elevated-why-support-body__col--img {
-    
-    @include mq($from: desktop) {   
-        float: right;
+        width: 50%;
     }    
 }
 
 .elevated-why-support-body__title {
+    @include fs-header(5);
+    color: guss-colour(news-main-1);
+    font-weight: 500;
+    line-height: 26px;
     padding-top: 6px;
+    
+    @include mq($from: tablet) {   
+        @include fs-headline(6);
+        font-weight: 500;
+        line-height: 34px;
+    }
 
     @include mq($from: desktop) {
         width:100%;
     }
 }
 
-.elevated-why-support-body__title__h1 {
-    @include fs-header(5);
-    line-height: 26px;
-    font-weight: 500;
-    color:guss-colour(news-main-1);
-
-    @include mq($from: tablet) {   
-        @include fs-headline(6);
-        line-height: 34px;
-        font-weight: 500;
-    }    
+.elevated-why-support-body > div:last-child > p:last-child {
+    margin-bottom: 0;
 }
 
-.elevated-why-support-body__p {
-    padding-right: 5%;
-    margin-bottom: 0px;
-    padding-bottom: 16px;
+.elevated-why-support-body__col--img {
+    @include mq($from: desktop) {   
+        float: right;
+    }    
 }
 
 .elevated-why-support-body__col__img {
