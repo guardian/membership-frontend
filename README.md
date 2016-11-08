@@ -212,4 +212,3 @@ idrun
 Further documentation notes and useful items can be found in [docs](/docs).
 
 - [Troubleshooting](docs/Troubleshooting.md) for information on common problems and how to fix them.
-- [Building AMIs](docs/building-amis.md) for how to update our AMIs
