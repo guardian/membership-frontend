@@ -16,7 +16,6 @@ object SiteMap extends Controller with LazyLogging {
       <url>
         <loc>{routes.FrontPage.index.absoluteURL(secure = true)}</loc>
         <priority>0.8</priority>
-        {alternatePage(routes.FrontPage.index.absoluteURL(secure = true), "x-default")}
       </url>
     </urlset>
     Ok(foo)
@@ -31,7 +30,6 @@ object SiteMap extends Controller with LazyLogging {
       </loc>
       <priority>1.0</priority>
       {alternatePages(ActiveCountryGroups.all)}
-      {alternatePage(routes.Info.supporterFor(countryGroup).absoluteURL(secure = true), "x-default")}
     </url>
   }
 
