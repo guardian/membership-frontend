@@ -1,7 +1,7 @@
 @(video: model.Video)
 
 <div class="video-player js-video">
-    <iframe class="video-player__iframe js-video__iframe"  src="@video.srcUrl" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+    <iframe class="video-player__iframe js-video__iframe @if(video.autoplay){autoplay} @if(video.loop){loop}" src="@video.srcUrl" width="560" height="315" frameborder="0" allowfullscreen></iframe>
     @for(posterImage <- video.posterImage) {
         <div class="video-player__overlay js-video__overlay">
             <div class="video-player__overlay__image">
