@@ -1,9 +1,9 @@
 @import views.support.PageInfo
-@(pageInfo: PageInfo, extraClass: Option[String] = None)
-
+@import com.gu.i18n.CountryGroup
 @import org.joda.time.DateTime
 @import model.Nav
 
+@(pageInfo: PageInfo, extraClass: Option[String] = None, countryGroup: Option[CountryGroup] = None)
 <footer class="global-footer hidden-print @extraClass.mkString" role="contentinfo">
 
     @fragments.global.brandbar()
@@ -11,7 +11,7 @@
     <div class="global-footer__info">
         <div class="global-footer__info__inner l-constrained">
             <ul class="colophon">
-                @for(item <- Nav.footerNavigation) {
+                @for(item <- Nav.footerNavigation(countryGroup)) {
                     <li class="colophon__item">
                         <a class="colophon__link" id="qa-footer-link-@item.id" href="@item.href">@item.title</a>
                     </li>
