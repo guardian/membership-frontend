@@ -83,7 +83,7 @@ libraryDependencies ++= frontendDependencies.map {
      .exclude("org.slf4j", "slf4j-simple") // snatches SLF4J logging from Logback, our chosen logging system
 }
 
-addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100")
+addCommandAlias("devrun", "run 9100")
 
 libraryDependencies ++= acceptanceTestDependencies
 
