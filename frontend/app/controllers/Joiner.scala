@@ -141,7 +141,8 @@ object Joiner extends Controller with ActivityTracking
          idUser = identityUser,
          pageInfo = pageInfo,
          trackingPromoCode = validTrackingPromoCode,
-         promoCodeToDisplay = validDisplayablePromoCode))
+         promoCodeToDisplay = validDisplayablePromoCode,
+         Some(countryGroup)))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 

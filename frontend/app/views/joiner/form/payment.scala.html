@@ -13,12 +13,15 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
+@import com.gu.i18n.CountryGroup
+
 @(plans: MonthYearPlans[PaidMember],
   countriesWithCurrencies: List[CountryWithCurrency],
   idUser: IdentityUser,
   pageInfo: PageInfo,
   trackingPromoCode: Option[PromoCode],
-  promoCodeToDisplay: Option[PromoCode]
+  promoCodeToDisplay: Option[PromoCode],
+  countryGroup: Option[CountryGroup]
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
@@ -97,7 +100,7 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans))
+                    @fragments.form.submit(PaidPlans(plans), countryGroup = countryGroup)
                 </div>
             </section>
         </form>
