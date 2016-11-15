@@ -114,9 +114,9 @@
 
                         "mkdir /etc/gu",
 
-                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership-keys.conf /etc/gu"]]},
-                        "chown membership /etc/gu/membership-keys.conf",
-                        "chmod 0600 /etc/gu/membership-keys.conf",
+                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership.private.conf /etc/gu"]]},
+                        "chown membership /etc/gu/membership.private.conf",
+                        "chmod 0600 /etc/gu/membership.private.conf",
 
                         "wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py",
                         {"Fn::Join": ["", ["sed -i",
