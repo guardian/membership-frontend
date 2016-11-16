@@ -350,8 +350,9 @@
 .us-legal {
     @include fs-textSans(3);
     color: $c-neutral2;
-    font-weight: bold;
-    padding: $gs-baseline 0 $gs-gutter 0;
+    padding: $gs-baseline * 2 0 $gs-row-height 0;
+    font-size: 12px;
+    line-height: 16px;
 }
 
 /* ==========================================================================
