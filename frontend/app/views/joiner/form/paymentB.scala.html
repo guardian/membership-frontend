@@ -14,11 +14,11 @@
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
 @(plans: MonthYearPlans[PaidMember],
-  countriesWithCurrencies: List[CountryWithCurrency],
-  idUser: IdentityUser,
-  pageInfo: PageInfo,
-  trackingPromoCode: Option[PromoCode],
-  promoCodeToDisplay: Option[PromoCode]
+    countriesWithCurrencies: List[CountryWithCurrency],
+    idUser: IdentityUser,
+    pageInfo: PageInfo,
+    trackingPromoCode: Option[PromoCode],
+    promoCodeToDisplay: Option[PromoCode]
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
@@ -35,6 +35,12 @@
 
             <section class="form-section form-section--no-padding">
                 <div class="form-section__content">
+                @fragments.form.progressBar()
+                </div>
+            </section>
+
+            <section class="form-section form-section--no-padding">
+                <div class="form-section__content">
                 @fragments.form.errorMessageDisplay()
                 </div>
             </section>
@@ -42,19 +48,19 @@
             <section class="form-section">
 
                 <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = false)
+                @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = true)
                 </div>
 
                 <div class="form-section__content">
                     @if(plans.tier != Supporter()){
+                        <div class="form-group">
+                            @fragments.form.benefitsFieldset(plans.tier.benefits)
+                            @fragments.form.featureChoiceFieldset(plans.tier)
+                        </div>}
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(plans.tier.benefits)
-                        @fragments.form.featureChoiceFieldset(plans.tier)
-                    </div>}
-                    <div class="form-group">
-                        <h2 class="form-group__title">Address</h2>
+                        <h2 class="form-group__title">Name and address</h2>
 
-                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "Name")
+                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
@@ -95,7 +101,7 @@
                         @fragments.form.paymentOptions(plans)
                         @fragments.form.cardDetail(plans)
                     </div>
-
+                    @fragments.form.terms()
                     @fragments.form.errorMessageDisplay()
                     @fragments.form.submit(PaidPlans(plans))
                 </div>

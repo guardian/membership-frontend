@@ -135,7 +135,7 @@ object Joiner extends Controller with ActivityTracking
       val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
       val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
-      Ok(views.html.joiner.form.payment(
+      Ok(views.html.joiner.form.paymentB(
          plans = plans,
          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          idUser = identityUser,
