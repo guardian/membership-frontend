@@ -1,0 +1,31 @@
+.skin-checkout-b {
+    background: #fff;
+
+    .form-header,
+    .form-section__content {
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        float:none;
+        max-width: 700px;
+
+    }
+
+    .form-headline {
+
+    }
+
+    .form-group__title {
+        margin-top: 4px;
+    }
+
+    .form-section__progress-bar {
+        padding-bottom: 10px;
+        border-bottom: solid guss-colour(news-support-1) 1px;
+    }
+}
+
+.skin-checkout-b::before,
+.skin-checkout-b::after {
+    background: #fff;
+}
