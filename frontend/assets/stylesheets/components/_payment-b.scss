@@ -1,40 +1,122 @@
 .skin-checkout-b {
-    background: #fff;
+    padding: 0;
+    width: 100%;
+    z-index: 500;
+  
+    background: #ffffff;
+
+    .form-header {
+    	margin-top: 6px;
+    }
 
     .form-header,
     .form-section__content {
         float: none;
         margin-right: 10px; 
         margin-left: 10px;
+        width: auto;
         padding: 0;
-        
         
         @include mq($from: mobileLandscape) {
             max-width: 440px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         @include mq($from: tablet) {
             max-width: 700px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
         }
     }
 
-    .form-headline {
-
+    .sub-heading {
+    	.form-group__title {
+    		margin-top: 4px;
+    		margin-bottom: 0;
+    	}
     }
 
     .form-group__title {
-        margin-top: 4px;
+      margin-top: 0px;
+			margin-bottom: 24px;
     }
+
+    .form-section__lead-in {
+    		text-align: right;
+    		margin-top: 24px;
+
+		    @include mq($from: tablet) {
+		        width: rem(gs-span(9));
+		        margin-left: auto;
+		        margin-right: auto;
+		    }
+
+		    @include mq($from: desktop) {
+		        width: auto;
+		        position: static;
+		        left: auto;
+		    }
+		}
 
     .form-section__progress-bar {
-        padding-bottom: 10px;
+        margin-top: 32px;
+        padding-bottom: 12px;
         border-bottom: solid guss-colour(news-support-1) 1px;
     }
+
+    .form-section__name-detail {
+    	margin-top: 7px;	
+
+    	.fieldset__heading {
+    		display: none;
+
+    		@include  mq($from: tablet) {
+    			display: table-cell;
+    		}
+    	}
+    }
+
+    .fieldset__headline {
+    	margin-bottom: 0;
+    }
+
+    .form-section__name-detail,
+    .form-section__promotion,
+    .form-section__billing  {
+    	.fieldset {
+    		border-top: 0;
+			}    		
+    }
+
+    .fieldset__fields {
+		  vertical-align: top;
+			padding-top: 2px;
+			padding-right: 5px;
+			padding-left: 5px;
+			padding-bottom: 12px;
+		}
+
+		.form-field__postcode{
+			width: 140px;	
+		}
+
+		.form-group{
+			margin-bottom: 24px;
+			border-bottom: 0;
+		}
+
+		.pseudo-radio {
+			border-radius: 10px;
+		}
+
+		input[type=radio]:checked ~ .pseudo-radio {
+			border-color: #005689;
+		}
+
+		input[type=radio]:checked ~ .pseudo-radio:before  {
+			background-color: #005689;
+		}
 }
 
-.skin-checkout-b::before,
-.skin-checkout-b::after {
-    background: #fff;
-}
+

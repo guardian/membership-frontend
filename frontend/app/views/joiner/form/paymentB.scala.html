@@ -23,7 +23,7 @@
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
-    <main class="page-content l-constrained skin-checkout-b">
+    <main class="page-content skin-checkout-b">
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
@@ -45,22 +45,25 @@
                 </div>
             </section>
 
-            <section class="form-section">
+            <section class="form-section form-section--no-padding">
 
                 <div class="form-section__content">
                     @if(plans.tier != Supporter()){
                         <div class="form-group">
-                            @fragments.form.benefitsFieldset(plans.tier.benefits)
-                            @fragments.form.featureChoiceFieldset(plans.tier)
+                          @fragments.form.benefitsFieldset(plans.tier.benefits)
+                          @fragments.form.featureChoiceFieldset(plans.tier)
                         </div>}
-                    <div class="form-group">
+                    
+                    <div class="form-group sub-heading">
                         <h2 class="form-group__title">Name and address</h2>
 
                         <div class="form-section__lead-in sign-in-required">
                             @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = true)
                         </div>
 
-                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
+                        <div class="form-section__name-detail">
+                            @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
+                        </div>
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
@@ -80,12 +83,14 @@
                         }
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group form-section__promotion">
                         <h2 class="form-group__title">Promotion</h2>
                         @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
                     </div>
 
                     <div class="form-group">
+                    	<div class="form-section__billing">
+                        
                         <h2 class="form-group__title">Billing</h2>
                         @fragments.form.billingAddress("Billing address")
                         @fragments.form.addressDetail(
@@ -98,10 +103,10 @@
                             postcode = idUser.privateFields.billingPostcode,
                             county = idUser.privateFields.billingAddress4
                         )
+                      	</div>
                         @fragments.form.paymentOptions(plans)
                         @fragments.form.cardDetail(plans)
                     </div>
-                    @fragments.form.terms()
                     @fragments.form.errorMessageDisplay()
                     @fragments.form.submit(PaidPlans(plans))
                 </div>
