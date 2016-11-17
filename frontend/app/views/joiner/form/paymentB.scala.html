@@ -53,7 +53,7 @@
                           @fragments.form.benefitsFieldset(plans.tier.benefits)
                           @fragments.form.featureChoiceFieldset(plans.tier)
                         </div>}
-                    
+
                     <div class="form-group sub-heading">
                         <h2 class="form-group__title">Name and address</h2>
 
@@ -88,9 +88,8 @@
                         @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group form-group--little-padding">
                     	<div class="form-section__billing">
-                        
                         <h2 class="form-group__title">Billing</h2>
                         @fragments.form.billingAddress("Billing address")
                         @fragments.form.addressDetail(
@@ -107,10 +106,17 @@
                         @fragments.form.paymentOptions(plans)
                         @fragments.form.cardDetail(plans)
                     </div>
+                    @fragments.form.terms()
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans))
+                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false)
                 </div>
             </section>
         </form>
+
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content form-section__progress-bar">
+            @fragments.form.progressBar()
+            </div>
+        </section>
     </main>
 }
