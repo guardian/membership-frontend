@@ -3,12 +3,21 @@
 
     .form-header,
     .form-section__content {
-        margin-left: auto;
-        margin-right: auto;
+        float: none;
+        margin-right: 10px; 
+        margin-left: 10px;
         padding: 0;
-        float:none;
-        max-width: 700px;
+        
+        
+        @include mq($from: mobileLandscape) {
+            max-width: 440px;
+            margin: 0 auto;
+        }
 
+        @include mq($from: tablet) {
+            max-width: 700px;
+            margin: 0 auto;
+        }
     }
 
     .form-headline {
