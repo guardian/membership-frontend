@@ -1,6 +1,16 @@
 {
     "defaultStacks": ["membership"],
     "packages":{
+        "ami-update": {
+            "type": "ami-cloudformation-parameter",
+            "data": {
+                "amiTags": { "Recipe": "xenial-membership", "AmigoStage": "PROD" },
+                "amiParameter": "ImageId",
+                "cloudFormationStackName": "Memb",
+                "prependStackToCloudFormationStackName" : false,
+                "appendStageToCloudFormationStackName" : true
+            }
+        },
         "frontend":{
             "type":"autoscaling",
             "data":{
@@ -10,7 +20,11 @@
     },
     "recipes":{
         "default":{
-            "actionsBeforeApp": ["frontend.uploadArtifacts", "frontend.deploy"]
+            "actionsBeforeApp": [
+                "ami-update.update",
+                "frontend.uploadArtifacts",
+                "frontend.deploy"
+            ]
         },
         "artifactUploadOnly": {
            "actions": [ "frontend.uploadArtifacts" ]
