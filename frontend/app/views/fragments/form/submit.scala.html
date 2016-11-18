@@ -17,6 +17,7 @@
   countryGroup: Option[CountryGroup] = None)
 
 @import configuration.Links
+@import configuration.CopyConfig.usLegalTerms
 
 @paidButton(price: Price, period: BillingPeriod) = {
     <span class="is-hidden" data-currency="@price.currency" data-billing-period="@period.adjective">Pay @price.pretty</span>
@@ -48,14 +49,9 @@
 </fieldset>
 
 @countryGroup.map{ cg =>
-    @if(cg.id.toLowerCase == "us") {
-        <div class="us-legal">
-            NOTICE REGARDING AUTOMATIC RENEWAL: IF YOU DO NOT CANCEL YOUR MEMBERSHIP PRIOR TO THE END OF YOUR INITIAL
-            MEMBERSHIP PERIOD, YOUR MEMBERSHIP WILL AUTOMATICALLY RENEW FOR A RENEWAL MEMBERSHIP PERIOD OF THE SAME
-            LENGTH AS YOUR INITIAL MEMBERSHIP PERIOD, AND WE WILL CHARGE YOUR PAYMENT ACCOUNT THE APPLICABLE
-            MEMBERSHIP FEE ASSOCIATED WITH THE APPLICABLE MEMBERSHIP PERIOD.  YOU MAY CANCEL YOUR MEMBERSHIP AT ANY
-            TIME PRIOR TO THE COMMENCEMENT OF THE APPLICABLE RENEWAL MEMBERSHIP PERIOD AND YOUR MEMBERSHIP WILL NOT
-            BE SUBJECT TO FURTHER RENEWAL​.
-        </div>
+    @if(Seq("us","um","vi").contains(cg.id.toLowerCase)) {
+        <div class="us-legal">@usLegalTerms</div>
+    } else {
+        <div class="us-legal is-hidden">@usLegalTerms</div>
     }
 }
