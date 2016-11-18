@@ -16,6 +16,7 @@ trait Redirects extends Controller {
     countryGroup match {
       case CountryGroup.UK => routes.Info.supporterUK()
       case CountryGroup.US => routes.Info.supporterUSA()
+      case CountryGroup.Ireland => routes.Info.supporterEurope()
       case CountryGroup.Europe => routes.Info.supporterEurope()
       case CountryGroup.Australia => routes.Info.supporterAustralia()
       case _ => routes.Info.supporterFor(countryGroup)
