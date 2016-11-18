@@ -115,7 +115,7 @@
                         "chmod 0600 /etc/gu/membership.private.conf",
 
                         "wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py",
-                        {"Fn::Sub": "sed -i -e s\"/__DATE/$(date +%F)/\" -e 's/__STAGE/$Stage/' $CONF_DIR/logger.conf"},
+                        {"Fn::Sub": "sed -i -e s\"/__DATE/$(date +%F)/\" -e 's/__STAGE/${Stage}/' $CONF_DIR/logger.conf"},
                         {"Fn::Sub": "python awslogs-agent-setup.py -nr ${AWS::Region} -c $CONF_DIR/logger.conf"},
                         "systemctl enable awslogs",
                         "systemctl start awslogs"
