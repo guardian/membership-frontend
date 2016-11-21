@@ -136,7 +136,7 @@ object Joiner extends Controller with ActivityTracking
       val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
 
-      if(request.getQueryString("skin").get == "membersB") {
+      if(request.getQueryString("skin").getOrElse("") == "membersB") {
         Ok(views.html.joiner.form.paymentB(
           plans = plans,
           countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
