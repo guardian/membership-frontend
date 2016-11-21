@@ -135,13 +135,24 @@ object Joiner extends Controller with ActivityTracking
       val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
       val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
-      Ok(views.html.joiner.form.paymentB(
-         plans = plans,
-         countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
-         idUser = identityUser,
-         pageInfo = pageInfo,
-         trackingPromoCode = validTrackingPromoCode,
-         promoCodeToDisplay = validDisplayablePromoCode))
+
+      if(request.getQueryString("skin").get == "membersB") {
+        Ok(views.html.joiner.form.paymentB(
+          plans = plans,
+          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
+          idUser = identityUser,
+          pageInfo = pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode))
+      } else {
+        Ok(views.html.joiner.form.payment(
+          plans = plans,
+          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
+          idUser = identityUser,
+          pageInfo = pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode))
+      }
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
