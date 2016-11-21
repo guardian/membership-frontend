@@ -95,6 +95,10 @@
         padding-right: 5px;
         padding-left: 5px;
         padding-bottom: 12px;
+
+        @include mq($from: tablet) {
+            padding-top: 6px;
+        }
     }
 
     .form-field__postcode{
@@ -133,15 +137,35 @@
     .u-cf {
         label {
             width: 50%;
+
+            @include mq($from: tablet) {
+                width: 49%;
+            }
+
             float: left;
         }
 
         div {
             width: 50%;
+
+            @include mq($from: tablet) {
+                width: 51%;
+            }
+
             float: right;
+
+            @include mq($from: tablet) {
+                margin-left: 0;
+            }
 
             ul > li:nth-child(1) {
                 text-align: left;
+            }
+
+            br {
+                @include mq($from: tablet) {
+                    display:none;
+                }
             }
         }
     }
@@ -183,6 +207,12 @@
         }
     }
 
+    .form-section__bottom-progress-bar {
+        @include mq($from: tablet) {
+            display: none;
+        }
+    }
+
     .actions {
         button {
             @include fs-textSans(3);
@@ -206,6 +236,9 @@
                 border-color: #003557;
             }
 
+            @include mq($from: tablet) {
+                margin-bottom: 24px;
+            }
         }
 
         span {
