@@ -67,7 +67,7 @@
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
-                            note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
+                            note = "We need your address to send you .",
                             formType = "deliveryAddress",
                             addressRequired = true,
                             address1 = idUser.privateFields.address1,
@@ -104,7 +104,7 @@
                         )
                       	</div>
                         @fragments.form.paymentOptions(plans)
-                        @fragments.form.cardDetail(plans)
+                        @fragments.form.cardDetail(plans, aDistribution = false)
                     </div>
                     @fragments.form.terms()
                     @fragments.form.errorMessageDisplay()

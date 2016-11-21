@@ -2,7 +2,7 @@
     padding: 0;
     width: 100%;
     z-index: 500;
-  
+
     background: #ffffff;
 
     .form-header {
@@ -12,11 +12,11 @@
     .form-header,
     .form-section__content {
         float: none;
-        margin-right: 10px; 
+        margin-right: 10px;
         margin-left: 10px;
         width: auto;
         padding: 0;
-        
+
         @include mq($from: mobileLandscape) {
             max-width: 440px;
             margin-left: auto;
@@ -38,26 +38,26 @@
     }
 
     .form-group__title {
-      margin-top: 0px;
-			margin-bottom: 24px;
+        margin-top: 0px;
+        margin-bottom: 24px;
     }
 
     .form-section__lead-in {
-    		text-align: right;
-    		margin-top: 24px;
+        text-align: right;
+        margin-top: 24px;
 
-		    @include mq($from: tablet) {
-		        width: rem(gs-span(9));
-		        margin-left: auto;
-		        margin-right: auto;
-		    }
+        @include mq($from: tablet) {
+            width: rem(gs-span(9));
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-		    @include mq($from: desktop) {
-		        width: auto;
-		        position: static;
-		        left: auto;
-		    }
-		}
+        @include mq($from: desktop) {
+            width: auto;
+            position: static;
+            left: auto;
+        }
+    }
 
     .form-section__progress-bar {
         margin-top: 32px;
@@ -66,7 +66,7 @@
     }
 
     .form-section__name-detail {
-    	margin-top: 7px;	
+    	margin-top: 7px;
 
     	.fieldset__heading {
     		display: none;
@@ -86,41 +86,88 @@
     .form-section__billing  {
     	.fieldset {
     		border-top: 0;
-			}    		
+			}
     }
 
     .fieldset__fields {
-		  vertical-align: top;
-			padding-top: 2px;
-			padding-right: 5px;
-			padding-left: 5px;
-			padding-bottom: 12px;
-		}
+        vertical-align: top;
+        padding-top: 2px;
+        padding-right: 5px;
+        padding-left: 5px;
+        padding-bottom: 12px;
+    }
 
-		.form-field__postcode{
-			width: 140px;	
-		}
+    .form-field__postcode{
+        width: 140px;
+    }
 
-		.form-group{
-			margin-bottom: 24px;
-			border-bottom: 0;
-		}
+    .form-group{
+        margin-bottom: 24px;
+        border-bottom: 0;
+    }
 
-		.form-group--little-padding {
-			margin-bottom: 12px;
-		}
+    .form-group--little-padding {
+        margin-bottom: 12px;
+    }
 
-		.pseudo-radio {
-			border-radius: 10px;
-		}
+    .o-inline-list {
+        text-align: right;
+    }
 
-		input[type=radio]:checked ~ .pseudo-radio {
-			border-color: #005689;
-		}
+    .o-inline-list__item {
+        font-size: 13px;
+    }
 
-		input[type=radio]:checked ~ .pseudo-radio:before  {
-			background-color: #005689;
-		}
+    .pseudo-radio {
+        border-radius: 10px;
+    }
+
+    input[type=radio]:checked ~ .pseudo-radio {
+        border-color: #005689;
+    }
+
+    input[type=radio]:checked ~ .pseudo-radio:before  {
+        background-color: #005689;
+    }
+
+    .u-cf {
+        label {
+            width: 50%;
+            float: left;
+        }
+
+        div {
+            width: 50%;
+            float: right;
+
+            ul > li:nth-child(1) {
+                text-align: left;
+            }
+        }
+    }
+
+    .credit-card-bottom-description {
+        @include fs-textSans(2);
+        p {
+            margin-bottom: 0;
+        }
+
+        div {
+            display: block;
+
+            @include mq($from: tablet) {
+                display: none;
+            }
+        }
+    }
+
+    .credit-card-note {
+        display: none;
+
+        @include mq($from: tablet) {
+            display: block;
+        }
+    }
 }
 
 
