@@ -8,17 +8,17 @@
         width:33.33%;
         background-color: #f6f6f6;
         @include fs-textSans(1);
-        padding-top: 0.8rem;
-        padding-bottom: 0.8rem;
-        border-right: 0.1rem solid #aad8f1;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-right: 1px solid #aad8f1;
         display: inline-block;
-        padding-right: 1rem;
+        padding-right: 10px;
         text-align: center;
     }
 
     .active {
         background-color: guss-colour(news-support-1);
-        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="28" viewBox="0 0 10 28"><path fill="#F6F6F6" d="M0 0h10v28H0z"/><path fill="#AAD8F1" d="M0 0l9 14-9 14"/></svg>');
+        background-image: svg-url('<svg width="10" height="28" viewBox="0 0 10 28"><path fill="#F6F6F6" d="M0 0h10v28H0z"/><path fill="#AAD8F1" d="M0 0l9 14-9 14"/></svg>');
         background-repeat: no-repeat;
         background-position: 100%;
         background-size: 18%;
