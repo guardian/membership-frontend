@@ -102,35 +102,23 @@
                     "Fn::Join":["\n", [
                         "#!/bin/bash -ev",
 
-                        "CONF_DIR=/membership/frontend-1.0-SNAPSHOT/conf",
+                        "CONF_DIR=/etc/frontend",
 
-                        "/opt/features/ssh-keys/initialise-keys-and-cron-job.sh -l -b github-team-keys -t Membership-and-Subscriptions || true",
-
-                        "adduser --system --home /membership --disabled-password membership",
-
-                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/frontend-1.0-SNAPSHOT.tgz /tmp"]]},
-
-                        "tar xvz -C /membership -f /tmp/frontend-1.0-SNAPSHOT.tgz",
+                        {"Fn::Sub":"aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/frontend/frontend_1.0-SNAPSHOT_all.deb /tmp"},
 
                         "mkdir /etc/gu",
 
-                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership-keys.conf /etc/gu"]]},
-                        "chown membership /etc/gu/membership-keys.conf",
-                        "chmod 0600 /etc/gu/membership-keys.conf",
+                        {"Fn::Sub":"aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/membership.private.conf /etc/gu"},
+
+                        "dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb",
+                        "chown frontend /etc/gu/membership.private.conf",
+                        "chmod 0600 /etc/gu/membership.private.conf",
 
                         "wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py",
-                        {"Fn::Join": ["", ["sed -i",
-                            " -e \"s/__DATE/$(date +%F)/\"",
-                            " -e \"s/__BUILD/$(cat $CONF_DIR/build.txt)/\"",
-                            " -e 's/__STAGE/", { "Ref": "Stage" }, "/'",
-                            " $CONF_DIR/logger.conf"]]},
-                        {"Fn::Join": [" ", ["python awslogs-agent-setup.py -nr", { "Ref": "AWS::Region" }, "-c $CONF_DIR/logger.conf" ]]},
-
-                        {"Fn::Join":["", ["sed 's/__STAGE/", { "Ref" : "Stage" } ,"/' $CONF_DIR/upstart.conf > /etc/init/membership-app.conf"]]},
-
-                        "chown -R membership /membership/",
-
-                        "start membership-app"
+                        {"Fn::Sub": "sed -i -e s\"/__DATE/$(date +%F)/\" -e 's/__STAGE/${Stage}/' $CONF_DIR/logger.conf"},
+                        {"Fn::Sub": "python awslogs-agent-setup.py -nr ${AWS::Region} -c $CONF_DIR/logger.conf"},
+                        "systemctl enable awslogs",
+                        "systemctl start awslogs"
                     ]]
                 }}
             }
@@ -156,6 +144,11 @@
                                 "Effect": "Allow",
                                 "Action": "s3:GetObject",
                                 "Resource": "arn:aws:s3:::membership-private/*"
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": "s3:GetObject",
+                                "Resource": "arn:aws:s3:::github-public-keys/Membership-and-Subscriptions/*"
                             }
                         ]
                     }

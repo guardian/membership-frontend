@@ -51,9 +51,29 @@ javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf"
 
 testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
 
-useNativeZip
 
-riffRaffPackageType := (packageZipTarball in Universal).value
+import com.typesafe.sbt.packager.archetypes.ServerLoader.Systemd
+serverLoading in Debian := Systemd
+
+debianPackageDependencies := Seq("openjdk-8-jre-headless")
+
+javaOptions in Universal ++= Seq(
+    "-Dpidfile.path=/dev/null",
+    "-J-XX:MaxRAMFraction=2",
+    "-J-XX:InitialRAMFraction=2",
+    "-J-XX:MaxMetaspaceSize=500m",
+    "-J-XX:+PrintGCDetails",
+    "-J-XX:+PrintGCDateStamps",
+    s"-J-Xloggc:/var/log/${name.value}/gc.log"
+)
+
+maintainer := "Membership Dev <membership.dev@theguardian.com>"
+
+packageSummary := "Membership Frontend service"
+
+packageDescription := """Membership Frontend appserver for https://membership.theguardian.com"""
+
+riffRaffPackageType := (packageBin in Debian).value
 
 riffRaffBuildIdentifier := env("BUILD_NUMBER", "DEV")
 
@@ -83,7 +103,7 @@ libraryDependencies ++= frontendDependencies.map {
      .exclude("org.slf4j", "slf4j-simple") // snatches SLF4J logging from Logback, our chosen logging system
 }
 
-addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100")
+addCommandAlias("devrun", "run 9100")
 
 libraryDependencies ++= acceptanceTestDependencies
 

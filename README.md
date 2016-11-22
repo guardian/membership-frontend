@@ -84,7 +84,7 @@ Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this proje
 Download our private keys from the `membership-private` S3 bucket. If you have the AWS CLI set up you can run:
 
 ```
-sudo aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu/ --profile membership
+sudo aws s3 cp s3://membership-private/DEV/membership.private.conf /etc/gu/ --profile membership
 ```
 
 ### Ubuntu setup
@@ -120,7 +120,7 @@ To make the site reachable as `mem.thegulocal.com` (necessary for register/sign-
 ### Manual
 
 [See here](https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users) for details of how we do test users.
-Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
+Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership.private.conf`.
 
 ### Automated
 
@@ -139,7 +139,7 @@ npm test
 #### Acceptance tests
 
 1. Run local membership-frontend: `sbt devrun`
-2. Run local [idenity-frontend](https://github.com/guardian/identity-frontend): `sbt devrun`
+2. Run local [identity-frontend](https://github.com/guardian/identity-frontend): `sbt devrun`
 3. `sbt acceptance-test`
 
 These are browser driving Selenium tests.
@@ -159,12 +159,12 @@ for what to do if a deploy goes bad.
 
 ### Committing config credentials
 
-For the Membership project, we put both `DEV` and `PROD` credentials in `membership-keys.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
+For the Membership project, we put both `DEV` and `PROD` credentials in `membership.private.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
 
 You can download and update credentials like this
 
-    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
-    aws s3 cp /etc/gu/membership-keys.conf s3://membership-private/DEV/ --profile membership
+    aws s3 cp s3://membership-private/DEV/membership.private.conf /etc/gu --profile membership
+    aws s3 cp /etc/gu/membership.private.conf s3://membership-private/DEV/ --profile membership
 
 For a reminder on why we do this, here's @tackley on the subject:
 
@@ -212,4 +212,3 @@ idrun
 Further documentation notes and useful items can be found in [docs](/docs).
 
 - [Troubleshooting](docs/Troubleshooting.md) for information on common problems and how to fix them.
-- [Building AMIs](docs/building-amis.md) for how to update our AMIs
