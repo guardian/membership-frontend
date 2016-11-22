@@ -262,7 +262,7 @@ class MemberService(identityService: IdentityService,
 
     // The year and month plans are guaranteed to have the same currencies
     val targetCurrencies = newPlan.year.charges.price.prices.map(_.currency).toSet
-    val currencyIsAvailable = targetCurrencies.toSet.contains(sub.plan.currency)
+    val currencyIsAvailable = targetCurrencies.contains(sub.plan.currency)
     val higherTier = newPlan.month.tier > sub.plan.tier
     currencyIsAvailable && higherTier
   }
@@ -394,8 +394,8 @@ class MemberService(identityService: IdentityService,
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
-      Subscribe(account = Account.stripe(contactId = contactId, currency = currency, autopay = true),
-              paymentMethod = CreditCardReferenceTransaction(customer.card.id, customer.id).some,
+      Subscribe(account = Account.payPal(contactId = contactId, currency = currency, autopay = true),
+              paymentMethod = PayPalReferenceTransaction("B-5YS016770F5907812", "membership.paypal-buyer@theguardian.com", customer.id).some,
               address = joinData.zuoraAccountAddress,
               email = email,
               ratePlans = NonEmptyList(plan),
