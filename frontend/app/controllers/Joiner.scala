@@ -109,7 +109,7 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode], skinOpt: Option[String]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog
 
@@ -135,24 +135,22 @@ object Joiner extends Controller with ActivityTracking
       val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
       val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
+      val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
-      if(request.getQueryString("skin").getOrElse("") == "membersB") {
-        Ok(views.html.joiner.form.paymentB(
-          plans = plans,
-          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
-          idUser = identityUser,
-          pageInfo = pageInfo,
-          trackingPromoCode = validTrackingPromoCode,
-          promoCodeToDisplay = validDisplayablePromoCode))
-      } else {
-        Ok(views.html.joiner.form.payment(
-          plans = plans,
-          countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
-          idUser = identityUser,
-          pageInfo = pageInfo,
-          trackingPromoCode = validTrackingPromoCode,
-          promoCodeToDisplay = validDisplayablePromoCode))
-      }
+      if (skinOpt.contains("membersB")) Ok(views.html.joiner.form.paymentB(
+        plans,
+        countryCurrencyWhitelist,
+        identityUser,
+        pageInfo,
+        trackingPromoCode = validTrackingPromoCode,
+        promoCodeToDisplay = validDisplayablePromoCode))
+      else Ok(views.html.joiner.form.payment(
+        plans,
+        countryCurrencyWhitelist,
+        identityUser,
+        pageInfo,
+        trackingPromoCode = validTrackingPromoCode,
+        promoCodeToDisplay = validDisplayablePromoCode))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
