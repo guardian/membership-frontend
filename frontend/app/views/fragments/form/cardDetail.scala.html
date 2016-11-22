@@ -12,7 +12,7 @@
 @import views.support.Pricing._
 @import views.support.{Asset, Dates, selectDates}
 
-<fieldset class="fieldset" xmlns="http://www.w3.org/1999/html">
+<fieldset class="fieldset">
 
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">Card details</h2>
@@ -161,12 +161,12 @@
 
 
         @if(!aDistribution){
-            <div class="credit-card-bottom-description">
-                <div class="credit-card-note">
+            <div class="bottom-credit-card-description">
+                <div class="bottom-credit-card-description--note">
                     <h3 class="credit-card-note__header">First payment</h3>
-                    <p>will be taken today under the name Guardian News & Media.</p>
+                    <p class="credit-card-note__text">will be taken today under the name Guardian News & Media.</p>
                 </div>
-                <div class="credit-card-note js-ongoing-card-payments">
+                <div class="bottom-credit-card-description--note js-ongoing-card-payments"">
                     <script type="text/javascript">
                         guardian.membership.checkoutForm.ongoingCardPayments = {
                             annual: '@Dates.dayInMonthWithSuffixAndMonth()',
@@ -174,9 +174,9 @@
                         };
                     </script>
                 </div>
-                <div class="credit-card-note">
+                <div class="bottom-credit-card-description--note">
                     <h3 class="credit-card-note__header">Cancellation</h3>
-                    <p>You can cancel your membership online through your profile page.</p>
+                    <p class="credit-card-note__text">You can cancel your membership online through your profile page.</p>
                 </div>
             </div>
         }

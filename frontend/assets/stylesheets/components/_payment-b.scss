@@ -25,8 +25,6 @@
 
         @include mq($from: tablet) {
             max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
         }
     }
 
@@ -90,11 +88,8 @@
     }
 
     .fieldset__fields {
+        padding: 2px 5px 12px;
         vertical-align: top;
-        padding-top: 2px;
-        padding-right: 5px;
-        padding-left: 5px;
-        padding-bottom: 12px;
 
         @include mq($from: tablet) {
             padding-top: 6px;
@@ -127,11 +122,11 @@
     }
 
     input[type=radio]:checked ~ .pseudo-radio {
-        border-color: #005689;
+        border-color: guss-colour(guardian-brand);
     }
 
     input[type=radio]:checked ~ .pseudo-radio:before  {
-        background-color: #005689;
+        background-color: guss-colour(guardian-brand);
     }
 
     .u-cf {
@@ -170,27 +165,23 @@
         }
     }
 
-    .credit-card-bottom-description {
-        @include fs-textSans(2);
-        p {
-            margin-bottom: 0;
-        }
+    .bottom-credit-card-description {
+      @include fs-textSans(2);
+      @include mq($from: tablet) {
+        display: none;
+      }
+    }
 
-        div {
-            display: block;
-
-            @include mq($from: tablet) {
-                display: none;
-            }
-        }
+    .credit-card-note__text {
+      margin-bottom: 0;
     }
 
     .credit-card-note {
-        display: none;
+      display: none;
 
-        @include mq($from: tablet) {
-            display: block;
-        }
+      @include mq($from: tablet) {
+        display: block;
+      }
     }
 
     .promo-code {
