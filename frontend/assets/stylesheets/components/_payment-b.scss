@@ -175,8 +175,8 @@
     .promo-code {
         button {
             background: transparent;
-            color: #005689;
-            border-color: #005689;
+            color: guss-colour(guardian-brand);
+            border-color: guss-colour(guardian-brand);
             background: svg-url('<svg width="30" height="30"><path fill="#005689" d="M22.8 14.6L15.2 7l-.7.7 5.5 6.6H6v1.5h14l-5.5 6.6.7.7 7.6-7.6v-.9"/></svg>') center right no-repeat;
             padding-right: 10px;
         }
