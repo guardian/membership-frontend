@@ -131,30 +131,18 @@
 
     .u-cf {
         label {
-            width: 50%;
-
-            @include mq($from: tablet) {
-                width: 49%;
-            }
-
             float: left;
+            padding-top: 0; 
+            width: 50%;
         }
 
         div {
             width: 50%;
-
-            @include mq($from: tablet) {
-                width: 51%;
-            }
-
             float: right;
+            margin-left: 0;
 
-            @include mq($from: tablet) {
-                margin-left: 0;
-            }
-
-            ul > li:nth-child(1) {
-                text-align: left;
+            li {
+                margin-right: 2px;
             }
 
             br {
