@@ -1,19 +1,16 @@
 package controllers
 
-import com.gu.i18n.CountryGroup.NewZealand
-import com.gu.i18n.{Country, CountryGroup}
+import com.gu.i18n.CountryGroup
 import com.typesafe.scalalogging.LazyLogging
 import model.ActiveCountryGroups
 import play.api.mvc._
+import utils.CountryGroupLang
 
 import scala.xml.Elem
 
-object SiteMap extends Controller with LazyLogging {
 
-  val countrySpecificGroups: Map[CountryGroup, Country] = (for {
-    countryGroup: CountryGroup <- ActiveCountryGroups.all
-    defaultCountry <- countryGroup.defaultCountry
-  } yield countryGroup -> defaultCountry).toMap
+
+object SiteMap extends Controller with LazyLogging {
 
   def sitemap() = CachedAction { implicit request =>
     val foo = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -28,7 +25,7 @@ object SiteMap extends Controller with LazyLogging {
   }
 
   def supporterPages()(implicit req: RequestHeader): Iterable[Elem] = for {
-    countryGroup <- countrySpecificGroups.keys
+    countryGroup <- CountryGroupLang.langByCountryGroup.keys
   } yield {
     <url>
       <loc>
@@ -40,11 +37,11 @@ object SiteMap extends Controller with LazyLogging {
   }
 
   def alternatePages()(implicit req: RequestHeader) = for {
-    (countrySpecificGroup, country) <- countrySpecificGroups
+    (countrySpecificGroup, lang) <- CountryGroupLang.langByCountryGroup
   } yield {
       <xhtml:link
       rel="alternate"
-      hreflang={s"en-${country.alpha2.toLowerCase}"}
+      hreflang={lang}
       href={routes.Info.supporterFor(countrySpecificGroup).absoluteURL(secure = true)}/>
   }
 }
