@@ -3,7 +3,11 @@
 @import com.gu.memsub.Current
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
-@(plans: MonthYearPlans[PaidMember], cardOpt: Option[com.gu.stripe.Stripe.Card] = None)
+@(
+    plans: MonthYearPlans[PaidMember],
+    cardOpt: Option[com.gu.stripe.Stripe.Card] = None,
+    variantA : Boolean = true
+)
 
 @import views.support.Pricing._
 @import views.support.{Asset, Dates, selectDates}
@@ -14,6 +18,7 @@
         <h2 class="fieldset__headline">Card details</h2>
         <div class="fieldset__note js-card-details-note">
             @fragments.form.securityNote()
+
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">First payment</h3>
                 <p>will be taken today under the name Guardian News & Media.</p>
@@ -46,6 +51,9 @@
                             <li class="u-align-middle o-inline-list__item">
                                 We accept
                             </li>
+                            @if(!variantA){
+                                <br>
+                            }
                             <li class="u-align-middle o-inline-list__item">
                                 <i class="sprite-card sprite-card--small sprite-card--visa"></i>
                             </li>
@@ -147,6 +155,28 @@
                     <div class="card-summary__digits">
                         •••• •••• •••• •••• @card.last4
                     </div>
+                </div>
+            </div>
+        }
+
+
+        @if(!variantA){
+            <div class="bottom-credit-card-description">
+                <div class="bottom-credit-card-description--note">
+                    <h3 class="credit-card-note__header">First payment</h3>
+                    <p class="credit-card-note__text">will be taken today under the name Guardian News & Media.</p>
+                </div>
+                <div class="bottom-credit-card-description--note js-ongoing-card-payments"">
+                    <script type="text/javascript">
+                        guardian.membership.checkoutForm.ongoingCardPayments = {
+                            annual: '@Dates.dayInMonthWithSuffixAndMonth()',
+                            monthly: '@Dates.dayInMonthWithSuffix()'
+                        };
+                    </script>
+                </div>
+                <div class="bottom-credit-card-description--note">
+                    <h3 class="credit-card-note__header">Cancellation</h3>
+                    <p class="credit-card-note__text">You can cancel your membership online through your profile page.</p>
                 </div>
             </div>
         }

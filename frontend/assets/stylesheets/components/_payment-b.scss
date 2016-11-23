@@ -1,0 +1,238 @@
+.skin-checkout-b {
+    padding: 0;
+    width: 100%;
+    z-index: 500;
+
+    background: #ffffff;
+
+    .text-link {
+        white-space: nowrap;
+    }
+
+    .form-header {
+    	margin-top: $gs-baseline/2;
+    }
+
+    .form-header,
+    .form-section__content {
+        float: none;
+        margin-right: $gs-gutter/2;
+        margin-left: $gs-gutter/2;
+        width: auto;
+        padding: 0;
+
+        @include mq($from: mobileLandscape) {
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @include mq($from: tablet) {
+            max-width: rem(gs-span(9));
+        }
+    }
+
+    .sub-heading {
+    	.form-group__title {
+    		margin-top: $gs-baseline/3;
+    		margin-bottom: 0;
+    	}
+    }
+
+    .form-group__title {
+        margin-top: 0;
+        margin-bottom: 2 * $gs-baseline;
+    }
+
+    .form-section__lead-in {
+        text-align: right;
+        margin-top: 2 * $gs-baseline;
+
+        @include mq($from: tablet) {
+            width: rem(gs-span(9));
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @include mq($from: desktop) {
+            width: auto;
+            position: static;
+            left: auto;
+        }
+    }
+
+    .form-section__progress-bar {
+        margin-top: 2.6666 * $gs-baseline;
+        padding-bottom: $gs-baseline;
+        border-bottom: solid guss-colour(news-support-1) 1px;
+    }
+
+    .form-section__name-detail {
+    	margin-top: 7px;
+
+    	.fieldset__heading {
+    		display: none;
+
+    		@include  mq($from: tablet) {
+    			display: table-cell;
+    		}
+    	}
+    }
+
+    .fieldset__headline {
+    	margin-bottom: 0;
+    }
+
+    .form-section__name-detail,
+    .form-section__promotion,
+    .form-section__billing  {
+    	.fieldset {
+    		border-top: 0;
+			}
+    }
+
+    .fieldset__fields {
+        padding: 2px 5px 12px;
+        vertical-align: top;
+
+        @include mq($from: tablet) {
+            padding-top: $gs-baseline/2;
+        }
+    }
+
+    .form-field__postcode{
+        width: rem(gs-span(2));
+    }
+
+    .form-group{
+        margin-bottom: 2 * $gs-baseline;
+        border-bottom: 0;
+    }
+
+    .form-group--little-padding {
+        margin-bottom: $gs-baseline;
+    }
+
+    .o-inline-list {
+        text-align: right;
+    }
+
+    .o-inline-list__item {
+        font-size: 13px;
+    }
+
+    .pseudo-radio {
+        border-radius: 10px;
+    }
+
+    input[type=radio]:checked ~ .pseudo-radio {
+        border-color: guss-colour(guardian-brand);
+    }
+
+    input[type=radio]:checked ~ .pseudo-radio:before  {
+        background-color: guss-colour(guardian-brand);
+    }
+
+    .u-cf {
+        label {
+            float: left;
+            padding-top: 0;
+            width: 50%;
+        }
+
+        div {
+            width: 50%;
+            float: right;
+            margin-left: 0;
+
+            li {
+                margin-right: 2px;
+            }
+
+            br {
+                @include mq($from: tablet) {
+                    display:none;
+                }
+            }
+        }
+    }
+
+    .bottom-credit-card-description {
+      @include fs-textSans(2);
+      @include mq($from: tablet) {
+        display: none;
+      }
+    }
+
+    .credit-card-note__text {
+      margin-bottom: 0;
+    }
+
+    .credit-card-note {
+      display: none;
+
+      @include mq($from: tablet) {
+        display: block;
+      }
+    }
+
+    .promo-code {
+        button {
+            background: transparent;
+            color: guss-colour(guardian-brand);
+            border-color: guss-colour(guardian-brand);
+            background: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="#005689" d="M22.8 14.6L15.2 7l-.7.7 5.5 6.6H6v1.5h14l-5.5 6.6.7.7 7.6-7.6v-.9"/></svg>') center right no-repeat;
+            padding-right: 10px;
+        }
+
+        button::after {
+            background: none;
+        }
+    }
+
+    .form-section__bottom-progress-bar {
+        @include mq($from: tablet) {
+            display: none;
+        }
+    }
+
+    .actions {
+        button {
+            @include fs-textSans(3);
+            background: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="-9 -9 36 36"><path fill="#FFF" d="M0 9.343h14.952L9.09 16.36l.76.76L18 8.95v-.78L9.85 0l-.76.762 5.862 7.016H0"/><path fill="#FFF" d="M9 27C-.924 27-9 18.925-9 9S-.925-9 9-9C18.927-9 27-.925 27 9S18.926 27 9 27zM9-8.056C-.403-8.056-8.055-.406-8.055 9c0 9.405 7.652 17.057 17.057 17.057 9.405 0 17.057-7.65 17.057-17.057C26.057-.405 18.405-8.056 9-8.056z" opacity=".3"/></svg>') center right no-repeat;
+            background-position: right 7px center;
+            background-color : guss-colour(guardian-brand);
+            border-color : guss-colour(guardian-brand);
+            border-radius: 650px;
+            font-size: 20px;
+            font-weight: normal;
+            height: 50px;
+            padding-top: $gs-baseline;
+            padding-left: $gs-gutter;
+            padding-right: 55px;
+
+            &:hover {
+                background-color: #003557;
+                border-color: #003557;
+            }
+
+            @include mq($from: tablet) {
+                margin-bottom: 2 * $gs-baseline;
+            }
+        }
+
+        span {
+            width: 90%;
+            display: block;
+            padding-top: 1px;    /*To vertically align the button's text*/
+            padding-bottom: 1px; /*To vertically align the button's text*/
+            padding-left: 4px;   /*To horizontally align the button's text*/
+            float: left;
+        }
+
+        button::after {
+            background: none;
+        }
+
+    }
+}

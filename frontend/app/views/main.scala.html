@@ -1,5 +1,6 @@
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
+@import utils.CountryGroupLang
 @(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None,
@@ -10,7 +11,7 @@
 @import configuration.{Config, Social}
 @import views.support.Asset
 <!DOCTYPE html>
-<html lang="en-GB" class="js-off id--signed-out">
+<html lang="@countryGroup.flatMap(CountryGroupLang.langByCountryGroup.get).getOrElse("en-gb")" class="js-off id--signed-out">
     <head>
         <meta charset="utf-8">
         <title>@if(!titleOverride.isEmpty){@titleOverride.get}else{@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }}</title>
