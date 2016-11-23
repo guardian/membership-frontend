@@ -1,6 +1,7 @@
 package configuration
 
 import com.gu.i18n.CountryGroup
+import com.gu.i18n.CountryGroup.{UK,US,Australia}
 import controllers.routes
 import com.netaporter.uri.dsl._
 
@@ -15,9 +16,9 @@ object Links {
 
   def membershipTerms(countryGroup: Option[CountryGroup] = None) = {
     countryGroup match {
-      case Some(cg) if cg.id.toLowerCase == "uk" => "https://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions"
-      case Some(cg) if cg.id.toLowerCase == "us" => "https://www.theguardian.com/info/2016/nov/08/guardian-members-us-terms-and-conditions"
-      case Some(cg) if cg.id.toLowerCase == "au" => "https://www.theguardian.com/info/2016/nov/08/guardian-members-australia-terms-and-conditions"
+      case Some(UK) => "https://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions"
+      case Some(US) => "https://www.theguardian.com/info/2016/nov/08/guardian-members-us-terms-and-conditions"
+      case Some(Australia)  => "https://www.theguardian.com/info/2016/nov/08/guardian-members-australia-terms-and-conditions"
       case _ => "https://www.theguardian.com/info/2016/nov/08/guardian-members-international-terms-and-conditions"
     }
   }
