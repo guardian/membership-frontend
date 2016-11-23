@@ -1,10 +1,12 @@
-@(returnUri: String)
+@(returnUri: String, inline: Boolean = false)
 
 @import configuration.Config.idWebAppSignOutThenInUrl
 
 <p class="text-note">
     You're signed in as <strong class="js-user-displayname"></strong>.
-</p>
-<p class="text-note">
+@if(!inline) {
+	</p>
+	<p class="text-note">	
+}
     <a href="@idWebAppSignOutThenInUrl(returnUri)" class="text-link">Sign out</a>
 </p>

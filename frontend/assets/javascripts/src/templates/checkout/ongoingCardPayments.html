@@ -1,5 +1,5 @@
 <h3 class="credit-card-note__header">Ongoing payments</h3>
-<p>
+<p class="credit-card-note__text">
 <% if (billingPeriods[billingPeriod].discount > 0 && billingPeriods[billingPeriod].discountDurationMonths > 0) { %>
     <% if (billingPeriod === 'annual') { %>
         Your card will be charged <%= billingPeriods[billingPeriod].generateChargeAmount() %> for your first year, then <%= billingPeriods[billingPeriod].getOriginalChargeAmount() %> every year thereafter.

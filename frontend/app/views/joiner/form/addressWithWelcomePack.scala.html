@@ -42,7 +42,7 @@
 
                 <form action="@routes.Joiner.joinStaff" method="POST" id="payment-form" class="form js-form" novalidate>
                     @CSRF.formField
-                    @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName)
+                    @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "Name")
                     @fragments.form.addressDetail(
                         countriesWithCurrencies = CountryWithCurrency.withCurrency(GBP),
                         heading = "Delivery address",

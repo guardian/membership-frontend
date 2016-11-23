@@ -14,16 +14,16 @@
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
 @(plans: MonthYearPlans[PaidMember],
-  countriesWithCurrencies: List[CountryWithCurrency],
-  idUser: IdentityUser,
-  pageInfo: PageInfo,
-  trackingPromoCode: Option[PromoCode],
-  promoCodeToDisplay: Option[PromoCode]
+    countriesWithCurrencies: List[CountryWithCurrency],
+    idUser: IdentityUser,
+    pageInfo: PageInfo,
+    trackingPromoCode: Option[PromoCode],
+    promoCodeToDisplay: Option[PromoCode]
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
-    <main class="page-content l-constrained">
+    <main class="page-content skin-checkout-b">
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
@@ -34,31 +34,40 @@
             </section>
 
             <section class="form-section form-section--no-padding">
+                <div class="form-section__content form-section__progress-bar">
+                    @fragments.form.progressBar()
+                </div>
+            </section>
+
+            <section class="form-section form-section--no-padding">
                 <div class="form-section__content">
                 @fragments.form.errorMessageDisplay()
                 </div>
             </section>
 
-            <section class="form-section">
-
-                <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = false)
-                </div>
+            <section class="form-section form-section--no-padding">
 
                 <div class="form-section__content">
                     @if(plans.tier != Supporter()){
-                    <div class="form-group">
-                        @fragments.form.benefitsFieldset(plans.tier.benefits)
-                        @fragments.form.featureChoiceFieldset(plans.tier)
-                    </div>}
-                    <div class="form-group">
-                        <h2 class="form-group__title">Address</h2>
+                        <div class="form-group">
+                          @fragments.form.benefitsFieldset(plans.tier.benefits)
+                          @fragments.form.featureChoiceFieldset(plans.tier)
+                        </div>}
 
-                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "Name")
+                    <div class="form-group sub-heading">
+                        <h2 class="form-group__title">Name and address</h2>
+
+                        <div class="form-section__lead-in sign-in-required">
+                            @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = true)
+                        </div>
+
+                        <div class="form-section__name-detail">
+                            @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
+                        </div>
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
-                            note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
+                            note = "We need your address to send you .",
                             formType = "deliveryAddress",
                             addressRequired = true,
                             address1 = idUser.privateFields.address1,
@@ -74,12 +83,13 @@
                         }
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group form-section__promotion">
                         <h2 class="form-group__title">Promotion</h2>
                         @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group form-group--little-padding">
+                    	<div class="form-section__billing">
                         <h2 class="form-group__title">Billing</h2>
                         @fragments.form.billingAddress("Billing address")
                         @fragments.form.addressDetail(
@@ -92,14 +102,21 @@
                             postcode = idUser.privateFields.billingPostcode,
                             county = idUser.privateFields.billingAddress4
                         )
+                      	</div>
                         @fragments.form.paymentOptions(plans)
-                        @fragments.form.cardDetail(plans)
+                        @fragments.form.cardDetail(plans, variantA = false)
                     </div>
-
+                    @fragments.form.terms()
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans))
+                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false)
                 </div>
             </section>
         </form>
+
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content form-section__progress-bar form-section__bottom-progress-bar">
+            @fragments.form.progressBar()
+            </div>
+        </section>
     </main>
 }
