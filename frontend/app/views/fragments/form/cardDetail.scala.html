@@ -6,7 +6,7 @@
 @(
     plans: MonthYearPlans[PaidMember],
     cardOpt: Option[com.gu.stripe.Stripe.Card] = None,
-    aDistribution : Boolean = true
+    variantA : Boolean = true
 )
 
 @import views.support.Pricing._
@@ -51,7 +51,7 @@
                             <li class="u-align-middle o-inline-list__item">
                                 We accept
                             </li>
-                            @if(!aDistribution){
+                            @if(!variantA){
                                 <br>
                             }
                             <li class="u-align-middle o-inline-list__item">
@@ -160,7 +160,7 @@
         }
 
 
-        @if(!aDistribution){
+        @if(!variantA){
             <div class="bottom-credit-card-description">
                 <div class="bottom-credit-card-description--note">
                     <h3 class="credit-card-note__header">First payment</h3>
