@@ -57,7 +57,7 @@ object Videos {
   )
 
   val scottTrustExplained = Video(
-    srcUrl="//www.youtube.com/embed/jn4wAy1Xs5M?enablejsapi=1&wmode=transparent",
+    srcUrl="//www.youtube.com/embed/jn4wAy1Xs5M?enablejsapi=1&wmode=transparent&rel=0",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
