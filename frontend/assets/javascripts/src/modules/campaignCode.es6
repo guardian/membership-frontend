@@ -14,7 +14,7 @@ function recordCampaign () {
 	let campaignCode = urlParams.get('INTCMP');
 
 	if (campaignCode) {
-		setCookie('mem_campaigncode', campaignCode);
+		setCookie('mem_campaign_code', campaignCode);
 	}
 
 }
