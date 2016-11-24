@@ -227,14 +227,15 @@ object Joiner extends Controller with ActivityTracking
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
+    val campaignCode = CampaignCode.fromRequest
 
     Timing.record(salesforceService.metrics, "createMember") {
-      memberService.createMember(request.user, formData, idRequest, eventId, CampaignCode.fromRequest, tier).map {
+      memberService.createMember(request.user, formData, idRequest, eventId, campaignCode, tier).map {
         case (sfContactId, zuoraSubName) =>
           logger.info(s"User ${request.user.id} successfully became ${tier.name} $zuoraSubName.")
           salesforceService.metrics.putSignUp(tier)
-          trackRegistration(formData, tier, sfContactId, request.user, CampaignCode.fromRequest)
-          trackRegistrationViaEvent(sfContactId, request.user, eventId, CampaignCode.fromRequest, tier)
+          trackRegistration(formData, tier, sfContactId, request.user, campaignCode)
+          trackRegistrationViaEvent(sfContactId, request.user, eventId, campaignCode, tier)
           onSuccess
       }.recover { // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
