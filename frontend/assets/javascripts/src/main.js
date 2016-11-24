@@ -26,7 +26,8 @@ require([
     'src/modules/metrics',
     'src/modules/patterns',
     'src/modules/paidToPaid',
-    'src/modules/memstatus'
+    'src/modules/memstatus',
+    'src/modules/campaignCode'
 ], function(
     ajax,
     raven,
@@ -55,7 +56,8 @@ require([
     metrics,
     patterns,
     paidToPaid,
-    memstatus
+    memstatus,
+    campaignCode
 ) {
     'use strict';
 
@@ -99,8 +101,10 @@ require([
     // Pattern library
     patterns.init();
 
-
     paidToPaid.init();
 
     memstatus.init();
+
+    campaignCode.init();
+
 });
