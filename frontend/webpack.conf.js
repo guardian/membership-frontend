@@ -15,7 +15,8 @@ module.exports = function(debug) { return {
             'lazySizes': 'lazysizes/lazysizes',
             'gumshoe': 'gumshoe/dist/js/gumshoe',
             'smoothScroll': 'smooth-scroll/dist/js/smooth-scroll',
-            'ajax': 'src/utils/ajax'
+            'ajax': 'src/utils/ajax',
+            'URLSearchParams': 'url-search-params'
         }
     },
 

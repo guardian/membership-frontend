@@ -62,6 +62,7 @@
     "smooth-scroll": "cferdinandi/smooth-scroll",
     "text-loader": "0.0.1",
     "time-grunt": "^1.2.1",
+    "url-search-params": "^0.6.1",
     "vinyl-fs": "2.2.1",
     "webpack": "^1.12.15",
     "webpack-dev-server": "^1.14.1",

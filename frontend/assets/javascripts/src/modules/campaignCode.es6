@@ -5,6 +5,7 @@
  */
 
 import { setCookie } from 'src/utils/cookie';
+import URLSearchParams from 'URLSearchParams';
 
 // Checks the querystring for INTCMP (internal campaign) and records in cookie.
 function recordCampaign () {
