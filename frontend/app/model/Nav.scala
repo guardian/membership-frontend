@@ -1,5 +1,6 @@
 package model
 
+import com.gu.i18n.CountryGroup
 import configuration.Links
 import controllers.routes
 
@@ -30,11 +31,11 @@ object Nav {
     NavItem("feedback", "/feedback", "Feedback")
   )
 
-  val footerNavigation = List(
+  def footerNavigation(countryGroup: Option[CountryGroup] = None) = List(
     NavItem("help", routes.Info.help().toString, "Help"),
     NavItem("contact", Links.membershipContact, "Contact us"),
     NavItem("feedback", routes.Info.feedback().toString, "Feedback"),
-    NavItem("terms", Links.membershipTerms, "Terms & conditions"),
+    NavItem("terms", Links.membershipTerms(countryGroup), "Terms & conditions"),
     NavItem("privacy", Links.guardianPrivacyPolicy, "Privacy policy"),
     NavItem("cookies", Links.guardianCookiePolicy, "Cookie policy")
   )

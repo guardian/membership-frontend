@@ -10,11 +10,14 @@
 @import views.support.TierPlans
 @import views.support.FreePlan
 @import views.support.PaidPlans
+@import com.gu.i18n.CountryGroup
 @(plans: TierPlans,
   membershipTermsAndConditions: Boolean = true,
-  isSlim: Boolean = false)
+  isSlim: Boolean = false,
+  countryGroup: Option[CountryGroup] = None)
 
 @import configuration.Links
+@import configuration.CopyConfig.usLegalTerms
 
 @paidButton(price: Price, period: BillingPeriod) = {
     <span class="is-hidden" data-currency="@price.currency" data-billing-period="@period.adjective">Pay @price.pretty</span>
@@ -26,7 +29,7 @@
 
         @if(membershipTermsAndConditions){
             <p class="ts-and-cs">By joining Guardian Members, you are agreeing to our
-                <a href="@Links.membershipTerms" class="text-link" target="_blank">Terms and Conditions</a> and
+                <a href="@Links.membershipTerms(countryGroup)" class="text-link" target="_blank">Terms and Conditions</a> and
                 <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
             </p>
         }
@@ -44,3 +47,11 @@
         </div>
     </div>
 </fieldset>
+
+@countryGroup.map{ cg =>
+    @if(Seq("us","um","vi").contains(cg.id.toLowerCase)) {
+        <div class="us-legal">@usLegalTerms</div>
+    } else {
+        <div class="us-legal is-hidden">@usLegalTerms</div>
+    }
+}

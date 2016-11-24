@@ -12,13 +12,15 @@
 @import views.support.MembershipCompat._
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.i18n.CountryGroup
 
 @(plans: MonthYearPlans[PaidMember],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,
     trackingPromoCode: Option[PromoCode],
-    promoCodeToDisplay: Option[PromoCode]
+    promoCodeToDisplay: Option[PromoCode],
+    countryGroup: Option[CountryGroup]
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
@@ -106,9 +108,9 @@
                         @fragments.form.paymentOptions(plans)
                         @fragments.form.cardDetail(plans, variantA = false)
                     </div>
-                    @fragments.form.terms()
+                    @fragments.form.terms(countryGroup)
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false)
+                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup)
                 </div>
             </section>
         </form>

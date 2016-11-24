@@ -1,4 +1,12 @@
-define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, validationDisplay) {
+define([
+    '$',
+    'bean',
+    'src/modules/form/validation/display'
+], function (
+    $,
+    bean,
+    validationDisplay
+) {
     'use strict';
 
     var CURRENCY_ATTR = 'data-currency';
@@ -22,6 +30,61 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     function renderPrices() {
         hideBillingAddress();
         selectDeliveryCountry();
+    }
+
+    function renderTermsAndConditions() {
+        var usLegalSelector = $('.us-legal');
+        var territory = territoryFromCountry(checkoutForm.billingCountry)
+        if (usLegalSelector[0]) {
+            switch (territory) {
+                case 'US':
+                    usLegalSelector[0].classList.remove('is-hidden');
+                    break;
+                default :
+                    usLegalSelector[0].classList.add('is-hidden');
+            }
+        }
+
+        localiseTermsAndConditionsLinks(territory);
+
+    }
+
+    function localiseTermsAndConditionsLinks(territory) {
+        var formTermsLinkSelector = $('.ts-and-cs a'),
+            footerTermsLinkSelector = $('#qa-footer-link-terms'),
+            termsLinks = {
+                'UK': 'https://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions',
+                'US': 'https://www.theguardian.com/info/2016/nov/08/guardian-members-us-terms-and-conditions',
+                'AU': 'https://www.theguardian.com/info/2016/nov/08/guardian-members-australia-terms-and-conditions',
+                'INT': 'https://www.theguardian.com/info/2016/nov/08/guardian-members-international-terms-and-conditions'
+            };
+
+        if (formTermsLinkSelector) {
+            for (var i = 0; i < formTermsLinkSelector.length; i++) {
+                var elText = formTermsLinkSelector[i].text.toLowerCase();
+                if (elText === 'terms & conditions' || elText === 'terms and conditions') {
+                    formTermsLinkSelector[i].href = termsLinks[territory];
+                }
+            }
+        }
+        if (footerTermsLinkSelector[0]) {
+            footerTermsLinkSelector[0].href = termsLinks[territory];
+        }
+    }
+
+    function territoryFromCountry(country) {
+        switch (country) {
+            case 'GB':
+                return 'UK';
+            case 'AU':
+                return country;
+            case 'US':
+            case 'UM':
+            case 'VI':
+                return 'US';
+            default:
+                return 'INT';
+        }
     }
 
     function hasParent(elem) {
@@ -101,6 +164,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
             checkoutForm.selectedBillingCountry = selectedCountry;
             checkoutForm.billingCountry = selectedCountry;
 
+            renderTermsAndConditions();
             renderPrices();
         });
 
