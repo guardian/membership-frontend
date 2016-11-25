@@ -1,4 +1,6 @@
 package configuration
+import actions.CheckoutFlowVariant.A
+import actions.{CheckoutFlowVariant, CheckoutFlowVariant$}
 import com.gu.config._
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
@@ -47,8 +49,13 @@ object Config {
   def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
-  def idWebAppRegisterUrl(uri: String): String =
+  def idWebAppRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String ={
+
+    val idMember = "clientId" -> abTestVariant.identitySkin
+
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
+  }
+
 
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) & idSkipConfirmation & idMember
