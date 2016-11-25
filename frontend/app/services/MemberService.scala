@@ -73,11 +73,8 @@ object MemberService {
     }
   }
 
-  def getRatePlanIdsToRemove(current: Seq[SubIds],
-                             planFinder: ProductRatePlanId => Boolean,
-                             discounts: DiscountRatePlanIds): Seq[RatePlanId] = current.collect {
+  def getDiscountRatePlanIdsToRemove(current: Seq[SubIds], discounts: DiscountRatePlanIds): Seq[RatePlanId] = current.collect {
     case discount if discount.productRatePlanId == discounts.percentageDiscount.planId => discount.ratePlanId
-    case plan if planFinder(plan.productRatePlanId) => plan.ratePlanId
   }
 }
 
@@ -436,7 +433,7 @@ class MemberService(identityService: IdentityService,
   }
 
   /**
-    * Construct an Amend command
+    * Construct an Amend command (used for subscription upgrades)
     */
   private def amend(sub: Subscription[SubscriptionPlan.Member], planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[ValidPromotion[Upgrades]])
                    (implicit r: IdentityRequest, applicator: PromotionApplicator[Upgrades, Amend]): Future[Amend] = {
@@ -450,10 +447,14 @@ class MemberService(identityService: IdentityService,
 
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.id.get, None, fs.map(_.get)))
+    val currentRatePlan = sub.plan.id
+    logger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: ${currentRatePlan}")
 
     (newRatePlan |@| ids) { case (newPln, restSub) =>
-
-      val plansToRemove = getRatePlanIdsToRemove(restSub, catalog.find(_).isDefined, discountIds)
+      val discountsToRemove = getDiscountRatePlanIdsToRemove(restSub, discountIds)
+      if (!discountsToRemove.isEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: ${discountsToRemove}")
+      val plansToRemove = currentRatePlan +: discountsToRemove
+      if (plansToRemove.isEmpty) logger.error(s"plansToRemove is empty - this could lead to overlapping rate plans on the Zuora sub: ${sub.id}")
       val upgrade = Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), sub.promoCode)
       code.fold(upgrade)(applicator(_, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(upgrade))
     }

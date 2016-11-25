@@ -16,6 +16,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
+import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
@@ -37,6 +38,7 @@ import scalaz.{EitherT, \/}
 import views.support.MembershipCompat._
 
 object TierController extends Controller with ActivityTracking
+                                         with LazyLogging
                                          with CatalogProvider
                                          with SubscriptionServiceProvider
                                          with MemberServiceProvider
@@ -203,10 +205,12 @@ object TierController extends Controller with ActivityTracking
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val identityRequest = IdentityRequest(request)
+    logger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, CampaignCode.fromRequest)
       handleErrors(upgrade) {
+        logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
     }
@@ -221,6 +225,7 @@ object TierController extends Controller with ActivityTracking
       def doUpgrade(): Future[Result] = {
         val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, CampaignCode.fromRequest)
         handleErrors(upgrade) {
+          logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
           Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
