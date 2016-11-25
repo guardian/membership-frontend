@@ -5,14 +5,16 @@ define([
     'src/modules/analytics/ophan',
     'src/modules/analytics/krux',
     'src/modules/analytics/facebook',
-    'src/modules/analytics/uet'
+    'src/modules/analytics/uet',
+    'src/modules/analytics/campaignCode'
 ], function (
     cookie,
     ga,
     ophan,
     krux,
     facebook,
-    uet
+    uet,
+    campaignCode
 ) {
     'use strict';
 
@@ -36,6 +38,7 @@ define([
         ophan.init();
         ophan.loaded.then(ga.init,ga.init);
         uet.init();
+        campaignCode.init();
     }
 
     function setupThirdParties() {
