@@ -1,5 +1,6 @@
 package controllers
 
+import abtests.CheckoutFlowVariant
 import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
@@ -29,10 +30,11 @@ import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.{CampaignCode, TierChangeCookies}
 import views.support
+import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.TierPlans._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
-import views.support.MembershipCompat._
+
 import scala.concurrent.Future
 import scala.util.Failure
 import scalaz.OptionT
@@ -109,7 +111,7 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode], skinOpt: Option[String]) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog
 
@@ -137,22 +139,26 @@ object Joiner extends Controller with ActivityTracking
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
-      if (skinOpt.contains("membersB")) Ok(views.html.joiner.form.paymentB(
-        plans,
-        countryCurrencyWhitelist,
-        identityUser,
-        pageInfo,
-        trackingPromoCode = validTrackingPromoCode,
-        promoCodeToDisplay = validDisplayablePromoCode,
-        Some(countryGroup)))
-      else Ok(views.html.joiner.form.payment(
-        plans,
-        countryCurrencyWhitelist,
-        identityUser,
-        pageInfo,
-        trackingPromoCode = validTrackingPromoCode,
-        promoCodeToDisplay = validDisplayablePromoCode,
-        Some(countryGroup)))
+      val flowSelected = CheckoutFlowVariant.getFlowVariantFromRequestCookie(request).getOrElse(CheckoutFlowVariant.A)
+
+      Ok(flowSelected match {
+        case CheckoutFlowVariant.A => views.html.joiner.form.payment(
+          plans,
+          countryCurrencyWhitelist,
+          identityUser,
+          pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode,
+          Some(countryGroup))
+        case CheckoutFlowVariant.B => views.html.joiner.form.paymentB(
+          plans,
+          countryCurrencyWhitelist,
+          identityUser,
+          pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode,
+          Some(countryGroup))
+      }).withCookies(Cookie(CheckoutFlowVariant.cookieName, flowSelected.testId))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 

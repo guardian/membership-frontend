@@ -1,4 +1,7 @@
 package configuration
+import abtests.CheckoutFlowVariant
+import abtests.CheckoutFlowVariant.A
+import com.getsentry.raven.dsn.Dsn
 import com.gu.config._
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
@@ -7,7 +10,6 @@ import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
-import com.getsentry.raven.dsn.Dsn
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -47,8 +49,8 @@ object Config {
   def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
-  def idWebAppRegisterUrl(uri: String): String =
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
+  def idWebAppRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String =
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & ("clientId" -> abTestVariant.identitySkin)
 
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) & idSkipConfirmation & idMember
