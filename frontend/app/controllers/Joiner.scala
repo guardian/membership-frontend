@@ -1,5 +1,6 @@
 package controllers
 
+import abtests.CheckoutFlowVariant
 import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._

@@ -1,6 +1,7 @@
 package configuration
-import actions.CheckoutFlowVariant.A
-import actions.{CheckoutFlowVariant, CheckoutFlowVariant$}
+import abtests.CheckoutFlowVariant
+import abtests.CheckoutFlowVariant.A
+import com.getsentry.raven.dsn.Dsn
 import com.gu.config._
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
@@ -9,7 +10,6 @@ import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
-import com.getsentry.raven.dsn.Dsn
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
