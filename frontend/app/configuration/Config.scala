@@ -49,14 +49,9 @@ object Config {
   def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
-  def idWebAppRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String ={
-
-    val idMember = "clientId" -> abTestVariant.identitySkin
-
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
-  }
-
-
+  def idWebAppRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String =
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & "clientId" -> abTestVariant.identitySkin
+  
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) & idSkipConfirmation & idMember
 
