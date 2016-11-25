@@ -39,7 +39,7 @@ class MemberServiceTest extends Specification {
     }
   }
 
-  "getRatePlansToRemove" should {
+  "getDiscountRatePlansToRemove" should {
 
     val partnerPrpId = ProductRatePlanId("partner")
     val discountPrpId = ProductRatePlanId("discount")
@@ -54,8 +54,8 @@ class MemberServiceTest extends Specification {
       SubIds(RatePlanId("id3"), manualPrpId)
     )
 
-    "Remove any rate plans in the product catalog with discounts, leaving off any others" in {
-      MemberService.getRatePlanIdsToRemove(current, _ == partnerPrpId, discounts).map(_.get) mustEqual Seq("id1", "id2")
+    "Remove any discount rate plan ids" in {
+      MemberService.getDiscountRatePlanIdsToRemove(current, discounts).map(_.get) mustEqual Seq("id2")
     }
   }
 }
