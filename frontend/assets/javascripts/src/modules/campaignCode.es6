@@ -20,7 +20,7 @@ function recordCampaign () {
 		campaignCode = urlParams.get('INTCMP');
 
 	} catch (ex) {
-		console.log('Failed to retrieve campaign code: ' + ex);
+		console.log('Failed to retrieve campaign code:', ex.message);
 	} finally {
 
 		if (campaignCode) {
