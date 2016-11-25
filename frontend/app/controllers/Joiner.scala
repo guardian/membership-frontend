@@ -148,7 +148,7 @@ object Joiner extends Controller with ActivityTracking
           pageInfo,
           trackingPromoCode = validTrackingPromoCode,
           promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup)))
+          Some(countryGroup))
         case CheckoutFlowVariant.B => views.html.joiner.form.paymentB(
           plans,
           countryCurrencyWhitelist,
@@ -156,7 +156,7 @@ object Joiner extends Controller with ActivityTracking
           pageInfo,
           trackingPromoCode = validTrackingPromoCode,
           promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup)))
+          Some(countryGroup))
       }).withCookies(Cookie(CheckoutFlowVariant.cookieName, flowSelected.testId))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
