@@ -10,11 +10,23 @@ import URLSearchParams from 'URLSearchParams';
 // Checks the querystring for INTCMP (internal campaign) and records in cookie.
 function recordCampaign () {
 
-	let urlParams = new URLSearchParams(window.location.search);
-	let campaignCode = urlParams.get('INTCMP');
+	let campaignCode;
 
-	if (campaignCode) {
-		setCookie('mem_campaign_code', campaignCode);
+	// Don't want JS to break if there is a problem reading query params.
+	// Just don't set the cookie if this happens.
+	try {
+
+		let urlParams = new URLSearchParams(window.location.search);
+		campaignCode = urlParams.get('INTCMP');
+
+	} catch (ex) {
+		console.log('Failed to retrieve campaign code: ' + ex);
+	} finally {
+
+		if (campaignCode) {
+			setCookie('mem_campaign_code', campaignCode);
+		}
+
 	}
 
 }
