@@ -30,13 +30,13 @@ import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.{CampaignCode, TierChangeCookies}
 import views.support
+import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.TierPlans._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
-import views.support.MembershipCompat._
 
 import scala.concurrent.Future
-import scala.util.{Failure, Random}
+import scala.util.Failure
 import scalaz.OptionT
 import scalaz.std.scalaFuture._
 
