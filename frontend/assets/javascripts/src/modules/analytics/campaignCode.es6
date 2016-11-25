@@ -16,7 +16,7 @@ function recordCampaign () {
 	// Just don't set the cookie if this happens.
 	try {
 
-		let urlParams = new URLSearchParams(window.location.search);
+		let urlParams = new URLSearchParams(window.location.search.slice(1));
 		campaignCode = urlParams.get('INTCMP');
 
 	} catch (ex) {
