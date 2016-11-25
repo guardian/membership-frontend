@@ -1,18 +1,36 @@
 @(currentTier: com.gu.salesforce.Tier, targetTier: com.gu.salesforce.Tier)
-
+@import views.support.Asset
 @import configuration.Email
 
 @main("Unavailable Tier") {
 
     <main role="main" class="page-content l-constrained">
+        @fragments.page.pageHeader(s"Thank you for your interest in becoming a ${targetTier.name} of the Guardian", Some(s"You're currently a ${currentTier.name}, we can't upgrade you to a ${targetTier.name}"))
 
-        @fragments.page.pageHeader("Unavailable Tier", Some("Unable to change from " + currentTier.name + " to " + targetTier.name))
+        <section class="page-section">
+            <div class="page-section__content">
+                <p>
+                    At the moment the @targetTier.name benefits can only be accessed in the UK, we are working hard to develop benefits relevant to our readers across the globe.
+                </p>
 
-        <div class="page-section">
-            <div class="page-section__content copy">
-                <p>Sorry you are currently unable to change your tier from <strong>@currentTier.name</strong> to <strong>@targetTier.name</strong>. Please contact <a href="mailto:@Email.membershipSupport">@Email.membershipSupport</a> for assistance.</p>
+                <p class="text-lead">If you're looking for a way to make a greater contribution to the Guardian right now,
+                    the best way you can help us is here:</p>
+                <a class="elevated-button action action--no-icon"
+                href="https://contribute.theguardian.com/?INTCMP=mem_tier_change_unavailable">
+                    <div class="elevated-button__text">
+                        Make a one-off Contribution
+                    </div>
+                    <div class="elevated-button__icon">
+                        <div class="elevated-button__icon__border">
+                        @for(icon <- Asset.inlineSvg("arrow-right-button")) {
+                            @icon
+                        }
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
+
+        </section>
 
     </main>
 }
