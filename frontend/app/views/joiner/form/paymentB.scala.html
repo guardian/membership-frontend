@@ -13,6 +13,7 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.i18n.CountryGroup
+@import abtests.CheckoutFlowVariant
 
 @(plans: MonthYearPlans[PaidMember],
     countriesWithCurrencies: List[CountryWithCurrency],
@@ -60,7 +61,7 @@
                         <h2 class="form-group__title">Name and address</h2>
 
                         <div class="form-section__lead-in sign-in-required">
-                            @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = true)
+                            @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = true, switchUser = true, CheckoutFlowVariant.B)
                         </div>
 
                         <div class="form-section__name-detail">

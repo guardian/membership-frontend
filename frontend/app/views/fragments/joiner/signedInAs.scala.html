@@ -1,4 +1,6 @@
-@(returnUri: String, inline: Boolean = false)
+@import abtests.CheckoutFlowVariant
+
+@(returnUri: String, inline: Boolean = false, switchUser: Boolean = false, flowVariant: CheckoutFlowVariant = CheckoutFlowVariant.A)
 
 @import configuration.Config.idWebAppSignOutThenInUrl
 
@@ -6,7 +8,7 @@
     You're signed in as <strong class="js-user-displayname"></strong>.
 @if(!inline) {
 	</p>
-	<p class="text-note">	
+	<p class="text-note">
 }
-    <a href="@idWebAppSignOutThenInUrl(returnUri)" class="text-link">Sign out</a>
+    <a href="@idWebAppSignOutThenInUrl(returnUri, switchUser, flowVariant)" class="text-link">Sign out</a>
 </p>

@@ -52,8 +52,13 @@ object Config {
   def idWebAppRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & ("clientId" -> abTestVariant.identitySkin)
 
-  def idWebAppSignOutThenInUrl(uri: String): String =
-    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) & idSkipConfirmation & idMember
+  def idWebAppSignOutThenInUrl(uri: String, switchUser: Boolean, abTestVariant: CheckoutFlowVariant = A): String = {
+    if (switchUser) {
+      (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppRegisterUrl(uri, abTestVariant)) & idSkipConfirmation & idMember
+    } else {
+      (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) & idSkipConfirmation & idMember
+    }
+  }
 
   def idWebAppProfileUrl =
     idWebAppUrl / "membership"/ "edit"
