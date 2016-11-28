@@ -1,13 +1,2 @@
-@(event: model.RichEvent.RichEvent, order: model.Eventbrite.EBOrder)
-
-<script type="text/javascript">
-    if (guardian.analyticsEnabled) {
-        require(['js!omniture'], function () {
-            s.products = 'event;@event.id;';
-            s.events = 'order';
-            s.eVar19 = @order.ticketCount;
-        });
-    }
-</script>
 @fragments.analytics.googleEventPurchaseConversion()
 @fragments.analytics.facebookEventTicketSale()

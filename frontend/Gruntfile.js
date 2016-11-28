@@ -155,12 +155,6 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
-            omniture: {
-                src: '<%= dirs.assets.javascripts %>/lib/analytics/omniture.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/omniture/',
-                expand: true,
-                flatten: true
-            },
             uet: {
                 src: '<%= dirs.assets.javascripts %>/lib/analytics/uet.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/uet/',
@@ -389,7 +383,6 @@ module.exports = function (grunt) {
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
-            'copy:omniture',
             'copy:uet'
         ]);
     });

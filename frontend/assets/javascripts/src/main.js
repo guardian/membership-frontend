@@ -99,8 +99,8 @@ require([
     // Pattern library
     patterns.init();
 
-
     paidToPaid.init();
 
     memstatus.init();
+
 });
