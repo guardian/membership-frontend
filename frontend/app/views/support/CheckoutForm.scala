@@ -1,5 +1,6 @@
 package views.support
 
+import com.gu.i18n.Currency.GBP
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod
 import com.typesafe.scalalogging.LazyLogging

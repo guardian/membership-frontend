@@ -222,6 +222,12 @@ object TierController extends Controller with ActivityTracking
             s"That password does not match our records. Please try again.")
       }
 
+      val noEmailMessage: Future[Result] = Future {
+        Redirect(routes.TierController.upgrade(target,form.promoCode))
+          .flashing("error" ->
+            s"Your email address is not on our system, please call customer services to upgrade")
+      }
+
       def doUpgrade(): Future[Result] = {
         val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, CampaignCode.fromRequest)
         handleErrors(upgrade) {
@@ -230,10 +236,12 @@ object TierController extends Controller with ActivityTracking
         }
       }
 
-      for {
-        status <- IdentityService(IdentityApi).reauthUser(paidMember.contact.email, form.password, identityRequest)
-        result <- if (status == 200) doUpgrade() else reauthFailedMessage
-      } yield result
+      paidMember.contact.email.map { email =>
+        for {
+          status <- IdentityService(IdentityApi).reauthUser(email, form.password, identityRequest)
+          result <- if (status == 200) doUpgrade() else reauthFailedMessage
+        } yield result
+      }.getOrElse(noEmailMessage)
 
     }
 

@@ -1,12 +1,12 @@
 package views.support
 
+import com.gu.i18n.Currency._
 import com.gu.i18n._
 import com.gu.identity.play.{PrivateFields, StatusFields}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub._
 import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans, PaidCharge}
 import org.specs2.mutable.Specification
-import views.support.TierPlans._
 
 
 class CheckoutFormTest extends Specification {
