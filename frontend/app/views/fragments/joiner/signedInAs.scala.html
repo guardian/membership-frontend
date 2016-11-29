@@ -2,7 +2,7 @@
 
 @(returnUri: String, inline: Boolean = false, switchUser: Boolean = false, flowVariant: CheckoutFlowVariant = CheckoutFlowVariant.A)
 
-@import configuration.Config.idWebAppSignOutThenInUrl
+@import configuration.Config.{idWebAppSignOutThenInUrl,idWebAppSignOutThenRegisterUrl}
 
 <p class="text-note">
     You're signed in as <strong class="js-user-displayname"></strong>.
@@ -10,5 +10,9 @@
 	</p>
 	<p class="text-note">
 }
-    <a href="@idWebAppSignOutThenInUrl(returnUri, switchUser, flowVariant)" class="text-link">Sign out</a>
+    @if(switchUser) {
+        <a href="@idWebAppSignOutThenRegisterUrl(returnUri, flowVariant)" class="text-link">Sign out</a>
+    } else {
+        <a href="@idWebAppSignOutThenInUrl(returnUri)" class="text-link">Sign out</a>
+    }
 </p>

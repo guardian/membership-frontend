@@ -46,7 +46,7 @@
             <section class="form-section">
 
                 <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = false, switchUser = true, CheckoutFlowVariant.A)
+                    @fragments.joiner.signedInAs(request.uri, inline = false, switchUser = true, CheckoutFlowVariant.A)
                 </div>
 
                 <div class="form-section__content">
