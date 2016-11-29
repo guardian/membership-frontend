@@ -78,10 +78,12 @@
                         }
                     </div>
 
-                    <div class="form-group">
-                        <h2 class="form-group__title">Promotion</h2>
-                        @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
-                    </div>
+                    @if(plans.tier != Supporter()){
+                        <div class="form-group">
+                            <h2 class="form-group__title">Promotion</h2>
+                            @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
+                        </div>
+                    }
 
                     <div class="form-group">
                         <h2 class="form-group__title">Billing</h2>
