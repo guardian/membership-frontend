@@ -1,8 +1,8 @@
 @import abtests.CheckoutFlowVariant
 
-@(returnUri: String, inline: Boolean = false, switchUser: Boolean = false, flowVariant: CheckoutFlowVariant = CheckoutFlowVariant.A)
+@(returnUri: String, inline: Boolean = false, flowVariant: CheckoutFlowVariant = CheckoutFlowVariant.A)
 
-@import configuration.Config.{idWebAppSignOutThenInUrl,idWebAppSignOutThenRegisterUrl}
+@import configuration.Config.idWebAppSignOutThenRegisterUrl
 
 <p class="text-note">
     You're signed in as <strong class="js-user-displayname"></strong>.
@@ -10,9 +10,5 @@
 	</p>
 	<p class="text-note">
 }
-    @if(switchUser) {
-        <a href="@idWebAppSignOutThenRegisterUrl(returnUri, flowVariant)" class="text-link">Sign out</a>
-    } else {
-        <a href="@idWebAppSignOutThenInUrl(returnUri)" class="text-link">Sign out</a>
-    }
+    <a href="@idWebAppSignOutThenRegisterUrl(returnUri, flowVariant)" class="text-link">Sign out</a>
 </p>
