@@ -1,10 +1,10 @@
 package views.support
 
-import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
+import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.memsub.BillingPeriod
 import configuration.{Config, CopyConfig}
-import model.{EventSchema, Nav}
 import model.Nav.NavItem
+import model.{EventSchema, Nav}
 import play.api.libs.json._
 
 case class PageInfo(title: String = CopyConfig.copyTitleDefault,

@@ -1,6 +1,7 @@
 package controllers
 
-import com.gu.i18n._
+import com.gu.i18n.{Country, Currency}
+import com.gu.i18n.Currency._
 import com.gu.memsub.subsv2.Catalog
 import com.gu.salesforce.PaidTier
 import play.api.libs.json.{JsArray, JsString, JsValue, Json, Writes}

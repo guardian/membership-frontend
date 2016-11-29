@@ -5,8 +5,9 @@ import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
+import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
-import com.gu.i18n.{CountryGroup, GBP}
+import com.gu.i18n.Currency.GBP
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.promo.{NewUsers, PromoCode}
 import com.gu.memsub.util.Timing

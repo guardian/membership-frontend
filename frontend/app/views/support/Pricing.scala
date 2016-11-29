@@ -1,10 +1,9 @@
 package views.support
 
-import com.gu.i18n.{Currency, GBP}
+import com.gu.i18n.Currency
+import com.gu.memsub.Price
 import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 import com.gu.memsub.subsv2.MonthYearPlans
-import com.gu.memsub.{Current, Price}
-import com.gu.salesforce.PaidTier
 
 case class Pricing(yearly: Price, monthly: Price) {
   require(yearly.currency == monthly.currency, "The yearly and monthly prices should have the same currency")

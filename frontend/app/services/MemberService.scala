@@ -1,59 +1,55 @@
 package services
 
+import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
-import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
+import com.gu.i18n.Currency.GBP
+import com.gu.i18n.{Country, CountryGroup}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
-import com.gu.memsub.Benefit
-import com.gu.memsub.subsv2.SubscriptionPlan
-import com.gu.memsub.BillingPeriod.year
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{RatePlanId, Feature, ProductRatePlanId}
-import com.gu.memsub.promo._
-import com.gu.memsub.subsv2.services.SubIds
-import com.gu.memsub.{Subscription => _, _}
-import com.gu.memsub.services.PromoService
-import com.gu.memsub.util.Timing
-import com.gu.subscriptions.Discounter
-import com.gu.zuora.rest
-import com.gu.zuora.soap.models.Commands._
-import com.gu.memsub.promo.PromotionMatcher._
+import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
 import com.gu.memsub.promo.PromotionApplicator._
-import _root_.services.api.MemberService.{MemberError, PendingAmendError}
-import com.gu.memsub.subsv2._
+import com.gu.memsub.promo.PromotionMatcher._
+import com.gu.memsub.promo._
+import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.PaymentService
-import com.gu.memsub.subsv2.services._
+import com.gu.memsub.subsv2.{SubscriptionPlan, _}
+import com.gu.memsub.subsv2.reads.ChargeListReads._
+import com.gu.memsub.subsv2.reads.SubPlanReads._
+import com.gu.memsub.subsv2.services.{SubIds, _}
+import com.gu.memsub.util.Timing
+import com.gu.memsub.{Subscription => _, _}
 import com.gu.salesforce.Tier.{Partner, Patron}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.{Stripe, StripeService}
+import com.gu.subscriptions.Discounter
 import com.gu.zuora.api.ZuoraService
+import com.gu.zuora.soap.models.Commands._
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
 import com.gu.zuora.soap.models.errors.PaymentGatewayError
-import com.gu.zuora.soap.models.{PaymentSummary, Queries => SoapQueries}
+import com.gu.zuora.soap.models.{Queries => SoapQueries}
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
+import model.{Benefit => _, _}
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.CampaignCode
+import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
-import model.{Benefit => _, _}
-import com.gu.memsub.subsv2.reads.ChargeListReads._
-import com.gu.memsub.subsv2.reads.SubPlanReads._
+
 import scala.concurrent.Future
 import scala.util.Failure
+import scalaz._
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
-import scalaz.syntax.std.option._
 import scalaz.syntax.monad._
-import views.support.MembershipCompat._
-
-import scalaz._
+import scalaz.syntax.std.option._
 
 object MemberService {
   import api.MemberService.MemberError

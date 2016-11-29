@@ -1,5 +1,7 @@
 package views.support
-import com.gu.i18n.{Country, CountryGroup, Currency, GBP}
+
+import com.gu.i18n.Currency.GBP
+import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.memsub.Product.Membership
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.subsv2.{CatalogPlan, _}

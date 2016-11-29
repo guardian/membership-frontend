@@ -1,7 +1,8 @@
 package controllers
 
 import actions.RichAuthRequest
-import com.gu.i18n.{Country, CountryGroup, GBP}
+import com.gu.i18n.Currency.GBP
+import com.gu.i18n.{Country, CountryGroup}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.images.{ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
