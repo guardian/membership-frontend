@@ -1,4 +1,4 @@
-define(['src/modules/identityPopup'], function (identityPopup) {
+define(['src/modules/identityMenu/identityPopup'], function (identityPopup) {
 
     var HREF = 'https://profile.thegulocal.com/signin?returnUrl=https://mem.thegulocal.com&skipConfirmation=true';
 
