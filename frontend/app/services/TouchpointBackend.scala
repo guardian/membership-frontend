@@ -107,6 +107,7 @@ object TouchpointBackend {
     )
   }
 
+  // TestUser (especially) has to be lazy as otherwise the app can't come up without the test catalog being valid.
   lazy val Normal = TouchpointBackend(BackendType.Default)
   lazy val TestUser = TouchpointBackend(BackendType.Testing)
 
