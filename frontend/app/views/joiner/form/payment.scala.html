@@ -102,7 +102,7 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), countryGroup = countryGroup)
+                    @fragments.form.submit(PaidPlans(plans), countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a"))
                 </div>
             </section>
         </form>
