@@ -3,9 +3,7 @@ import identityPopupDetails from './identityPopupDetails';
 
 export function init () {
 
-	let simpleHeader = document.querySelector('header.simple-header');
-
-	if (!simpleHeader) {
+	if (!guardian.membership.simpleHeader) {
 		identityPopup.init();
 		identityPopupDetails.init();
 	}
