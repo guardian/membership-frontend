@@ -19,14 +19,12 @@ case class Register(testUser: TestUser) extends Page with Browser {
     val firstName = id("register_field_firstname")
     val lastName = id("register_field_lastname")
     val email = id("register_field_email")
-    val username = id("register_field_username")
     val password = id("register_field_password")
 
     def fillIn() {
       setValue(firstName, testUser.username)
       setValue(lastName, testUser.username)
       setValue(email, s"${testUser.username}@gu.com")
-      setValue(username, testUser.username)
       setValue(password, testUser.username)
     }
   }
