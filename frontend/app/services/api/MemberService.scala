@@ -4,8 +4,8 @@ import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.{Subscription => S, _}
-import com.gu.salesforce.{Tier, ContactId, PaidTier}
-import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion, PromoCode}
+import com.gu.salesforce.{ContactId, PaidTier, Tier}
+import com.gu.memsub.promo.{PromoCode, PromoError, Upgrades, ValidPromotion}
 import com.gu.salesforce.{ContactId, PaidTier}
 import com.gu.memsub.BillingSchedule
 import com.gu.stripe.Stripe
@@ -14,9 +14,11 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
-import model.{PlanChoice, GenericSFContact}
+import model.{GenericSFContact, PlanChoice}
 import views.support.ThankyouSummary
 import com.gu.memsub.subsv2._
+import com.gu.stripe.Stripe.Customer
+
 import scala.concurrent.Future
 import scalaz.\/
 import utils.CampaignCode
@@ -72,7 +74,8 @@ trait MemberService {
                              nameData: NameForm,
                              tier: PaidTier,
                              campaignCode: Option[CampaignCode],
-                             email: String): Future[SubscribeResult]
+                             email: String,
+                             stripeCustomer: Option[Customer]): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
                              joinData: JoinForm,
