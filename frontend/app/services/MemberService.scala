@@ -112,8 +112,8 @@ class MemberService(identityService: IdentityService,
       salesforceService.upsert(user, formData).andThen { case Failure(e) =>
         logger.error(s"Could not create Salesforce contact for user ${user.id}", e)}
 
-    def createStripeCustomer(paid: PaidMemberJoinForm): Future[Customer] =
-      stripeService.Customer.create(user.id, paid.payment.token).andThen {
+    def createStripeCustomer(stripeToken: String): Future[Customer] =
+      stripeService.Customer.create(user.id, stripeToken).andThen {
         case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)}
 
     def updateIdentity(): Future[Unit] =
@@ -141,11 +141,18 @@ class MemberService(identityService: IdentityService,
         logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)}
 
     formData match {
-      case PaidMemberJoinForm(_,_,PaymentForm(_,_,payPalBaid), _, _,_,_,_,_,_,_,_) =>
-
-      case paid: PaidMemberJoinForm => //
+      case paid @ PaidMemberJoinForm(_,_,PaymentForm(_,_,Some(_)), _, _,_,_,_,_,_,_,_) => //Paid member with PayPal token
         for {
-          stripeCustomer  <- createStripeCustomer(paid)
+          idUser          <- getIdentityUserDetails()
+          sfContact       <- createSalesforceContact(idUser)
+          zuoraSubName    <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress)
+          _               <- updateSalesforceContactWithMembership(None)  // FIXME: This should go!
+          _               <- updateIdentity()
+        } yield (sfContact, zuoraSubName)
+
+      case paid @ PaidMemberJoinForm(_,_,PaymentForm(_,Some(stripeToken),_), _, _,_,_,_,_,_,_,_) => //Paid member with Stripe token
+        for {
+          stripeCustomer  <- createStripeCustomer(stripeToken)
           idUser          <- getIdentityUserDetails()
           sfContact       <- createSalesforceContact(idUser)
           zuoraSubName    <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress)
@@ -167,14 +174,12 @@ class MemberService(identityService: IdentityService,
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-
       paymentResult <- createPaymentMethod(sub, form).liftM
       memberId <- EitherT(upgradeSubscription(
         sub.subscription,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
-        customerOpt = Some(customer),
         campaignCode = code
       ))
     } yield memberId).run
@@ -188,7 +193,6 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, sub.subscription.plan.charges.billingPeriod),
         form = form,
-        customerOpt = None,
         campaignCode = code
       ))
     } yield {
@@ -445,11 +449,11 @@ class MemberService(identityService: IdentityService,
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.id.get, None, fs.map(_.get)))
     val currentRatePlan = sub.plan.id
-    logger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: ${currentRatePlan}")
+    logger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: $currentRatePlan")
 
     (newRatePlan |@| ids) { case (newPln, restSub) =>
       val discountsToRemove = getDiscountRatePlanIdsToRemove(restSub, discountIds)
-      if (!discountsToRemove.isEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: ${discountsToRemove}")
+      if (discountsToRemove.nonEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: $discountsToRemove")
       val plansToRemove = currentRatePlan +: discountsToRemove
       if (plansToRemove.isEmpty) logger.error(s"plansToRemove is empty - this could lead to overlapping rate plans on the Zuora sub: ${sub.id}")
       val upgrade = Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), sub.promoCode)
@@ -461,7 +465,6 @@ class MemberService(identityService: IdentityService,
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
-                                  customerOpt: Option[Customer],
                                   campaignCode: Option[CampaignCode])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails
@@ -486,16 +489,24 @@ class MemberService(identityService: IdentityService,
   private def createPaymentMethod(sub: FreeMember, form: FreeMemberChangeForm) = {
     form.payment match {
       case PaymentForm(_, Some(stripeToken), _) =>
-        createStripePaymentMethod(sub.contact.identityId, stripeToken)
+        createStripePaymentMethod(sub.contact, stripeToken)
       case PaymentForm(_, _, Some(payPalBaid)) =>
+        createPayPalPaymentMethod(sub.contact, payPalBaid)
     }
-    stripeService.Customer.create(sub.contact.identityId, token).liftM
   }
-  private def createStripePaymentMethod(contactId: ContactId,
-                                  customer: Stripe.Customer): Future[UpdateResult] =
+  private def createStripePaymentMethod(contact: Contact,
+                                        stripeToken: String): Future[UpdateResult] =
     for {
-      sub <- subscriptionService.current[SubscriptionPlan.Member](contactId).map(_.head)
+      customer <- stripeService.Customer.create(contact.identityId, stripeToken)
+      sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
       result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer)
+    } yield result
+
+  private def createPayPalPaymentMethod(contact: Contact,
+                                        payPalBaid: String): Future[UpdateResult] =
+    for {
+      sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
+      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, contact.email.getOrElse("")) //TODO: Can email be none here?
     } yield result
 
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
