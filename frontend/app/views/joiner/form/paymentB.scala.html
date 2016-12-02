@@ -113,7 +113,7 @@
                     </div>
                     @fragments.form.terms(countryGroup)
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup)
+                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment b"))
                 </div>
             </section>
         </form>
