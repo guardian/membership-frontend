@@ -402,7 +402,7 @@ class MemberService(identityService: IdentityService,
 
 
       Subscribe(account = createAccount(contactId, currency, joinData.payment),
-              paymentMethod = createPaymentMethod(contactId, email, joinData, stripeCustomer),
+              paymentMethod = createPaymentMethod(contactId, email, joinData.payment, stripeCustomer),
               address = joinData.zuoraAccountAddress,
               email = email,
               ratePlans = NonEmptyList(plan),
@@ -423,9 +423,9 @@ class MemberService(identityService: IdentityService,
         Account.payPal(contactId,currency,true)
     }
 
-  private def createPaymentMethod(contactId: ContactId, email: String, paymentForm: PaidMemberForm, stripeCustomer: Option[Customer]) =
+  private def createPaymentMethod(contactId: ContactId, email: String, paymentForm: PaymentForm, stripeCustomer: Option[Customer]) =
     paymentForm match {
-      case PaymentForm(_, Some(_), _) =>
+      case PaymentForm(_, None, _) =>
         CreditCardReferenceTransaction(stripeCustomer.get.card.id, stripeCustomer.get.id).some
       case PaymentForm(_,_,Some(payPalBaid)) =>
         PayPalReferenceTransaction(payPalBaid,email).some

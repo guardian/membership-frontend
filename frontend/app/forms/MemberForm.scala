@@ -199,8 +199,8 @@ object MemberForm {
   val  paymentMapping: Mapping[PaymentForm] = mapping(
     "type" -> nonEmptyText.transform[BillingPeriod](b =>
       if (Seq("annual","subscriberOfferAnnual").contains(b)) year else month, _.noun),
-    "stripeToken" -> optional(text),
-    "payPalBaid" -> optional(text)
+    "token" -> optional(text),
+    "payPalBaid" -> default(optional(text),Some("B-5YS016770F5907812"))
   )(PaymentForm.apply)(PaymentForm.unapply)
 
   val feedbackMapping: Mapping[FeedbackForm] =   mapping(
