@@ -122,12 +122,12 @@ class MemberService(identityService: IdentityService,
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // Update Identity user details in MongoDB
       }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e)}
 
-    def createPaidZuoraSubscription(sfContact: ContactId, stripeCustomer: Customer, paid: PaidMemberJoinForm, email: String): Future[String] =
+    def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String): Future[String] =
       (for {
-        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email)
+        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, campaignCode, email)
       } yield zuoraSub.subscriptionName).andThen {
-        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
-        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
+        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
+        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
@@ -141,12 +141,14 @@ class MemberService(identityService: IdentityService,
         logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)}
 
     formData match {
+      case PaidMemberJoinForm(_,_,PaymentForm(_,_,payPalBaid), _, _,_,_,_,_,_,_,_) =>
+
       case paid: PaidMemberJoinForm => //
         for {
           stripeCustomer  <- createStripeCustomer(paid)
           idUser          <- getIdentityUserDetails()
           sfContact       <- createSalesforceContact(idUser)
-          zuoraSubName    <- createPaidZuoraSubscription(sfContact, stripeCustomer, paid, idUser.primaryEmailAddress)
+          zuoraSubName    <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress)
           _               <- updateSalesforceContactWithMembership(Some(stripeCustomer))  // FIXME: This should go!
           _               <- updateIdentity()
         } yield (sfContact, zuoraSubName)
@@ -165,8 +167,8 @@ class MemberService(identityService: IdentityService,
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(sub.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(sub.contact, customer).liftM
+
+      paymentResult <- createPaymentMethod(sub, form).liftM
       memberId <- EitherT(upgradeSubscription(
         sub.subscription,
         contact = sub.contact,
@@ -382,7 +384,6 @@ class MemberService(identityService: IdentityService,
                                       joinData: PaidMemberForm,
                                       nameData: NameForm,
                                       tier: PaidTier,
-                                      customer: Stripe.Customer,
                                       campaignCode: Option[CampaignCode],
                                       email: String): Future[SubscribeResult] = {
 
@@ -395,7 +396,7 @@ class MemberService(identityService: IdentityService,
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
       Subscribe(account = Account.payPal(contactId = contactId, currency = currency, autopay = true),
-              paymentMethod = PayPalReferenceTransaction("B-5YS016770F5907812", "membership.paypal-buyer@theguardian.com", customer.id).some,
+              paymentMethod = PayPalReferenceTransaction("B-5YS016770F5907812", "membership.paypal-buyer@theguardian.com").some,
               address = joinData.zuoraAccountAddress,
               email = email,
               ratePlans = NonEmptyList(plan),
@@ -482,7 +483,15 @@ class MemberService(identityService: IdentityService,
     }).run
   }
 
-  private def createPaymentMethod(contactId: ContactId,
+  private def createPaymentMethod(sub: FreeMember, form: FreeMemberChangeForm) = {
+    form.payment match {
+      case PaymentForm(_, Some(stripeToken), _) =>
+        createStripePaymentMethod(sub.contact.identityId, stripeToken)
+      case PaymentForm(_, _, Some(payPalBaid)) =>
+    }
+    stripeService.Customer.create(sub.contact.identityId, token).liftM
+  }
+  private def createStripePaymentMethod(contactId: ContactId,
                                   customer: Stripe.Customer): Future[UpdateResult] =
     for {
       sub <- subscriptionService.current[SubscriptionPlan.Member](contactId).map(_.head)

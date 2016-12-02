@@ -71,7 +71,6 @@ trait MemberService {
                              joinData: PaidMemberForm,
                              nameData: NameForm,
                              tier: PaidTier,
-                             customer: Stripe.Customer,
                              campaignCode: Option[CampaignCode],
                              email: String): Future[SubscribeResult]
 
