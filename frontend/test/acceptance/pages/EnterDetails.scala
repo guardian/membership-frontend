@@ -9,7 +9,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def pageHasLoaded: Boolean = pageHasElement(id("cc-cvc"))
 
-  def userIsSignedIn: Boolean = elementHasText(userDisplayName, testUser.username.toLowerCase)
+  def userIsSignedIn: Boolean = elementHasText(userDisplayName, testUser.username)
 
   def fillInDeliveryAddress() { DeliveryAddress.fillIn() }
 
