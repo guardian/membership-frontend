@@ -14,6 +14,7 @@
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
 @import com.gu.i18n.CountryGroup
+@import abtests.CheckoutFlowVariant
 
 @(plans: MonthYearPlans[PaidMember],
   countriesWithCurrencies: List[CountryWithCurrency],
@@ -45,7 +46,7 @@
             <section class="form-section">
 
                 <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.FrontPage.index().url, inline = false)
+                    @fragments.joiner.signedInAs(request.uri, inline = false, CheckoutFlowVariant.A)
                 </div>
 
                 <div class="form-section__content">
@@ -102,7 +103,7 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), countryGroup = countryGroup)
+                    @fragments.form.submit(PaidPlans(plans), countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a"))
                 </div>
             </section>
         </form>

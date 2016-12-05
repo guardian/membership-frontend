@@ -61,7 +61,12 @@
 </script>
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.contact.email}"),classes = Seq("sessioncamhidetext"))
+        @fragments.page.pageHeader(
+            pageHeader,
+            Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. " +
+                member.contact.email.map(email => s"We've sent confirmation of your membership to $email").getOrElse("Our system failed to store your email address, please contact customer services.")),
+            classes = Seq("sessioncamhidetext")
+        )
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
