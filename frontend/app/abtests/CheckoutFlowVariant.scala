@@ -10,13 +10,13 @@ import scala.util.Random
 object CheckoutFlowVariant {
   val cookieName = "ab-checkout-flow"
   val runningTest = false
-  val chosenFlow = A
+  val default = A
 
   val all = Seq[CheckoutFlowVariant](A,B)
 
   def deriveFlowVariant(implicit request: RequestHeader): CheckoutFlowVariant =
     if(runningTest) getFlowVariantFromRequestCookie(request).getOrElse(CheckoutFlowVariant.all(Random.nextInt(CheckoutFlowVariant.all.size)))
-    else chosenFlow
+    else default
 
   def getFlowVariantFromRequestCookie(request: RequestHeader): Option[CheckoutFlowVariant] =
     if(runningTest)
@@ -24,7 +24,7 @@ object CheckoutFlowVariant {
         cookieValue <- request.cookies.get(cookieName)
         variant <- CheckoutFlowVariant.lookup(cookieValue.value)
       } yield variant
-    else Some(chosenFlow)
+    else Some(default)
 
   case object A extends CheckoutFlowVariant {
     override val testId: String = "test-A"
