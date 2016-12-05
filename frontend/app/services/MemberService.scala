@@ -417,15 +417,15 @@ class MemberService(identityService: IdentityService,
 
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
     paymentForm match {
-      case PaymentForm(_, stripeToken, _) =>
+      case PaymentForm(_, Some(stripeToken), _) =>
         Account.stripe(contactId,currency, true)
-      case PaymentForm(_,_,payPalBaid) =>
+      case PaymentForm(_,_,Some(payPalBaid)) =>
         Account.payPal(contactId,currency,true)
     }
 
   private def createPaymentMethod(contactId: ContactId, email: String, paymentForm: PaymentForm, stripeCustomer: Option[Customer]) =
     paymentForm match {
-      case PaymentForm(_, None, _) =>
+      case PaymentForm(_, Some(stripeToken), _) =>
         CreditCardReferenceTransaction(stripeCustomer.get.card.id, stripeCustomer.get.id).some
       case PaymentForm(_,_,Some(payPalBaid)) =>
         PayPalReferenceTransaction(payPalBaid,email).some

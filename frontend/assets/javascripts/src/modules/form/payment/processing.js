@@ -62,7 +62,7 @@ define([
                 handleError(userMessage, errorElement);
             }
         } else {
-            data = serializer(utilsHelper.toArray(formUtil.elem.elements), { 'payment.token': response.id });
+            data = serializer(utilsHelper.toArray(formUtil.elem.elements), { 'payment.stripeToken': response.id });
 
             loader.setProcessingMessage('Checking card details...');
 
