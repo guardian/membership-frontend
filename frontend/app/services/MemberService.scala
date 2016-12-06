@@ -525,7 +525,7 @@ class MemberService(identityService: IdentityService,
                                         payPalBaid: String): Future[UpdateResult] =
     for {
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
-      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, contact.email.getOrElse("")) //TODO: Can email be none here?
+      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, contact.email.getOrElse(""))
     } yield result
 
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
