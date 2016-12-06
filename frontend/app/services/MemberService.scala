@@ -52,6 +52,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 
 object MemberService {
+
   import api.MemberService.MemberError
 
   type EitherTErr[F[_], A] = EitherT[F, MemberError, A]
@@ -84,7 +85,7 @@ class MemberService(identityService: IdentityService,
                     paymentService: PaymentService,
                     discounter: Discounter,
                     discountIds: DiscountRatePlanIds)
-    extends api.MemberService with ActivityTracking with LazyLogging  {
+  extends api.MemberService with ActivityTracking with LazyLogging {
 
   import EventbriteService._
   import MemberService._
@@ -94,33 +95,36 @@ class MemberService(identityService: IdentityService,
   def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
     identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
       .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
-      .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
+        .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
 
   override def createMember(
-      user: IdMinimalUser,
-      formData: JoinForm,
-      identityRequest: IdentityRequest,
-      fromEventId: Option[String],
-      campaignCode: Option[CampaignCode],
-      tier: Tier): Future[(ContactId, ZuoraSubName)] = {
+                             user: IdMinimalUser,
+                             formData: JoinForm,
+                             identityRequest: IdentityRequest,
+                             fromEventId: Option[String],
+                             campaignCode: Option[CampaignCode],
+                             tier: Tier): Future[(ContactId, ZuoraSubName)] = {
 
     def getIdentityUserDetails(): Future[IdUser] =
       identityService.getFullUserDetails(user)(identityRequest).andThen { case Failure(e) =>
-        logger.error(s"Could not get Identity user details for user ${user.id}", e)}
+        logger.error(s"Could not get Identity user details for user ${user.id}", e)
+      }
 
     def createSalesforceContact(user: IdUser): Future[ContactId] =
       salesforceService.upsert(user, formData).andThen { case Failure(e) =>
-        logger.error(s"Could not create Salesforce contact for user ${user.id}", e)}
+        logger.error(s"Could not create Salesforce contact for user ${user.id}", e)
+      }
 
     def createStripeCustomer(stripeToken: String): Future[Customer] =
       stripeService.Customer.create(user.id, stripeToken).andThen {
-        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)}
+        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+      }
 
     def updateIdentity(): Future[Unit] =
       Future {
         formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // Update user password (social signin)
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // Update Identity user details in MongoDB
-      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e)}
+      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e) }
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, stripeCustomer: Option[Customer]): Future[String] =
       (for {
@@ -134,39 +138,41 @@ class MemberService(identityService: IdentityService,
       (for {
         zuoraSub <- createFreeSubscription(sfContact, formData, email)
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
-        logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)}
+        logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)
+      }
 
     def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
       salesforceService.updateMemberStatus(user, tier, stripeCustomer).andThen { case Failure(e) =>
-        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)}
+        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
+      }
 
     formData match {
-      case paid @ PaidMemberJoinForm(_,_,PaymentForm(_,_,Some(_)), _, _,_,_,_,_,_,_,_) => //Paid member with PayPal token
+      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, _, Some(_)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
         for {
-          idUser          <- getIdentityUserDetails()
-          sfContact       <- createSalesforceContact(idUser)
-          zuoraSubName    <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, None)
-          _               <- updateSalesforceContactWithMembership(None)  // FIXME: This should go!
-          _               <- updateIdentity()
+          idUser <- getIdentityUserDetails()
+          sfContact <- createSalesforceContact(idUser)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, None)
+          _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
+          _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
 
-      case paid @ PaidMemberJoinForm(_,_,PaymentForm(_,Some(stripeToken),_), _, _,_,_,_,_,_,_,_) => //Paid member with Stripe token
+      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _, _, _) => //Paid member with Stripe token
         for {
-          stripeCustomer  <- createStripeCustomer(stripeToken)
-          idUser          <- getIdentityUserDetails()
-          sfContact       <- createSalesforceContact(idUser)
-          zuoraSubName    <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, Some(stripeCustomer))
-          _               <- updateSalesforceContactWithMembership(Some(stripeCustomer))  // FIXME: This should go!
-          _               <- updateIdentity()
+          stripeCustomer <- createStripeCustomer(stripeToken)
+          idUser <- getIdentityUserDetails()
+          sfContact <- createSalesforceContact(idUser)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, Some(stripeCustomer))
+          _ <- updateSalesforceContactWithMembership(Some(stripeCustomer)) // FIXME: This should go!
+          _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
 
       case _ =>
         for {
-          idUser          <- getIdentityUserDetails()
-          sfContact       <- createSalesforceContact(idUser)
-          zuoraSubName    <- createFreeZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress)
-          _               <- updateSalesforceContactWithMembership(None)                  // FIXME: This should go!
-          _               <- updateIdentity()
+          idUser <- getIdentityUserDetails()
+          sfContact <- createSalesforceContact(idUser)
+          zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress)
+          _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
+          _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
     }
   }
@@ -201,12 +207,14 @@ class MemberService(identityService: IdentityService,
         sub.contact.identityId,
         sub.subscription.plan.tier)), sub.contact)
       salesforceService.metrics.putUpgrade(newTier)
-      memberId}).run
+      memberId
+    }).run
 
   override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(sub: Subscription[SubscriptionPlan.PaidMember]) = sub.plan.chargedThrough.getOrElse(sub.startDate)
+
     val friendRatePlanId = catalog.friend.id
 
     (for {
@@ -276,15 +284,16 @@ class MemberService(identityService: IdentityService,
   override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
 
     val latestSubEither = subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](contact).map(_.get)
-    val latestSubF = latestSubEither.map(_.fold(identity,identity))
+    val latestSubF = latestSubEither.map(_.fold(identity, identity))
 
     for {
       sub <- latestSubF
       subEither <- latestSubEither
-      upcomingPaymentDetails <- paymentService.billingSchedule(sub.id)// shows things you'll pay assuming infinite term
-      paymentToday <- zuoraService.getPaymentSummary(sub.name, sub.plan.charges.currencies.head).map(Some.apply).recover({case _ => None})
+      upcomingPaymentDetails <- paymentService.billingSchedule(sub.id) // shows things you'll pay assuming infinite term
+      paymentToday <- zuoraService.getPaymentSummary(sub.name, sub.plan.charges.currencies.head).map(Some.apply).recover({ case _ => None })
     } yield {
       implicit val currency = sub.plan.charges.currencies.head
+
       def price(amount: Float) = Price(amount, sub.plan.charges.currencies.head)
 
       val nextPayment = for {
@@ -379,7 +388,7 @@ class MemberService(identityService: IdentityService,
         email = email,
         promoCode = joinData.trackingPromoCode
       ))
-    } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e)}
+    } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
 
   implicit private def features = zuoraService.getFeatures
@@ -393,7 +402,7 @@ class MemberService(identityService: IdentityService,
                                       stripeCustomer: Option[Customer]): Future[SubscribeResult] = {
 
     val country = joinData.zuoraAccountAddress.country
-    val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
+    val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures.map { features =>
 
       val planId = planChoice.productRatePlanId
@@ -402,33 +411,34 @@ class MemberService(identityService: IdentityService,
 
 
       Subscribe(account = createAccount(contactId, currency, joinData.payment),
-              paymentMethod = createPaymentMethod(contactId, email, joinData.payment, stripeCustomer),
-              address = joinData.zuoraAccountAddress,
-              email = email,
-              ratePlans = NonEmptyList(plan),
-              name = nameData)
-    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
+        paymentMethod = createPaymentMethod(contactId, email, joinData.payment, stripeCustomer),
+        address = joinData.zuoraAccountAddress,
+        email = email,
+        ratePlans = NonEmptyList(plan),
+        name = nameData)
+    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
     subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(sub)))
-             .flatMap(zuoraService.createSubscription)
-             .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
+      .flatMap(zuoraService.createSubscription)
+      .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
 
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
     paymentForm match {
       case PaymentForm(_, Some(stripeToken), _) =>
-        Account.stripe(contactId,currency, true)
-      case PaymentForm(_,_,Some(payPalBaid)) =>
-        Account.payPal(contactId,currency,true)
+        Account.stripe(contactId, currency, true)
+      case PaymentForm(_, _, Some(payPalBaid)) =>
+        Account.payPal(contactId, currency, true)
     }
 
   private def createPaymentMethod(contactId: ContactId, email: String, paymentForm: PaymentForm, stripeCustomer: Option[Customer]) =
     paymentForm match {
       case PaymentForm(_, Some(stripeToken), _) =>
-        CreditCardReferenceTransaction(stripeCustomer.get.card.id, stripeCustomer.get.id).some
-      case PaymentForm(_,_,Some(payPalBaid)) =>
-        PayPalReferenceTransaction(payPalBaid,email).some
+        val card = stripeCustomer.get.card
+        CreditCardReferenceTransaction(card.id, stripeCustomer.get.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`).some
+      case PaymentForm(_, _, Some(payPalBaid)) =>
+        PayPalReferenceTransaction(payPalBaid, email).some
       case _ => None
     }
 
@@ -444,7 +454,7 @@ class MemberService(identityService: IdentityService,
   }
 
   def latestInvoiceItems(items: Seq[SoapQueries.InvoiceItem]): Seq[SoapQueries.InvoiceItem] = {
-    if(items.isEmpty)
+    if (items.isEmpty)
       items
     else {
       val sortedItems = items.sortBy(_.chargeNumber)
@@ -513,6 +523,7 @@ class MemberService(identityService: IdentityService,
         createPayPalPaymentMethod(sub.contact, payPalBaid)
     }
   }
+
   private def createStripePaymentMethod(contact: Contact,
                                         stripeToken: String): Future[UpdateResult] =
     for {
@@ -529,9 +540,9 @@ class MemberService(identityService: IdentityService,
     } yield result
 
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
-      if (sub.hasPendingFreePlan || sub.isCancelled)
-        PendingAmendError(sub.name).left
-      else
-        sub.right
+    if (sub.hasPendingFreePlan || sub.isCancelled)
+      PendingAmendError(sub.name).left
+    else
+      sub.right
 
 }
