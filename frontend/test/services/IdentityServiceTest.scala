@@ -57,7 +57,7 @@ class IdentityServiceTest extends Specification with Mockito {
       val paidForm = PaidMemberJoinForm(
         partner,
         NameForm("Joe", "Bloggs"),
-        PaymentForm(year, Some("token"), None),
+        PaymentForm(year, Some("stripeToken"), None),
         Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
         Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK.name)),
         MarketingChoicesForm(Some(false), Some(false)),
