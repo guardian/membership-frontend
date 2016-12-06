@@ -113,7 +113,7 @@ object TouchpointBackend extends LazyLogging {
   lazy val Normal = TouchpointBackend(BackendType.Default)
   lazy val TestUser = TouchpointBackend(BackendType.Testing)
 
-  val f = Future {
+  Future {
     logger.info(s"TouchpointBackend.TestUser is lazily initialised to ensure bad UAT settings can not block deployment to PROD. Initalisation starting...")
     val amountOfPlans = TestUser.catalog.allMembership.size
     logger.info(s"TouchpointBackend.TestUser initalisation complete: $amountOfPlans membership plans in UAT")
