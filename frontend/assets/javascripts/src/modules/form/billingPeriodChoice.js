@@ -14,9 +14,9 @@ define(
             billingPeriods = guardian.membership.checkoutForm.billingPeriods,
             $BILLING_PERIOD_CONTAINER = $('.js-billing-period__container');
 
-        function notifyOtherModulesToRender() {
+        function notifyOtherModulesToRender(payload) {
             ongoingCardPayments.render();
-            submitButton.render();
+            submitButton.render(payload);
         }
 
         function render() {
@@ -46,7 +46,7 @@ define(
                     bean.on($BILLING_PERIOD_CONTAINER[0], 'change', '[type=radio]', function (el) {
                         el.target.checked = true;
                         checkoutForm.billingPeriod = el.target.value;
-                        notifyOtherModulesToRender();
+                        notifyOtherModulesToRender(el.target.value);
                     });
                     render();
                 }
