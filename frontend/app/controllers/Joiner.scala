@@ -239,7 +239,7 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
-    val ipAddress = ProxiedIP.getIP(request)
+    val ipAddress = None // Deprected - we do not need to store this [anymore] as we store the ipCountry instead.
     val ipCountry = request.getFastlyCountry
 
     Timing.record(salesforceService.metrics, "createMember") {
