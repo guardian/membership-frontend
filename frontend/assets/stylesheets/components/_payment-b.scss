@@ -10,7 +10,10 @@
     }
 
     .form-header {
-    	margin-top: $gs-baseline/2;
+        border-bottom: 1px solid #4bc6df;
+        margin-top: $gs-baseline/2;
+        padding: 0 0 (2*$gs-baseline) 0;
+        margin-bottom: 2px;
     }
 
     .form-header,
@@ -18,9 +21,11 @@
         float: none;
         margin-right: $gs-gutter/2;
         margin-left: $gs-gutter/2;
+        padding-top: 0;
+        padding-right: 0;
+        padding-left: 0;
         width: auto;
-        padding: 0;
-
+        
         @include mq($from: mobileLandscape) {
             max-width: 440px;
             margin-left: auto;
@@ -46,7 +51,7 @@
 
     .form-section__lead-in {
         text-align: right;
-        margin-top: 2 * $gs-baseline;
+        margin-top: $gs-baseline;
 
         @include mq($from: tablet) {
             width: rem(gs-span(9));
