@@ -10,7 +10,10 @@
     }
 
     .form-header {
-    	margin-top: $gs-baseline/2;
+        border-bottom: 1px solid guss-colour(news-main-2);
+        margin-top: $gs-baseline/2;
+        padding: 0 0 (2*$gs-baseline) 0;
+        margin-bottom: 2px;
     }
 
     .form-header,
@@ -18,8 +21,10 @@
         float: none;
         margin-right: $gs-gutter/2;
         margin-left: $gs-gutter/2;
+        padding-top: 0;
+        padding-right: 0;
+        padding-left: 0;
         width: auto;
-        padding: 0;
 
         @include mq($from: mobileLandscape) {
             max-width: 440px;
@@ -46,7 +51,7 @@
 
     .form-section__lead-in {
         text-align: right;
-        margin-top: 2 * $gs-baseline;
+        margin-top: $gs-baseline;
 
         @include mq($from: tablet) {
             width: rem(gs-span(9));
@@ -59,12 +64,6 @@
             position: static;
             left: auto;
         }
-    }
-
-    .form-section__progress-bar {
-        margin-top: 2.6666 * $gs-baseline;
-        padding-bottom: $gs-baseline;
-        border-bottom: solid guss-colour(news-support-1) 1px;
     }
 
     .form-section__name-detail {
@@ -187,12 +186,6 @@
 
         button::after {
             background: none;
-        }
-    }
-
-    .form-section__bottom-progress-bar {
-        @include mq($from: tablet) {
-            display: none;
         }
     }
 
