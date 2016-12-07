@@ -4,23 +4,22 @@ import actions.ActionRefiners.PlannedOutageProtection
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
+import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
-import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
 import forms.MemberForm._
+import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
 import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
-import views.support.{Asset, PageInfo}
-import com.netaporter.uri.dsl._
-import com.netaporter.uri.Uri
 import tracking.RedirectWithCampaignCodes._
+import utils.RequestCountry._
+import views.support.{Asset, PageInfo}
 
 import scala.concurrent.Future
-import utils.RequestCountry._
 
 trait Info extends Controller {
   def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
-    val determinedCountryGroup = (countryGroup orElse request.getFastlyCountry).getOrElse(CountryGroup.RestOfTheWorld)
+    val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
     redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
   }
 

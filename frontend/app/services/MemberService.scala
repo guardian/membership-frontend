@@ -1,5 +1,7 @@
 package services
 
+import java.net.InetAddress
+
 import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
@@ -102,7 +104,9 @@ class MemberService(identityService: IdentityService,
       identityRequest: IdentityRequest,
       fromEventId: Option[String],
       campaignCode: Option[CampaignCode],
-      tier: Tier): Future[(ContactId, ZuoraSubName)] = {
+      tier: Tier,
+      ipAddress: Option[InetAddress],
+      ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)] = {
 
     def getIdentityUserDetails(): Future[IdUser] =
       identityService.getFullUserDetails(user)(identityRequest).andThen { case Failure(e) =>
@@ -124,7 +128,7 @@ class MemberService(identityService: IdentityService,
 
     def createPaidZuoraSubscription(sfContact: ContactId, stripeCustomer: Customer, paid: PaidMemberJoinForm, email: String): Future[String] =
       (for {
-        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email)
+        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, ipAddress, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
@@ -132,7 +136,7 @@ class MemberService(identityService: IdentityService,
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
-        zuoraSub <- createFreeSubscription(sfContact, formData, email)
+        zuoraSub <- createFreeSubscription(sfContact, formData, email, ipAddress, ipCountry)
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
         logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)}
 
@@ -358,7 +362,9 @@ class MemberService(identityService: IdentityService,
 
   override def createFreeSubscription(contactId: ContactId,
                                       joinData: JoinForm,
-                                      email: String): Future[SubscribeResult] = {
+                                      email: String,
+                                      ipAddress: Option[InetAddress],
+                                      ipCountry: Option[Country]): Future[SubscribeResult] = {
     val planId = joinData.planChoice.productRatePlanId
     val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
 
@@ -371,7 +377,9 @@ class MemberService(identityService: IdentityService,
         name = joinData.name,
         address = joinData.deliveryAddress,
         email = email,
-        promoCode = joinData.trackingPromoCode
+        promoCode = joinData.trackingPromoCode,
+        ipAddress = ipAddress.map(_.getHostAddress),
+        ipCountry = ipCountry
       ))
     } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e)}
   }
@@ -384,7 +392,9 @@ class MemberService(identityService: IdentityService,
                                       tier: PaidTier,
                                       customer: Stripe.Customer,
                                       campaignCode: Option[CampaignCode],
-                                      email: String): Future[SubscribeResult] = {
+                                      email: String,
+                                      ipAddress: Option[InetAddress],
+                                      ipCountry: Option[Country]): Future[SubscribeResult] = {
 
     val country = joinData.zuoraAccountAddress.country
     val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
@@ -394,12 +404,24 @@ class MemberService(identityService: IdentityService,
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
-      Subscribe(account = Account.stripe(contactId = contactId, currency = currency, autopay = true),
-              paymentMethod = CreditCardReferenceTransaction(customer.card.id, customer.id).some,
-              address = joinData.zuoraAccountAddress,
-              email = email,
-              ratePlans = NonEmptyList(plan),
-              name = nameData)
+      Subscribe(
+        account = Account.stripe(contactId = contactId, currency = currency, autopay = true),
+        paymentMethod = CreditCardReferenceTransaction(
+          cardId = customer.card.id,
+          customerId = customer.id,
+          last4 = customer.card.last4,
+          cardCountry = CountryGroup.countryByCode(customer.card.country),
+          expirationMonth = customer.card.exp_month,
+          expirationYear = customer.card.exp_year,
+          cardType = customer.card.`type`
+        ).some,
+        address = joinData.zuoraAccountAddress,
+        email = email,
+        ratePlans = NonEmptyList(plan),
+        name = nameData,
+        ipAddress = ipAddress.map(_.getHostAddress),
+        ipCountry = ipCountry
+      )
     }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
