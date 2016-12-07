@@ -61,12 +61,6 @@
         }
     }
 
-    .form-section__progress-bar {
-        margin-top: 2.6666 * $gs-baseline;
-        padding-bottom: $gs-baseline;
-        border-bottom: solid guss-colour(news-support-1) 1px;
-    }
-
     .form-section__name-detail {
     	margin-top: 7px;
 
@@ -187,12 +181,6 @@
 
         button::after {
             background: none;
-        }
-    }
-
-    .form-section__bottom-progress-bar {
-        @include mq($from: tablet) {
-            display: none;
         }
     }
 
