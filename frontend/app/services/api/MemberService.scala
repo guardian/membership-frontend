@@ -1,13 +1,15 @@
 package services.api
 
+import java.net.InetAddress
+
 import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.{Subscription => S, _}
 import com.gu.salesforce.{ContactId, PaidTier, Tier}
-import com.gu.memsub.promo.{PromoCode, PromoError, Upgrades, ValidPromotion}
 import com.gu.salesforce.{ContactId, PaidTier}
 import com.gu.memsub.BillingSchedule
+import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion}
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
@@ -18,10 +20,10 @@ import model.{GenericSFContact, PlanChoice}
 import views.support.ThankyouSummary
 import com.gu.memsub.subsv2._
 import com.gu.stripe.Stripe.Customer
+import utils.CampaignCode
 
 import scala.concurrent.Future
 import scalaz.\/
-import utils.CampaignCode
 
 trait MemberService {
   import MemberService._
@@ -35,7 +37,9 @@ trait MemberService {
                    identityRequest: IdentityRequest,
                    fromEventId: Option[String],
                    campaignCode: Option[CampaignCode],
-                   tier: Tier): Future[(ContactId, ZuoraSubName)]
+                   tier: Tier,
+                   ipAddress: Option[InetAddress],
+                   ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)]
 
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
@@ -73,13 +77,17 @@ trait MemberService {
                              joinData: PaidMemberForm,
                              nameData: NameForm,
                              tier: PaidTier,
+                             stripeCustomer: Option[Customer],
                              campaignCode: Option[CampaignCode],
                              email: String,
-                             stripeCustomer: Option[Customer]): Future[SubscribeResult]
+                             ipAddress: Option[InetAddress],
+                             ipCountry: Option[Country]): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
                              joinData: JoinForm,
-                             email: String): Future[SubscribeResult]
+                             email: String,
+                             ipAddress: Option[InetAddress],
+                             ipCountry: Option[Country]): Future[SubscribeResult]
 }
 
 object MemberService {

@@ -8,6 +8,7 @@ import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
+import com.gu.identity.play.ProxiedIP
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.promo.{NewUsers, PromoCode}
 import com.gu.memsub.util.Timing
@@ -30,6 +31,7 @@ import services.PromoSessionService.codeFromSession
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.{CampaignCode, TierChangeCookies}
+import utils.RequestCountry._
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -78,7 +80,7 @@ object Joiner extends Controller with ActivityTracking
     )
 
     (for {
-      contentURL <- contentRefererOpt if Uri.parse(contentURL).host.exists(_ == "www.theguardian.com")
+      contentURL <- contentRefererOpt if Uri.parse(contentURL).host.contains("www.theguardian.com")
       access <- accessOpt
     } yield {
       Redirect(routes.MemberOnlyContent.membershipContent(contentURL, access.name))
@@ -102,11 +104,11 @@ object Joiner extends Controller with ActivityTracking
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
       } yield
-        Ok(views.html.joiner.staff(catalog, new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
+        Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
 
       case _ =>
         Future.successful(
-          Ok(views.html.joiner.staff(catalog, new StaffEmails(request.user.email, None), None, None, flashMsgOpt)) )
+          Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, None), None, None, flashMsgOpt)) )
     }
   }
 
@@ -251,9 +253,11 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
+    val ipAddress = None // Deprected - we do not need to store this [anymore] as we store the ipCountry instead.
+    val ipCountry = request.getFastlyCountry
 
     Timing.record(salesforceService.metrics, "createMember") {
-      memberService.createMember(request.user, formData, idRequest, eventId, campaignCode, tier).map {
+      memberService.createMember(request.user, formData, idRequest, eventId, campaignCode, tier, ipAddress, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
           logger.info(s"User ${request.user.id} successfully became ${tier.name} $zuoraSubName.")
           salesforceService.metrics.putSignUp(tier)

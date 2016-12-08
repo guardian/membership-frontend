@@ -20,8 +20,7 @@ require([
     'src/modules/filterLiveSearch',
     'src/modules/form',
     'src/modules/form/processSubmit',
-    'src/modules/identityPopup',
-    'src/modules/identityPopupDetails',
+    'src/modules/identityMenu/setup',
     'src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
@@ -49,8 +48,7 @@ require([
     filterLiveSearch,
     form,
     processSubmit,
-    identityPopup,
-    identityPopupDetails,
+    identityMenu,
     comparisonTable,
     metrics,
     patterns,
@@ -72,8 +70,7 @@ require([
     dropdown.init();
     sticky.init();
     sectionNav.init();
-    identityPopup.init();
-    identityPopupDetails.init();
+    identityMenu.init();
     navigation.init();
     userDetails.init();
     videoOverlay.init();
