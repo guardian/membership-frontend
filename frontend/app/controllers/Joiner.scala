@@ -176,7 +176,8 @@ object Joiner extends Controller with ActivityTracking
     } yield {
 
       val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
-      val providedPromoCode = codeFromSession // only take from the session
+      val providedPromoCode = codeFromSession
+      // only take from the session
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
       val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
@@ -241,7 +242,8 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
-    val ipAddress = None // Deprected - we do not need to store this [anymore] as we store the ipCountry instead.
+    val ipAddress = None
+    // Deprecated - we do not need to store this [anymore] as we store the ipCountry instead.
     val ipCountry = request.getFastlyCountry
 
     Timing.record(salesforceService.metrics, "createMember") {
@@ -255,7 +257,7 @@ object Joiner extends Controller with ActivityTracking
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
-          logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
+          logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
@@ -296,11 +298,10 @@ object Joiner extends Controller with ActivityTracking
 
   def thankyouStaff = thankyou(Tier.partner)
 
-  private def handlePaymentGatewayError(
-                                         e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String, String)], country: String) = {
+  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String, String)], country: String) = {
 
     def handleError(code: String) = {
-      logger.warn(s"User ${userId} could not become $tier member due to payment gateway failed transaction: \n\terror=${e} \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
+      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
       Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
     }
 
