@@ -144,7 +144,6 @@ object Joiner extends Controller with ActivityTracking
 
       val flowSelected = CheckoutFlowVariant.getFlowVariantFromRequestCookie(request).getOrElse(CheckoutFlowVariant.A)
 
-
       Ok(flowSelected match {
         case CheckoutFlowVariant.A => views.html.joiner.form.payment(
           plans,
@@ -176,8 +175,7 @@ object Joiner extends Controller with ActivityTracking
     } yield {
 
       val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
-      val providedPromoCode = codeFromSession
-      // only take from the session
+      val providedPromoCode = codeFromSession // only take from the session
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
       val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
@@ -242,8 +240,7 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
-    val ipAddress = None
-    // Deprecated - we do not need to store this [anymore] as we store the ipCountry instead.
+    val ipAddress = None // Deprecated - we do not need to store this [anymore] as we store the ipCountry instead.
     val ipCountry = request.getFastlyCountry
 
     Timing.record(salesforceService.metrics, "createMember") {
