@@ -91,8 +91,10 @@ object ActionRefiners extends LazyLogging {
 
   def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {
     override protected def filter[A](request: SubReqWithSub[A]): Future[Option[Result]] = {
-      if (!request.touchpointBackend.memberService.subscriptionUpgradableTo(request.subscriber.subscription, targetTier)) {
-        Future.successful(Some(Ok(views.html.tier.upgrade.unavailable(request.subscriber.subscription.plan.tier, targetTier))))
+      if (!request.touchpointBackend.memberService.upgradeTierIsValidForCurrency(request.subscriber.subscription, targetTier)) {
+        Future.successful(Some(Ok(views.html.tier.upgrade.unavailableTierForCurrency(request.subscriber.subscription.plan.tier, targetTier))))
+      } else if (!request.touchpointBackend.memberService.upgradeTierIsHigher(request.subscriber.subscription, targetTier)) {
+        Future.successful(Some(Ok(views.html.tier.upgrade.unavailableUpgradePath(request.subscriber.subscription.plan.tier, targetTier))))
       } else {
         Future.successful(None)
       }
@@ -106,7 +108,7 @@ object ActionRefiners extends LazyLogging {
       if (req.subscriber.subscription.isCancelled) {
         logger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
       }
-      Ok(views.html.tier.upgrade.unavailable(req.subscriber.subscription.plan.tier, selectedTier))
+      Ok(views.html.tier.upgrade.unavailableUpgradePath(req.subscriber.subscription.plan.tier, selectedTier))
     }
   }
 

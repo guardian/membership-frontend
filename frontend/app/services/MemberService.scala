@@ -274,15 +274,19 @@ class MemberService(identityService: IdentityService,
     )).run
   }
 
-  def subscriptionUpgradableTo(sub: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean = {
-    import model.TierOrdering.upgradeOrdering
+  def upgradeTierIsValidForCurrency(sub: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean = {
     val newPlan = catalog.findPaid(newTier)
-
     // The year and month plans are guaranteed to have the same currencies
     val targetCurrencies = newPlan.year.charges.price.prices.map(_.currency).toSet
     val currencyIsAvailable = targetCurrencies.contains(sub.plan.currency)
+    currencyIsAvailable
+  }
+
+  def upgradeTierIsHigher(sub: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean = {
+    import model.TierOrdering.upgradeOrdering
+    val newPlan = catalog.findPaid(newTier)
     val higherTier = newPlan.month.tier > sub.plan.tier
-    currencyIsAvailable && higherTier
+    higherTier
   }
 
   override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
