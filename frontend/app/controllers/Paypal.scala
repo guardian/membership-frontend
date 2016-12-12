@@ -33,7 +33,7 @@ class Paypal extends Controller {
 		for ((param, value) <- params) reqBody.add(param, value)
 
 		val request = new Request.Builder()
-			.url(Config.paypalSandboxUrl)
+			.url(Config.paypalUrl)
 			.post(reqBody.build())
 			.build()
 
