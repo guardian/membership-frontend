@@ -46,7 +46,7 @@ class DestinationServiceTest extends Specification {
         plans = scalaz.NonEmptyList(new PaidSubscriptionPlan[Product.Membership, PaidCharge[com.gu.memsub.Partner.type, Month]](
           id = RatePlanId(""), productRatePlanId = ProductRatePlanId(""), name = "name", product = Product.Membership, description = "", features = Nil,
           charges = partnerCharge,
-          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2016-01-01"), productName = "")),
+          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = "")),
         hasPendingFreePlan = false,
         readerType = ReaderType.Direct
       )
