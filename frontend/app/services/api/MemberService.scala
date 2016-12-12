@@ -5,10 +5,11 @@ import java.net.InetAddress
 import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
-import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion}
-import com.gu.memsub.subsv2._
-import com.gu.memsub.{BillingSchedule, Subscription => S}
+import com.gu.memsub.{Subscription => S, _}
 import com.gu.salesforce.{ContactId, PaidTier, Tier}
+import com.gu.salesforce.{ContactId, PaidTier}
+import com.gu.memsub.BillingSchedule
+import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion}
 import com.gu.stripe.Stripe
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
@@ -16,8 +17,10 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{GenericSFContact, PlanChoice}
-import utils.CampaignCode
 import views.support.ThankyouSummary
+import com.gu.memsub.subsv2._
+import com.gu.stripe.Stripe.Customer
+import utils.CampaignCode
 
 import scala.concurrent.Future
 import scalaz.\/
@@ -74,7 +77,7 @@ trait MemberService {
                              joinData: PaidMemberForm,
                              nameData: NameForm,
                              tier: PaidTier,
-                             customer: Stripe.Customer,
+                             stripeCustomer: Option[Customer],
                              campaignCode: Option[CampaignCode],
                              email: String,
                              ipAddress: Option[InetAddress],

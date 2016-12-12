@@ -242,7 +242,6 @@ object TierController extends Controller with ActivityTracking
           result <- if (status == 200) doUpgrade() else reauthFailedMessage
         } yield result
       }.getOrElse(noEmailMessage)
-
     }
 
     val futureResult = request.paidOrFreeSubscriber.fold(

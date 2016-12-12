@@ -44,14 +44,14 @@ import scalaz.OptionT
 import scalaz.std.scalaFuture._
 
 object Joiner extends Controller with ActivityTracking
-                                 with LazyLogging
-                                 with CatalogProvider
-                                 with StripeServiceProvider
-                                 with SalesforceServiceProvider
-                                 with SubscriptionServiceProvider
-                                 with PromoServiceProvider
-                                 with PaymentServiceProvider
-                                 with MemberServiceProvider {
+  with LazyLogging
+  with CatalogProvider
+  with StripeServiceProvider
+  with SalesforceServiceProvider
+  with SubscriptionServiceProvider
+  with PromoServiceProvider
+  with PaymentServiceProvider
+  with MemberServiceProvider {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
@@ -73,10 +73,10 @@ object Joiner extends Controller with ActivityTracking
 
     implicit val countryGroup = UK
     val pageInfo = PageInfo(
-      title=CopyConfig.copyTitleChooseTier,
-      url=request.path,
-      description=Some(CopyConfig.copyDescriptionChooseTier),
-      customSignInUrl=Some(signInUrl)
+      title = CopyConfig.copyTitleChooseTier,
+      url = request.path,
+      description = Some(CopyConfig.copyDescriptionChooseTier),
+      customSignInUrl = Some(signInUrl)
     )
 
     (for {
@@ -84,7 +84,7 @@ object Joiner extends Controller with ActivityTracking
       access <- accessOpt
     } yield {
       Redirect(routes.MemberOnlyContent.membershipContent(contentURL, access.name))
-    }).getOrElse (
+    }).getOrElse(
       Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
     ).withSession(
       request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _))
@@ -108,7 +108,7 @@ object Joiner extends Controller with ActivityTracking
 
       case _ =>
         Future.successful(
-          Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, None), None, None, flashMsgOpt)) )
+          Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
     }
   }
 
@@ -161,8 +161,9 @@ object Joiner extends Controller with ActivityTracking
           trackingPromoCode = validTrackingPromoCode,
           promoCodeToDisplay = validDisplayablePromoCode,
           Some(countryGroup))
-      }).withCookies(Cookie(CheckoutFlowVariant.cookieName, flowSelected.testId))
-    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
+      }
+      ).withCookies(Cookie(CheckoutFlowVariant.cookieName, flowSelected.testId))
+    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e) }
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
@@ -199,19 +200,19 @@ object Joiner extends Controller with ActivityTracking
 
   def joinFriend = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-      makeMember(Tier.friend, Redirect(routes.Joiner.thankyou(Tier.friend))) )
+      makeMember(Tier.friend, Redirect(routes.Joiner.thankyou(Tier.friend))))
   }
 
   def joinStaff = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-        makeMember(Tier.partner, Redirect(routes.Joiner.thankyouStaff())) )
+      makeMember(Tier.partner, Redirect(routes.Joiner.thankyouStaff())))
   }
 
   def joinPaid(tier: PaidTier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold({ formWithErrors =>
-        Future.successful(BadRequest(formWithErrors.errorsAsJson))
-      },
-      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
+      Future.successful(BadRequest(formWithErrors.errorsAsJson))
+    },
+      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))))
   }
 
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
@@ -219,16 +220,16 @@ object Joiner extends Controller with ActivityTracking
     for {
       responseCode <- IdentityService(IdentityApi).updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
     }
-    yield {
-      responseCode match {
-        case 200 => Redirect(routes.Joiner.enterStaffDetails())
-                  .flashing("success" ->
-          s"Your email address has been changed to $googleEmail")
-        case _ => Redirect(routes.Joiner.staff())
-                  .flashing("error" ->
-          s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email.")
+      yield {
+        responseCode match {
+          case 200 => Redirect(routes.Joiner.enterStaffDetails())
+            .flashing("success" ->
+              s"Your email address has been changed to $googleEmail")
+          case _ => Redirect(routes.Joiner.staff())
+            .flashing("error" ->
+              s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email.")
+        }
       }
-    }
   }
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
@@ -239,7 +240,7 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
-    val ipAddress = None // Deprected - we do not need to store this [anymore] as we store the ipCountry instead.
+    val ipAddress = None // Deprecated - we do not need to store this [anymore] as we store the ipCountry instead.
     val ipCountry = request.getFastlyCountry
 
     Timing.record(salesforceService.metrics, "createMember") {
@@ -250,9 +251,10 @@ object Joiner extends Controller with ActivityTracking
           trackRegistration(formData, tier, sfContactId, request.user, campaignCode)
           trackRegistrationViaEvent(sfContactId, request.user, eventId, campaignCode, tier)
           onSuccess
-      }.recover { // errors due to user's card are logged at WARN level as they are not logic errors
+      }.recover {
+        // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
-          logger.warn(s"Stripe API call returned error: \n\t${error} \n\tuser=${request.user.id}")
+          logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${request.user.id}")
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
@@ -282,22 +284,21 @@ object Joiner extends Controller with ActivityTracking
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       card <- paymentCard
     } yield Ok(views.html.joiner.thankyou(
-        request.subscriber,
-        paymentSummary,
-        card,
-        destination,
-        upgrade,
-        validPromotion.filterNot(_.asTracking.isDefined)
-    )).discardingCookies(TierChangeCookies.deletionCookies:_*)
+      request.subscriber,
+      paymentSummary,
+      card,
+      destination,
+      upgrade,
+      validPromotion.filterNot(_.asTracking.isDefined)
+    )).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
   def thankyouStaff = thankyou(Tier.partner)
 
-  private def handlePaymentGatewayError(
-      e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String,String)], country: String) = {
+  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String, String)], country: String) = {
 
     def handleError(code: String) = {
-      logger.warn(s"User ${userId} could not become $tier member due to payment gateway failed transaction: \n\terror=${e} \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
+      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
       Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
     }
 

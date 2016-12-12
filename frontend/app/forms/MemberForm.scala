@@ -34,7 +34,7 @@ object MemberForm {
 
   )
 
-  case class PaymentForm(billingPeriod: BillingPeriod, token: String)
+  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String] )
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
@@ -199,7 +199,8 @@ object MemberForm {
   val  paymentMapping: Mapping[PaymentForm] = mapping(
     "type" -> nonEmptyText.transform[BillingPeriod](b =>
       if (Seq("annual","subscriberOfferAnnual").contains(b)) year else month, _.noun),
-    "token" -> nonEmptyText
+    "stripeToken" -> optional(text),
+    "payPalBaid" -> optional(text)
   )(PaymentForm.apply)(PaymentForm.unapply)
 
   val feedbackMapping: Mapping[FeedbackForm] =   mapping(

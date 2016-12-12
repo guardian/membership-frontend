@@ -22,7 +22,7 @@ class IdentityServiceTest extends Specification with Mockito {
   "IdentityService" should {
     "post json for updating an users email" in {
       val identityAPI = mock[IdentityApi]
-      val identityService = new IdentityService(identityAPI)
+      val identityService = IdentityService(identityAPI)
 
       identityService.updateEmail(user, "joe.bloggs@awesome-email.com", identityRequest)
 
@@ -33,7 +33,7 @@ class IdentityServiceTest extends Specification with Mockito {
     "post json for updating users details on joining friend" in {
       val identityAPI = mock[IdentityApi]
 
-      val identityService = new IdentityService(identityAPI)
+      val identityService = IdentityService(identityAPI)
 
       val friendForm = FriendJoinForm(
         NameForm("Joe", "Bloggs"),
@@ -52,12 +52,12 @@ class IdentityServiceTest extends Specification with Mockito {
     "post json for updating users details on joining paid tier" in {
       val identityAPI = mock[IdentityApi]
 
-      val identityService = new IdentityService(identityAPI)
+      val identityService = IdentityService(identityAPI)
 
       val paidForm = PaidMemberJoinForm(
         partner,
         NameForm("Joe", "Bloggs"),
-        PaymentForm(year, "token"),
+        PaymentForm(year, Some("stripeToken"), None),
         Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
         Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK.name)),
         MarketingChoicesForm(Some(false), Some(false)),
@@ -79,7 +79,7 @@ class IdentityServiceTest extends Specification with Mockito {
   "post json for updating details on upgrade" in {
     val identityAPI = mock[IdentityApi]
 
-    val identityService = new IdentityService(identityAPI)
+    val identityService = IdentityService(identityAPI)
     val addressDetails = AddressDetails(
       Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
       Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK.name))

@@ -6,7 +6,7 @@ import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
 import com.gu.i18n.Currency.GBP
-import com.gu.i18n.{Country, CountryGroup}
+import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
@@ -54,6 +54,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 
 object MemberService {
+
   import api.MemberService.MemberError
 
   type EitherTErr[F[_], A] = EitherT[F, MemberError, A]
@@ -86,7 +87,7 @@ class MemberService(identityService: IdentityService,
                     paymentService: PaymentService,
                     discounter: Discounter,
                     discountIds: DiscountRatePlanIds)
-    extends api.MemberService with ActivityTracking with LazyLogging  {
+  extends api.MemberService with ActivityTracking with LazyLogging {
 
   import EventbriteService._
   import MemberService._
@@ -96,7 +97,7 @@ class MemberService(identityService: IdentityService,
   def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
     identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
       .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
-      .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
+        .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
 
   override def createMember(
       user: IdMinimalUser,
@@ -110,58 +111,72 @@ class MemberService(identityService: IdentityService,
 
     def getIdentityUserDetails(): Future[IdUser] =
       identityService.getFullUserDetails(user)(identityRequest).andThen { case Failure(e) =>
-        logger.error(s"Could not get Identity user details for user ${user.id}", e)}
+        logger.error(s"Could not get Identity user details for user ${user.id}", e)
+      }
 
     def createSalesforceContact(user: IdUser): Future[ContactId] =
       salesforceService.upsert(user, formData).andThen { case Failure(e) =>
-        logger.error(s"Could not create Salesforce contact for user ${user.id}", e)}
+        logger.error(s"Could not create Salesforce contact for user ${user.id}", e)
+      }
 
-    def createStripeCustomer(paid: PaidMemberJoinForm): Future[Customer] =
-      stripeService.Customer.create(user.id, paid.payment.token).andThen {
-        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)}
+    def createStripeCustomer(stripeToken: String): Future[Customer] =
+      stripeService.Customer.create(user.id, stripeToken).andThen {
+        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+      }
 
     def updateIdentity(): Future[Unit] =
       Future {
         formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // Update user password (social signin)
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // Update Identity user details in MongoDB
-      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e)}
+      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e) }
 
-    def createPaidZuoraSubscription(sfContact: ContactId, stripeCustomer: Customer, paid: PaidMemberJoinForm, email: String): Future[String] =
+    def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, stripeCustomer: Option[Customer]): Future[String] =
       (for {
         zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, ipAddress, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
-        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
-        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}; Stripe Customer=${stripeCustomer.id}", e)
+        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
+        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
         zuoraSub <- createFreeSubscription(sfContact, formData, email, ipAddress, ipCountry)
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
-        logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)}
+        logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)
+      }
 
     def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
       salesforceService.updateMemberStatus(user, tier, stripeCustomer).andThen { case Failure(e) =>
-        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)}
+        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
+      }
 
     formData match {
-      case paid: PaidMemberJoinForm => //
+      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, _, Some(_)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
         for {
-          stripeCustomer  <- createStripeCustomer(paid)
-          idUser          <- getIdentityUserDetails()
-          sfContact       <- createSalesforceContact(idUser)
-          zuoraSubName    <- createPaidZuoraSubscription(sfContact, stripeCustomer, paid, idUser.primaryEmailAddress)
-          _               <- updateSalesforceContactWithMembership(Some(stripeCustomer))  // FIXME: This should go!
-          _               <- updateIdentity()
+          idUser <- getIdentityUserDetails()
+          sfContact <- createSalesforceContact(idUser)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, None)
+          _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
+          _ <- updateIdentity()
+        } yield (sfContact, zuoraSubName)
+
+      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _, _, _) => //Paid member with Stripe token
+        for {
+          stripeCustomer <- createStripeCustomer(stripeToken)
+          idUser <- getIdentityUserDetails()
+          sfContact <- createSalesforceContact(idUser)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, Some(stripeCustomer))
+          _ <- updateSalesforceContactWithMembership(Some(stripeCustomer)) // FIXME: This should go!
+          _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
 
       case _ =>
         for {
-          idUser          <- getIdentityUserDetails()
-          sfContact       <- createSalesforceContact(idUser)
-          zuoraSubName    <- createFreeZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress)
-          _               <- updateSalesforceContactWithMembership(None)                  // FIXME: This should go!
-          _               <- updateIdentity()
+          idUser <- getIdentityUserDetails()
+          sfContact <- createSalesforceContact(idUser)
+          zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress)
+          _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
+          _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
     }
   }
@@ -169,14 +184,12 @@ class MemberService(identityService: IdentityService,
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      customer <- stripeService.Customer.create(sub.contact.identityId, form.payment.token).liftM
-      paymentResult <- createPaymentMethod(sub.contact, customer).liftM
+      paymentResult <- createPaymentMethod(sub, form).liftM
       memberId <- EitherT(upgradeSubscription(
         sub.subscription,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
-        customerOpt = Some(customer),
         campaignCode = code
       ))
     } yield memberId).run
@@ -190,7 +203,6 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, sub.subscription.plan.charges.billingPeriod),
         form = form,
-        customerOpt = None,
         campaignCode = code
       ))
     } yield {
@@ -199,12 +211,14 @@ class MemberService(identityService: IdentityService,
         sub.contact.identityId,
         sub.subscription.plan.tier)), sub.contact)
       salesforceService.metrics.putUpgrade(newTier)
-      memberId}).run
+      memberId
+    }).run
 
   override def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(sub: Subscription[SubscriptionPlan.PaidMember]) = sub.plan.chargedThrough.getOrElse(sub.startDate)
+
     val friendRatePlanId = catalog.friend.id
 
     (for {
@@ -266,7 +280,7 @@ class MemberService(identityService: IdentityService,
 
     // The year and month plans are guaranteed to have the same currencies
     val targetCurrencies = newPlan.year.charges.price.prices.map(_.currency).toSet
-    val currencyIsAvailable = targetCurrencies.toSet.contains(sub.plan.currency)
+    val currencyIsAvailable = targetCurrencies.contains(sub.plan.currency)
     val higherTier = newPlan.month.tier > sub.plan.tier
     currencyIsAvailable && higherTier
   }
@@ -274,15 +288,16 @@ class MemberService(identityService: IdentityService,
   override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
 
     val latestSubEither = subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](contact).map(_.get)
-    val latestSubF = latestSubEither.map(_.fold(identity,identity))
+    val latestSubF = latestSubEither.map(_.fold(identity, identity))
 
     for {
       sub <- latestSubF
       subEither <- latestSubEither
-      upcomingPaymentDetails <- paymentService.billingSchedule(sub.id)// shows things you'll pay assuming infinite term
-      paymentToday <- zuoraService.getPaymentSummary(sub.name, sub.plan.charges.currencies.head).map(Some.apply).recover({case _ => None})
+      upcomingPaymentDetails <- paymentService.billingSchedule(sub.id) // shows things you'll pay assuming infinite term
+      paymentToday <- zuoraService.getPaymentSummary(sub.name, sub.plan.charges.currencies.head).map(Some.apply).recover({ case _ => None })
     } yield {
       implicit val currency = sub.plan.charges.currencies.head
+
       def price(amount: Float) = Price(amount, sub.plan.charges.currencies.head)
 
       val nextPayment = for {
@@ -381,7 +396,7 @@ class MemberService(identityService: IdentityService,
         ipAddress = ipAddress.map(_.getHostAddress),
         ipCountry = ipCountry
       ))
-    } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e)}
+    } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
 
   implicit private def features = zuoraService.getFeatures
@@ -390,45 +405,53 @@ class MemberService(identityService: IdentityService,
                                       joinData: PaidMemberForm,
                                       nameData: NameForm,
                                       tier: PaidTier,
-                                      customer: Stripe.Customer,
+                                      stripeCustomer: Option[Customer],
                                       campaignCode: Option[CampaignCode],
                                       email: String,
                                       ipAddress: Option[InetAddress],
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
     val country = joinData.zuoraAccountAddress.country
-    val planChoice = PaidPlanChoice(tier,joinData.payment.billingPeriod)
+    val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures.map { features =>
 
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
-      Subscribe(
-        account = Account.stripe(contactId = contactId, currency = currency, autopay = true),
-        paymentMethod = CreditCardReferenceTransaction(
-          cardId = customer.card.id,
-          customerId = customer.id,
-          last4 = customer.card.last4,
-          cardCountry = CountryGroup.countryByCode(customer.card.country),
-          expirationMonth = customer.card.exp_month,
-          expirationYear = customer.card.exp_year,
-          cardType = customer.card.`type`
-        ).some,
+
+      Subscribe(account = createAccount(contactId, currency, joinData.payment),
+        paymentMethod = createPaymentMethod(contactId, email, joinData.payment, stripeCustomer),
         address = joinData.zuoraAccountAddress,
         email = email,
         ratePlans = NonEmptyList(plan),
         name = nameData,
-        ipAddress = ipAddress.map(_.getHostAddress),
-        ipCountry = ipCountry
-      )
-    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
+        ipCountry = ipCountry)
+    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
     subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(sub)))
-             .flatMap(zuoraService.createSubscription)
-             .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)}
+      .flatMap(zuoraService.createSubscription)
+      .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
+
+  private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
+    paymentForm match {
+      case PaymentForm(_, Some(stripeToken), _) =>
+        Account.stripe(contactId, currency, autopay = true)
+      case PaymentForm(_, _, Some(payPalBaid)) =>
+        Account.payPal(contactId, currency, autopay = true)
+    }
+
+  private def createPaymentMethod(contactId: ContactId, email: String, paymentForm: PaymentForm, stripeCustomer: Option[Customer]) =
+    paymentForm match {
+      case PaymentForm(_, Some(stripeToken), _) =>
+        val card = stripeCustomer.get.card
+        CreditCardReferenceTransaction(card.id, stripeCustomer.get.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`).some
+      case PaymentForm(_, _, Some(payPalBaid)) =>
+        PayPalReferenceTransaction(payPalBaid, email).some
+      case _ => None
+    }
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =
@@ -442,7 +465,7 @@ class MemberService(identityService: IdentityService,
   }
 
   def latestInvoiceItems(items: Seq[SoapQueries.InvoiceItem]): Seq[SoapQueries.InvoiceItem] = {
-    if(items.isEmpty)
+    if (items.isEmpty)
       items
     else {
       val sortedItems = items.sortBy(_.chargeNumber)
@@ -466,11 +489,11 @@ class MemberService(identityService: IdentityService,
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.id.get, None, fs.map(_.get)))
     val currentRatePlan = sub.plan.id
-    logger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: ${currentRatePlan}")
+    logger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: $currentRatePlan")
 
     (newRatePlan |@| ids) { case (newPln, restSub) =>
       val discountsToRemove = getDiscountRatePlanIdsToRemove(restSub, discountIds)
-      if (!discountsToRemove.isEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: ${discountsToRemove}")
+      if (discountsToRemove.nonEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: $discountsToRemove")
       val plansToRemove = currentRatePlan +: discountsToRemove
       if (plansToRemove.isEmpty) logger.error(s"plansToRemove is empty - this could lead to overlapping rate plans on the Zuora sub: ${sub.id}")
       val upgrade = Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), sub.promoCode)
@@ -482,7 +505,6 @@ class MemberService(identityService: IdentityService,
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
-                                  customerOpt: Option[Customer],
                                   campaignCode: Option[CampaignCode])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails
@@ -504,17 +526,34 @@ class MemberService(identityService: IdentityService,
     }).run
   }
 
-  private def createPaymentMethod(contactId: ContactId,
-                                  customer: Stripe.Customer): Future[UpdateResult] =
+  private def createPaymentMethod(sub: FreeMember, form: FreeMemberChangeForm) = {
+    form.payment match {
+      case PaymentForm(_, Some(stripeToken), _) =>
+        createStripePaymentMethod(sub.contact, stripeToken)
+      case PaymentForm(_, _, Some(payPalBaid)) =>
+        createPayPalPaymentMethod(sub.contact, payPalBaid)
+    }
+  }
+
+  private def createStripePaymentMethod(contact: Contact,
+                                        stripeToken: String): Future[UpdateResult] =
     for {
-      sub <- subscriptionService.current[SubscriptionPlan.Member](contactId).map(_.head)
+      customer <- stripeService.Customer.create(contact.identityId, stripeToken)
+      sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
       result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer)
     } yield result
 
+  private def createPayPalPaymentMethod(contact: Contact,
+                                        payPalBaid: String): Future[UpdateResult] =
+    for {
+      sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
+      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, contact.email.getOrElse(""))
+    } yield result
+
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
-      if (sub.hasPendingFreePlan || sub.isCancelled)
-        PendingAmendError(sub.name).left
-      else
-        sub.right
+    if (sub.hasPendingFreePlan || sub.isCancelled)
+      PendingAmendError(sub.name).left
+    else
+      sub.right
 
 }
