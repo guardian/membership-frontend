@@ -425,7 +425,8 @@ class MemberService(identityService: IdentityService,
         address = joinData.zuoraAccountAddress,
         email = email,
         ratePlans = NonEmptyList(plan),
-        name = nameData)
+        name = nameData,
+        ipCountry = ipCountry)
     }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
@@ -437,9 +438,9 @@ class MemberService(identityService: IdentityService,
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
     paymentForm match {
       case PaymentForm(_, Some(stripeToken), _) =>
-        Account.stripe(contactId, currency, true)
+        Account.stripe(contactId, currency, autopay = true)
       case PaymentForm(_, _, Some(payPalBaid)) =>
-        Account.payPal(contactId, currency, true)
+        Account.payPal(contactId, currency, autopay = true)
     }
 
   private def createPaymentMethod(contactId: ContactId, email: String, paymentForm: PaymentForm, stripeCustomer: Option[Customer]) =
