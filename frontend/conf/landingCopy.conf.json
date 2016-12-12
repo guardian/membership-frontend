@@ -1,0 +1,32 @@
+{
+    "uk" : {
+
+        "preVideo" : [
+                    "We want to make the world a better, fairer place. We want to keep the powerful honest. And we believe that doing so means keeping society informed by producing quality, independent journalism, which discovers and tells readers the truth.",
+                    "It’s essential for the functioning of democracy. And our unique ownership structure means no one can tell us to censor or drop a story."
+                    ],
+
+        "postVideo" : [
+                    "But it’s difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.",
+                    "So if you read us, if you like us, if you value our perspective – then become a Supporter and help make our future more secure."
+                    ],
+        "introBenefits" : ["As a Guardian Supporter, you’ll enjoy a number of benefits, including:"],
+
+        "benefits" : [
+                    "Exclusive emails from Guardian journalists",
+                    "An ad-free experience on our mobile app",
+                    "A weekly look \"Inside the Guardian\" for our Members",
+                    "Joining the global Guardian Members community",
+                    "A welcome gift"
+                    ],
+
+        "outBenefits" : ["Most importantly of all, you’ll appreciate every word that you read, in the knowledge that you’ve helped to bring it to the page."],
+
+        "whySupport" : ["Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.",
+                      "We don’t have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.",
+                      "Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.",
+                      "But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.",
+                      "We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone." ]
+    }
+
+}

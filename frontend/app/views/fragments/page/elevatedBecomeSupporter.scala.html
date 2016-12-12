@@ -3,16 +3,17 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
+@import configuration.LandingCopy
 @(  image: OrientatedImages,
     supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean)
+    showCurrencyPrefix: Boolean,
+    landingCopy: LandingCopy)
 
 <section class="elevated-become-supporter-section l-constrained">
-
     <div class="u-section-div">
 	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix)
-	    @fragments.page.elevatedBecomeSupporterBody()
+	    @fragments.page.elevatedBecomeSupporterBody(landingCopy)
     </div>
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix)
 </section>

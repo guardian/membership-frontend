@@ -3,13 +3,15 @@
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import model.OrientatedImages
 
+@import configuration.LandingCopy
 @(  image: OrientatedImages,
 	supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean)
+    showCurrencyPrefix: Boolean,
+    landingCopy: LandingCopy)
 
 <section class="elevated-why-support-section l-constrained">
-    @fragments.page.elevatedWhySupportBody(image)
+    @fragments.page.elevatedWhySupportBody(image, landingCopy)
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showCurrencyPrefix)
 </section>
 

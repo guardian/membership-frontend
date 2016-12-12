@@ -2,12 +2,14 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
+@import configuration.LandingCopy
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean)
+    showCurrencyPrefix: Boolean,
+    landingCopy: LandingCopy)
 
 <section class="elevated-close-guardian-section">
-    @fragments.page.elevatedCloserGuardianBody()
+    @fragments.page.elevatedCloserGuardianBody(landingCopy)
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 2", showCurrencyPrefix, showRightDiagonal = true)
 </section>
 
