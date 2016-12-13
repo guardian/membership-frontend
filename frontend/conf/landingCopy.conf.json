@@ -1,6 +1,10 @@
 {
     "uk" : {
 
+        "mainTitle" : ["Become a", "Guardian Supporter"],
+
+        "tagLine" : "Be part of the Guardian's future, by helping to secure it",
+
         "preVideo" : [
                     "We want to make the world a better, fairer place. We want to keep the powerful honest. And we believe that doing so means keeping society informed by producing quality, independent journalism, which discovers and tells readers the truth.",
                     "It’s essential for the functioning of democracy. And our unique ownership structure means no one can tell us to censor or drop a story."
@@ -10,7 +14,10 @@
                     "But it’s difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.",
                     "So if you read us, if you like us, if you value our perspective – then become a Supporter and help make our future more secure."
                     ],
-        "introBenefits" : ["As a Guardian Supporter, you’ll enjoy a number of benefits, including:"],
+
+        "benefitsTitle" : ["Supporters get closer", "to the Guardian"],
+
+        "benefitsIntro" : ["As a Guardian Supporter, you’ll enjoy a number of benefits, including:"],
 
         "benefits" : [
                     "Exclusive emails from Guardian journalists",
@@ -20,13 +27,87 @@
                     "A welcome gift"
                     ],
 
-        "outBenefits" : ["Most importantly of all, you’ll appreciate every word that you read, in the knowledge that you’ve helped to bring it to the page."],
+        "benefitsOutro" : ["Most importantly of all, you’ll appreciate every word that you read, in the knowledge that you’ve helped to bring it to the page."],
+
+
+        "whySupportTitle" : [ "Why do we need", "our Supporters?"],
 
         "whySupport" : ["Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.",
                       "We don’t have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.",
                       "Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.",
                       "But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.",
                       "We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone." ]
-    }
+    },
 
+    "us" : {
+
+        "mainTitle" : ["Become a", "Guardian US Supporter"],
+
+        "tagLine" : "Help secure the future of our fearless, independent journalism",
+
+        "preVideo" : [
+            "We want to make the world a better, fairer place. We want to keep the powerful honest.  And we believe that quality, independent journalism is essential for American democracy.",
+            "Guardian US operates outside the American media bubble to bring a global perspective to the most pressing issues facing this country.  Our journalists report with integrity and fairness, but we’re not afraid to take bold stands on the issues we care about most, from civil liberties, to the environment, to free expression. We amplify stories ignored by the establishment media, and elevate underrepresented voices."
+        ],
+
+        "postVideo" : [
+            "This is difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.  So if you read us, and you value our perspective – then become a Supporter and help make our future more secure."
+        ],
+        "benefitsTitle" : ["Join a community of readers who care","about independent journalism"],
+
+        "benefitsIntro" : ["As a Guardian US Supporter, you can enjoy:"],
+
+        "benefits" : [
+            "An ad-free experience in our mobile app",
+            "Regular behind-the-scenes emails from our newsroom",
+            "A welcome certificate drawn by Guardian artist Mona Chalabi",
+            "Invitations to live events"
+        ],
+
+        "benefitsOutro" : ["Most importantly, the knowledge that your contribution is directly funding our journalism in America"],
+
+        "whySupportTitle" : [ "Why do we need", "our Supporters?"],
+
+        "whySupport" : ["The Guardian’s unique ownership structure guarantees our independence from corporate and political interests. We are owned by The Scott Trust, an independent-UK based organization that reinvests all profits back  into our journalism.  We don’t have shareholders to please, or a billionaire owner pulling the strings.",
+            "But while the Scott Trust ensures our independence, we need our Supporters to help secure our future in this challenging financial climate.",
+            "We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone."
+        ]
+    },
+
+    "au" : {
+        "mainTitle" : ["Become a", "Guardian Australia Supporter"],
+
+        "tagLine" : "Help protect our independent journalism",
+
+        "preVideo" : [
+            "We want to make the world a better, fairer place. We want to keep the powerful honest. We aim to keep society informed by producing quality, independent journalism, which discovers and tells readers the truth. At Guardian Australia we shine a light on critical, under-reported stories across Australia and deliver the best of the Guardian’s work from reporters around the globe. Our independent ownership allows us to produce award-winning journalism free from commercial influence. No-one can edit our editor."
+        ],
+
+        "postVideo" : [
+            "Your support is crucial for us to maintain this. We operate a lean, local news organisation with offices in Sydney, Melbourne and Canberra, and correspondents in other states. But our commercial environment is increasingly challenging and advertising revenues are in decline. So if you read us, if you like us, if you value our perspective – then it’s only fair to become a Supporter and help make our future in Australia more secure."
+        ],
+
+        "benefitsTitle" : ["Supporters get closer", "to the Guardian"],
+
+        "benefitsIntro" : ["As a Guardian Australia Supporter, you can enjoy:"],
+
+        "benefits" : [
+            "An ad-free experience in our mobile app ",
+            "Regular behind-the-scenes emails from our newsroom",
+            "Welcome letter with First Dog on the Moon certificate",
+            "Invitations to Guardian Live events"
+        ],
+
+        "benefitsOutro" : ["Most importantly, the knowledge that your contribution is directly funding our journalism in Australia."],
+
+
+        "whySupportTitle" : [ "Why do we need", "our Supporters?"],
+
+        "whySupport" : ["Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.",
+            "We don’t have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.",
+            "Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.",
+            "But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.",
+            "We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone." ]
+
+    }
 }

@@ -5,7 +5,10 @@
 
 <div class="l-constrained elevated-why-support-body">
     <div class="elevated-why-support-body__title u-content-width--left">
-        Why do we need<br>our Supporters?
+        @for(line <- landingCopy.whySupportTitle) {
+            @line
+            <br>
+        }
     </div>
     <div class="elevated-why-support-body__col elevated-why-support-body__col--img u-content-width--right">
         <img class="elevated-why-support-body__col__img" src="@image.landscape.defaultImage" />

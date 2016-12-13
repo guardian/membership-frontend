@@ -3,17 +3,25 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
+@import configuration.LandingCopy
 @(  image: OrientatedImages,
     supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean)
+    showCurrencyPrefix: Boolean,
+    landingCopy: LandingCopy
+)
 
 <div class="elevated-banner l-constrained">
     <div class="elevated-banner__col u-content-width--left">
         <div class="elevated-banner__content">
-            <h1 class="elevated-banner__title"><h1 class="elevated-banner__title__h1">Become a<br>Guardian&nbsp;Supporter</h1>
+            <h1 class="elevated-banner__title"><h1 class="elevated-banner__title__h1">
+                @for(line <- landingCopy.mainTitle) {
+                    @line
+                    <br>
+                }
+            </h1>
 
-            <p class="elevated-banner__tagline">Be part of the Guardian's future, by helping to secure&nbsp;it</p>
+            <p class="elevated-banner__tagline">@landingCopy.tagLine</p>
 
             <div class="elevated-banner__button">
             	@fragments.page.elevatedButton(supporterPlans, countryGroup, "Top Button", showCurrencyPrefix)

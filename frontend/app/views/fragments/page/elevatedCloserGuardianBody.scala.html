@@ -6,19 +6,24 @@
 @(  landingCopy: LandingCopy)
 
 <div class="l-constrained elevated-closer-guardian-body">
-    <h1 class="elevated-closer-guardian-body__title u-content-width--left">Supporters get closer<br>to the Guardian</h1>
+    <h1 class="elevated-closer-guardian-body__title u-content-width--left">
+        @for(line <- landingCopy.benefitsTitle) {
+            @line
+            <br>
+        }
+    </h1>
 
     <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__video u-content-width--left">
         <div class="video-preview video-preview--plain">
             <div class="elevated-preview__video">
-            @fragments.media.videoPlayer(Videos.membershipExplained)
+                @fragments.media.videoPlayer(Videos.membershipExplained)
             </div>
         </div>
     </div>
 
     <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
         <div class="elevated-closer-guardian-body__list">
-            @for(paragraph <- landingCopy.introBenefits) {
+            @for(paragraph <- landingCopy.benefitsIntro) {
                 <p class="u-responsive-p">
                 @paragraph
                 <p>
@@ -30,7 +35,7 @@
                     </li>
                 }
             </ul>
-            @for(paragraph <- landingCopy.outBenefits) {
+            @for(paragraph <- landingCopy.benefitsOutro) {
                 <p class="u-responsive-p">
                 @paragraph
                 <p>
