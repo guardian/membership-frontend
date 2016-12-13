@@ -99,6 +99,10 @@
                             county = idUser.privateFields.billingAddress4
                         )
                         @fragments.form.paymentOptions(plans)
+                        <fieldset class="fieldset">
+                            <button type="button" class="js-card-payment-method">Credit/Debit Card</button>
+                            <div id="paypal-button-checkout"></div>
+                        </fieldset>
                         @fragments.form.cardDetail(plans)
                     </div>
 
