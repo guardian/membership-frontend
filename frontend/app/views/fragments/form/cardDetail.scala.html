@@ -77,7 +77,8 @@
                            placeholder="0000 0000 0000 0000"
                            maxlength="19"
                            autocomplete="off"
-                           data-validation="validCreditCardNumber"/>
+                           data-validation="validCreditCardNumber"
+                           disabled="disabled" />
                     @fragments.form.errorMessage("Sorry, the card number that you have entered is incorrect. Please check and retype.")
                 </div>
 
@@ -94,7 +95,8 @@
                        placeholder="CVC"
                        maxlength="4"
                        autocomplete="off"
-                       data-validation="validCVC"/>
+                       data-validation="validCVC"
+                       disabled="disabled" />
                 @fragments.form.errorMessage("Sorry, the security code that you have entered is incorrect. Please check and retype.")
                 <a class="cvc-cta text-link js-toggle" data-toggle="js-cvc-image-container" href="#">What's this?</a>
                 <div id="js-cvc-image-container" class="cvc u-cf" data-toggle-hidden>
@@ -128,7 +130,8 @@
                 <select data-stripe="exp-month"
                         id="cc-exp-month"
                         data-validation="validCreditCardMonth"
-                        class="js-credit-card-exp-month">
+                        class="js-credit-card-exp-month"
+                        disabled="disabled">
                     <option selected="selected">Month</option>
                     @for(month <- selectDates.validCardMonths){
                     <option value="@month">@month</option>
@@ -138,7 +141,8 @@
                 <select data-stripe="exp-year"
                         id="cc-exp-year"
                         data-validation="validCreditCardYear"
-                        class="js-credit-card-exp-year">
+                        class="js-credit-card-exp-year"
+                        disabled="disabled">
                     <option selected="selected">Year</option>
                     @for((year, formattedYear) <- selectDates.validCardYears){
                     <option value="@year">@formattedYear</option>
