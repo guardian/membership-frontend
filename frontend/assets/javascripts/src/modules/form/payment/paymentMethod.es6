@@ -1,9 +1,9 @@
-let cardFields = document.getElementByClassname('js-checkout-card-fields');
+let cardFields = document.getElementsByClassName('js-checkout-card-fields')[0];
 
 // Unhides the credit card fieldset, and enables the form fields.
-export function showCardFields () {
+function showCardFields () {
 
-	cardFields.elements.forEach(card => {
+	[].forEach.call(cardFields.elements, (card) => {
 		card.removeAttribute('disabled');
 	});
 
@@ -12,12 +12,23 @@ export function showCardFields () {
 }
 
 // Hides the credit card fieldset, and disables the form fields.
-export function hideCardFields () {
+function hideCardFields () {
 
-	cardFields.elements.forEach(card => {
+	[].forEach.call(cardFields.elements, (card) => {
 		card.setAttribute('disabled', 'disabled');
 	});
 
 	cardFields.classList.add('is-hidden');
+
+}
+
+// Toggles hiding or showing the card fields.
+export function toggleCardFields () {
+
+	if (cardFields.classList.contains('is-hidden')) {
+		showCardFields();
+	} else {
+		hideCardFields();
+	}
 
 }

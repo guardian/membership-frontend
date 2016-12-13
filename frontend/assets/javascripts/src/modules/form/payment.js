@@ -13,7 +13,7 @@ define([
      */
     var init = function () {
         Stripe.setPublishableKey(guardian.stripePublicKey);
-        listeners.addPaymentListeners();
+        listeners.init();
     };
 
     return {
