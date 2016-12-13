@@ -1,23 +1,16 @@
 @import model.OrientatedImages
 
-@import configuration.LandingCopy
-@( image: OrientatedImages, landingCopy: LandingCopy )
+@( image: OrientatedImages, title: Html)(body:Html)
 
 <div class="l-constrained elevated-why-support-body">
     <div class="elevated-why-support-body__title u-content-width--left">
-        @for(line <- landingCopy.whySupportTitle) {
-            @line
-            <br>
-        }
+        @title
     </div>
+
     <div class="elevated-why-support-body__col elevated-why-support-body__col--img u-content-width--right">
         <img class="elevated-why-support-body__col__img" src="@image.landscape.defaultImage" />
         <p class="elevated-why-support-body__caption">The Guardian newsroom during a busy afternoon</p>
     </div><div class="elevated-why-support-body__col u-content-width--left">
-        @for(paragraph <- landingCopy.whySupport) {
-            <p class="u-responsive-p">
-                @paragraph
-            <p>
-        }
+        @body
     </div>
 </div>

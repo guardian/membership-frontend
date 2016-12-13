@@ -1,18 +1,83 @@
 @import com.gu.i18n.CountryGroup
+@import configuration.Videos
 @import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
 @import views.support.PageInfo
-@import configuration.LandingCopy
+
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
-    detailImage: model.OrientatedImages,
-    landingCopy: LandingCopy)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
     <section class="elevated-supporter">
-        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false, landingCopy)
-        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, landingCopy)
-        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, landingCopy)
+
+        @* ===== First part ===== *@
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Become a<br>Guardian Supporter"), Html("Be part of the Guardian's future, by helping to secure it")
+        ){
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    We want to make the world a better, fairer place. We want to keep the powerful honest. And we believe that doing so means keeping society informed by producing quality, independent journalism, which discovers and tells readers the truth.
+                </p>
+                <p class="u-responsive-p">
+                    It’s essential for the functioning of democracy. And our unique ownership structure means no one can tell us to censor or drop a story.
+                </p>
+            </div>
+
+            @fragments.page.elevatedBecomeSupporterBodyVideo(Videos.scottTrustExplained, "Katharine Viner, editor-in-chief, explains the Guardian's unique ownership model")
+
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    But it’s difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.
+                </p>
+                <p class="u-responsive-p">
+                    So if you read us, if you like us, if you value our perspective – then become a Supporter and help make our future more secure.
+                </p>
+            </div>
+        }
+
+        @* ===== Second Part ===== *@
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Supporters get closer<br>to the Guardian")){
+            <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
+                <div class="elevated-closer-guardian-body__list">
+
+                    <p class="u-responsive-p">
+                        As a Guardian Supporter, you’ll enjoy a number of benefits, including:
+                    <p>
+
+                    <ul>
+                        <li class="elevated-closer-guardian-body__list_item">Exclusive emails from Guardian journalists</li>
+                        <li class="elevated-closer-guardian-body__list_item">An ad-free experience on our mobile app</li>
+                        <li class="elevated-closer-guardian-body__list_item">A weekly look \"Inside the Guardian\" for our Members</li>
+                        <li class="elevated-closer-guardian-body__list_item">Joining the global Guardian Members community</li>
+                        <li class="elevated-closer-guardian-body__list_item">A welcome gift</li>
+                    </ul>
+
+                    <p class="u-responsive-p">
+                        Most importantly of all, you’ll appreciate every word that you read, in the knowledge that you’ve helped to bring it to the page.
+                    <p>
+                </div>
+            </div>
+        }
+
+        @* ===== Third Part ===== *@
+
+        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Why do we need<br>our Supporters?")){
+            <p class="u-responsive-p">
+                Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.
+            </p>
+            <p class="u-responsive-p">
+                We don’t have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.
+            </p>
+            <p class="u-responsive-p">
+                Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.
+            </p>
+            <p class="u-responsive-p">
+                But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.
+            </p>
+            <p class="u-responsive-p">
+                We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone.
+            </p>
+        }
     </section>
 }

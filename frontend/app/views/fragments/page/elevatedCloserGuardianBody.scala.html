@@ -2,15 +2,11 @@
 @import views.support.Asset
 @import configuration.Videos
 
-@import configuration.LandingCopy
-@(  landingCopy: LandingCopy)
+@(title: Html)(body: Html)
 
 <div class="l-constrained elevated-closer-guardian-body">
     <h1 class="elevated-closer-guardian-body__title u-content-width--left">
-        @for(line <- landingCopy.benefitsTitle) {
-            @line
-            <br>
-        }
+        @title
     </h1>
 
     <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__video u-content-width--left">
@@ -21,27 +17,7 @@
         </div>
     </div>
 
-    <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
-        <div class="elevated-closer-guardian-body__list">
-            @for(paragraph <- landingCopy.benefitsIntro) {
-                <p class="u-responsive-p">
-                @paragraph
-                <p>
-            }
-            <ul>
-                @for(benefit <- landingCopy.benefits) {
-                    <li class="elevated-closer-guardian-body__list_item">
-                        @benefit
-                    </li>
-                }
-            </ul>
-            @for(paragraph <- landingCopy.benefitsOutro) {
-                <p class="u-responsive-p">
-                @paragraph
-                <p>
-            }
-        </div>
-	</div>
+    @body
 </div>
 
 

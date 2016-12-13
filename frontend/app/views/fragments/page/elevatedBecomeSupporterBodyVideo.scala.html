@@ -1,0 +1,12 @@
+@(  video:  model.Video,
+    caption: String
+)
+
+<div class="elevated-become-supporter-body__col elevated-become-supporter-body__video u-content-width--right">
+    <div class="video-preview video-preview--plain">
+        <div class="elevated-preview__video">
+            @fragments.media.videoPlayer(video)
+        </div>
+    </div>
+    <p class="elevated-become-supporter-body__caption">@caption</p>
+</div>

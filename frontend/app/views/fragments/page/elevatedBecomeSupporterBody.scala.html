@@ -1,30 +1,5 @@
-@import configuration.Videos
-
-@import configuration.LandingCopy
-@(  landingCopy: LandingCopy)
+@(body: Html)
 
 <div class="elevated-become-supporter-body">
-
-    <div class="elevated-become-supporter-body__col u-content-width--left">
-        @for(paragraph <- landingCopy.preVideo) {
-            <p class="u-responsive-p">
-                @paragraph
-            <p>
-        }
-    </div>
-    <div class="elevated-become-supporter-body__col elevated-become-supporter-body__video u-content-width--right">
-        <div class="video-preview video-preview--plain">
-            <div class="elevated-preview__video">
-            @fragments.media.videoPlayer(Videos.scottTrustExplained)
-            </div>
-        </div>
-        <p class="elevated-become-supporter-body__caption">Katharine Viner, editor-in-chief, explains the Guardian's unique ownership model</p>
-    </div>
-    <div class="elevated-become-supporter-body__col u-content-width--left">
-        @for(paragraph <- landingCopy.postVideo) {
-            <p class="u-responsive-p">
-                @paragraph
-            <p>
-        }
-    </div>
+    @body
 </div>

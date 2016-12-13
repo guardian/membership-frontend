@@ -6,7 +6,6 @@ import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
-import configuration.LandingCopy.ukLandingCopy
 import controllers.Redirects.redirectToSupporterPage
 import forms.MemberForm._
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
@@ -61,8 +60,7 @@ trait Info extends Controller {
         url = request.path,
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
-      detailImageOrientated,
-      ukLandingCopy))
+      detailImageOrientated))
   }
 
   def supporterAustralia = CachedAndOutageProtected { implicit request =>
