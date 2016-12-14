@@ -6,13 +6,15 @@
 @(  image: OrientatedImages,
     supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean)
+    showCurrencyPrefix: Boolean,
+    mainTitle: Html,
+    tagLine: Html
+)(body: Html)
 
 <section class="elevated-become-supporter-section l-constrained">
-
     <div class="u-section-div">
-	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix)
-	    @fragments.page.elevatedBecomeSupporterBody()
+	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix, mainTitle, tagLine)
+	    @fragments.page.elevatedBecomeSupporterBody(body)
     </div>
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix)
 </section>

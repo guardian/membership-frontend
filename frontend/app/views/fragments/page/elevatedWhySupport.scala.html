@@ -6,10 +6,12 @@
 @(  image: OrientatedImages,
 	supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean)
+    showCurrencyPrefix: Boolean,
+    title: Html
+)(body: Html)
 
 <section class="elevated-why-support-section l-constrained">
-    @fragments.page.elevatedWhySupportBody(image)
+    @fragments.page.elevatedWhySupportBody(image, title)(body)
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showCurrencyPrefix)
 </section>
 

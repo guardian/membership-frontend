@@ -54,7 +54,9 @@ trait MemberService {
 
   def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
 
-  def subscriptionUpgradableTo(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
+  def upgradeTierIsValidForCurrency(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
+
+  def upgradeTierIsHigher(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
 
   def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary]
 

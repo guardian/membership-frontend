@@ -1,0 +1,28 @@
+@(currentTier: com.gu.salesforce.Tier, targetTier: com.gu.salesforce.Tier)
+
+@import configuration.Email
+
+@main("Unavailable Tier") {
+
+    <main role="main" class="page-content l-constrained">
+        @fragments.page.pageHeader(s"Unavailable Tier", Some(s"Unable to change from ${currentTier.name} to ${targetTier.name}"))
+
+        <section class="page-section">
+            <div class="page-section__content">
+                @if(currentTier == targetTier) {
+                    <p>
+                        According to our records, you are already registered as a <strong>@currentTier.name</strong>.
+                        Please contact <a href="mailto:@Email.membershipSupport">@Email.membershipSupport</a> if you require any assistance with your membership.
+                    </p>
+                } else {
+                    <p>
+                        You are currently a <strong>@currentTier.name</strong>, it's not possible to change to the <strong>@targetTier.name</strong> tier.
+                        Please contact <a href="mailto:@Email.membershipSupport">@Email.membershipSupport</a> if you require any assistance with your membership.
+                    </p>
+                }
+            </div>
+
+        </section>
+
+    </main>
+}
