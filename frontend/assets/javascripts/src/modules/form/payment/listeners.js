@@ -25,8 +25,11 @@ define([
 
         var cardButton = document.getElementsByClassName(
             'js-card-payment-method')[0];
+        var changeLink = document.getElementsByClassName(
+            'js-change-payment-method')[0];
 
-        cardButton.addEventListener('click', paymentMethod.toggleCardFields);
+        cardButton.addEventListener('click', paymentMethod.showCardFields);
+        changeLink.addEventListener('click', paymentMethod.hideCardFields);
 
     }
 
