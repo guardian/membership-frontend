@@ -22,7 +22,7 @@ export function init () {
 				reject();
 			} else {
 
-				const SETUP_PAYMENT_URL = '/setup-payment';
+				const SETUP_PAYMENT_URL = '/paypal-setup-payment';
 
 				paypal.request.post(SETUP_PAYMENT_URL)
 					.then(data => {

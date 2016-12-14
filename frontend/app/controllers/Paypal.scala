@@ -7,7 +7,7 @@ import okhttp3.{OkHttpClient, FormBody, Request, Response}
 import com.netaporter.uri.Uri.parseQuery
 import configuration.Config
 
-class Paypal extends Controller {
+object Paypal extends Controller {
 
 	// Payment token used to tie Paypal requests together.
 	case class Token (token: String)
@@ -72,7 +72,7 @@ class Paypal extends Controller {
 	}
 
 	// Sets up a payment by contacting Paypal, returns the token as JSON.
-	def setupPayment = Action {
+	def setupPayment = NoCacheAction {
 
 		val paymentParams = Map(
 			"METHOD" -> "SetExpressCheckout",
@@ -89,7 +89,7 @@ class Paypal extends Controller {
 	}
 
 	// Creates a billing agreement using a payment token.
-	def createAgreement = Action { request =>
+	def createAgreement = NoCacheAction { request =>
 
 		request.body.asJson.map { json =>
 
