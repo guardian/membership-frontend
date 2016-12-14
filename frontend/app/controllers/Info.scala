@@ -52,7 +52,7 @@ trait Info extends Controller {
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
-    Ok(views.html.info.elevatedSupporter(
+    Ok(views.html.info.elevatedSupporterUK(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(
@@ -69,79 +69,75 @@ trait Info extends Controller {
     val heroImage = ResponsiveImageGroup(
       name=Some("intro"),
       metadata=Some(Grid.Metadata(
-        description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
+        description = Some("Montage of The Guardian Headlines"),
         byline = None,
-        credit = Some("Carol Cho/AAP")
+        credit = None
       )),
-      availableImages=ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
+      availableImages=ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("coral"),
-        metadata=Some(Grid.Metadata(
-          description = Some("The impact of coral bleaching at Lizard Island on the Great Barrier Reef: (left) the coral turns white, known as 'bleaching', in March 2016; (right) the dead coral is blanketed by seaweed in May 2016"),
-          byline = None,
-          credit = None
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
-          sizes=List(1000,500)
-        )
-      ))
+    val detailImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("A scene in The Guardian editorial office."),
+        byline = None,
+        credit = None
+      )),
+      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
+    )
 
-    Ok(views.html.info.supporterAustralia(
+    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+
+    Ok(views.html.info.elevatedSupporterAU(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(
         title = CopyConfig.copyTitleSupporters,
         url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters),
-        navigation = Nil
+        description = Some(CopyConfig.copyDescriptionSupporters)
       ),
-      pageImages))
+      detailImageOrientated))
   }
 
 
   def supporterUSA = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = US
 
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("fearless"),
-        metadata=Some(Grid.Metadata(
-          description = Some("The Counted: people killed by police in the United States in 2015"),
-          byline = Some("The Guardian US"),
-          credit = None
-        )),
-        availableImages=ResponsiveImageGenerator(
-          id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
-          sizes=List(1000,500)
-        )
-      )
+    val heroImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("Montage of The Guardian Headlines"),
+        byline = None,
+        credit = None
+      )),
+      availableImages=ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
     )
 
-    val heroImages = OrientatedImages(
-      portrait = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/1066_0_1866_2333", Seq(1866, 1600, 800))),
-      landscape = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val detailImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("A scene in The Guardian editorial office."),
+        byline = None,
+        credit = None
+      )),
+      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
     )
 
-    Ok(
-      views.html.info.supporterUSA(
-        heroImages,
-        TouchpointBackend.Normal.catalog.supporter,
-        PageInfo(
-          title = CopyConfig.copyTitleSupporters,
-          url = request.path,
-          description = Some(CopyConfig.copyDescriptionSupporters),
-          navigation = Nav.internationalLandingPageNavigation
-        ),
-        pageImages
-      )
+    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+
+    Ok(views.html.info.elevatedSupporterUS(
+      heroOrientated,
+      TouchpointBackend.Normal.catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters)
+      ),
+      detailImageOrientated)
     )
   }
 

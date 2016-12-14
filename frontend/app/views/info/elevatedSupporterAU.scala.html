@@ -1,0 +1,87 @@
+@import com.gu.i18n.CountryGroup
+@import configuration.Videos
+@import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
+@import views.support.PageInfo
+
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+    pageInfo: PageInfo,
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    <section class="elevated-supporter">
+
+        @* ===== First part ===== *@
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Become a Guardian<br>Australia Supporter"), Html("Help protect our independent journalism")
+        ){
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    We want to make the world a better, fairer place. We want to keep the powerful honest. We aim to keep society informed by producing quality, independent journalism, which discovers and tells readers the truth. At Guardian Australia we shine a light on critical, under-reported stories across Australia and deliver the best of the Guardian’s work from reporters around the globe. Our independent ownership allows us to produce award-winning journalism free from commercial influence.
+                </p>
+                <p class="u-responsive-p">
+                    No-one can edit our editor.
+                </p>
+            </div>
+
+            @fragments.page.elevatedBecomeSupporterBodyVideo(Videos.scottTrustExplained, "Katharine Viner, editor-in-chief, explains the Guardian's unique ownership model")
+
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    Your support is crucial for us to maintain this. We operate a lean, local news organisation with offices in Sydney, Melbourne and Canberra, and correspondents in other states. But our commercial environment is increasingly challenging and advertising revenues are in decline. So if you read us, if you like us, if you value our perspective – then it’s only fair to become a Supporter and help make our future in Australia more secure.
+                </p>
+            </div>
+        }
+
+        @* ===== Second Part ===== *@
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Supporters get closer<br>to the Guardian")){
+            <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
+                <div class="elevated-closer-guardian-body__list">
+
+                    <p class="u-responsive-p">
+                        As a Guardian Australia Supporter, you can enjoy:
+                    </p>
+
+                    <ul>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            An ad-free experience in our mobile app
+                        </li>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            Regular behind-the-scenes emails from our newsroom
+                        </li>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            Welcome letter with First Dog on the Moon certificate
+                        </li>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            Invitations to Guardian Live events
+                        </li>
+                    </ul>
+
+                    <p class="u-responsive-p">
+                        Most importantly, the knowledge that your contribution is directly funding our journalism in Australia.
+                    <p>
+                </div>
+            </div>
+        }
+
+        @* ===== Third Part ===== *@
+
+        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Why do we need<br>our Supporters?")){
+            <p class="u-responsive-p">
+                Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.
+            </p>
+            <p class="u-responsive-p">
+                We don’t have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.
+            </p>
+            <p class="u-responsive-p">
+                Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.
+            </p>
+            <p class="u-responsive-p">
+                But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.
+            </p>
+            <p class="u-responsive-p">
+                We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone.
+            </p>
+        }
+    </section>
+}
