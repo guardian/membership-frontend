@@ -1,3 +1,6 @@
+import form from 'src/modules/form/helper/formUtil';
+import validity from 'src/modules/form/validation/validity';
+
 export function init () {
 
 	paypal.Button.render({
@@ -11,15 +14,25 @@ export function init () {
 		// Called when user clicks Paypal button.
 		payment: function (resolve, reject) {
 
-			const SETUP_PAYMENT_URL = '/setup-payment';
+			form.elems.map(function (elem) {
+				validity.check(elem);
+			});
 
-			paypal.request.post(SETUP_PAYMENT_URL)
-				.then(data => {
-					resolve(data.token);
-				})
-				.catch(err => {
-					reject(err);
-				});
+			if (form.errs.length > 0) {
+				reject();
+			} else {
+
+				const SETUP_PAYMENT_URL = '/setup-payment';
+
+				paypal.request.post(SETUP_PAYMENT_URL)
+					.then(data => {
+						resolve(data.token);
+					})
+					.catch(err => {
+						reject(err);
+					});
+
+			}
 
 		},
 
