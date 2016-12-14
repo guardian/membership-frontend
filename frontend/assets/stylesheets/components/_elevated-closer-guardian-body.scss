@@ -4,7 +4,7 @@
 .elevated-closer-guardian-body {
     background: guss-colour(neutral-8);
     padding-bottom: 18px;
-    
+
     @include mq($from: tablet) {
         padding-bottom: 36px;
     }
@@ -29,6 +29,13 @@
     }
 }
 
+.au-closer-guardian-body,
+.us-closer-guardian-body {
+    @include mq($from: desktop) {
+        padding-bottom: 70px;
+    }
+}
+
 .elevated-closer-guardian-body__list {
     p {
         @include mq($from: tablet) {
@@ -44,16 +51,16 @@
 .elevated-closer-guardian-body__col {
     width: 100%;
 
-    @include mq($from: desktop) {   
+    @include mq($from: desktop) {
         display: inline-block;
         vertical-align: middle;
         width: 50%;
-    }    
+    }
 }
 
 .elevated-closer-guardian-body__video {
 	vertical-align: top;
-    
+
     @include mq($from: desktop) {
         float: left;
     }
@@ -89,7 +96,7 @@
     height: 11px;
     vertical-align: baseline;
     width: 11px;
-    
+
     @include mq($from: tablet) {
         height: 14px;
         width: 14px;
