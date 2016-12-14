@@ -59,7 +59,7 @@
 }
 
 .elevated-closer-guardian-body__video {
-	vertical-align: top;
+    vertical-align: top;
 
     @include mq($from: desktop) {
         float: left;
@@ -96,7 +96,7 @@
     height: 11px;
     vertical-align: baseline;
     width: 11px;
-    
+
     @include mq($from: tablet) {
         height: 14px;
         width: 14px;
