@@ -1,25 +1,5 @@
-@import configuration.Videos
+@(body: Html)
 
 <div class="elevated-become-supporter-body">
-    
-    <div class="elevated-become-supporter-body__col u-content-width--left">
-        <p class="u-responsive-p">We want to make the world a better, fairer place. We want to keep the powerful honest. And we believe that doing so means keeping society informed by producing quality, independent journalism, which discovers and tells readers the truth.</p>
-
-        <p class="u-responsive-p">It’s essential for the functioning of democracy. And our unique ownership structure means no one can tell us to censor or drop a story.</p>
-    </div>
-    
-    <div class="elevated-become-supporter-body__col elevated-become-supporter-body__video u-content-width--right">
-        <div class="video-preview video-preview--plain">
-            <div class="elevated-preview__video">
-            @fragments.media.videoPlayer(Videos.scottTrustExplained)
-            </div>
-        </div>
-        <p class="elevated-become-supporter-body__caption">Katharine Viner, editor-in-chief, explains the Guardian's unique ownership model</p>
-    </div>
-    <div class="elevated-become-supporter-body__col u-content-width--left">
-        <p class="u-responsive-p">But it’s difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.</p>
-        <p class="u-responsive-p">So if you read us, if you like us, if you value our perspective – then become a Supporter and help make our future more secure.</p>
-    </div>
-
+    @body
 </div>
-

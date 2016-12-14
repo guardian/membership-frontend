@@ -2,38 +2,23 @@
 @import views.support.Asset
 @import configuration.Videos
 
+@(title: Html)(body: Html)
+
 <div class="l-constrained elevated-closer-guardian-body">
-    <h1 class="elevated-closer-guardian-body__title u-content-width--left">Supporters get closer<br>to the Guardian</h1>
+    <h1 class="elevated-closer-guardian-body__title u-content-width--left">
+        @title
+    </h1>
 
     <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__video u-content-width--left">
         <div class="video-preview video-preview--plain">
             <div class="elevated-preview__video">
-            @fragments.media.videoPlayer(Videos.membershipExplained)
+                @fragments.media.videoPlayer(Videos.membershipExplained)
             </div>
         </div>
     </div>
 
-    <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
-        <div class="elevated-closer-guardian-body__list">
-                <p class="u-responsive-p">As a Guardian Supporter, you’ll enjoy a number of benefits, including:</p>
-                <ul>
-    	            <li class="elevated-closer-guardian-body__list_item">
-                        Exclusive emails from Guardian journalists
-                    </li>
-    	            <li class="elevated-closer-guardian-body__list_item">
-                        An ad-free experience on our mobile app
-                    </li>
-    	            <li class="elevated-closer-guardian-body__list_item">
-                        A weekly look "Inside the Guardian" for our Members
-                    </li>
-    	            <li class="elevated-closer-guardian-body__list_item">
-                        Joining the global Guardian Members community
-                    </li>
-    	            <li class="elevated-closer-guardian-body__list_item">
-                        A welcome gift
-                    </li>
-                </ul>
-                <p class="u-responsive-p">Most importantly of all, you’ll appreciate every word that you read, in the knowledge that you’ve helped to bring it to the page.</p>
-        </div>
-	</div>
+    @body
 </div>
+
+
+
