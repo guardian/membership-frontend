@@ -1,4 +1,5 @@
 let cardFields = document.getElementsByClassName('js-checkout-card-fields')[0];
+let submitButton = document.getElementsByClassName('js-submit-input')[0];
 
 // Unhides the credit card fieldset, and enables the form fields.
 function showCardFields () {
@@ -8,6 +9,7 @@ function showCardFields () {
 	});
 
 	cardFields.classList.remove('is-hidden');
+	submitButton.classList.remove('is-hidden');
 
 }
 
@@ -19,6 +21,7 @@ function hideCardFields () {
 	});
 
 	cardFields.classList.add('is-hidden');
+	submitButton.classList.add('is-hidden');
 
 }
 
