@@ -5,7 +5,7 @@ export function init () {
 		env: 'sandbox', // Specify 'production' for the prod environment
 		style: {
 			color: 'blue',
-			size: 'small'
+			size: 'medium'
 		},
 
 		// Called when user clicks Paypal button.
