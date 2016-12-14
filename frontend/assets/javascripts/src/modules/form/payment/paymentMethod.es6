@@ -31,14 +31,3 @@ export function hideCardFields (event) {
 	submitButton.classList.add('is-hidden');
 
 }
-
-// Toggles hiding or showing the card fields.
-export function toggleCardFields () {
-
-	if (cardFields.classList.contains('is-hidden')) {
-		showCardFields();
-	} else {
-		hideCardFields();
-	}
-
-}
