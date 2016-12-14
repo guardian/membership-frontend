@@ -36,9 +36,21 @@ export function init () {
 
 		},
 
-		// // Called when user finishes with Paypal interface (approves payment).
+		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
-			console.log('Payment authorised.');
+
+			const CREATE_AGREEMENT_URL = '/paypal-create-agreement';
+
+			fetch(CREATE_AGREEMENT_URL, {
+				headers: { 'Content-Type': 'application/json' },
+				method: 'POST',
+				body: JSON.stringify({ token: data.paymentToken })
+			}).then(response => {
+				console.log(response);
+			}).catch(err => {
+				alert(err);
+			});
+
 	   }
 			
 	}, '#paypal-button-checkout');
