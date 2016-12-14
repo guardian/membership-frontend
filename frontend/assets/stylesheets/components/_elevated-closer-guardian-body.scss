@@ -31,7 +31,7 @@
 
 .au-closer-guardian-body,
 .us-closer-guardian-body {
-    @include mq($from: desktop) {
+    @include mq($from: mem-full) {
         padding-bottom: 70px;
     }
 }

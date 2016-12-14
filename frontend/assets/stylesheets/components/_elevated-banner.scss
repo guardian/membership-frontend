@@ -6,7 +6,7 @@
       clip-path : polygon(0% 100%, 0% 0%, 100% 0%, 100% 95.73%);
   }
 
-  @include mq($from: desktop) { 
+  @include mq($from: desktop) {
     @supports (clip-path : polygon(0% 98%, 0% 0%, 100% 0%, 100% 88.61%)) {
       clip-path : polygon(0% 96%, 0% 0%, 100% 0%, 100% 88.61%);
     }
@@ -17,16 +17,16 @@
     /* In mobile the width of the columns is 100% */
     width: 100%;
     background: guss-colour(news-main-2);
-    
-    @include mq($from: desktop) {   
+
+    @include mq($from: desktop) {
         width: 50%;
         display: inline-block;
-    } 
+    }
 }
 
 .elevated-banner__content {
     padding-top: 3px;
-    
+
     @include mq($from: tablet) {
         padding-top: 6px;
         height: 316px;
@@ -44,7 +44,7 @@
         line-height: 47px;
     }
 }
- 
+
 .elevated-banner__tagline {
     @include fs-header(5);
     line-height: 26px;
@@ -66,9 +66,15 @@
     }
 }
 
+.elevated-banner__tagline--us {
+    @include mq($from: tablet) {
+        max-width: 490px;
+    }
+}
+
 .elevated-banner__button {
     padding-bottom: 34px;
-    
+
     @include mq($from: desktop) {
         margin-top: 35px;
         padding-bottom: 48px;
@@ -76,10 +82,10 @@
 }
 
 .elevated-banner__col--img {
-    display: none;   
+    display: none;
 
-    @include mq($from: desktop) {   
-        display: inline-block;           
+    @include mq($from: desktop) {
+        display: inline-block;
         overflow: hidden;
         height: 316px;
         float: right;
@@ -88,7 +94,7 @@
 
 .elevated-banner__col__img {
 
-    @include mq($from: desktop) {   
+    @include mq($from: desktop) {
         height: 316px;
         overflow: hidden;
     }
