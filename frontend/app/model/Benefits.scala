@@ -33,8 +33,7 @@ object Benefits {
   val PriorityBookingTiers = DiscountTicketTiers
   val ComplimentaryTicketTiers = Set[Tier](Partner(), Patron())
 
-  var adFreeApp = Benefit("ad_free_app","Free access to the premium tier of the Guardian app (includes crosswords and has no adverts)")
-  val adFreeAppLocalised = Benefit("ad_free_app","An ad-free experience in our mobile app")
+  val adFreeApp = Benefit("ad_free_app","An ad-free experience in our mobile app")
   val accessTicket = Benefit("access_tickets", "Access to tickets")
   val booksOrTickets = Benefit("books_or_tickets", s"$zuoraFreeEventTicketsAllowance tickets or 4 books", isNew = true)
   val booksAndTickets = Benefit("books_and_tickets", s"$zuoraFreeEventTicketsAllowance tickets and 4 books", isNew = true)
@@ -68,14 +67,14 @@ object Benefits {
   )
 
   val auSupporter = Seq(
-    adFreeAppLocalised,
+    adFreeApp,
     regularEmails,
     welcomePackAU,
     liveEvents
   )
 
   val usSupporter = Seq(
-    adFreeAppLocalised,
+    adFreeApp,
     regularEmails,
     welcomePackUS,
     liveEvents
@@ -83,7 +82,7 @@ object Benefits {
 
   val ukSupporter = Seq(
     emailsUpdatesJournalists,
-    adFreeAppLocalised,
+    adFreeApp,
     regularEmailsUK,
     globalCommunity,
     welcomePackUK
