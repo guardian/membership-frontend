@@ -45,9 +45,7 @@ object Benefits {
   val liveEvents = Benefit("live_events", "Invitations to Guardian Live events")
   val noBookingFees = Benefit("no_booking_fees", "No booking fees")
   val priorityBooking = Benefit("priority_booking", "48hrs priority booking")
-  val regularEmails = Benefit("regular_emails", "Regular member emails")
-  val regularEmailsAU =  Benefit("regular_emails", "Regular behind-the-scenes emails from our newsroom")
-  val regularEmailsUS =  Benefit("regular_emails", "Regular behind-the-scenes emails from our newsroom")
+  val regularEmails = Benefit("regular_emails", "Regular behind-the-scenes emails from our newsroom")
   val regularEmailsUK =  Benefit("regular_emails", "A weekly look \"Inside the Guardian\" for our Members")
   val uniqueExperiences = Benefit("unique_experiences", "Exclusive behind-the-scenes functions")
   val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
@@ -71,14 +69,14 @@ object Benefits {
 
   val auSupporter = Seq(
     adFreeAppLocalised,
-    regularEmailsAU,
+    regularEmails,
     welcomePackAU,
     liveEvents
   )
 
   val usSupporter = Seq(
     adFreeAppLocalised,
-    regularEmailsUS,
+    regularEmails,
     welcomePackUS,
     liveEvents
   )
