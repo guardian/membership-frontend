@@ -5,9 +5,10 @@
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     showCurrencyPrefix: Boolean,
-    benefitsTitle: Html)(body: Html)
+    benefitsTitle: Html,
+    lowMargin: Boolean = false)(body: Html)
 
-<section class="elevated-close-guardian-section">
+<section class="elevated-close-guardian-section @if(lowMargin){elevated-close-guardian-section--low-margin}">
     @fragments.page.elevatedCloserGuardianBody(benefitsTitle)(body)
     @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 2", showCurrencyPrefix, showRightDiagonal = true)
 </section>
