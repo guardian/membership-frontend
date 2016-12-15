@@ -1,3 +1,4 @@
+@import model.Benefits
 @import com.gu.i18n.CountryGroup
 @import configuration.Videos
 @import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
@@ -46,21 +47,11 @@
                     <p>
 
                     <ul>
-                        <li class="elevated-closer-guardian-body__list_item">
-                            Exclusive emails from Guardian journalists
-                        </li>
-                        <li class="elevated-closer-guardian-body__list_item">
-                            An ad-free experience on our mobile app
-                        </li>
-                        <li class="elevated-closer-guardian-body__list_item">
-                            A weekly look "Inside the Guardian" for our Members
-                        </li>
-                        <li class="elevated-closer-guardian-body__list_item">
-                            Joining the global Guardian Members community
-                        </li>
-                        <li class="elevated-closer-guardian-body__list_item">
-                            A welcome gift
-                        </li>
+                        @for(benefit <- Benefits.promoForCountry(countryGroup)){
+                            <li class="elevated-closer-guardian-body__list_item">
+                                @benefit.title
+                            </li>
+                        }
                     </ul>
 
                     <p class="u-responsive-p">
