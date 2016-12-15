@@ -67,7 +67,7 @@ object Paypal extends Controller {
 			"TOKEN" -> token.token)
 
 		val response = nvpRequest(agreementParams)
-		retrieveNVPParam(response, "BILLINGAGREEMENTID")
+		Json.toJson(Token(retrieveNVPParam(response, "BILLINGAGREEMENTID")))
 
 	}
 
