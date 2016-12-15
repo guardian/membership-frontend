@@ -1,5 +1,3 @@
-# Title
-
 ## Why are you doing this?
 <!-- Remember, PRs are documentation for future contributors -->
 
