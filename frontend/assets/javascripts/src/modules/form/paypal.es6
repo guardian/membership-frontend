@@ -3,6 +3,7 @@ import form from 'src/modules/form/helper/formUtil';
 import validity from 'src/modules/form/validation/validity';
 import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
+import listeners from 'src/modules/form/payment/listeners';
 
 export function init () {
 
@@ -77,5 +78,7 @@ export function init () {
 	   }
 			
 	}, '#paypal-button-checkout');
+
+	listeners.cardDisplayButtonListener();
 
 }

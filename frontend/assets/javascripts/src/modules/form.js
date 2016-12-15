@@ -66,7 +66,7 @@ define([
     'src/modules/form/ongoingCardPayments',
     'src/modules/form/billingPeriodChoice',
     'src/modules/form/promoCode',
-    'src/modules/form/payment/paypal'
+    'src/modules/form/paypal'
 ], function (validation, form, payment, address, options, submitButton, password, ongoingCardPayments, billingPeriodChoice, promoCode, paypal) {
     'use strict';
 
@@ -88,11 +88,16 @@ define([
                     payment.init();
                 });
 
+            }
+
+            if (form.hasPaypal) {
+
                 curl('js!paypal').then(function () {
                     paypal.init();
                 });
 
             }
+
         }
     };
 

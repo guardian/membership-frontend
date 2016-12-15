@@ -1,3 +1,5 @@
+import listeners from 'src/modules/form/payment/listeners';
+
 let paymentMethods = document.getElementsByClassName('js-payment-methods')[0];
 let cardFields = document.getElementsByClassName('js-checkout-card-fields')[0];
 let submitButton = document.getElementsByClassName('js-submit-input')[0];
