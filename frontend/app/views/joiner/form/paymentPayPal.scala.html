@@ -99,11 +99,21 @@
                             county = idUser.privateFields.billingAddress4
                         )
                         @fragments.form.paymentOptions(plans)
-                        @fragments.form.cardDetail(plans)
+                        <fieldset class="fieldset js-payment-methods">
+                            <div class="fieldset__heading">
+                                <h2 class="fieldset__headline">Payment method</h2>
+                                @fragments.form.securityNote()
+                            </div>
+                            <div class="fieldset__fields">
+                                <button type="button" class="action js-card-payment-method">Credit/Debit Card</button>
+                                <div id="paypal-button-checkout"></div>
+                            </div>
+                        </fieldset>
+                        @fragments.form.cardDetailPayPal(plans)
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a-annual"))
+                    @fragments.form.submitPayPal(PaidPlans(plans), countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a-annual"))
                 </div>
             </section>
         </form>

@@ -147,7 +147,7 @@ object Joiner extends Controller with ActivityTracking
 
       Ok(
       if(paypalTest){
-        views.html.joiner.form.paypalTest(
+        views.html.joiner.form.paymentPayPal(
           plans,
           countryCurrencyWhitelist,
           identityUser,

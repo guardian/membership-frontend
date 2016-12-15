@@ -39,7 +39,7 @@
             <noscript>
                 <a href="http://www.enable-javascript.com/" target="_blank" class="action is-disabled">Enable javascript to proceed</a>.
             </noscript>
-            <button type="button" class="action js-submit-input u-hidden-non-js"
+            <button type="button" class="action js-submit-input u-hidden-non-js is-hidden"
                 @for(label <- dataLabel; category <- dataCategory) {
                     data-metric-trigger="click"
                     data-metric-category="@category"
