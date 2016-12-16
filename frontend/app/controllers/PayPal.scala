@@ -9,7 +9,7 @@ import configuration.Config
 
 object PayPal extends Controller {
 
-	// Payment token used to tie Paypal requests together.
+	// Payment token used to tie PayPal requests together.
 	case class Token (token: String)
 
 	// Json writers.
@@ -23,7 +23,7 @@ object PayPal extends Controller {
 		"SIGNATURE" -> Config.paypalSignature,
 		"VERSION" -> Config.paypalNVPVersion)
 
-	// Takes a series of parameters, send a request to Paypal, returns response.
+	// Takes a series of parameters, send a request to PayPal, returns response.
 	def nvpRequest (params: Map[String, String]) = {
 
 		val client = new OkHttpClient()
@@ -45,7 +45,7 @@ object PayPal extends Controller {
 
 		val responseBody = response.body().string()
 		val queryParams = parseQuery(responseBody)
-		queryParams.paramMap.get(paramName).get(0)
+		queryParams.paramMap(paramName).head
 
 	}
 
@@ -58,7 +58,7 @@ object PayPal extends Controller {
 
 	}
 
-	// Sends a request to Paypal to create billing agreement and returns BAID.
+	// Sends a request to PayPal to create billing agreement and returns BAID.
 	def retrieveBaid (token: Token) = {
 
 		val agreementParams = Map(
@@ -70,7 +70,7 @@ object PayPal extends Controller {
 
 	}
 
-	// Sets up a payment by contacting Paypal, returns the token as JSON.
+	// Sets up a payment by contacting PayPal, returns the token as JSON.
 	def setupPayment = NoCacheAction {
 
 		val paymentParams = Map(
