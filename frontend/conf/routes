@@ -145,5 +145,5 @@ GET            /:countryGroup/contribute              controllers.Giraffe.redire
 GET            /change-mem-status-permission          controllers.MembershipStatus.load
 
 # Paypal NVP endpoints.
-POST           /paypal-setup-payment                  controllers.Paypal.setupPayment
-POST           /paypal-create-agreement               controllers.Paypal.createAgreement
+POST           /paypal-setup-payment                  controllers.PayPal.setupPayment
+POST           /paypal-create-agreement               controllers.PayPal.createAgreement

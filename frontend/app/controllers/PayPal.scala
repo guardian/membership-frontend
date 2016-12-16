@@ -7,7 +7,7 @@ import okhttp3.{OkHttpClient, FormBody, Request, Response}
 import com.netaporter.uri.Uri.parseQuery
 import configuration.Config
 
-object Paypal extends Controller {
+object PayPal extends Controller {
 
 	// Payment token used to tie Paypal requests together.
 	case class Token (token: String)
@@ -28,7 +28,6 @@ object Paypal extends Controller {
 
 		val client = new OkHttpClient()
 		val reqBody = new FormBody.Builder()
-
 		for ((param, value) <- defaultNVPParams) reqBody.add(param, value)
 		for ((param, value) <- params) reqBody.add(param, value)
 
