@@ -5,6 +5,39 @@ import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
 import listeners from 'src/modules/form/payment/listeners';
 
+// Validates the form; returns true if the form is valid, false otherwise.
+function formValid () {
+
+	form.elems.map(function (elem) {
+		validity.check(elem);
+	});
+
+	let formHasErrors = form.errs.length > 0;
+	return !formHasErrors;
+
+}
+
+// Sends request to server to setup payment, and returns Paypal token.
+function setupPayment (resolve, reject) {
+
+	if (formValid()) {
+
+		const SETUP_PAYMENT_URL = '/paypal-setup-payment';
+
+		paypal.request.post(SETUP_PAYMENT_URL)
+			.then(data => {
+				resolve(data.token);
+			})
+			.catch(err => {
+				reject(err);
+			});
+
+	} else {
+		reject('Form invalid.');
+	}
+
+}
+
 export function init () {
 
 	paypal.Button.render({
@@ -18,29 +51,7 @@ export function init () {
 		commit: true,
 
 		// Called when user clicks Paypal button.
-		payment: function (resolve, reject) {
-
-			form.elems.map(function (elem) {
-				validity.check(elem);
-			});
-
-			if (form.errs.length > 0) {
-				reject();
-			} else {
-
-				const SETUP_PAYMENT_URL = '/paypal-setup-payment';
-
-				paypal.request.post(SETUP_PAYMENT_URL)
-					.then(data => {
-						resolve(data.token);
-					})
-					.catch(err => {
-						reject(err);
-					});
-
-			}
-
-		},
+		payment: setupPayment,
 
 		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
