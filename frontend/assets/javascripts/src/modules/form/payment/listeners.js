@@ -33,15 +33,8 @@ define([
 
     }
 
-    // Sets up the listeners defined above.
-    function initListeners () {
-
-        addPaymentListeners();
-        cardDisplayButtonListener();
-
-    }
-
     return {
-        init: initListeners
+        addPaymentListeners: addPaymentListeners,
+        cardDisplayButtonListener: cardDisplayButtonListener
     };
 });

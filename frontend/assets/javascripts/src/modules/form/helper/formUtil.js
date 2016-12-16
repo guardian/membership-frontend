@@ -32,6 +32,10 @@ define([
         return !!document.querySelector('.js-credit-card-number');
     };
 
+    function hasPaypal () {
+        return !!document.getElementById('paypal-button-checkout');
+    }
+
     /**
      * formUtil singleton provides:
      *    elem: DomElement - the form element
@@ -50,6 +54,7 @@ define([
                 elem: form,
                 elems: getInputsToValidate(form.elements),
                 hasPayment: hasPayment(),
+                hasPaypal: hasPaypal(),
                 errs: [],
                 flush: function () {
                     this.elem = getFormElem();
