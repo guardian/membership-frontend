@@ -38,16 +38,50 @@ function setupPayment (resolve, reject) {
 
 }
 
+// Creates the billing agreement and retrieves the BAID as json.
+function createAgreement (paypalData) {
+
+	const CREATE_AGREEMENT_URL = '/paypal-create-agreement';
+
+	return fetch(CREATE_AGREEMENT_URL, {
+		headers: { 'Content-Type': 'application/json' },
+		method: 'POST',
+		body: JSON.stringify({ token: paypalData.paymentToken })
+	}).then(response => {
+		return response.json();
+	});
+
+}
+
+// Creates the new member by posting the form data with the BAID.
+function postForm (baid) {
+
+	data = serializer(utilsHelper.toArray(form.elem.elements),
+		{ 'payment.payPalBaid': baid.token });
+	
+	ajax({
+		url: form.elem.action,
+		method: 'post',
+		data: data,
+		success: function (successData) {
+			window.location.assign(successData.redirect);
+		},
+		error: function (errData) {
+			alert(err);
+		}
+	});
+
+}
+
 export function init () {
 
 	paypal.Button.render({
 
-		// Specify 'production' for the prod environment
+		// Sets the environment.
 		env: 'sandbox',
-		style: {
-			color: 'blue',
-			size: 'medium'
-		},
+		// Styles the button.
+		style: { color: 'blue', size: 'medium' },
+		// Defines whether user sees 'continue' or 'pay now' in overlay.
 		commit: true,
 
 		// Called when user clicks Paypal button.
@@ -56,33 +90,7 @@ export function init () {
 		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
 
-			const CREATE_AGREEMENT_URL = '/paypal-create-agreement';
-
-			fetch(CREATE_AGREEMENT_URL, {
-				headers: { 'Content-Type': 'application/json' },
-				method: 'POST',
-				body: JSON.stringify({ token: data.paymentToken })
-			}).then(response => {
-				return response.json();
-			}).then(jsonResponse => {
-
-				data = serializer(utilsHelper.toArray(form.elem.elements),
-					{ 'payment.payPalBaid': jsonResponse.token });
-				
-				ajax({
-					url: form.elem.action,
-					method: 'post',
-					data: data,
-					success: function (successData) {
-						console.log(successData);
-						window.location.assign(successData.redirect);
-					},
-					error: function (errData) {
-						alert(err);
-					}
-				});
-
-			}).catch(err => {
+			createAgreement(data).then(postForm).catch(err => {
 				alert(err);
 			});
 
