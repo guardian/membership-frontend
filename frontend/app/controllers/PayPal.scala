@@ -7,9 +7,9 @@ import okhttp3.{OkHttpClient, FormBody, Request, Response}
 import com.netaporter.uri.Uri.parseQuery
 import configuration.Config
 
-object Paypal extends Controller {
+object PayPal extends Controller {
 
-	// Payment token used to tie Paypal requests together.
+	// Payment token used to tie PayPal requests together.
 	case class Token (token: String)
 
 	// Json writers.
@@ -23,12 +23,11 @@ object Paypal extends Controller {
 		"SIGNATURE" -> Config.paypalSignature,
 		"VERSION" -> Config.paypalNVPVersion)
 
-	// Takes a series of parameters, send a request to Paypal, returns response.
+	// Takes a series of parameters, send a request to PayPal, returns response.
 	def nvpRequest (params: Map[String, String]) = {
 
 		val client = new OkHttpClient()
 		val reqBody = new FormBody.Builder()
-
 		for ((param, value) <- defaultNVPParams) reqBody.add(param, value)
 		for ((param, value) <- params) reqBody.add(param, value)
 
@@ -46,7 +45,7 @@ object Paypal extends Controller {
 
 		val responseBody = response.body().string()
 		val queryParams = parseQuery(responseBody)
-		queryParams.paramMap.get(paramName).get(0)
+		queryParams.paramMap(paramName).head
 
 	}
 
@@ -59,7 +58,7 @@ object Paypal extends Controller {
 
 	}
 
-	// Sends a request to Paypal to create billing agreement and returns BAID.
+	// Sends a request to PayPal to create billing agreement and returns BAID.
 	def retrieveBaid (token: Token) = {
 
 		val agreementParams = Map(
@@ -71,7 +70,7 @@ object Paypal extends Controller {
 
 	}
 
-	// Sets up a payment by contacting Paypal, returns the token as JSON.
+	// Sets up a payment by contacting PayPal, returns the token as JSON.
 	def setupPayment = NoCacheAction {
 
 		val paymentParams = Map(
