@@ -56,7 +56,7 @@ function createAgreement (paypalData) {
 // Creates the new member by posting the form data with the BAID.
 function postForm (baid) {
 
-	data = serializer(utilsHelper.toArray(form.elem.elements),
+	let data = serializer(utilsHelper.toArray(form.elem.elements),
 		{ 'payment.payPalBaid': baid.token });
 	
 	ajax({
