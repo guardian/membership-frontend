@@ -14,7 +14,7 @@ trait Redirects extends Controller {
 
   def redirectToSupporterPage(countryGroup: CountryGroup): Call = {
     countryGroup match {
-      case CountryGroup.UK => routes.Info.supporterUK()
+      case CountryGroup.UK => routes.Info.supporterUK(None)
       case CountryGroup.US => routes.Info.supporterUSA()
       case CountryGroup.Europe => routes.Info.supporterEurope()
       case CountryGroup.Australia => routes.Info.supporterAustralia()
