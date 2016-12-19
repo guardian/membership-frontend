@@ -24,7 +24,7 @@ object PayPal extends Controller {
 		"VERSION" -> Config.paypalNVPVersion)
 
 	// Takes a series of parameters, send a request to PayPal, returns response.
-	def nvpRequest (params: Map[String, String]) = {
+	private def nvpRequest (params: Map[String, String]) = {
 
 		val client = new OkHttpClient()
 		val reqBody = new FormBody.Builder()
@@ -41,7 +41,7 @@ object PayPal extends Controller {
 	}
 
 	// Takes an NVP response and retrieves a given parameter as a string.
-	def retrieveNVPParam (response: Response, paramName: String) = {
+	private def retrieveNVPParam (response: Response, paramName: String) = {
 
 		val responseBody = response.body().string()
 		val queryParams = parseQuery(responseBody)
@@ -51,7 +51,7 @@ object PayPal extends Controller {
 
 	// Retrieves a payment token from an NVP response, and wraps it in JSON for
 	// sending back to the client.
-	def tokenJsonResponse (response: Response) = {
+	private def tokenJsonResponse (response: Response) = {
 
 		val token = Token(retrieveNVPParam(response, "TOKEN"))
 		Json.toJson(token)
@@ -59,7 +59,7 @@ object PayPal extends Controller {
 	}
 
 	// Sends a request to PayPal to create billing agreement and returns BAID.
-	def retrieveBaid (token: Token) = {
+	private def retrieveBaid (token: Token) = {
 
 		val agreementParams = Map(
 			"METHOD" -> "CreateBillingAgreement",
