@@ -22,7 +22,7 @@ function setupPayment (resolve, reject) {
 
 	if (formValid()) {
 
-		const SETUP_PAYMENT_URL = '/paypal-setup-payment';
+		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
 		paypal.request.post(SETUP_PAYMENT_URL)
 			.then(data => {
@@ -41,7 +41,7 @@ function setupPayment (resolve, reject) {
 // Creates the billing agreement and retrieves the BAID as json.
 function createAgreement (paypalData) {
 
-	const CREATE_AGREEMENT_URL = '/paypal-create-agreement';
+	const CREATE_AGREEMENT_URL = '/paypal/create-agreement';
 
 	return fetch(CREATE_AGREEMENT_URL, {
 		headers: { 'Content-Type': 'application/json' },
