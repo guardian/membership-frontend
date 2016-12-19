@@ -3,19 +3,21 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
+@import com.gu.memsub.BillingPeriod
 @(  image: OrientatedImages,
     supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     showCurrencyPrefix: Boolean,
     mainTitle: Html,
-    tagLine: Html
+    tagLine: Html,
+    pricingType: Option[BillingPeriod]
 )(body: Html)
 
 <section class="elevated-become-supporter-section l-constrained">
     <div class="u-section-div">
-	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix, mainTitle, tagLine)
+	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix, mainTitle, tagLine, pricingType)
 	    @fragments.page.elevatedBecomeSupporterBody(body)
     </div>
-    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix)
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix, pricingType = pricingType)
 </section>
 

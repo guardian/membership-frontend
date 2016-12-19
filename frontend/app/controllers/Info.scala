@@ -3,6 +3,7 @@ package controllers
 import actions.ActionRefiners.PlannedOutageProtection
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
+import com.gu.memsub.BillingPeriod
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
@@ -25,7 +26,7 @@ trait Info extends Controller {
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
 
-  def supporterUK = CachedAndOutageProtected { implicit request =>
+  def supporterUK(pricing : Option[BillingPeriod]= None) = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = UK
 
     val heroImage = ResponsiveImageGroup(
@@ -60,7 +61,8 @@ trait Info extends Controller {
         url = request.path,
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
-      detailImageOrientated))
+      detailImageOrientated,
+      pricing))
   }
 
   def supporterAustralia = CachedAndOutageProtected { implicit request =>

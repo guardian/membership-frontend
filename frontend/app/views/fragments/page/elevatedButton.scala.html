@@ -4,11 +4,12 @@
 @import views.support.Asset
 @import views.support.MembershipCompat._
 @import views.support.Pricing._
+@import com.gu.memsub.{BillingPeriod, Month, Year, Price}
 
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     dataLabel : String,
-    showCurrencyPrefix: Boolean = true )
+    pricingType : Option[String])
 
     @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
         <a class="elevated-button action action--no-icon"
@@ -20,11 +21,13 @@
 
             href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
             <div class="elevated-button__text">
-                Become a Supporter <br/>for @if(showCurrencyPrefix) {
-                @pricing.monthly.pretty
-            } else {
-                @pricing.monthly.prettyWithoutCurrencyPrefix
-            } a month
+                Become a Supporter <br/>for
+                    @{
+                        val billingPeriod= Set(Month(), Year()).find( _.adjective == pricingType.getOrElse("")).getOrElse(Month())
+                        val price= pricing.getPriceByBillingPeriod(billingPeriod)
+                        (if (showCurrencyPrefix) price.pretty else price.prettyWithoutCurrencyPrefix) + " a " + billingPeriod.noun
+                    }
+
             </div>
             <div class="elevated-button__icon">
                 <div class="elevated-button__icon__border">
