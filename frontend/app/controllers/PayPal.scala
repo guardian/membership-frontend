@@ -72,15 +72,15 @@ object PayPal extends Controller with LazyLogging {
 	}
 
 	// Sets up a payment by contacting PayPal, returns the token as JSON.
-	def setupPayment = NoCacheAction {
+	def setupPayment = NoCacheAction { request =>
 
 		val paymentParams = Map(
 			"METHOD" -> "SetExpressCheckout",
 			"PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
 			"PAYMENTREQUEST_0_AMT" -> "4.50",
 			"PAYMENTREQUEST_0_CURRENCYCODE" -> "GBP",
-			"RETURNURL" -> "http://localhost:9000/create-agreement",
-			"CANCELURL" -> "http://localhost:9000/cancel",
+			"RETURNURL" -> routes.PayPal.returnUrl().absoluteURL(true)(request),
+			"CANCELURL" -> routes.PayPal.cancelUrl().absoluteURL(true)(request),
 			"BILLINGTYPE" -> "MerchantInitiatedBilling")
 
 		val response = nvpRequest(paymentParams)
