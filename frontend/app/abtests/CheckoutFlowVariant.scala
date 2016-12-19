@@ -9,8 +9,8 @@ import scala.util.Random
   */
 object CheckoutFlowVariant {
   val cookieName = "ab-checkout-flow"
-  val runningTest = true
-  val default = A
+  val runningTest = false
+  val default = B
 
   val all = Seq[CheckoutFlowVariant](A,B)
 
