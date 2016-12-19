@@ -6,8 +6,9 @@ import play.api.libs.json.{Json, JsSuccess, JsError}
 import okhttp3.{OkHttpClient, FormBody, Request, Response}
 import com.netaporter.uri.Uri.parseQuery
 import configuration.Config
+import com.typesafe.scalalogging.LazyLogging
 
-object PayPal extends Controller {
+object PayPal extends Controller with LazyLogging {
 
 	// Payment token used to tie PayPal requests together.
 	case class Token (token: String)
@@ -98,6 +99,24 @@ object PayPal extends Controller {
 			}
 
 		}.getOrElse(BadRequest)
+
+	}
+
+	// The endpoint corresponding to the Paypal return url, hit if the user is
+	// redirected and needs to come back.
+	def returnUrl = NoCacheAction {
+
+		logger.info("User hit the Paypal returnUrl.")
+		Ok(views.html.paypal.errorPage())
+
+	}
+
+	// The endpoint corresponding to the Paypal cancel url, hit if the user is
+	// redirected and the payment fails.
+	def cancelUrl = NoCacheAction {
+
+		logger.error("User hit the Paypal cancelUrl, something went wrong.")
+		Ok(views.html.paypal.errorPage())
 
 	}
 

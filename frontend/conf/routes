@@ -147,3 +147,5 @@ GET            /change-mem-status-permission          controllers.MembershipStat
 # Paypal NVP endpoints.
 POST           /paypal-setup-payment                  controllers.PayPal.setupPayment
 POST           /paypal-create-agreement               controllers.PayPal.createAgreement
+GET            /paypal/return                         controllers.PayPal.returnUrl
+GET            /paypal/cancel                         controllers.PayPal.cancelUrl
