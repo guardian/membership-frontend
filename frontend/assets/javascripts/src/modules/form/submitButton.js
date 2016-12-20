@@ -14,7 +14,7 @@ define(
             if ($SUBMIT_SPAN.length > 0) {
                 $SUBMIT_SPAN.html(template(submitButtonTemplate)(guardian.membership.checkoutForm));
                 if(payload) {
-                    $SUBMIT_BUTTON[0].setAttribute('data-metric-label', payload);
+                    $SUBMIT_BUTTON[0].setAttribute('data-metric-label', 'payment ' + payload);
                 }
             }
         }
