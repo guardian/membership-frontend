@@ -9,7 +9,7 @@
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     dataLabel : String,
-    pricingType : Option[String])
+    pricingType : Option[BillingPeriod])
 
     @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
         <a class="elevated-button action action--no-icon"
@@ -25,7 +25,7 @@
                     @{
                         val billingPeriod= Set(Month(), Year()).find( _.adjective == pricingType.getOrElse("")).getOrElse(Month())
                         val price= pricing.getPriceByBillingPeriod(billingPeriod)
-                        (if (showCurrencyPrefix) price.pretty else price.prettyWithoutCurrencyPrefix) + " a " + billingPeriod.noun
+                        price.pretty + " a " + billingPeriod.noun
                     }
 
             </div>

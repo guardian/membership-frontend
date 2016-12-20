@@ -3,16 +3,17 @@
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import model.OrientatedImages
 
+@import com.gu.memsub.BillingPeriod
 @(  image: OrientatedImages,
 	supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     showCurrencyPrefix: Boolean,
     title: Html,
-    pricingType: Option[String]
+    pricingType: Option[BillingPeriod]
 )(body: Html)
 
 <section class="elevated-why-support-section l-constrained">
     @fragments.page.elevatedWhySupportBody(image, title)(body)
-    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showCurrencyPrefix, pricingType= pricingType)
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showCurrencyPrefix, pricingType)
 </section>
 

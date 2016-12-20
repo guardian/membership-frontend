@@ -7,7 +7,6 @@
 @(  image: OrientatedImages,
     supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    showCurrencyPrefix: Boolean,
     mainTitle: Html,
     tagLine: Html,
     pricingType: Option[BillingPeriod]
@@ -15,9 +14,9 @@
 
 <section class="elevated-become-supporter-section l-constrained">
     <div class="u-section-div">
-	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, showCurrencyPrefix, mainTitle, tagLine, pricingType)
+	    @fragments.page.elevatedBanner(image,supporterPlans, countryGroup, mainTitle, tagLine, pricingType)
 	    @fragments.page.elevatedBecomeSupporterBody(body)
     </div>
-    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", showCurrencyPrefix, pricingType = pricingType)
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Middle Button 1", pricingType = pricingType)
 </section>
 
