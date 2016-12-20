@@ -1,6 +1,4 @@
-@import abtests.CheckoutFlowVariant
-
-@(returnUri: String, inline: Boolean = false, flowVariant: CheckoutFlowVariant = CheckoutFlowVariant.A)
+@(returnUri: String, inline: Boolean = false)
 
 @import configuration.Config.idWebAppSignOutThenRegisterUrl
 
@@ -10,5 +8,5 @@
 	</p>
 	<p class="text-note">
 }
-    <a href="@idWebAppSignOutThenRegisterUrl(returnUri, flowVariant)" class="text-link">Sign out</a>
+    <a href="@idWebAppSignOutThenRegisterUrl(returnUri)" class="text-link">Sign out</a>
 </p>

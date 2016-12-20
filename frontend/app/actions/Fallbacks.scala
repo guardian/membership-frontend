@@ -1,10 +1,9 @@
 package actions
 
-import abtests.CheckoutFlowVariant
 import com.gu.salesforce.PaidTier
 import configuration.Config
 import play.api.mvc.Results._
-import play.api.mvc.{Call, Cookie, RequestHeader}
+import play.api.mvc.{Call, RequestHeader}
 import play.twirl.api.Html
 
 object Fallbacks {
@@ -23,11 +22,7 @@ object Fallbacks {
   def notYetAMemberOn(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
 
-  def chooseRegister(implicit request: RequestHeader) = {
-    val flowSelected = CheckoutFlowVariant.deriveFlowVariant(request)
-
-    SeeOther(Config.idWebAppRegisterUrl(request.uri, flowSelected)).withCookies(Cookie(CheckoutFlowVariant.cookieName, flowSelected.testId))
-  }
+  def chooseRegister(implicit request: RequestHeader) = SeeOther(Config.idWebAppRegisterUrl(request.uri))
 
   def joinStaffMembership(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.staff())

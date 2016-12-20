@@ -1,6 +1,5 @@
 package controllers
 
-import abtests.CheckoutFlowVariant
 import actions.ActionRefiners._
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
@@ -142,27 +141,14 @@ object Joiner extends Controller with ActivityTracking
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
-      val flowSelected = CheckoutFlowVariant.getFlowVariantFromRequestCookie(request).getOrElse(CheckoutFlowVariant.A)
-
-      Ok(flowSelected match {
-        case CheckoutFlowVariant.A => views.html.joiner.form.payment(
+      Ok(views.html.joiner.form.payment(
           plans,
           countryCurrencyWhitelist,
           identityUser,
           pageInfo,
           trackingPromoCode = validTrackingPromoCode,
           promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup))
-        case CheckoutFlowVariant.B => views.html.joiner.form.paymentB(
-          plans,
-          countryCurrencyWhitelist,
-          identityUser,
-          pageInfo,
-          trackingPromoCode = validTrackingPromoCode,
-          promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup))
-      }
-      ).withCookies(Cookie(CheckoutFlowVariant.cookieName, flowSelected.testId))
+          Some(countryGroup)))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e) }
   }
 
