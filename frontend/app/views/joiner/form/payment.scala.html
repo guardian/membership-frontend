@@ -65,7 +65,7 @@
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
-                            note = "We need your address to send you .",
+                            note = "We need your address to send you a welcome pack.",
                             formType = "deliveryAddress",
                             addressRequired = true,
                             address1 = idUser.privateFields.address1,
@@ -108,7 +108,7 @@
                     </div>
                     @fragments.form.terms(countryGroup)
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment b-annual"))
+                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment annual"))
                 </div>
             </section>
         </form>
