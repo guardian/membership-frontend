@@ -95,7 +95,7 @@ GET            /tier/change/:tier/summary             controllers.TierController
 # Information
 GET            /patrons                               controllers.Info.patron
 GET            /supporter                             controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
-GET            /uk/supporter                          controllers.Info.supporterUK(pricing : Option[String])
+GET            /uk/supporter                          controllers.Info.supporterUK(pricing : Option[BillingPeriod])
 GET            /us/supporter                          controllers.Info.supporterUSA
 GET            /eu/supporter                          controllers.Info.supporterEurope
 GET            /au/supporter                          controllers.Info.supporterAustralia
