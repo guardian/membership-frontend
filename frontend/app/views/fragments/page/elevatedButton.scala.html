@@ -23,7 +23,7 @@
             <div class="elevated-button__text">
                 Become a Supporter <br/>for
                     @{
-                        val billingPeriod= Set(Month(), Year()).find( _.adjective == pricingType.getOrElse("")).getOrElse(Month())
+                        val billingPeriod= Set(Month(), Year()).find( _ == pricingType.getOrElse(None)).getOrElse(Month())
                         val price= pricing.getPriceByBillingPeriod(billingPeriod)
                         price.pretty + " a " + billingPeriod.noun
                     }
