@@ -3,7 +3,6 @@ package controllers
 import actions.ActionRefiners.PlannedOutageProtection
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
-import com.gu.memsub.BillingPeriod
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
