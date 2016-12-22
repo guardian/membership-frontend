@@ -26,7 +26,7 @@ trait Info extends Controller {
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
 
-  def supporterUK(pricing : Option[BillingPeriod]= None) = CachedAndOutageProtected { implicit request =>
+  def supporterUK = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = UK
 
     val heroImage = ResponsiveImageGroup(
@@ -61,8 +61,7 @@ trait Info extends Controller {
         url = request.path,
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
-      detailImageOrientated,
-      pricing))
+      detailImageOrientated))
   }
 
   def supporterAustralia = CachedAndOutageProtected { implicit request =>

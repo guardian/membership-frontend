@@ -8,12 +8,11 @@
 	supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     showCurrencyPrefix: Boolean,
-    title: Html,
-    pricingType: Option[BillingPeriod]
+    title: Html
 )(body: Html)
 
 <section class="elevated-why-support-section l-constrained">
     @fragments.page.elevatedWhySupportBody(image, title)(body)
-    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showCurrencyPrefix, pricingType)
+    @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showCurrencyPrefix)
 </section>
 
