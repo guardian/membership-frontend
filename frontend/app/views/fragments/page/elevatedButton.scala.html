@@ -20,14 +20,19 @@
             data-metric-label="@dataLabel"
 
             href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id@if(!pricingType.isEmpty){&pricing=@pricingType.get.adjective}">
-            <div class="elevated-button__text">
+            <div class="elevated-button__text elevated-button--pricing-monthly">
                 Become a Supporter <br/>for
                     @{
                         val billingPeriod= Set(Month(), Year()).find( _ == pricingType.getOrElse(None)).getOrElse(Month())
                         val price= pricing.getPriceByBillingPeriod(billingPeriod)
                         price.pretty + " a " + billingPeriod.noun
                     }
-
+            </div>
+            <div class="elevated-button__text elevated-button--pricing-annual" style="display:none">
+                Become a Supporter <br/>for
+                @{
+                    pricing.yearly.pretty + " a " + Year().noun
+                }
             </div>
             <div class="elevated-button__icon">
                 <div class="elevated-button__icon__border">
