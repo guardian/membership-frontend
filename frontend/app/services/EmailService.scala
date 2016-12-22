@@ -24,8 +24,6 @@ trait EmailService extends LazyLogging {
     c
   }
 
-  private val digest = MessageDigest.getInstance("MD5")
-
   def md5(input: String): String = {
     val hf = Hashing.md5()
     util.Arrays.toString(hf.newHasher().putBytes(input.getBytes("UTF-8")).hash().asBytes())
