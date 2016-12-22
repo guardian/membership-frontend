@@ -6,12 +6,11 @@
 @(	supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
     dataLabel: String,
-    showRightDiagonal: Boolean = false,
-    pricingType: Option[BillingPeriod]
-   )
+    showRightDiagonal: Boolean = false
+)
 
 <div class="l-constrained elevated-footer-button @if(showRightDiagonal){elevated-footer--right-diagonal}">
 	<div class="elevated-footer-button__button u-content-width--left">
-		@fragments.page.elevatedButton(supporterPlans, countryGroup, dataLabel, pricingType)
+		@fragments.page.elevatedButton(supporterPlans, countryGroup, dataLabel)
 	</div>
 </div>

@@ -36,6 +36,7 @@ function updateButtons(priceFlow){
 
             CTA_LANDING.forEach(function(value){
                 value.setAttribute('href', value.getAttribute('href')+'&pricing=monthly');
+                value.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
                 value.querySelector('.elevated-button--pricing-monthly').style.display = 'block';
                 value.querySelector('.elevated-button--pricing-annual').style.display = 'none';
             });
@@ -44,6 +45,7 @@ function updateButtons(priceFlow){
 
             CTA_LANDING.forEach(function(value){
                 value.setAttribute('href', value.getAttribute('href')+'&pricing=annual');
+                value.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
                 value.querySelector('.elevated-button--pricing-monthly').style.display = 'none';
                 value.querySelector('.elevated-button--pricing-annual').style.display = 'block';
             });

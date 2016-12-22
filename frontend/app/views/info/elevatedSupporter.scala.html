@@ -7,15 +7,14 @@
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
-    detailImage: model.OrientatedImages,
-    pricingType : Option[BillingPeriod])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
     <section class="elevated-supporter">
 
         @* ===== First part ===== *@
-        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, Html("Become a<br>Guardian Supporter"), Html("Be part of the Guardian's future, by helping to secure it"), pricingType){
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, Html("Become a<br>Guardian Supporter"), Html("Be part of the Guardian's future, by helping to secure it")){
             <div class="elevated-become-supporter-body__col u-content-width--left">
                 <p class="u-responsive-p">
                     We want to make the world a better, fairer place. We want to keep the powerful honest. And we believe that doing so means keeping society informed by producing quality, independent journalism, which discovers and tells readers the truth.
@@ -38,7 +37,7 @@
         }
 
         @* ===== Second Part ===== *@
-        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Supporters get closer<br>to the Guardian"), pricingType){
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Supporters get closer<br>to the Guardian")){
             <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
                 <div class="elevated-closer-guardian-body__list">
 
@@ -73,7 +72,7 @@
 
         @* ===== Third Part ===== *@
 
-        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Why do we need<br>our Supporters?"), pricingType){
+        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Why do we need<br>our Supporters?")){
             <p class="u-responsive-p">
                 Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.
             </p>

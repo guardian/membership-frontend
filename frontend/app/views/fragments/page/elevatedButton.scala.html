@@ -8,8 +8,7 @@
 
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
-    dataLabel : String,
-    pricingType : Option[BillingPeriod])
+    dataLabel : String)
 
     @defining(supporterPlans.pricingByCurrencyOrGBP(countryGroup.currency)) { pricing =>
         <a class="elevated-button action action--no-icon"
@@ -19,20 +18,20 @@
             data-metric-action="cta click"
             data-metric-label="@dataLabel"
 
-            href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id@if(!pricingType.isEmpty){&pricing=@pricingType.get.adjective}">
-            <div class="elevated-button__text elevated-button--pricing-monthly">
-                Become a Supporter <br/>for
+            href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
+            <div class="elevated-button__text ">
+                Become a Supporter <br/>
+                    <span class="elevated-button--pricing-placeholder" style="visibility:hidden">for
                     @{
-                        val billingPeriod= Set(Month(), Year()).find( _ == pricingType.getOrElse(None)).getOrElse(Month())
-                        val price= pricing.getPriceByBillingPeriod(billingPeriod)
-                        price.pretty + " a " + billingPeriod.noun
+                        pricing.monthly.pretty + " a " + Month().noun
+                    }</span><span class="elevated-button--pricing-monthly" style="display:none">for
+                    @{
+                        pricing.monthly.pretty + " a " + Month().noun
+                    }</span><span class="elevated-button--pricing-annual" style="display:none">for
+                    @{
+                        pricing.yearly.pretty + " a " + Year().noun
                     }
-            </div>
-            <div class="elevated-button__text elevated-button--pricing-annual" style="display:none">
-                Become a Supporter <br/>for
-                @{
-                    pricing.yearly.pretty + " a " + Year().noun
-                }
+                    </span>
             </div>
             <div class="elevated-button__icon">
                 <div class="elevated-button__icon__border">
