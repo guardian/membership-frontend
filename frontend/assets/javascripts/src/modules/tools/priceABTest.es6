@@ -52,7 +52,3 @@ function updateButtons(priceFlow){
             break;
     }
 }
-
-
-
-
