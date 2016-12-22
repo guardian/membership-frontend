@@ -29,6 +29,13 @@
     }
 }
 
+.au-closer-guardian-body,
+.us-closer-guardian-body {
+     @include mq($from: mem-full) {
+         padding-bottom: 70px;
+     }
+ }
+
 .elevated-closer-guardian-body__list {
     p {
         @include mq($from: tablet) {
@@ -52,7 +59,7 @@
 }
 
 .elevated-closer-guardian-body__video {
-	vertical-align: top;
+    vertical-align: top;
     
     @include mq($from: desktop) {
         float: left;

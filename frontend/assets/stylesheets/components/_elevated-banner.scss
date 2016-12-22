@@ -66,6 +66,12 @@
     }
 }
 
+.elevated-banner__tagline--us {
+    @include mq($from: tablet) {
+        max-width: 490px;
+    }
+}
+
 .elevated-banner__button {
     padding-bottom: 34px;
     

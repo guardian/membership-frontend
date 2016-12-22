@@ -1,0 +1,78 @@
+@import model.Benefits
+@import com.gu.i18n.CountryGroup
+@import configuration.Videos
+@import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
+@import views.support.PageInfo
+
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+    pageInfo: PageInfo,
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    <section class="elevated-supporter">
+
+        @* ===== First part ===== *@
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Become a Guardian<br>US Supporter"), Html("<p class=\"elevated-banner__tagline--us elevated-banner__tagline\">Help secure the future of our fearless, independent journalism</p>")
+        ){
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    We want to make the world a better, fairer place. We want to keep the powerful honest.  And we believe that quality, independent journalism is essential for American democracy.
+                </p>
+            </div>
+
+            @fragments.page.elevatedBecomeSupporterBodyVideo(Videos.scottTrustExplained, "Katharine Viner, editor-in-chief, explains the Guardian's unique ownership model")
+
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    Guardian US operates outside the American media bubble to bring a global perspective to the most pressing issues facing this country.  Our journalists report with integrity and fairness, but we’re not afraid to take bold stands on the issues we care about most, from civil liberties, to the environment, to free expression. We amplify stories ignored by the establishment media, and elevate underrepresented voices.
+                </p>
+                <p class="u-responsive-p">
+                    This is difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.  So if you read us, and you value our perspective – then become a Supporter and help make our future more secure.
+                </p>
+            </div>
+        }
+
+        @* ===== Second Part ===== *@
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Join a community of readers<br>who care about independent journalism")){
+            <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right us-closer-guardian-body">
+                <div class="elevated-closer-guardian-body__list">
+
+                    <p class="u-responsive-p">
+                        As a Guardian US Supporter, you can enjoy:
+                    <p>
+
+                    <ul>
+                        @for(benefit <- Benefits.promoForCountry(countryGroup)){
+                            <li class="elevated-closer-guardian-body__list_item">
+                            @benefit.title
+                            </li>
+                        }
+                    </ul>
+
+                    <p class="u-responsive-p">
+                        Most importantly, the knowledge that your contribution is directly funding our journalism in America
+                    <p>
+                </div>
+            </div>
+        }
+
+        @* ===== Third Part ===== *@
+
+        @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Why do we need<br>our Supporters?")){
+            <p class="u-responsive-p">
+                The Guardian’s unique ownership structure guarantees our independence from corporate and political interests. We are owned by The Scott Trust, an independent-UK based organization that reinvests all profits back  into our journalism.
+            </p>
+            <p class="u-responsive-p">
+                We don’t have shareholders to please, or a billionaire owner pulling the strings.
+            </p>
+            <p class="u-responsive-p">
+                But while the Scott Trust ensures our independence, we need our Supporters to help secure our future in this challenging financial climate.
+            </p>
+            <p class="u-responsive-p">
+                We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone.
+            </p>
+        }
+    </section>
+}
