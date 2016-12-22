@@ -11,7 +11,7 @@ define(function() {
             if (!url) {
                 url = window.location.href;
             }
-            
+
             name = name.replace(/[\[\]]/g, '\\$&');
             var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
                 results = regex.exec(url);
@@ -32,11 +32,11 @@ define(function() {
                 url = window.location.href;
             }
 
-            var response = "";
+            var response = '';
             var urlParts = url.split('/');
 
             for (var i = 1; i < urlParts.length; i++) {
-                response += "/";
+                response += '/';
                 response += urlParts[i];
             }
             return response;
