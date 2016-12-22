@@ -2,6 +2,8 @@
 @import configuration.Videos
 @import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
 @import views.support.PageInfo
+@import tracking.AppnexusPixel
+@import com.gu.salesforce.Tier.Supporter
 
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
@@ -11,6 +13,10 @@
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
     <section class="elevated-supporter">
+
+        <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
+            <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.landingPageids(Supporter())}&t=2" width="1" height="1" />
+        <!-- End of Conversion Pixel -->
 
         @* ===== First part ===== *@
         @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Become a<br>Guardian Supporter"), Html("Be part of the Guardian's future, by helping to secure it")

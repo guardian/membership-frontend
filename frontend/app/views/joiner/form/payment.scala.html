@@ -13,6 +13,7 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.i18n.CountryGroup
+@import tracking.AppnexusPixel
 
 
 @(plans: MonthYearPlans[PaidMember],
@@ -27,6 +28,9 @@
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
     <main class="page-content skin-checkout-b">
+        <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
+            <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
+        <!-- End of Conversion Pixel -->
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField

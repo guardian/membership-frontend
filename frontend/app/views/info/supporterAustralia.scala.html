@@ -7,6 +7,8 @@
 @import com.gu.memsub.subsv2.Catalog._
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import views.support.MembershipCompat._
+@import com.gu.salesforce.Tier.Supporter
+@import tracking.AppnexusPixel
 
 @import com.gu.memsub.subsv2.CatalogPlan
 @(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
@@ -14,6 +16,11 @@
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
+        <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.landingPageids(Supporter())}&t=2" width="1" height="1" />
+    <!-- End of Conversion Pixel -->
+
     @* ===== About Supporters ===== *@
     @fragments.page.heroBanner(heroImage) {
         Become a Guardian&nbsp;Supporter
