@@ -19,6 +19,7 @@ export function init() {
     let isEngamentBannerTraffic = ccRegExp.test(internalCampaignCode);
 
     if (isEngamentBannerTraffic || !isLandingPage) {
+        updateButtons(TEST_CODES[0], false);
         return;
     }
     guardian.abPriceCTA = cookie.getCookie('ab-price-cta');
@@ -27,15 +28,17 @@ export function init() {
     cookie.setCookie('ab-price-cta', priceFlow, 30, true);
 
     guardian.abPriceCTA = priceFlow;
-    updateButtons(priceFlow);
+    updateButtons(priceFlow, true);
 }
 
-function updateButtons(priceFlow){
+function updateButtons(priceFlow, modifyNextstep){
     switch (priceFlow){
         case 'price-monthly' :
 
             CTA_LANDING.forEach(function(value){
-                value.setAttribute('href', value.getAttribute('href')+'&pricing=monthly');
+                if(modifyNextstep) {
+                    value.setAttribute('href', value.getAttribute('href')+'&pricing=monthly');
+                }
                 value.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
                 value.querySelector('.elevated-button--pricing-monthly').style.display = 'block';
                 value.querySelector('.elevated-button--pricing-annual').style.display = 'none';
@@ -44,7 +47,9 @@ function updateButtons(priceFlow){
         case 'price-annual' :
 
             CTA_LANDING.forEach(function(value){
-                value.setAttribute('href', value.getAttribute('href')+'&pricing=annual');
+                if(modifyNextstep) {
+                    value.setAttribute('href', value.getAttribute('href') + '&pricing=annual');
+                }
                 value.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
                 value.querySelector('.elevated-button--pricing-monthly').style.display = 'none';
                 value.querySelector('.elevated-button--pricing-annual').style.display = 'block';
