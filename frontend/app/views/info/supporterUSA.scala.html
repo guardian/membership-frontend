@@ -16,9 +16,10 @@
 @import configuration.Videos
 @import views.support.Asset
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
-    <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
-        <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.landingPageids(Supporter())}&t=2" width="1" height="1" />
-    <!-- End of Conversion Pixel -->
+
+    <!-- Segment Pixel - Jan17-Membership Landing Page - DO NOT MODIFY -->
+        <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.landingPageids(Supporter())}&t=2" width="1" height="1" />
+    <!-- End of Segment Pixel -->
 
     @fragments.page.heroBanner(heroImages) {
         Become a Guardian&nbsp;Supporter
