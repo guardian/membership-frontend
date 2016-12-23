@@ -28,9 +28,10 @@
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
     <main class="page-content skin-checkout-b">
-        <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
-            <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
-        <!-- End of Conversion Pixel -->
+
+        <!-- Segment Pixel - Jan17 - Become a supporter - DO NOT MODIFY -->
+            <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
+        <!-- End of Segment Pixel -->
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
