@@ -3,15 +3,23 @@
 
 @import views.support.PageInfo
 @import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan._
+@import com.gu.memsub.subsv2.CatalogPlan
+@import com.gu.salesforce.Tier.Supporter
 @import views.support.MembershipCompat._
-@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[Supporter],
+@import tracking.AppnexusPixel
+
+@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @import configuration.Videos
 @import views.support.Asset
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    <!-- Segment Pixel - Jan17-Membership Landing Page - DO NOT MODIFY -->
+        <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.landingPageids(Supporter())}&t=2" width="1" height="1" />
+    <!-- End of Segment Pixel -->
+
     @fragments.page.heroBanner(heroImage, "hero-banner__image--bottom") {
         Become a Guardian&nbsp;Supporter
     } {
