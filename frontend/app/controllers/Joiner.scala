@@ -113,7 +113,7 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode], pricingType: Option[BillingPeriod]) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog
 
@@ -126,13 +126,13 @@ object Joiner extends Controller with ActivityTracking
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
-        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup), pricingType)
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
       )
 
       val providedPromoCode = promoCode orElse codeFromSession
 
       // is the providedPromoCode valid for the page being rendered (year is default billing period)
-      val planChoice = PaidPlanChoice(tier, pricingType.getOrElse(BillingPeriod.year))
+      val planChoice = PaidPlanChoice(tier, BillingPeriod.year)
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
 

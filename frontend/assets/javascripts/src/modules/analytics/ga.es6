@@ -17,8 +17,7 @@ const dimensions = {
     intcmp: 'dimension12', // Session
     customerAgent: 'dimension13', // Session
     CamCodeBusinessUnit: 'dimension14', // Session
-    CamCodeTeam: 'dimension15', // Session
-    experience: 'dimension16'// Session
+    CamCodeTeam: 'dimension15' // Session
 
 };
 const metrics = {
@@ -100,10 +99,6 @@ export function init() {
     wrappedGa('set', dimensions.isLoggedOn, isLoggedIn.toString());
     wrappedGa('set', dimensions.signedOut, signedOut.toString());
     wrappedGa('set', dimensions.platform, 'membership');
-    if (guardian.abPriceCTA) {
-        wrappedGa('set', dimensions.experience, guardian.abPriceCTA);
-    }
-
     if (isLoggedIn) {
         wrappedGa('set', dimensions.identityId, u.id);
     }
