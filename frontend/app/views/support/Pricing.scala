@@ -1,7 +1,7 @@
 package views.support
 
 import com.gu.i18n.Currency
-import com.gu.memsub.Price
+import com.gu.memsub.{BillingPeriod, Month, Year, Price}
 import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 import com.gu.memsub.subsv2.MonthYearPlans
 
@@ -17,6 +17,17 @@ case class Pricing(yearly: Price, monthly: Price) {
 
   val savingInfo: Option[String] =
     if (hasYearlySaving) Some(s"Save ${yearlySaving.pretty}/year") else None
+
+  def getPriceByBillingPeriod(b : BillingPeriod) : Price = b match {
+    case Year() => yearly
+    case Month() => monthly
+  }
+
+  def getPhrase(period : BillingPeriod): String = {
+    val price= getPriceByBillingPeriod(period)
+    price.pretty + " a " + period.noun
+  }
+
 }
 
 object Pricing {

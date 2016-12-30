@@ -10,7 +10,7 @@ case class CheckoutForm(defaultCountry: Option[Country],
                         billingPeriod: BillingPeriod)
 
 object CheckoutForm extends LazyLogging {
-  def forIdentityUser(idUser: IdentityUser, plans: TierPlans, requestCountryGroup: Option[CountryGroup]): CheckoutForm = {
+  def forIdentityUser(idUser: IdentityUser, plans: TierPlans, requestCountryGroup: Option[CountryGroup], pricingType : Option[BillingPeriod] = None): CheckoutForm = {
     val (country, desiredCurrency) = (requestCountryGroup, idUser.country) match {
       case (Some(cg), _) =>
         (cg.defaultCountry, cg.currency)
@@ -29,6 +29,6 @@ object CheckoutForm extends LazyLogging {
     val currency =
       if (plans.currencies.contains(desiredCurrency)) desiredCurrency else GBP
 
-    CheckoutForm(country, currency, BillingPeriod.year)
+    CheckoutForm(country, currency, pricingType.getOrElse(BillingPeriod.year))
   }
 }
