@@ -21,17 +21,9 @@
             href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id">
             <div class="elevated-button__text ">
                 Become a Supporter <br/>
-                    <span class="elevated-button--pricing-placeholder" style="visibility:hidden">for
-                    @{
-                        pricing.monthly.pretty + " a " + Month().noun
-                    }</span><span class="elevated-button--pricing-monthly" style="display:none">for
-                    @{
-                        pricing.monthly.pretty + " a " + Month().noun
-                    }</span><span class="elevated-button--pricing-annual" style="display:none">for
-                    @{
-                        pricing.yearly.pretty + " a " + Year().noun
-                    }
-                    </span>
+                    <span class="elevated-button--pricing-placeholder" style="visibility:hidden">for @pricing.getPhrase(Month())</span>
+                    <span class="elevated-button--pricing-monthly" style="display:none">for @pricing.getPhrase(Month())</span>
+                    <span class="elevated-button--pricing-annual" style="display:none">for @pricing.getPhrase(Year())</span>
             </div>
             <div class="elevated-button__icon">
                 <div class="elevated-button__icon__border">
