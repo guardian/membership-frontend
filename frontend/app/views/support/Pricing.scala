@@ -23,7 +23,7 @@ case class Pricing(yearly: Price, monthly: Price) {
     case Month() => monthly
   }
 
-  def getPhrase(period : BillingPeriod){
+  def getPhrase(period : BillingPeriod): String = {
     val price= getPriceByBillingPeriod(period)
     price.pretty + " a " + period.noun
   }
