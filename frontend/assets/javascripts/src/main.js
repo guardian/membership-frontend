@@ -25,8 +25,7 @@ require([
     'src/modules/metrics',
     'src/modules/patterns',
     'src/modules/paidToPaid',
-    'src/modules/memstatus',
-    'src/modules/tools/priceABTest'
+    'src/modules/memstatus'
 ], function(
     ajax,
     raven,
@@ -54,16 +53,12 @@ require([
     metrics,
     patterns,
     paidToPaid,
-    memstatus,
-    priceABTest
+    memstatus
 ) {
     'use strict';
 
     ajax.init({page: {ajaxUrl: ''}});
     raven.init('https://8ad435f4fefe468eb59b19fd81a06ea9@app.getsentry.com/56405');
-
-    //Price ABTest
-    priceABTest.init();
 
     analytics.init();
 
@@ -94,7 +89,6 @@ require([
     // Forms
     form.init();
     processSubmit.init();
-
 
     // Metrics
     metrics.init();
