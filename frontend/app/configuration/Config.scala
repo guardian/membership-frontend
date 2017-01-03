@@ -1,6 +1,4 @@
 package configuration
-import abtests.CheckoutFlowVariant
-import abtests.CheckoutFlowVariant.A
 import com.getsentry.raven.dsn.Dsn
 import com.gu.config._
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
@@ -49,11 +47,11 @@ object Config {
   def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
-  def idWebAppRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String =
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & ("clientId" -> abTestVariant.identitySkin)
+  def idWebAppRegisterUrl(uri: String): String =
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
-  def idWebAppSignOutThenRegisterUrl(uri: String, abTestVariant: CheckoutFlowVariant = A): String =
-    (idWebAppUrl / "signout") ? ("returnUrl" -> (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri" & idSkipConfirmation & ("clientId" -> abTestVariant.identitySkin)))
+  def idWebAppSignOutThenRegisterUrl(uri: String): String =
+    (idWebAppUrl / "signout") ? ("returnUrl" -> (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri" & idSkipConfirmation & idMember))
 
   def idWebAppProfileUrl =
     idWebAppUrl / "membership"/ "edit"

@@ -10,6 +10,7 @@
 @import com.gu.memsub.PaymentCard
 @import com.gu.memsub.Subscriber
 @import com.gu.memsub.promo.Promotion.AnyPromotion
+@import tracking.AppnexusPixel
 @(member: Subscriber.Member,
   summary: ThankyouSummary,
   cardOpt: Option[PaymentCard],
@@ -60,6 +61,10 @@
    };
 </script>
     <main role="main" class="page-content l-constrained">
+
+        <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
+            <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.thankYouPageids(member.subscription.plan.tier)}&t=2" width="1" height="1" />
+        <!-- End of Conversion Pixel -->
 
         @fragments.page.pageHeader(
             pageHeader,

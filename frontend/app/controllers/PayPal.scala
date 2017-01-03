@@ -1,12 +1,13 @@
 package controllers
 
-import play.api.mvc.{Controller, Action}
+import play.api.mvc.{Action, Controller}
 import play.api.mvc.Results.BadRequest
-import play.api.libs.json.{Json, JsSuccess, JsError}
-import okhttp3.{OkHttpClient, FormBody, Request, Response}
+import play.api.libs.json.{JsError, JsSuccess, Json}
+import okhttp3.{FormBody, OkHttpClient, Request, Response}
 import com.netaporter.uri.Uri.parseQuery
 import configuration.Config
 import com.typesafe.scalalogging.LazyLogging
+import play.api.Logger
 
 object PayPal extends Controller with LazyLogging {
 
@@ -61,7 +62,7 @@ object PayPal extends Controller with LazyLogging {
 
 	// Sends a request to PayPal to create billing agreement and returns BAID.
 	private def retrieveBaid (token: Token) = {
-
+    logger.info("Called retrieveBaid")
 		val agreementParams = Map(
 			"METHOD" -> "CreateBillingAgreement",
 			"TOKEN" -> token.token)
@@ -73,7 +74,7 @@ object PayPal extends Controller with LazyLogging {
 
 	// Sets up a payment by contacting PayPal, returns the token as JSON.
 	def setupPayment = NoCacheAction { request =>
-
+    logger.info("Called setupPayment")
 		val paymentParams = Map(
 			"METHOD" -> "SetExpressCheckout",
 			"PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
