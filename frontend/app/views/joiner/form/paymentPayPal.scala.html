@@ -1,19 +1,12 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.promo.PromoCode
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.salesforce.Tier.Supporter
 @import views.html.helper._
 @import views.support.DisplayText._
-@import views.support.PageInfo
-@import views.support.CountryWithCurrency
-@import views.support.IdentityUser
-
-@import com.gu.memsub.Current
-@import com.gu.salesforce.PaidTier
-@import com.gu.salesforce.Tier.Supporter
-@import com.gu.memsub.promo.PromoCode
-@import views.support.PaidPlans
 @import views.support.MembershipCompat._
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-
-@import com.gu.i18n.CountryGroup
+@import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
 
 @(plans: MonthYearPlans[PaidMember],
   countriesWithCurrencies: List[CountryWithCurrency],
