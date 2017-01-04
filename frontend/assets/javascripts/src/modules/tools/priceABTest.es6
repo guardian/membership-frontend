@@ -34,26 +34,29 @@ export function init() {
 function updateButtons(priceFlow, modifyNextstep){
     switch (priceFlow){
         case 'price-monthly' :
-
-            CTA_LANDING.forEach(function(value){
+            for(var i = 0, len = CTA_LANDING.length ; i < len ; i++) {
+                var element = CTA_LANDING[i];
                 if(modifyNextstep) {
-                    value.setAttribute('href', value.getAttribute('href')+'&pricing=monthly');
+                    element.setAttribute('href', element.getAttribute('href')+'&pricing=monthly');
                 }
-                value.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
-                value.querySelector('.elevated-button--pricing-monthly').style.display = 'block';
-                value.querySelector('.elevated-button--pricing-annual').style.display = 'none';
-            });
+                element.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
+                element.querySelector('.elevated-button--pricing-monthly').style.display = 'block';
+                element.querySelector('.elevated-button--pricing-annual').style.display = 'none';
+            }
             break;
+
         case 'price-annual' :
 
-            CTA_LANDING.forEach(function(value){
+            for(var i = 0, len = CTA_LANDING.length ; i < len ; i++) {
+                var element = CTA_LANDING[i];
+
                 if(modifyNextstep) {
-                    value.setAttribute('href', value.getAttribute('href') + '&pricing=annual');
+                    element.setAttribute('href', element.getAttribute('href') + '&pricing=annual');
                 }
-                value.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
-                value.querySelector('.elevated-button--pricing-monthly').style.display = 'none';
-                value.querySelector('.elevated-button--pricing-annual').style.display = 'block';
-            });
+                element.querySelector('.elevated-button--pricing-placeholder').style.display = 'none';
+                element.querySelector('.elevated-button--pricing-monthly').style.display = 'none';
+                element.querySelector('.elevated-button--pricing-annual').style.display = 'block';
+            }
             break;
     }
 }
