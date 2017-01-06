@@ -122,6 +122,7 @@ object Joiner extends Controller with ActivityTracking
     (for {
       identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
+      MembersDataAPI.Service.addBehaviour(request.user, "enterPaidDetails.show")
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
