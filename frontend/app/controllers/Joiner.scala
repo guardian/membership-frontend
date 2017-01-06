@@ -113,7 +113,13 @@ object Joiner extends Controller with ActivityTracking
 
   def NonMemberAction(tier: Tier) = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
-  def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup, promoCode: Option[PromoCode], pricingType: Option[BillingPeriod]) = NonMemberAction(tier).async { implicit request =>
+  def enterPaidDetails(
+    tier: PaidTier,
+    countryGroup: CountryGroup,
+    promoCode: Option[PromoCode],
+    pricingType: Option[BillingPeriod],
+    paypalTest: Boolean = false) = NonMemberAction(tier).async { implicit request =>
+
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog
 
@@ -141,15 +147,29 @@ object Joiner extends Controller with ActivityTracking
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
-      Ok(views.html.joiner.form.payment(
+
+      Ok(
+      if(paypalTest){
+        views.html.joiner.form.paymentPayPal(
           plans,
           countryCurrencyWhitelist,
           identityUser,
           pageInfo,
           trackingPromoCode = validTrackingPromoCode,
           promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup)))
-    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e) }
+          Some(countryGroup))
+      } else {
+          views.html.joiner.form.payment(
+          plans,
+          countryCurrencyWhitelist,
+          identityUser,
+          pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode,
+          Some(countryGroup))
+        }
+      )
+    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>

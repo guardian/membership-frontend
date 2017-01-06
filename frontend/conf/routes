@@ -20,7 +20,7 @@ GET            /analytics-off                         controllers.Testing.analyt
 GET            /join/staff                            controllers.Joiner.staff
 GET            /join/staff/enter-details              controllers.Joiner.enterStaffDetails
 GET            /join/friend/enter-details             controllers.Joiner.enterFriendDetails
-GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK, promoCode: Option[PromoCode] ?= None,  pricing : Option[BillingPeriod] ?= None)
+GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK, promoCode: Option[PromoCode] ?= None, pricing: Option[BillingPeriod] ?= None, paypalTest: Boolean ?= false)
 POST           /join/friend/enter-details             controllers.Joiner.joinFriend
 POST           /join/staff/enter-details              controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
@@ -143,3 +143,9 @@ GET            /contribute                            controllers.Giraffe.redire
 GET            /:countryGroup/contribute              controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
 
 GET            /change-mem-status-permission          controllers.MembershipStatus.load
+
+# Paypal NVP endpoints.
+POST           /paypal/setup-payment                  controllers.PayPal.setupPayment
+POST           /paypal/create-agreement               controllers.PayPal.createAgreement
+GET            /paypal/return                         controllers.PayPal.returnUrl
+GET            /paypal/cancel                         controllers.PayPal.cancelUrl

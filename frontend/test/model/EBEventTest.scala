@@ -80,8 +80,7 @@ class EBEventTest extends PlaySpecification {
         .mainImageUrl must beSome(Uri.parse("https://media.gutools.co.uk/images/e5b35b1f20588172b24960314cbf8e9c8482d3bf?crop=27_0_1800_1080"))
     }
     "should not blow up even if the url is really bizarre" in {
-      updateEventWithDescription(ebLiveEvent, "<!-- main-image: http://test.net/## -->")
-        .mainImageUrl must beNone
+      updateEventWithDescription(ebLiveEvent, "<!-- main-image: http://test.net/## -->").mainImageUrl must not(throwA[Exception])
     }
     "should not return media service url is missing" in {
       nonTicketedEvent.mainImageUrl must beNone
