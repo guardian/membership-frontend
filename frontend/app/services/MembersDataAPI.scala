@@ -101,13 +101,13 @@ object MembersDataAPI {
     }
 
     // TODO: test this!
-    def removeBehaviour(memberRequest: SubReqWithSub[_], activity: String) = memberRequest.user.credentials match {
+    def removeBehaviour(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
-        deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id, activity).onComplete {
-          case Success(result) => Logger.info(s"Cleared $activity for ${memberRequest.user.user.id}")
-          case Failure(err) => Logger.error(s"Failed to remove behaviour event ($activity) via membership-data-api for user ${memberRequest.user.id}", err)
+        deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id).onComplete {
+          case Success(result) => Logger.info(s"Cleared behaviours for ${memberRequest.user.user.id}")
+          case Failure(err) => Logger.error(s"Failed to remove behaviour events via membership-data-api for user ${memberRequest.user.id}", err)
         }
-      case _ => Logger.error(s"Unexpected credentials for removeBehaviour ($activity) for ${memberRequest.user.credentials}")
+      case _ => Logger.error(s"Unexpected credentials for removeBehaviour for ${memberRequest.user.credentials}")
     }
 
     private def getAttributes(cookies: Seq[Option[Cookie]]) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
@@ -119,7 +119,7 @@ object MembersDataAPI {
     }
 
     // TODO: test this!
-    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String) = {
+    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String) = {
       BehaviourHelper(cookies).get[Behaviour]("user-behaviour/me/remove")
     }
   }
