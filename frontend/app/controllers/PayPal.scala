@@ -8,6 +8,7 @@ import com.netaporter.uri.Uri.parseQuery
 import configuration.Config
 import com.typesafe.scalalogging.LazyLogging
 import play.api.Logger
+import services.PayPalService
 
 object PayPal extends Controller with LazyLogging {
 
@@ -18,84 +19,24 @@ object PayPal extends Controller with LazyLogging {
 	implicit val tokenWrites = Json.writes[Token]
 	implicit val tokenReads = Json.reads[Token]
 
-	// The parameters sent with every NVP request.
-	private val defaultNVPParams = Map(
-		"USER" -> Config.paypalUser,
-		"PWD" -> Config.paypalPassword,
-		"SIGNATURE" -> Config.paypalSignature,
-		"VERSION" -> Config.paypalNVPVersion)
-
-	// Takes a series of parameters, send a request to PayPal, returns response.
-	private def nvpRequest (params: Map[String, String]) = {
-
-		val client = new OkHttpClient()
-		val reqBody = new FormBody.Builder()
-		for ((param, value) <- defaultNVPParams) reqBody.add(param, value)
-		for ((param, value) <- params) reqBody.add(param, value)
-
-		val request = new Request.Builder()
-			.url(Config.paypalUrl)
-			.post(reqBody.build())
-			.build()
-
-		client.newCall(request).execute()
-
-	}
-
-	// Takes an NVP response and retrieves a given parameter as a string.
-	private def retrieveNVPParam (response: Response, paramName: String) = {
-
-		val responseBody = response.body().string()
-		val queryParams = parseQuery(responseBody)
-		queryParams.paramMap(paramName).head
-
-	}
-
 	// Retrieves a payment token from an NVP response, and wraps it in JSON for
 	// sending back to the client.
-	private def tokenJsonResponse (response: Response) = {
-
-		val token = Token(retrieveNVPParam(response, "TOKEN"))
-		Json.toJson(token)
-
-	}
-
-	// Sends a request to PayPal to create billing agreement and returns BAID.
-	private def retrieveBaid (token: Token) = {
-    logger.info("Called retrieveBaid")
-		val agreementParams = Map(
-			"METHOD" -> "CreateBillingAgreement",
-			"TOKEN" -> token.token)
-
-		val response = nvpRequest(agreementParams)
-		Json.toJson(Token(retrieveNVPParam(response, "BILLINGAGREEMENTID")))
-
+	private def tokenJsonResponse (token : String) = {
+		Json.toJson(Token(token))
 	}
 
 	// Sets up a payment by contacting PayPal, returns the token as JSON.
 	def setupPayment = NoCacheAction { request =>
     logger.info("Called setupPayment")
-		val paymentParams = Map(
-			"METHOD" -> "SetExpressCheckout",
-			"PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
-			"PAYMENTREQUEST_0_AMT" -> "4.50",
-			"PAYMENTREQUEST_0_CURRENCYCODE" -> "GBP",
-			"RETURNURL" -> routes.PayPal.returnUrl().absoluteURL(true)(request),
-			"CANCELURL" -> routes.PayPal.cancelUrl().absoluteURL(true)(request),
-			"BILLINGTYPE" -> "MerchantInitiatedBilling")
-
-		val response = nvpRequest(paymentParams)
-		Ok(tokenJsonResponse(response))
-
+		Ok(tokenJsonResponse(PayPalService.retrieveToken(request)))
 	}
 
 	// Creates a billing agreement using a payment token.
 	def createAgreement = NoCacheAction { request =>
-
 		request.body.asJson.map { json =>
 
 			Json.fromJson[Token](json) match {
-				case JsSuccess(token: Token, _) => Ok(retrieveBaid(token))
+				case JsSuccess(token: Token, _) => Ok(tokenJsonResponse(PayPalService.retrieveBaid(token)))
 				case e: JsError => BadRequest(JsError.toJson(e).toString)
 			}
 
