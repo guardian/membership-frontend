@@ -62,7 +62,8 @@ object PayPalService extends LazyLogging {
       "PAYMENTREQUEST_0_CURRENCYCODE" -> "GBP",
       "RETURNURL" -> routes.PayPal.returnUrl().absoluteURL(secure = true)(request),
       "CANCELURL" -> routes.PayPal.cancelUrl().absoluteURL(secure = true)(request),
-      "BILLINGTYPE" -> "MerchantInitiatedBilling")
+      "BILLINGTYPE" -> "MerchantInitiatedBilling",
+      "NOSHIPPING" -> "1")
 
     val response = nvpRequest(paymentParams)
     retrieveNVPParam(response, "TOKEN")
