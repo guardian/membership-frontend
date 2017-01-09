@@ -3,10 +3,9 @@ package services
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
-import controllers.{NoCacheAction, routes}
-import controllers.PayPal.{Ok, Token, logger}
+import controllers.PayPal.Token
+import controllers.routes
 import okhttp3.{FormBody, OkHttpClient, Request, Response}
-import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 
 object PayPalService extends LazyLogging {

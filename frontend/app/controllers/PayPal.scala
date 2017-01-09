@@ -1,13 +1,8 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
-import play.api.mvc.Results.BadRequest
-import play.api.libs.json.{JsError, JsSuccess, Json}
-import okhttp3.{FormBody, OkHttpClient, Request, Response}
-import com.netaporter.uri.Uri.parseQuery
-import configuration.Config
 import com.typesafe.scalalogging.LazyLogging
-import play.api.Logger
+import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.mvc.Controller
 import services.PayPalService
 
 object PayPal extends Controller with LazyLogging {
@@ -44,20 +39,20 @@ object PayPal extends Controller with LazyLogging {
 
 	}
 
-	// The endpoint corresponding to the Paypal return url, hit if the user is
+	// The endpoint corresponding to the PayPal return url, hit if the user is
 	// redirected and needs to come back.
 	def returnUrl = NoCacheAction {
 
-		logger.info("User hit the Paypal returnUrl.")
+		logger.info("User hit the PayPal returnUrl.")
 		Ok(views.html.paypal.errorPage())
 
 	}
 
-	// The endpoint corresponding to the Paypal cancel url, hit if the user is
+	// The endpoint corresponding to the PayPal cancel url, hit if the user is
 	// redirected and the payment fails.
 	def cancelUrl = NoCacheAction {
 
-		logger.error("User hit the Paypal cancelUrl, something went wrong.")
+		logger.error("User hit the PayPal cancelUrl, something went wrong.")
 		Ok(views.html.paypal.errorPage())
 
 	}

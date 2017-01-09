@@ -150,12 +150,18 @@ class MemberService(identityService: IdentityService,
         logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
       }
 
+    def retrieveEmail(baid : String) = Future {
+      PayPalService.retrieveEmail(baid)
+    }
+
+
     formData match {
-      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, _, Some(_)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
+      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, _, Some(baid)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
         for {
           idUser <- getIdentityUserDetails()
           sfContact <- createSalesforceContact(idUser)
-          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, None)
+          email <- retrieveEmail(baid)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, email, None)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
           _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
