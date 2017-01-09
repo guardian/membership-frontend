@@ -82,6 +82,7 @@ trait MemberService {
                              stripeCustomer: Option[Customer],
                              campaignCode: Option[CampaignCode],
                              email: String,
+                             payPalEmail: Option[String],
                              ipAddress: Option[InetAddress],
                              ipCountry: Option[Country]): Future[SubscribeResult]
 
