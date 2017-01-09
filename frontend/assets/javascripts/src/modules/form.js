@@ -65,8 +65,9 @@ define([
     'src/modules/form/submitButton',
     'src/modules/form/ongoingCardPayments',
     'src/modules/form/billingPeriodChoice',
-    'src/modules/form/promoCode'
-], function (validation, form, payment, address, options, submitButton, password, ongoingCardPayments, billingPeriodChoice, promoCode) {
+    'src/modules/form/promoCode',
+    'src/modules/form/paypal'
+], function (validation, form, payment, address, options, submitButton, password, ongoingCardPayments, billingPeriodChoice, promoCode, paypal) {
     'use strict';
 
     var init = function () {
@@ -82,10 +83,21 @@ define([
             promoCode.init();
 
             if (form.hasPayment) {
+
                 curl('js!stripe').then(function() {
                     payment.init();
                 });
+
             }
+
+            if (form.hasPaypal) {
+
+                curl('js!paypal').then(function () {
+                    paypal.init();
+                });
+
+            }
+
         }
     };
 
