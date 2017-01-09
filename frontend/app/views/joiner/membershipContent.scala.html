@@ -15,7 +15,7 @@
 )(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @actionAttrs = {
-    href="@{routes.Info.supporterRedirect(None)}"
+    href="@{routes.Info.supporterRedirect(None)}?INTCMP=gdnwb_copts_memberscontent_signinpage"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@Supporter.toString.toLowerCase"
