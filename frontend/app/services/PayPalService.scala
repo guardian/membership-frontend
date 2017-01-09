@@ -38,7 +38,6 @@ object PayPalService extends LazyLogging {
     val responseBody = response.body().string()
     val queryParams = parseQuery(responseBody)
     val result = queryParams.paramMap(paramName).head
-    response.close()
     result
   }
 
