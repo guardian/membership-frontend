@@ -52,7 +52,7 @@ object PayPalService extends LazyLogging {
     retrieveNVPParam(response, "EMAIL")
   }
 
-  // Sets up a payment by contacting PayPal, returns the token as JSON.
+  // Sets up a payment by contacting PayPal and returns the token.
   def retrieveToken(request: RequestHeader) = {
     logger.info("Called setupPayment")
     val paymentParams = Map(

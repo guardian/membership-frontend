@@ -14,8 +14,8 @@ object PayPal extends Controller with LazyLogging {
 	implicit val tokenWrites = Json.writes[Token]
 	implicit val tokenReads = Json.reads[Token]
 
-	// Retrieves a payment token from an NVP response, and wraps it in JSON for
-	// sending back to the client.
+	// Wraps the PayPal token and converts it to JSON
+  // for sending back to the client.
 	private def tokenJsonResponse (token : String) = {
 		Json.toJson(Token(token))
 	}
