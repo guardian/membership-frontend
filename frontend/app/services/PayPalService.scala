@@ -37,8 +37,7 @@ object PayPalService extends LazyLogging {
   private def retrieveNVPParam(response: Response, paramName: String) = {
     val responseBody = response.body().string()
     val queryParams = parseQuery(responseBody)
-    val result = queryParams.paramMap(paramName).head
-    result
+    queryParams.paramMap(paramName).head
   }
 
   def retrieveEmail(baid: String) = {
