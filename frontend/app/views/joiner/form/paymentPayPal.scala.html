@@ -7,19 +7,25 @@
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
+@import tracking.AppnexusPixel
+
 
 @(plans: MonthYearPlans[PaidMember],
-  countriesWithCurrencies: List[CountryWithCurrency],
-  idUser: IdentityUser,
-  pageInfo: PageInfo,
-  trackingPromoCode: Option[PromoCode],
-  promoCodeToDisplay: Option[PromoCode],
-  countryGroup: Option[CountryGroup]
-)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
+    countriesWithCurrencies: List[CountryWithCurrency],
+    idUser: IdentityUser,
+    pageInfo: PageInfo,
+    trackingPromoCode: Option[PromoCode],
+    promoCodeToDisplay: Option[PromoCode],
+    countryGroup: Option[CountryGroup]
+    )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
-    <main class="page-content l-constrained">
+    <main class="page-content skin-checkout-b">
+
+        <!-- Segment Pixel - Jan17 - Become a supporter - DO NOT MODIFY -->
+            <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
+        <!-- End of Segment Pixel -->
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
@@ -29,32 +35,36 @@
                 <h1 class="form-headline">@plans.tier.cta</h1>
             </section>
 
+
             <section class="form-section form-section--no-padding">
                 <div class="form-section__content">
                 @fragments.form.errorMessageDisplay()
                 </div>
             </section>
 
-            <section class="form-section">
-
-                <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(request.uri, inline = false)
-                </div>
+            <section class="form-section form-section--no-padding">
 
                 <div class="form-section__content">
                     @if(plans.tier != Supporter()){
-                    <div class="form-group">
-                        @fragments.form.benefitsFieldset(plans.tier.benefits)
-                        @fragments.form.featureChoiceFieldset(plans.tier)
-                    </div>}
-                    <div class="form-group">
-                        <h2 class="form-group__title">Address</h2>
+                        <div class="form-group">
+                            @fragments.form.benefitsFieldset(plans.tier.benefits)
+                            @fragments.form.featureChoiceFieldset(plans.tier)
+                        </div>}
 
-                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "Name")
+                    <div class="form-group sub-heading">
+                        <h2 class="form-group__title">Name and address</h2>
+
+                        <div class="form-section__lead-in sign-in-required">
+                        @fragments.joiner.signedInAs(request.uri, inline = true)
+                        </div>
+
+                        <div class="form-section__name-detail">
+                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
+                        </div>
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
-                            note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
+                            note = "We need your address to send you a welcome pack.",
                             formType = "deliveryAddress",
                             addressRequired = true,
                             address1 = idUser.privateFields.address1,
@@ -70,42 +80,44 @@
                         }
                     </div>
 
-                    @if(plans.tier != Supporter()){
-                        <div class="form-group">
+                    @if(plans.tier != Supporter()) {
+                        <div class="form-group form-section__promotion">
                             <h2 class="form-group__title">Promotion</h2>
                             @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
                         </div>
                     }
 
-                    <div class="form-group">
-                        <h2 class="form-group__title">Billing</h2>
-                        @fragments.form.billingAddress("Billing address")
-                        @fragments.form.addressDetail(
-                            countriesWithCurrencies = countriesWithCurrencies,
-                            formType = "billingAddress",
-                            addressRequired = true,
-                            address1 = idUser.privateFields.billingAddress1,
-                            address2 = idUser.privateFields.billingAddress2,
-                            town = idUser.privateFields.billingAddress3,
-                            postcode = idUser.privateFields.billingPostcode,
-                            county = idUser.privateFields.billingAddress4
-                        )
+                    <div class="form-group form-group--little-padding">
+                        <div class="form-section__billing">
+                            <h2 class="form-group__title">Billing</h2>
+                            @fragments.form.billingAddress("Billing address")
+                            @fragments.form.addressDetail(
+                                countriesWithCurrencies = countriesWithCurrencies,
+                                formType = "billingAddress",
+                                addressRequired = true,
+                                address1 = idUser.privateFields.billingAddress1,
+                                address2 = idUser.privateFields.billingAddress2,
+                                town = idUser.privateFields.billingAddress3,
+                                postcode = idUser.privateFields.billingPostcode,
+                                county = idUser.privateFields.billingAddress4
+                            )
+                        </div>
                         @fragments.form.paymentOptions(plans)
-                        <fieldset class="fieldset js-payment-methods">
+                        <fieldset class="fieldset js-payment-methods actions">
                             <div class="fieldset__heading">
                                 <h2 class="fieldset__headline">Payment method</h2>
                                 @fragments.form.securityNote()
                             </div>
                             <div class="fieldset__fields">
-                                <button type="button" class="action js-card-payment-method">Credit/Debit Card</button>
+                                <button type="button" class="action">Credit/Debit Card</button>
                                 <div id="paypal-button-checkout"></div>
                             </div>
                         </fieldset>
                         @fragments.form.cardDetailPayPal(plans)
                     </div>
-
+                    @fragments.form.terms(countryGroup)
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submitPayPal(PaidPlans(plans), countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a-annual"))
+                    @fragments.form.submitPayPal(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a-annual"))
                 </div>
             </section>
         </form>
