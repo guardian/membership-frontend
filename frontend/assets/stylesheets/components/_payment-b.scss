@@ -173,6 +173,12 @@
       @include mq($from: tablet) {
         display: block;
       }
+
+      a {
+        color: guss-colour(guardian-brand);
+        display: block;
+        margin-top: 10px;
+      }
     }
 
     .promo-code {
