@@ -100,7 +100,6 @@ object MembersDataAPI {
       }
     }
 
-    // TODO: test this!
     def removeBehaviour(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
         deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id).onComplete {
@@ -118,7 +117,6 @@ object MembersDataAPI {
       BehaviourHelper(cookies).post[Behaviour](s"user-behaviour/me/capture/$activity", json)
     }
 
-    // TODO: test this!
     private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String) = {
       BehaviourHelper(cookies).get[Behaviour]("user-behaviour/me/remove")
     }
