@@ -23,7 +23,8 @@ object Healthcheck extends Controller {
     new BoolTest("Events", () => GuardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
     new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes)),
-    new BoolTest("Promotions", () => promos.all.nonEmpty)
+    new BoolTest("Promotions", () => promos.all.nonEmpty),
+    new BoolTest("Salesforce", () => salesforceService.isAuthenticated)
   )
 
   def healthcheck() = Action {
