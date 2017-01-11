@@ -48,7 +48,8 @@ class DestinationServiceTest extends Specification {
           charges = partnerCharge,
           chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = "")),
         hasPendingFreePlan = false,
-        readerType = ReaderType.Direct
+        readerType = ReaderType.Direct,
+        autoRenew = true
       )
 
       val testSubscriber: Subscriber.Member = Subscriber(testSub, testMember)
