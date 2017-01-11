@@ -40,6 +40,8 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
   override def updateMemberStatus(user: IdMinimalUser, tier: Tier, customer: Option[Customer]): Future[ContactId] =
     upsert(user.id, memberData(tier, customer))
 
+  override def isAuthenticated = repository.salesforce.isAuthenticated
+
   private def memberData(tier: Tier, customerOpt: Option[Customer]): JsObject = Json.obj(
     Keys.TIER -> tier.name
   ) ++ customerOpt.map { customer =>
