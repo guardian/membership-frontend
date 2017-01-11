@@ -37,7 +37,7 @@ trait Bundle extends Controller {
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
-    Ok(views.html.bundle.elevatedSupporter(
+    Ok(views.html.info.elevatedSupporter(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(
