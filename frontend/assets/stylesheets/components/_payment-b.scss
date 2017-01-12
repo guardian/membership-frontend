@@ -161,6 +161,11 @@
       @include mq($from: tablet) {
         display: none;
       }
+      a {
+          color: guss-colour(guardian-brand);
+          display: block;
+          margin-top: 10px;
+      }
     }
 
     .credit-card-note__text {
@@ -172,6 +177,12 @@
 
       @include mq($from: tablet) {
         display: block;
+      }
+
+      a {
+        color: guss-colour(guardian-brand);
+        display: block;
+        margin-top: 10px;
       }
     }
 
@@ -212,6 +223,23 @@
             @include mq($from: tablet) {
                 margin-bottom: 2 * $gs-baseline;
             }
+        }
+
+        button.choose-payment-method {
+            height: 40px;
+            width: 227px;
+            background: none;
+            background-color : guss-colour(guardian-brand);
+            border-color : guss-colour(guardian-brand);
+            font-size: 16px;
+            padding: 0;
+            text-align: center;
+            margin-bottom: 6px;
+            margin-top: 6px;
+        }
+
+        button.choose-payment-method::after {
+            display: none;
         }
 
         span {
