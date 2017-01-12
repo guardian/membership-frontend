@@ -1,10 +1,12 @@
 define([
     '$',
     'bean',
+    'src/modules/form/billingPeriodChoice',
     'src/modules/form/validation/display'
 ], function (
     $,
     bean,
+    billingPeriodChoice,
     validationDisplay
 ) {
     'use strict';
@@ -28,6 +30,7 @@ define([
      */
 
     function renderPrices() {
+        billingPeriodChoice.render();
         hideBillingAddress();
         selectDeliveryCountry();
     }
