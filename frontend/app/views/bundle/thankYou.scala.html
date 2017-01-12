@@ -11,11 +11,19 @@
 
 @main("Supporters", pageInfo=pageInfo) {
 
-    <section class="elevated-supporter">
+    <section class="bundle-thankyou">
 
-        @* ===== Header part ===== *@
-        @* ===== Second part ===== *@
-        Enter your email!!!! <input type="text"> <button type="submit">
+        <div class="bundle-thankyou__email-form  bundle-thankyou-js">
 
+            <div class="bundle-thankyou__email-form__fields">
+                <input type="email" class="bundle-thankyou__email-form__email" />
+            </div>
+
+            <span class="bundle-thankyou__email-form__submit-button">
+                <span id="membership__engagement-message-button-caption">Send email reminder</span>
+            </span>
+
+            <span class="bundle-thankyou__email-form__thanks-message">Thanks, we will send you a reminder about becoming a Supporter</span>
+        </div>
     </section>
 }
