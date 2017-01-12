@@ -5,19 +5,20 @@
 @import tracking.AppnexusPixel
 @import com.gu.salesforce.Tier.Supporter
 
+@import abtests.BundleVariant
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
-    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token)
+    detailImage: model.OrientatedImages,
+    bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Supporters", pageInfo=pageInfo) {
 
     <section class="elevated-supporter">
 
-            <!-- Segment Pixel - Jan17-Membership Landing Page - DO NOT MODIFY -->
-        <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.landingPageids(Supporter())}&t=2" width="1" height="1" />
-            <!-- End of Segment Pixel -->
-
+        @* ===== Header part ===== *@
+        @* ===== Second part ===== *@
+        @* ===== Third part ===== *@
 
     </section>
 }

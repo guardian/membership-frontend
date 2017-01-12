@@ -46,7 +46,8 @@ trait Bundle extends Controller {
           url = request.path,
           description = Some(CopyConfig.copyDescriptionSupporters)
         ),
-        detailImageOrientated))
+        detailImageOrientated,
+        bundleVariant))
 
       case BundleVariant(B , _, _ ) => Ok(views.html.bundle.bundleSetB(
         heroOrientated,
@@ -56,7 +57,8 @@ trait Bundle extends Controller {
           url = request.path,
           description = Some(CopyConfig.copyDescriptionSupporters)
         ),
-        detailImageOrientated))
+        detailImageOrientated,
+        bundleVariant))
     }
 
   }

@@ -5,10 +5,12 @@
 @import tracking.AppnexusPixel
 @import com.gu.salesforce.Tier.Supporter
 
+@import abtests.BundleVariant
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
-    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token)
+    detailImage: model.OrientatedImages,
+    bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Supporters", pageInfo=pageInfo) {
 
