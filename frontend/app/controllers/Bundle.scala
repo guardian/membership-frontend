@@ -60,8 +60,17 @@ trait Bundle extends Controller {
         detailImageOrientated,
         bundleVariant))
     }
-
   }
+
+  def thankYou(bundleVariant: BundleVariant) = CachedAction { implicit request =>
+    Ok(views.html.bundle.thankYou(
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters)
+        ),
+        bundleVariant))
+    }
 }
 
 object Bundle extends Bundle

@@ -108,6 +108,7 @@ GET            /offers-competitions                   controllers.Info.offersAnd
 
 # Bundles
 GET            /bundles                               controllers.Bundle.get(intcmp: BundleVariant)
+GET            /bundles/thankyou                      controllers.Bundle.thankYou(intcmp: BundleVariant)
 
 # Styleguide
 GET            /patterns                              controllers.PatternLibrary.patterns
