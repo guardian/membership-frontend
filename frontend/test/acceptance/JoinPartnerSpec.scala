@@ -59,6 +59,12 @@ class JoinPartnerSpec extends FeatureSpec with Browser
       And("should be logged in with their Identity account.")
       assert(enterDetails.userIsSignedIn)
 
+      When("users select non-UK country,")
+      enterDetails.changeCountry()
+
+      Then("the currency should change.")
+      assert(enterDetails.currencyHasChanged)
+
       When("Users fill in delivery address details,")
       enterDetails.fillInDeliveryAddress()
 
@@ -72,7 +78,7 @@ class JoinPartnerSpec extends FeatureSpec with Browser
       assert(ThankYou.pageHasLoaded)
 
       And("should be signed in as Partner.")
-      assert(ThankYou.userIsSignedInAsPartner)
+      assert(ThankYou.userIsSignedInAsSupporter)
     }
   }
 }

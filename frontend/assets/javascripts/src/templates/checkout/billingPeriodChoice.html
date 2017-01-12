@@ -8,7 +8,7 @@
                <% if (guardian.membership.checkoutForm.billingPeriod === choice.inputValue) { %>checked="checked"<% } %>
         />
         <div  id="<%= choice.productRatePlanId %>" class="pseudo-radio <%= choice.classes.join(' ') %>">
-            <div class="pseudo-radio__header">Pay <%= choice.generateDisplayAmount() %></div>
+            <div class="pseudo-radio__header" id="qa-currency-radio">Pay <%= choice.generateDisplayAmount() %></div>
             <% choice.generateNotes().forEach(function(note) { %>
                 <div class="pseudo-radio__note"><%= note %></div>
             <% }); %>

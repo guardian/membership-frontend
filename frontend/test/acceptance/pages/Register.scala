@@ -6,7 +6,7 @@ import org.scalatest.selenium.Page
 import java.net.URLEncoder
 
 case class Register(testUser: TestUser) extends Page with Browser {
-  private val returnUrlParam = URLEncoder.encode(s"${baseUrl}/join/partner/enter-details", "UTF-8")
+  private val returnUrlParam = URLEncoder.encode(s"${baseUrl}/join/supporter/enter-details", "UTF-8")
   val url = s"${identityFrontendUrl}/register?returnUrl=${returnUrlParam}&skipConfirmation=true&clientId=members"
 
   def fillInPersonalDetails() { RegisterFields.fillIn() }
