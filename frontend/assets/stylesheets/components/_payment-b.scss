@@ -161,6 +161,11 @@
       @include mq($from: tablet) {
         display: none;
       }
+      a {
+          color: guss-colour(guardian-brand);
+          display: block;
+          margin-top: 10px;
+      }
     }
 
     .credit-card-note__text {
