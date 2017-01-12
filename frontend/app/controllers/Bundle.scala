@@ -1,5 +1,7 @@
 package controllers
 
+import abtests.{BundleVariant}
+import abtests.Distribution._
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import configuration.CopyConfig
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
@@ -7,11 +9,9 @@ import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
 import views.support.{Asset, PageInfo}
 
-import scala.concurrent.Future
-
 trait Bundle extends Controller {
 
-  def get = CachedAction { implicit request =>
+  def get(bundleVariant: BundleVariant) = CachedAction { implicit request =>
 
     val heroImage = ResponsiveImageGroup(
       name=Some("intro"),
@@ -37,15 +37,28 @@ trait Bundle extends Controller {
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
-    Ok(views.html.info.elevatedSupporter(
-      heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters)
-      ),
-      detailImageOrientated))
+    bundleVariant match {
+      case BundleVariant(A , _, _ ) => Ok(views.html.bundle.bundleSetA(
+        heroOrientated,
+        TouchpointBackend.Normal.catalog.supporter,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters)
+        ),
+        detailImageOrientated))
+
+      case BundleVariant(B , _, _ ) => Ok(views.html.bundle.bundleSetB(
+        heroOrientated,
+        TouchpointBackend.Normal.catalog.supporter,
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters)
+        ),
+        detailImageOrientated))
+    }
+
   }
 }
 

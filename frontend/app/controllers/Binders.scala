@@ -1,14 +1,16 @@
 package controllers
 
 
+import abtests.BundleVariant
 import com.gu.i18n.{Country, CountryGroup}
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.BillingPeriod._
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.PromoCode
-import com.gu.salesforce.{PaidTier, Tier, FreeTier}
+import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import play.api.mvc.PathBindable.{Parsing => PathParsing}
 import play.api.mvc.QueryStringBindable.{Parsing => QueryParsing}
+
 import scala.reflect.runtime.universe._
 
 object Binders {
@@ -58,4 +60,7 @@ object Binders {
     adjective => Seq(month, year).find(_.adjective == adjective).get, _.adjective, (key: String, _: Exception) => s"Cannot parse parameter $key as a Billing Period"
   )
 
+  implicit object bindableBundleVariant extends QueryParsing[BundleVariant](
+    x => BundleVariant.lookup(x).get, _.testId,  (key: String, _: Exception) => s"Cannot parse parameter $key as a Bundle Variant"
+  )
 }
