@@ -10,13 +10,11 @@ export function hello(){
 
 export function open(){
     //When a payment method "overlay" is opened.
+    console.log('start the spinner');
 }
 export function close(){
     //When a payment method overlay is closed.
-}
-
-export function failure(){
-    //When a payment fails
+    console.log('stop the spinner');
 }
 
 // Validates the form; returns true if the form is valid, false otherwise.
