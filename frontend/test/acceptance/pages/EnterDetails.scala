@@ -25,7 +25,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def fillInCardDeclinedProcessError() { CreditCard.fillInCardDeclinedProcessError() }
 
-  def changeCountryToUSA() { DeliveryAddress.selectUSA() }
+  def changeCountry(country: String) { DeliveryAddress.selectCountryCode(country) }
 
   def currencyHasChanged(): Boolean = elementHasText(currency, "US$")
 
@@ -44,7 +44,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
       setValue(postCode, "N1 9GU")
     }
 
-    def selectUSA() { setSingleSelectionValue(country, "US") }
+    def selectCountryCode(countryCode:  String) { setSingleSelectionValue(country, countryCode) }
   }
 
   private object CreditCard {

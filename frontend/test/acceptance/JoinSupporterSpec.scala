@@ -60,7 +60,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       assert(enterDetails.userIsSignedIn)
 
       When("users select USA delivery country,")
-      enterDetails.changeCountryToUSA()
+      enterDetails.changeCountry("US")
 
       Then("the currency should change.")
       assert(enterDetails.currencyHasChanged)
