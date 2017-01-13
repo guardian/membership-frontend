@@ -14,7 +14,68 @@
 
 @main("Supporters", pageInfo=pageInfo) {
 
-    <section class="elevated-supporter">
+    @* ===== First part ===== *@
+    @fragments.bundle.bundleHeader(heroImage)(
+        {Support the Guardian },
+        { We're introducing new ways o support the Guardian's quality journalism and independent voice },
+        {We want to use our independent, truthful  journalism to make the world a better, fairer place. Which is why our most important relationship is with our readers.},
+        {If you value our indepent journalism, please help to fund it by becoming a Supporter.}
+    )
 
+
+
+    @* ===== Second Part ===== *@
+    @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Supporters get closer<br>to the Guardian")){
+        <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
+            <div class="elevated-closer-guardian-body__list">
+
+                <p class="u-responsive-p">
+                    As a Guardian Supporter, you’ll enjoy a number of benefits, including:
+            <p>
+
+                <ul>
+                    <li class="elevated-closer-guardian-body__list_item">
+                        Exclusive emails from Guardian journalists
+                    </li>
+                    <li class="elevated-closer-guardian-body__list_item">
+                        An ad-free experience on our mobile app
+                    </li>
+                    <li class="elevated-closer-guardian-body__list_item">
+                        A weekly look "Inside the Guardian" for our Members
+                    </li>
+                    <li class="elevated-closer-guardian-body__list_item">
+                        Joining the global Guardian Members community
+                    </li>
+                    <li class="elevated-closer-guardian-body__list_item">
+                        A welcome gift
+                    </li>
+                </ul>
+
+                <p class="u-responsive-p">
+                    Most importantly of all, you’ll appreciate every word that you read, in the knowledge that you’ve helped to bring it to the page.
+            <p>
+            </div>
+        </div>
+    }
+
+    @* ===== Third Part ===== *@
+
+    @fragments.page.elevatedWhySupport(detailImage, supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Why do we need<br>our Supporters?")){
+        <p class="u-responsive-p">
+            Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have huge numbers of readers, and we are increasingly reliant upon their financial support.
+        </p>
+        <p class="u-responsive-p">
+            We don’t have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.
+        </p>
+        <p class="u-responsive-p">
+            Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.
+        </p>
+        <p class="u-responsive-p">
+            But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.
+        </p>
+        <p class="u-responsive-p">
+            We know that not everyone is in a position to become a Supporter. But if you can, you’ll be an integral part of our mission to make the world a better, fairer place, for everyone.
+        </p>
+    }
     </section>
 }
