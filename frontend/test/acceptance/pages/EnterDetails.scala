@@ -5,7 +5,7 @@ import Config.baseUrl
 import org.scalatest.selenium.Page
 
 case class EnterDetails(val testUser: TestUser) extends Page with Browser {
-  val url = s"$baseUrl/join/partner/enter-details"
+  val url = s"$baseUrl/join/supporter/enter-details"
 
   def pageHasLoaded: Boolean = pageHasElement(id("cc-cvc"))
 
@@ -25,6 +25,10 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def fillInCardDeclinedProcessError() { CreditCard.fillInCardDeclinedProcessError() }
 
+  def changeCountry(country: String) { DeliveryAddress.selectCountryCode(country) }
+
+  def currencyHasChanged(): Boolean = elementHasText(currency, "US$")
+
   def pay() { clickOn(payButton) }
 
   private object DeliveryAddress {
@@ -39,6 +43,8 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
       setValue(town, "London")
       setValue(postCode, "N1 9GU")
     }
+
+    def selectCountryCode(countryCode:  String) { setSingleSelectionValue(country, countryCode) }
   }
 
   private object CreditCard {
@@ -77,4 +83,6 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
   private val userDisplayName = cssSelector(".js-user-displayname")
 
   private val payButton = className("js-submit-input")
+
+  private val currency = id("qa-currency-radio")
 }

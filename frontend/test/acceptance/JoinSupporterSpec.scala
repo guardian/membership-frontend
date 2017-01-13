@@ -5,7 +5,7 @@ import acceptance.util._
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfter, FeatureSpec, GivenWhenThen}
 import org.slf4j.LoggerFactory
 
-class JoinPartnerSpec extends FeatureSpec with Browser
+class JoinSupporterSpec extends FeatureSpec with Browser
   with GivenWhenThen with BeforeAndAfter with BeforeAndAfterAll  {
 
   def logger = LoggerFactory.getLogger(this.getClass)
@@ -29,13 +29,13 @@ class JoinPartnerSpec extends FeatureSpec with Browser
         "\nPlease run identity-frontend server before running tests.")
   }
 
-  feature("Become a Partner in UK") {
-    scenario("User joins as Partner by clicking 'Become a Partner' button on Membership homepage", Acceptance) {
+  feature("Become a Supporter in UK") {
+    scenario("User joins as Supporter by clicking 'Become a Supporter' button on Membership homepage", Acceptance) {
       checkDependenciesAreAvailable
 
       val testUser = new TestUser
 
-      Given("users click 'Become a Partner' button on Membership homepage")
+      Given("users click 'Become a Supporter' button on Membership homepage")
 
       When("they land on 'Identity Frontend' page,")
       val register = pages.Register(testUser)
@@ -59,6 +59,12 @@ class JoinPartnerSpec extends FeatureSpec with Browser
       And("should be logged in with their Identity account.")
       assert(enterDetails.userIsSignedIn)
 
+      When("users select USA delivery country,")
+      enterDetails.changeCountry("US")
+
+      Then("the currency should change.")
+      assert(enterDetails.currencyHasChanged)
+
       When("Users fill in delivery address details,")
       enterDetails.fillInDeliveryAddress()
 
@@ -71,8 +77,8 @@ class JoinPartnerSpec extends FeatureSpec with Browser
       Then("they should land on 'Thank You' page,")
       assert(ThankYou.pageHasLoaded)
 
-      And("should be signed in as Partner.")
-      assert(ThankYou.userIsSignedInAsPartner)
+      And("should be signed in as Supporter.")
+      assert(ThankYou.userIsSignedInAsSupporter)
     }
   }
 }
