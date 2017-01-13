@@ -109,4 +109,4 @@ libraryDependencies ++= acceptanceTestDependencies
 
 addCommandAlias("fast-test", "testOnly -- -l Acceptance")
 
-addCommandAlias("acceptance-test", "testOnly acceptance.JoinPartnerSpec")
+addCommandAlias("acceptance-test", "testOnly acceptance.JoinSupporterSpec")

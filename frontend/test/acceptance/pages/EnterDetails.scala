@@ -25,7 +25,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def fillInCardDeclinedProcessError() { CreditCard.fillInCardDeclinedProcessError() }
 
-  def changeCountry() { DeliveryAddress.selectUSA() }
+  def changeCountryToUSA() { DeliveryAddress.selectUSA() }
 
   def currencyHasChanged(): Boolean = elementHasText(currency, "US$")
 
