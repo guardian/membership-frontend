@@ -66,8 +66,9 @@ define([
     'src/modules/form/ongoingCardPayments',
     'src/modules/form/billingPeriodChoice',
     'src/modules/form/promoCode',
-    'src/modules/form/paypal'
-], function (validation, form, payment, address, options, submitButton, password, ongoingCardPayments, billingPeriodChoice, promoCode, paypal) {
+    'src/modules/form/paypal',
+    'src/modules/form/stripe'
+], function (validation, form, payment, address, options, submitButton, password, ongoingCardPayments, billingPeriodChoice, promoCode, paypal, stripe) {
     'use strict';
 
     var init = function () {
@@ -96,6 +97,13 @@ define([
                     paypal.init();
                 });
 
+            }
+
+            console.log(form.hasStripeCheckout);
+            if (form.hasStripeCheckout){
+                curl('js!https://checkout.stripe.com/checkout.js').then(function(){
+                    stripe.init();
+                })
             }
 
         }

@@ -112,6 +112,9 @@
                                 <button type="button" class="action choose-payment-method js-card-payment-method">Credit/Debit Card</button>
                                 <div id="paypal-button-checkout"></div>
                             </div>
+                            <div class="fieldset__fields">
+                                @fragments.form.stripeCheckout(idUser)
+                            </div>
                         </fieldset>
                         @fragments.form.cardDetailPayPal(plans)
                     </div>

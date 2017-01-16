@@ -1,0 +1,31 @@
+import * as payment from 'src/modules/payment';
+import bean from 'bean'
+import $ from '$'
+export function init() {
+    let handler = window.StripeCheckout.configure(guardian.stripeCheckout);
+    const button = $('.js-stripe-checkout');
+    const email = button.data('email');
+    bean.on(window, 'popstate', handler.close);
+
+    const open = (e) => {
+        if (payment.validateForm()) {
+            payment.open();
+            handler.open({
+                description: 'So I could do with some good copy for this, and what it needs to contain like price etc.',
+                panelLabel: 'Approved button copy!',
+                email: email,
+                token: (token) => {
+                    payment.postForm({
+                        'payment.stripeToken': token.id
+                    })
+                },
+                closed: payment.closed
+            })
+        }
+        e.preventDefault();
+    };
+
+    bean.on(button[0], 'click', open);
+
+
+}

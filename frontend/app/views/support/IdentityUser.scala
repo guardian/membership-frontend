@@ -7,7 +7,7 @@ import com.gu.identity.play.IdUser
 import utils.TestUsers
 
 
-case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean) {
+case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean, email: String) {
   private val countryName: Option[String] = privateFields.billingCountry orElse privateFields.country
 
   val country: Option[Country] =
@@ -27,6 +27,7 @@ object IdentityUser {
     IdentityUser(
       privateFields = user.privateFields.getOrElse(PrivateFields()),
       marketingChoices = user.statusFields.getOrElse(StatusFields()),
-      passwordExists = passwordExists
+      passwordExists = passwordExists,
+      email = user.primaryEmailAddress
     )
 }
