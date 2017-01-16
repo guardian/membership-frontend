@@ -26,7 +26,8 @@ require([
     'src/modules/patterns',
     'src/modules/paidToPaid',
     'src/modules/memstatus',
-    'src/modules/tools/priceABTest'
+    'src/modules/tools/priceABTest',
+    'src/modules/bundles/thankYou'
 ], function(
     ajax,
     raven,
@@ -55,7 +56,8 @@ require([
     patterns,
     paidToPaid,
     memstatus,
-    priceABTest
+    priceABTest,
+    bundles
 ) {
     'use strict';
 
@@ -94,6 +96,9 @@ require([
     // Forms
     form.init();
     processSubmit.init();
+
+    //Bundle
+    bundles.init()
 
     // Metrics
     metrics.init();
