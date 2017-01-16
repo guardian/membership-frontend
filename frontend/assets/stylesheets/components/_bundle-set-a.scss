@@ -1,0 +1,32 @@
+/* Bundle's Columns Style */
+.bundle-column--left-wide {
+    width: 60%;
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+    vertical-align: top;
+}
+
+.bundle-column--right-narrow {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.bundle-column--left-narrow {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.bundle-column--right-wide {
+    width: 60%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.bundle-header__img {
+    position: absolute;
+    padding-top: 25px;
+}
+

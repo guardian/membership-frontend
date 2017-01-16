@@ -34,7 +34,7 @@ object BundleVariant {
 }
 
 case class BundleVariant(distribution: Distribution, priceIndex: Int, prices: Map[BundleTier, Double]) {
-  val testId = distribution.name + priceIndex
+  val testId =  "MEMBERSHIP_AB_THRASHER_UK_" + distribution.name + priceIndex
 }
 
 sealed trait BundleTier
