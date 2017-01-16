@@ -1,32 +1,71 @@
+@mixin main-left-padding() {
+    padding-left: 100px;
+}
+
+@mixin secondary-left-padding() {
+
+}
+
+@mixin main-right-padding() {
+    padding-right: 16px;
+}
+
+@mixin secondary-right-padding() {
+
+}
+
+@mixin text-title() {
+    @include fs-header(5);
+    color: #ffffff;
+    font-weight: 200;
+    font-size: 56px;
+    line-height: 56px;
+    //guss-colour(guardian-brand-dark);
+}
+
+@mixin text-tag-line() {
+    @include fs-headline(4);
+    font-weight: 300;
+    color: guss-colour(neutral-1);
+}
+
 /* Bundle's Columns Style */
 .bundle-column--left-wide {
     width: 60%;
     display: inline-block;
-    padding-left: 15px;
-    padding-right: 15px;
     vertical-align: top;
+    @include main-left-padding;
+    @include secondary-right-padding;
 }
 
 .bundle-column--right-narrow {
     width: 40%;
     display: inline-block;
     vertical-align: top;
+    @include secondary-left-padding;
+    @include main-right-padding;
 }
 
 .bundle-column--left-narrow {
     width: 40%;
     display: inline-block;
     vertical-align: top;
+    @include main-left-padding;
+    @include secondary-right-padding;
 }
 
 .bundle-column--right-wide {
     width: 60%;
     display: inline-block;
     vertical-align: top;
+    @include secondary-left-padding;
+    @include main-right-padding;
 }
 
-.bundle-header__img {
-    position: absolute;
-    padding-top: 25px;
+.bundle-content--left {
+    max-width: 460px;
 }
 
+.bundle-row {
+    padding-top: 24px;
+}

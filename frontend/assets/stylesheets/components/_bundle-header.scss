@@ -2,7 +2,7 @@
 /* Header */
 /* Green Part of the Header */
 .bundle-header--main-header {
-    background: lightgreen;
+    background: #87be27;
 }
 
 /* White Part of the Header */
@@ -11,10 +11,14 @@
 }
 
 .bundle-a__title {
-    color: white;
-    font-size: 74px;
+    @include text-title();
 }
 
 .bundle-a__tagline {
+    @include text-tag-line();
+}
 
+.bundle-header__img {
+    position: absolute;
+    padding-top: 25px;
 }

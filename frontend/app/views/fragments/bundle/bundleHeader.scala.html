@@ -5,22 +5,30 @@
 
 @(image: OrientatedImages, mainTitle: Html, tagLine: Html, paragraph1: Html, paragraph2: Html)
 
-<section class="bundle-section l-constrained">
+<section class="bundle-section">
     <div class="bundle-header--main-header">
-        <div class="bundle-column--left-wide">
-            <h1 class="bundle-a__title">@mainTitle</h1>
-            <p class="bundle-a__tagline">@tagLine</p>
-        </div><div class="bundle-column--right-narrow">
-            <img class="bundle-header__img" src="http://placehold.it/350x350">
+        <div class="l-constrained bundle-row">
+            <div class="bundle-column--left-wide">
+                <div class="bundle-content--left">
+                    <h1 class="bundle-a__title">@mainTitle</h1>
+                    <p class="bundle-a__tagline">@tagLine</p>
+                </div>
+            </div><div class="bundle-column--right-narrow">
+                <img class="bundle-header__img" src="http://placehold.it/350x350">
+            </div>
         </div>
     </div>
     <div class="bundle-header--secondary-header">
-        <div class="bundle-column--left-wide">
-            <p class="bundle-header-paragraph bundle-paragraph">@paragraph1</p>
-            <p class="bundle-header-paragraph bundle-paragraph">@paragraph2</p>
-        </div>
-        <div class="bundle-column--right-narrow">
+        <div class="l-constrained">
+            <div class="bundle-column--left-wide">
+                <div class="bundle-content--left">
+                    <p class="bundle-header-paragraph bundle-paragraph">@paragraph1</p>
+                    <p class="bundle-header-paragraph bundle-paragraph">@paragraph2</p>
+                </div>
+            </div>
+            <div class="bundle-column--right-narrow">
 
+            </div>
         </div>
     </div>
 </section>
