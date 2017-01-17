@@ -21,13 +21,17 @@ class CheckoutFormTest extends Specification {
     IdentityUser(
       billingAddress,
       StatusFields(),
-      passwordExists = false)
+      passwordExists = false,
+      email = "test@gu.com"
+    )
 
   val idUserWithBlankCountry =
     IdentityUser(
       billingAddress.copy(billingCountry = None),
       StatusFields(),
-      passwordExists = false)
+      passwordExists = false,
+      email = "test@gu.com"
+    )
 
   val pricingSummary = PricingSummary(Map(
     GBP -> Price(1.5f, GBP),
