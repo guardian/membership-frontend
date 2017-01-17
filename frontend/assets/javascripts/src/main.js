@@ -26,7 +26,8 @@ require([
     'src/modules/patterns',
     'src/modules/paidToPaid',
     'src/modules/memstatus',
-    'src/modules/tools/priceABTest'
+    'src/modules/tools/priceABTest',
+    'src/modules/faq'
 ], function(
     ajax,
     raven,
@@ -55,7 +56,8 @@ require([
     patterns,
     paidToPaid,
     memstatus,
-    priceABTest
+    priceABTest,
+    faq
 ) {
     'use strict';
 
@@ -106,4 +108,5 @@ require([
 
     memstatus.init();
 
+    faq.init();
 });

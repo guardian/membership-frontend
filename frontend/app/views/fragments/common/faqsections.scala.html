@@ -1,0 +1,8 @@
+@(sections: List[model.Faq.Section])
+
+@for(section <- sections){
+    <div class="faq__section" id="@section.id">
+        <h2 class="faq__section__headline">@section.title</h2>
+        @fragments.common.faqs(section.questions)
+    </div>
+}

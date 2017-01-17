@@ -1,8 +1,8 @@
 @(faqs: List[model.Faq.Item])
 
 @for(faq <- faqs) {
-    <div class="faq">
-        <h3 class="faq__headline">@faq.question</h3>
+    <div class="faq" id="@faq.id">
+        <input type="checkbox" id="c_@faq.id"/><label for="c_@faq.id"><h3 class="faq__headline">@faq.question</h3></label>
         <div class="faq__answer copy">
             @faq.answer
         </div>

@@ -4,9 +4,43 @@
 
 .faq {
     padding-bottom: $gs-gutter;
+    input[type=checkbox] {
+        display: none;
+    }
+    input[type=checkbox] ~ .faq__answer {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.8s ease;
+    }
+    input[type=checkbox] + label {
+        h3:before {
+            font-size: 10px;
+            padding-right: 10px;
+            content: '▶ ';
+        }
+    }
+    input[type=checkbox]:checked + label {
+        h3:before {
+            content: '▼ ';
+            padding-right: 10px;
+            font-size: 10px;
+        }
+    }
+    input[type=checkbox]:checked ~ .faq__answer {
+        max-height: 100%;
+        opacity: 1;
+    }
 }
+
 .faq__headline {
     @include fs-headline(3);
-    font-weight: guss-font-weight(bold);
+    font-weight: guss-font-weight(medium);
     margin-bottom: $gs-baseline / 4;
+}
+
+.faq__section__headline {
+    @include fs-headline(4);
+    font-weight: guss-font-weight(bold);
+    margin-bottom: $gs-baseline;
 }
