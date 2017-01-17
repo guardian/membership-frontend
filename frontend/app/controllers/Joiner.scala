@@ -128,10 +128,6 @@ object Joiner extends Controller with ActivityTracking
     (for {
       identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
-      tier match {
-        case t: Tier.Supporter => MembersDataAPI.Service.addBehaviour(request.user, "enterPaidDetails.show")
-        case _ =>
-      }
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
@@ -293,20 +289,14 @@ object Joiner extends Controller with ActivityTracking
       validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       card <- paymentCard
-    } yield {
-      tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request)
-        case _ =>
-      }
-      Ok(views.html.joiner.thankyou(
-        request.subscriber,
-        paymentSummary,
-        card,
-        destination,
-        upgrade,
-        validPromotion.filterNot(_.asTracking.isDefined)
-      )).discardingCookies(TierChangeCookies.deletionCookies: _*)
-    }
+    } yield Ok(views.html.joiner.thankyou(
+      request.subscriber,
+      paymentSummary,
+      card,
+      destination,
+      upgrade,
+      validPromotion.filterNot(_.asTracking.isDefined)
+    )).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
   def thankyouStaff = thankyou(Tier.partner)
