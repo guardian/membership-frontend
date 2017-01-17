@@ -29,6 +29,12 @@
     color: guss-colour(neutral-1);
 }
 
+@mixin text-paragraph() {
+    @include fs-bodyCopy(4);
+    font-weight: 300;
+    color: guss-colour(neutral-1);
+}
+
 /* Bundle's Columns Style */
 .bundle-column--left-wide {
     width: 60%;
