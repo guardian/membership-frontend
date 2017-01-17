@@ -3,7 +3,7 @@
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 
-@(image: OrientatedImages, mainTitle: Html, tagLine: Html, paragraph1: Html, paragraph2: Html)
+@(image: OrientatedImages, mainTitle: Html, tagLine: Html, paragraph: Html)
 
 <section class="bundle-section">
     <div class="bundle-header--main-header">
@@ -18,12 +18,12 @@
             </div>
         </div>
     </div>
+
     <div class="bundle-header--secondary-header">
-        <div class="l-constrained">
+        <div class="l-constrained bundle-row">
             <div class="bundle-column--left-wide">
                 <div class="bundle-content--left">
-                    <p class="bundle-header-paragraph bundle-paragraph">@paragraph1</p>
-                    <p class="bundle-header-paragraph bundle-paragraph">@paragraph2</p>
+                    <p class="bundle-header-paragraph bundle-paragraph">@paragraph</p>
                 </div>
             </div>
             <div class="bundle-column--right-narrow">

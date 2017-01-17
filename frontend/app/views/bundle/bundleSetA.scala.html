@@ -14,14 +14,19 @@
 
 @main("Supporters", pageInfo=pageInfo) {
 
-    <section class="bundle-section">
-        @* ===== First part ===== *@
-        @fragments.bundle.bundleHeader(
-            heroImage,
-            Html("Support<br/>the Guardian"),
-            Html("We\'re introducing <strong>new ways</strong> to support the&nbsp;Guardian\'s quality journalism and independent voice"),
-            Html("We want to use our independent, truthful  journalism to make the world a better, fairer place. Which is why our most important relationship is with our readers.</p>"),
-            Html("If you value our independent journalism, please help to fund it by becoming a Supporter.")
-        )
-    </section>
+
+    @* ===== First part ===== *@
+    @fragments.bundle.bundleHeader(
+        heroImage,
+        Html("Support<br/>the Guardian"),
+        Html("We\'re introducing <strong>new ways</strong> to support the&nbsp;Guardian\'s quality journalism and independent voice"),
+        Html("We want to use our independent, truthful  journalism to make the world a better, fairer place. Which is why our most important relationship is with our readers. If you value our independent journalism, please help to fund it by becoming a Supporter.")
+    )
+
+    @* ===== Offerings ===== *@
+    @fragments.bundle.bundleOfferings(bundleVariant)
+
+
+    @* ===== Why do we need supporters? ===== *@
+
 }
