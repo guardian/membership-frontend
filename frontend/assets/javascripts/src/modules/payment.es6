@@ -4,10 +4,6 @@ import validity from 'src/modules/form/validation/validity';
 import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
 
-export function hello(){
-    console.log('hello')
-}
-
 export function open(){
     //When a payment method "overlay" is opened.
     console.log('start the spinner');
@@ -29,7 +25,7 @@ export function validateForm() {
 
 }
 
-// Creates the new member by posting the form data with the BAID.
+// Creates the new member by posting the form data with the provided token object.
 export function postForm (paymentToken) {
 
     let data = serializer(utilsHelper.toArray(form.elem.elements),

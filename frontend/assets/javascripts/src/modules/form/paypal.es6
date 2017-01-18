@@ -46,7 +46,6 @@ function postForm (baid) {
 }
 
 export function init () {
-    payment.hello();
 	paypal.Button.render({
 
 		// Sets the environment.
