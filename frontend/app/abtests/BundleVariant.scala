@@ -11,12 +11,8 @@ object BundleVariant {
   val cookieName = "ab-bundle"
 
   val all = Seq[BundleVariant](
-    BundleVariant(A, 1, Map((Supporter, 6.5), (DigitalPack, 14), (Saturday, 16), (GuardianWeekly, 24), (Weekend, 24), (SatGW, 24))),
-    BundleVariant(A, 2, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25))),
-    BundleVariant(A, 3, Map((Supporter, 8), (DigitalPack, 15), (Saturday, 20), (GuardianWeekly, 20), (Weekend, 30), (SatGW, 30))),
-    BundleVariant(B, 1, Map((Supporter, 6), (DigitalPack, 10), (Saturday, 16), (GuardianWeekly, 16), (Weekend, 24), (SatGW, 24))),
-    BundleVariant(B, 2, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25))),
-    BundleVariant(B, 3, Map((Supporter, 7), (DigitalPack, 14), (Saturday, 20), (GuardianWeekly, 20), (Weekend, 30), (SatGW, 24)))
+    BundleVariant(A, 1, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
+    BundleVariant(B, 1, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)))
   )
 
   def deriveFlowVariant(implicit request: RequestHeader): BundleVariant =
@@ -28,7 +24,6 @@ object BundleVariant {
   } yield variant
 
   def lookup(name: String): Option[BundleVariant] = {
-    printf(name)
     all.find(_.testId == name)
   }
 }
@@ -50,6 +45,10 @@ case object GuardianWeekly extends BundleTier
 case object Weekend extends BundleTier
 
 case object SatGW extends BundleTier
+
+case object SixDay extends BundleTier
+
+case object SevenDay extends BundleTier
 
 
 object Distribution {
