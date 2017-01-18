@@ -17,7 +17,7 @@
 @mixin text-title() {
     @include fs-header(5);
     color: #ffffff;
-    font-weight: 200;
+    font-weight: 400;
     font-size: 56px;
     line-height: 56px;
     //guss-colour(guardian-brand-dark);
@@ -25,7 +25,7 @@
 
 @mixin text-tag-line() {
     @include fs-headline(4);
-    font-weight: 300;
+    font-weight: 400;
     color: guss-colour(neutral-1);
 }
 
@@ -37,7 +37,7 @@
 
 /* Bundle's Columns Style */
 .bundle-column--left-wide {
-    width: 60%;
+    width: 640px;
     display: inline-block;
     vertical-align: top;
     @include main-left-padding;
@@ -45,7 +45,7 @@
 }
 
 .bundle-column--right-narrow {
-    width: 40%;
+    width: 500px;
     display: inline-block;
     vertical-align: top;
     @include secondary-left-padding;
@@ -53,7 +53,7 @@
 }
 
 .bundle-column--left-narrow {
-    width: 40%;
+    width: 500px;
     display: inline-block;
     vertical-align: top;
     @include main-left-padding;
@@ -61,17 +61,17 @@
 }
 
 .bundle-column--right-wide {
-    width: 60%;
+    width: 640px;
     display: inline-block;
     vertical-align: top;
     @include secondary-left-padding;
     @include main-right-padding;
 }
 
-.bundle-content--left {
-    max-width: 460px;
-}
-
 .bundle-row {
     padding-top: 24px;
+}
+
+.bundle-row-b {
+    padding-top: 36px;
 }

@@ -12,12 +12,20 @@
 
 .bundle-a__title {
     @include text-title();
+    padding-top: 24px;
 }
 
 .bundle-a__tagline {
     @include text-tag-line();
+    padding-bottom: 36px;
+    width: 460px;
 }
 
 .bundle-header__img {
     position: absolute;
+}
+
+.bundle-header__paragraph{
+    width: 460px;
+    margin-bottom: 0;
 }
