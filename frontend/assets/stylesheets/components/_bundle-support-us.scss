@@ -5,3 +5,28 @@
 .support-us__img {
     position: absolute;
 }
+
+.support-us__title {
+    padding-top: 2px;
+    @include text-offering-title();
+    border-top: 1px guss-colour(news-main-2) solid;
+    margin-bottom: 24px;
+}
+
+.support-us__text {
+    padding-top: 8px;
+    max-width: 460px;
+}
+
+.support-us__one-off {
+    h1 {
+        padding-top: 2px;
+        @include text-offering-title();
+        border-top: 1px guss-colour(news-main-2) solid;
+    }
+}
+
+.support-us__one-off__text {
+    max-width: 460px;
+}
+
