@@ -1,0 +1,22 @@
+@(  whySupportImage: model.OrientatedImages,
+    whySupportText: Html,
+    contributionText: Html
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+
+<section class="bundle-section">
+    <div class="l-constrained">
+        <div class="bundle-column--left-narrow">
+            <img src="http://placehold.it/350x550">
+        </div><div class="bundle-column--right-wide">
+            <div class="">
+                <h1>Why do we need Supporters?</h1>
+                @whySupportText
+            </div>
+            <div class="">
+                <h1>Make a one-off contribution</h1>
+                @contributionText
+            </div>
+        </div>
+    </div>
+</section>
