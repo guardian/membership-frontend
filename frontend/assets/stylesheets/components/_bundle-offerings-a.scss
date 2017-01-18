@@ -1,6 +1,6 @@
 .offering-column,
 .offering-column--left-column{
-    width: 300px;
+    width: gs-span(4);
     display: inline-block;
     vertical-align: top;
     background-color: #d4ebf8;
@@ -13,7 +13,7 @@
 
 .give-offering {
     margin-top: 36px;
-    max-width: 360px;
+    max-width: gs-span(4.75);
 }
 
 

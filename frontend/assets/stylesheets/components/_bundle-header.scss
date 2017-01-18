@@ -14,7 +14,7 @@
 .bundle-header__tagline {
     @include text-tag-line();
     padding-bottom: 36px;
-    width: 460px;
+    width: gs-span(6);
 }
 
 .bundle-header__img {
@@ -22,7 +22,7 @@
 }
 
 .bundle-header__paragraph{
-    width: 460px;
+    width: gs-span(6);
     margin-bottom: 0;
     @include text-paragraph();
     color: guss-colour(neutral-2);
