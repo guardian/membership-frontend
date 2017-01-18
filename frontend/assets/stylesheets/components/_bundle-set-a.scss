@@ -42,7 +42,7 @@
 
 /* Bundle's Columns Style */
 .bundle-column--left-wide {
-    width: 640px;
+    width: gs-span(8.25);
     display: inline-block;
     vertical-align: top;
     @include main-left-padding;
@@ -50,14 +50,14 @@
 }
 
 .bundle-column--right-narrow {
-    width: 500px;
+    width: gs-span(6.5);
     display: inline-block;
     vertical-align: top;
     @include main-right-padding;
 }
 
 .bundle-column--left-narrow {
-    width: 500px;
+    width: gs-span(6.5);
     display: inline-block;
     vertical-align: top;
     @include main-left-padding;
@@ -65,14 +65,14 @@
 }
 
 .bundle-column--right-wide {
-    width: 640px;
+    width: gs-span(8.25);
     display: inline-block;
     vertical-align: top;
     @include main-right-padding;
 }
 
 .bundle-column--left-narrow--secondary-padding {
-    width: 500px;
+    width: gs-span(6.5);
     display: inline-block;
     vertical-align: top;
     @include secondary-left-padding;
