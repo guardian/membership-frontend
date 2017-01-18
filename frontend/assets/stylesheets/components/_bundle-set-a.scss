@@ -7,7 +7,7 @@
 }
 
 @mixin main-right-padding() {
-    padding-right: 16px;
+    padding-right: 20px;
 }
 
 @mixin secondary-right-padding() {
@@ -33,6 +33,11 @@
     @include fs-bodyCopy(4);
     font-weight: 300;
     color: guss-colour(neutral-1);
+}
+
+@mixin text-offering-title() {
+    @include fs-headline(7);
+    color: guss-colour(news-support-2);
 }
 
 /* Bundle's Columns Style */
