@@ -405,7 +405,7 @@
     }
 
     @pattern("FAQ", "FAQ answers") {
-        @fragments.common.faqs(model.Faq.help.take(4))
+        @fragments.common.faqs(model.Faq.staff.take(4))
     }
 
     @pattern("Forms: Create password") {
