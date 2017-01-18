@@ -11,9 +11,10 @@
         max-height: 0;
         opacity: 0;
         overflow: hidden;
-        transition: all 0.8s ease;
+        transition: all 0.2s ease;
     }
     input[type=checkbox] + label {
+        cursor:pointer;
         h3:before {
             font-size: 10px;
             padding-right: 10px;
