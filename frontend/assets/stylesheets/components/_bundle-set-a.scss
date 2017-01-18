@@ -3,7 +3,7 @@
 }
 
 @mixin secondary-left-padding() {
-
+    padding-left: 20px;
 }
 
 @mixin main-right-padding() {
@@ -53,7 +53,6 @@
     width: 500px;
     display: inline-block;
     vertical-align: top;
-    @include secondary-left-padding;
     @include main-right-padding;
 }
 
@@ -69,8 +68,15 @@
     width: 640px;
     display: inline-block;
     vertical-align: top;
-    @include secondary-left-padding;
     @include main-right-padding;
+}
+
+.bundle-column--left-narrow--secondary-padding {
+    width: 500px;
+    display: inline-block;
+    vertical-align: top;
+    @include secondary-left-padding;
+    @include secondary-right-padding;
 }
 
 .bundle-row {
@@ -79,4 +85,8 @@
 
 .bundle-row-b {
     padding-top: 36px;
+}
+
+.bundle-row-c {
+    padding-top: 48px;
 }

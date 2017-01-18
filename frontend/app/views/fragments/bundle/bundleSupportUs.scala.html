@@ -3,19 +3,32 @@
     contributionText: Html
 )(implicit token: play.filters.csrf.CSRF.Token)
 
-
 <section class="bundle-section">
-    <div class="l-constrained">
-        <div class="bundle-column--left-narrow">
-            <img src="http://placehold.it/350x550">
-        </div><div class="bundle-column--right-wide">
-            <div class="">
+    <div class="bundle-row-c">
+        <div class="l-constrained">
+            <div class="bundle-column--left-narrow--secondary-padding">
+                <img class="support-us__img" src="http://placehold.it/440x650">
+            </div><div class="bundle-column--right-wide">
                 <h1>Why do we need Supporters?</h1>
-                @whySupportText
             </div>
-            <div class="">
-                <h1>Make a one-off contribution</h1>
-                @contributionText
+        </div>
+        <div class="support-us__body">
+            <div class="l-constrained">
+                <div class="bundle-column--left-narrow"></div><div class="bundle-column--right-wide">
+                <div class="">
+                    @whySupportText
+                    </div>
+                </div>
+                <div class="bundle-column--left-narrow"></div><div class="bundle-column--right-wide">
+            </div>
+            </div>
+        </div>
+        <div class="l-constrained">
+            <div class="bundle-column--left-narrow"></div><div class="bundle-column--right-wide">
+                <div class="">
+                    <h1>Make a one-off contribution</h1>
+                    @contributionText
+                </div>
             </div>
         </div>
     </div>
