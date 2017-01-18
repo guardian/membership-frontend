@@ -3,6 +3,7 @@ import bean from 'bean'
 import $ from '$'
 export function init() {
     let handler = window.StripeCheckout.configure(guardian.stripeCheckout);
+    let success = false;
     const button = $('.js-stripe-checkout');
     const email = button.data('email');
     bean.on(window, 'popstate', handler.close);
@@ -15,11 +16,16 @@ export function init() {
                 panelLabel: 'Approved button copy!',
                 email: email,
                 token: (token) => {
+                    success = true;
                     payment.postForm({
                         'payment.stripeToken': token.id
                     })
                 },
-                closed: payment.closed
+                closed: () => {
+                    if (!success) {
+                        payment.close();
+                    }
+                }
             })
         }
         e.preventDefault();

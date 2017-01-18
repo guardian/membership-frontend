@@ -9,16 +9,16 @@
  form.js
  form.js which is a facade to all form interactivity across the site. form.js initialises the:
  1. validation
-    - adds form listeners (blur/change and submit)
+ - adds form listeners (blur/change and submit)
  2. address rules
-    - adds listeners for the address rules (subdivision choice and address validation) for delivery and billing addresses
-    - sets up the billing address CTA toggle
+ - adds listeners for the address rules (subdivision choice and address validation) for delivery and billing addresses
+ - sets up the billing address CTA toggle
  3. password
-    - sets up the password check work
+ - sets up the password check work
  4. payment
-    - sets up stripe
-    - adds payment listeners for masker and displaying the card image
-    - sets up payment options listeners to provide different info on payment option choice
+ - sets up stripe
+ - adds payment listeners for masker and displaying the card image
+ - sets up payment options listeners to provide different info on payment option choice
 
  All of these initialisations follow our pattern in main.js and will only apply the relevant work if the relevant elements are on the page.
 
@@ -45,11 +45,11 @@
 
  Helper
  - formUtil (a singleton to provide an object for useful form properties/methods)
-     - elem (form dom element)
-     - elems (form elements to validate)
-     - hasPayment (method to tell us if the form has payment)
-     - errs (global form errors array)
-     - flush (a method to flush the elem and elems on the form - used when validation is added/removed)
+ - elem (form dom element)
+ - elems (form elements to validate)
+ - hasPayment (method to tell us if the form has payment)
+ - errs (global form errors array)
+ - flush (a method to flush the elem and elems on the form - used when validation is added/removed)
  - loader (loader and processing message work)
  - password (password work)
  - serializer (serialize the form inputs into a data object for sending to stripe)
@@ -85,7 +85,7 @@ define([
 
             if (form.hasPayment) {
 
-                curl('js!stripe').then(function() {
+                curl('js!stripe').then(function () {
                     payment.init();
                 });
 
@@ -98,10 +98,8 @@ define([
                 });
 
             }
-
-            console.log(form.hasStripeCheckout);
-            if (form.hasStripeCheckout){
-                curl('js!https://checkout.stripe.com/checkout.js').then(function(){
+            if (form.hasStripeCheckout) {
+                curl('js!https://checkout.stripe.com/checkout.js').then(function () {
                     stripe.init();
                 })
             }

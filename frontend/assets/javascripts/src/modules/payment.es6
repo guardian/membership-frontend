@@ -3,14 +3,19 @@ import form from 'src/modules/form/helper/formUtil';
 import validity from 'src/modules/form/validation/validity';
 import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
+import $ from 'src/utils/$'
 
-export function open(){
+const $paymentTypes = $('.js-payment-type');
+const $spinner = $('.js-payment-processing');
+export function open() {
     //When a payment method "overlay" is opened.
-    console.log('start the spinner');
+    $paymentTypes.hide();
+    $spinner.addClass('is-loading');
 }
-export function close(){
+export function close() {
     //When a payment method overlay is closed.
-    console.log('stop the spinner');
+    $paymentTypes.show();
+    $spinner.removeClass('is-loading');
 }
 
 // Validates the form; returns true if the form is valid, false otherwise.
@@ -26,7 +31,7 @@ export function validateForm() {
 }
 
 // Creates the new member by posting the form data with the provided token object.
-export function postForm (paymentToken) {
+export function postForm(paymentToken) {
 
     let data = serializer(utilsHelper.toArray(form.elem.elements),
         paymentToken);
