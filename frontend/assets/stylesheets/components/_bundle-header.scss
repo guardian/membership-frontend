@@ -3,19 +3,15 @@
 /* Green Part of the Header */
 .bundle-header--main-header {
     background: #87be27;
+    padding-top: 24px;
 }
 
-/* White Part of the Header */
-.bundle-header--secondary-header {
-
-}
-
-.bundle-a__title {
+.bundle-header__title {
     @include text-title();
     padding-top: 24px;
 }
 
-.bundle-a__tagline {
+.bundle-header__tagline {
     @include text-tag-line();
     padding-bottom: 36px;
     width: 460px;
@@ -28,4 +24,7 @@
 .bundle-header__paragraph{
     width: 460px;
     margin-bottom: 0;
+    @include text-paragraph();
+    color: guss-colour(neutral-2);
+    padding-top: 24px;
 }

@@ -4,18 +4,26 @@
 
 .support-us__img {
     position: absolute;
+    margin-top: 48px;
 }
 
 .support-us__title {
     padding-top: 2px;
     @include text-offering-title();
     border-top: 1px guss-colour(news-main-2) solid;
+    margin-top: 48px;
     margin-bottom: 24px;
 }
 
 .support-us__text {
+    @include text-paragraph();
     padding-top: 8px;
     max-width: 460px;
+    color: guss-colour(neutral-1);
+
+    p {
+        margin-bottom: 12px;
+    }
 }
 
 .support-us__one-off {

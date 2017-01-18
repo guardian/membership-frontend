@@ -30,8 +30,8 @@
 }
 
 @mixin text-paragraph() {
-    @include fs-bodyCopy(4);
-    font-weight: 300;
+    @include fs-bodyCopy(3);
+    line-height: 22px;
     color: guss-colour(neutral-1);
 }
 
@@ -77,16 +77,4 @@
     vertical-align: top;
     @include secondary-left-padding;
     @include secondary-right-padding;
-}
-
-.bundle-row {
-    padding-top: 24px;
-}
-
-.bundle-row-b {
-    padding-top: 36px;
-}
-
-.bundle-row-c {
-    padding-top: 48px;
 }

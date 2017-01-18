@@ -12,6 +12,7 @@
 }
 
 .give-offering {
+    margin-top: 36px;
     max-width: 360px;
 }
 
@@ -38,6 +39,7 @@
 }
 
 .offering__title {
+    margin-top: 36px;
     padding-top: 2px;
     @include text-offering-title();
     border-top: 1px guss-colour(news-main-2) solid;
@@ -76,4 +78,3 @@
         line-height: 18px;
     }
 }
-
