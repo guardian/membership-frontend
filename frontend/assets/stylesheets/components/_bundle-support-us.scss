@@ -1,8 +1,3 @@
-
-.support-us__text {
-
-}
-
 .bundle-support__one-off__content {
     @include bundle-column-wide();
 
@@ -19,8 +14,6 @@
 }
 
 
-
-
 .bundle-support__main__img {
     @include bundle-column-narrow();
     padding-left: 20px;
@@ -35,7 +28,6 @@
 .bundle-support__main__title {
     @include bundle-column-wide();
     padding-right: 20px;
-
 
     >h1 {
         padding-top: 2px;
