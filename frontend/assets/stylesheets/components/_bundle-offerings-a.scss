@@ -18,12 +18,12 @@
 
 .bundle-offering-a__give__content__body {
     background-color: guss-colour(comment-support-2);
-    margin-top: 24px;
+    margin-top: $gs-baseline * 2;
 
     >p {
         padding-top: 8px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: $gs-gutter / 2;
+        padding-right: $gs-gutter / 2;
         @include fs-headline(3);
         font-weight: 900;
     }
@@ -41,7 +41,7 @@
         color: guss-colour(neutral-1);
     }
 
-    p {
+    >p {
         @include fs-textSans(4);
         color: guss-colour(news-support-6);
         padding-bottom: 0;
@@ -53,13 +53,17 @@
 
 .bundle-offering-a__subscribe {
     @include bundle-column-wide();
-    padding-right: 20px;
+    padding-right: $gs-gutter;
 
     >h1 {
-        margin-top: 36px;
+        margin-top: $gs-baseline * 3;
         padding-top: 2px;
         @include text-offering-title();
         border-top: 1px guss-colour(news-main-2) solid;
+    }
+
+    div:first-child {
+        margin-right: $gs-gutter;
     }
 }
 
@@ -68,7 +72,7 @@
     display: inline-block;
     vertical-align: top;
     background-color: #d4ebf8;
-    margin-top: 24px;
+    margin-top: $gs-baseline * 2;
 
     >h2 {
         padding-top: 8px;
@@ -80,7 +84,7 @@
 }
 
 .bundle-offering-a__subscribe__offer__price-description {
-    padding-left: 10px;
+    padding-left: $gs-gutter / 2;
     @include fs-textSans(2);
     line-height: 24px;
     font-weight: 900;
@@ -105,7 +109,7 @@
         color: guss-colour(neutral-1);
     }
 
-    p {
+    >p {
         @include fs-textSans(4);
         color: guss-colour(news-support-6);
         padding-bottom: 0;
@@ -114,7 +118,7 @@
 }
 
 .offer-right-margin {
-    margin-right: 20px;
+    margin-right: $gs-gutter;
 }
 
 

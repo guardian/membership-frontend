@@ -15,21 +15,13 @@ object BundleVariant {
     BundleVariant(B, 1, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)))
   )
 
-  def deriveFlowVariant(implicit request: RequestHeader): BundleVariant =
-    getFlowVariantFromRequestCookie(request).getOrElse(BundleVariant.all(Random.nextInt(BundleVariant.all.size)))
-
-  def getFlowVariantFromRequestCookie(request: RequestHeader): Option[BundleVariant] = for {
-    cookieValue <- request.cookies.get(cookieName)
-    variant <- BundleVariant.lookup(cookieValue.value)
-  } yield variant
-
   def lookup(name: String): Option[BundleVariant] = {
     all.find(_.testId == name)
   }
 }
 
 case class BundleVariant(distribution: Distribution, priceIndex: Int, prices: Map[BundleTier, Double]) {
-  val testId =  "MEMBERSHIP_AB_THRASHER_UK_" + distribution.name + priceIndex
+  val testId =  s"MEMBERSHIP_AB_THRASHER_UK_${distribution.name}$priceIndex"
 }
 
 sealed trait BundleTier

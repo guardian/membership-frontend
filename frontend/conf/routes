@@ -107,8 +107,8 @@ POST           /feedback                              controllers.Info.submitFee
 GET            /offers-competitions                   controllers.Info.offersAndCompetitions
 
 # Bundles
-GET            /bundles                               controllers.Bundle.get(intcmp: BundleVariant)
-GET            /bundles/thankyou                      controllers.Bundle.thankYou(intcmp: BundleVariant)
+GET            /bundles                               controllers.Bundle.get(intcmp: abtests.BundleVariant)
+GET            /bundles/thankyou                      controllers.Bundle.thankYou(intcmp: abtests.BundleVariant)
 
 # Styleguide
 GET            /patterns                              controllers.PatternLibrary.patterns
