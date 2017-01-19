@@ -63,12 +63,8 @@ export function postForm(paymentToken) {
         url: form.elem.action,
         method: 'post',
         data: data,
-        success: function (successData) {
-            window.location.assign(successData.redirect);
-        },
-        error: function (errData) {
-            alert(err);
-        }
+        success: (successData) => window.location.assign(successData.redirect),
+        error: fail
     });
 
 }
