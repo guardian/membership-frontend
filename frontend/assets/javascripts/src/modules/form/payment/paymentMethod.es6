@@ -22,9 +22,9 @@ export function showCardFields (event) {
 		card.removeAttribute('disabled');
 	});
 
-	paymentMethods.addClass('is-hidden');
-	cardFields.removeClass('is-hidden');
-	submitButton.removeClass('is-hidden');
+	paymentMethods.hide();
+	cardFields.show();
+	submitButton.show();
 
 }
 
@@ -37,8 +37,8 @@ export function hideCardFields (event) {
 		card.setAttribute('disabled', 'disabled');
 	});
 
-	paymentMethods.removeClass('is-hidden');
-	cardFields.addClass('is-hidden');
-	submitButton.addClass('is-hidden');
+	paymentMethods.show();
+	cardFields.hide();
+	submitButton.hide();
 
 }
