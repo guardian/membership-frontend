@@ -1,5 +1,31 @@
 
 /* Header */
+.global-header__logo__image {
+    margin-top: 30px;
+    width: 320px;
+    height: 60px;
+}
+
+.global-header__inner {
+    background: none;
+    background-color: #005689;
+}
+
+.control__icon {
+    color: $white;
+    border-color: $white;
+}
+
+.control__info,
+.control,
+.control:active {
+    color: $white;
+}
+
+.global-navigation__item--right {
+    display: none;
+}
+
 /* Green Part of the Header */
 .bundle-header__main {
     background: #87be27;
