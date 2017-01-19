@@ -1,50 +1,11 @@
 /* Give */
 .bundle-offering-a__give {
     @include bundle-column-narrow();
-    padding-left: 100px;
-}
-
-.bundle-offering-a__cta {
-    display: inline-block;
-    padding: 5px 15px;
-    border: .6px solid #005689;
-    border-radius: 100px;
-    svg path {
-        stroke: #ffffff;
-        fill: #ffffff;
-    }
-    color: #ffffff;
-    background-color: #005689;
-
-    .inline-arrow-white-right {
-        display: block;
-        float: right;
-        height: 30px;
-        margin-left: 10px;
-    }
-
-    p {
-        font-family: Guardian Text Sans Web;
-        font-weight: 600;
-        font-size: 15px;
-        line-height: 30px;
-        display: inline-block;
-        vertical-align: middle;
-        margin: 0;
-    }
-}
-
-.bundle-offering-a__cta:hover {
-    background-color: #00456e;
-    border: .6px solid #00456e;
-}
-
-.bundle-offering-a__cta:hover p {
-    color: #fff;
+    padding-left: $gs-gutter * 5;
 }
 
 .bundle-offering-a__give__content {
-    margin-top: 36px;
+    margin-top: $gs-baseline * 3;
     max-width: gs-span(4.75);
 
     >h1 {
@@ -110,8 +71,12 @@
     width: gs-span(4);
     display: inline-block;
     vertical-align: top;
-    background-color: #d4ebf8;
+
     margin-top: $gs-baseline * 2;
+}
+
+.bundle-offering-a__subscribe__offer__content {
+    background-color: #d4ebf8;
 
     >h2 {
         padding-top: 8px;

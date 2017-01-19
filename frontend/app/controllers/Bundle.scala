@@ -62,14 +62,14 @@ trait Bundle extends Controller {
     }
   }
 
-  def thankYou(bundleVariant: BundleVariant) = CachedAction { implicit request =>
+  def thankYou(bundleVariant: BundleVariant, selectedOption: String) = CachedAction { implicit request =>
     Ok(views.html.bundle.thankYou(
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
           url = request.path,
           description = Some(CopyConfig.copyDescriptionSupporters)
         ),
-        bundleVariant))
+        bundleVariant, selectedOption))
     }
 }
 

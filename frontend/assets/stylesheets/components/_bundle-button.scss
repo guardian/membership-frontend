@@ -1,0 +1,39 @@
+.bundle-button__content {
+    background-color: #005689;
+    border: .6px solid #005689;
+    border-radius: 100px;
+    color: #ffffff;
+    display: inline-block;
+    padding: 5px 15px;
+
+    p {
+        font-family: Guardian Text Sans Web;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0;
+    }
+
+    svg path {
+        stroke: #ffffff;
+        fill: #ffffff;
+    }
+}
+
+.bundle-button__content__arrow {
+    display: block;
+    float: right;
+    height: 30px;
+    margin-left: 10px;
+}
+
+.bundle-button__content:hover {
+    background-color: #00456e;
+    border: .6px solid #00456e;
+
+    p {
+        color: #fff;
+    }
+}

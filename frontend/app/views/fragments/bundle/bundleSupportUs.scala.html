@@ -1,4 +1,6 @@
+@import abtests.BundleVariant
 @(  whySupportImage: model.OrientatedImages,
+    bundleVariant: BundleVariant,
     whySupportText: Html,
     contributionText: Html
 )(implicit token: play.filters.csrf.CSRF.Token)
@@ -23,6 +25,7 @@
                 <h1>Make a one-off contribution</h1>
                 <div class="bundle-support__one-off__content__text">
                     @contributionText
+                    @fragments.bundle.bundleButton("Contribute now", "/bundles/thankyou?intcmp="+ bundleVariant.testId,"")
                 </div>
         </div>
     </div>
