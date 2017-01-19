@@ -6,20 +6,20 @@
 @(image: OrientatedImages, mainTitle: Html, tagLine: Html, paragraph: Html)
 
 <section class="bundle-section">
-    <div class="bundle-header--main-header">
+    <div class="bundle-header__main">
         <div class="l-constrained">
-            <div class="bundle-column--left-wide">
-                <h1 class="bundle-header__title">@mainTitle</h1>
-                <p class="bundle-header__tagline">@tagLine</p>
-            </div><div class="bundle-column--right-narrow">
-                <img class="bundle-header__img" src="http://placehold.it/480x400">
+            <div class="bundle-header__main__content">
+                <h1>@mainTitle</h1>
+                <p>@tagLine</p>
+            </div><div class="bundle-header__main__img">
+                <img src="http://placehold.it/480x400">
             </div>
         </div>
     </div>
     <div class="l-constrained">
-        <div class="bundle-column--left-wide">
-            <div class="bundle-content--left">
-                <p class="bundle-header__paragraph">@paragraph</p>
+        <div class="bundle-header__secondary">
+            <div class="bundle-header__secondary__content">
+                <p>@paragraph</p>
             </div>
         </div>
     </div>

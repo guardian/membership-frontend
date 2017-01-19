@@ -1,26 +1,9 @@
-@mixin main-left-padding() {
-    padding-left: 100px;
-}
-
-@mixin secondary-left-padding() {
-    padding-left: 20px;
-}
-
-@mixin main-right-padding() {
-    padding-right: 20px;
-}
-
-@mixin secondary-right-padding() {
-
-}
-
 @mixin text-title() {
     @include fs-header(5);
     color: #ffffff;
     font-weight: 400;
     font-size: 56px;
     line-height: 56px;
-    //guss-colour(guardian-brand-dark);
 }
 
 @mixin text-tag-line() {
@@ -41,40 +24,41 @@
 }
 
 /* Bundle's Columns Style */
-.bundle-column--left-wide {
+@mixin bundle-column-wide() {
     width: gs-span(8.25);
     display: inline-block;
     vertical-align: top;
-    @include main-left-padding;
-    @include secondary-right-padding;
 }
 
-.bundle-column--right-narrow {
+@mixin bundle-column-narrow() {
     width: gs-span(6.5);
     display: inline-block;
     vertical-align: top;
-    @include main-right-padding;
 }
 
-.bundle-column--left-narrow {
-    width: gs-span(6.5);
+.bundle-column-wide--main-left-padding {
+    width: gs-span(8.25);
     display: inline-block;
     vertical-align: top;
-    @include main-left-padding;
-    @include secondary-right-padding;
+}
+
+.budle-column--main-padding {
+    padding-left: 100px;
+}
+
+.budle-column--secondary-padding {
+    padding-left: 20px;
 }
 
 .bundle-column--right-wide {
     width: gs-span(8.25);
     display: inline-block;
     vertical-align: top;
-    @include main-right-padding;
+
 }
 
 .bundle-column--left-narrow--secondary-padding {
     width: gs-span(6.5);
     display: inline-block;
     vertical-align: top;
-    @include secondary-left-padding;
-    @include secondary-right-padding;
 }

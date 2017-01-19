@@ -1,72 +1,42 @@
-.offering-column,
-.offering-column--left-column{
-    width: gs-span(4);
-    display: inline-block;
-    vertical-align: top;
-    background-color: #d4ebf8;
-    margin-top: 24px;
+/* Give */
+.bundle-offering-a__give {
+    @include bundle-column-narrow();
+    padding-left: 100px;
 }
 
-.offering-column--left-column {
-    margin-right: 20px;
-}
-
-.give-offering {
+.bundle-offering-a__give__content {
     margin-top: 36px;
     max-width: gs-span(4.75);
+
+    >h1 {
+        margin-top: 36px;
+        padding-top: 2px;
+        @include text-offering-title();
+        border-top: 1px guss-colour(news-main-2) solid;
+    }
 }
 
-
-.give__body {
+.bundle-offering-a__give__content__body {
     background-color: guss-colour(comment-support-2);
     margin-top: 24px;
+
+    >p {
+        padding-top: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+        @include fs-headline(3);
+        font-weight: 900;
+    }
 }
 
-.give__description {
-    padding-top: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
-    @include fs-headline(3);
-    font-weight: 900;
-}
-
-.option__title {
-    padding-top: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
-    @include fs-headline(3);
-    font-weight: 900;
-}
-
-.offering__title {
-    margin-top: 36px;
-    padding-top: 2px;
-    @include text-offering-title();
-    border-top: 1px guss-colour(news-main-2) solid;
-}
-
-.offering__price-description {
-    padding-left: 10px;
-    @include fs-textSans(2);
-    line-height: 24px;
-    font-weight: 900;
-    color: guss-colour(news-support-6);
-}
-
-.offering__price {
-
-    @include fs-headline(3);
-    font-weight: 900;
-    color: guss-colour(neutral-1);
-}
-.offering__features-list {
+.bundle-offering-a__give__content__body__list{
     list-style-type: none;
 }
 
-.offering__feature {
+.bundle-offering-a__give__content__body__list__item {
     padding-left: 28px;
 
-    h1 {
+    >h1 {
         @include fs-header(1);
         color: guss-colour(neutral-1);
     }
@@ -78,3 +48,75 @@
         line-height: 18px;
     }
 }
+
+/* Subscribe */
+
+.bundle-offering-a__subscribe {
+    @include bundle-column-wide();
+    padding-right: 20px;
+
+    >h1 {
+        margin-top: 36px;
+        padding-top: 2px;
+        @include text-offering-title();
+        border-top: 1px guss-colour(news-main-2) solid;
+    }
+}
+
+.bundle-offering-a__subscribe__offer {
+    width: gs-span(4);
+    display: inline-block;
+    vertical-align: top;
+    background-color: #d4ebf8;
+    margin-top: 24px;
+
+    >h2 {
+        padding-top: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+        @include fs-headline(3);
+        font-weight: 900;
+    }
+}
+
+.bundle-offering-a__subscribe__offer__price-description {
+    padding-left: 10px;
+    @include fs-textSans(2);
+    line-height: 24px;
+    font-weight: 900;
+    color: guss-colour(news-support-6);
+
+    >span {
+        @include fs-headline(3);
+        font-weight: 900;
+        color: guss-colour(neutral-1);
+    }
+}
+
+.bundle-offering-a__subscribe__offer__list {
+    list-style-type: none;
+}
+
+.bundle-offering-a__subscribe__offer__list__item {
+    padding-left: 28px;
+
+    >h1 {
+        @include fs-header(1);
+        color: guss-colour(neutral-1);
+    }
+
+    p {
+        @include fs-textSans(4);
+        color: guss-colour(news-support-6);
+        padding-bottom: 0;
+        line-height: 18px;
+    }
+}
+
+.offer-right-margin {
+    margin-right: 20px;
+}
+
+
+
+

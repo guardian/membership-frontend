@@ -1,30 +1,44 @@
 
 /* Header */
 /* Green Part of the Header */
-.bundle-header--main-header {
+.bundle-header__main {
     background: #87be27;
     padding-top: 24px;
 }
 
-.bundle-header__title {
-    @include text-title();
-    padding-top: 24px;
+.bundle-header__main__content {
+    @include bundle-column-wide();
+    padding-left: 100px;
+
+    h1 {
+        @include text-title();
+        padding-top: 24px;
+    }
+
+    p {
+         @include text-tag-line();
+         padding-bottom: 36px;
+         width: gs-span(6);
+     }
 }
 
-.bundle-header__tagline {
-    @include text-tag-line();
-    padding-bottom: 36px;
-    width: gs-span(6);
+.bundle-header__main__img {
+
+    @include bundle-column-narrow();
+
+    img {
+        position: absolute;
+    }
 }
 
-.bundle-header__img {
-    position: absolute;
-}
-
-.bundle-header__paragraph{
-    width: gs-span(6);
-    margin-bottom: 0;
-    @include text-paragraph();
-    color: guss-colour(neutral-2);
-    padding-top: 24px;
+.bundle-header__secondary__content {
+    @include bundle-column-wide();
+    padding-left: 100px;
+    p {
+        width: gs-span(6);
+        margin-bottom: 0;
+        @include text-paragraph();
+        color: guss-colour(neutral-2);
+        padding-top: 24px;
+    }
 }

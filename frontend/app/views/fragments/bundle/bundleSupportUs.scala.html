@@ -4,30 +4,26 @@
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 <section class="bundle-section">
-    <div class="l-constrained">
-        <div class="bundle-column--left-narrow--secondary-padding">
-            <img class="support-us__img" src="http://placehold.it/440x650">
-        </div><div class="bundle-column--right-wide">
-            <h1 class="support-us__title">Why do we need Supporters?</h1>
+    <div class="bundle-support__main l-constrained">
+        <div class="bundle-support__main__img"><img src="http://placehold.it/440x650"></div><div class="bundle-support__main__title">
+            <h1>Why do we need Supporters?</h1>
         </div>
     </div>
-    <div class="support-us__body">
+    <div class="bundle-support__content">
         <div class="l-constrained">
-            <div class="bundle-column--left-narrow"></div><div class="bundle-column--right-wide">
-            <div class="support-us__text">
+            <div class="bundle-support__content__img-space"></div><div class="bundle-support__content__body">
+            <div class="bundle-support__content__body__text">
                 @whySupportText
                 </div>
             </div>
         </div>
     </div>
-    <div class="l-constrained bundle-row-b">
-        <div class="bundle-column--left-narrow"></div><div class="bundle-column--right-wide">
-            <div class="support-us__one-off">
+    <div class="bundle-support__one-off l-constrained ">
+        <div class="bundle-support__one-off__img-space"></div><div class="bundle-support__one-off__content">
                 <h1>Make a one-off contribution</h1>
-                <div class="support-us__one-off__text">
+                <div class="bundle-support__one-off__content__text">
                     @contributionText
                 </div>
-            </div>
         </div>
     </div>
 </section>
