@@ -99,7 +99,7 @@ define([
 
             }
             if (form.hasStripeCheckout) {
-                curl('js!https://checkout.stripe.com/checkout.js').then(function () {
+                curl('js!stripeCheckout').then(function () {
                     stripe.init();
                 })
             }
