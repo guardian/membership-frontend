@@ -27,7 +27,7 @@ const messageElement = $('.js-payment-error');
 // Decides what the message text should be.
 function getMessage (error) {
 
-    const specificMessage = errorMessages.hasOwnProperty(error.type);
+    const specificMessage = error && errorMessages.hasOwnProperty(error.type);
 
     if (specificMessage) {
         return errorMessages[error.type][error.code];
