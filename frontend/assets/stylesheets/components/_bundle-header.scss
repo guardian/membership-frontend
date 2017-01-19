@@ -1,0 +1,44 @@
+
+/* Header */
+/* Green Part of the Header */
+.bundle-header__main {
+    background: #87be27;
+    padding-top: $gs-baseline * 2;
+}
+
+.bundle-header__main__content {
+    @include bundle-column-wide();
+    padding-left: 100px;
+
+    h1 {
+        @include text-title();
+        padding-top: $gs-baseline * 2;
+    }
+
+    p {
+         @include text-tag-line();
+         padding-bottom: $gs-baseline * 3;
+         width: gs-span(6);
+     }
+}
+
+.bundle-header__main__img {
+
+    @include bundle-column-narrow();
+
+    img {
+        position: absolute;
+    }
+}
+
+.bundle-header__secondary__content {
+    @include bundle-column-wide();
+    padding-left: $gs-gutter * 5;
+    p {
+        width: gs-span(6);
+        margin-bottom: 0;
+        @include text-paragraph();
+        color: guss-colour(neutral-2);
+        padding-top: $gs-baseline * 2;
+    }
+}

@@ -97,7 +97,6 @@ require([
     form.init();
     processSubmit.init();
 
-
     // Metrics
     metrics.init();
 

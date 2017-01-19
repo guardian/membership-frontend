@@ -1,0 +1,24 @@
+@import com.gu.i18n.CountryGroup
+@import configuration.Videos
+@import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
+@import views.support.PageInfo
+@import tracking.AppnexusPixel
+@import com.gu.salesforce.Tier.Supporter
+
+@import abtests.BundleVariant
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+    pageInfo: PageInfo,
+    detailImage: model.OrientatedImages,
+    bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
+
+@main("Supporters", pageInfo=pageInfo) {
+
+    <section class="elevated-supporter">
+
+        @* ===== Header part ===== *@
+        @* ===== Second part ===== *@
+        @* ===== Third part ===== *@
+
+    </section>
+}
