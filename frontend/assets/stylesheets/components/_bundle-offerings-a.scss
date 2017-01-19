@@ -62,7 +62,7 @@
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
-    div:first-child {
+    div:first-of-type {
         margin-right: $gs-gutter;
     }
 }
@@ -116,11 +116,3 @@
         line-height: 18px;
     }
 }
-
-.offer-right-margin {
-    margin-right: $gs-gutter;
-}
-
-
-
-

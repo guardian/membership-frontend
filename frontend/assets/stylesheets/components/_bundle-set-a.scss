@@ -18,6 +18,13 @@
     color: guss-colour(neutral-1);
 }
 
+@mixin text-support-us-paragraph() {
+    @include fs-headline(3);
+    font-size: 18px;
+    line-height: 22px;
+    color: guss-colour(neutral-1);
+}
+
 @mixin text-offering-title() {
     @include fs-headline(7);
     color: guss-colour(news-support-2);
