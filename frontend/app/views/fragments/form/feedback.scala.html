@@ -1,3 +1,4 @@
+@import model.FeedbackType
 @(pageText: Option[String] = None)
 
 <fieldset class="fieldset">
@@ -9,16 +10,16 @@
     <div class="fieldset__fields">
 
         <div class="form-field">
-            <label class="label" for="category">I have feedback about</label>
+            <label class="label" for="category">Contact us about</label>
             <div>
                 <select name="category"
                         id="category"
                         required
                         aria-required="true">
                     <option value="">Select feedback category</option>
-                    <option>Suggest an improvement</option>
-                    <option>Give general feedback</option>
-                    <option>Accessibility issue</option>
+                    @for(feedbackType <- model.FeedbackType.all){
+                        <option value="@feedbackType.slug">@feedbackType.description</option>
+                    }
                 </select>
                 @fragments.form.errorMessage("Please select a feedback category")
             </div>

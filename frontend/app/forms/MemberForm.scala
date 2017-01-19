@@ -10,7 +10,7 @@ import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Address, BillingPeriod, FullName}
 import com.gu.salesforce.Tier._
 import com.gu.salesforce.{PaidTier, Tier}
-import model.{FeatureChoice, FreePlanChoice, PaidPlanChoice, PlanChoice}
+import model._
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{FieldMapping, Form, FormError, Mapping}
@@ -108,7 +108,7 @@ object MemberForm {
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
   }
 
-  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
+  case class FeedbackForm(category: FeedbackType, page: String, feedback: String, name: String, email: String)
 
   val abTestFormatter: Formatter[JsValue] = new Formatter[JsValue] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError],JsValue] = {
@@ -143,7 +143,22 @@ object MemberForm {
       Map(key -> value.alpha2)
   }
 
+  implicit val feedbackTypeFormatter: Formatter[FeedbackType] = new Formatter[FeedbackType] {override def unbind(key: String, value: FeedbackType) = Map(key -> value.slug)
+
+    override def bind(key: String, data: Map[String, String]):Either[Seq[FormError],FeedbackType] = {
+      val feedbackType = data.get(key)
+      lazy val formError = FormError(key, s"Cannot find a feedback type of ${feedbackType.getOrElse("")}")
+      feedbackType
+        .flatMap(FeedbackType.fromSlug)
+        .toRight[Seq[FormError]](Seq(formError))
+    }
+  }
+
+
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
+
+  private val feedbackType = of[FeedbackType] as feedbackTypeFormatter
+
   private val country: Mapping[String] =
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
@@ -204,7 +219,7 @@ object MemberForm {
   )(PaymentForm.apply)(PaymentForm.unapply)
 
   val feedbackMapping: Mapping[FeedbackForm] =   mapping(
-    "category" -> nonEmptyText,
+    "category" -> feedbackType,
     "page" -> text,
     "feedback" -> nonEmptyText,
     "name" -> nonEmptyText,
@@ -269,7 +284,7 @@ object MemberForm {
 
   val feedbackForm: Form[FeedbackForm] = Form(
     mapping(
-      "category" -> nonEmptyText,
+      "category" -> feedbackType,
       "page" -> text,
       "feedback" -> nonEmptyText,
       "name" -> nonEmptyText,

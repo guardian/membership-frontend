@@ -10,7 +10,7 @@ import controllers.Redirects.redirectToSupporterPage
 import forms.MemberForm._
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
 import play.api.mvc.Controller
-import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
+import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
 import views.support.{Asset, PageInfo}
