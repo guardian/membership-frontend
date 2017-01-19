@@ -44,7 +44,6 @@ function createAgreement (paypalData) {
 
 // Creates the new member by posting the form data with the BAID.
 function postForm (baid) {
-
 	payment.postForm({ 'payment.payPalBaid': baid.token });
 }
 
@@ -65,19 +64,13 @@ export function init () {
 		// Called when user clicks Paypal button.
 		payment: setupPayment,
 		// Called when there is an error with the paypal payment.
-        onError: payment.failure,
+        onError: payment.fail,
 
 		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
 
 			payment.showSpinner();
-
-			createAgreement(data).then(postForm).catch(err => {
-
-				payment.hideSpinner();
-				alert(err);
-
-			});
+			createAgreement(data).then(postForm).catch(payment.fail);
 
 	   }
 

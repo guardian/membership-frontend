@@ -37,6 +37,7 @@ export function hideSpinner () {
 // The error object should have a type and a code, see paymentError.es6.
 export function fail (error) {
 
+    hideSpinner();
     error.showMessage(error);
 
 }
