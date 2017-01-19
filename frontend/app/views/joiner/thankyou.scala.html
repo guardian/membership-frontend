@@ -7,13 +7,13 @@
 
 @import views.support.ThankyouSummary
 @import views.support.MembershipCompat._
-@import com.gu.memsub.PaymentCard
 @import com.gu.memsub.Subscriber
 @import com.gu.memsub.promo.Promotion.AnyPromotion
 @import tracking.AppnexusPixel
+@import com.gu.memsub.{PaymentMethod, PaymentCard, PayPalMethod}
 @(member: Subscriber.Member,
   summary: ThankyouSummary,
-  cardOpt: Option[PaymentCard],
+  paymentMethod: Option[PaymentMethod],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean,
   promotion: Option[AnyPromotion])
@@ -50,6 +50,13 @@
             @content
         </div>
     </section>
+}
+
+@paymentRow(title : String, message: String) = {
+    <tr role="row">
+        <th role="rowheader">@title</th>
+        <td id="qa-joiner-summary-card">@message</td>
+    </tr>
 }
 
 @main(title) {
@@ -120,13 +127,13 @@
                         }
                     }
 
-                    @for(card <- cardOpt) {
-
-                    <tr role="row">
-                        <th role="rowheader">Card</th>
-                        <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.lastFourDigits</td>
-                    </tr>
-                    }
+                    @{paymentMethod match {
+                        case Some(card : PaymentCard) =>
+                            paymentRow("Card", "•••• •••• •••• •••• " + card.lastFourDigits)
+                        case Some(payPal : PayPalMethod) =>
+                            paymentRow("Payment method", "You are paying with PayPal")
+                        case _ =>
+                    }}
                 </table>
             </div>
         </section>
