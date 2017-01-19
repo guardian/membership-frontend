@@ -1,7 +1,10 @@
+// ----- Imports ----- //
 
 import listeners from 'src/modules/form/payment/listeners';
 import * as payment from 'src/modules/payment';
 
+
+// ----- Functions ----- //
 
 // Sends request to server to setup payment, and returns Paypal token.
 function setupPayment (resolve, reject) {
@@ -45,7 +48,11 @@ function postForm (baid) {
 	payment.postForm({ 'payment.payPalBaid': baid.token });
 }
 
+
+// ----- Exports ----- //
+
 export function init () {
+
 	paypal.Button.render({
 
 		// Sets the environment.
@@ -57,13 +64,19 @@ export function init () {
 
 		// Called when user clicks Paypal button.
 		payment: setupPayment,
+		// Called when there is an error with the paypal payment.
         onError: payment.failure,
+
 		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
 
 			payment.showSpinner();
+
 			createAgreement(data).then(postForm).catch(err => {
+
+				payment.hideSpinner();
 				alert(err);
+
 			});
 
 	   }
