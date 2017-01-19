@@ -18,7 +18,8 @@ const dimensions = {
     customerAgent: 'dimension13', // Session
     CamCodeBusinessUnit: 'dimension14', // Session
     CamCodeTeam: 'dimension15', // Session
-    experience: 'dimension16'// Session
+    experience: 'dimension16',// Session
+    paymentMethod: 'dimension17',// User
 
 };
 const metrics = {
@@ -114,6 +115,7 @@ export function init() {
 
         wrappedGa('set',dimensions.membershipNumber,guardian.productData.regNumber);
         wrappedGa('set',dimensions.productPurchased,guardian.productData.tier);
+        wrappedGa('set',dimensions.paymentMethod,guardian.productData.paymentMethod);
         // Send analytics after acquisition (on thank you page).
         acquisitionEvent();
 
