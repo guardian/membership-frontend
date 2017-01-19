@@ -15,7 +15,7 @@ const $paymentTypes = $('.js-payment-type');
 const $spinner = $('.js-payment-processing');
 
 
-// ----- Functions ----- //
+// ----- Exports ----- //
 
 export function open() {
     //When a payment method "overlay" is opened.

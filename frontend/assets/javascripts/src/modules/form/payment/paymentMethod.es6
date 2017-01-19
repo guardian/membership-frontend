@@ -1,8 +1,17 @@
+// ----- Imports ----- //
+
+import $ from 'src/utils/$'
 import listeners from 'src/modules/form/payment/listeners';
 
-let paymentMethods = document.getElementsByClassName('js-payment-methods')[0];
-let cardFields = document.getElementsByClassName('js-checkout-card-fields')[0];
-let submitButton = document.getElementsByClassName('js-submit-input')[0];
+
+// ----- Setup ----- //
+
+let paymentMethods = $('.js-payment-methods');
+let cardFields = $('.js-checkout-card-fields');
+let submitButton = $('.js-submit-input');
+
+
+// ----- Exports ----- //
 
 // Unhides the credit card fieldset, and enables the form fields.
 export function showCardFields (event) {
@@ -13,9 +22,9 @@ export function showCardFields (event) {
 		card.removeAttribute('disabled');
 	});
 
-	paymentMethods.classList.add('is-hidden');
-	cardFields.classList.remove('is-hidden');
-	submitButton.classList.remove('is-hidden');
+	paymentMethods.addClass('is-hidden');
+	cardFields.removeClass('is-hidden');
+	submitButton.removeClass('is-hidden');
 
 }
 
@@ -28,8 +37,8 @@ export function hideCardFields (event) {
 		card.setAttribute('disabled', 'disabled');
 	});
 
-	paymentMethods.classList.remove('is-hidden');
-	cardFields.classList.add('is-hidden');
-	submitButton.classList.add('is-hidden');
+	paymentMethods.removeClass('is-hidden');
+	cardFields.addClass('is-hidden');
+	submitButton.addClass('is-hidden');
 
 }
