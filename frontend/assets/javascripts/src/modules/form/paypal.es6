@@ -14,12 +14,8 @@ function setupPayment (resolve, reject) {
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
 		paypal.request.post(SETUP_PAYMENT_URL)
-			.then(data => {
-				resolve(data.token);
-			})
-			.catch(err => {
-				reject(err);
-			});
+			.then(({token}) => resolve(token))
+			.catch(reject);
 
 	} else {
 		reject('Form invalid.');

@@ -29,8 +29,10 @@ export function showSpinner () {
 
 // When we need to hide the payment processing spinner.
 export function hideSpinner () {
+
     $paymentTypes.show();
     $spinner.removeClass('is-loading');
+
 }
 
 // Handles a problem with a payment, takes an error object.
@@ -43,7 +45,7 @@ export function fail (error) {
 }
 
 // Validates the form; returns true if the form is valid, false otherwise.
-export function validateForm() {
+export function validateForm () {
 
     form.elems.map(function (elem) {
         validity.check(elem);
@@ -55,7 +57,7 @@ export function validateForm() {
 }
 
 // Creates the new member by posting the form data with the provided token object.
-export function postForm(paymentToken) {
+export function postForm (paymentToken) {
 
     let data = serializer(utilsHelper.toArray(form.elem.elements),
         paymentToken);
@@ -64,7 +66,7 @@ export function postForm(paymentToken) {
         url: form.elem.action,
         method: 'post',
         data: data,
-        success: (successData) => window.location.assign(successData.redirect),
+        success: ({redirect}) => window.location.assign(redirect),
         error: fail
     });
 

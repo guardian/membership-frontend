@@ -18,7 +18,7 @@ export function showCardFields (event) {
 
 	event.preventDefault();
 
-	[].forEach.call(cardFields.elements, (card) => {
+	[].forEach.call(cardFields.elements, card => {
 		card.removeAttribute('disabled');
 	});
 
@@ -33,7 +33,7 @@ export function hideCardFields (event) {
 
 	event.preventDefault();
 
-	[].forEach.call(cardFields.elements, (card) => {
+	[].forEach.call(cardFields.elements, card => {
 		card.setAttribute('disabled', 'disabled');
 	});
 
