@@ -109,8 +109,17 @@
                                 @fragments.form.securityNote()
                             </div>
                             <div class="fieldset__fields">
-                                <button type="button" class="action choose-payment-method js-card-payment-method">Credit/Debit Card</button>
-                                <div id="paypal-button-checkout"></div>
+                                <div class="form-field">
+                                    <div class="loader js-payment-processing">Processing.</div>
+                                </div>
+                                <div class="form-field js-payment-type">                                <button type="button" class="action choose-payment-method js-card-payment-method">
+                                    Credit/Debit Card</button>
+                                </div>
+                                <div class="form-field js-payment-type">
+                                    <div id="paypal-button-checkout"></div>
+                                </div>
+                                <div class="form-field js-payment-type">                                @fragments.form.stripeCheckout(idUser)
+                                </div>
                             </div>
                         </fieldset>
                         @fragments.form.cardDetailPayPal(plans)

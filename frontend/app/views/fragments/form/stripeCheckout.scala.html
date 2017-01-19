@@ -1,0 +1,13 @@
+@import views.support.IdentityUser
+@(idUser: IdentityUser)
+<script>
+    guardian.stripeCheckout = {
+        key: guardian.stripePublicKey,
+        image: 'https://d24w1tjgih0o9s.cloudfront.net/gu.png',
+        locale: 'auto',
+        name: 'Guardian',
+        zipCode: false,
+        allowRememberMe: false
+    };
+</script>
+<button type="button" class="action choose-payment-method js-stripe-checkout" data-email="@idUser.email">stripe checkout, yeah</button>

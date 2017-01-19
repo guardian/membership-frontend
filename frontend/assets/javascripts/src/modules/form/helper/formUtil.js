@@ -36,6 +36,10 @@ define([
         return !!document.getElementById('paypal-button-checkout');
     }
 
+    function hasStripeCheckout () {
+        return !!document.querySelector('.js-stripe-checkout');
+    }
+
     /**
      * formUtil singleton provides:
      *    elem: DomElement - the form element
@@ -55,6 +59,7 @@ define([
                 elems: getInputsToValidate(form.elements),
                 hasPayment: hasPayment(),
                 hasPaypal: hasPaypal(),
+                hasStripeCheckout: hasStripeCheckout(),
                 errs: [],
                 flush: function () {
                     this.elem = getFormElem();
