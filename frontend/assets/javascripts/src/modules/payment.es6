@@ -17,14 +17,18 @@ const $spinner = $('.js-payment-processing');
 
 // ----- Exports ----- //
 
+// When a payment method "overlay" is opened.
 export function open() {
-    //When a payment method "overlay" is opened.
+
     $paymentTypes.hide();
+    error.hideMessage();
+
     $spinner.addClass('is-loading');
+
 }
 
+// When a payment method overlay is closed.
 export function close() {
-    //When a payment method overlay is closed.
     $paymentTypes.show();
     $spinner.removeClass('is-loading');
 }
