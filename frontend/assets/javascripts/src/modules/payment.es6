@@ -17,8 +17,8 @@ const $spinner = $('.js-payment-processing');
 
 // ----- Exports ----- //
 
-// When a payment method "overlay" is opened.
-export function open() {
+// When we need to show to payment processing spinner.
+export function showSpinner () {
 
     $paymentTypes.hide();
     error.hideMessage();
@@ -27,8 +27,8 @@ export function open() {
 
 }
 
-// When a payment method overlay is closed.
-export function close() {
+// When we need to hide the payment processing spinner.
+export function hideSpinner () {
     $paymentTypes.show();
     $spinner.removeClass('is-loading');
 }

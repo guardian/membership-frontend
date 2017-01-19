@@ -10,7 +10,7 @@ export function init() {
 
     const open = (e) => {
         if (payment.validateForm()) {
-            payment.open();
+            payment.showSpinner();
             handler.open({
                 description: 'So I could do with some good copy for this, and what it needs to contain like price etc.',
                 panelLabel: 'Approved button copy!',
@@ -23,7 +23,7 @@ export function init() {
                 },
                 closed: () => {
                     if (!success) {
-                        payment.close();
+                        payment.hideSpinner();
                     }
                 }
             })

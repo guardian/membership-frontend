@@ -5,7 +5,9 @@ import * as payment from 'src/modules/payment';
 
 // Sends request to server to setup payment, and returns Paypal token.
 function setupPayment (resolve, reject) {
-    payment.open()
+
+    payment.showSpinner();
+
 	if (payment.validateForm()) {
 
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
@@ -15,11 +17,17 @@ function setupPayment (resolve, reject) {
 				resolve(data.token);
 			})
 			.catch(err => {
+
+				payment.hideSpinner();
 				reject(err);
+
 			});
 
 	} else {
+
+		payment.hideSpinner();
 		reject('Form invalid.');
+
 	}
 
 }
@@ -58,7 +66,7 @@ export function init () {
 		// Called when user clicks Paypal button.
 		payment: setupPayment,
         //Oncancel
-        onCancel: payment.close,
+        onCancel: payment.hideSpinner,
         onError: payment.failure,
 		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
