@@ -10,7 +10,7 @@ import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Address, BillingPeriod, FullName}
 import com.gu.salesforce.Tier._
 import com.gu.salesforce.{PaidTier, Tier}
-import model.{FeatureChoice, FreePlanChoice, PaidPlanChoice, PlanChoice}
+import model._
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{FieldMapping, Form, FormError, Mapping}
@@ -108,7 +108,6 @@ object MemberForm {
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
   }
 
-  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
   val abTestFormatter: Formatter[JsValue] = new Formatter[JsValue] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError],JsValue] = {
@@ -143,7 +142,11 @@ object MemberForm {
       Map(key -> value.alpha2)
   }
 
+
+
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
+
+
   private val country: Mapping[String] =
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
@@ -203,13 +206,7 @@ object MemberForm {
     "payPalBaid" -> optional(text)
   )(PaymentForm.apply)(PaymentForm.unapply)
 
-  val feedbackMapping: Mapping[FeedbackForm] =   mapping(
-    "category" -> nonEmptyText,
-    "page" -> text,
-    "feedback" -> nonEmptyText,
-    "name" -> nonEmptyText,
-    "email" -> email
-  )(FeedbackForm.apply)(FeedbackForm.unapply)
+
 
   val friendJoinForm: Form[FriendJoinForm] = Form(
     mapping(
@@ -267,15 +264,7 @@ object MemberForm {
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
 
-  val feedbackForm: Form[FeedbackForm] = Form(
-    mapping(
-      "category" -> nonEmptyText,
-      "page" -> text,
-      "feedback" -> nonEmptyText,
-      "name" -> nonEmptyText,
-      "email" -> email
-    )(FeedbackForm.apply)(FeedbackForm.unapply)
-  )
+
 
   val supportForm: Form[SupportForm] = Form(
     mapping(

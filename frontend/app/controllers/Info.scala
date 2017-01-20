@@ -7,13 +7,14 @@ import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, Re
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
-import forms.MemberForm._
+import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
 import play.api.mvc.Controller
-import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
+import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
 import views.support.{Asset, PageInfo}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
@@ -29,25 +30,25 @@ trait Info extends Controller {
     implicit val countryGroup = UK
 
     val heroImage = ResponsiveImageGroup(
-      name=Some("intro"),
-      metadata=Some(Grid.Metadata(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
         description = Some("Montage of The Guardian Headlines"),
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
+      availableImages = ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
     val detailImage = ResponsiveImageGroup(
-      name=Some("intro"),
-      metadata=Some(Grid.Metadata(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
         description = Some("A scene in The Guardian editorial office."),
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
+      availableImages = ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
     )
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
@@ -67,28 +68,28 @@ trait Info extends Controller {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
-      name=Some("intro"),
-      metadata=Some(Grid.Metadata(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
         description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
         byline = None,
         credit = Some("Carol Cho/AAP")
       )),
-      availableImages=ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
+      availableImages = ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
     val pageImages = Seq(
       ResponsiveImageGroup(
-        name=Some("coral"),
-        metadata=Some(Grid.Metadata(
+        name = Some("coral"),
+        metadata = Some(Grid.Metadata(
           description = Some("The impact of coral bleaching at Lizard Island on the Great Barrier Reef: (left) the coral turns white, known as 'bleaching', in March 2016; (right) the dead coral is blanketed by seaweed in May 2016"),
           byline = None,
           credit = None
         )),
-        availableImages=ResponsiveImageGenerator(
-          id="03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
-          sizes=List(1000,500)
+        availableImages = ResponsiveImageGenerator(
+          id = "03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
+          sizes = List(1000, 500)
         )
       ))
 
@@ -110,15 +111,15 @@ trait Info extends Controller {
 
     val pageImages = Seq(
       ResponsiveImageGroup(
-        name=Some("fearless"),
-        metadata=Some(Grid.Metadata(
+        name = Some("fearless"),
+        metadata = Some(Grid.Metadata(
           description = Some("The Counted: people killed by police in the United States in 2015"),
           byline = Some("The Guardian US"),
           credit = None
         )),
-        availableImages=ResponsiveImageGenerator(
-          id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
-          sizes=List(1000,500)
+        availableImages = ResponsiveImageGenerator(
+          id = "201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
+          sizes = List(1000, 500)
         )
       )
     )
@@ -157,10 +158,10 @@ trait Info extends Controller {
 
     val pageImages = Seq(
       ResponsiveImageGroup(
-        name=Some("fearless"),
-        availableImages=ResponsiveImageGenerator(
-          id="88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129",
-          sizes=List(1000,500)
+        name = Some("fearless"),
+        availableImages = ResponsiveImageGenerator(
+          id = "88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129",
+          sizes = List(1000, 500)
         )
       )
     )
@@ -191,10 +192,10 @@ trait Info extends Controller {
 
     val pageImages = Seq(
       ResponsiveImageGroup(
-        name=Some("fearless"),
-        availableImages=ResponsiveImageGenerator(
-          id="88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129",
-          sizes=List(1000,500)
+        name = Some("fearless"),
+        availableImages = ResponsiveImageGenerator(
+          id = "88f98c8706beafeae6dc32886ccd71da60e6e7d7/0_0_5212_3129",
+          sizes = List(1000, 500)
         )
       )
     )
@@ -224,35 +225,35 @@ trait Info extends Controller {
     )
     val pageImages = Seq(
       ResponsiveImageGroup(
-        name=Some("intro"),
-        altText=Some("Patrons of the Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
-          sizes=List(1000,500)
+        name = Some("intro"),
+        altText = Some("Patrons of the Guardian"),
+        availableImages = ResponsiveImageGenerator(
+          id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
+          sizes = List(1000, 500)
         )
       ),
       ResponsiveImageGroup(
-        name=Some("independence"),
-        altText=Some("Katharine Viner, editor-in-chief of the Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="a4856412e2bef82e6d1d4ce5220fe2391e3f5ca5/0_0_2000_1200",
-          sizes=List(1000,500)
+        name = Some("independence"),
+        altText = Some("Katharine Viner, editor-in-chief of the Guardian"),
+        availableImages = ResponsiveImageGenerator(
+          id = "a4856412e2bef82e6d1d4ce5220fe2391e3f5ca5/0_0_2000_1200",
+          sizes = List(1000, 500)
         )
       ),
       ResponsiveImageGroup(
-        name=Some("backstage-pass"),
-        altText=Some("Backstage pass to the Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="83afa3867ef76d82c86291f4387b5799c26e07f8/0_0_1140_684",
-          sizes=List(1000, 500)
+        name = Some("backstage-pass"),
+        altText = Some("Backstage pass to the Guardian"),
+        availableImages = ResponsiveImageGenerator(
+          id = "83afa3867ef76d82c86291f4387b5799c26e07f8/0_0_1140_684",
+          sizes = List(1000, 500)
         )
       ),
       ResponsiveImageGroup(
-        name=Some("get-involved"),
-        altText=Some("Choose to get involved"),
-        availableImages=ResponsiveImageGenerator(
-          id="ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
-          sizes=List(1000,500)
+        name = Some("get-involved"),
+        altText = Some("Choose to get involved"),
+        availableImages = ResponsiveImageGenerator(
+          id = "ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
+          sizes = List(1000, 500)
         )
       )
     )
@@ -272,7 +273,7 @@ trait Info extends Controller {
 
     val results =
       GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
-        item.content.fields.flatMap(_.membershipAccess).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
+        item.content.fields.flatMap(_.membershipAccess).isEmpty && !item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
     Ok(views.html.info.offersAndCompetitions(TouchpointBackend.Normal.catalog, results))
   }
@@ -281,9 +282,22 @@ trait Info extends Controller {
     Ok(views.html.info.help())
   }
 
-  def feedback = NoCacheAction { implicit request =>
+  val identityService = IdentityService(IdentityApi)
+
+
+
+  def feedback = NoCacheAction.async { implicit request =>
+    val authenticatedUser = AuthenticationService.authenticatedUserFor(request)
+    val name = authenticatedUser.flatMap(_.displayName)
+
+    val identityUser = authenticatedUser.map { user => identityService.getFullUserDetails(user)(IdentityRequest(request)) }
+    val email  = identityUser.map(_.map(u => Some(u.primaryEmailAddress))).getOrElse(Future.successful(None))
+
+
     val flashMsgOpt = request.flash.get("msg").map(FlashMessage.success)
-    Ok(views.html.info.feedback(flashMsgOpt, request.getQueryString("page")))
+    email.map { email =>
+      Ok(views.html.info.feedback(flashMsgOpt, request.getQueryString("page"), name, email))
+    }
   }
 
   def submitFeedback = NoCacheAction.async { implicit request =>
@@ -291,13 +305,19 @@ trait Info extends Controller {
     val userOpt = AuthenticationService.authenticatedUserFor(request).map(_.user)
     val uaOpt = request.headers.get(USER_AGENT)
 
-    def sendFeedback(formData: FeedbackForm) = {
-      EmailService.sendFeedback(formData, userOpt, uaOpt)
+    val identityUser = userOpt.map { user => identityService.getFullUserDetails(user)(IdentityRequest(request)) }
+    val email  = identityUser.map(_.map(u => Some(u.primaryEmailAddress))).getOrElse(Future.successful(None))
 
-      Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
+
+    def sendFeedback(formData: FeedbackForm) = {
+      email.map{email=>
+        EmailService.sendFeedback(formData, userOpt, email, uaOpt)
+        Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us")
+      }
+
     }
 
-    feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
+    FeedbackForm.form.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
 }
