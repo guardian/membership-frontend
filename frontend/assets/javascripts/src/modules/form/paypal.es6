@@ -13,7 +13,14 @@ function setupPayment (resolve, reject) {
 
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
-		paypal.request.post(SETUP_PAYMENT_URL)
+		fetch(SETUP_PAYMENT_URL, { method: 'POST' })
+			.then(response => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw 'Payment setup failed.';
+				}
+			})
 			.then(({token}) => resolve(token))
 			.catch(reject);
 
