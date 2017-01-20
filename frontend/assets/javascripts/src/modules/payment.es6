@@ -17,11 +17,18 @@ const $spinner = $('.js-payment-processing');
 
 // ----- Exports ----- //
 
+// Clears any payment error messages.
+export function clearErrors () {
+
+    paymentError.hideMessage();
+
+}
+
 // When we need to show to payment processing spinner.
 export function showSpinner () {
 
     $paymentTypes.hide();
-    paymentError.hideMessage();
+    clearErrors();
 
     $spinner.addClass('is-loading');
 

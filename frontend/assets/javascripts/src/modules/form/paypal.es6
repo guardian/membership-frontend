@@ -9,6 +9,8 @@ import * as payment from 'src/modules/payment';
 // Sends request to server to setup payment, and returns Paypal token.
 function setupPayment (resolve, reject) {
 
+	payment.clearErrors();
+
 	if (payment.validateForm()) {
 
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
