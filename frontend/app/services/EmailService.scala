@@ -12,7 +12,7 @@ import com.amazonaws.services.simpleemail.model._
 import com.google.common.hash.{HashCode, HashFunction, Hashing}
 import com.gu.aws.CredentialsProvider
 import configuration.Config
-import forms.FeedbackForm.FeedbackForm
+import forms.FeedbackForm
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}

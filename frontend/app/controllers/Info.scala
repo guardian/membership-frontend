@@ -7,7 +7,7 @@ import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, Re
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
-import forms.FeedbackForm._
+import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
 import play.api.mvc.Controller
 import services._
@@ -317,7 +317,7 @@ trait Info extends Controller {
 
     }
 
-    feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
+    FeedbackForm.form.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
 }

@@ -62,7 +62,7 @@
                    type="text"
                    required
                    aria-required="true"
-                   value="@name.getOrElse("")"
+                   value="@name.mkString"
             />
             @fragments.form.errorMessage("Please enter your name")
         </div>
@@ -78,7 +78,7 @@
                    pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                    required
                    aria-required="true"
-                   value="@email.getOrElse("")"
+                   value="@email.mkString"
 
             />
             @fragments.form.errorMessage("Please enter your email address")

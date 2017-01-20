@@ -5,11 +5,9 @@ import play.api.data.format.Formatter
 import play.api.data.{Form, FormError, Mapping}
 import model.FeedbackType
 
-/**
-  * Created by alex_ware on 20/01/2017.
-  */
+
+case class FeedbackForm(category: FeedbackType, page: String, feedback: String, name: String, email: String)
 object FeedbackForm {
-  case class FeedbackForm(category: FeedbackType, page: String, feedback: String, name: String, email: String)
 
   implicit val feedbackTypeFormatter: Formatter[FeedbackType] = new Formatter[FeedbackType] {override def unbind(key: String, value: FeedbackType) = Map(key -> value.slug)
 
@@ -24,7 +22,7 @@ object FeedbackForm {
   private val feedbackType = of[FeedbackType] as feedbackTypeFormatter
 
 
-  val feedbackForm: Form[FeedbackForm] = Form(
+  val form: Form[FeedbackForm] = Form(
     mapping(
       "category" -> feedbackType,
       "page" -> text,
