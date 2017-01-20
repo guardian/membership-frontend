@@ -1,11 +1,11 @@
 .bundle-button__content {
-    background-color: #005689;
-    border: .6px solid #005689;
+    background-color: guss-colour(guardian-brand);
+    border: .6px solid guss-colour(guardian-brand);
     border-radius: 100px;
     color: #ffffff;
     display: inline-block;
     padding: 3px 7px 3px 15px;
-    
+
     p {
         font-family: Guardian Text Sans Web;
         font-weight: 600;
@@ -32,8 +32,8 @@
 }
 
 .bundle-button__content:hover {
-    background-color: #00456e;
-    border: .6px solid #00456e;
+    background-color: guss-colour(guardian-brand-dark);
+    border: .6px solid guss-colour(guardian-brand-dark);
 
     p {
         color: #fff;
