@@ -5,7 +5,7 @@
     color: #ffffff;
     display: inline-block;
     padding: 3px 7px 3px 15px;
-
+    overflow: initial;
     p {
         @include fs-textSans(4);
         font-weight: 600;

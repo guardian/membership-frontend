@@ -14,6 +14,11 @@
         @include text-offering-title();
         border-top: 1px guss-colour(news-main-2) solid;
     }
+
+    .bundle-button__content {
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
 }
 
 .bundle-offering-a__give__content__body {
@@ -85,6 +90,11 @@
         padding-right: 10px;
         @include fs-headline(3);
         font-weight: 900;
+    }
+
+    .bundle-button__content {
+        margin-bottom: 5px;
+        margin-left: 5px;
     }
 }
 
