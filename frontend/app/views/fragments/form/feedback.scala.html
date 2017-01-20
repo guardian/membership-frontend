@@ -1,5 +1,5 @@
 @import model.FeedbackType
-@(pageText: Option[String] = None)
+@(pageText: Option[String] = None, name: Option[String] = None, email: Option[String] = None)
 
 <fieldset class="fieldset">
 
@@ -61,7 +61,9 @@
                    class="input-text"
                    type="text"
                    required
-                   aria-required="true"/>
+                   aria-required="true"
+                   value="@name.getOrElse("")"
+            />
             @fragments.form.errorMessage("Please enter your name")
         </div>
 
@@ -75,7 +77,10 @@
                    type="email"
                    pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                    required
-                   aria-required="true"/>
+                   aria-required="true"
+                   value="@email.getOrElse("")"
+
+            />
             @fragments.form.errorMessage("Please enter your email address")
         </div>
 
