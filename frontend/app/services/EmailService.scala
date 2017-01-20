@@ -12,7 +12,7 @@ import com.amazonaws.services.simpleemail.model._
 import com.google.common.hash.{HashCode, HashFunction, Hashing}
 import com.gu.aws.CredentialsProvider
 import configuration.Config
-import forms.MemberForm.FeedbackForm
+import forms.FeedbackForm.FeedbackForm
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -36,7 +36,8 @@ trait EmailService extends LazyLogging {
       logger.info(s"Sending feedback for ${feedback.name} - Identity $userOpt")
       val to = new Destination().withToAddresses(feedback.category.email)
       val subjectContent = new Content(s"Membership feedback from ${feedback.name}")
-
+      val name = userOpt.map(_.displayName).mkString
+      val id = userOpt.map(_.id).mkString
       val body =
         s"""
         Category: ${feedback.category.description}<br />
@@ -45,7 +46,7 @@ trait EmailService extends LazyLogging {
         <br />
         Name: ${feedback.name}<br />
         Email address: ${feedback.email}<br />
-        Identity user: ${userOpt.mkString} ${userEmail.getOrElse("")} <br/>
+        Identity user: ${name} ${userEmail.mkString} (${id})<br/>
         User agent: ${uaOpt.mkString}
       """.stripMargin
       logger.info(body)

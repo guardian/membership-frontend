@@ -7,7 +7,7 @@ import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, Re
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
-import forms.MemberForm._
+import forms.FeedbackForm._
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
 import play.api.mvc.Controller
 import services._

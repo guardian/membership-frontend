@@ -29,7 +29,7 @@ case object MembershipFeedback extends FeedbackType {
 }
 
 case object GuardianLive extends FeedbackType {
-  override val description: String = "feedback on the Membership scheme"
+  override val description: String = "support with a Guardian Live event"
 }
 
 case object Journalism extends FeedbackType {
