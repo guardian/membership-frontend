@@ -38,7 +38,7 @@
                             <p>Your daily newspaper optimised for tablet and downloaded every morning</p>
                         </li>
                     </ul>
-                    @fragments.bundle.bundleButton("Find out more", "/bundles/thankyou?intcmp="+ bundleVariant.testId,"")
+                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "Digital Subscription").url,"")
                 </div>
             </div><div class="bundle-offering-a__subscribe__offer">
                 <div class="bundle-offering-a__subscribe__offer__content">

@@ -25,7 +25,7 @@
                 <h1>Make a one-off contribution</h1>
                 <div class="bundle-support__one-off__content__text">
                     @contributionText
-                    @fragments.bundle.bundleButton("Contribute now", "/bundles/thankyou?intcmp="+ bundleVariant.testId,"")
+                    @fragments.bundle.bundleButton("Contribute now", routes.Bundle.thankYou(bundleVariant, "Contribution").url,"")
                 </div>
         </div>
     </div>
