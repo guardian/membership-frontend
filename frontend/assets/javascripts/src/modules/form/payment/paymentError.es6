@@ -46,13 +46,13 @@ export function showMessage (error) {
     const message = getMessage(error);
 
     messageElement.text(message);
-    messageElement.show();
+    messageElement.removeClass('is-hidden');
 
 }
 
 // Hides the error message.
 export function hideMessage () {
 
-    messageElement.hide();
+    messageElement.addClass('is-hidden');
 
 }

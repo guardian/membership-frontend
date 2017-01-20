@@ -6,7 +6,7 @@ import validity from 'src/modules/form/validation/validity';
 import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
 import $ from 'src/utils/$'
-import * as error from 'src/modules/form/payment/paymentError';
+import * as paymentError from 'src/modules/form/payment/paymentError';
 
 
 // ----- Setup ----- //
@@ -21,7 +21,7 @@ const $spinner = $('.js-payment-processing');
 export function showSpinner () {
 
     $paymentTypes.hide();
-    error.hideMessage();
+    paymentError.hideMessage();
 
     $spinner.addClass('is-loading');
 
@@ -40,7 +40,7 @@ export function hideSpinner () {
 export function fail (error) {
 
     hideSpinner();
-    error.showMessage(error);
+    paymentError.showMessage(error);
 
 }
 
