@@ -27,6 +27,11 @@
         @include fs-headline(3);
         font-weight: 900;
     }
+
+    .bundle-button__content {
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
 }
 
 .bundle-offering-a__give__content__body__list{
@@ -73,6 +78,11 @@
     vertical-align: top;
 
     margin-top: $gs-baseline * 2;
+
+    .bundle-button__content {
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
 }
 
 .bundle-offering-a__subscribe__offer__content {

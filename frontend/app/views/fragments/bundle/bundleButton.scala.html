@@ -1,14 +1,24 @@
 
-@(buttonLabel: String, target: String, dataLink: String)
+@(buttonLabel: String, target: String, dataLink: String, chevron: Boolean = false)
 
 <span class="bundle-button">
     <a data-link-name="@dataLink" class="link-button" href="@target">
         <div class="bundle-button__content">
             <p>@buttonLabel</p>
-            <span class="bundle-button__content__arrow inline-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30">
-                    <path fill="#fff" d="M22.8 14.6L15.2 7l-.7.7 5.5 6.6H6v1.5h14l-5.5 6.6.7.7 7.6-7.6v-.9"></path>
-                </svg>
+            <span class="bundle-button__content__arrow">
+                @if(chevron){
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="20px" height="10.41px" viewBox="0 0 20 10.41" enable-background="new 0 0 20 10.41" xml:space="preserve">
+                        <polygon points="19.11,0 10.001,7.671 0.89,0 0,0.866 9.544,10.41 10.457,10.41 20,0.866 "/>
+                    </svg>
+                }else{
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="20px" height="19.023px" viewBox="0 0 20 19.023" enable-background="new 0 0 20 19.023" xml:space="preserve">
+                        <polygon points="10.945,0 10.099,0.846 16.612,8.643 0,8.643 0,10.382 16.612,10.382 10.099,18.178 10.945,19.023
+	20,9.946 20,9.077 "/>
+                    </svg>
+                }
+
             </span>
         </div>
     </a>

@@ -4,8 +4,8 @@
     border-radius: 100px;
     color: #ffffff;
     display: inline-block;
-    padding: 5px 15px;
-
+    padding: 3px 7px 3px 15px;
+    
     p {
         font-family: Guardian Text Sans Web;
         font-weight: 600;
@@ -16,10 +16,7 @@
         margin: 0;
     }
 
-    svg path {
-        stroke: #ffffff;
-        fill: #ffffff;
-    }
+
 }
 
 .bundle-button__content__arrow {
@@ -27,6 +24,11 @@
     float: right;
     height: 30px;
     margin-left: 10px;
+    padding-top: 5px;
+
+    svg polygon {
+        fill: #ffffff;
+    }
 }
 
 .bundle-button__content:hover {
