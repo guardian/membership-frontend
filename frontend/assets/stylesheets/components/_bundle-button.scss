@@ -7,7 +7,7 @@
     padding: 3px 7px 3px 15px;
 
     p {
-        font-family: Guardian Text Sans Web;
+        @include fs-textSans(4);
         font-weight: 600;
         font-size: 15px;
         line-height: 30px;
@@ -15,12 +15,10 @@
         vertical-align: middle;
         margin: 0;
     }
-
-
 }
 
 .bundle-button__content__arrow {
-    display: block;
+    display: inline;
     float: right;
     height: 30px;
     margin-left: 10px;
@@ -36,6 +34,6 @@
     border: .6px solid guss-colour(guardian-brand-dark);
 
     p {
-        color: #fff;
+        color: #ffffff;
     }
 }
