@@ -68,6 +68,9 @@ export function init () {
 		payment: setupPayment,
 		// Called when there is an error with the paypal payment.
         onError: payment.fail,
+        // We don't want to do anything here, but if this callback isn't present
+        // PayPal throws a bunch of errors and then stops working.
+        onCancel: () => {},
 
 		// Called when user finishes with Paypal interface (approves payment).
 		onAuthorize: function (data, actions) {
