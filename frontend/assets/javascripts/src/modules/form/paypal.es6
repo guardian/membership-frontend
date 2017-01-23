@@ -36,6 +36,35 @@ function setupPayment (resolve, reject) {
 
 }
 
+// Attempts to take the payment and make the user a member.
+function makePayment (data, actions) {
+
+	payment.showSpinner();
+
+	createAgreement(data).then(baid => {
+
+		if (baid) {
+			postForm(baid);
+		}
+
+	}).catch(payment.fail);
+
+}
+
+// Handles the retrieval of the BAID from and AJAX response.
+function handleAgreementResponse (response) {
+
+	if (response.status === 200) {
+		return response.json();
+	} else {
+
+		handleAgreementFail('Agreement request failed.');
+		return null;
+
+	}
+
+}
+
 // Handles failure to create agreement.
 function handleAgreementFail (err) {
 
@@ -55,21 +84,12 @@ function createAgreement (paypalData) {
 	const CREATE_AGREEMENT_URL = '/paypal/create-agreement';
 
 	return fetch(CREATE_AGREEMENT_URL, {
+
 		headers: { 'Content-Type': 'application/json' },
 		method: 'POST',
 		body: JSON.stringify({ token: paypalData.paymentToken })
-	}).then(response => {
 
-		if (response.status === 200) {
-			return response.json();
-		} else {
-
-			handleAgreementFail('Agreement request failed.');
-			return null;
-
-		}
-
-	}).catch(handleAgreementFail);
+	}).then(handleAgreementResponse).catch(handleAgreementFail);
 
 }
 
@@ -103,19 +123,7 @@ export function init () {
         onCancel: () => {},
 
 		// Called when user finishes with Paypal interface (approves payment).
-		onAuthorize: function (data, actions) {
-
-			payment.showSpinner();
-
-			createAgreement(data).then(baid => {
-
-				if (baid) {
-					postForm(baid);
-				}
-
-			}).catch(payment.fail);
-
-	   }
+		onAuthorize: makePayment
 
 	}, '#paypal-button-checkout');
 
