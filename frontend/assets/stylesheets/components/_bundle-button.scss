@@ -1,0 +1,39 @@
+.bundle-button__content {
+    background-color: guss-colour(guardian-brand);
+    border: .6px solid guss-colour(guardian-brand);
+    border-radius: 100px;
+    color: #ffffff;
+    display: inline-block;
+    padding: 3px 7px 3px 15px;
+    overflow: initial;
+    p {
+        @include fs-textSans(4);
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0;
+    }
+}
+
+.bundle-button__content__arrow {
+    display: inline;
+    float: right;
+    height: 30px;
+    margin-left: 10px;
+    padding-top: 5px;
+
+    svg polygon {
+        fill: #ffffff;
+    }
+}
+
+.bundle-button__content:hover {
+    background-color: guss-colour(guardian-brand-dark);
+    border: .6px solid guss-colour(guardian-brand-dark);
+
+    p {
+        color: #ffffff;
+    }
+}
