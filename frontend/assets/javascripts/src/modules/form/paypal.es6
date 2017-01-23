@@ -17,18 +17,35 @@ function setupPayment (resolve, reject) {
 
 		fetch(SETUP_PAYMENT_URL, { method: 'POST' })
 			.then(response => {
+
 				if (response.status === 200) {
-					return response.json();
+					resolve(response.json().token);
 				} else {
-					throw new Error('Payment setup failed.');
+
+					payment.error('PayPal payment setup request failed.');
+					reject();
+
 				}
+
 			})
-			.then(({token}) => resolve(token))
 			.catch(reject);
 
 	} else {
 		reject('Form invalid.');
 	}
+
+}
+
+// Handles failure to create agreement.
+function handleAgreementFail (err) {
+
+	payment.fail({
+		type: 'PayPal',
+		code: 'BAIDCreationFailed',
+		additional: err
+	});
+
+	return null;
 
 }
 
@@ -42,10 +59,17 @@ function createAgreement (paypalData) {
 		method: 'POST',
 		body: JSON.stringify({ token: paypalData.paymentToken })
 	}).then(response => {
-		return response.json();
-	}).catch(err => {
-		return { type: 'PayPal', code: 'BAIDCreationFailed', additional: err };
-	});
+
+		if (response.status === 200) {
+			return response.json();
+		} else {
+
+			handleAgreementFail('Agreement request failed.');
+			return null;
+
+		}
+
+	}).catch(handleAgreementFail);
 
 }
 
@@ -82,7 +106,14 @@ export function init () {
 		onAuthorize: function (data, actions) {
 
 			payment.showSpinner();
-			createAgreement(data).then(postForm).catch(payment.fail);
+
+			createAgreement(data).then(baid => {
+
+				if (baid) {
+					postForm(baid);
+				}
+
+			}).catch(payment.fail);
 
 	   }
 

@@ -38,7 +38,7 @@ function parseError (error) {
 
         return {
             sentry: `${error.type}: ${error.code}: ${error.additional || ''}`,
-            user: errorMessages[error.type][error.code]]
+            user: errorMessages[error.type][error.code]
         };
 
     }

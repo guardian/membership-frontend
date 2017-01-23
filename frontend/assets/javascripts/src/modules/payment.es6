@@ -15,6 +15,24 @@ const $paymentTypes = $('.js-payment-type');
 const $spinner = $('.js-payment-processing');
 
 
+// ----- Functions ----- /
+
+// Handles problems with the form post.
+function handlePostError (err) {
+
+    let errMessage = null;
+
+    try {
+        errMessage = JSON.parse(err.response);
+    } catch (e) {
+        paymentErr.logError(e.toString);
+    }
+
+    fail(errMessage);
+
+}
+
+
 // ----- Exports ----- //
 
 // Clears any payment error messages.
@@ -51,6 +69,11 @@ export function fail (error) {
 
 }
 
+// Logs an error in the payment flow.
+export function error (msg) {
+    paymentError.logError(msg, 'error');
+}
+
 // Validates the form; returns true if the form is valid, false otherwise.
 export function validateForm () {
 
@@ -74,7 +97,7 @@ export function postForm (paymentToken) {
         method: 'post',
         data: data,
         success: ({redirect}) => window.location.assign(redirect),
-        error: fail
+        error: handlePostError
     });
 
 }
