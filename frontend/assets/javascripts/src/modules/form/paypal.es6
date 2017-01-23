@@ -50,35 +50,6 @@ function setupPayment (resolve, reject) {
 
 }
 
-// Attempts to take the payment and make the user a member.
-function makePayment (data, actions) {
-
-	payment.showSpinner();
-
-	createAgreement(data).then(baid => {
-
-		if (baid) {
-			postForm(baid);
-		}
-
-	}).catch(payment.fail);
-
-}
-
-// Handles the retrieval of the BAID from and AJAX response.
-function handleAgreementResponse (response) {
-
-	if (response.status === 200) {
-		return response.json();
-	} else {
-
-		handleAgreementFail('Agreement request failed.');
-		return null;
-
-	}
-
-}
-
 // Handles failure to create agreement.
 function handleAgreementFail (err) {
 
@@ -87,8 +58,6 @@ function handleAgreementFail (err) {
 		code: 'BAIDCreationFailed',
 		additional: err
 	});
-
-	return null;
 
 }
 
@@ -103,13 +72,40 @@ function createAgreement (paypalData) {
 		method: 'POST',
 		body: JSON.stringify({ token: paypalData.paymentToken })
 
-	}).then(handleAgreementResponse).catch(handleAgreementFail);
+	}).then(response => {
+
+		if (response.status === 200) {
+			return response.json();
+		} else {
+			throw new Error('Agreement request failed.');
+		}
+
+	});
 
 }
 
 // Creates the new member by posting the form data with the BAID.
 function postForm (baid) {
-	payment.postForm({ 'payment.payPalBaid': baid.token });
+	payment.postForm({ 'payment.payPalBaid': baid });
+}
+
+// Attempts to take the payment and make the user a member.
+function makePayment (data, actions) {
+
+	payment.showSpinner();
+
+	createAgreement(data).then(baid => {
+
+		if (baid && baid.token) {
+			postForm(baid.token);
+		} else {
+			throw new Error('BAID came back blank.');
+		}
+
+	}).catch(err => {
+		handleAgreementFail(err ? err.message : '');
+	});
+
 }
 
 

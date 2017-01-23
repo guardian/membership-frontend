@@ -25,7 +25,7 @@ function handlePostError (err) {
     try {
         errMessage = JSON.parse(err.response);
     } catch (e) {
-        paymentErr.logError(e.toString);
+        paymentError.logError(e.toString);
     }
 
     fail(errMessage);
