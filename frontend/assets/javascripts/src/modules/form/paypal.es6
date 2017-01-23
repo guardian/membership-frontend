@@ -6,6 +6,28 @@ import * as payment from 'src/modules/payment';
 
 // ----- Functions ----- //
 
+// Handles the paypal setup response and retrieves the token.
+function handleSetupResponse (response) {
+
+	if (response.status === 200) {
+		return response.json();
+	} else {
+		throw new Error('PayPal payment setup request failed.');
+	}
+
+}
+
+// Checks that the PayPal token is ok.
+function handleTokenRetrieval ({token}) {
+
+	if (token) {
+		resolve(token);						
+	} else {
+		throw new Error('PayPal token came back blank.');
+	}
+
+}
+
 // Sends request to server to setup payment, and returns Paypal token.
 function setupPayment (resolve, reject) {
 
@@ -16,19 +38,14 @@ function setupPayment (resolve, reject) {
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
 		fetch(SETUP_PAYMENT_URL, { method: 'POST' })
-			.then(response => {
+			.then(handleSetupResponse)
+			.then(handleTokenRetrieval)
+			.catch(err => {
 
-				if (response.status === 200) {
-					resolve(response.json().token);
-				} else {
+				payment.error(err.message);
+				reject(err);
 
-					payment.error('PayPal payment setup request failed.');
-					reject();
-
-				}
-
-			})
-			.catch(reject);
+			});
 
 	} else {
 		reject('Form invalid.');
