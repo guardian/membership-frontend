@@ -43,6 +43,8 @@ function createAgreement (paypalData) {
 		body: JSON.stringify({ token: paypalData.paymentToken })
 	}).then(response => {
 		return response.json();
+	}).catch(err => {
+		return { type: 'PayPal', code: 'BAIDCreationFailed', additional: err };
 	});
 
 }
@@ -69,7 +71,9 @@ export function init () {
 		// Called when user clicks Paypal button.
 		payment: setupPayment,
 		// Called when there is an error with the paypal payment.
-        onError: payment.fail,
+        onError: () => {
+        	payment.fail({ type: 'PayPal', code: 'PaymentError' });
+        },
         // We don't want to do anything here, but if this callback isn't present
         // PayPal throws a bunch of errors and then stops working.
         onCancel: () => {},

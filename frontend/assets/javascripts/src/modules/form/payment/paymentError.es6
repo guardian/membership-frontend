@@ -17,6 +17,10 @@ const errorMessages = {
         RevocationOfAuthorization: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.',
         GenericDecline: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.',
         UknownPaymentError: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.'
+    },
+    PayPal: {
+        PaymentError: genericErrorMessage,
+        BAIDCreationFailed: genericErrorMessage
     }
 };
 
@@ -26,18 +30,23 @@ const messageElement = $('.js-payment-error');
 // ----- Functions ----- //
 
 // Decides what the message text should be.
-function getMessage (error) {
+function parseError (error) {
 
     const specificMessage = error && errorMessages.hasOwnProperty(error.type);
 
     if (specificMessage) {
 
-        return [`${error.type}: ${error.code}`,
-            errorMessages[error.type][error.code]];
+        return {
+            sentry: `${error.type}: ${error.code}: ${error.additional || ''}`,
+            user: errorMessages[error.type][error.code]]
+        };
 
     }
 
-    return ['PaymentError', genericErrorMessage];
+    return {
+        sentry: 'UnknownPaymentError',
+        user: genericErrorMessage
+    }
 
 }
 
@@ -47,10 +56,10 @@ function getMessage (error) {
 // Displays a message on the page that corresponds to the error passed.
 export function showMessage (error) {
 
-    const [sentryMessage, message] = getMessage(error);
+    const message = parseError(error);
 
-    logError(sentryMessage)
-    messageElement.text(message);
+    logError(message.sentry);
+    messageElement.text(message.user);
     messageElement.removeClass('is-hidden');
 
 }
