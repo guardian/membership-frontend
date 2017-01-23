@@ -20,7 +20,7 @@ function setupPayment (resolve, reject) {
 				if (response.status === 200) {
 					return response.json();
 				} else {
-					throw 'Payment setup failed.';
+					throw new Error('Payment setup failed.');
 				}
 			})
 			.then(({token}) => resolve(token))

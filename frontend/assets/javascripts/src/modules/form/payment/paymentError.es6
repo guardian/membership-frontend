@@ -1,6 +1,7 @@
 // ----- Imports ----- //
 
-import $ from 'src/utils/$'
+import $ from 'src/utils/$';
+import {Raven} from 'src/modules/raven';
 
 
 // ----- Setup ----- //
@@ -30,10 +31,13 @@ function getMessage (error) {
     const specificMessage = error && errorMessages.hasOwnProperty(error.type);
 
     if (specificMessage) {
-        return errorMessages[error.type][error.code];
+
+        return [`${error.type}: ${error.code}`,
+            errorMessages[error.type][error.code]];
+
     }
 
-    return genericErrorMessage;
+    return ['PaymentError', genericErrorMessage];
 
 }
 
@@ -43,8 +47,9 @@ function getMessage (error) {
 // Displays a message on the page that corresponds to the error passed.
 export function showMessage (error) {
 
-    const message = getMessage(error);
+    const [sentryMessage, message] = getMessage(error);
 
+    Raven.captureMessage(sentryMessage);
     messageElement.text(message);
     messageElement.removeClass('is-hidden');
 
