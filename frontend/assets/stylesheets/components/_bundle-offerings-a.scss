@@ -9,48 +9,35 @@
     max-width: gs-span(4.75);
 
     >h1 {
-        margin-top: 36px;
+        margin-top: $gs-baseline * 3;
         padding-top: 2px;
         @include text-offering-title();
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
     .bundle-button__content {
-        margin-bottom: 5px;
-        margin-left: 5px;
+        margin-bottom: $gs-baseline;
+        margin-left: $gs-gutter/2;
     }
 }
 
 .bundle-offering-a__give__content__body {
-    background-color: guss-colour(comment-support-2);
+    background-color: #d4ebf8;
     margin-top: $gs-baseline * 2;
 
     >p {
-        padding-top: 8px;
-        padding-left: $gs-gutter / 2;
-        padding-right: $gs-gutter / 2;
-        @include fs-headline(3);
-        font-weight: 900;
+        @include fs-headline(2);
+        font-size: 18px;
+        line-height: 22px;
+        margin-bottom: $gs-baseline * 2;
+        padding: 8px $gs-gutter/2 0;
     }
 }
 
-.bundle-offering-a__give__content__body__list{
-    list-style-type: none;
-}
-
-.bundle-offering-a__give__content__body__list__item {
-    padding-left: 28px;
-
-    >h1 {
-        @include fs-header(1);
-        color: guss-colour(neutral-1);
-    }
-
-    >p {
-        @include fs-textSans(4);
-        color: guss-colour(news-support-6);
-        padding-bottom: 0;
-        line-height: 18px;
+.bundle-offering-a__give__monthly-button,
+.bundle-offering-a__give__one-off-button{
+    .bundle-button__content {
+        width: gs-span(3.35);
     }
 }
 
@@ -68,48 +55,41 @@
     }
 
     >div:first-of-type {
-        margin-right: $gs-gutter;
+        padding-right: 1px;
+
+        .bundle-button__content {
+            margin-top: 108px;
+        }
     }
 }
 
 .bundle-offering-a__subscribe__offer {
-    width: gs-span(4);
+    width: gs-span(4.125);
     display: inline-block;
     vertical-align: top;
-
     margin-top: $gs-baseline * 2;
-
 }
 
 .bundle-offering-a__subscribe__offer__content {
-    background-color: #d4ebf8;
+    background-color: guss-colour(news-support-1);
 
     >h2 {
-        padding-top: 8px;
-        padding-left: 10px;
-        padding-right: 10px;
-        @include fs-headline(3);
+        @include fs-headline(4);
+        padding: 8px $gs-gutter/2 0;
         font-weight: 900;
     }
 
     .bundle-button__content {
-        margin-bottom: 5px;
-        margin-left: 5px;
+        margin-bottom: $gs-baseline;
+        margin-left: $gs-gutter/2;
     }
 }
 
 .bundle-offering-a__subscribe__offer__price-description {
     padding-left: $gs-gutter / 2;
-    @include fs-textSans(2);
-    line-height: 24px;
-    font-weight: 900;
-    color: guss-colour(news-support-6);
-
-    >span {
-        @include fs-headline(3);
-        font-weight: 900;
-        color: guss-colour(neutral-1);
-    }
+    @include fs-headline(4);
+    font-weight: 200;
+    color: guss-colour(neutral-1);
 }
 
 .bundle-offering-a__subscribe__offer__list {
@@ -117,7 +97,8 @@
 }
 
 .bundle-offering-a__subscribe__offer__list__item {
-    padding-left: 28px;
+    padding-left: 48px;
+    padding-right: $gs-gutter/2;
 
     >h1 {
         @include fs-header(1);
@@ -126,8 +107,67 @@
 
     >p {
         @include fs-textSans(4);
-        color: guss-colour(news-support-6);
+        color: guss-colour(news-support-7);
         padding-bottom: 0;
         line-height: 18px;
     }
+}
+
+.bundle-offering-a__subscribe__offer__print-options {
+    >ul {
+        list-style: none;
+    }
+
+    .bundle-button__content {
+        width: gs-span(3.875)
+    }
+}
+.bundle-offering-a__subscribe__offer__print-options__option {
+    background-color: #ffffff;
+    border-radius: 10px;
+
+    height:52px;
+    margin: $gs-baseline/2 10px 0px;
+
+    padding: 8px $gs-gutter/2 0px;
+
+}
+
+.bundle-offering-a__subscribe_option--selected,
+.bundle-offering-a__subscribe__offer__print-options__option:hover {
+    cursor: pointer;
+    background-color: #87be27;
+    p {
+        color: guss-colour(neutral-1);
+    }
+}
+
+.bundle-offering-a__print-option__description {
+    width: gs-span(2.275);
+    display: inline-block;
+    vertical-align: top;
+    >h1 {
+        @include fs-header(1);
+        line-height: 18px;
+        color: guss-colour(neutral-1);
+    }
+
+    >p {
+        @include fs-textSans(1);
+        line-height: 18px;
+        color: guss-colour(neutral-2);
+
+    }
+}
+
+.bundle-offering-a__print-option__price {
+    @include fs-headline(2);
+    line-height: 18px;
+    font-weight: 200;
+
+    color: guss-colour(neutral-1);
+    display: inline-block;
+    text-align: right;
+    vertical-align: top;
+    width: gs-span(1.6);
 }

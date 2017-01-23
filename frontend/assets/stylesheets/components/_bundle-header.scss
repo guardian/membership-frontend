@@ -38,7 +38,6 @@
         width: gs-span(6);
         margin-bottom: 0;
         @include text-paragraph();
-        color: guss-colour(neutral-2);
         padding-top: $gs-baseline * 2;
     }
 }
