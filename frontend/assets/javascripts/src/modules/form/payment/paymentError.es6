@@ -49,7 +49,7 @@ export function showMessage (error) {
 
     const [sentryMessage, message] = getMessage(error);
 
-    Raven.captureMessage(sentryMessage);
+    logError(sentryMessage)
     messageElement.text(message);
     messageElement.removeClass('is-hidden');
 
@@ -59,5 +59,12 @@ export function showMessage (error) {
 export function hideMessage () {
 
     messageElement.addClass('is-hidden');
+
+}
+
+// Sends an error message to Sentry.
+export function logError (message, level) {
+
+    Raven.captureMessage(message, { level: level || 'error' });
 
 }
