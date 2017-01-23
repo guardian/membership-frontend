@@ -173,7 +173,7 @@ module.exports = function (grunt) {
                 cwd: '<%= dirs.assets.images %>',
                 src: [
                     '**',
-                    '!**/inline-svgs/raw/**'
+                    '!**/inline-svgs/raw/**/**.**'
                 ],
                 dest: '<%= dirs.publicDir.images %>',
                 expand: true

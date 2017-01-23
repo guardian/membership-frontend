@@ -97,9 +97,23 @@
 }
 
 .bundle-offering-a__subscribe__offer__list__item {
-    padding-left: 48px;
+    padding-left: $gs-gutter/2;;
     padding-right: $gs-gutter/2;
+}
 
+.bundle-offering-a__subscribe__offer__list__item__icon {
+    width: 38px;
+    vertical-align: top;
+    display: inline-block;
+    path {
+        fill: #ffffff;
+    }
+}
+
+.bundle-offering-a__subscribe__offer__list__item__content {
+    width: 251px;
+    display: inline-block;
+    vertical-align: top;
     >h1 {
         @include fs-header(1);
         color: guss-colour(neutral-1);

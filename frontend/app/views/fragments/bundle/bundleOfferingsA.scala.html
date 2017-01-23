@@ -1,4 +1,5 @@
 @import abtests.BundleVariant
+@import views.support.Asset
 
 @(bundleVariant: BundleVariant)
 <section class="bundle-section">
@@ -24,17 +25,37 @@
                     <span class="bundle-offering-a__subscribe__offer__price-description">£14.00/month</span>
 
                     <ul class="bundle-offering-a__subscribe__offer__list">
+
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Ad-free</h1>
-                            <p>Faster-loading pages and a clearer reading experience on our website and app</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-adfree")) {
+                                    @icon
+                                }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Ad-free</h1>
+                                <p>Faster-loading pages and a clearer reading experience on our website and app</p>
+                            </div>
                         </li>
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Commenting</h1>
-                            <p>Discussion threads on articles are restricted to those who become Supporters</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-commenting")) {
+                                    @icon
+                                }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Commenting</h1>
+                                <p>Discussion threads on articles are restricted to those who become Supporters</p>
+                            </div>
                         </li>
+
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Tablet edition</h1>
-                            <p>Your daily newspaper optimised for tablet</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-tabletedition")) {
+                                    @icon
+                                }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Tablet edition</h1>
+                                <p>Your daily newspaper optimised for tablet</p>
+                            </div>
                         </li>
                     </ul>
                     @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "Digital Subscription").url,"")
@@ -45,20 +66,44 @@
                     <span class="bundle-offering-a__subscribe__offer__price-description">from £23.40/month</span>
                     <ul class="bundle-offering-a__subscribe__offer__list">
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Ad-free</h1>
-                            <p>Faster-loading pages and a clearer reading experience on our website and app</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-adfree")) {
+                                    @icon
+                                }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Ad-free</h1>
+                                <p>Faster-loading pages and a clearer reading experience on our website and app</p>
+                            </div>
                         </li>
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Commenting</h1>
-                            <p>Discussion threads on articles are restricted to those who become Supporters</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-commenting")) {
+                                    @icon
+                                }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Commenting</h1>
+                                <p>Discussion threads on articles are restricted to those who become Supporters</p>
+                            </div>
                         </li>
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Tablet edition</h1>
-                            <p>Your daily newspaper optimised for tablet</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                            @for(icon <- Asset.inlineSvg("bundle-tabletedition")) {
+                                @icon
+                            }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Tablet edition</h1>
+                                <p>Your daily newspaper optimised for tablet</p>
+                            </div>
                         </li>
                         <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <h1>Print</h1>
-                            <p>Pick the package you want: Saturday, Sunday, Weekly, Weekend or Everyday.  Save up to 36% on the Guardian and Observer newspapers</p>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                            @for(icon <- Asset.inlineSvg("bundle-newspaper")) {
+                                @icon
+                            }
+                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Print</h1>
+                                <p>Pick the package you want: Saturday, Sunday, Weekly, Weekend or Everyday.  Save up to 36% on the Guardian and Observer newspapers</p>
+                            </div>
                         </li>
                     </ul>
                     @fragments.bundle.bundleButton("See options","#","", chevron = true)
