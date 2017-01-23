@@ -19,7 +19,7 @@ const dimensions = {
     CamCodeBusinessUnit: 'dimension14', // Session
     CamCodeTeam: 'dimension15', // Session
     experience: 'dimension16',// Session
-    paymentMethod: 'dimension17',// User
+    paymentMethod: 'dimension17',// Hit
 
 };
 const metrics = {
