@@ -17,17 +17,6 @@ function handleSetupResponse (response) {
 
 }
 
-// Checks that the PayPal token is ok.
-function handleTokenRetrieval ({token}) {
-
-	if (token) {
-		resolve(token);						
-	} else {
-		throw new Error('PayPal token came back blank.');
-	}
-
-}
-
 // Sends request to server to setup payment, and returns Paypal token.
 function setupPayment (resolve, reject) {
 
@@ -39,7 +28,15 @@ function setupPayment (resolve, reject) {
 
 		fetch(SETUP_PAYMENT_URL, { method: 'POST' })
 			.then(handleSetupResponse)
-			.then(handleTokenRetrieval)
+			.then(({token}) => {
+
+				if (token) {
+					resolve(token);						
+				} else {
+					throw new Error('PayPal token came back blank.');
+				}
+
+			})
 			.catch(err => {
 
 				payment.error(err.message);
