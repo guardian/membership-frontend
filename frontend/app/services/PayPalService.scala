@@ -3,7 +3,7 @@ package services
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
-import controllers.PayPal.Token
+import controllers.PayPal.{PayPalBillingDetails, Token}
 import controllers.routes
 import okhttp3.{FormBody, OkHttpClient, Request, Response}
 import play.api.mvc.RequestHeader
@@ -51,13 +51,12 @@ object PayPalService extends LazyLogging {
   }
 
   // Sets up a payment by contacting PayPal and returns the token.
-  def retrieveToken(request: RequestHeader) = {
-    logger.info("Called setupPayment")
+  def retrieveToken(request: RequestHeader, billingDetails: PayPalBillingDetails) = {
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
-      "PAYMENTREQUEST_0_AMT" -> "4.50",
-      "PAYMENTREQUEST_0_CURRENCYCODE" -> "GBP",
+      "PAYMENTREQUEST_0_AMT" -> s"${billingDetails.amount}",
+      "PAYMENTREQUEST_0_CURRENCYCODE" -> s"${billingDetails.currency}",
       "RETURNURL" -> routes.PayPal.returnUrl().absoluteURL(secure = true)(request),
       "CANCELURL" -> routes.PayPal.cancelUrl().absoluteURL(secure = true)(request),
       "BILLINGTYPE" -> "MerchantInitiatedBilling",
