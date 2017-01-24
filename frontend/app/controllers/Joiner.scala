@@ -7,7 +7,6 @@ import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
-import com.gu.identity.play.ProxiedIP
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.promo.{NewUsers, PromoCode}
 import com.gu.memsub.util.Timing
@@ -29,8 +28,8 @@ import play.api.mvc._
 import services.PromoSessionService.codeFromSession
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
-import utils.{CampaignCode, TierChangeCookies}
 import utils.RequestCountry._
+import utils.{CampaignCode, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -39,8 +38,6 @@ import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
 
 import scala.concurrent.Future
 import scala.util.Failure
-import scalaz.OptionT
-import scalaz.std.scalaFuture._
 
 object Joiner extends Controller with ActivityTracking
   with LazyLogging
@@ -278,21 +275,17 @@ object Joiner extends Controller with ActivityTracking
     val prpId = request.subscriber.subscription.plan.productRatePlanId
     implicit val idReq = IdentityRequest(request)
 
-    val paymentCard = (for {
-      card <- OptionT(paymentService.getPaymentCard(request.subscriber.subscription.accountId))
-    } yield card).run
-
     for {
       country <- memberService.country(request.subscriber.contact)
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       promotion = request.subscriber.subscription.promoCode.flatMap(c => promoService.findPromotion(c))
       validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
-      card <- paymentCard
+      paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
     } yield Ok(views.html.joiner.thankyou(
       request.subscriber,
       paymentSummary,
-      card,
+      paymentMethod,
       destination,
       upgrade,
       validPromotion.filterNot(_.asTracking.isDefined)
