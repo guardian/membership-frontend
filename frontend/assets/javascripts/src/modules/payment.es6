@@ -1,25 +1,81 @@
+// ----- Imports ----- //
+
 import ajax from 'ajax';
 import form from 'src/modules/form/helper/formUtil';
 import validity from 'src/modules/form/validation/validity';
 import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
 import $ from 'src/utils/$'
+import * as paymentError from 'src/modules/form/payment/paymentError';
+
+
+// ----- Setup ----- //
 
 const $paymentTypes = $('.js-payment-type');
 const $spinner = $('.js-payment-processing');
-export function open() {
-    //When a payment method "overlay" is opened.
-    $paymentTypes.hide();
-    $spinner.addClass('is-loading');
+
+
+// ----- Functions ----- /
+
+// Handles problems with the form post.
+function handlePostError (err) {
+
+    let errMessage = null;
+
+    try {
+        errMessage = JSON.parse(err.response);
+    } catch (e) {
+        paymentError.logError(e.toString);
+    }
+
+    fail(errMessage);
+
 }
-export function close() {
-    //When a payment method overlay is closed.
+
+
+// ----- Exports ----- //
+
+// Clears any payment error messages.
+export function clearErrors () {
+
+    paymentError.hideMessage();
+
+}
+
+// When we need to show to payment processing spinner.
+export function showSpinner () {
+
+    $paymentTypes.hide();
+    clearErrors();
+
+    $spinner.addClass('is-loading');
+
+}
+
+// When we need to hide the payment processing spinner.
+export function hideSpinner () {
+
     $paymentTypes.show();
     $spinner.removeClass('is-loading');
+
+}
+
+// Handles a problem with a payment, takes an error object.
+// The error object should have a type and a code, see paymentError.es6.
+export function fail (error) {
+
+    hideSpinner();
+    paymentError.showMessage(error);
+
+}
+
+// Logs an error in the payment flow.
+export function error (msg) {
+    paymentError.logError(msg, 'error');
 }
 
 // Validates the form; returns true if the form is valid, false otherwise.
-export function validateForm() {
+export function validateForm () {
 
     form.elems.map(function (elem) {
         validity.check(elem);
@@ -31,7 +87,7 @@ export function validateForm() {
 }
 
 // Creates the new member by posting the form data with the provided token object.
-export function postForm(paymentToken) {
+export function postForm (paymentToken) {
 
     let data = serializer(utilsHelper.toArray(form.elem.elements),
         paymentToken);
@@ -40,12 +96,8 @@ export function postForm(paymentToken) {
         url: form.elem.action,
         method: 'post',
         data: data,
-        success: function (successData) {
-            window.location.assign(successData.redirect);
-        },
-        error: function (errData) {
-            alert(err);
-        }
+        success: ({redirect}) => window.location.assign(redirect),
+        error: handlePostError
     });
 
 }
