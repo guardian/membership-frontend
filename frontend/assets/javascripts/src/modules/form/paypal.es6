@@ -133,8 +133,10 @@ export function init () {
 		// Called when user clicks Paypal button.
 		payment: setupPayment,
 		// Called when there is an error with the paypal payment.
+		// Note that this is only reliably called on the first error, so there
+		// may be some duplicate error logging when this runs alongside
+		// the paypalError function above.
         onError: () => {
-			console.log('THIS IS A BIG ERROR AND ALL THE THINGS ARE BROKEN');
         	payment.fail({ type: 'PayPal', code: 'PaymentError' });
         },
         // We don't want to do anything here, but if this callback isn't present
