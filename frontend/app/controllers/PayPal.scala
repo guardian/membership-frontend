@@ -1,8 +1,8 @@
 package controllers
 
 import com.typesafe.scalalogging.LazyLogging
-import play.api.libs.json.{JsError, JsSuccess, Json}
-import play.api.mvc.Controller
+import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
+import play.api.mvc.{AnyContent, Controller, Request}
 import services.PayPalService
 
 object PayPal extends Controller with LazyLogging {
@@ -25,29 +25,25 @@ object PayPal extends Controller with LazyLogging {
 
 	// Sets up a payment by contacting PayPal, returns the token as JSON.
 	def setupPayment = NoCacheAction { request =>
-    request.body.asJson.map{ json =>
-
-      Json.fromJson[PayPalBillingDetails](json) match {
-        case JsSuccess(billingDetails: PayPalBillingDetails, _) =>
-          logger.info("Called setupPayment with billing details: " + billingDetails)
-          Ok(tokenJsonResponse(PayPalService.retrieveToken(request, billingDetails)))
-        case e: JsError => BadRequest(JsError.toJson(e).toString)
-      }
-    }.getOrElse(BadRequest)
+    parseJsonAndRunServiceCall(request)(PayPalService.retrieveToken(request))
 	}
 
 	// Creates a billing agreement using a payment token.
 	def createAgreement = NoCacheAction { request =>
-		request.body.asJson.map { json =>
-
-			Json.fromJson[Token](json) match {
-				case JsSuccess(token: Token, _) => Ok(tokenJsonResponse(PayPalService.retrieveBaid(token)))
-				case e: JsError => BadRequest(JsError.toJson(e).toString)
-			}
-
-		}.getOrElse(BadRequest)
-
+    parseJsonAndRunServiceCall(request)(PayPalService.retrieveBaid)
 	}
+
+  //Takes a request, parses it into a type T, passes this into serviceCall to retrieve a token then returns this as json
+  def parseJsonAndRunServiceCall[T](request:Request[AnyContent])(serviceCall : T => String)(implicit fjs: Reads[T]) = {
+    request.body.asJson.map { json =>
+
+      Json.fromJson[T](json)(fjs) match {
+        case JsSuccess(parsed, _) => Ok(tokenJsonResponse(serviceCall(parsed)))
+        case e: JsError => BadRequest(JsError.toJson(e).toString)
+      }
+
+    }.getOrElse(BadRequest)
+  }
 
 	// The endpoint corresponding to the PayPal return url, hit if the user is
 	// redirected and needs to come back.

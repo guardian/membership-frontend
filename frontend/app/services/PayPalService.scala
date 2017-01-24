@@ -51,7 +51,7 @@ object PayPalService extends LazyLogging {
   }
 
   // Sets up a payment by contacting PayPal and returns the token.
-  def retrieveToken(request: RequestHeader, billingDetails: PayPalBillingDetails) = {
+  def retrieveToken(request: RequestHeader)(billingDetails: PayPalBillingDetails) = {
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
