@@ -6,13 +6,21 @@ import * as payment from 'src/modules/payment';
 
 // ----- Functions ----- //
 
+// Handles errors in the PayPal flow, reports a failed payment and throws error.
+function paypalError (err) {
+
+	payment.fail({ type: 'PayPal', code: 'PaymentError', additional: err });
+	throw new Error(err);
+
+}
+
 // Handles the paypal setup response and retrieves the token.
 function handleSetupResponse (response) {
 
 	if (response.status === 200) {
 		return response.json();
 	} else {
-		throw new Error('PayPal payment setup request failed.');
+		paypalError('PayPal payment setup request failed.');
 	}
 
 }
@@ -33,7 +41,7 @@ function setupPayment (resolve, reject) {
 				if (token) {
 					resolve(token);						
 				} else {
-					throw new Error('PayPal token came back blank.');
+					paypalError('PayPal token came back blank.');
 				}
 
 			})
@@ -77,7 +85,7 @@ function createAgreement (paypalData) {
 		if (response.status === 200) {
 			return response.json();
 		} else {
-			throw new Error('Agreement request failed.');
+			paypalError('Agreement request failed.');
 		}
 
 	});
@@ -99,7 +107,7 @@ function makePayment (data, actions) {
 		if (baid && baid.token) {
 			postForm(baid.token);
 		} else {
-			throw new Error('BAID came back blank.');
+			paypalError('BAID came back blank.');
 		}
 
 	}).catch(err => {
@@ -126,6 +134,7 @@ export function init () {
 		payment: setupPayment,
 		// Called when there is an error with the paypal payment.
         onError: () => {
+			console.log('THIS IS A BIG ERROR AND ALL THE THINGS ARE BROKEN');
         	payment.fail({ type: 'PayPal', code: 'PaymentError' });
         },
         // We don't want to do anything here, but if this callback isn't present
