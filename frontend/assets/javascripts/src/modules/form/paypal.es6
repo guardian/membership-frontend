@@ -47,7 +47,11 @@ function setupPayment (resolve, reject) {
 			})
 			.catch(err => {
 
-				payment.error(err.message);
+				payment.fail({
+					type: 'PayPal',
+					code: 'PaymentError',
+					additional: err.message
+				});
 				reject(err);
 
 			});
