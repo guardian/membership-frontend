@@ -1,0 +1,38 @@
+.bundle-thankyou__email-form {
+
+    .fsBody {
+        padding-top: 0;
+    }
+
+    .fsForm {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    label {
+        font-size: 18px !important;
+        margin-left: 60px !important;
+        @include text-paragraph();
+        color: guss-colour(neutral-1) !important;
+    }
+
+    input[type=email] {
+        width: 460px !important;
+        height: 36px;
+        margin-left: 60px;
+        border-radius: 18px !important;
+    }
+
+    input[type=submit] {
+        width: 460px !important;
+        height: 36px;
+        margin-left: 60px;
+        border-radius: 18px !important;
+    }
+
+    textarea {
+        border-radius: 18px !important;
+        width: 460px !important;
+        margin-left: 60px;
+    }
+}

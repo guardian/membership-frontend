@@ -8,20 +8,19 @@
 @import abtests.BundleVariant
 @(  pageInfo: PageInfo,
     bundleVariant: BundleVariant,
-    selectedOption: String)(implicit token: play.filters.csrf.CSRF.Token)
+    selectedOption: String,
+    heroImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Supporters", pageInfo=pageInfo) {
+    @* ===== First part ===== *@
+    @fragments.bundle.bundleHeader(
+        heroImage,
+        Html("Thank you for<br/>your interest"),
+        Html("This product is something we’ve<br/>been working on that isn’t available<br/>at the moment"),
+        Html("We are still evaluating the interest and feasibility of this type of offer.</p><p>If you would like more information about this product and would like to be contacted if it becomes available, please give us your email address.</p><p>If you have any feedback, do let us know below.</p>")
+    )
 
-    <section class="bundle-thankyou l-constrained">
-        <h1>Thank you!</h1>
-        <p>Currently we are not supporting this bundle but we will let you know when we are.</p>
-        <p>This product is something we’ve been working on that isn’t available at the moment.</p>
-        <p>We are still evaluating the interest and feasibility of this type of offer.</p>
-        <p>If you are interested in purchasing this product and would like to be contacted if it becomes available let us know your email address.</p>
-        <p>To make a membership and subscription offer that fits you, we need your input. <strong>Share your feedback below:</strong></p>
-
-        <div class="bundle-thankyou__email-form  bundle-thankyou-js">
-            <script type="text/javascript" src="https://guardiannewsampampmedia.formstack.com/forms/js.php/membership_team__feedback_form?bundle_variant=@bundleVariant.testId&selected_option=@selectedOption"></script><noscript><a href="https://guardiannewsampampmedia.formstack.com/forms/membership_team__feedback_form?bundle_variant=@bundleVariant.testId&selected_option=@selectedOption" title="Online Form">Online Form - Membership team - feedback form</a></noscript><div style="text-align:right; font-size:x-small;"><a href="http://www.formstack.com?utm_source=jsembed&utm_medium=product&utm_campaign=product+branding&fa=h,2583327" title="Web Form Generator">Web Form Generator</a></div>
-        </div>
-    </section>
+    <div class="bundle-thankyou__email-form  bundle-thankyou-js l-constrained">
+        <script type="text/javascript" src="https://guardiannewsampampmedia.formstack.com/forms/js.php/membership_team__feedback_form?bundle_variant=@bundleVariant.testId&selected_option=@selectedOption"></script><noscript><a href="https://guardiannewsampampmedia.formstack.com/forms/membership_team__feedback_form?bundle_variant=@bundleVariant.testId&selected_option=@selectedOption" title="Online Form">Online Form - Membership team - feedback form</a></noscript><div style="text-align:right; font-size:x-small;"><a href="http://www.formstack.com?utm_source=jsembed&utm_medium=product&utm_campaign=product+branding&fa=h,2583327" title="Web Form Generator">Web Form Generator</a></div>
+    </div>
 }
