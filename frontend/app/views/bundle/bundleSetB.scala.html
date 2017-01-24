@@ -9,16 +9,28 @@
 @(  heroImage: model.OrientatedImages,
     supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
     pageInfo: PageInfo,
-    detailImage: model.OrientatedImages,
+    whySupportImage: model.OrientatedImages,
     bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Supporters", pageInfo=pageInfo) {
 
-    <section class="elevated-supporter">
+    @* ===== First part ===== *@
+    @fragments.bundle.bundleHeader(
+        heroImage,
+        Html("Support<br/>the Guardian"),
+        Html("We\'re introducing <strong>new ways</strong> to support the&nbsp;Guardian\'s quality journalism and independent voice"),
+        Html("We want to use our independent, truthful  journalism to make the world a better, fairer place. Which is why our most important relationship is with our readers. If you value our independent journalism, please help to fund it by becoming a Supporter.")
+    )
 
-        @* ===== Header part ===== *@
-        @* ===== Second part ===== *@
-        @* ===== Third part ===== *@
+    @* ===== Offerings ===== *@
+    @fragments.bundle.bundleOfferingsB(bundleVariant)
 
-    </section>
+    @* ===== Why do we need supporters? ===== *@
+    @fragments.bundle.bundleSupportUs(whySupportImage, bundleVariant,
+        Html("<p>Like many other media organisations, the Guardian is operating in an incredibly challenging financial climate. Our advertising revenues are falling fast. We have a huge numbers of readers, and we are increasingly reliant upon their financial support.</p>" +
+            "<p>We don't have a wealthy owner pulling the strings. No shareholders, advertisers or billionaire owners can edit our editor.</p>" +
+            "<p>Our owner, the Scott Trust, safeguards our editorial independence from commercial or political interference. It reinvests revenue into our journalism, as opposed to into shareholders' pockets.</p>" +
+            "<p>But while the Scott Trust ensures our independence, we need our Supporters, now more than ever before, to help secure our future.</p>" +
+            "<p>We know that not everyone is in a position to become a Supporter. But if you can, you will be an integral part of our mission to make the world a better, fairer place, for everyone.</p>"),
+        Html("<p>Give to the Guardian on your terms. Become a Supporter by making a one-off contribution to help support our journalism</p>"));
 }

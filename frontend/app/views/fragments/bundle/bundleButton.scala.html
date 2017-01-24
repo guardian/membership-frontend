@@ -7,11 +7,11 @@
         <p>@buttonLabel</p>
         <div class="bundle-button__content__arrow">
             @if(chevron){
-                @for(icon <- Asset.inlineSvg("chevron-bundle")) {
+                @for(icon <- Asset.inlineSvg("bundle-chevron")) {
                     @icon
                 }
             }else{
-                @for(icon <- Asset.inlineSvg("arrow-right-bundle")) {
+                @for(icon <- Asset.inlineSvg("bundle-arrow")) {
                     @icon
                 }
             }
