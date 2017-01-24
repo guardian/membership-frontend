@@ -2,12 +2,15 @@
 @(  whySupportImage: model.OrientatedImages,
     bundleVariant: BundleVariant,
     whySupportText: Html,
-    contributionText: Html
+    contributionText: Html,
+    bVariant: Boolean = false
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 <section class="bundle-section">
-    <div class="bundle-support__main l-constrained">
-        <div class="bundle-support__main__img"><img src="http://placehold.it/440x650"></div><div class="bundle-support__main__title">
+
+    <div class="bundle-support__main  l-constrained">
+        <div class="bundle-support__main__img"><img src="http://placehold.it/460x650"></div><div class="bundle-support__main__title@if(bVariant){--b-variant}">
+            @if(bVariant){<div class="bundle-support__line"></div>}
             <h1>Why do we need Supporters?</h1>
         </div>
     </div>

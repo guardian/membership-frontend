@@ -31,6 +31,12 @@
     font-weight: 500;
 }
 
+@mixin text-offering-title-b() {
+    @include fs-headline(5);
+    color: guss-colour(news-support-2);
+    font-weight: 500;
+}
+
 /* Bundle's Columns Style */
 @mixin bundle-column-wide() {
     width: gs-span(8.25);
