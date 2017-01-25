@@ -37,3 +37,33 @@
         color: #ffffff;
     }
 }
+
+.bundle-button__content--secondary {
+    background-color: #ffffff;
+    border: .6px solid #b2ccdb;
+    border-radius: 100px;
+    color: guss-colour(news-main-1);
+    display: inline-block;
+    padding: 3px 7px 3px 15px;
+    overflow: initial;
+
+    p {
+        @include fs-textSans(4);
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0;
+    }
+
+    svg path {
+        fill: guss-colour(news-main-1);
+    }
+
+
+}
+
+.bundle-button__content--secondary:hover {
+    border: .6px solid guss-colour(news-main-1);
+}
