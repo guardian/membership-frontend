@@ -6,7 +6,11 @@
 @import configuration.Config
 @import model.SVG.Logos
 
+@if(!pageInfo.url.startsWith("/bundles")) {
 <header class="global-header hidden-print js-header" role="banner">
+} else {
+<header class="global-header-bundles hidden-print js-header" role="banner">
+}
     <div class="global-header__inner">
         <div class="global-header__branding l-constrained">
             <div class="global-header__primary">

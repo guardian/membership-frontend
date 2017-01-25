@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Global Footer (Bundles version)
+   ========================================================================== */
+
+.global-footer-bundles {
+    .global-brandbar {
+        background: none;
+        background-color: #005689;
+    }
+    .global-brandbar__logo {
+        display: none;
+    }
+    .control,
+    .control:active,
+    .control.is-active,
+    .control:hover,
+    .control__icon,
+    .control__icon:hover,
+    .control__info,
+    .control__item {
+        color: $white;
+        border-color: $white;
+    }
+
+}
+
+
