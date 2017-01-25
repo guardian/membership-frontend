@@ -29,7 +29,7 @@ To get started working on Membership you will need to complete the following ste
 We require the following to be installed:
 
 - `Java 8`
-- `Node (with npm)`
+- [Node.js](https://nodejs.org) - version is specified by [.nvmrc](.nvmrc), execute [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it
 - `NGINX`
 
 ### Setup AWS credentials
