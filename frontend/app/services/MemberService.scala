@@ -11,7 +11,6 @@ import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
 import com.gu.memsub.promo.PromotionApplicator._
-import com.gu.memsub.promo.PromotionMatcher._
 import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.PaymentService
