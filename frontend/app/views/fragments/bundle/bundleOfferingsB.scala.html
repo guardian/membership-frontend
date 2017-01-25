@@ -122,10 +122,10 @@
                 </div>
                 </li>
             </ul>
-            @fragments.bundle.bundleButton("See options","#","", chevron = true)
+            @fragments.bundle.bundleButton("See options","#","", Option("js-see-more-button"), chevron = true)
             <div class="bundle-offering-b__subscribe__offer__print-options">
                 <ul>
-                    <li class="bundle-offering-b__subscribe__offer__print-options__option bundle-offering-b__subscribe_option--selected">
+                    <li class="bundle-offering-b__subscribe__offer__print-options__option subscribe_option--selected">
                         <div class="bundle-offering-b__print-option__description">
                             <h1>Saturday</h1>
                         </div><div class="bundle-offering-b__print-option__price">
@@ -171,7 +171,7 @@
                     </div>
                     </li>
                 </ul>
-                @fragments.bundle.bundleButton("£23.40/month","#","")
+                @fragments.bundle.bundleButton("£23.40/month", routes.Bundle.thankYou(bundleVariant, "PrintDigitalSubscription-£23.40/month").url,"", Option("js-print-button"))
             </div>
         </div>
         </div>
@@ -180,7 +180,7 @@
             <hr class="bundle-offering-b__line">
             <h1 class="bundle-offering-b__give__heading">Choose to support us with a one-off contribution</h1>
             <p class="bundle-offering-b__give__description">Fund our journalism on your own terms, with a one-off payment. Every penny goes to supporting our fearless, in depth reporting</p>
-            @fragments.bundle.bundleButton("Contribute now","#","", secondary = true)
+            @fragments.bundle.bundleButton("Contribute now",s"https://contribute.theguardian.com?INTCMP=${bundleVariant.testId}","", secondary = true)
         </div>
     </div>
 </section>

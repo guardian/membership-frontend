@@ -39,13 +39,13 @@
     padding-right: $gs-gutter*5;
     padding-left: $gs-gutter*5;
 
-    >div:nth-of-type(2){
+    >div:nth-of-type(1){
         .bundle-button__content {
             margin-top: 180px;
         }
     }
 
-    >div:nth-of-type(3) {
+    >div:nth-of-type(2) {
         .bundle-button__content {
             margin-top: 108px;
         }
@@ -133,6 +133,8 @@
 }
 
 .bundle-offering-b__subscribe__offer__print-options {
+    display: none;
+
     >ul {
         list-style: none;
     }
@@ -152,6 +154,7 @@
 
 }
 
+.subscribe_option--selected,
 .bundle-offering-b__subscribe__offer__print-options__option:hover {
     cursor: pointer;
     background-color: #87be27;

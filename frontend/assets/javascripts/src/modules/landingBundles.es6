@@ -8,11 +8,12 @@ const SEE_MORE_CTA_SELECTOR = '.js-see-more-button';
 const CURRENT_PRINT_SELECTOR = '.subscribe_option--selected';
 const PRINT_CTA_SELECTOR = '.js-print-button';
 
-const PRINT_OPTIONS_SELECTOR = '.bundle-offering-a__subscribe__offer__print-options__option';
+const PRINT_OPTIONS_SELECTOR = '.bundle-offering-a__subscribe__offer__print-options__option, .bundle-offering-b__subscribe__offer__print-options__option';
 
 const PRINT_A = document.querySelectorAll(PRINT_A_SELECTOR);
 const PRINT_B = document.querySelectorAll(PRINT_B_SELECTOR);
 const SEE_MORE_CTA = document.querySelector(SEE_MORE_CTA_SELECTOR);
+debugger
 const PRINT_OPTIONS = document.querySelectorAll(PRINT_OPTIONS_SELECTOR);
 const PRINT_CTA = document.querySelector(PRINT_CTA_SELECTOR);
 
