@@ -10,10 +10,10 @@
                 <div class="bundle-offering-a__give__content__body">
                     <p class="bundle-offering-a__give__content__body__description">Fund our journalism on your own terms - either a regular or one-off payment. Every penny goes to supporting our fearless, in-depth reporting.</p>
                     <div class="bundle-offering-a__give__monthly-button">
-                        @fragments.bundle.bundleButton("Make a monthly contribution","#","")
+                        @fragments.bundle.bundleButton("Make a monthly contribution",routes.Bundle.thankYou(bundleVariant, "Monthly contribution").url,"")
                     </div>
                     <div class="bundle-offering-a__give__one-off-button">
-                        @fragments.bundle.bundleButton("Make a one-off contribution","#","")
+                        @fragments.bundle.bundleButton("Make a one-off contribution",s"https://contribute.theguardian.com?INTCMP=${bundleVariant.testId}","")
                     </div>
                 </div>
             </div>
@@ -106,10 +106,10 @@
                             </div>
                         </li>
                     </ul>
-                    @fragments.bundle.bundleButton("See options","#","", chevron = true)
+                    @fragments.bundle.bundleButton("See options","#","", Option("js-see-more-button"), chevron = true)
                     <div class="bundle-offering-a__subscribe__offer__print-options">
                         <ul>
-                            <li class="bundle-offering-a__subscribe__offer__print-options__option bundle-offering-a__subscribe_option--selected">
+                            <li class="bundle-offering-a__subscribe__offer__print-options__option subscribe_option--selected">
                                 <div class="bundle-offering-a__print-option__description">
                                     <h1>Saturday</h1>
                                     <p></p>
@@ -158,7 +158,7 @@
                                 </div>
                             </li>
                         </ul>
-                        @fragments.bundle.bundleButton("£23.40/month","#","")
+                        @fragments.bundle.bundleButton("£23.40/month", routes.Bundle.thankYou(bundleVariant, "PrintDigitalSubscription-£23.40/month").url,"", Option("js-print-button"))
                     </div>
                 </div>
             </div>

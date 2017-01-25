@@ -27,7 +27,8 @@ require([
     'src/modules/paidToPaid',
     'src/modules/memstatus',
     'src/modules/tools/priceABTest',
-    'src/modules/faq'
+    'src/modules/faq',
+    'src/modules/landingBundles'
 ], function(
     ajax,
     raven,
@@ -57,7 +58,8 @@ require([
     paidToPaid,
     memstatus,
     priceABTest,
-    faq
+    faq,
+    landingBundles
 ) {
     'use strict';
 
@@ -99,6 +101,9 @@ require([
 
     // Metrics
     metrics.init();
+
+    //Landing Bundles
+    landingBundles.init();
 
     // Pattern library
     patterns.init();

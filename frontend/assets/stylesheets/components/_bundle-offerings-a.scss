@@ -135,7 +135,10 @@
     .bundle-button__content {
         width: gs-span(3.875)
     }
+
+    display: none;
 }
+
 .bundle-offering-a__subscribe__offer__print-options__option {
     background-color: #ffffff;
     border-radius: 10px;
@@ -147,7 +150,7 @@
 
 }
 
-.bundle-offering-a__subscribe_option--selected,
+.subscribe_option--selected,
 .bundle-offering-a__subscribe__offer__print-options__option:hover {
     cursor: pointer;
     background-color: #87be27;
