@@ -32,6 +32,19 @@ We require the following to be installed:
 - `Node (with npm)`
 - `NGINX`
 
+### Setup AWS credentials
+
+Install the awscli:
+```
+brew install awscli
+```
+
+Setup membership developer AWS credentials using [Janus](https://github.com/guardian/janus) (you will need access to the Janus repo).
+
+### Setup NGINX
+
+Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this project.
+
 ### Install client-side dependencies
 
 ```
@@ -48,13 +61,13 @@ npm test
 
 For development you'll also need the following commands:
 
-**Compile assets**
+###### Compile assets
 
 ```
 npm run compile
 ```
 
-**Watch files for changes**
+###### Watch files for changes
 
 ```
 npm run watch
@@ -62,22 +75,14 @@ npm run watch
 
 *Note:* We use `grunt` and `bower` behind the scenes but provide [facades for common tasks](https://bocoup.com/weblog/a-facade-for-tooling-with-npm-scripts/) to make setup easier and reduce the number of tools needed for most developers. If you want to work with the full set of build tools install `grunt-cli` and run `grunt --help` to see the list of available tasks.
 
-**Client-side Principles**: See [client-side-principles.md](docs/client-side-principles.md) for high-level client-side principles for Membership.
+##### Client-side Principles
 
-**Pattern Library**: A library of common patterns used across the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
+See [client-side-principles.md](docs/client-side-principles.md) for high-level client-side principles for Membership.
 
-### Setup AWS credentials
+##### Pattern Library
 
-Install the awscli:
-```
-brew install awscli
-```
+A library of common patterns used across the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
 
-Setup membership developer AWS credentials using [Janus](https://github.com/guardian/janus) (you will need access to the Janus repo).
-
-### Setup NGINX
-
-Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this project. Make sure you get your AWS credentials set up first.
 
 ### Download private keys
 
