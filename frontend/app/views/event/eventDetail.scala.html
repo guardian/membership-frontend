@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    @if(event.isBookable && event.isInstanceOf[GuLiveEvent]) {
+    @if(event.isBookable && event.hasComplimentaryTickets && event.isInstanceOf[GuLiveEvent]) {
         @fragments.event.remainingTickets("event", List("l-constrained"))
     }
 
