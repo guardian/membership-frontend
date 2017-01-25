@@ -245,6 +245,7 @@ object Eventbrite {
     } yield ticket
 
     val limitedAvailabilityText = "Last tickets remaining"
+    val hasComplimentaryTickets = internalTicketing.exists(_.complimentaryTickets.nonEmpty)
     val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
     val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
     val isSoldOut = internalTicketing.exists(_.isSoldOut)
