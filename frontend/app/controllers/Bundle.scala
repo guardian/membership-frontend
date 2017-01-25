@@ -63,13 +63,24 @@ trait Bundle extends Controller {
   }
 
   def thankYou(bundleVariant: BundleVariant, selectedOption: String) = CachedAction { implicit request =>
+    val heroImage = ResponsiveImageGroup(
+      name=Some("intro"),
+      metadata=Some(Grid.Metadata(
+        description = Some("Montage of The Guardian Headlines"),
+        byline = None,
+        credit = None
+      )),
+      availableImages=ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
+    )
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
     Ok(views.html.bundle.thankYou(
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
           url = request.path,
           description = Some(CopyConfig.copyDescriptionSupporters)
         ),
-        bundleVariant, selectedOption))
+        bundleVariant, selectedOption, heroOrientated))
     }
 }
 

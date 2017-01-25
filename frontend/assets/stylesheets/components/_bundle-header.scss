@@ -38,6 +38,10 @@
         width: gs-span(6);
         margin-bottom: 0;
         @include text-paragraph();
+        padding-top: $gs-baseline;
+    }
+
+    p:first-of-type {
         padding-top: $gs-baseline * 2;
     }
 }

@@ -1,0 +1,50 @@
+.bundle-thankyou__email-form {
+
+    margin-top: 24px;
+
+    .fsBody {
+        padding-top: 0;
+    }
+
+    .fsForm {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .fsSubmit {
+        text-align: left;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    label {
+        font-size: 18px !important;
+        margin-left: $gs-gutter * 3 !important;
+        @include text-paragraph();
+        color: guss-colour(neutral-1) !important;
+    }
+
+    input[type=email] {
+        width: 460px !important;
+        height: $gs-baseline * 3;
+        margin-left: $gs-gutter * 3;
+        border-radius: 18px !important;
+    }
+
+    input[type=submit] {
+        width: 100px !important;
+        height: $gs-baseline * 3;
+        margin-left: $gs-gutter * 3;
+        border-radius: 18px !important;
+
+        @include text-paragraph();
+        background-color: guss-colour(guardian-brand) !important;
+
+    }
+
+    textarea {
+        border-radius: 18px !important;
+        width: 460px !important;
+        margin-left: $gs-gutter * 3;
+    }
+}
