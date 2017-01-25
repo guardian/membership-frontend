@@ -1,10 +1,18 @@
 .bundle-thankyou__email-form {
 
+    margin-top: 24px;
+
     .fsBody {
         padding-top: 0;
     }
 
     .fsForm {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .fsSubmit {
+        text-align: left;
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
@@ -24,10 +32,14 @@
     }
 
     input[type=submit] {
-        width: 460px !important;
+        width: 100px !important;
         height: 36px;
         margin-left: 60px;
         border-radius: 18px !important;
+
+        @include text-paragraph();
+        background-color: guss-colour(guardian-brand) !important;
+
     }
 
     textarea {
