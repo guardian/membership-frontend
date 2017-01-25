@@ -45,24 +45,6 @@
     padding-right: $gs-gutter*5;
     padding-left: $gs-gutter*5;
 
-    >h1 {
-        padding-top: 5px;
-        @include text-offering-title-b();
-    }
-
-    >p {
-        @include fs-headline(2);
-        font-size: 18px;
-        line-height: 22px;
-        color: guss-colour(neutral-1);
-        max-width: gs-span(6);
-        margin-bottom: 0;
-    }
-
-    >div {
-        padding-right: 1px;
-    }
-
     >div:nth-of-type(2){
         .bundle-button__content {
             margin-top: 180px;
@@ -76,11 +58,26 @@
     }
 }
 
+.bundle-offering-b__subscribe__header {
+    padding-top: 5px;
+    @include text-offering-title-b();
+}
+
+.bundle-offering-b__subscribe__description {
+    @include fs-headline(2);
+    font-size: 18px;
+    line-height: 22px;
+    color: guss-colour(neutral-1);
+    max-width: gs-span(6);
+    margin-bottom: 0;
+}
+
 .bundle-offering-b__subscribe__offer {
     width: gs-span(4.1583);
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;
+    padding-right: 1px;
 }
 
 .bundle-offering-b__subscribe__offer__content {
