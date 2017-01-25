@@ -7,13 +7,18 @@ export function init() {
     const button = $('.js-stripe-checkout');
     const email = button.data('email');
     bean.on(window, 'popstate', handler.close);
-
+    const amount = () => {
+        let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
+        let amount = billingPeriod.generateDisplayAmount();
+        let period = billingPeriod.noun;
+        return "Pay " + amount + " per " + period;
+    };
     const open = (e) => {
         if (payment.validateForm()) {
             payment.showSpinner();
             handler.open({
-                description: 'So I could do with some good copy for this, and what it needs to contain like price etc.',
-                panelLabel: 'Approved button copy!',
+                description: 'Please enter your card details.',
+                panelLabel: amount(),
                 email: email,
                 token: (token) => {
                     success = true;
