@@ -19,22 +19,22 @@
 
     label {
         font-size: 18px !important;
-        margin-left: 60px !important;
+        margin-left: $gs-gutter * 3 !important;
         @include text-paragraph();
         color: guss-colour(neutral-1) !important;
     }
 
     input[type=email] {
         width: 460px !important;
-        height: 36px;
-        margin-left: 60px;
+        height: $gs-baseline * 3;
+        margin-left: $gs-gutter * 3;
         border-radius: 18px !important;
     }
 
     input[type=submit] {
         width: 100px !important;
-        height: 36px;
-        margin-left: 60px;
+        height: $gs-baseline * 3;
+        margin-left: $gs-gutter * 3;
         border-radius: 18px !important;
 
         @include text-paragraph();
@@ -45,6 +45,6 @@
     textarea {
         border-radius: 18px !important;
         width: 460px !important;
-        margin-left: 60px;
+        margin-left: $gs-gutter * 3;
     }
 }
