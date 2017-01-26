@@ -112,13 +112,11 @@
                                 <div class="form-field">
                                     <div class="loader js-payment-processing">Processing.</div>
                                 </div>
-                                <div class="form-field js-payment-type">                                <button type="button" class="action choose-payment-method js-card-payment-method">
-                                    Credit/Debit Card</button>
+                                <div class="form-field js-payment-type">
+                                    @fragments.form.stripeCheckout(idUser)
                                 </div>
                                 <div class="form-field js-payment-type">
                                     <div id="paypal-button-checkout"></div>
-                                </div>
-                                <div class="form-field js-payment-type">                                @fragments.form.stripeCheckout(idUser)
                                 </div>
                             </div>
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
