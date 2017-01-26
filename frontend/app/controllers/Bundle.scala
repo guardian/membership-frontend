@@ -32,7 +32,7 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("28728d31d1aeba8194cb0bb2060e23d033a84f33/0_0_920_1300", Seq(920, 708), "png")
+      availableImages=ResponsiveImageGenerator("6bf759b538128aed0f90cebe8b2465875e85c7ce/0_0_460_650", Seq(460), "png")
     )
 
     val bottomImageOrientated = OrientatedImages(portrait = bottomImage, landscape = bottomImage)
