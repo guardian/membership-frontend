@@ -37,7 +37,7 @@ object PayPalService extends LazyLogging {
   private def retrieveNVPParam(response: Response, paramName: String) = {
     val responseBody = response.body().string()
     if (Config.stageDev)
-      logger.info("NVP response body = " + responseBody)
+      logger.debug("NVP response body = " + responseBody)
 
     val queryParams = parseQuery(responseBody)
     queryParams.paramMap(paramName).head
@@ -58,7 +58,6 @@ object PayPalService extends LazyLogging {
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
-      "LOGOIMG" -> "https://d24w1tjgih0o9s.cloudfront.net/gu-small.png",
       "L_PAYMENTREQUEST_0_NAME0" -> s"Guardian ${billingDetails.tier.capitalize}",
       "L_PAYMENTREQUEST_0_DESC0" -> s"You have chosen the ${billingDetails.billingPeriod} payment option",
       "L_PAYMENTREQUEST_0_AMT0" -> s"${billingDetails.amount}",
