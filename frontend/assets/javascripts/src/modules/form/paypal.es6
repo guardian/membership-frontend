@@ -32,14 +32,21 @@ function setupPayment (resolve, reject) {
 
 	if (payment.validateForm()) {
 
+        const checkoutForm = guardian.membership.checkoutForm;
+        const amount = checkoutForm.billingPeriods[checkoutForm.billingPeriod].amount[checkoutForm.currency];
+
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
-		fetch(SETUP_PAYMENT_URL, { method: 'POST' })
+		fetch(SETUP_PAYMENT_URL, {
+		    method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({amount: amount, billingPeriod: checkoutForm.billingPeriod, currency: checkoutForm.currency })
+		})
 			.then(handleSetupResponse)
 			.then(({token}) => {
 
 				if (token) {
-					resolve(token);						
+					resolve(token);
 				} else {
 					paypalError('PayPal token came back blank.');
 				}
