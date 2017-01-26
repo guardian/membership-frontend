@@ -1,9 +1,9 @@
 @import views.support.Asset
 
-@(buttonLabel: String, target: String, dataLink: String, chevron: Boolean = false, secondary: Boolean = false)
+@(buttonLabel: String, target: String, className: Option[String] = None, chevron: Boolean = false, secondary: Boolean = false)
 
 <div class="bundle-button">
-    <a data-link-name="@dataLink" class="@if(secondary){ bundle-button__content--secondary } else { bundle-button__content }" href="@target">
+    <a class="@if(secondary){ bundle-button__content--secondary } else { bundle-button__content } @className.mkString" href="@target">
         <p>@buttonLabel</p>
         <div class="bundle-button__content__arrow">
             @if(chevron){
