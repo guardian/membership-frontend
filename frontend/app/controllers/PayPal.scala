@@ -10,7 +10,7 @@ object PayPal extends Controller with LazyLogging {
 	// Payment token used to tie PayPal requests together.
 	case class Token (token: String)
 
-  case class PayPalBillingDetails(amount: Float, billingPeriod: String, currency: String)
+  case class PayPalBillingDetails(amount: Float, billingPeriod: String, currency: String, tier: String)
 
 	// Json writers.
 	implicit val tokenWrites = Json.writes[Token]
@@ -25,16 +25,16 @@ object PayPal extends Controller with LazyLogging {
 
 	// Sets up a payment by contacting PayPal, returns the token as JSON.
 	def setupPayment = NoCacheAction { request =>
-    parseJsonAndRunServiceCall(request)(PayPalService.retrieveToken(request))
+    parseJsonAndRunServiceCall(request, PayPalService.retrieveToken(request))
 	}
 
 	// Creates a billing agreement using a payment token.
 	def createAgreement = NoCacheAction { request =>
-    parseJsonAndRunServiceCall(request)(PayPalService.retrieveBaid)
+    parseJsonAndRunServiceCall(request, PayPalService.retrieveBaid)
 	}
 
   //Takes a request, parses it into a type T, passes this into serviceCall to retrieve a token then returns this as json
-  def parseJsonAndRunServiceCall[T](request:Request[AnyContent])(serviceCall : T => String)(implicit fjs: Reads[T]) = {
+  def parseJsonAndRunServiceCall[T](request:Request[AnyContent], serviceCall : T => String)(implicit fjs: Reads[T]) = {
     request.body.asJson.map { json =>
 
       Json.fromJson[T](json)(fjs) match {
