@@ -74,8 +74,7 @@ object PayPalService extends LazyLogging {
 
   // Sends a request to PayPal to create billing agreement and returns BAID.
   def retrieveBaid(token: Token) = {
-    if (Config.stageDev)
-      logger.info("Called retrieveBaid")
+    logger.debug("Called retrieveBaid")
 
     val agreementParams = Map(
       "METHOD" -> "CreateBillingAgreement",
