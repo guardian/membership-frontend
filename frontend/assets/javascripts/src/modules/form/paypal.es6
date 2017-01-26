@@ -1,6 +1,7 @@
 // ----- Imports ----- //
 
 import listeners from 'src/modules/form/payment/listeners';
+import form from 'src/modules/form/helper/formUtil';
 import * as payment from 'src/modules/payment';
 
 
@@ -34,13 +35,14 @@ function setupPayment (resolve, reject) {
 
         const checkoutForm = guardian.membership.checkoutForm;
         const amount = checkoutForm.billingPeriods[checkoutForm.billingPeriod].amount[checkoutForm.currency];
+        const tier = form.elem.tier.value;
 
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
 		fetch(SETUP_PAYMENT_URL, {
 		    method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({amount: amount, billingPeriod: checkoutForm.billingPeriod, currency: checkoutForm.currency })
+            body: JSON.stringify({amount: amount, billingPeriod: checkoutForm.billingPeriod, currency: checkoutForm.currency, tier: tier })
 		})
 			.then(handleSetupResponse)
 			.then(({token}) => {
