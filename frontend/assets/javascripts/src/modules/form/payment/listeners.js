@@ -1,9 +1,8 @@
 define([
     'bean',
     'src/utils/masker',
-    'src/modules/form/payment/displayCardImg',
-    'src/modules/form/payment/paymentMethod'
-], function (bean, masker, displayCardImg, paymentMethod) {
+    'src/modules/form/payment/displayCardImg'
+], function (bean, masker, displayCardImg) {
     'use strict';
 
     var CREDIT_CARD_NUMBER_ELEM = document.querySelector('.js-credit-card-number');
@@ -20,21 +19,7 @@ define([
         });
     };
 
-    // Sets up a listener for the card payment method button.
-    function cardDisplayButtonListener () {
-
-        var cardButton = document.getElementsByClassName(
-            'js-card-payment-method')[0];
-        var changeLink = document.getElementsByClassName(
-            'js-change-payment-method')[0];
-
-        cardButton.addEventListener('click', paymentMethod.showCardFields);
-        changeLink.addEventListener('click', paymentMethod.hideCardFields);
-
-    }
-
     return {
-        addPaymentListeners: addPaymentListeners,
-        cardDisplayButtonListener: cardDisplayButtonListener
+        addPaymentListeners: addPaymentListeners
     };
 });
