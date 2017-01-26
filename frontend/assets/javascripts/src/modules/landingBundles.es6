@@ -60,9 +60,6 @@ function bindOptionsBehaviour() {
 }
 
 function toggle(section) {
-    if(getComputedStyle(section).display === 'none') {
-        section.style.display = 'block';
-    } else {
-        section.style.display = 'none';
-    }
+    const shouldShowSection =  getComputedStyle(section).display === 'none';
+    section.style.display = shouldShowSection ? 'block' : 'none';
 }

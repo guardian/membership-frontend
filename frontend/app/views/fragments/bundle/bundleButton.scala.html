@@ -3,7 +3,7 @@
 @(buttonLabel: String, target: String, className: Option[String] = None, chevron: Boolean = false, secondary: Boolean = false)
 
 <div class="bundle-button">
-    <a class="@if(secondary){ bundle-button__content--secondary } else { bundle-button__content } @className.getOrElse("")" href="@target">
+    <a class="@if(secondary){ bundle-button__content--secondary } else { bundle-button__content } @className.mkString" href="@target">
         <p>@buttonLabel</p>
         <div class="bundle-button__content__arrow">
             @if(chevron){
