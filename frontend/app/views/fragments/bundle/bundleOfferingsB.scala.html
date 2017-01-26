@@ -1,5 +1,6 @@
 @import abtests.BundleVariant
 @import views.support.Asset
+@import abtests.BundleTier._
 
 @(bundleVariant: BundleVariant)
 <section class="bundle-section">
@@ -11,7 +12,7 @@
             <div class="bundle-offering-b__subscribe__offer">
                 <div class="bundle-offering-b__subscribe__offer__content">
                     <h2>Supporter</h2>
-                    <span class="bundle-offering-b__subscribe__offer__price-description">£7.50/month</span>
+                    <span class="bundle-offering-b__subscribe__offer__price-description">@bundleVariant.prettyMonthlyPrice(Supporter)</span>
                     <ul class="bundle-offering-b__subscribe__offer__list">
                         <li class="bundle-offering-b__subscribe__offer__list__item">
                             <div class="bundle-offering-b__subscribe__offer__list__item__icon">
@@ -34,12 +35,12 @@
                             </div>
                         </li>
                     </ul>
-                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "Digital Subscription").url,"")
+                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "[B Design] Supporter").url)
                 </div>
             </div><div class="bundle-offering-b__subscribe__offer">
             <div class="bundle-offering-b__subscribe__offer__content">
                 <h2>Digital Supporter</h2>
-                <span class="bundle-offering-b__subscribe__offer__price-description">£14.00/month</span>
+                <span class="bundle-offering-b__subscribe__offer__price-description">@bundleVariant.prettyMonthlyPrice(DigitalPack)</span>
                 <ul class="bundle-offering-b__subscribe__offer__list">
 
                     <li class="bundle-offering-b__subscribe__offer__list__item">
@@ -74,12 +75,12 @@
                     </div>
                     </li>
                 </ul>
-                @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "Digital Subscription").url,"")
+                @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "[B Design] Digital Subscription").url)
             </div>
         </div><div class="bundle-offering-b__subscribe__offer">
         <div class="bundle-offering-b__subscribe__offer__content">
             <h2>Print&amp;Digital Supporter</h2>
-            <span class="bundle-offering-b__subscribe__offer__price-description">from £23.40/month</span>
+            <span class="bundle-offering-b__subscribe__offer__price-description">from @bundleVariant.prettyMonthlyPrice(Saturday)</span>
             <ul class="bundle-offering-b__subscribe__offer__list">
                 <li class="bundle-offering-b__subscribe__offer__list__item">
                     <div class="bundle-offering-b__subscribe__offer__list__item__icon">
@@ -118,25 +119,25 @@
                     }
                     </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
                     <h1>Print</h1>
-                    <p>Pick the package you want: Saturday, Sunday, Weekly, Weekend or Everyday.  Save up to 36% on the Guardian and Observer newspapers</p>
+                    <p>Pick the package you want: Saturday, Sunday, Weekly, Weekend or Everyday. Save up to 36% on the Guardian and Observer newspapers</p>
                 </div>
                 </li>
             </ul>
-            @fragments.bundle.bundleButton("See options","#","", Option("js-see-more-button"), chevron = true)
+            @fragments.bundle.bundleButton("See options","#", Option("js-see-more-button"), chevron = true)
             <div class="bundle-offering-b__subscribe__offer__print-options">
                 <ul>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option subscribe_option--selected">
                         <div class="bundle-offering-b__print-option__description">
                             <h1>Saturday</h1>
                         </div><div class="bundle-offering-b__print-option__price">
-                                    £23.40/month
+                            @bundleVariant.prettyMonthlyPrice(Saturday)
                     </div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
                             <h1>The Guardian Weekly</h1>
                         </div><div class="bundle-offering-b__print-option__price">
-                                    £23.40/month
+                            @bundleVariant.prettyMonthlyPrice(GuardianWeekly)
                     </div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
@@ -144,14 +145,14 @@
                             <h1>Weekend</h1>
                             <p>Saturday &amp; Sunday</p>
                         </div><div class="bundle-offering-b__print-option__price">
-                                    £26.00/month
+                            @bundleVariant.prettyMonthlyPrice(Weekend)
                     </div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
                             <h1>Saturday &amp; The&nbsp;Guardian Weekly</h1>
                         </div><div class="bundle-offering-b__print-option__price">
-                                    £28.60/month
+                            @bundleVariant.prettyMonthlyPrice(SatGW)
                     </div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
@@ -159,7 +160,7 @@
                             <h1>Sixday</h1>
                             <p>Monday - Saturday</p>
                         </div><div class="bundle-offering-b__print-option__price">
-                                    £88.88/month
+                            @bundleVariant.prettyMonthlyPrice(SixDay)
                     </div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
@@ -167,11 +168,11 @@
                             <h1>Everyday</h1>
                             <p>Monday - Sunday</p>
                         </div><div class="bundle-offering-b__print-option__price">
-                                    £99.99/month
+                            @bundleVariant.prettyMonthlyPrice(SevenDay)
                     </div>
                     </li>
                 </ul>
-                @fragments.bundle.bundleButton("£23.40/month", routes.Bundle.thankYou(bundleVariant, "PrintDigitalSubscription-£23.40/month").url,"", Option("js-print-button"))
+                @fragments.bundle.bundleButton(bundleVariant.prettyMonthlyPrice(Supporter), routes.Bundle.thankYou(bundleVariant, "[B Design] Print Digital Subscription-Saturday").url, Option("js-print-button"))
             </div>
         </div>
         </div>
@@ -180,7 +181,7 @@
             <hr class="bundle-offering-b__line">
             <h1 class="bundle-offering-b__give__heading">Choose to support us with a one-off contribution</h1>
             <p class="bundle-offering-b__give__description">Fund our journalism on your own terms, with a one-off payment. Every penny goes to supporting our fearless, in depth reporting</p>
-            @fragments.bundle.bundleButton("Contribute now",s"https://contribute.theguardian.com?INTCMP=${bundleVariant.testId}","", secondary = true)
+            @fragments.bundle.bundleButton("Contribute now",s"https://contribute.theguardian.com?INTCMP=${bundleVariant.testId}", secondary = true)
         </div>
     </div>
 </section>

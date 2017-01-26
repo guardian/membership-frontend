@@ -1,8 +1,6 @@
 package abtests
 
-import play.api.mvc.RequestHeader
-
-import scala.util.Random
+import abtests.BundleTier._
 
 object BundleVariant {
 
@@ -12,7 +10,8 @@ object BundleVariant {
 
   val all = Seq[BundleVariant](
     BundleVariant(A, 1, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
-    BundleVariant(B, 1, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)))
+    BundleVariant(B, 1, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
+    BundleVariant(B, 2, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)))
   )
 
   def lookup(name: String): Option[BundleVariant] = {
@@ -22,30 +21,35 @@ object BundleVariant {
 
 case class BundleVariant(distribution: Distribution, priceIndex: Int, prices: Map[BundleTier, Double]) {
   val testId =  s"MEMBERSHIP_AB_THRASHER_UK_${distribution.name}$priceIndex"
+
+  def prettyMonthlyPrice(tier: BundleTier) = f"£${prices(tier)}%.2f/month"
 }
 
 sealed trait BundleTier
 
-case object Supporter extends BundleTier
+object BundleTier {
 
-case object DigitalPack extends BundleTier
+  case object Supporter extends BundleTier
 
-case object Saturday extends BundleTier
+  case object DigitalPack extends BundleTier
 
-case object GuardianWeekly extends BundleTier
+  case object Saturday extends BundleTier
 
-case object Weekend extends BundleTier
+  case object GuardianWeekly extends BundleTier
 
-case object SatGW extends BundleTier
+  case object Weekend extends BundleTier
 
-case object SixDay extends BundleTier
+  case object SatGW extends BundleTier
 
-case object SevenDay extends BundleTier
+  case object SixDay extends BundleTier
+
+  case object SevenDay extends BundleTier
+
+}
 
 
 object Distribution {
   val A = Distribution("A")
-
   val B = Distribution("B")
 }
 
