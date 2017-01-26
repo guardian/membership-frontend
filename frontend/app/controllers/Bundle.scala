@@ -20,22 +20,22 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
+      availableImages=ResponsiveImageGenerator("d003e046432a83d2d42ed17d6f713dc986094e8d/0_0_960_800", Seq(960, 500), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
-    val detailImage = ResponsiveImageGroup(
+    val bottomImage = ResponsiveImageGroup(
       name=Some("intro"),
       metadata=Some(Grid.Metadata(
-        description = Some("A scene in The Guardian editorial office."),
+        description = Some("Montage of The Guardian Headlines"),
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
+      availableImages=ResponsiveImageGenerator("28728d31d1aeba8194cb0bb2060e23d033a84f33/0_0_920_1300", Seq(920, 708), "png")
     )
 
-    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+    val bottomImageOrientated = OrientatedImages(portrait = bottomImage, landscape = bottomImage)
 
     bundleVariant match {
       case BundleVariant(A , _, _ ) => Ok(views.html.bundle.bundleSetA(
@@ -46,7 +46,7 @@ trait Bundle extends Controller {
           url = request.path,
           description = Some(CopyConfig.copyDescriptionSupporters)
         ),
-        detailImageOrientated,
+        bottomImageOrientated,
         bundleVariant))
 
       case BundleVariant(B , _, _ ) => Ok(views.html.bundle.bundleSetB(
@@ -57,7 +57,7 @@ trait Bundle extends Controller {
           url = request.path,
           description = Some(CopyConfig.copyDescriptionSupporters)
         ),
-        detailImageOrientated,
+        bottomImageOrientated,
         bundleVariant))
     }
   }
@@ -70,7 +70,7 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
+      availableImages=ResponsiveImageGenerator("d003e046432a83d2d42ed17d6f713dc986094e8d/0_0_960_800", Seq(960, 500), "png")
     )
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
