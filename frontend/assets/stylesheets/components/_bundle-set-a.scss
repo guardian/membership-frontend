@@ -13,7 +13,8 @@
 }
 
 @mixin text-paragraph() {
-    @include fs-bodyCopy(3);
+    @include fs-headline(2);
+    font-size: 18px;
     line-height: 22px;
     color: guss-colour(neutral-1);
 }
