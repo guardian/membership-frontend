@@ -42,8 +42,11 @@ function bindButtonBehaviour() {
 }
 
 function bindOptionsBehaviour() {
-    PRINT_OPTIONS.forEach(function(field) {
-        field.addEventListener('click', function(evt){
+
+    for(var i = 0 ; i < PRINT_OPTIONS.length ; i++) {
+        var field = PRINT_OPTIONS[i];
+
+        field.addEventListener('click', function (evt) {
             let currentSelection = document.querySelector(CURRENT_PRINT_SELECTOR);
             let target = evt.currentTarget;
             let targetIdElement = target.querySelector(PRINT_A_ID_SELECTOR) || target.querySelector(PRINT_B_ID_SELECTOR);
@@ -61,8 +64,7 @@ function bindOptionsBehaviour() {
             currentSelection.classList.remove('subscribe_option--selected');
             target.classList.add('subscribe_option--selected');
         });
-
-    });
+    }
 }
 
 function toggle(section) {
