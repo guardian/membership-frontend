@@ -14,16 +14,19 @@
                     <h2>Supporter</h2>
                     <span class="bundle-offering-b__subscribe__offer__price-description">@bundleVariant.prettyMonthlyPrice(Supporter)</span>
                     <ul class="bundle-offering-b__subscribe__offer__list">
-                        <li class="bundle-offering-b__subscribe__offer__list__item">
-                            <div class="bundle-offering-b__subscribe__offer__list__item__icon">
-                            @for(icon <- Asset.inlineSvg("bundle-adfree")) {
-                                @icon
-                            }
-                            </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
-                            <h1>Ad-free</h1>
-                            <p>Enjoy our website and apps without adverts</p>
-                        </div>
-                        </li>
+
+                        @if(bundleVariant.hasAdFree) {
+                            <li class="bundle-offering-b__subscribe__offer__list__item">
+                                <div class="bundle-offering-b__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-adfree")) {
+                                    @icon
+                                }
+                                </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
+                                <h1>Ad-free</h1>
+                                <p>Enjoy our website and apps without adverts</p>
+                            </div>
+                            </li>
+                        }
                         <li class="bundle-offering-b__subscribe__offer__list__item">
                             <div class="bundle-offering-b__subscribe__offer__list__item__icon">
                             @for(icon <- Asset.inlineSvg("bundle-commenting")) {
@@ -42,17 +45,18 @@
                 <h2>Digital Supporter</h2>
                 <span class="bundle-offering-b__subscribe__offer__price-description">@bundleVariant.prettyMonthlyPrice(DigitalPack)</span>
                 <ul class="bundle-offering-b__subscribe__offer__list">
-
-                    <li class="bundle-offering-b__subscribe__offer__list__item">
-                        <div class="bundle-offering-b__subscribe__offer__list__item__icon">
-                        @for(icon <- Asset.inlineSvg("bundle-adfree")) {
-                            @icon
-                        }
-                        </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
-                        <h1>Ad-free</h1>
-                        <p>Enjoy our website and apps without adverts</p>
-                    </div>
-                    </li>
+                    @if(bundleVariant.hasAdFree) {
+                        <li class="bundle-offering-b__subscribe__offer__list__item">
+                            <div class="bundle-offering-b__subscribe__offer__list__item__icon">
+                            @for(icon <- Asset.inlineSvg("bundle-adfree")) {
+                                @icon
+                            }
+                            </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
+                            <h1>Ad-free</h1>
+                            <p>Enjoy our website and apps without adverts</p>
+                        </div>
+                        </li>
+                    }
                     <li class="bundle-offering-b__subscribe__offer__list__item">
                         <div class="bundle-offering-b__subscribe__offer__list__item__icon">
                         @for(icon <- Asset.inlineSvg("bundle-commenting")) {
@@ -82,16 +86,18 @@
             <h2>Print&amp;Digital Supporter</h2>
             <span class="bundle-offering-b__subscribe__offer__price-description">from @bundleVariant.prettyMonthlyPrice(Saturday)</span>
             <ul class="bundle-offering-b__subscribe__offer__list">
-                <li class="bundle-offering-b__subscribe__offer__list__item">
-                    <div class="bundle-offering-b__subscribe__offer__list__item__icon">
-                    @for(icon <- Asset.inlineSvg("bundle-adfree")) {
-                        @icon
-                    }
-                    </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
-                    <h1>Ad-free</h1>
-                    <p>Enjoy our website and apps without adverts</p>
-                </div>
-                </li>
+                @if(bundleVariant.hasAdFree) {
+                    <li class="bundle-offering-b__subscribe__offer__list__item">
+                        <div class="bundle-offering-b__subscribe__offer__list__item__icon">
+                        @for(icon <- Asset.inlineSvg("bundle-adfree")) {
+                            @icon
+                        }
+                        </div><div class="bundle-offering-b__subscribe__offer__list__item__content">
+                        <h1>Ad-free</h1>
+                        <p>Enjoy our website and apps without adverts</p>
+                    </div>
+                    </li>
+                }
                 <li class="bundle-offering-b__subscribe__offer__list__item">
                     <div class="bundle-offering-b__subscribe__offer__list__item__icon">
                     @for(icon <- Asset.inlineSvg("bundle-commenting")) {
