@@ -37,7 +37,9 @@
         margin-left: $gs-gutter * 3;
         border-radius: 18px !important;
 
-        @include text-paragraph();
+        font-family: "Guardian Text Sans Web" !important;
+        font-size: 14px !important;
+        font-weight: 900 !important;
         background-color: guss-colour(guardian-brand) !important;
 
     }
