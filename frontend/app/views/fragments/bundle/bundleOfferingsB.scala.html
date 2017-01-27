@@ -35,7 +35,7 @@
                             </div>
                         </li>
                     </ul>
-                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "[B Design] Supporter").url)
+                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "supporter").url)
                 </div>
             </div><div class="bundle-offering-b__subscribe__offer">
             <div class="bundle-offering-b__subscribe__offer__content">
@@ -75,7 +75,7 @@
                     </div>
                     </li>
                 </ul>
-                @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "[B Design] Digital Subscription").url)
+                @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "digital-pack").url)
             </div>
         </div><div class="bundle-offering-b__subscribe__offer">
         <div class="bundle-offering-b__subscribe__offer__content">
@@ -127,18 +127,21 @@
             <div class="bundle-offering-b__subscribe__offer__print-options">
                 <ul>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option subscribe_option--selected">
+
                         <div class="bundle-offering-b__print-option__description">
                             <h1>Saturday</h1>
                         </div><div class="bundle-offering-b__print-option__price">
                             @bundleVariant.prettyMonthlyPrice(Saturday)
-                    </div>
+                        </div>
+                        <div class="bundle-offering-b__print-option__id">saturday</div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
                             <h1>The Guardian Weekly</h1>
                         </div><div class="bundle-offering-b__print-option__price">
                             @bundleVariant.prettyMonthlyPrice(GuardianWeekly)
-                    </div>
+                        </div>
+                        <div class="bundle-offering-b__print-option__id">guardian-weekly</div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
@@ -146,14 +149,16 @@
                             <p>Saturday &amp; Sunday</p>
                         </div><div class="bundle-offering-b__print-option__price">
                             @bundleVariant.prettyMonthlyPrice(Weekend)
-                    </div>
+                        </div>
+                        <div class="bundle-offering-b__print-option__id">weekend</div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
                             <h1>Saturday &amp; The&nbsp;Guardian Weekly</h1>
                         </div><div class="bundle-offering-b__print-option__price">
                             @bundleVariant.prettyMonthlyPrice(SatGW)
-                    </div>
+                        </div>
+                        <div class="bundle-offering-b__print-option__id">satgwe</div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
@@ -161,7 +166,8 @@
                             <p>Monday - Saturday</p>
                         </div><div class="bundle-offering-b__print-option__price">
                             @bundleVariant.prettyMonthlyPrice(SixDay)
-                    </div>
+                        </div>
+                        <div class="bundle-offering-b__print-option__id">six-day</div>
                     </li>
                     <li class="bundle-offering-b__subscribe__offer__print-options__option">
                         <div class="bundle-offering-b__print-option__description">
@@ -169,10 +175,11 @@
                             <p>Monday - Sunday</p>
                         </div><div class="bundle-offering-b__print-option__price">
                             @bundleVariant.prettyMonthlyPrice(SevenDay)
-                    </div>
+                        </div>
+                        <div class="bundle-offering-b__print-option__id">seven-day</div>
                     </li>
                 </ul>
-                @fragments.bundle.bundleButton(bundleVariant.prettyMonthlyPrice(Saturday), routes.Bundle.thankYou(bundleVariant, "[B Design] Print Digital Subscription-Saturday").url, Option("js-print-button"))
+                @fragments.bundle.bundleButton(bundleVariant.prettyMonthlyPrice(Saturday), routes.Bundle.thankYou(bundleVariant, "saturday").url, Option("js-print-button"))
             </div>
         </div>
         </div>
