@@ -23,6 +23,11 @@
     .control:active,
     .control:hover {
         color: $white;
+        border-color: $white;
+    }
+
+    .control:hover .control__icon {
+        border-color: $white;
     }
 
     .global-navigation__item--right {
