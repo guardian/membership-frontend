@@ -1,8 +1,12 @@
 
 /* Header */
 .global-header-bundles {
+
+    height: 96px;
+
     .global-header__logo__image {
-        margin-top: 30px;
+        margin-top: 2px;
+        margin-right: 20px;
         width: 320px;
         height: 60px;
     }
@@ -10,6 +14,7 @@
     .global-header__inner {
         background: none;
         background-color: #005689;
+        padding-bottom: 0;
     }
 
     .control__icon,
@@ -31,6 +36,10 @@
     }
 
     .global-navigation__item--right {
+        display: none;
+    }
+
+    .global-header__primary {
         display: none;
     }
 }
@@ -65,7 +74,7 @@
         position: absolute;
         width: 480px;
         height: 400px;
-        top: 151px;
+        top: 117px;
     }
 }
 
