@@ -1,6 +1,5 @@
 // ----- Imports ----- //
 
-import listeners from 'src/modules/form/payment/listeners';
 import form from 'src/modules/form/helper/formUtil';
 import * as payment from 'src/modules/payment';
 
@@ -160,7 +159,5 @@ export function init () {
 		onAuthorize: makePayment
 
 	}, '#paypal-button-checkout');
-
-	listeners.cardDisplayButtonListener();
 
 }
