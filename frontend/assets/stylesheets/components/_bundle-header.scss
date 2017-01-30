@@ -1,5 +1,49 @@
 
 /* Header */
+.global-header-bundles {
+
+    height: 96px;
+
+    .global-header__logo__image {
+        margin-top: 2px;
+        margin-right: 20px;
+        width: 320px;
+        height: 60px;
+    }
+
+    .global-header__inner {
+        background: none;
+        background-color: #005689;
+        padding-bottom: 0;
+    }
+
+    .control__icon,
+    .control__icon:hover {
+        color: $white;
+        border-color: $white;
+    }
+
+    .control__info,
+    .control,
+    .control:active,
+    .control:hover {
+        color: $white;
+        border-color: $white;
+    }
+
+    .control:hover .control__icon {
+        border-color: $white;
+    }
+
+    .global-navigation {
+        display: none;
+    }
+
+    .global-header__primary {
+        display: none;
+    }
+}
+
 /* Green Part of the Header */
 .bundle-header__main {
     background: #87be27;
@@ -30,7 +74,7 @@
         position: absolute;
         width: 480px;
         height: 400px;
-        top: 151px;
+        top: 117px;
     }
 }
 

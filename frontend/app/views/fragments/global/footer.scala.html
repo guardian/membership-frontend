@@ -4,8 +4,11 @@
 @import model.Nav
 
 @(pageInfo: PageInfo, extraClass: Option[String] = None, countryGroup: Option[CountryGroup] = None)
+@if(!pageInfo.url.startsWith("/bundles")) {
 <footer class="global-footer hidden-print @extraClass.mkString" role="contentinfo">
-
+} else {
+<footer class="global-footer-bundles hidden-print @extraClass.mkString" role="contentinfo">
+}
     @fragments.global.brandbar()
 
     <div class="global-footer__info">
