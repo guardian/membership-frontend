@@ -21,6 +21,7 @@ case class Pricing(yearly: Price, monthly: Price) {
   def getPriceByBillingPeriod(b : BillingPeriod) : Price = b match {
     case Year() => yearly
     case Month() => monthly
+    case _ => monthly
   }
 
   def getPhrase(period : BillingPeriod): String = {
