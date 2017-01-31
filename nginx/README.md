@@ -19,7 +19,7 @@ Add the following local development domains to your hosts file in `/etc/hosts`:
 
 #### Run Membership's Nginx setup script
 
-Run the Membership-specific [setup.sh](nginx/setup.sh) script from the root
+Run the Membership-specific [setup.sh](setup.sh) script from the root
 of the `membership-frontend` project:
 
 ```
