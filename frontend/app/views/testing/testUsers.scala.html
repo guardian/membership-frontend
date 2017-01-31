@@ -17,7 +17,7 @@
                     <h2>New Test User key: <strong>@userString</strong></h2>
                     <div class="text-intro">
                         <p>
-                            Your user will be valid for the next @ValidityPeriod.pretty.
+                            Your user will be valid for the next @ValidityPeriod.toString.stripPrefix("PT").
                             When registering please populate the following fields with your new test user key.
                         </p>
                     </div>
@@ -50,7 +50,7 @@
                             })();
                         ">
                                 @if(Config.stageDev){Dev } New Identity Signup</a>.
-                            Clicking this on the <em>new</em> identity sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form. Unless you're a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=866522">Firefox user</a>. 
+                            Clicking this on the <em>new</em> identity sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form. Unless you're a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=866522">Firefox user</a>.
                         </li>
                         <li>
                             <a href="javascript:

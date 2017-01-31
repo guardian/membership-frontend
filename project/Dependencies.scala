@@ -8,7 +8,10 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "7.2.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.7"
+  val memsubCommonPlayAuth = Seq(
+    "com.gu" %% "memsub-common-play-auth" % "0.8", // v0.8 is the latest version published for Play 2.4...
+    "com.gu" %% "identity-test-users" % "0.6"
+  )
   val membershipCommon = "com.gu" %% "membership-common" % "0.352"
   val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
@@ -27,10 +30,10 @@ object Dependencies {
 
   //projects
 
-  val frontendDependencies = Seq(memsubCommonPlayAuth, scalaUri, membershipCommon,
+  val frontendDependencies = memsubCommonPlayAuth ++ Seq(scalaUri, membershipCommon,
     contentAPI, playWS, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch)
 
-  val acceptanceTestDependencies = Seq(scalaTest, selenium, memsubCommonPlayAuth, seleniumHtmlUnitDriver, seleniumManager)
+  val acceptanceTestDependencies = memsubCommonPlayAuth ++ Seq(scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
 
 }
