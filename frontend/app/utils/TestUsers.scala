@@ -1,6 +1,7 @@
 package utils
 
-import com.github.nscala_time.time.Imports._
+import java.time.Duration.ofDays
+
 import com.gu.identity.play.IdMinimalUser
 import com.gu.identity.testing.usernames.TestUsernames
 import com.gu.salesforce._
@@ -8,11 +9,11 @@ import configuration.Config
 
 object TestUsers {
 
-  val ValidityPeriod = 2.days
+  val ValidityPeriod = ofDays(2)
 
   lazy val testUsers = TestUsernames(
     com.gu.identity.testing.usernames.Encoder.withSecret(Config.config.getString("identity.test.users.secret")),
-    recency = ValidityPeriod.standardDuration
+    recency = ValidityPeriod
   )
 
   def isTestUser(user: IdMinimalUser): Boolean =
