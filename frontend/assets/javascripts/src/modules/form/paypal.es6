@@ -149,7 +149,11 @@ export function init () {
 		// may be some duplicate error logging when this runs alongside
 		// the paypalError function above.
         onError: () => {
-        	payment.fail({ type: 'PayPal', code: 'PaymentError' });
+        	payment.fail({
+        		type: 'PayPal',
+        		code: 'PaymentError',
+        		additional: 'Catch-all - unknown error in PayPal checkout.'
+        	});
         },
         // We don't want to do anything here, but if this callback isn't present
         // PayPal throws a bunch of errors and then stops working.
