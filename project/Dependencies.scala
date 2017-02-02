@@ -12,7 +12,7 @@ object Dependencies {
     "com.gu" %% "memsub-common-play-auth" % "0.8", // v0.8 is the latest version published for Play 2.4...
     "com.gu" %% "identity-test-users" % "0.6"
   )
-  val membershipCommon = "com.gu" %% "membership-common" % "0.352"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.355"
   val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
   val playCache = PlayImport.cache

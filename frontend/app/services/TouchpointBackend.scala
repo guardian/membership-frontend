@@ -9,6 +9,7 @@ import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services.SubscriptionService.CatalogMap
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.okhttp.RequestRunners
+import com.gu.paypal.PayPalConfig
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
@@ -90,6 +91,7 @@ object TouchpointBackend extends LazyLogging {
     TouchpointBackend(
       salesforceService = salesforceService,
       stripeService = stripeService,
+      payPalConfig = backend.payPal,
       giraffeStripeService = giraffeStripeService,
       zuoraSoapClient = zuoraSoapClient,
       destinationService = new DestinationService[Future](
@@ -126,6 +128,7 @@ object TouchpointBackend extends LazyLogging {
 
 case class TouchpointBackend(salesforceService: api.SalesforceService,
                              stripeService: StripeService,
+                             payPalConfig: PayPalConfig,
                              giraffeStripeService: StripeService,
                              zuoraSoapClient: soap.ClientWithFeatureSupplier,
                              destinationService: DestinationService[Future],

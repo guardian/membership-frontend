@@ -145,11 +145,6 @@ object Config {
   val casServiceConfig = config.getString("cas.url")
   val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
 
-  def payPalConfig(env: String) = {
-    PayPalConfig.fromConfig(
-      config.getConfig(s"paypal.$env"))
-  }
-
   def membershipRatePlanIds(env: String) = MembershipRatePlanIds.fromConfig(
     config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.membership"))
 

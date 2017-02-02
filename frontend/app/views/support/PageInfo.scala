@@ -14,6 +14,7 @@ case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                     schemaOpt: Option[EventSchema] = None,
                     customSignInUrl: Option[String] = None,
                     stripePublicKey: Option[String] = None,
+                    payPalEnvironment: Option[String] = None,
                     initialCheckoutForm: CheckoutForm =
                       CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, BillingPeriod.year),
                     navigation: Seq[NavItem] = Nav.primaryNavigation

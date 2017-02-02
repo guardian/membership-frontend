@@ -2,31 +2,30 @@ package services
 
 import actions.AuthRequest
 import com.gu.identity.play.IdMinimalUser
+import com.gu.paypal.PayPalConfig
+import com.gu.touchpoint.TouchpointBackendConfig.BackendType
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
-import configuration.{Config, PayPalConfig, Stages}
-import controllers.PayPal.{PayPalBillingDetails, Token, logger}
+import configuration.Config
+import controllers.PayPal.{PayPalBillingDetails, Token}
 import controllers.routes
 import okhttp3.{FormBody, OkHttpClient, Request, Response}
-import play.api.mvc.{AnyContent, RequestHeader}
+import play.api.mvc.AnyContent
 import utils.TestUsers
 
 object PayPalService extends LazyLogging {
 
-  lazy val config = Config.payPalConfig(Config.stage)
-  lazy val testConfig = Config.payPalConfig(Stages.DEV)
-
   // The parameters sent with every NVP request.
   private def defaultNVPParams(requestConfig : PayPalConfig) = Map(
-    "USER" -> requestConfig.payPalUser,
-    "PWD" -> requestConfig.payPalPassword,
-    "SIGNATURE" -> requestConfig.payPalSignature,
-    "VERSION" -> requestConfig.payPalNVPVersion)
+    "USER" -> requestConfig.user,
+    "PWD" -> requestConfig.password,
+    "SIGNATURE" -> requestConfig.signature,
+    "VERSION" -> requestConfig.NVPVersion)
 
   // Takes a series of parameters, send a request to PayPal, returns response.
   private def nvpRequest(params: Map[String, String], user : IdMinimalUser) = {
     logger.info("Is test user = " + TestUsers.isTestUser(user))
-    val requestConfig = if (TestUsers.isTestUser(user)) testConfig else config
+    val requestConfig = TouchpointBackend.forUser(user).payPalConfig
 
     val client = new OkHttpClient()
     val reqBody = new FormBody.Builder()
@@ -34,7 +33,7 @@ object PayPalService extends LazyLogging {
     for ((param, value) <- params) reqBody.add(param, value)
 
     val request = new Request.Builder()
-      .url(requestConfig.payPalUrl)
+      .url(requestConfig.url)
       .post(reqBody.build())
       .build()
 
