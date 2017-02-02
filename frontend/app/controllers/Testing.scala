@@ -14,6 +14,8 @@ object Testing extends Controller with LazyLogging {
 
   val analyticsOffCookie = Cookie(AnalyticsCookieName, "true", httpOnly = false)
 
+  val PreSigninTestCookieName = "pre-signin-test-user"
+
   /**
    * Make sure to use canonical @guardian.co.uk for addresses
    */
@@ -31,7 +33,8 @@ object Testing extends Controller with LazyLogging {
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()
     logger.info(s"Generated test user string $testUserString for ${request.user.email}")
-    Ok(views.html.testing.testUsers(testUserString)).withCookies(analyticsOffCookie)
+    val testUserCookie = Cookie(PreSigninTestCookieName, testUserString, Some(30 * 60), httpOnly = true)
+    Ok(views.html.testing.testUsers(testUserString)).withCookies(testUserCookie, analyticsOffCookie)
   }
 
   def analyticsOff = CachedAction {

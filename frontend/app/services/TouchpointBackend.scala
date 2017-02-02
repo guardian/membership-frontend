@@ -27,8 +27,9 @@ import monitoring.TouchpointBackendMetrics
 import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
-import utils.TestUsers.isTestUser
+import utils.TestUsers.{TestUserCredentialType, isTestUser}
 import org.joda.time.LocalDate
+import play.api.mvc.RequestHeader
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -45,32 +46,32 @@ object TouchpointBackend extends LazyLogging {
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
 
-  def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend = {
-    val touchpointBackendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
-    TouchpointBackend(touchpointBackendConfig, backendType)
+  def apply(backendType: BackendType): TouchpointBackend = {
+    val backendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
+    TouchpointBackend(backendConfig, backendType)
   }
 
-  def apply(backend: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
-    val stripeService = new StripeService(backend.stripe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv = backend.stripe.envName
+  def apply(config: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
+    val stripeService = new StripeService(config.stripe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+      val backendEnv = config.stripe.envName
       val service = "Stripe"
     }))
-    val giraffeStripeService = new StripeService(backend.giraffe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv = backend.stripe.envName
+    val giraffeStripeService = new StripeService(config.giraffe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+      val backendEnv = config.stripe.envName
       val service = "Stripe Giraffe"
     }))
 
-    val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
+    val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
 
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
     val paperRatePlanIds = Config.subsProductIds(restBackendConfig.envName)
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
-    val runner = RequestRunners.loggingRunner(backend.zuoraMetrics("zuora-soap-client"))
+    val runner = RequestRunners.loggingRunner(config.zuoraMetrics("zuora-soap-client"))
     // extendedRunner sets the configurable read timeout, which is used for the createSubscription call.
-    val extendedRunner = RequestRunners.configurableLoggingRunner(20.seconds, backend.zuoraMetrics("zuora-soap-client"))
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, runner, extendedRunner)
+    val extendedRunner = RequestRunners.configurableLoggingRunner(20.seconds, config.zuoraMetrics("zuora-soap-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
 
-    val discounter = new Discounter(Config.discountRatePlanIds(backend.zuoraEnvName))
+    val discounter = new Discounter(Config.discountRatePlanIds(config.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
     val promoService = new PromoService(promoCollection, discounter)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient)
@@ -82,16 +83,17 @@ object TouchpointBackend extends LazyLogging {
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds)
 
     val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
-    val salesforceService = new SalesforceService(backend.salesforce)
+    val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
       identityService, salesforceService, zuoraService, stripeService, newSubsService, newCatalogService, promoService, paymentService, discounter,
-        Config.discountRatePlanIds(backend.zuoraEnvName))
+        Config.discountRatePlanIds(config.zuoraEnvName))
 
     TouchpointBackend(
+      config.environmentName,
       salesforceService = salesforceService,
       stripeService = stripeService,
-      payPalConfig = backend.payPal,
+      payPalConfig = config.payPal,
       giraffeStripeService = giraffeStripeService,
       zuoraSoapClient = zuoraSoapClient,
       destinationService = new DestinationService[Future](
@@ -115,6 +117,28 @@ object TouchpointBackend extends LazyLogging {
   lazy val Normal = TouchpointBackend(BackendType.Default)
   lazy val TestUser = TouchpointBackend(BackendType.Testing)
 
+  def backendFor(backendType: BackendType): TouchpointBackend = backendType match {
+    case BackendType.Testing => TestUser
+    case BackendType.Default => Normal
+  }
+
+  case class Resolution(
+    backend: TouchpointBackend,
+    typ: BackendType,
+    validTestUserCredentialOpt: Option[TestUserCredentialType[_]]
+  )
+
+  /**
+    * Alternate credentials are used *only* when the user is not signed in - if you're logged in as
+    * a 'normal' non-test user, it doesn't make any difference what pre-signin-test-cookie you have.
+    */
+  def forRequest[C](permittedAltCredentialType: TestUserCredentialType[C], altCredentialSource: C)(
+    implicit request: RequestHeader): Resolution = {
+    val validTestUserCredentialOpt = isTestUser(permittedAltCredentialType, altCredentialSource)
+    val backendType = if (validTestUserCredentialOpt.isDefined) BackendType.Testing else BackendType.Default
+    Resolution(backendFor(backendType), backendType, validTestUserCredentialOpt)
+  }
+
   Future {
     logger.info(s"TouchpointBackend.TestUser is lazily initialised to ensure bad UAT settings can not block deployment to PROD. Initalisation starting...")
     val amountOfPlans = TestUser.catalog.allMembership.size
@@ -126,21 +150,24 @@ object TouchpointBackend extends LazyLogging {
   def forUser(user: Contact): TouchpointBackend = if (isTestUser(user)) TestUser else Normal
 }
 
-case class TouchpointBackend(salesforceService: api.SalesforceService,
-                             stripeService: StripeService,
-                             payPalConfig: PayPalConfig,
-                             giraffeStripeService: StripeService,
-                             zuoraSoapClient: soap.ClientWithFeatureSupplier,
-                             destinationService: DestinationService[Future],
-                             memberService: api.MemberService,
-                             subscriptionService: subsv2.services.SubscriptionService[Future],
-                             catalogService: subsv2.services.CatalogService[Future],
-                             zuoraService: ZuoraService,
-                             membershipRatePlanIds: MembershipRatePlanIds,
-                             promos: PromotionCollection,
-                             promoService: PromoService,
-                             paymentService: PaymentService,
-                             identityService: IdentityService) extends ActivityTracking {
+case class TouchpointBackend(
+  environmentName: String,
+  salesforceService: api.SalesforceService,
+  stripeService: StripeService,
+  payPalConfig: PayPalConfig,
+  giraffeStripeService: StripeService,
+  zuoraSoapClient: soap.ClientWithFeatureSupplier,
+  destinationService: DestinationService[Future],
+  memberService: api.MemberService,
+  subscriptionService: subsv2.services.SubscriptionService[Future],
+  catalogService: subsv2.services.CatalogService[Future],
+  zuoraService: ZuoraService,
+  membershipRatePlanIds: MembershipRatePlanIds,
+  promos: PromotionCollection,
+  promoService: PromoService,
+  paymentService: PaymentService,
+  identityService: IdentityService
+) extends ActivityTracking {
 
   lazy val catalog: Catalog = catalogService.unsafeCatalog
 }

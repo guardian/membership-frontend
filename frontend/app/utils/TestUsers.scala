@@ -6,6 +6,10 @@ import com.gu.identity.play.IdMinimalUser
 import com.gu.identity.testing.usernames.TestUsernames
 import com.gu.salesforce._
 import configuration.Config
+import controllers.Testing
+import forms.MemberForm.JoinForm
+import play.api.mvc.{Cookies, RequestHeader}
+import services.AuthenticationService.authenticatedUserFor
 
 object TestUsers {
 
@@ -15,6 +19,33 @@ object TestUsers {
     com.gu.identity.testing.usernames.Encoder.withSecret(Config.config.getString("identity.test.users.secret")),
     recency = ValidityPeriod
   )
+
+
+  sealed trait TestUserCredentialType[C] {
+    def token(credential: C): Option[String]
+    def passes(credential: C): Option[this.type] = token(credential).filter(isTestUser).map(_ => this)
+  }
+
+  object PreSigninTestCookie extends TestUserCredentialType[Cookies] {
+    def token(cookies: Cookies) = cookies.get(Testing.PreSigninTestCookieName).map(_.value)
+  }
+
+  object NameEnteredInForm extends TestUserCredentialType[Option[JoinForm]] {
+    def token(formData: Option[JoinForm]) = formData.map(_.name.first)
+  }
+
+  object SignedInUsername extends TestUserCredentialType[IdMinimalUser] {
+    def token(idUser: IdMinimalUser) = idUser.displayName.flatMap(_.split(' ').headOption)
+  }
+
+
+  def isTestUser[C](permittedAltCredentialType: TestUserCredentialType[C], altCredentialSource: C)(implicit request: RequestHeader)
+  : Option[TestUserCredentialType[_]] = {
+
+    authenticatedUserFor(request).map(_.user).fold[Option[TestUserCredentialType[_]]] {
+      permittedAltCredentialType.passes(altCredentialSource)
+    }(SignedInUsername.passes)
+  }
 
   def isTestUser(user: IdMinimalUser): Boolean =
     user.displayName.flatMap(_.split(' ').headOption).exists(TestUsers.testUsers.isValid)
