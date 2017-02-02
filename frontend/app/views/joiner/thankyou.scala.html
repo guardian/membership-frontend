@@ -16,7 +16,9 @@
   paymentMethod: Option[PaymentMethod],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean,
-  promotion: Option[AnyPromotion])
+  promotion: Option[AnyPromotion],
+  touchpointBackendResolution: services.TouchpointBackend.Resolution
+)
 
 @title = @{
     if(upgrade) {
@@ -59,7 +61,10 @@
     </tr>
 }
 
-@main(title) {
+@main(
+    title,
+    touchpointBackendResolutionOpt = Some(touchpointBackendResolution)
+) {
 <script type="text/javascript">
    guardian.productData = {
        regNumber: '@member.contact.regNumber.getOrElse("")',

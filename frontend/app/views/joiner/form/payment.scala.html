@@ -22,10 +22,11 @@
     pageInfo: PageInfo,
     trackingPromoCode: Option[PromoCode],
     promoCodeToDisplay: Option[PromoCode],
-    countryGroup: Option[CountryGroup]
+    countryGroup: Option[CountryGroup],
+    touchpointBackendResolution: services.TouchpointBackend.Resolution
     )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
+@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
 
     <main class="page-content skin-checkout-b">
 

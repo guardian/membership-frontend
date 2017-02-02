@@ -1,11 +1,13 @@
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
 @import utils.CountryGroupLang
+@import utils.TestUsers._
 @(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None,
         titleOverride: Option[String] = None,
-    simpleHeader: Boolean = false
+    simpleHeader: Boolean = false,
+    touchpointBackendResolutionOpt: Option[services.TouchpointBackend.Resolution] = None
     )(content: Html)
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
@@ -86,6 +88,20 @@
     </head>
     <body id="top">
         <a class="u-h skip" href="#container">Skip to main content</a>
+        @for(
+            touchpointBackendResolution <- touchpointBackendResolutionOpt;
+            validTestUserCredential <- touchpointBackendResolution.validTestUserCredentialOpt;
+            backend = touchpointBackendResolution.backend
+        ) {
+            <div class="warning-message">
+                Using @touchpointBackendResolution.typ.name backend: <strong><code>@backend.environmentName</code></strong>
+                because you @validTestUserCredential match {
+                case PreSigninTestCookie => { have a valid <code>@Testing.PreSigninTestCookieName</code> cookie - note you still need to create the user with the Test Username }
+                case NameEnteredInForm => { entered a valid Test Username into the form }
+                case SignedInUsername => { are signed in as a user with a valid Test Username }
+            }
+            </div>
+        }
         <noscript>
             <div class="warning-message copy hidden-print">
                 Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Members.
