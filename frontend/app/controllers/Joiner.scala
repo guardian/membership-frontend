@@ -126,7 +126,7 @@ object Joiner extends Controller with ActivityTracking
       identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
       tier match {
-        case t: Tier.Supporter => MembersDataAPI.Service.addBehaviour(request.user, "enterPaidDetails.show")
+        case t: Tier.Supporter => MembersDataAPI.Service.addBehaviour(request, "enterPaidDetails.show")
         case _ =>
       }
       val plans = catalog.findPaid(tier)
