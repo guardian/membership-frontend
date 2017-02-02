@@ -1,5 +1,4 @@
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.promo.PromoCode
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
 @import com.gu.salesforce.Tier.Supporter
@@ -14,8 +13,6 @@
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,
-    trackingPromoCode: Option[PromoCode],
-    promoCodeToDisplay: Option[PromoCode],
     countryGroup: Option[CountryGroup]
     )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
@@ -79,13 +76,6 @@
                             @fragments.form.createPassword()
                         }
                     </div>
-
-                    @if(plans.tier != Supporter()) {
-                        <div class="form-group form-section__promotion">
-                            <h2 class="form-group__title">Promotion</h2>
-                            @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
-                        </div>
-                    }
 
                     <div class="form-group form-group--little-padding">
                         <div class="form-section__billing">
