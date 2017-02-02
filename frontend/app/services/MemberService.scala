@@ -150,7 +150,7 @@ class MemberService(identityService: IdentityService,
       }
 
     def retrieveEmail(baid : String) = Future {
-      PayPalService.retrieveEmail(baid)
+      PayPalService.retrieveEmail(baid, user)
     }
 
 

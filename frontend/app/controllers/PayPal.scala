@@ -1,9 +1,11 @@
 package controllers
 
+import actions.AuthRequest
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
 import play.api.mvc.{AnyContent, Controller, Request}
 import services.PayPalService
+import utils.TestUsers
 
 object PayPal extends Controller with LazyLogging {
 
@@ -24,21 +26,21 @@ object PayPal extends Controller with LazyLogging {
 	}
 
 	// Sets up a payment by contacting PayPal, returns the token as JSON.
-	def setupPayment = NoCacheAction { request =>
-    parseJsonAndRunServiceCall(request, PayPalService.retrieveToken(request))
+	def setupPayment = AuthenticatedAction { request =>
+    parseJsonAndRunServiceCall(request, PayPalService.retrieveToken)
 	}
 
 	// Creates a billing agreement using a payment token.
-	def createAgreement = NoCacheAction { request =>
+	def createAgreement = AuthenticatedAction { request =>
     parseJsonAndRunServiceCall(request, PayPalService.retrieveBaid)
 	}
 
   //Takes a request, parses it into a type T, passes this into serviceCall to retrieve a token then returns this as json
-  def parseJsonAndRunServiceCall[T](request:Request[AnyContent], serviceCall : T => String)(implicit fjs: Reads[T]) = {
+  def parseJsonAndRunServiceCall[T](request:AuthRequest[AnyContent], serviceCall : (AuthRequest[AnyContent], T) => String)(implicit fjs: Reads[T]) = {
     request.body.asJson.map { json =>
 
       Json.fromJson[T](json)(fjs) match {
-        case JsSuccess(parsed, _) => Ok(tokenJsonResponse(serviceCall(parsed)))
+        case JsSuccess(parsed, _) => Ok(tokenJsonResponse(serviceCall(request, parsed)))
         case e: JsError => BadRequest(JsError.toJson(e).toString)
       }
 

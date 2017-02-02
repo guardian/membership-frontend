@@ -1,32 +1,36 @@
 package services
 
+import actions.AuthRequest
+import com.gu.identity.play.IdMinimalUser
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
-import controllers.PayPal.{PayPalBillingDetails, Token}
+import controllers.PayPal.{PayPalBillingDetails, Token, logger}
 import controllers.routes
 import okhttp3.{FormBody, OkHttpClient, Request, Response}
-import play.api.mvc.RequestHeader
+import play.api.mvc.{AnyContent, RequestHeader}
+import utils.TestUsers
 
 object PayPalService extends LazyLogging {
 
+  lazy val config = Config.payPalConfig(Config.stage)
   // The parameters sent with every NVP request.
   private val defaultNVPParams = Map(
-    "USER" -> Config.paypalUser,
-    "PWD" -> Config.paypalPassword,
-    "SIGNATURE" -> Config.paypalSignature,
-    "VERSION" -> Config.paypalNVPVersion)
+    "USER" -> config.payPalUser,
+    "PWD" -> config.payPalPassword,
+    "SIGNATURE" -> config.payPalSignature,
+    "VERSION" -> config.payPalNVPVersion)
 
   // Takes a series of parameters, send a request to PayPal, returns response.
-  private def nvpRequest(params: Map[String, String]) = {
-
+  private def nvpRequest(params: Map[String, String], user : IdMinimalUser) = {
+    logger.info(s"Stage = ${Config.stage}, Config = $config, Is test user = ${TestUsers.isTestUser(user)}")
     val client = new OkHttpClient()
     val reqBody = new FormBody.Builder()
     for ((param, value) <- defaultNVPParams) reqBody.add(param, value)
     for ((param, value) <- params) reqBody.add(param, value)
 
     val request = new Request.Builder()
-      .url(Config.paypalUrl)
+      .url(config.payPalUrl)
       .post(reqBody.build())
       .build()
 
@@ -43,18 +47,18 @@ object PayPalService extends LazyLogging {
     queryParams.paramMap(paramName).head
   }
 
-  def retrieveEmail(baid: String) = {
+  def retrieveEmail(baid: String, user: IdMinimalUser) = {
     val params = Map(
       "METHOD" -> "BillAgreementUpdate",
       "REFERENCEID" -> baid
     )
 
-    val response = nvpRequest(params)
+    val response = nvpRequest(params, user)
     retrieveNVPParam(response, "EMAIL")
   }
 
   // Sets up a payment by contacting PayPal and returns the token.
-  def retrieveToken(request: RequestHeader)(billingDetails: PayPalBillingDetails) = {
+  def retrieveToken(request: AuthRequest[AnyContent], billingDetails: PayPalBillingDetails) = {
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
@@ -68,19 +72,19 @@ object PayPalService extends LazyLogging {
       "BILLINGTYPE" -> "MerchantInitiatedBilling",
       "NOSHIPPING" -> "1")
 
-    val response = nvpRequest(paymentParams)
+    val response = nvpRequest(paymentParams, request.user)
     retrieveNVPParam(response, "TOKEN")
   }
 
   // Sends a request to PayPal to create billing agreement and returns BAID.
-  def retrieveBaid(token: Token) = {
+  def retrieveBaid(request: AuthRequest[AnyContent], token: Token) = {
     logger.debug("Called retrieveBaid")
 
     val agreementParams = Map(
       "METHOD" -> "CreateBillingAgreement",
       "TOKEN" -> token.token)
 
-    val response = nvpRequest(agreementParams)
+    val response = nvpRequest(agreementParams, request.user)
     retrieveNVPParam(response, "BILLINGAGREEMENTID")
   }
 
