@@ -14,7 +14,7 @@ import utils.TestUsers
 object PayPalService extends LazyLogging {
 
   lazy val config = Config.payPalConfig(Config.stage)
-  lazy val testConfig = Config.payPalConfig(Stages.UAT)
+  lazy val testConfig = Config.payPalConfig(Stages.DEV)
 
   // The parameters sent with every NVP request.
   private def defaultNVPParams(requestConfig : PayPalConfig) = Map(
@@ -25,6 +25,7 @@ object PayPalService extends LazyLogging {
 
   // Takes a series of parameters, send a request to PayPal, returns response.
   private def nvpRequest(params: Map[String, String], user : IdMinimalUser) = {
+    logger.info("Is test user = " + TestUsers.isTestUser(user))
     val requestConfig = if (TestUsers.isTestUser(user)) testConfig else config
 
     val client = new OkHttpClient()
