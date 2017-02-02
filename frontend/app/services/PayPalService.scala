@@ -4,7 +4,7 @@ import actions.AuthRequest
 import com.gu.identity.play.IdMinimalUser
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
-import configuration.Config
+import configuration.{Config, PayPalConfig, Stages}
 import controllers.PayPal.{PayPalBillingDetails, Token, logger}
 import controllers.routes
 import okhttp3.{FormBody, OkHttpClient, Request, Response}
@@ -14,23 +14,26 @@ import utils.TestUsers
 object PayPalService extends LazyLogging {
 
   lazy val config = Config.payPalConfig(Config.stage)
+  lazy val testConfig = Config.payPalConfig(Stages.UAT)
+
   // The parameters sent with every NVP request.
-  private val defaultNVPParams = Map(
-    "USER" -> config.payPalUser,
-    "PWD" -> config.payPalPassword,
-    "SIGNATURE" -> config.payPalSignature,
-    "VERSION" -> config.payPalNVPVersion)
+  private def defaultNVPParams(requestConfig : PayPalConfig) = Map(
+    "USER" -> requestConfig.payPalUser,
+    "PWD" -> requestConfig.payPalPassword,
+    "SIGNATURE" -> requestConfig.payPalSignature,
+    "VERSION" -> requestConfig.payPalNVPVersion)
 
   // Takes a series of parameters, send a request to PayPal, returns response.
   private def nvpRequest(params: Map[String, String], user : IdMinimalUser) = {
-    logger.info(s"Stage = ${Config.stage}, Config = $config, Is test user = ${TestUsers.isTestUser(user)}")
+    val requestConfig = if (TestUsers.isTestUser(user)) testConfig else config
+
     val client = new OkHttpClient()
     val reqBody = new FormBody.Builder()
-    for ((param, value) <- defaultNVPParams) reqBody.add(param, value)
+    for ((param, value) <- defaultNVPParams(requestConfig)) reqBody.add(param, value)
     for ((param, value) <- params) reqBody.add(param, value)
 
     val request = new Request.Builder()
-      .url(config.payPalUrl)
+      .url(requestConfig.payPalUrl)
       .post(reqBody.build())
       .build()
 
@@ -87,5 +90,4 @@ object PayPalService extends LazyLogging {
     val response = nvpRequest(agreementParams, request.user)
     retrieveNVPParam(response, "BILLINGAGREEMENTID")
   }
-
 }

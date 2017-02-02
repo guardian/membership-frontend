@@ -119,8 +119,8 @@ object Config {
   val roundedDiscountPercentage: Int = math.round((1-discountMultiplier.toFloat)*100)
 
   val stage = config.getString("stage")
-  val stageProd: Boolean = stage == "PROD"
-  val stageDev: Boolean = stage == "DEV"
+  val stageProd: Boolean = stage == Stages.PROD
+  val stageDev: Boolean = stage == Stages.DEV
 
   lazy val googleGroupChecker = googleGroupCheckerFor(config)
 
@@ -146,7 +146,6 @@ object Config {
   val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
 
   def payPalConfig(env: String) = {
-    logger.info("config=" + config.atKey("paypal"))
     PayPalConfig.fromConfig(
       config.getConfig(s"paypal.$env"))
   }
