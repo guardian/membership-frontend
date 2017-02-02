@@ -14,6 +14,7 @@ import play.api.mvc.AnyContent
 import utils.TestUsers
 
 object PayPalService extends LazyLogging {
+  val client = new OkHttpClient()
 
   // The parameters sent with every NVP request.
   private def defaultNVPParams(requestConfig : PayPalConfig) = Map(
@@ -27,7 +28,6 @@ object PayPalService extends LazyLogging {
     logger.info("Is test user = " + TestUsers.isTestUser(user))
     val requestConfig = TouchpointBackend.forUser(user).payPalConfig
 
-    val client = new OkHttpClient()
     val reqBody = new FormBody.Builder()
     for ((param, value) <- defaultNVPParams(requestConfig)) reqBody.add(param, value)
     for ((param, value) <- params) reqBody.add(param, value)
