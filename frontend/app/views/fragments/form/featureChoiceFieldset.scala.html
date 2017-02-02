@@ -32,31 +32,12 @@
     </fieldset>
 }
 
-@patronChoice() = {
-    <fieldset class="fieldset">
-        <div class="fieldset__heading">
-            <h3 class="fieldset__headline">Your benefits</h3>
-        </div>
-        <div class="fieldset__fields">
-            @for(choice <- FeatureChoice.all) {
-                <div class="pseudo-radio-faker">
-                    <div class="pseudo-radio-faker__header">@choice.label</div>
-                    <div class="pseudo-radio-faker__note">
-                      @choice.description
-                    </div>
-                </div>
-            }
-        </div>
-    </fieldset>
-}
-
 @tier match {
     case Partner() => {
         @partnerChoice()
     }
     case Patron() => {
         <input type="hidden" name="featureChoice" value="@FeatureChoice.setToString(FeatureChoice.all)" />
-        @patronChoice()
     }
     case _ =>  {}
 }
