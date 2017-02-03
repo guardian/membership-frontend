@@ -80,6 +80,7 @@ class MemberService(identityService: IdentityService,
                     salesforceService: api.SalesforceService,
                     zuoraService: ZuoraService,
                     stripeService: StripeService,
+                    payPalService: PayPalService,
                     subscriptionService: SubscriptionService[Future],
                     catalogService: CatalogService[Future],
                     promoService: PromoService,
@@ -150,7 +151,7 @@ class MemberService(identityService: IdentityService,
       }
 
     def retrieveEmail(baid : String) = Future {
-      PayPalService.retrieveEmail(baid, user)
+      payPalService.retrieveEmail(baid)
     }
 
 

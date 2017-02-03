@@ -60,6 +60,10 @@ object TouchpointBackend extends LazyLogging {
       val backendEnv = config.stripe.envName
       val service = "Stripe Giraffe"
     }))
+    val payPalService = new PayPalService(config.payPal, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+      val backendEnv = config.payPal.touchpointEnvironment
+      val service = "PayPal"
+    }))
 
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
 
@@ -86,14 +90,14 @@ object TouchpointBackend extends LazyLogging {
     val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, newSubsService, newCatalogService, promoService, paymentService, discounter,
+      identityService, salesforceService, zuoraService, stripeService, payPalService, newSubsService, newCatalogService, promoService, paymentService, discounter,
         Config.discountRatePlanIds(config.zuoraEnvName))
 
     TouchpointBackend(
       config.environmentName,
       salesforceService = salesforceService,
       stripeService = stripeService,
-      payPalConfig = config.payPal,
+      payPalService = payPalService,
       giraffeStripeService = giraffeStripeService,
       zuoraSoapClient = zuoraSoapClient,
       destinationService = new DestinationService[Future](
@@ -154,7 +158,7 @@ case class TouchpointBackend(
   environmentName: String,
   salesforceService: api.SalesforceService,
   stripeService: StripeService,
-  payPalConfig: PayPalConfig,
+  payPalService: PayPalService,
   giraffeStripeService: StripeService,
   zuoraSoapClient: soap.ClientWithFeatureSupplier,
   destinationService: DestinationService[Future],

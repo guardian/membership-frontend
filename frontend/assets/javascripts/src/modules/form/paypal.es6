@@ -138,7 +138,7 @@ export function init () {
 	paypal.Button.render({
 
 		// Sets the environment.
-		env: window.guardian.payPalEnvironment,
+		env: guardian.payPalEnvironment,
 		// Styles the button.
 		style: { color: 'blue', size: 'medium' },
 		// Defines whether user sees 'continue' or 'pay now' in overlay.

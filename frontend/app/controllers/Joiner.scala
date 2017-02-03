@@ -137,7 +137,7 @@ object Joiner extends Controller with ActivityTracking
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
-        payPalEnvironment = Some(TouchpointBackend.forUser(request.user).payPalConfig.payPalEnvironment),
+        payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
         initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup), pricingType)
       )
 

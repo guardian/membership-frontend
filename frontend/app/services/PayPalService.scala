@@ -1,39 +1,38 @@
 package services
 
 import actions.AuthRequest
-import com.gu.identity.play.IdMinimalUser
 import com.gu.okhttp.RequestRunners
+import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import com.gu.paypal.PayPalConfig
-import com.gu.touchpoint.TouchpointBackendConfig.BackendType
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.PayPal.{PayPalBillingDetails, Token}
 import controllers.routes
-import okhttp3.{FormBody, OkHttpClient, Request, Response}
+import okhttp3.{FormBody, Request, Response}
 import play.api.mvc.AnyContent
-import utils.TestUsers
 
-object PayPalService extends LazyLogging {
+import scala.concurrent.Future
 
+class PayPalService(apiConfig: PayPalConfig, client: LoggingHttpClient[Future]) extends LazyLogging {
+
+  val config = apiConfig
   // The parameters sent with every NVP request.
-  private def defaultNVPParams(requestConfig : PayPalConfig) = Map(
-    "USER" -> requestConfig.user,
-    "PWD" -> requestConfig.password,
-    "SIGNATURE" -> requestConfig.signature,
-    "VERSION" -> requestConfig.NVPVersion)
+  val defaultNVPParams = Map(
+    "USER" -> config.user,
+    "PWD" -> config.password,
+    "SIGNATURE" -> config.signature,
+    "VERSION" -> config.NVPVersion)
 
   // Takes a series of parameters, send a request to PayPal, returns response.
-  private def nvpRequest(params: Map[String, String], user : IdMinimalUser) = {
-    logger.info("Is test user = " + TestUsers.isTestUser(user))
-    val requestConfig = TouchpointBackend.forUser(user).payPalConfig
+  private def nvpRequest(params: Map[String, String]) = {
 
     val reqBody = new FormBody.Builder()
-    for ((param, value) <- defaultNVPParams(requestConfig)) reqBody.add(param, value)
+    for ((param, value) <- defaultNVPParams) reqBody.add(param, value)
     for ((param, value) <- params) reqBody.add(param, value)
 
     val request = new Request.Builder()
-      .url(requestConfig.url)
+      .url(config.url)
       .post(reqBody.build())
       .build()
 
@@ -44,24 +43,24 @@ object PayPalService extends LazyLogging {
   private def retrieveNVPParam(response: Response, paramName: String) = {
     val responseBody = response.body().string()
     if (Config.stageDev)
-      logger.debug("NVP response body = " + responseBody)
+      logger.info("NVP response body = " + responseBody)
 
     val queryParams = parseQuery(responseBody)
     queryParams.paramMap(paramName).head
   }
 
-  def retrieveEmail(baid: String, user: IdMinimalUser) = {
+  def retrieveEmail(baid: String) = {
     val params = Map(
       "METHOD" -> "BillAgreementUpdate",
       "REFERENCEID" -> baid
     )
 
-    val response = nvpRequest(params, user)
+    val response = nvpRequest(params)
     retrieveNVPParam(response, "EMAIL")
   }
 
   // Sets up a payment by contacting PayPal and returns the token.
-  def retrieveToken(request: AuthRequest[AnyContent], billingDetails: PayPalBillingDetails) = {
+  def retrieveToken(returnUrl : String, cancelUrl : String)(billingDetails: PayPalBillingDetails) = {
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
@@ -70,24 +69,24 @@ object PayPalService extends LazyLogging {
       "L_PAYMENTREQUEST_0_AMT0" -> s"${billingDetails.amount}",
       "PAYMENTREQUEST_0_AMT" -> s"${billingDetails.amount}",
       "PAYMENTREQUEST_0_CURRENCYCODE" -> s"${billingDetails.currency}",
-      "RETURNURL" -> routes.PayPal.returnUrl().absoluteURL(secure = true)(request),
-      "CANCELURL" -> routes.PayPal.cancelUrl().absoluteURL(secure = true)(request),
+      "RETURNURL" -> returnUrl,
+      "CANCELURL" -> cancelUrl,
       "BILLINGTYPE" -> "MerchantInitiatedBilling",
       "NOSHIPPING" -> "1")
 
-    val response = nvpRequest(paymentParams, request.user)
+    val response = nvpRequest(paymentParams)
     retrieveNVPParam(response, "TOKEN")
   }
 
   // Sends a request to PayPal to create billing agreement and returns BAID.
-  def retrieveBaid(request: AuthRequest[AnyContent], token: Token) = {
+  def retrieveBaid(token: Token) = {
     logger.debug("Called retrieveBaid")
 
     val agreementParams = Map(
       "METHOD" -> "CreateBillingAgreement",
       "TOKEN" -> token.token)
 
-    val response = nvpRequest(agreementParams, request.user)
+    val response = nvpRequest(agreementParams)
     retrieveNVPParam(response, "BILLINGAGREEMENTID")
   }
 }
