@@ -24,23 +24,33 @@
             <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
         <!-- End of Segment Pixel -->
 
+        <!-- CHECKOUT FORM -->
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
             <input type="hidden" name="tier" value="@plans.tier.slug"/>
 
+            <!-- FORM TITLE -->
             <section class="form-header">
                 <h1 class="form-headline">@plans.tier.cta</h1>
             </section>
 
+            <!-- FORM CONTENT -->
             <section class="form-section form-section--no-padding">
 
                 <div class="form-section__content">
+
+                    <!-- PARTNER/PATRON BENEFITS LIST -->
                     @if(plans.tier != Supporter()){
+                        <!-- List of benefits -->
                         @fragments.form.benefitsFieldset(plans.tier.benefits)
+
+                        <!-- ACCORDION SECTION - BENEFITS CHOICE -->
                         <div class="form-group">
                             @fragments.form.featureChoiceFieldset(plans.tier)
-                        </div>}
+                        </div>
+                    }
 
+                    <!-- ACCORDION SECTION - NAME AND ADDRESS -->
                     <div class="form-group sub-heading">
                         <h2 class="form-group__title">Name and address</h2>
 
@@ -48,9 +58,12 @@
                             @fragments.joiner.signedInAs(request.uri, inline = true)
                         </div>
 
+                        <!-- Name -->
                         <div class="form-section__name-detail">
-                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
+                            @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
                         </div>
+
+                        <!-- Address -->
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
@@ -70,7 +83,10 @@
                         }
                     </div>
 
+                    <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
                     <div class="form-group form-group--little-padding">
+
+                        <!-- Billing Address -->
                         <div class="form-section__billing">
                             <h2 class="form-group__title">Billing</h2>
                             @fragments.form.billingAddress("Billing address")
@@ -85,6 +101,8 @@
                                 county = idUser.privateFields.billingAddress4
                             )
                         </div>
+
+                        <!-- Payment Options -->
                         @fragments.form.paymentOptions(plans)
                         <fieldset class="fieldset js-payment-methods actions">
                             <div class="fieldset__heading">
@@ -105,6 +123,7 @@
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
                         </fieldset>
                     </div>
+
                     @fragments.form.terms(countryGroup)
                     @fragments.form.errorMessageDisplay()
                     @fragments.form.submitPayPal(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment a-annual"))
