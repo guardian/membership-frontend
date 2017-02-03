@@ -18,7 +18,7 @@
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
-    <main class="page-content skin-checkout-b">
+    <main class="page-content skin-checkout-b skin-checkout-paypal">
 
         <!-- Segment Pixel - Jan17 - Become a supporter - DO NOT MODIFY -->
             <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
@@ -42,7 +42,7 @@
                     <!-- PARTNER/PATRON BENEFITS LIST -->
                     @if(plans.tier != Supporter()){
                         <!-- List of benefits -->
-                        @fragments.form.benefitsFieldset(plans.tier.benefits)
+                        @fragments.form.benefitsFieldsetPayPal(plans.tier.benefits)
 
                         <!-- ACCORDION SECTION - BENEFITS CHOICE -->
                         <div class="form-group">

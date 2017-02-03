@@ -1,0 +1,14 @@
+@(benefits: Seq[model.Benefit])
+
+<section class="benefits">
+    <div class="benefits__heading">
+        <h2 class="benefits__headline">What's included</h2>
+    </div>
+    <div class="benefits__list copy">
+        <ul>
+            @for(benefit <- benefits) {
+                <li>@benefit.title</li>
+            }
+        </ul>
+    </div>
+</section>
