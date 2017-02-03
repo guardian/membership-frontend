@@ -2,6 +2,7 @@ package services
 
 import actions.AuthRequest
 import com.gu.identity.play.IdMinimalUser
+import com.gu.okhttp.RequestRunners
 import com.gu.paypal.PayPalConfig
 import com.gu.touchpoint.TouchpointBackendConfig.BackendType
 import com.netaporter.uri.Uri.parseQuery
@@ -14,7 +15,6 @@ import play.api.mvc.AnyContent
 import utils.TestUsers
 
 object PayPalService extends LazyLogging {
-  val client = new OkHttpClient()
 
   // The parameters sent with every NVP request.
   private def defaultNVPParams(requestConfig : PayPalConfig) = Map(
@@ -37,7 +37,7 @@ object PayPalService extends LazyLogging {
       .post(reqBody.build())
       .build()
 
-    client.newCall(request).execute()
+    RequestRunners.client.newCall(request).execute()
   }
 
   // Takes an NVP response and retrieves a given parameter as a string.
