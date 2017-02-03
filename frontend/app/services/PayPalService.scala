@@ -1,20 +1,14 @@
 package services
 
-import actions.AuthRequest
 import com.gu.okhttp.RequestRunners
-import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import com.gu.paypal.PayPalConfig
 import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.PayPal.{PayPalBillingDetails, Token}
-import controllers.routes
 import okhttp3.{FormBody, Request, Response}
-import play.api.mvc.AnyContent
 
-import scala.concurrent.Future
-
-class PayPalService(apiConfig: PayPalConfig, client: LoggingHttpClient[Future]) extends LazyLogging {
+class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
 
   val config = apiConfig
   // The parameters sent with every NVP request.

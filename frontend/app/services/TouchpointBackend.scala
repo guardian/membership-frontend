@@ -60,10 +60,7 @@ object TouchpointBackend extends LazyLogging {
       val backendEnv = config.stripe.envName
       val service = "Stripe Giraffe"
     }))
-    val payPalService = new PayPalService(config.payPal, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv = config.payPal.touchpointEnvironment
-      val service = "PayPal"
-    }))
+    val payPalService = new PayPalService(config.payPal)
 
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
 
