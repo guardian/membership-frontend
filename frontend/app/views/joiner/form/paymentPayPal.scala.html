@@ -95,6 +95,8 @@
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
+
+                        <button class="action form-panel__continue" type="button">Continue</button>
                     </div>
 
                 </section>
@@ -115,7 +117,7 @@
 
                             <div class="fieldset__heading">
                                 <h2 class="fieldset__headline">Payment methods</h2>
-                                <p>Secure</p>
+                                <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
                             </div>
 
                             <div class="fieldset__fields">
