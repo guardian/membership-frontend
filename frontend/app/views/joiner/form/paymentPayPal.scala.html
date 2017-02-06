@@ -42,77 +42,90 @@
                     @fragments.form.benefitsFieldsetPayPal(plans.tier.benefits)
 
                     <!-- ACCORDION SECTION - BENEFITS CHOICE -->
-                    <section class="form-panel">
-                        @fragments.form.featureChoiceFieldsetPayPal(plans.tier)
-                    </section>}
+                    @fragments.form.featureChoicePanelPayPal(plans.tier)
+                }
+
                 <!-- ACCORDION SECTION - NAME AND ADDRESS -->
                 <section class="form-panel sub-heading">
 
-                    <!-- Name -->
-                    <div class="form-section__name-detail">
-                        @fragments.form.nameDetailPayPal(
-                            idUser.privateFields.firstName,
-                            idUser.privateFields.secondName,
-                            heading = "Name and address"
-                        )
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Name and address</h2>
                     </div>
 
-                    <!-- Address -->
-                    @fragments.form.addressDetail(
-                        countriesWithCurrencies = countriesWithCurrencies,
-                        heading = "Delivery address",
-                        note = "We need your address to send you a welcome pack.",
-                        formType = "deliveryAddress",
-                        addressRequired = true,
-                        address1 = idUser.privateFields.address1,
-                        address2 = idUser.privateFields.address2,
-                        town = idUser.privateFields.address3,
-                        postcode = idUser.privateFields.postcode,
-                        county = idUser.privateFields.address4
-                    )
-                    <!-- Billing Address -->
-                    @fragments.form.billingAddress("Billing address")
-                    @fragments.form.addressDetail(
-                        countriesWithCurrencies = countriesWithCurrencies,
-                        formType = "billingAddress",
-                        addressRequired = true,
-                        address1 = idUser.privateFields.billingAddress1,
-                        address2 = idUser.privateFields.billingAddress2,
-                        town = idUser.privateFields.billingAddress3,
-                        postcode = idUser.privateFields.billingPostcode,
-                        county = idUser.privateFields.billingAddress4
-                    )
+                    <div class="form-panel__content">
+                        <!-- Name -->
+                        <div class="form-section__name-detail">
+                            @fragments.form.nameDetailPayPal(
+                                idUser.privateFields.firstName,
+                                idUser.privateFields.secondName,
+                                heading = ""
+                            )
+                        </div>
 
-                    @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
+                        <!-- Address -->
+                        @fragments.form.addressDetail(
+                            countriesWithCurrencies = countriesWithCurrencies,
+                            heading = "Delivery address",
+                            note = "We need your address to send you a welcome pack.",
+                            formType = "deliveryAddress",
+                            addressRequired = true,
+                            address1 = idUser.privateFields.address1,
+                            address2 = idUser.privateFields.address2,
+                            town = idUser.privateFields.address3,
+                            postcode = idUser.privateFields.postcode,
+                            county = idUser.privateFields.address4
+                        )
+                        <!-- Billing Address -->
+                        @fragments.form.billingAddress("Billing address")
+                        @fragments.form.addressDetail(
+                            countriesWithCurrencies = countriesWithCurrencies,
+                            formType = "billingAddress",
+                            addressRequired = true,
+                            address1 = idUser.privateFields.billingAddress1,
+                            address2 = idUser.privateFields.billingAddress2,
+                            town = idUser.privateFields.billingAddress3,
+                            postcode = idUser.privateFields.billingPostcode,
+                            county = idUser.privateFields.billingAddress4
+                        )
 
-                    @if(!idUser.passwordExists) {
-                        @fragments.form.createPassword()
-                    }
+                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
+
+                        @if(!idUser.passwordExists) {
+                            @fragments.form.createPassword()
+                        }
+                    </div>
+
                 </section>
 
                 <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
                 <section class="form-panel form-group--little-padding">
 
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Payment method</h2>
+                        @fragments.form.securityNote()
+                    </div>
+
+                    <div class="form-panel__content">
+
                     <!-- Payment Options -->
-                    @fragments.form.paymentOptions(plans)
-                    <fieldset class="fieldset js-payment-methods actions">
-                        <div class="fieldset__heading">
-                            <h2 class="fieldset__headline">Payment method</h2>
-                            @fragments.form.securityNote()
-                        </div>
-                        <div class="fieldset__fields">
-                            <div class="form-field">
-                                <div class="loader js-payment-processing">Processing.</div>
+                        @fragments.form.paymentOptions(plans)
+                        <fieldset class="fieldset js-payment-methods actions">
+                            
+                            <div class="fieldset__fields">
+                                <div class="form-field">
+                                    <div class="loader js-payment-processing">Processing.</div>
+                                </div>
+                                <div class="form-field js-payment-type">
+                                    @fragments.form.stripeCheckout(idUser)
+                                </div>
+                                <div class="form-field js-payment-type">
+                                    <div id="paypal-button-checkout"></div>
+                                </div>
                             </div>
-                            <div class="form-field js-payment-type">
-                                @fragments.form.stripeCheckout(idUser)
-                            </div>
-                            <div class="form-field js-payment-type">
-                                <div id="paypal-button-checkout"></div>
-                            </div>
-                        </div>
-                        <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
-                    </fieldset>
+                            <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
+                        </fieldset>
+
+                    </div>
                 </section>
 
                 @fragments.form.termsPayPal(countryGroup)

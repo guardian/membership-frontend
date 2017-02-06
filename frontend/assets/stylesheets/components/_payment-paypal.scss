@@ -9,11 +9,57 @@
     }
 
     /* ==========================================================================
+       Forms: Panels
+       ========================================================================== */
+
+    .form-panel {
+        display: table;
+        background-color: $c-neutral8;
+        border-top: 1px solid guss-colour(news-main-2);
+    }
+
+    .form-panel__heading {
+        padding: ($gs-baseline / 2) $gs-baseline;
+        padding-left: ($gs-gutter / 2);
+
+        @include mq(tablet) {
+            display: table-cell;
+            padding-right: ($gs-gutter * 2);
+            padding-bottom: ($gs-baseline * 2);
+            width: gs-span(4) + $gs-gutter;
+        }
+    }
+
+    .form-panel__content {
+        vertical-align: top;
+        padding: ($gs-gutter / 2);
+        padding-bottom: $gs-baseline;
+
+        @include mq(tablet) {
+            display: table-cell;
+            width: gs-span(5);
+            padding-left: 0;
+        }
+    }
+
+    .form-section__name-detail {
+        margin-top: 0;
+    }
+
+    /* ==========================================================================
        Forms: Fieldset
        ========================================================================== */
 
     .fieldset {
-        border-top: 1px solid guss-colour(news-main-2);
+        border: none;
+        display: block;
+    }
+
+    .fieldset__headline, .fieldset__fields {
+        display: block;
+        @include mq(tablet) {
+            display: block;
+        }
     }
 
     /* ==========================================================================
