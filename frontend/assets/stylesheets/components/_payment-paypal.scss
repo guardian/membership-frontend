@@ -25,13 +25,17 @@
         }
     }
 
+    .form-content {
+        counter-reset: panel;
+    }
+
     /* ==========================================================================
        Forms: Panels
        ========================================================================== */
 
     .form-panel {
         display: table;
-        background-color: $c-neutral8;
+        background-color: guss-colour(comment-support-2);
         border-top: 1px solid guss-colour(news-main-2);
         width: 100%;
     }
@@ -46,6 +50,19 @@
             padding-bottom: ($gs-baseline * 2);
             width: gs-span(4) + $gs-gutter;
         }
+    }
+
+    .form-panel__headline::before {
+        counter-increment: panel;
+        content: counter(panel) " ";
+        color: guss-colour(news-main-2);
+        padding-right: 10px;
+    }
+
+    .form-panel__headline, .benefits__headline {
+        @include fs-headline(3);
+        font-weight: 900;
+        font-family: $f-serif-headline;
     }
 
     .form-panel__content {
@@ -71,6 +88,7 @@
     .fieldset {
         border: none;
         display: block;
+        background-color: inherit;
     }
 
     .fieldset__headline, .fieldset__fields {
@@ -106,7 +124,6 @@
     }
 
     .benefits__headline {
-        @include fs-header(3);
         margin-left: 0;
         margin-right: 0;
         margin-bottom: ($gs-baseline / 2);
@@ -126,6 +143,19 @@
 
     .benefits__list li {
         fill: guss-colour(news-main-2);
+    }
+
+    /* ==========================================================================
+       Forms: Fields
+       ========================================================================== */
+
+    .input-text {
+        border: none;
+        border: 3px solid guss-colour(comment-support-2);
+    }
+
+    .input-text:focus {
+        border-color: rgba(guss-colour(comment-support-1), 0.3);
     }
 
 }
