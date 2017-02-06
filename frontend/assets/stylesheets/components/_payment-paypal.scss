@@ -1,11 +1,28 @@
 .skin-checkout-paypal {
 
     /* ==========================================================================
-       Form Header
+       Form Header & Content
        ========================================================================== */
 
-    .form-header {
+    .checkout-header, .form-content {
         border-bottom: none;
+        float: none;
+        margin-right: $gs-gutter/2;
+        margin-left: $gs-gutter/2;
+        padding-top: 0;
+        padding-right: 0;
+        padding-left: 0;
+        width: auto;
+
+        @include mq($from: mobileLandscape) {
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @include mq($from: tablet) {
+            max-width: rem(gs-span(9));
+        }
     }
 
     /* ==========================================================================
@@ -16,6 +33,7 @@
         display: table;
         background-color: $c-neutral8;
         border-top: 1px solid guss-colour(news-main-2);
+        width: 100%;
     }
 
     .form-panel__heading {
