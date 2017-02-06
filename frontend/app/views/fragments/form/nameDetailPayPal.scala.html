@@ -1,4 +1,4 @@
-@(firstName: Option[String], lastName: Option[String], heading: String)(implicit request: RequestHeader)
+@(firstName: Option[String], lastName: Option[String])(implicit request: RequestHeader)
 @import utils.TestUsers.testUsers
 
 @if(firstName.exists(testUsers.isValid)) {
@@ -6,13 +6,6 @@
 }
 
 <fieldset class="fieldset">
-
-    <div class="fieldset__heading">
-        <h2 class="fieldset__headline">@heading</h2>
-        <div class="sign-in-required">
-          @fragments.joiner.signedInAs(request.uri, inline = true)
-      </div>
-    </div>
 
     <div class="fieldset__fields">
 

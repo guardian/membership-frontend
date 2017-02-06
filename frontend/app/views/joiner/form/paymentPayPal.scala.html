@@ -50,6 +50,9 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Name and address</h2>
+                        <div class="sign-in-required">
+                            @fragments.joiner.signedInAs(request.uri, inline = true)
+                        </div>
                     </div>
 
                     <div class="form-panel__content">
@@ -57,8 +60,7 @@
                         <div class="form-section__name-detail">
                             @fragments.form.nameDetailPayPal(
                                 idUser.privateFields.firstName,
-                                idUser.privateFields.secondName,
-                                heading = ""
+                                idUser.privateFields.secondName
                             )
                         </div>
 
@@ -102,15 +104,20 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Payment method</h2>
-                        @fragments.form.securityNote()
+                        <p>Prices include VAT</p>
                     </div>
 
                     <div class="form-panel__content">
 
-                    <!-- Payment Options -->
-                        @fragments.form.paymentOptions(plans)
+                        <!-- Payment Options -->
+                        @fragments.form.paymentOptionsPayPal(plans)
                         <fieldset class="fieldset js-payment-methods actions">
-                            
+
+                            <div class="fieldset__heading">
+                                <h2 class="fieldset__headline">Payment methods</h2>
+                                <p>Secure</p>
+                            </div>
+
                             <div class="fieldset__fields">
                                 <div class="form-field">
                                     <div class="loader js-payment-processing">Processing.</div>
