@@ -119,8 +119,8 @@ object Config {
   val roundedDiscountPercentage: Int = math.round((1-discountMultiplier.toFloat)*100)
 
   val stage = config.getString("stage")
-  val stageProd: Boolean = stage == "PROD"
-  val stageDev: Boolean = stage == "DEV"
+  val stageProd: Boolean = stage == Stages.PROD
+  val stageDev: Boolean = stage == Stages.DEV
 
   lazy val googleGroupChecker = googleGroupCheckerFor(config)
 
@@ -144,12 +144,6 @@ object Config {
 
   val casServiceConfig = config.getString("cas.url")
   val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
-
-  val paypalNVPVersion = config.getString("paypal.nvp-version")
-  val paypalUrl = config.getString("paypal.url")
-  val paypalUser = config.getString("paypal.user")
-  val paypalPassword = config.getString("paypal.password")
-  val paypalSignature = config.getString("paypal.signature")
 
   def membershipRatePlanIds(env: String) = MembershipRatePlanIds.fromConfig(
     config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.membership"))

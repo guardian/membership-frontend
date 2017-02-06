@@ -29,6 +29,9 @@
         @for(stripePublicKey <- pageInfo.stripePublicKey) {
             stripePublicKey: '@stripePublicKey',
         }
+        @for(payPalEnvironment <- pageInfo.payPalEnvironment) {
+            payPalEnvironment: '@payPalEnvironment',
+        }
         membership: {
             checkoutForm: @Html(Json.toJson(pageInfo.initialCheckoutForm).toString),
             buildNumber: '@app.BuildInfo.buildNumber',

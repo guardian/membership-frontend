@@ -3,6 +3,7 @@ import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.PaymentService
 import com.gu.memsub.subsv2.Catalog
+import com.gu.memsub.subsv2.services._
 import com.gu.stripe.StripeService
 import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
@@ -10,9 +11,9 @@ import play.api.data.Form
 import play.api.http.HeaderNames.USER_AGENT
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.{AnyContent, RequestHeader, Result}
+import services.PayPalService
 import services.api.{MemberService, SalesforceService}
-import com.gu.memsub.subsv2.services._
 
 import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}
@@ -42,6 +43,11 @@ package object controllers extends CommonActions with LazyLogging{
   trait StripeServiceProvider {
     def stripeService(implicit request: BackendProvider): StripeService =
       request.touchpointBackend.stripeService
+  }
+
+  trait PayPalServiceProvider {
+    def payPalService(implicit request: AuthRequest[AnyContent]): PayPalService =
+      request.touchpointBackend.payPalService
   }
 
   trait ZuoraServiceProvider {
