@@ -116,7 +116,7 @@ object Joiner extends Controller with ActivityTracking
     countryGroup: CountryGroup,
     promoCode: Option[PromoCode],
     pricingType: Option[BillingPeriod],
-    paypalTest: Boolean = false) = NonMemberAction(tier).async { implicit request =>
+    paypalTest: Option[String]) = NonMemberAction(tier).async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -155,28 +155,26 @@ object Joiner extends Controller with ActivityTracking
 
 
       Ok(
-      if(paypalTest){
-        views.html.joiner.form.paymentPayPal(
+      paypalTest match {
+        case Some(variant) => views.html.joiner.form.paymentPayPal(
           plans,
           countryCurrencyWhitelist,
           identityUser,
           pageInfo,
           trackingPromoCode = validTrackingPromoCode,
           promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup))
-      } else {
-          views.html.joiner.form.payment(
-            plans,
-            countryCurrencyWhitelist,
-            identityUser,
-            pageInfo,
-            trackingPromoCode = validTrackingPromoCode,
-            promoCodeToDisplay = validDisplayablePromoCode,
-            Some(countryGroup),
-            resolution
-          )
-        }
-      )
+          Some(countryGroup),
+          variant)
+        case None => views.html.joiner.form.payment(
+          plans,
+          countryCurrencyWhitelist,
+          identityUser,
+          pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode,
+          Some(countryGroup),
+          resolution)
+      })
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
