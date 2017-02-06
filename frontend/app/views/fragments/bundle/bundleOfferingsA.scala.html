@@ -27,16 +27,18 @@
 
                     <ul class="bundle-offering-a__subscribe__offer__list">
 
-                        <li class="bundle-offering-a__subscribe__offer__list__item">
-                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                        @if(bundleVariant.distribution.name == "CONTROL") {
+                            <li class="bundle-offering-a__subscribe__offer__list__item">
+                                <div class="bundle-offering-a__subscribe__offer__list__item__icon">
                                 @for(icon <- Asset.inlineSvg("bundle-adfree")) {
                                     @icon
                                 }
-                            </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
                                 <h1>Ad-free</h1>
                                 <p>Enjoy our website and apps without adverts</p>
                             </div>
-                        </li>
+                            </li>
+                        }
                         <li class="bundle-offering-a__subscribe__offer__list__item">
                             <div class="bundle-offering-a__subscribe__offer__list__item__icon">
                                 @for(icon <- Asset.inlineSvg("bundle-commenting")) {
@@ -66,16 +68,20 @@
                     <h2>Print&amp;Digital subscription</h2>
                     <span class="bundle-offering-a__subscribe__offer__price-description">from @bundleVariant.prettyMonthlyPrice(Saturday)</span>
                     <ul class="bundle-offering-a__subscribe__offer__list">
+
+                    @if(bundleVariant.distribution.name == "CONTROL") {
                         <li class="bundle-offering-a__subscribe__offer__list__item">
                             <div class="bundle-offering-a__subscribe__offer__list__item__icon">
-                                @for(icon <- Asset.inlineSvg("bundle-adfree")) {
-                                    @icon
-                                }
+                            @for(icon <- Asset.inlineSvg("bundle-adfree")) {
+                                @icon
+                            }
                             </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
-                                <h1>Ad-free</h1>
-                                <p>Enjoy our website and apps without adverts</p>
-                            </div>
+                            <h1>Ad-free</h1>
+                            <p>Enjoy our website and apps without adverts</p>
+                           </div>
                         </li>
+                    }
+
                         <li class="bundle-offering-a__subscribe__offer__list__item">
                             <div class="bundle-offering-a__subscribe__offer__list__item__icon">
                                 @for(icon <- Asset.inlineSvg("bundle-commenting")) {

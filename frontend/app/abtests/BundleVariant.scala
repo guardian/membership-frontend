@@ -9,9 +9,8 @@ object BundleVariant {
   val cookieName = "ab-bundle"
 
   val all = Seq[BundleVariant](
-    BundleVariant(A, 1, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
-    BundleVariant(B, 1, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
-    BundleVariant(B, 2, Map((Supporter, 7.5), (DigitalPack, 14), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = false)
+    BundleVariant(CONTROL, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
+    BundleVariant(VARIANT, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = false)
   )
 
   def lookup(name: String): Option[BundleVariant] = {
@@ -19,8 +18,8 @@ object BundleVariant {
   }
 }
 
-case class BundleVariant(distribution: Distribution, priceIndex: Int, prices: Map[BundleTier, Double], hasAdFree: Boolean = true) {
-  val testId =  s"MEMBERSHIP_AB_THRASHER_UK_${distribution.name}$priceIndex"
+case class BundleVariant(distribution: Distribution, prices: Map[BundleTier, Double], hasAdFree: Boolean = true) {
+  val testId =  s"MEMBERSHIP_A_THRASHER_UK_${distribution.name}"
 
   def prettyMonthlyPrice(tier: BundleTier) = f"£${prices(tier)}%.2f/month"
 }
@@ -49,8 +48,8 @@ object BundleTier {
 
 
 object Distribution {
-  val A = Distribution("A")
-  val B = Distribution("B")
+  val CONTROL = Distribution("CONTROL")
+  val VARIANT = Distribution("VARIANT")
 }
 
 case class Distribution(name: String)
