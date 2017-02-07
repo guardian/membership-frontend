@@ -2,8 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt")
-GET            /humans.txt                            controllers.CachedAssets.at(path="/public", file="humans.txt")
+GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt", false:Boolean)
+GET            /humans.txt                            controllers.CachedAssets.at(path="/public", file="humans.txt", false:Boolean)
 GET            /favicon.ico                           controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 GET            /sitemap.xml                           controllers.SiteMap.sitemap()
 
@@ -125,10 +125,10 @@ GET            /founder                               controllers.VanityUrl.redi
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
 GET            /join                                  controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 
-GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet, true)
+GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile, true)
+GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile, true: Boolean)
 
 # Promotions
 GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
