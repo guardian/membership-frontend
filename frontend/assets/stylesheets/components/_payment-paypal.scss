@@ -29,6 +29,10 @@
         counter-reset: panel;
     }
 
+    .sign-in-required {
+        margin-left: 20px;
+    }
+
     /* ==========================================================================
        Forms: Panels
        ========================================================================== */
@@ -56,7 +60,7 @@
         counter-increment: panel;
         content: counter(panel) " ";
         color: guss-colour(news-main-2);
-        padding-right: 10px;
+        padding-right: 5px;
     }
 
     .form-panel__headline, .benefits__headline {
@@ -91,11 +95,23 @@
         background-color: inherit;
     }
 
-    .fieldset__headline, .fieldset__fields {
+    .fieldset__heading {
+        border-top: 1px dotted guss-colour(neutral-3);
+        padding: 3px 0px 0px;
+    }
+
+    .fieldset__heading, .fieldset__fields {
         display: block;
+        padding: 0;
+        margin: 0 0 24px;
+
         @include mq(tablet) {
             display: block;
         }
+    }
+
+    .fieldset__headline {
+        @include fs-bodyHeading(2);
     }
 
     /* ==========================================================================
@@ -150,9 +166,12 @@
        Forms: Fields
        ========================================================================== */
 
+    .label {
+        color: inherit;
+    }
+
     .input-text {
         border: none;
-        border: 3px solid guss-colour(comment-support-2);
     }
 
     .pseudo-radio {
@@ -164,29 +183,33 @@
     }
 
     input[type=radio]:checked ~ .pseudo-radio:before  {
-        background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTYgMTYiPjxzdHlsZT4uc3Qwe2ZpbGw6I0ZGRkZGRjt9IC5zdDF7ZmlsbDojMzMzMzMzO308L3N0eWxlPjxjaXJjbGUgY2xhc3M9InN0MCIgY3g9IjgiIGN5PSI4IiByPSI4Ii8+PGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iOCIgY3k9IjgiIHI9IjQiLz48L3N2Zz4=);
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PGNpcmNsZSBjeD0iOCIgY3k9IjgiIHI9IjgiIGZpbGw9Im5vbmUiLz48Y2lyY2xlIGN4PSI4IiBjeT0iOCIgcj0iNCIgZmlsbD0iIzMzMyIvPjwvc3ZnPg==);
+        background-color: #fff;
     }
 
     .select {
         border-radius: 650px;
-        border: 3px solid guss-colour(comment-support-2);
         padding: 8px 8px 7px;
         background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNyAxNC4xMyI+PHN0eWxlPi5zdDB7ZmlsbDojMzMzMzMzO308L3N0eWxlPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0uNTUgMy44NEwwIDMuMjkgMy4yOCAwaC40NUw3IDMuMjlsLS41NS41NS0yLjMxLTEuNzd2My43MUgyLjg2VjIuMDdMLjU1IDMuODR6TTcgMTAuODVsLTMuMjggMy4yOGgtLjQ0TDAgMTAuODVsLjU1LS41OCAyLjMxIDEuNzdWOC4zNWgxLjI4djMuNjlsMi4zMS0xLjc3LjU1LjU4eiIvPjwvc3ZnPg==);
         background-repeat: no-repeat;
-        background-position: right 14px top 10px;
+        background-position: right 13px top 10px;
         background-size: 7px;
         border: none;
         appearance: none;
         outline: none;
     }
 
-    .input-text:focus {
-        border-color: rgba(guss-colour(comment-support-1), 0.3);
+    .input-text:focus, .select:focus {
+        box-shadow: inset 0 0 0 3px rgba(guss-colour(comment-support-1), 0.3);
     }
 
     // Fix for IE10+, hides the dropdown arrow.
     .select::-ms-expand {
         display: none;
+    }
+
+    .form-field--error .input-text {
+        border: 2px solid guss-colour(live-main-2);
     }
 
     /* ==========================================================================
