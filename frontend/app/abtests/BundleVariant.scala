@@ -19,7 +19,7 @@ object BundleVariant {
 }
 
 case class BundleVariant(distribution: Distribution, prices: Map[BundleTier, Double], hasAdFree: Boolean = true) {
-  val testId =  s"MEMBERSHIP_A_THRASHER_UK_${distribution.name}"
+  val testId =  s"MEMBERSHIP_A_ADS_THRASHER_UK_${distribution.name}"
 
   def prettyMonthlyPrice(tier: BundleTier) = f"£${prices(tier)}%.2f/month"
 }
