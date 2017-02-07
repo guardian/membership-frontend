@@ -38,7 +38,8 @@ object Benefits {
   val noBookingFees = Benefit("no_booking_fees", "No booking fees")
   val guest = Benefit("guest", "Bring a guest")
   val booksOrTickets = Benefit("books_or_tickets", s"$zuoraFreeEventTicketsAllowance tickets or 4 books", isNew = true)
-  val booksAndTickets = Benefit("books_and_tickets", s"$zuoraFreeEventTicketsAllowance tickets and 4 books", isNew = true)
+  val tickets = Benefit("tickets", s"Get $zuoraFreeEventTicketsAllowance Guardian Live tickets to use throughout the year (use one ticket per event at the event of your choosing)")
+  val books = Benefit("tickets", "We send you 4 carefully selected Guardian published books throughout the year (the exact book remains a mystery until it lands on the doorstep)")
 
   val discount = Benefit("discount", "20% discount for you and a guest")
   val uniqueExperiences = Benefit("unique_experiences", "Exclusive behind-the-scenes functions")
@@ -79,7 +80,8 @@ object Benefits {
     emailUpdates
   )
   val patron = Seq(
-    booksAndTickets,
+    tickets,
+    books,
     uniqueExperiences,
     priorityBooking,
     noBookingFees,

@@ -29,6 +29,7 @@ import services.PromoSessionService.codeFromSession
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.RequestCountry._
+import utils.TestUsers.PreSigninTestCookie
 import utils.{CampaignCode, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
@@ -114,10 +115,16 @@ object Joiner extends Controller with ActivityTracking
     tier: PaidTier,
     countryGroup: CountryGroup,
     promoCode: Option[PromoCode],
-    pricingType: Option[BillingPeriod],
     paypalTest: Boolean = false) = NonMemberAction(tier).async { implicit request =>
 
-    implicit val backendProvider: BackendProvider = request
+    implicit val resolution: TouchpointBackend.Resolution =
+      TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+
+    implicit val tpBackend = resolution.backend
+
+    implicit val backendProvider: BackendProvider = new BackendProvider {
+      override def touchpointBackend = tpBackend
+    }
     implicit val c = catalog
 
     val identityRequest = IdentityRequest(request)
@@ -133,13 +140,14 @@ object Joiner extends Controller with ActivityTracking
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
-        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup), pricingType)
+        payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
       )
 
       val providedPromoCode = promoCode orElse codeFromSession
 
       // is the providedPromoCode valid for the page being rendered (year is default billing period)
-      val planChoice = PaidPlanChoice(tier, pricingType.getOrElse(BillingPeriod.year))
+      val planChoice = PaidPlanChoice(tier, BillingPeriod.year)
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
 
@@ -147,7 +155,6 @@ object Joiner extends Controller with ActivityTracking
       val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
-
 
       Ok(
       if(paypalTest){
@@ -161,13 +168,15 @@ object Joiner extends Controller with ActivityTracking
           Some(countryGroup))
       } else {
           views.html.joiner.form.payment(
-          plans,
-          countryCurrencyWhitelist,
-          identityUser,
-          pageInfo,
-          trackingPromoCode = validTrackingPromoCode,
-          promoCodeToDisplay = validDisplayablePromoCode,
-          Some(countryGroup))
+            plans,
+            countryCurrencyWhitelist,
+            identityUser,
+            pageInfo,
+            trackingPromoCode = validTrackingPromoCode,
+            promoCodeToDisplay = validDisplayablePromoCode,
+            Some(countryGroup),
+            resolution
+          )
         }
       )
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
@@ -276,6 +285,7 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
+    implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
     val prpId = request.subscriber.subscription.plan.productRatePlanId
     implicit val idReq = IdentityRequest(request)
 
@@ -297,7 +307,8 @@ object Joiner extends Controller with ActivityTracking
         paymentMethod,
         destination,
         upgrade,
-        validPromotion.filterNot(_.asTracking.isDefined)
+        validPromotion.filterNot(_.asTracking.isDefined),
+        resolution
       )).discardingCookies(TierChangeCookies.deletionCookies: _*)
     }
   }

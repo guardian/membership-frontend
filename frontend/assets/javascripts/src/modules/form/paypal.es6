@@ -2,6 +2,7 @@
 
 import form from 'src/modules/form/helper/formUtil';
 import * as payment from 'src/modules/payment';
+import 'whatwg-fetch';
 
 
 // ----- Functions ----- //
@@ -39,7 +40,8 @@ function setupPayment (resolve, reject) {
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
 		fetch(SETUP_PAYMENT_URL, {
-		    method: 'POST',
+            credentials: 'include',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({amount: amount, billingPeriod: checkoutForm.billingPeriod, currency: checkoutForm.currency, tier: tier })
 		})
@@ -87,8 +89,8 @@ function createAgreement (paypalData) {
 	const CREATE_AGREEMENT_URL = '/paypal/create-agreement';
 
 	return fetch(CREATE_AGREEMENT_URL, {
-
-		headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
 		method: 'POST',
 		body: JSON.stringify({ token: paypalData.paymentToken })
 
@@ -136,7 +138,7 @@ export function init () {
 	paypal.Button.render({
 
 		// Sets the environment.
-		env: 'sandbox',
+		env: guardian.payPalEnvironment,
 		// Styles the button.
 		style: { color: 'blue', size: 'medium' },
 		// Defines whether user sees 'continue' or 'pay now' in overlay.

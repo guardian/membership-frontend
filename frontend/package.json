@@ -66,6 +66,7 @@
     "vinyl-fs": "2.2.1",
     "webpack": "^1.12.15",
     "webpack-dev-server": "^1.14.1",
+    "whatwg-fetch": "^2.0.2",
     "zxcvbn": "3.5.0"
   }
 }
