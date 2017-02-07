@@ -38,18 +38,7 @@ trait Bundle extends Controller {
     val bottomImageOrientated = OrientatedImages(portrait = bottomImage, landscape = bottomImage)
 
     bundleVariant match {
-      case BundleVariant(A , _, _ , _) => Ok(views.html.bundle.bundleSetA(
-        heroOrientated,
-        TouchpointBackend.Normal.catalog.supporter,
-        PageInfo(
-          title = CopyConfig.copyTitleSupporters,
-          url = request.path,
-          description = Some(CopyConfig.copyDescriptionSupporters)
-        ),
-        bottomImageOrientated,
-        bundleVariant))
-
-      case BundleVariant(B , _, _, _ ) => Ok(views.html.bundle.bundleSetB(
+      case BundleVariant(_, _, _) => Ok(views.html.bundle.bundleSetA(
         heroOrientated,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(

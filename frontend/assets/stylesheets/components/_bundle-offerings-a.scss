@@ -164,7 +164,9 @@
         color: guss-colour(neutral-1);
     }
 }
-
+.bundle-offering-a__print-option__id {
+    display: none;
+}
 .bundle-offering-a__print-option__description {
     width: gs-span(2.275);
     display: inline-block;
