@@ -155,8 +155,38 @@
         border: 3px solid guss-colour(comment-support-2);
     }
 
+    .pseudo-radio {
+        border: none;
+    }
+
+    .pseudo-radio::before {
+        background-color: #fff;
+    }
+
+    input[type=radio]:checked ~ .pseudo-radio:before  {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTYgMTYiPjxzdHlsZT4uc3Qwe2ZpbGw6I0ZGRkZGRjt9IC5zdDF7ZmlsbDojMzMzMzMzO308L3N0eWxlPjxjaXJjbGUgY2xhc3M9InN0MCIgY3g9IjgiIGN5PSI4IiByPSI4Ii8+PGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iOCIgY3k9IjgiIHI9IjQiLz48L3N2Zz4=);
+    }
+
+    .select {
+        border-radius: 650px;
+        border: 3px solid guss-colour(comment-support-2);
+        padding: 8px 8px 7px;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNyAxNC4xMyI+PHN0eWxlPi5zdDB7ZmlsbDojMzMzMzMzO308L3N0eWxlPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0uNTUgMy44NEwwIDMuMjkgMy4yOCAwaC40NUw3IDMuMjlsLS41NS41NS0yLjMxLTEuNzd2My43MUgyLjg2VjIuMDdMLjU1IDMuODR6TTcgMTAuODVsLTMuMjggMy4yOGgtLjQ0TDAgMTAuODVsLjU1LS41OCAyLjMxIDEuNzdWOC4zNWgxLjI4djMuNjlsMi4zMS0xLjc3LjU1LjU4eiIvPjwvc3ZnPg==);
+        background-repeat: no-repeat;
+        background-position: right 14px top 10px;
+        background-size: 7px;
+        border: none;
+        appearance: none;
+        outline: none;
+    }
+
     .input-text:focus {
         border-color: rgba(guss-colour(comment-support-1), 0.3);
+    }
+
+    // Fix for IE10+, hides the dropdown arrow.
+    .select::-ms-expand {
+        display: none;
     }
 
     /* ==========================================================================
