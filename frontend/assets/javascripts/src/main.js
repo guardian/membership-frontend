@@ -27,6 +27,7 @@ require([
     'src/modules/paidToPaid',
     'src/modules/memstatus',
     'src/modules/tools/priceABTest',
+    'src/modules/tools/payPalABTest',
     'src/modules/faq',
     'src/modules/landingBundles'
 ], function(
@@ -58,6 +59,7 @@ require([
     paidToPaid,
     memstatus,
     priceABTest,
+    payPalABTest,
     faq,
     landingBundles
 ) {
@@ -68,6 +70,7 @@ require([
 
     //Price ABTest
     priceABTest.init();
+    payPalABTest.init();
 
     analytics.init();
 
