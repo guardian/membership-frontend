@@ -5,6 +5,7 @@ Disallow: /whats-on
 Disallow: /join-challenger
 Disallow: /bundles
 Disallow: /bundles/thankyou
+
 Allow: /
 
 Sitemap: https://membership.theguardian.com/sitemap.xml
