@@ -3,6 +3,7 @@ User-agent: *
 Disallow: /patterns
 Disallow: /whats-on
 Disallow: /join-challenger
+Disallow: /bundles
 
 Allow: /
 
