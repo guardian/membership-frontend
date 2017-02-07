@@ -4,7 +4,6 @@ Disallow: /patterns
 Disallow: /whats-on
 Disallow: /join-challenger
 Disallow: /bundles
-Disallow: /bundles/thankyou
 
 Allow: /
 
