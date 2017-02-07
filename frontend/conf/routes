@@ -125,10 +125,10 @@ GET            /founder                               controllers.VanityUrl.redi
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
 GET            /join                                  controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 
-GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
+GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet, true)
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)
+GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile, true)
 
 # Promotions
 GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
