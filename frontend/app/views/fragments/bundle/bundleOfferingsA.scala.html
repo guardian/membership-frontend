@@ -27,7 +27,7 @@
 
                     <ul class="bundle-offering-a__subscribe__offer__list">
 
-                        @if(bundleVariant.distribution.name == "CONTROL") {
+                        @if(bundleVariant.hasAdFree) {
                             <li class="bundle-offering-a__subscribe__offer__list__item">
                                 <div class="bundle-offering-a__subscribe__offer__list__item__icon">
                                 @for(icon <- Asset.inlineSvg("bundle-adfree")) {
@@ -69,7 +69,7 @@
                     <span class="bundle-offering-a__subscribe__offer__price-description">from @bundleVariant.prettyMonthlyPrice(Saturday)</span>
                     <ul class="bundle-offering-a__subscribe__offer__list">
 
-                    @if(bundleVariant.distribution.name == "CONTROL") {
+                    @if(bundleVariant.hasAdFree) {
                         <li class="bundle-offering-a__subscribe__offer__list__item">
                             <div class="bundle-offering-a__subscribe__offer__list__item__icon">
                             @for(icon <- Asset.inlineSvg("bundle-adfree")) {
