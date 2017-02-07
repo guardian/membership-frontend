@@ -45,13 +45,10 @@
     }
 
     .form-panel__heading {
-        padding: ($gs-baseline / 2) $gs-baseline;
-        padding-left: ($gs-gutter / 2);
+        padding: ($gs-baseline / 3) ($gs-gutter / 2) ($gs-baseline * 2);
 
         @include mq(tablet) {
             display: table-cell;
-            padding-right: ($gs-gutter * 2);
-            padding-bottom: ($gs-baseline * 2);
             width: gs-span(4) + $gs-gutter;
         }
     }
@@ -71,13 +68,11 @@
 
     .form-panel__content {
         vertical-align: top;
-        padding: ($gs-gutter / 2);
-        padding-bottom: $gs-baseline;
+        padding: 0 ($gs-gutter / 2) ($gs-baseline * 2);
 
         @include mq(tablet) {
             display: table-cell;
             width: gs-span(5);
-            padding-left: 0;
         }
     }
 
@@ -97,17 +92,21 @@
 
     .fieldset__heading {
         border-top: 1px dotted guss-colour(neutral-3);
-        padding: 3px 0px 0px;
+        padding: ($gs-baseline / 4) 0 0;
     }
 
     .fieldset__heading, .fieldset__fields {
         display: block;
-        padding: 0;
-        margin: 0 0 24px;
+        margin: 0 0 ($gs-baseline * 2);
 
         @include mq(tablet) {
             display: block;
         }
+    }
+
+    .fieldset__fields {
+        padding: 0;
+        margin-bottom: ($gs-baseline * 2);
     }
 
     .fieldset__headline {
@@ -176,10 +175,13 @@
 
     .pseudo-radio {
         border: none;
+        padding: 0;
+        padding-left: 36px;
     }
 
     .pseudo-radio::before {
         background-color: #fff;
+        top: 3px;
     }
 
     input[type=radio]:checked ~ .pseudo-radio:before  {
