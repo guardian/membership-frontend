@@ -26,12 +26,12 @@ function tierSelector(tier) {
 // because we have no single container which holds a tier column.
 // Instead they are split between rows, so we use data-tier to group them together.
 function addHoverListeners() {
-    let elems = document.querySelectorAll(CLICKABLE);
-    for(var i = 0 ; i < elems.length ; i++){
+    const elems = document.querySelectorAll(CLICKABLE);
+    for(let i = 0 ; i < elems.length ; i++){
         elems[i].addEventListener('mouseenter', e => {
-            let tier = $(e.currentTarget).data('tier');
-            let $elemsInThisTier = $(CLICKABLE + tierSelector(tier));
-            let $elemsInOtherTiers = $(CLICKABLE + ':not(' + tierSelector(tier) + ')');
+            const tier = $(e.currentTarget).data('tier');
+            const $elemsInThisTier = $(CLICKABLE + tierSelector(tier));
+            const $elemsInOtherTiers = $(CLICKABLE + ':not(' + tierSelector(tier) + ')');
 
             $elemsInThisTier.addClass(HOVER_CLASS);
             $elemsInThisTier.addClass(ACTIVE_CLASS);
