@@ -51,7 +51,7 @@ trait EmailService extends LazyLogging {
       """.stripMargin
       logger.info(body)
       val message = new Message(subjectContent, new Body().withHtml(new Content(body)))
-      val email = new SendEmailRequest(feedback.category.email, to, message)
+      val email = new SendEmailRequest(feedback.category.email, to, message).withReplyToAddresses(feedback.email)
 
       Try {
         client.sendEmail(email)
