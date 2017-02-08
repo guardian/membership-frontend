@@ -29,10 +29,6 @@
         counter-reset: panel;
     }
 
-    .sign-in-required {
-        margin-left: 20px;
-    }
-
     /* ==========================================================================
        Forms: Panels
        ========================================================================== */
@@ -68,7 +64,8 @@
 
     .form-panel__content {
         vertical-align: top;
-        padding: 0 ($gs-gutter / 2) ($gs-baseline * 2);
+        padding: 0 ($gs-gutter / 2) 0;
+        margin-bottom: $gs-baseline * 2;
 
         @include mq(tablet) {
             display: table-cell;
@@ -80,6 +77,10 @@
         margin-top: 0;
     }
 
+    .form-panel--no-margin {
+        margin-bottom: 0;
+    }
+
     /* ==========================================================================
        Forms: Fieldset
        ========================================================================== */
@@ -88,6 +89,7 @@
         border: none;
         display: block;
         background-color: inherit;
+        // margin-bottom: $gs-baseline * 2;
     }
 
     .fieldset__heading {
@@ -106,7 +108,7 @@
 
     .fieldset__fields {
         padding: 0;
-        margin-bottom: ($gs-baseline * 2);
+        margin-bottom: $gs-baseline * 2;
     }
 
     .fieldset__headline {
@@ -126,34 +128,31 @@
     }
 
     .benefits__heading {
-        vertical-align: top;
-        padding: ($gs-baseline / 2) $gs-baseline;
-        padding-left: ($gs-gutter / 2);
+        padding: ($gs-baseline / 3) 0 ($gs-baseline * 2);
 
         @include mq(tablet) {
             display: table-cell;
-            padding-right: ($gs-gutter * 2);
-            padding-bottom: ($gs-baseline * 2);
             width: gs-span(4) + $gs-gutter;
         }
     }
 
     .benefits__headline {
-        margin-left: 0;
-        margin-right: 0;
-        margin-bottom: ($gs-baseline / 2);
+        margin: 0;
     }
 
     .benefits__list {
         vertical-align: top;
-        padding: ($gs-gutter / 2);
-        padding-bottom: $gs-baseline;
+        padding: 0;
+        padding-bottom: $gs-baseline * 2;
 
         @include mq(tablet) {
             display: table-cell;
             width: gs-span(5);
-            padding-left: 0;
         }
+    }
+
+    .benefits__list ul {
+        margin-bottom: 0;
     }
 
     .benefits__list li {
@@ -176,12 +175,18 @@
     .pseudo-radio {
         border: none;
         padding: 0;
-        padding-left: 36px;
+        padding-left: 22px;
     }
 
     .pseudo-radio::before {
         background-color: #fff;
-        top: 3px;
+        top: 2px;
+        margin-left: -12px;
+    }
+
+    .pseudo-radio__header {
+        @include fs-bodyHeading(2);
+        margin-bottom: 0;
     }
 
     input[type=radio]:checked ~ .pseudo-radio:before  {
@@ -214,6 +219,18 @@
         border: 2px solid guss-colour(live-main-2);
     }
 
+    .billing-choice .pseudo-radio:before {
+        top: 2px;
+    }
+
+    .period-choice .pseudo-radio__note {
+        @include fs-data(3);
+    }
+
+    .payment-method-headline {
+        display: inline-block;
+    }
+
     /* ==========================================================================
        Forms: Buttons
        ========================================================================== */
@@ -230,6 +247,28 @@
 
     .form-panel__continue::after {
         display: none;
+    }
+
+    /* ==========================================================================
+       Forms: Notes
+       ========================================================================== */
+
+    .text-note {
+        margin-left: $gs-gutter;
+    }
+
+    .text-note, .fieldset-note, .security-note, .optional-marker:after, .pseudo-radio__note {
+        color: rgba(guss-colour(neutral-1), 0.75);
+    }
+
+    .pseudo-radio__note {
+        @include fs-bodyCopy(2);
+        margin-bottom: $gs-baseline;
+    }
+
+    .security-note {
+        @include fs-data(2);
+        float: right;
     }
 
 }

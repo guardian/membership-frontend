@@ -78,7 +78,7 @@
                             county = idUser.privateFields.address4
                         )
                         <!-- Billing Address -->
-                        @fragments.form.billingAddress("Billing address")
+                        @fragments.form.billingAddressPayPal("Billing address")
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
@@ -106,17 +106,17 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Payment</h2>
-                        <p class="fieldset__note">Prices include VAT</p>
+                        <p class="text-note">Prices include VAT</p>
                     </div>
 
-                    <div class="form-panel__content">
+                    <div class="form-panel__content form-panel--no-margin">
 
                         <!-- Payment Options -->
                         @fragments.form.paymentOptionsPayPal(plans)
                         <fieldset class="fieldset js-payment-methods actions">
 
                             <div class="fieldset__heading">
-                                <h2 class="fieldset__headline">Payment methods</h2>
+                                <h2 class="fieldset__headline payment-method-headline">Payment methods</h2>
                                 <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
                             </div>
 
