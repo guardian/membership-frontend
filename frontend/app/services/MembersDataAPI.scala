@@ -101,9 +101,9 @@ object MembersDataAPI {
       }
     }
 
-    def removeBehaviour(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
+    def removeBehaviour(memberRequest: SubReqWithSub[_], activity: String) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
-        deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id).onComplete {
+        deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id, activity).onComplete {
           case Success(result) => Logger.info(s"Cleared behaviours for ${memberRequest.user.user.id}")
           case Failure(err) => Logger.error(s"Failed to remove behaviour events via membership-data-api for user ${memberRequest.user.id}", err)
         }
@@ -115,11 +115,13 @@ object MembersDataAPI {
     private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String) = {
       val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}"}"""
       val json = Json.parse(record)
-      BehaviourHelper(cookies).post[Behaviour](s"user-behaviour/capture", json)
+      BehaviourHelper(cookies).post[Behaviour]("user-behaviour/capture", json)
     }
 
-    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String) = {
-      BehaviourHelper(cookies).get[Behaviour]("user-behaviour/me/remove")
+    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String) = {
+      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}"}"""
+      val json = Json.parse(record)
+      BehaviourHelper(cookies).post[Behaviour]("user-behaviour/remove", json)
     }
   }
 }

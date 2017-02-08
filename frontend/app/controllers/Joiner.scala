@@ -298,7 +298,7 @@ object Joiner extends Controller with ActivityTracking
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request)
+        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request, "enterPaidDetails.show")
         case _ =>
       }
       Ok(views.html.joiner.thankyou(
