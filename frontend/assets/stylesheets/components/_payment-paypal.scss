@@ -45,7 +45,7 @@
 
         @include mq(tablet) {
             display: table-cell;
-            width: gs-span(4) + $gs-gutter;
+            min-width: gs-span(4) + $gs-gutter;
         }
     }
 
@@ -69,7 +69,8 @@
 
         @include mq(tablet) {
             display: table-cell;
-            width: gs-span(5);
+            min-width: gs-span(5);
+            padding: 0;
             padding-top: $gs-baseline / 3;
         }
     }
@@ -90,12 +91,12 @@
         border: none;
         display: block;
         background-color: inherit;
-        // margin-bottom: $gs-baseline * 2;
     }
 
     .fieldset__heading {
         border-top: 1px dotted guss-colour(neutral-3);
         padding: ($gs-baseline / 4) 0 0;
+        width: 100%;
     }
 
     .fieldset__heading--no-border {
@@ -117,6 +118,10 @@
     .fieldset__fields {
         padding: 0;
         margin-bottom: $gs-baseline * 2;
+        width: 100%;
+        @include mq(tablet) {
+            padding-right: $gs-gutter / 2;
+        }
     }
 
     .fieldset__headline {
@@ -282,6 +287,9 @@
     .security-note {
         @include fs-data(2);
         float: right;
+        @include mq(tablet) {
+            padding-right: $gs-gutter / 2;
+        }
     }
 
 }
