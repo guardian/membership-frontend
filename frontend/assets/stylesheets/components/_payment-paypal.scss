@@ -70,6 +70,7 @@
         @include mq(tablet) {
             display: table-cell;
             width: gs-span(5);
+            padding-top: $gs-baseline / 3;
         }
     }
 
@@ -95,6 +96,13 @@
     .fieldset__heading {
         border-top: 1px dotted guss-colour(neutral-3);
         padding: ($gs-baseline / 4) 0 0;
+    }
+
+    .fieldset__heading--no-border {
+        @include mq(tablet) {
+            padding-top: 0;
+            border: none;            
+        }
     }
 
     .fieldset__heading, .fieldset__fields {
@@ -148,6 +156,7 @@
         @include mq(tablet) {
             display: table-cell;
             width: gs-span(5);
+            padding-top: $gs-baseline / 3;
         }
     }
 
@@ -243,6 +252,10 @@
         background-position: right 9px top 15px;
         background-color : guss-colour(guardian-brand);
         padding-right: 40px;
+
+        @include mq(tablet) {
+            margin-bottom: $gs-baseline * 2;
+        }
     }
 
     .form-panel__continue::after {
