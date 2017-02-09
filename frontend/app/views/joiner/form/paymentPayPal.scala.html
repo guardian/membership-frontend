@@ -50,12 +50,13 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Name and address</h2>
-                        <div class="sign-in-required">
+                        <div class="form-panel__edit js-edit-name-address">edit</div>
+                        <div class="sign-in-required js-sign-in-note @if(plans.tier == Partner()){is-hidden}">
                             @fragments.joiner.signedInAs(request.uri, inline = true)
                         </div>
                     </div>
 
-                    <div class="form-panel__content @if(plans.tier == Partner()){is-hidden}">
+                    <div class="form-panel__content js-form-panel-name-address @if(plans.tier == Partner()){is-hidden}">
                         <!-- Name -->
                         <div class="form-section__name-detail">
                             @fragments.form.nameDetailPayPal(
@@ -96,7 +97,7 @@
                             @fragments.form.createPassword()
                         }
 
-                        <button class="action form-panel__continue" type="button">Continue</button>
+                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
                         <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
                     </div>
 
@@ -110,7 +111,7 @@
                         <p class="text-note">Prices include VAT</p>
                     </div>
 
-                    <div class="form-panel__content form-panel--no-margin">
+                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
 
                         <!-- Payment Options -->
                         @fragments.form.paymentOptionsPayPal(plans)

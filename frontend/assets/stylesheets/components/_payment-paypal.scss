@@ -56,6 +56,10 @@
         padding-right: 5px;
     }
 
+    .form-panel__headline {
+        display: inline-block;
+    }
+
     .form-panel__headline, .benefits__headline {
         @include fs-headline(3);
         font-weight: 900;
@@ -81,6 +85,13 @@
 
     .form-panel--no-margin {
         margin-bottom: 0;
+    }
+
+    .form-panel__edit {
+        @include fs-textSans(1);
+        @include text-link();
+        float: right;
+        cursor: pointer;
     }
 
     /* ==========================================================================
@@ -127,6 +138,10 @@
 
     .fieldset__headline {
         @include fs-bodyHeading(2);
+    }
+
+    .payment-method-headline {
+        display: inline-block;
     }
 
     /* ==========================================================================
@@ -236,10 +251,6 @@
 
     .period-choice .pseudo-radio__note {
         @include fs-data(3);
-    }
-
-    .payment-method-headline {
-        display: inline-block;
     }
 
     /* ==========================================================================
