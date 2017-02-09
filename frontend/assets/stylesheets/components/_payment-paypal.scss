@@ -119,6 +119,7 @@
         padding: 0;
         margin-bottom: $gs-baseline * 2;
         width: 100%;
+
         @include mq(tablet) {
             padding-right: $gs-gutter / 2;
         }
@@ -229,10 +230,6 @@
         display: none;
     }
 
-    .form-field--error .input-text {
-        border: 2px solid guss-colour(live-main-2);
-    }
-
     .billing-choice .pseudo-radio:before {
         top: 2px;
     }
@@ -301,8 +298,42 @@
     .security-note {
         @include fs-data(2);
         float: right;
+
         @include mq(tablet) {
             padding-right: $gs-gutter / 2;
+        }
+    }
+
+    /* ==========================================================================
+       Forms: Errors
+       ========================================================================== */
+
+    .flash-message--error {
+        padding: ($gs-baseline / 2) ($gs-gutter / 4);
+        color: guss-colour(live-main-2);
+        border-color: guss-colour(live-main-2);
+        margin: ($gs-baseline * 2) 0;
+        font-size: 13px;
+        line-height: 17px;
+        background-color: #fae9e7;
+
+        @include mq(tablet) {
+            margin-right: $gs-gutter / 2;
+        }
+    }
+
+    .form-field--error .input-text, .form-field--error .select {
+        border: 2px solid guss-colour(live-main-2);
+    }
+
+    .form-field__error-message {
+        margin-top: $gs-baseline / 4;
+        color: guss-colour(live-main-2);
+    }
+
+    .qa-form-error {
+        @include mq(tablet) {
+            margin-top: 0;
         }
     }
 

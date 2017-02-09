@@ -1,7 +1,7 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.salesforce.Tier.Supporter
+@import com.gu.salesforce.Tier.{Supporter, Partner}
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
@@ -55,7 +55,7 @@
                         </div>
                     </div>
 
-                    <div class="form-panel__content">
+                    <div class="form-panel__content @if(plans.tier == Partner()){is-hidden}">
                         <!-- Name -->
                         <div class="form-section__name-detail">
                             @fragments.form.nameDetailPayPal(
@@ -97,6 +97,7 @@
                         }
 
                         <button class="action form-panel__continue" type="button">Continue</button>
+                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
                     </div>
 
                 </section>
@@ -138,7 +139,6 @@
                 </section>
 
                 @fragments.form.termsPayPal(countryGroup)
-                @fragments.form.errorMessageDisplay()
             </section>
         </form>
     </main>
