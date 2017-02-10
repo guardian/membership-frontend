@@ -115,7 +115,7 @@ object Joiner extends Controller with ActivityTracking
     tier: PaidTier,
     countryGroup: CountryGroup,
     promoCode: Option[PromoCode],
-    paypalTest: Boolean = false) = NonMemberAction(tier).async { implicit request =>
+    paypalTest: Option[String]) = NonMemberAction(tier).async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -132,6 +132,10 @@ object Joiner extends Controller with ActivityTracking
     (for {
       identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
+      tier match {
+        case t: Tier.Supporter => MembersDataAPI.Service.addBehaviour(request, "enterPaidDetails.show")
+        case _ =>
+      }
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
@@ -153,26 +157,24 @@ object Joiner extends Controller with ActivityTracking
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
       Ok(
-      if(paypalTest){
-        views.html.joiner.form.paymentPayPal(
+      paypalTest match {
+        case Some(variant) => views.html.joiner.form.paymentPayPal(
           plans,
           countryCurrencyWhitelist,
           identityUser,
           pageInfo,
-          Some(countryGroup))
-      } else {
-          views.html.joiner.form.payment(
-            plans,
-            countryCurrencyWhitelist,
-            identityUser,
-            pageInfo,
-            trackingPromoCode = validTrackingPromoCode,
-            promoCodeToDisplay = validDisplayablePromoCode,
-            Some(countryGroup),
-            resolution
-          )
-        }
-      )
+          Some(countryGroup),
+          variant)
+        case None => views.html.joiner.form.payment(
+          plans,
+          countryCurrencyWhitelist,
+          identityUser,
+          pageInfo,
+          trackingPromoCode = validTrackingPromoCode,
+          promoCodeToDisplay = validDisplayablePromoCode,
+          Some(countryGroup),
+          resolution)
+      })
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
@@ -290,15 +292,21 @@ object Joiner extends Controller with ActivityTracking
       validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
-    } yield Ok(views.html.joiner.thankyou(
-      request.subscriber,
-      paymentSummary,
-      paymentMethod,
-      destination,
-      upgrade,
-      validPromotion.filterNot(_.asTracking.isDefined),
-      resolution
-    )).discardingCookies(TierChangeCookies.deletionCookies: _*)
+    } yield {
+      tier match {
+        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request, "enterPaidDetails.show")
+        case _ =>
+      }
+      Ok(views.html.joiner.thankyou(
+        request.subscriber,
+        paymentSummary,
+        paymentMethod,
+        destination,
+        upgrade,
+        validPromotion.filterNot(_.asTracking.isDefined),
+        resolution
+      )).discardingCookies(TierChangeCookies.deletionCookies: _*)
+    }
   }
 
   def thankyouStaff = thankyou(Tier.partner)

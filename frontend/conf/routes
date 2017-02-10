@@ -2,8 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt")
-GET            /humans.txt                            controllers.CachedAssets.at(path="/public", file="humans.txt")
+GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt", aggressiveCaching:Boolean ?= false )
+GET            /humans.txt                            controllers.CachedAssets.at(path="/public", file="humans.txt", aggressiveCaching:Boolean ?= false )
 GET            /favicon.ico                           controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 GET            /sitemap.xml                           controllers.SiteMap.sitemap()
 
@@ -20,7 +20,7 @@ GET            /analytics-off                         controllers.Testing.analyt
 GET            /join/staff                            controllers.Joiner.staff
 GET            /join/staff/enter-details              controllers.Joiner.enterStaffDetails
 GET            /join/friend/enter-details             controllers.Joiner.enterFriendDetails
-GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK, promoCode: Option[PromoCode] ?= None, paypalTest: Boolean ?= false)
+GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK, promoCode: Option[PromoCode] ?= None, paypalTest: Option[String] ?= None)
 POST           /join/friend/enter-details             controllers.Joiner.joinFriend
 POST           /join/staff/enter-details              controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
@@ -128,7 +128,7 @@ GET            /join                                  controllers.Info.supporter
 GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)
+GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
 
 # Promotions
 GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)

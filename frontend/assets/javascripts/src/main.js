@@ -26,6 +26,7 @@ require([
     'src/modules/patterns',
     'src/modules/paidToPaid',
     'src/modules/memstatus',
+    'src/modules/tools/payPalABTest',
     'src/modules/faq',
     'src/modules/landingBundles'
 ], function(
@@ -56,6 +57,7 @@ require([
     patterns,
     paidToPaid,
     memstatus,
+    payPalABTest,
     faq,
     landingBundles
 ) {
@@ -63,6 +65,8 @@ require([
 
     ajax.init({page: {ajaxUrl: ''}});
     raven.init('https://8ad435f4fefe468eb59b19fd81a06ea9@app.getsentry.com/56405');
+
+    payPalABTest.init();
 
     analytics.init();
 

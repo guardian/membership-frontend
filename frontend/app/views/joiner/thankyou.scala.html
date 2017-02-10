@@ -79,10 +79,8 @@
 </script>
     <main role="main" class="page-content l-constrained">
 
-        <!-- Conversion Pixel - Jan17 - Partner Conversion pixel - DO NOT MODIFY -->
-            <img src="https://secure.adnxs.com/px?id=@{AppnexusPixel.thankYouPageids(member.subscription.plan.tier)}&t=2" width="1" height="1" />
-        <!-- End of Conversion Pixel -->
-
+        @fragments.analytics.appNexusPixel("id", AppnexusPixel.thankYouPageids(member.subscription.plan.tier))
+            
         @fragments.page.pageHeader(
             pageHeader,
             Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. " +
