@@ -12,40 +12,48 @@ import play.api.mvc._
 import services.{GuardianContentService, _}
 import views.support.PageInfo
 
+import scala.concurrent.Future
+
 object MemberOnlyContent extends Controller with LazyLogging {
 
   val contentApiService = GuardianContentService
 
-  def membershipContent(referringContent: String, membershipAccess: String) = CachedAction.async { implicit request =>
-    val accessOpt = ContentAccess.valueOf(membershipAccess)
-    contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
+  def membershipContent(referringContentOpt: Option[String], membershipAccessOpt: Option[String]) = CachedAction.async { implicit request =>
 
-      val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> ("https://theguardian.com/" + referringContent)) ? ("skipConfirmation" -> "true")).toString
+    (for {
+      referringContent <- referringContentOpt
+      membershipAccess <- membershipAccessOpt
+    } yield {
+      val accessOpt = ContentAccess.valueOf(membershipAccess)
+      contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
+        val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> ("https://theguardian.com/" + referringContent)) ? ("skipConfirmation" -> "true")).toString
 
-      implicit val countryGroup = UK
+        implicit val countryGroup = UK
 
-
-      (for {
-        content <- response.content
-      } yield {
-        if (content.fields.exists(_.membershipAccess.nonEmpty)) {
-          val capiContent: CapiContent = CapiContent(content)
-          val headline: String = capiContent.headline
-          val pageInfo = PageInfo(
-            title = headline,
-            url = request.path,
-            description = capiContent.trailText,
-            customSignInUrl = Some(signInUrl),
-            image = capiContent.mainPicture.map(_.defaultImage)
-          )
-          Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, capiContent, s"Exclusive Members Content: $headline")).
-            withSession(request.session +  (DestinationService.JoinReferrer -> ("https://" + Config.guardianHost +"/" + referringContent)))
-        } else {
-          Redirect(("https://theguardian.com/" + referringContent))
-        }
-      }).getOrElse(
-        Redirect(routes.Joiner.tierChooser())
-      )
-    }
+        (for {
+          content <- response.content
+        } yield {
+          if (content.fields.exists(_.membershipAccess.nonEmpty)) {
+            val capiContent: CapiContent = CapiContent(content)
+            val headline: String = capiContent.headline
+            val pageInfo = PageInfo(
+              title = headline,
+              url = request.path,
+              description = capiContent.trailText,
+              customSignInUrl = Some(signInUrl),
+              image = capiContent.mainPicture.map(_.defaultImage)
+            )
+            Ok(views.html.joiner.membershipContent(pageInfo, accessOpt, signInUrl, capiContent, s"Exclusive Members Content: $headline")).
+              withSession(request.session + (DestinationService.JoinReferrer -> ("https://" + Config.guardianHost + "/" + referringContent)))
+          } else {
+            Redirect(("https://theguardian.com/" + referringContent))
+          }
+        }).getOrElse(
+          Redirect(routes.Joiner.tierChooser())
+        )
+      }
+    }).getOrElse(
+      Future(Redirect(("https://membership.theguardian.com/uk/supporter")))
+    )
   }
 }

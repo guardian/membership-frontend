@@ -32,7 +32,7 @@ GET            /lookupPromotion                       controllers.Promotions.val
 
 GET            /choose-tier                           controllers.Joiner.tierChooser
 
-GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: String, membershipAccess: String)
+GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String], membershipAccess: Option[String])
 
 # Normal user signin:
 GET            /signin                                controllers.Login.chooseSigninOrRegister(returnUrl: String)
