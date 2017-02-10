@@ -80,7 +80,7 @@ object Joiner extends Controller with ActivityTracking
       contentURL <- contentRefererOpt if Uri.parse(contentURL).host.contains("www.theguardian.com")
       access <- accessOpt
     } yield {
-      Redirect(routes.MemberOnlyContent.membershipContent(Some(contentURL), Some(access.name)))
+      Redirect(routes.MemberOnlyContent.membershipContent(Some(contentURL)))
     }).getOrElse(
       Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
     ).withSession(
