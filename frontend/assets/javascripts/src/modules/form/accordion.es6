@@ -10,40 +10,54 @@ checkout form. The user can only continue if the previous section validates.
 import * as payment from 'src/modules/payment';
 
 
-// ----- Panels ----- //
+// ----- Functions ----- //
 
-const form = document.getElementById('payment-form');
+// Looks up the benefits panel in the DOM.
+function getBenefitsPanel (form) {
 
-// Benefits panel.
-const benefitsExists =
-	form.getElementsByClassName('js-form-panel-benefits').length > 0;
-const benefitsPanel = {};
+	return {
+		content: [ form.querySelector('.js-form-panel-benefits') ],
+		editLink: form.querySelector('.js-edit-benefits'),
+		continue: form.querySelector('.js-continue-benefits')
+	};
 
-if (benefitsExists) {
-	benefitsPanel.content = [ form.querySelector('.js-form-panel-benefits') ];
-	benefitsPanel.editLink = form.querySelector('.js-edit-benefits');
-	benefitsPanel.continue = form.querySelector('.js-continue-benefits');
 }
 
-// Name and address panel.
-const nameAddressPanel = {
-	content: [
-		form.querySelector('.js-form-panel-name-address'),
-		form.querySelector('.js-sign-in-note')
-	],
-	editLink: form.querySelector('.js-edit-name-address'),
-	continue: form.querySelector('.js-continue-name-address')
-};
+// Looks up the name/address panel in the DOM.
+function getNameAddressPanel (form) {
 
-// Payment panel.
-const paymentPanel = {
-	content: [ form.querySelector('.js-form-panel-payment') ],
-	editLink: null,
-	continue: null
-};
+	return {
+		content: [
+			form.querySelector('.js-form-panel-name-address'),
+			form.querySelector('.js-sign-in-note')
+		],
+		editLink: form.querySelector('.js-edit-name-address'),
+		continue: form.querySelector('.js-continue-name-address')
+	};
 
+}
 
-// ----- Functions ----- //
+// Looks up the payment panel in the DOM.
+function getPaymentPanel (form) {
+
+	return {
+		content: [ form.querySelector('.js-form-panel-payment') ],
+		editLink: null,
+		continue: null
+	};
+
+}
+
+// Retrieves references to the panels from the DOM.
+function getPanels (form, benefitsExists) {
+
+	return {
+		benefits: benefitsExists ? getBenefitsPanel(form) : null,
+		nameAddress: getNameAddressPanel(form),
+		payment: getPaymentPanel(form)
+	};
+
+}
 
 // Closes a form panel.
 function closePanel (panel, editable) {
@@ -78,40 +92,36 @@ function openPanel (panel) {
 }
 
 // Sets up listeners in the benefits panel.
-function benefitsListeners () {
+function benefitsListeners (panels) {
 
-	if (benefitsExists) {
+	panels.benefits.continue.addEventListener('click', () => {
+		closePanel(panels.benefits, true);
+		openPanel(panels.nameAddress);
+	});
 
-		benefitsPanel.continue.addEventListener('click', () => {
-			closePanel(benefitsPanel, true);
-			openPanel(nameAddressPanel);
-		});
-
-		benefitsPanel.editLink.addEventListener('click', () => {
-			openPanel(benefitsPanel);
-			closePanel(nameAddressPanel);
-			closePanel(paymentPanel);
-		});
-
-	}
+	panels.benefits.editLink.addEventListener('click', () => {
+		openPanel(panels.benefits);
+		closePanel(panels.nameAddress);
+		closePanel(panels.payment);
+	});
 
 }
 
 // Sets up listeners in the name and address panel.
-function nameAddressListeners () {
+function nameAddressListeners (panels) {
 
-	nameAddressPanel.continue.addEventListener('click', () => {
+	panels.nameAddress.continue.addEventListener('click', () => {
 
 		if (payment.validateForm()) {
-			closePanel(nameAddressPanel, true);
-			openPanel(paymentPanel);
+			closePanel(panels.nameAddress, true);
+			openPanel(panels.payment);
 		}
 
 	});
 
-	nameAddressPanel.editLink.addEventListener('click', () => {
-		openPanel(nameAddressPanel);
-		closePanel(paymentPanel);
+	panels.nameAddress.editLink.addEventListener('click', () => {
+		openPanel(panels.nameAddress);
+		closePanel(panels.payment);
 	});
 
 }
@@ -122,7 +132,20 @@ function nameAddressListeners () {
 // Sets up listeners for opening and closing panels.
 export function init () {
 
-	benefitsListeners();
-	nameAddressListeners();
+	const form = document.getElementById('payment-form');
+
+	if (form) {
+
+		const benefitsExists =
+			form.getElementsByClassName('js-form-panel-benefits').length > 0;
+		const panels = getPanels(form, benefitsExists);
+
+		if (benefitsExists) {
+			benefitsListeners(panels);
+		}
+
+		nameAddressListeners(panels);
+
+	}
 
 }
