@@ -1,7 +1,7 @@
 @import com.gu.i18n.CountryGroup
 
-@import com.gu.memsub.Month
-@import com.gu.memsub.Year
+@import com.gu.memsub.BillingPeriod.Month
+@import com.gu.memsub.BillingPeriod.Year
 @import com.gu.memsub.Status
 @import com.gu.memsub.BillingPeriod
 @import com.gu.memsub.Current
@@ -47,8 +47,8 @@
 
 @discountDuration = @{
     pricePlan.charges.billingPeriod match {
-        case Year() => promotion.promotionType.durationMonths.fold("year")(d => "first year")
-        case Month() => promotion.promotionType.durationMonths.fold("month")(d => s"first $d months")
+        case Year => promotion.promotionType.durationMonths.fold("year")(d => "first year")
+        case Month => promotion.promotionType.durationMonths.fold("month")(d => s"first $d months")
         case bp:BillingPeriod => bp.noun
     }
 }

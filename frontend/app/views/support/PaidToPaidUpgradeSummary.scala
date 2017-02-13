@@ -1,6 +1,7 @@
 package views.support
 
 import com.gu.i18n.Currency
+import com.gu.memsub.BillingPeriod.{Month, Year}
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.{Subscription => S, _}
 import com.gu.memsub.subsv2._
@@ -51,8 +52,8 @@ object PaidToPaidUpgradeSummary {
         firstPayment =  firstPayment,
         nextPayment = targetPrice,
         nextPaymentDate = billingPeriod match {
-          case Year() => LocalDate.now().plusYears(1)
-          case Month() => LocalDate.now().plusMonths(1)
+          case Year => LocalDate.now().plusYears(1)
+          case Month => LocalDate.now().plusMonths(1)
           case _ => throw new IllegalStateException(s"Unreachable code: the plan ${plan.id} was expected to be either yearly or monthly")
         }
       )

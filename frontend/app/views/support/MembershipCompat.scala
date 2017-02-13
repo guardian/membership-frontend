@@ -2,6 +2,7 @@ package views.support
 
 import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
+import com.gu.memsub.BillingPeriod.{Month, Year}
 import com.gu.memsub.Product.Membership
 import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.subsv2.{CatalogPlan, _}
@@ -52,8 +53,8 @@ object MembershipCompat {
   implicit class YMPlans(in: MonthYearPlans[CatalogPlan.PaidMember]) {
 
     def get(b: BillingPeriod): CatalogPlan.PaidMember[BillingPeriod] = b match {
-      case Month() => in.month
-      case Year() => in.year
+      case Month => in.month
+      case Year => in.year
       case _ => throw new RuntimeException("can't have quarterly membership")
     }
   }

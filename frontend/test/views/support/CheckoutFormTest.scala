@@ -40,8 +40,8 @@ class CheckoutFormTest extends Specification {
   ))
 
   val plans = MonthYearPlans[CatalogPlan.Partner](
-    month = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.month, pricingSummary), Status.current),
-    year = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.year, pricingSummary), Status.current)
+    month = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.Month, pricingSummary), Status.current),
+    year = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.Year, pricingSummary), Status.current)
   )
 
   implicit class checkoutForm2Tuple2(form: CheckoutForm) {

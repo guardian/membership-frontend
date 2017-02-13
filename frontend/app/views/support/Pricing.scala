@@ -1,7 +1,8 @@
 package views.support
 
 import com.gu.i18n.Currency
-import com.gu.memsub.{BillingPeriod, Month, Year, Price}
+import com.gu.memsub.BillingPeriod.{Month, Year}
+import com.gu.memsub.{BillingPeriod, Price}
 import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 import com.gu.memsub.subsv2.MonthYearPlans
 
@@ -19,8 +20,8 @@ case class Pricing(yearly: Price, monthly: Price) {
     if (hasYearlySaving) Some(s"Save ${yearlySaving.pretty}/year") else None
 
   def getPriceByBillingPeriod(b : BillingPeriod) : Price = b match {
-    case Year() => yearly
-    case Month() => monthly
+    case Year => yearly
+    case Month => monthly
     case _ => monthly
   }
 

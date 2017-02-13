@@ -201,7 +201,7 @@ object MemberForm {
 
   val  paymentMapping: Mapping[PaymentForm] = mapping(
     "type" -> nonEmptyText.transform[BillingPeriod](b =>
-      if (Seq("annual","subscriberOfferAnnual").contains(b)) year else month, _.noun),
+      if (Seq("annual","subscriberOfferAnnual").contains(b)) Year else Month, _.noun),
     "stripeToken" -> optional(text),
     "payPalBaid" -> optional(text)
   )(PaymentForm.apply)(PaymentForm.unapply)

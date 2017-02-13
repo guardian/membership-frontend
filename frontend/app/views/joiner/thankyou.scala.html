@@ -1,5 +1,5 @@
 @import com.gu.salesforce.Tier
-@import com.gu.memsub.BillingPeriod.year
+@import com.gu.memsub.BillingPeriod.Year
 @import configuration.Links
 @import play.twirl.api.Html
 @import views.support.Dates._
@@ -80,7 +80,7 @@
     <main role="main" class="page-content l-constrained">
 
         @fragments.analytics.appNexusPixel("id", AppnexusPixel.thankYouPageids(member.subscription.plan.tier))
-            
+
         @fragments.page.pageHeader(
             pageHeader,
             Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. " +
@@ -124,7 +124,7 @@
                         </th>
                         <td id="qa-joiner-summary-recurring">@summary.planAmount.pretty</td>
                     </tr>
-                    @if(summary.billingPeriod == year && summary.initialFreePeriodOffer) {
+                    @if(summary.billingPeriod == Year && summary.initialFreePeriodOffer) {
                         @for(renewalDate <- summary.renewalDate) {
                             <tr role="row">
                                 <th role="rowheader">

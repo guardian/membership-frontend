@@ -139,7 +139,7 @@ object Joiner extends Controller with ActivityTracking
       val providedPromoCode = promoCode orElse codeFromSession
 
       // is the providedPromoCode valid for the page being rendered (year is default billing period)
-      val planChoice = PaidPlanChoice(tier, BillingPeriod.year)
+      val planChoice = PaidPlanChoice(tier, BillingPeriod.Year)
       val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
       val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
 

@@ -2,6 +2,7 @@ package services
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.i18n.Currency.GBP
+import com.gu.memsub.BillingPeriod.Month
 import com.gu.memsub.Subscription.{ProductRatePlanId, RatePlanId}
 import com.gu.memsub._
 import com.gu.memsub.services
@@ -31,7 +32,7 @@ class DestinationServiceTest extends Specification {
     def createRequestWithSession(newSessions: (String, String)*) = {
 
       val testMember = Contact("id", None, None, Some("fn"), "ln", Some("email"), new DateTime(), "contactId", "accountId", None, None, None, None, None)
-      val partnerCharge: PaidCharge[com.gu.memsub.Partner.type, Month] = PaidCharge[com.gu.memsub.Partner.type, Month](com.gu.memsub.Partner, Month(), PricingSummary(Map(GBP -> Price(0.1f, GBP))))
+      val partnerCharge: PaidCharge[com.gu.memsub.Partner.type, Month.type] = PaidCharge[com.gu.memsub.Partner.type, Month.type](com.gu.memsub.Partner, Month, PricingSummary(Map(GBP -> Price(0.1f, GBP))))
       val testSub: Subscription[SubscriptionPlan.Member] = new Subscription[SubscriptionPlan.Partner](
         id = com.gu.memsub.Subscription.Id(""),
         name = com.gu.memsub.Subscription.Name(""),
@@ -43,7 +44,7 @@ class DestinationServiceTest extends Specification {
         promoCode = None,
         casActivationDate = None,
         isCancelled = false,
-        plans = scalaz.NonEmptyList(new PaidSubscriptionPlan[Product.Membership, PaidCharge[com.gu.memsub.Partner.type, Month]](
+        plans = scalaz.NonEmptyList(new PaidSubscriptionPlan[Product.Membership, PaidCharge[com.gu.memsub.Partner.type, Month.type]](
           id = RatePlanId(""), productRatePlanId = ProductRatePlanId(""), name = "name", product = Product.Membership, description = "", features = Nil,
           charges = partnerCharge,
           chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = "")),
