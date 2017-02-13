@@ -5,7 +5,7 @@
 @import views.support.Asset
 @import views.support.MembershipCompat._
 @import views.support.Pricing._
-@import com.gu.memsub.{ Month, Year}
+@import com.gu.memsub.BillingPeriod.{ Month, Year}
 
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
@@ -22,7 +22,7 @@
             href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier, countryGroup=countryGroup, paypalTest = PayPalTestVariants.allocateVariant())}">
             <div class="elevated-button__text ">
                 Become a Supporter <br/>
-                <span class="elevated-button--pricing-placeholder">for @pricing.getPhrase(Month())</span>
+                <span class="elevated-button--pricing-placeholder">for @pricing.getPhrase(Month)</span>
             </div>
 
             <div class="elevated-button__icon">

@@ -8,7 +8,7 @@ import com.gu.memsub.images.{ResponsiveImage, ResponsiveImageGenerator, Responsi
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.Formatters._
 import com.gu.memsub.promo.{InvalidProductRatePlan, _}
-import com.gu.memsub.{Month, Year}
+import com.gu.memsub.BillingPeriod.{Month, Year}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import com.netaporter.uri.dsl._
 import play.api.libs.json._
@@ -141,7 +141,7 @@ object Promotions extends Controller {
     implicit val catalog = request.touchpointBackend.catalog
 
     val prpIds: Seq[ProductRatePlanId] = tier match {
-      case t: PaidTier => Seq(PaidPlanChoice(t, Year()).productRatePlanId, PaidPlanChoice(t, Month()).productRatePlanId)
+      case t: PaidTier => Seq(PaidPlanChoice(t, Year).productRatePlanId, PaidPlanChoice(t, Month).productRatePlanId)
       case t: FreeTier => Seq(FreePlanChoice(t).productRatePlanId)
     }
 

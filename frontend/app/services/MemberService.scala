@@ -324,7 +324,7 @@ class MemberService(identityService: IdentityService,
         nextPayment = nextPayment,
         renewalDate = Some(sub.termEndDate.plusDays(1)),
         initialFreePeriodOffer = subEither.fold(_ => false, _.plan.chargedThrough.isEmpty),
-        subEither.fold(_ => BillingPeriod.year, _.plan.charges.billingPeriod) // TODO should be optional for free plans?
+        subEither.fold(_ => BillingPeriod.Year, _.plan.charges.billingPeriod) // TODO should be optional for free plans?
       )
     }
 

@@ -170,8 +170,8 @@ object TierController extends Controller with ActivityTracking
       identityUserFieldsF.map(privateFields => {
 
         // is the promoCode valid for the page being rendered
-        val pageInfo = getPageInfo(privateFields, BillingPeriod.year)
-        val planChoice = PaidPlanChoice(target, BillingPeriod.year)
+        val pageInfo = getPageInfo(privateFields, BillingPeriod.Year)
+        val planChoice = PaidPlanChoice(target, BillingPeriod.Year)
         val validPromoCode = providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
         val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
         val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)

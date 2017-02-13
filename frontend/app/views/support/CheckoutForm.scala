@@ -29,6 +29,6 @@ object CheckoutForm extends LazyLogging {
     val currency =
       if (plans.currencies.contains(desiredCurrency)) desiredCurrency else GBP
 
-    CheckoutForm(country, currency, BillingPeriod.year)
+    CheckoutForm(country, currency, BillingPeriod.Year)
   }
 }

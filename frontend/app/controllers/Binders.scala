@@ -57,7 +57,7 @@ object Binders {
   )
 
   implicit object bindableBillingPeriod extends QueryParsing[BillingPeriod](
-    adjective => Seq(month, year).find(_.adjective == adjective).get, _.adjective, (key: String, _: Exception) => s"Cannot parse parameter $key as a Billing Period"
+    adjective => Seq(Month, Year).find(_.adjective == adjective).get, _.adjective, (key: String, _: Exception) => s"Cannot parse parameter $key as a Billing Period"
   )
 
   implicit object bindableBundleVariant extends QueryParsing[BundleVariant](
