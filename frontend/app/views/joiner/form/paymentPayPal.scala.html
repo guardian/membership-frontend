@@ -17,7 +17,7 @@
     paypalTestVariant: String
     )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
+@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true, margins=false) {
 
     <main class="page-content skin-checkout-b skin-checkout-paypal">
 
@@ -118,7 +118,7 @@
                         <fieldset class="fieldset js-payment-methods">
 
                             <div class="fieldset__heading">
-                                <h2 class="fieldset__headline payment-method-headline">Payment methods</h2>
+                                <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
                                 <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
                             </div>
 
