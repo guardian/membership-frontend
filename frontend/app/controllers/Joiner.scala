@@ -76,16 +76,8 @@ object Joiner extends Controller with ActivityTracking
       customSignInUrl = Some(signInUrl)
     )
 
-    (for {
-      contentURL <- contentRefererOpt if Uri.parse(contentURL).host.contains("www.theguardian.com")
-      access <- accessOpt
-    } yield {
-      Redirect(routes.MemberOnlyContent.membershipContent(contentURL, access.name))
-    }).getOrElse(
-      Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
-    ).withSession(
-      request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _))
-    )
+    Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
+      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
