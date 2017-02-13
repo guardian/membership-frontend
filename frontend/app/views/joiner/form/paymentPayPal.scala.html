@@ -9,23 +9,22 @@
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
 @import tracking.AppnexusPixel
 
-
+@import abtests.PayPalTestVariants
 @(plans: MonthYearPlans[PaidMember],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,
     trackingPromoCode: Option[PromoCode],
     promoCodeToDisplay: Option[PromoCode],
-    countryGroup: Option[CountryGroup]
+    countryGroup: Option[CountryGroup],
+    paypalTestVariant: String
     )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true) {
 
     <main class="page-content skin-checkout-b">
 
-        <!-- Segment Pixel - Jan17 - Become a supporter - DO NOT MODIFY -->
-            <img src="https://secure.adnxs.com/px?add=@{AppnexusPixel.checkoutPageids(plans.tier)}&t=2" width="1" height="1" />
-        <!-- End of Segment Pixel -->
+        @fragments.analytics.appNexusPixel("add", AppnexusPixel.checkoutPageids(plans.tier))
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
@@ -115,9 +114,11 @@
                                 <div class="form-field js-payment-type">
                                     @fragments.form.stripeCheckout(idUser)
                                 </div>
-                                <div class="form-field js-payment-type">
-                                    <div id="paypal-button-checkout"></div>
-                                </div>
+                                @if(paypalTestVariant == PayPalTestVariants.withPayPal){
+                                    <div class="form-field js-payment-type">
+                                        <div id="paypal-button-checkout"></div>
+                                    </div>
+                                }
                             </div>
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
                         </fieldset>
