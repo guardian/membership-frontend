@@ -1,0 +1,124 @@
+@import com.gu.i18n.Country
+@import views.support.CountryWithCurrency
+@(countriesWithCurrencies: List[CountryWithCurrency],
+  formType: String,
+  address1: Option[String],
+  address2: Option[String],
+  town: Option[String],
+  postcode: Option[String],
+  county: Option[String],
+  addressRequired: Boolean = true,
+  heading: String = "",
+  note: String = "",
+  showHeading: Boolean = true)
+
+@countyOrStateSelect(countyOrStateList: List[String], countyOrStateLabel: String) = {
+    <div class="form-field u-h">
+        <label class="label" for="@countyOrStateLabel-@(formType)">@countyOrStateLabel.capitalize</label>
+        <select name="@(formType).countyOrState"
+                id="@countyOrStateLabel-@(formType)"
+                class="select js-@countyOrStateLabel"
+                required
+                aria-required="true">
+        @for(countyOrState <- countyOrStateList) {
+            <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
+        }
+        </select>
+        @fragments.form.errorMessage(s"Please enter your ${countyOrStateLabel.capitalize}")
+    </div>
+}
+
+<fieldset class="fieldset js-@(formType)-fieldset">
+
+    @if(showHeading) {
+    <div class="fieldset__heading">
+        <h2 class="fieldset__headline">@heading</h2>
+        <div class="fieldset__note">@note</div>
+    </div>
+    }
+
+    <div class="fieldset__fields">
+
+        <div class="form-field">
+            <label class="label" for="country-@(formType)">Country</label>
+            <select name="@(formType).country"
+                id="country-@(formType)"
+                class="select js-country"
+                required
+                aria-required="true">
+                <option value="">--</option>
+                @for(cc <- countriesWithCurrencies) {
+                    <option value="@cc.country.alpha2"
+                            data-currency="@cc.currency.toString">@cc.country.name</option>
+                }
+            </select>
+            @fragments.form.errorMessage("Please enter your Country")
+        </div>
+
+        <div class="form-field">
+            <label class="label@if(!addressRequired){ optional-marker}"
+                   for="address-line-one-@(formType)">Address line 1</label>
+            <input type="text"
+                   name="@(formType).lineOne"
+                   value="@address1"
+                   id="address-line-one-@(formType)"
+                   @* Salesforce accepts up to 255 chars but this field gets concatenated with address line 2 *@
+                   maxlength="126"
+                   class="input-text js-address-line-one"
+                   @if(addressRequired){required aria-required="true"} />
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} first line")
+        </div>
+
+        <div class="form-field">
+            <label class="label optional-marker" for="address-line-two-@(formType)">Address line 2</label>
+            <input type="text"
+                   name="@(formType).lineTwo"
+                   value="@address2"
+                   id="address-line-two-@(formType)"
+                   @* Salesforce accepts up to 255 chars but this field gets concatenated with address line 1 *@
+                   maxlength="126"
+                   class="input-text js-address-line-two"/>
+        </div>
+
+        <div class="form-field">
+            <label class="label js-town-label @if(!addressRequired){optional-marker}" for="town-@(formType)">Town</label>
+            <input type="text"
+                   name="@(formType).town"
+                   value="@town"
+                   id="town-@(formType)"
+                   maxlength="40"
+                   class="input-text js-town"
+                   @if(addressRequired){required aria-required="true"} />
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} town")
+        </div>
+
+        @countyOrStateSelect(Country.US.states.toList, "state")
+        @countyOrStateSelect(Country.Canada.states.toList, "province")
+
+        <div class="js-county-container">
+            <div class="form-field js-county-section">
+                <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
+                <input type="text"
+                       name="@(formType).countyOrState"
+                       value="@county"
+                       id="county-or-state-@(formType)"
+                       @* This length is limited by Zuora. Salesforce accepts up to 40 chars *@
+                       maxlength="32"
+                       class="input-text js-county-or-state"/>
+            </div>
+        </div>
+
+        <div class="form-field form-field--no-margin">
+            <label class="label optional-marker js-postcode-label" for="postCode-@(formType)">Post code</label>
+            <input type="text"
+                   name="@(formType).postCode"
+                   value="@postcode"
+                   id="postCode-@(formType)"
+                   maxlength="10"
+                   class="input-text js-postcode form-field__postcode"
+                   required
+                   aria-required="true"/>
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} post code")
+        </div>
+    </div>
+</fieldset>

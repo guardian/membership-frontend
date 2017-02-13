@@ -7,12 +7,8 @@
     .checkout-header, .form-content {
         border-bottom: none;
         float: none;
-        margin-right: $gs-gutter/2;
-        margin-left: $gs-gutter/2;
-        padding-top: 0;
-        padding-right: 0;
-        padding-left: 0;
         width: auto;
+        margin: 0 10px;
 
         @include mq($from: mobileLandscape) {
             max-width: 440px;
@@ -25,8 +21,21 @@
         }
     }
 
+    .checkout-header {
+        padding-bottom: 36px;
+        padding-top: 10px;
+    }
+
+    .checkout-headline {
+        @include fs-headline(7);
+    }
+
     .form-content {
         counter-reset: panel;
+    }
+
+    .app-nexus-pixel {
+        display: block;
     }
 
     /* ==========================================================================
@@ -313,6 +322,10 @@
         @include mq(tablet) {
             padding-right: $gs-gutter / 2;
         }
+    }
+
+    .ts-and-cs {
+        @include fs-textSans(2);
     }
 
     /* ==========================================================================

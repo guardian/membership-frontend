@@ -25,7 +25,7 @@
 
         <!-- FORM TITLE -->
         <section class="checkout-header">
-            <h1 class="checkout-headline">@plans.tier.cta</h1>
+            <h1 class="checkout-headline">@fragments.form.formCta(plans.tier)</h1>
         </section>
 
         <!-- CHECKOUT FORM -->
@@ -65,10 +65,10 @@
                         </div>
 
                         <!-- Address -->
-                        @fragments.form.addressDetail(
+                        @fragments.form.addressDetailPayPal(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
-                            note = "We need your address to send you a welcome pack.",
+                            note = "We need your address to send you a welcome pack",
                             formType = "deliveryAddress",
                             addressRequired = true,
                             address1 = idUser.privateFields.address1,
@@ -79,7 +79,7 @@
                         )
                         <!-- Billing Address -->
                         @fragments.form.billingAddressPayPal("Billing address")
-                        @fragments.form.addressDetail(
+                        @fragments.form.addressDetailPayPal(
                             countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
                             addressRequired = true,
@@ -87,7 +87,8 @@
                             address2 = idUser.privateFields.billingAddress2,
                             town = idUser.privateFields.billingAddress3,
                             postcode = idUser.privateFields.billingPostcode,
-                            county = idUser.privateFields.billingAddress4
+                            county = idUser.privateFields.billingAddress4,
+                            showHeading = false
                         )
 
                         @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
