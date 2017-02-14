@@ -1,0 +1,368 @@
+.skin-checkout-paypal {
+
+    /* ==========================================================================
+       Form Header & Content
+       ========================================================================== */
+
+    .checkout-header, .form-content {
+        border-bottom: none;
+        float: none;
+        width: auto;
+        margin: 0 10px;
+
+        @include mq($from: mobileLandscape) {
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @include mq($from: tablet) {
+            max-width: rem(gs-span(9));
+        }
+    }
+
+    .checkout-header {
+        padding-bottom: 36px;
+        padding-top: 10px;
+    }
+
+    .checkout-headline {
+        @include fs-headline(7);
+    }
+
+    .form-content {
+        counter-reset: panel;
+    }
+
+    .app-nexus-pixel {
+        display: block;
+    }
+
+    /* ==========================================================================
+       Forms: Panels
+       ========================================================================== */
+
+    .form-panel {
+        display: table;
+        background-color: guss-colour(comment-support-2);
+        border-top: 1px solid guss-colour(news-main-2);
+        width: 100%;
+    }
+
+    .form-panel__heading {
+        padding: ($gs-baseline / 3) ($gs-gutter / 2) ($gs-baseline * 2);
+
+        @include mq(tablet) {
+            display: table-cell;
+            min-width: gs-span(4) + $gs-gutter;
+        }
+    }
+
+    .form-panel__headline::before {
+        counter-increment: panel;
+        content: counter(panel) " ";
+        color: guss-colour(news-main-2);
+        padding-right: 5px;
+    }
+
+    .form-panel__headline {
+        display: inline-block;
+    }
+
+    .form-panel__headline, .benefits__headline {
+        @include fs-headline(3);
+        font-weight: 900;
+        font-family: $f-serif-headline;
+    }
+
+    .form-panel__content {
+        vertical-align: top;
+        padding: 0 ($gs-gutter / 2) 0;
+        margin-bottom: $gs-baseline * 2;
+
+        @include mq(tablet) {
+            display: table-cell;
+            min-width: gs-span(5);
+            padding: 0;
+            padding-top: $gs-baseline / 3;
+        }
+    }
+
+    .form-section__name-detail {
+        margin-top: 0;
+    }
+
+    .form-panel--no-margin {
+        margin-bottom: 0;
+    }
+
+    .form-panel__edit {
+        @include fs-textSans(1);
+        @include text-link();
+        float: right;
+        cursor: pointer;
+    }
+
+    /* ==========================================================================
+       Forms: Fieldset
+       ========================================================================== */
+
+    .fieldset {
+        border: none;
+        display: block;
+        background-color: inherit;
+    }
+
+    .fieldset__heading {
+        border-top: 1px dotted guss-colour(neutral-3);
+        padding: ($gs-baseline / 4) 0 0;
+        width: 100%;
+    }
+
+    .fieldset__heading--no-border {
+        @include mq(tablet) {
+            padding-top: 0;
+            border: none;            
+        }
+    }
+
+    .fieldset__heading, .fieldset__fields {
+        display: block;
+        margin: 0 0 ($gs-baseline * 2);
+
+        @include mq(tablet) {
+            display: block;
+        }
+    }
+
+    .fieldset__fields {
+        padding: 0;
+        margin-bottom: $gs-baseline * 2;
+        width: 100%;
+
+        @include mq(tablet) {
+            padding-right: $gs-gutter / 2;
+        }
+    }
+
+    .fieldset__headline {
+        @include fs-bodyHeading(2);
+    }
+
+    .fieldset__headline--payment {
+        display: inline-block;
+    }
+
+    /* ==========================================================================
+       Forms: Benefits
+       ========================================================================== */
+
+    .benefits {
+        border: 0;
+        padding: 0;
+        margin: 0;
+        display: table;
+        border-top: 1px solid guss-colour(news-main-2);
+    }
+
+    .benefits__heading {
+        padding: ($gs-baseline / 3) 0 ($gs-baseline * 2);
+
+        @include mq(tablet) {
+            display: table-cell;
+            width: gs-span(4) + $gs-gutter;
+        }
+    }
+
+    .benefits__headline {
+        margin: 0;
+    }
+
+    .benefits__list {
+        vertical-align: top;
+        padding: 0;
+        padding-bottom: $gs-baseline * 2;
+
+        @include mq(tablet) {
+            display: table-cell;
+            width: gs-span(5);
+            padding-top: $gs-baseline / 3;
+        }
+    }
+
+    .benefits__list ul {
+        margin-bottom: 0;
+    }
+
+    .benefits__list li {
+        fill: guss-colour(news-main-2);
+        list-style-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><style>.st0{fill:#54C1DA;}</style><circle class="st0" cx="6" cy="6" r="6"/></svg>');
+    }
+
+    /* ==========================================================================
+       Forms: Fields
+       ========================================================================== */
+
+    .label {
+        color: inherit;
+    }
+
+    .input-text {
+        border: none;
+    }
+
+    .pseudo-radio {
+        border: none;
+        padding: 0;
+        padding-left: 22px;
+    }
+
+    .pseudo-radio::before {
+        background-color: #fff;
+        top: 2px;
+        margin-left: -12px;
+    }
+
+    .pseudo-radio__header {
+        @include fs-bodyHeading(2);
+        margin-bottom: 0;
+    }
+
+    input[type=radio]:checked ~ .pseudo-radio:before  {
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="none"/><circle cx="8" cy="8" r="4" fill="#333"/></svg>');
+        background-color: #fff;
+    }
+
+    .select {
+        border-radius: 650px;
+        padding: 8px 8px 7px;
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7 14.13"><style>.st0{fill:#333333;}</style><path class="st0" d="M.55 3.84L0 3.29 3.28 0h.45L7 3.29l-.55.55-2.31-1.77v3.71H2.86V2.07L.55 3.84zM7 10.85l-3.28 3.28h-.44L0 10.85l.55-.58 2.31 1.77V8.35h1.28v3.69l2.31-1.77.55.58z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 13px top 10px;
+        background-size: 7px;
+        border: none;
+        appearance: none;
+        outline: none;
+    }
+
+    .input-text:focus, .select:focus {
+        box-shadow: inset 0 0 0 3px rgba(guss-colour(comment-support-1), 0.3);
+    }
+
+    // Fix for IE10+, hides the dropdown arrow.
+    .select::-ms-expand {
+        display: none;
+    }
+
+    .billing-choice .pseudo-radio:before {
+        top: 2px;
+    }
+
+    .period-choice .pseudo-radio__note {
+        @include fs-data(3);
+    }
+
+    /* ==========================================================================
+       Forms: Buttons
+       ========================================================================== */
+
+    .form-panel__continue {
+        background-color: guss-colour(guardian-brand);
+        border-color: guss-colour(guardian-brand);
+        border-radius: 650px;
+        background: svg-url('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="10.41px" viewBox="0 0 20 10.41" enable-background="new 0 0 20 10.41" xml:space="preserve"><polygon fill="#fff" points="19.11,0 10.001,7.671 0.89,0 0,0.866 9.544,10.41 10.457,10.41 20,0.866 "/></svg>');
+        background-repeat: no-repeat;
+        background-position: right;
+        background-position-x: 85px;
+        background-position-y: 13px;
+        background-size: 18%;
+        background-color: guss-colour(guardian-brand);
+        padding-right: 40px;
+
+        @include mq(tablet) {
+            margin-bottom: $gs-baseline * 2;
+        }
+    }
+
+    .form-panel__continue:after, .choose-payment-method:after {
+        display: none;
+    }
+
+    .choose-payment-method {
+        height: gs-height(1);
+        background-color: guss-colour(guardian-brand);
+        width: 227px;
+        border-color: guss-colour(guardian-brand);
+        text-align: center;
+    }
+
+    .choose-payment-method, .form-panel__continue {
+        &:hover {
+            background-color: darken(guss-colour(guardian-brand), 10);
+        }
+    }
+
+    /* ==========================================================================
+       Forms: Notes
+       ========================================================================== */
+
+    .text-note {
+        margin-left: $gs-gutter;
+    }
+
+    .text-note, .fieldset-note, .security-note, .optional-marker:after, .pseudo-radio__note {
+        color: rgba(guss-colour(neutral-1), 0.75);
+    }
+
+    .pseudo-radio__note {
+        @include fs-bodyCopy(2);
+        margin-bottom: $gs-baseline;
+    }
+
+    .security-note {
+        @include fs-data(2);
+        float: right;
+
+        @include mq(tablet) {
+            padding-right: $gs-gutter / 2;
+        }
+    }
+
+    .ts-and-cs {
+        @include fs-textSans(2);
+    }
+
+    /* ==========================================================================
+       Forms: Errors
+       ========================================================================== */
+
+    .flash-message--error {
+        padding: ($gs-baseline / 2) ($gs-gutter / 4);
+        color: guss-colour(live-main-2);
+        border-color: guss-colour(live-main-2);
+        margin: ($gs-baseline * 2) 0;
+        font-size: 13px;
+        line-height: 17px;
+        background-color: #fae9e7;
+
+        @include mq(tablet) {
+            margin-right: $gs-gutter / 2;
+        }
+    }
+
+    .form-field--error .input-text, .form-field--error .select {
+        border: 2px solid guss-colour(live-main-2);
+    }
+
+    .form-field__error-message {
+        margin-top: $gs-baseline / 4;
+        color: guss-colour(live-main-2);
+    }
+
+    .qa-form-error {
+        @include mq(tablet) {
+            margin-top: 0;
+        }
+    }
+
+}
