@@ -62,7 +62,7 @@
                 var yearProRatedDiscount = this.discount * percentageOfYear;
                 return formattedDiscountedPrice(checkoutForm.currency, this.amount, yearProRatedDiscount);
             },
-            noun: '@year.noun',
+            noun: '@Year.noun',
             discount: 0,
             discountDurationMonths: 0
         },
@@ -82,7 +82,7 @@
             generateDisplayAmount: function() {
                 return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
             },
-            noun: '@month.noun',
+            noun: '@Month.noun',
             discount: 0,
             discountDurationMonths: 0
         },
@@ -102,7 +102,7 @@
                 return annual.generateDisplayAmount() + suffix;
             },
             inputId: '@plans.year.id.get',
-            inputValue: '@year.adjective',
+            inputValue: '@Year.adjective',
             promoted: false
         },
         {
@@ -120,7 +120,7 @@
                 return checkoutForm.billingPeriods.monthly.generateDisplayAmount() + '/month';
             },
             inputId: '@plans.month.id.get',
-            inputValue: '@month.adjective',
+            inputValue: '@Month.adjective',
             promoted: false
         }
     ];
