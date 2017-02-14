@@ -155,8 +155,6 @@ object Joiner extends Controller with ActivityTracking
           countryCurrencyWhitelist,
           identityUser,
           pageInfo,
-          trackingPromoCode = validTrackingPromoCode,
-          promoCodeToDisplay = validDisplayablePromoCode,
           Some(countryGroup),
           variant)
         case None => views.html.joiner.form.payment(
