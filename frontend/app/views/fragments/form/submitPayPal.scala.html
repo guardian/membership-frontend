@@ -1,0 +1,66 @@
+@import views.support.Pricing._
+@import com.gu.memsub.Price
+@import com.gu.memsub.BillingPeriod._
+
+@import com.gu.memsub.BillingPeriod
+@import com.gu.salesforce.Tier
+
+@import com.gu.salesforce.FreeTier
+@import com.gu.salesforce.PaidTier
+@import views.support.TierPlans
+@import views.support.FreePlan
+@import views.support.PaidPlans
+@import com.gu.i18n.CountryGroup
+@(plans: TierPlans,
+  membershipTermsAndConditions: Boolean = true,
+  isSlim: Boolean = false,
+  countryGroup: Option[CountryGroup] = None,
+  dataCategory: Option[String] = None,
+  dataLabel: Option[String] = None)
+
+@import configuration.Links
+@import configuration.CopyConfig.usLegalTerms
+
+@paidButton(price: Price, period: BillingPeriod) = {
+    <span class="is-hidden" data-currency="@price.currency" data-billing-period="@period.adjective">Pay @price.pretty</span>
+}
+
+<fieldset class="fieldset fieldset--simple">
+    <div class="fieldset__heading"></div>
+    <div class="fieldset__fields fieldset__fields--no-padding">
+
+        @if(membershipTermsAndConditions){
+            <p class="ts-and-cs">By joining Guardian Members, you are agreeing to our
+                <a href="@Links.membershipTerms(countryGroup)" class="text-link" target="_blank">Terms and Conditions</a> and
+                <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
+            </p>
+        }
+        <div class="actions">
+            <noscript>
+                <a href="http://www.enable-javascript.com/" target="_blank" class="action is-disabled">Enable javascript to proceed</a>.
+            </noscript>
+            <button type="button" class="action js-submit-input u-hidden-non-js is-hidden"
+                @for(label <- dataLabel; category <- dataCategory) {
+                    data-metric-trigger="click"
+                    data-metric-category="@category"
+                    data-metric-action="cta click"
+                    data-metric-label="@label"
+                 }>
+
+                @{plans match {
+                    case FreePlan(_) => Html("Join now")
+                    case PaidPlans(p) => <span class='js-submit-input-cta'></span>
+                }}
+            </button>
+            <div class="loader js-loader"></div>
+        </div>
+    </div>
+</fieldset>
+
+@countryGroup.map{ cg =>
+    @if(Seq("us","um","vi").contains(cg.id.toLowerCase)) {
+        <div class="us-legal">@usLegalTerms</div>
+    } else {
+        <div class="us-legal is-hidden">@usLegalTerms</div>
+    }
+}
