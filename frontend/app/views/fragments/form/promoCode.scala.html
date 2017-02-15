@@ -1,9 +1,8 @@
-@import com.gu.memsub.promo.PromoCode
-
-@(trackingPromoCode: Option[PromoCode], promoCodeToDisplay: Option[PromoCode])
+@import com.gu.memsub.promo.ValidPromotion
+@(validPromotion: Option[ValidPromotion[_]])
 
 <fieldset class="fieldset">
-    @fragments.form.trackingPromoCode(trackingPromoCode)
+    @fragments.form.trackingPromoCode(validPromotion.flatMap(_.trackingCode))
 
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">Do you have a promo code?</h2>
@@ -12,7 +11,7 @@
     <div class="fieldset__fields">
         <div class="form-field">
             <div class="promo-code">
-              <input id="promo-code" name="promoCode" value="@promoCodeToDisplay.map(_.get).getOrElse("")" type="text" class="js-promocode-value input-text js-input promo-code__field"/>
+              <input id="promo-code" name="promoCode" value="@validPromotion.flatMap(_.displayableCode).map(_.get).mkString" type="text" class="js-promocode-value input-text js-input promo-code__field"/>
               <button type="button" class="js-promo-code-apply promo-code__apply action js-promo-code-validate">Apply</button>
             </div>
             <div class="loader js-promo-loader">Validating</div>
