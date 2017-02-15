@@ -8,13 +8,12 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
 import com.gu.memsub.BillingPeriod
-import com.gu.memsub.promo.{NewUsers, PromoCode}
+import com.gu.memsub.promo._
 import com.gu.memsub.util.Timing
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
-import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
@@ -140,11 +139,7 @@ object Joiner extends Controller with ActivityTracking
 
       // is the providedPromoCode valid for the page being rendered (year is default billing period)
       val planChoice = PaidPlanChoice(tier, BillingPeriod.Year)
-      val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
-      val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
-
-      val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
-      val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
+      val validPromo = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
@@ -162,8 +157,7 @@ object Joiner extends Controller with ActivityTracking
           countryCurrencyWhitelist,
           identityUser,
           pageInfo,
-          trackingPromoCode = validTrackingPromoCode,
-          promoCodeToDisplay = validDisplayablePromoCode,
+          validPromo,
           Some(countryGroup),
           resolution)
       })
@@ -179,16 +173,14 @@ object Joiner extends Controller with ActivityTracking
     } yield {
 
       val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
-      val providedPromoCode = codeFromSession // only take from the session
-      val validPromoCode = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
-      val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
-      val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
+      val validPromo = codeFromSession.flatMap(code => promoService.validate[NewUsers](code, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
+
 
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
         identityUser,
         pageInfo,
-        validTrackingPromoCode))
+        validPromo))
     }
   }
 
