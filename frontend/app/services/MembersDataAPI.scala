@@ -35,7 +35,7 @@ object MembersDataAPI {
   )(Attributes.apply _)
 
   case class Attributes(tier: Tier, membershipNumber: Option[String])
-  case class Behaviour(userId: String, activity: String, lastObserved: String)
+  case class Behaviour(userId: String, activity: String, lastObserved: String, note: String)
 
   object Attributes {
     def fromMember(member: Member) = Attributes(member.subscription.plan.tier, member.contact.regNumber)
@@ -51,7 +51,8 @@ object MembersDataAPI {
   implicit val behaviourReads: Reads[Behaviour] = (
     (JsPath \ "userId").read[String] and
     (JsPath \ "activity").read[String] and
-    (JsPath \ "lastObserved").read[String]
+    (JsPath \ "lastObserved").read[String] and
+    (JsPath \ "note").read[String]
   )(Behaviour.apply _)
 
   case class AttributeHelper(cookies: Seq[Option[Cookie]]) extends WebServiceHelper[Attributes, ApiError] {
@@ -90,10 +91,10 @@ object MembersDataAPI {
       case _ => Logger.error(s"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }
 
-    def addBehaviour(request: AuthRequest[AnyContent], activity: String) = {
+    def upsertBehaviour(request: AuthRequest[_], activity: String, note: String) = {
       request.user.credentials match {
         case cookies: AccessCredentials.Cookies =>
-          setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity).onComplete {
+          setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity, note).onComplete {
             case Success(result) => Logger.info(s"Recorded $activity for ${request.user.id}")
             case Failure(err) => Logger.error(s"Failed to record behaviour event ($activity) via membership-data-api for user ${request.user.id}", err)
           }
@@ -112,8 +113,8 @@ object MembersDataAPI {
 
     private def getAttributes(cookies: Seq[Option[Cookie]]) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
 
-    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String) = {
-      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}"}"""
+    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String, note: String) = {
+      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}","note":"${note.toLowerCase}"}"""
       val json = Json.parse(record)
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/capture", json)
     }
