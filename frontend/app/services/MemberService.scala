@@ -392,6 +392,7 @@ class MemberService(identityService: IdentityService,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
     val planId = joinData.planChoice.productRatePlanId
     val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
+    val today = DateTime.now.toLocalDate
 
     (for {
       zuoraFeatures <- zuoraService.getFeatures
@@ -404,7 +405,9 @@ class MemberService(identityService: IdentityService,
         email = email,
         promoCode = joinData.trackingPromoCode,
         ipAddress = ipAddress.map(_.getHostAddress),
-        ipCountry = ipCountry
+        ipCountry = ipCountry,
+        contractAcceptance = today,
+        contractEffective = today
       ))
     } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
@@ -430,14 +433,16 @@ class MemberService(identityService: IdentityService,
       val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
-
+      val today = DateTime.now.toLocalDate
       Subscribe(account = createAccount(contactId, currency, joinData.payment),
         paymentMethod = createPaymentMethod(contactId, payPalEmail, joinData.payment, stripeCustomer),
         address = joinData.zuoraAccountAddress,
         email = email,
         ratePlans = NonEmptyList(plan),
         name = nameData,
-        ipCountry = ipCountry)
+        ipCountry = ipCountry,
+        contractAcceptance = today,
+        contractEffective = today)
     }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
