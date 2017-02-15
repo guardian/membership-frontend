@@ -335,8 +335,12 @@ class MemberService(identityService: IdentityService,
       case plan: PaidSubscriptionPlan[_, _] => plan.features
       case _ => List.empty
     }
-    val startDate = subscription.startDate.toDateTimeAtStartOfDay(DateTimeZone.forID("America/Los_Angeles"))
+    val startDate = subscription.termStartDate.toDateTimeAtStartOfDay(DateTimeZone.forID("America/Los_Angeles"))
+
     zuoraService.getUsages(subscription.name, unitOfMeasure, startDate).map { usages =>
+      logger.info(s"getUsageCountWithinTerm: User ${subscription.accountId} has used ${usages.size} tickets since $startDate " +
+        s"(sub-start-date=${subscription.startDate} term-start-date=${subscription.termStartDate})")
+
       val hasComplimentaryTickets = features.map(_.code).contains(FreeEventTickets.zuoraCode)
       if (!hasComplimentaryTickets) None else Some(usages.size)
     }
