@@ -120,7 +120,8 @@ object MembersDataAPI {
     }
 
     private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String) = {
-      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}"}"""
+      val removeNote = "remove"
+      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}","note":"${removeNote}"}"""
       val json = Json.parse(record)
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/remove", json)
     }
