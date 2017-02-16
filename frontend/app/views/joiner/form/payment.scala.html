@@ -39,10 +39,10 @@
                 <!-- PARTNER/PATRON BENEFITS LIST -->
                 @if(plans.tier != Supporter()){
                     <!-- List of benefits -->
-                    @fragments.form.benefitsFieldsetPayPal(plans.tier.benefits)
+                    @fragments.form.benefitsPanel(plans.tier.benefits)
 
                     <!-- ACCORDION SECTION - BENEFITS CHOICE -->
-                    @fragments.form.featureChoicePanelPayPal(plans.tier)
+                    @fragments.form.featureChoicePanel(plans.tier)
                 }
 
                 <!-- ACCORDION SECTION - NAME AND ADDRESS -->
@@ -59,14 +59,14 @@
                     <div class="form-panel__content js-form-panel-name-address @if(plans.tier == Partner()){is-hidden}">
                         <!-- Name -->
                         <div class="form-section__name-detail">
-                            @fragments.form.nameDetailPayPal(
+                            @fragments.form.nameDetailFields(
                                 idUser.privateFields.firstName,
                                 idUser.privateFields.secondName
                             )
                         </div>
 
                         <!-- Address -->
-                        @fragments.form.addressDetailPayPal(
+                        @fragments.form.addressDetailFields(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
                             note = "We need your address to send you a welcome pack",
@@ -79,8 +79,8 @@
                             county = idUser.privateFields.address4
                         )
                         <!-- Billing Address -->
-                        @fragments.form.billingAddressPayPal("Billing address")
-                        @fragments.form.addressDetailPayPal(
+                        @fragments.form.billingAddressFields("Billing address")
+                        @fragments.form.addressDetailFields(
                             countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
                             addressRequired = true,
@@ -115,7 +115,7 @@
                     <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
 
                         <!-- Payment Options -->
-                        @fragments.form.paymentOptionsPayPal(plans)
+                        @fragments.form.paymentOptionsFields(plans)
                         <fieldset class="fieldset js-payment-methods">
 
                             <div class="fieldset__heading">
@@ -145,7 +145,7 @@
                     </div>
                 </section>
 
-                @fragments.form.termsPayPal(countryGroup)
+                @fragments.form.terms(countryGroup)
             </section>
         </form>
     </main>
