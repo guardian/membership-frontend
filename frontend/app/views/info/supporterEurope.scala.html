@@ -17,7 +17,7 @@
 @import views.support.Asset
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIDs.get(Supporter()))
+    @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIds.get(Supporter()))
 
     @fragments.page.heroBanner(images, imageModifierClass = "hero-banner__image--top hero-banner__image--eu") {
         Become a Guardian&nbsp;Supporter
