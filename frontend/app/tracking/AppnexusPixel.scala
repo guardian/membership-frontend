@@ -8,9 +8,29 @@ import com.gu.salesforce.Tier.Friend
 
 object AppnexusPixel {
 
-  val thankYouPageids:Map[Tier, Int] = Map(Partner() -> 793015, Patron() -> 793021, Supporter() ->793016, Friend() -> 793017)
+  def getThankYouPageId(tier: Tier) : Option[Int] = {
+    tier match {
+      case Partner() => Some(793015)
+      case Patron() => Some(793021)
+      case Supporter() => Some(793016)
+      case Friend() => Some(793017)
+      case _ => None
+    }
+  }
 
-  val landingPageids:Map[Tier, Int] = Map(Supporter() -> 7269289)
+  def getLandingPageID(tier: Tier) : Option[Int] = {
+    tier match {
+      case Supporter() => Some(7269289)
+      case _ => None
+    }
+  }
 
-  val checkoutPageids:Map[Tier, Int] = Map(Partner() -> 7269292, Patron() -> 7269296, Supporter() -> 7269291)
+  def getCheckoutPageID(tier: Tier) : Option[Int] = {
+    tier match {
+      case Partner() => Some(7269292)
+      case Patron() => Some(7269296)
+      case Supporter() => Some(7269291)
+      case _ => None
+    }
+  }
 }

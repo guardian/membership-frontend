@@ -14,7 +14,7 @@
 
     <section class="elevated-supporter">
 
-        @fragments.analytics.appNexusPixel("add",AppnexusPixel.landingPageids(Supporter()))
+        @AppnexusPixel.getLandingPageID(Supporter()).map({x => fragments.analytics.appNexusPixel("add",x )})
 
         @* ===== First part ===== *@
         @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, Html("Become a<br>Guardian Supporter"), Html("Be part of the Guardian's future, by helping to secure it")){
