@@ -1,27 +1,18 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.promo.{NewUsers, ValidPromotion}
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.salesforce.Tier.Supporter
+@import tracking.AppnexusPixel
 @import views.html.helper._
 @import views.support.DisplayText._
-@import views.support.PageInfo
-@import views.support.CountryWithCurrency
-@import views.support.IdentityUser
-
-@import com.gu.memsub.Current
-@import com.gu.salesforce.PaidTier
-@import com.gu.salesforce.Tier.Supporter
-@import com.gu.memsub.promo.PromoCode
-@import views.support.PaidPlans
 @import views.support.MembershipCompat._
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.i18n.CountryGroup
-@import tracking.AppnexusPixel
-
-
+@import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
 @(plans: MonthYearPlans[PaidMember],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,
-    trackingPromoCode: Option[PromoCode],
-    promoCodeToDisplay: Option[PromoCode],
+    validPromo: Option[ValidPromotion[NewUsers]],
     countryGroup: Option[CountryGroup],
     touchpointBackendResolution: services.TouchpointBackend.Resolution
     )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
@@ -88,7 +79,7 @@
                     @if(plans.tier != Supporter()) {
                         <div class="form-group form-section__promotion">
                             <h2 class="form-group__title">Promotion</h2>
-                            @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
+                            @fragments.form.promoCode(validPromo)
                         </div>
                     }
 
