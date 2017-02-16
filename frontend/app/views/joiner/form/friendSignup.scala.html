@@ -5,12 +5,10 @@
 @import views.support.DisplayText._
 @import views.support.{CountryWithCurrency, FreePlan, IdentityUser, PageInfo}
 
-@import com.gu.memsub.promo.ValidPromotion
-@import com.gu.memsub.promo.NewUsers
 @(friendPlan: CatalogPlan.Friend,
   idUser: IdentityUser,
   pageInfo: PageInfo,
-  validPromo: Option[ValidPromotion[NewUsers]]
+  trackingPromoCode: Option[PromoCode]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Become a Friend", pageInfo) {
@@ -59,7 +57,7 @@
                             county = idUser.privateFields.address4
                         )
                         @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
-                        @fragments.form.trackingPromoCode(validPromo.flatMap(_.trackingCode))
+                        @fragments.form.trackingPromoCode(trackingPromoCode)
 
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()

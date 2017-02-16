@@ -1,15 +1,17 @@
 package controllers
 
-import _root_.services.api.MemberService._
+import services.PromoSessionService.codeFromSession
 import actions.BackendProvider
+import com.gu.memsub.promo.{PromoCode, Upgrades}
+import _root_.services.api.MemberService._
 import com.gu.i18n.CountryGroup
+import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
-import com.gu.memsub.BillingPeriod
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.promo.Formatters.PromotionFormatters._
-import com.gu.memsub.promo.{PromoCode, Upgrades}
 import com.gu.memsub.subsv2.{Catalog, MonthYearPlans}
+import services.{IdentityApi, IdentityService}
+import com.gu.memsub.{BillingPeriod, _}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -22,21 +24,18 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
-import services.PromoSessionService.codeFromSession
-import services.{IdentityApi, IdentityService}
 import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.{CampaignCode, TierChangeCookies}
-import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
-
 import scala.concurrent.Future
 import scala.language.implicitConversions
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
+import views.support.MembershipCompat._
 
 object TierController extends Controller with ActivityTracking
                                          with LazyLogging
@@ -173,8 +172,10 @@ object TierController extends Controller with ActivityTracking
         // is the promoCode valid for the page being rendered
         val pageInfo = getPageInfo(privateFields, BillingPeriod.Year)
         val planChoice = PaidPlanChoice(target, BillingPeriod.Year)
-        val validPromo =
-          providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
+        val validPromoCode = providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
+        val validPromotion = validPromoCode.flatMap(validPromo => promoService.findPromotion(validPromo.code))
+        val validTrackingPromoCode = validPromotion.filter(_.asTracking.isDefined).flatMap(p => providedPromoCode)
+        val validDisplayablePromoCode = validPromotion.filterNot(_.asTracking.isDefined).flatMap(p => providedPromoCode)
 
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
@@ -182,7 +183,8 @@ object TierController extends Controller with ActivityTracking
           countriesWithCurrency,
           privateFields,
           pageInfo,
-          validPromo
+          validTrackingPromoCode,
+          validDisplayablePromoCode
         )(getToken, request))
       })
     }, { paidSubscriber =>

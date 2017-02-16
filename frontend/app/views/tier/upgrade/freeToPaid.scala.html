@@ -1,18 +1,24 @@
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.{MonthYearPlans, _}
 @import play.api.mvc.RequestHeader
 @import play.filters.csrf
 @import views.support.DisplayText._
+@import views.support.PageInfo
+@import views.support.CountryWithCurrency
+@import com.gu.memsub.{Status, Current}
+@import com.gu.memsub.promo.PromoCode
+@import com.gu.memsub.subsv2._
+@import views.support.PaidPlans
+@import com.gu.memsub.Friend
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.MonthYearPlans
 @import views.support.MembershipCompat._
-@import views.support.{CountryWithCurrency, PageInfo, PaidPlans}
-@import com.gu.memsub.promo.ValidPromotion
-@import com.gu.memsub.promo.Upgrades
+
 @(currentPlan: CatalogPlan.Member,
   targetPlans: MonthYearPlans[PaidMember],
   countriesWithCurrency: List[CountryWithCurrency],
   userFields: com.gu.identity.play.PrivateFields,
   pageInfo: PageInfo,
-    validPromo: Option[ValidPromotion[Upgrades]]
+  trackingPromoCode: Option[PromoCode],
+  promoCodeToDisplay: Option[PromoCode]
 )(implicit token: csrf.CSRF.Token, request: RequestHeader)
 
 @import views.html.helper._
@@ -65,7 +71,7 @@
 
                   <div class="form-group">
                       <h2 class="form-group__title">Promotion</h2>
-                      @fragments.form.promoCode(validPromo)
+                      @fragments.form.promoCode(trackingPromoCode, promoCodeToDisplay)
                   </div>
 
                   <div class="form-group">
