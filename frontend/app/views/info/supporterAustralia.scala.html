@@ -17,7 +17,7 @@
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageids(Supporter()))
+    @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIds.get(Supporter()))
 
     @* ===== About Supporters ===== *@
     @fragments.page.heroBanner(heroImage) {
