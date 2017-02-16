@@ -2,12 +2,14 @@ define([
     '$',
     'bean',
     'src/modules/form/billingPeriodChoice',
-    'src/modules/form/validation/display'
+    'src/modules/form/validation/display',
+    'src/modules/form/helper/formUtil'
 ], function (
     $,
     bean,
     billingPeriodChoice,
-    validationDisplay
+    validationDisplay,
+    form
 ) {
     'use strict';
 
@@ -175,6 +177,7 @@ define([
             checkoutForm.showBillingAddress = true;
 
             renderPrices();
+            form.flush();
         });
 
         bean.on(USE_DELIVERY_ADDRESS_EL, 'click', function() {
@@ -182,6 +185,7 @@ define([
             checkoutForm.billingCountry = checkoutForm.deliveryCountry;
 
             renderPrices();
+            form.flush();
         });
     }
 
