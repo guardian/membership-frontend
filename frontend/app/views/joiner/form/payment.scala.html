@@ -21,7 +21,7 @@
 
     <main class="page-content skin-checkout-b">
 
-        @AppnexusPixel.getCheckoutPageID(plans.tier).map({x => fragments.analytics.appNexusPixel("add",x )})
+        @fragments.analytics.appNexusPixel("add", AppnexusPixel.checkoutPageIDs.get(plans.tier))
 
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField

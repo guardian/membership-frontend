@@ -20,9 +20,9 @@
 @main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true, margins=false) {
 
     <main class="page-content skin-checkout-b skin-checkout-paypal">
-
-        @AppnexusPixel.getCheckoutPageID(plans.tier).map({x => fragments.analytics.appNexusPixel("add",x )})
         
+        @fragments.analytics.appNexusPixel("add", AppnexusPixel.checkoutPageIDs.get(plans.tier))
+
         <!-- FORM TITLE -->
         <section class="checkout-header">
             <h1 class="checkout-headline">@fragments.form.formCta(plans.tier)</h1>

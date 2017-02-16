@@ -79,7 +79,7 @@
 </script>
     <main role="main" class="page-content l-constrained">
 
-        @AppnexusPixel.getThankYouPageId(member.subscription.plan.tier).map({x => fragments.analytics.appNexusPixel("id",x )})
+        @fragments.analytics.appNexusPixel("id", AppnexusPixel.thankYouPageIDs.get(member.subscription.plan.tier))
 
         @fragments.page.pageHeader(
             pageHeader,
