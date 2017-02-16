@@ -125,7 +125,7 @@ object Joiner extends Controller with ActivityTracking
       identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
       tier match {
-        case t: Tier.Supporter => MembersDataAPI.Service.addBehaviour(request, "enterPaidDetails.show")
+        case t: Tier.Supporter => MembersDataAPI.Service.upsertBehaviour(request, "enterPaidDetails.show", t.name)
         case _ =>
       }
       val plans = catalog.findPaid(tier)
@@ -259,14 +259,17 @@ object Joiner extends Controller with ActivityTracking
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
           logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${request.user.id}")
+          setBehaviourNote(tier.name, error.code)(request)
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
+          setBehaviourNote(tier.name, error.code)(request)
           handlePaymentGatewayError(error, request.user.id, tier.name, idRequest.trackingParameters, formData.deliveryAddress.countryName)
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
           logger.error(s"User ${request.user.id} could not become ${tier.name} member: ${idRequest.trackingParameters}", error)
+          setBehaviourNote(tier.name, "card_error")(request)
           Forbidden
       }
     }
@@ -320,4 +323,11 @@ object Joiner extends Controller with ActivityTracking
       case _ => handleError("UknownPaymentError")
     }
   }
+
+  private def setBehaviourNote(tier: String, errorCode: String)(implicit request: AuthRequest[_]) = {
+    if (tier.toLowerCase == "supporter") {
+      MembersDataAPI.Service.upsertBehaviour(request, "enterPaidDetails.show", errorCode)
+    }
+  }
+
 }
