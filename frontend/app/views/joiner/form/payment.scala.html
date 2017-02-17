@@ -1,66 +1,75 @@
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.promo.{NewUsers, ValidPromotion}
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.salesforce.Tier.Supporter
-@import tracking.AppnexusPixel
+@import com.gu.salesforce.Tier.{Supporter, Partner}
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
+@import tracking.AppnexusPixel
+
+@import abtests.PayPalTestVariants
 @(plans: MonthYearPlans[PaidMember],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,
-    validPromo: Option[ValidPromotion[NewUsers]],
     countryGroup: Option[CountryGroup],
-    touchpointBackendResolution: services.TouchpointBackend.Resolution
+    touchpointBackendResolution: services.TouchpointBackend.Resolution,
+    paypalTestVariant: Option[String]
     )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+@main(plans.tier.cta, pageInfo=pageInfo, simpleHeader=true, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
 
-    <main class="page-content skin-checkout-b">
+    <main class="page-content skin-checkout-b skin-checkout-paypal">
 
         @fragments.analytics.appNexusPixel("add", AppnexusPixel.checkoutPageIds.get(plans.tier))
 
+        <!-- FORM TITLE -->
+        <section class="checkout-header">
+            <h1 class="checkout-headline">@fragments.form.formCta(plans.tier)</h1>
+        </section>
+
+        <!-- CHECKOUT FORM -->
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
             <input type="hidden" name="tier" value="@plans.tier.slug"/>
 
-            <section class="form-header">
-                <h1 class="form-headline">@plans.tier.cta</h1>
-            </section>
+            <section class="form-content">
 
+                <!-- PARTNER/PATRON BENEFITS LIST -->
+                @if(plans.tier != Supporter()){
+                    <!-- List of benefits -->
+                    @fragments.form.benefitsPanel(plans.tier.benefits)
 
-            <section class="form-section form-section--no-padding">
-                <div class="form-section__content">
-                @fragments.form.errorMessageDisplay()
-                </div>
-            </section>
+                    <!-- ACCORDION SECTION - BENEFITS CHOICE -->
+                    @fragments.form.featureChoicePanel(plans.tier)
+                }
 
-            <section class="form-section form-section--no-padding">
+                <!-- ACCORDION SECTION - NAME AND ADDRESS -->
+                <section class="form-panel sub-heading">
 
-                <div class="form-section__content">
-                    @if(plans.tier != Supporter()){
-                        <div class="form-group">
-                            @fragments.form.benefitsFieldset(plans.tier.benefits)
-                            @fragments.form.featureChoiceFieldset(plans.tier)
-                        </div>}
-
-                    <div class="form-group sub-heading">
-                        <h2 class="form-group__title">Name and address</h2>
-
-                        <div class="form-section__lead-in sign-in-required">
-                        @fragments.joiner.signedInAs(request.uri, inline = true)
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Name and address</h2>
+                        <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
+                        <div class="sign-in-required js-sign-in-note @if(plans.tier == Partner()){is-hidden}">
+                            @fragments.joiner.signedInAs(request.uri, inline = true)
                         </div>
+                    </div>
 
+                    <div class="form-panel__content js-form-panel-name-address @if(plans.tier == Partner()){is-hidden}">
+                        <!-- Name -->
                         <div class="form-section__name-detail">
-                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName, heading = "")
+                            @fragments.form.nameDetailFields(
+                                idUser.privateFields.firstName,
+                                idUser.privateFields.secondName
+                            )
                         </div>
-                        @fragments.form.addressDetail(
+
+                        <!-- Address -->
+                        @fragments.form.addressDetailFields(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
-                            note = "We need your address to send you a welcome pack.",
+                            note = "We need your address to send you a welcome pack",
                             formType = "deliveryAddress",
                             addressRequired = true,
                             address1 = idUser.privateFields.address1,
@@ -69,42 +78,74 @@
                             postcode = idUser.privateFields.postcode,
                             county = idUser.privateFields.address4
                         )
+                        <!-- Billing Address -->
+                        @fragments.form.billingAddressFields("Billing address")
+                        @fragments.form.addressDetailFields(
+                            countriesWithCurrencies = countriesWithCurrencies,
+                            formType = "billingAddress",
+                            addressRequired = true,
+                            address1 = idUser.privateFields.billingAddress1,
+                            address2 = idUser.privateFields.billingAddress2,
+                            town = idUser.privateFields.billingAddress3,
+                            postcode = idUser.privateFields.billingPostcode,
+                            county = idUser.privateFields.billingAddress4,
+                            showHeading = false
+                        )
+
                         @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
 
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
+
+                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
+                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
                     </div>
 
-                    @if(plans.tier != Supporter()) {
-                        <div class="form-group form-section__promotion">
-                            <h2 class="form-group__title">Promotion</h2>
-                            @fragments.form.promoCode(validPromo)
-                        </div>
-                    }
+                </section>
 
-                    <div class="form-group form-group--little-padding">
-                        <div class="form-section__billing">
-                            <h2 class="form-group__title">Billing</h2>
-                            @fragments.form.billingAddress("Billing address")
-                            @fragments.form.addressDetail(
-                                countriesWithCurrencies = countriesWithCurrencies,
-                                formType = "billingAddress",
-                                addressRequired = true,
-                                address1 = idUser.privateFields.billingAddress1,
-                                address2 = idUser.privateFields.billingAddress2,
-                                town = idUser.privateFields.billingAddress3,
-                                postcode = idUser.privateFields.billingPostcode,
-                                county = idUser.privateFields.billingAddress4
-                            )
-                        </div>
-                        @fragments.form.paymentOptions(plans)
-                        @fragments.form.cardDetail(plans)
+                <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
+                <section class="form-panel form-group--little-padding">
+
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Payment</h2>
+                        <p class="text-note">Prices include VAT</p>
                     </div>
-                    @fragments.form.terms(countryGroup)
-                    @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(PaidPlans(plans), membershipTermsAndConditions = false, countryGroup = countryGroup, dataCategory = Some("checkout page"), dataLabel = Some("payment annual"))
-                </div>
+
+                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
+
+                        <!-- Payment Options -->
+                        @fragments.form.paymentOptionsFields(plans)
+                        <fieldset class="fieldset js-payment-methods">
+
+                            <div class="fieldset__heading">
+                                <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
+                                <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
+                            </div>
+
+                            <div class="fieldset__fields">
+                                <div class="form-field">
+                                    <div class="loader js-payment-processing">Processing.</div>
+                                </div>
+                                <div class="form-field js-payment-type">
+                                    @fragments.form.stripeCheckout(idUser)
+                                </div>
+                                @{paypalTestVariant match {
+                                    case Some(variant) if variant == PayPalTestVariants.withPayPal => {
+                                        <div class="form-field js-payment-type">
+                                            <div id="paypal-button-checkout"></div>
+                                        </div>
+                                    }
+                                    case _ => {}
+                                }}
+                            </div>
+                            <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
+                        </fieldset>
+
+                    </div>
+                </section>
+
+                @fragments.form.terms(countryGroup)
             </section>
         </form>
     </main>

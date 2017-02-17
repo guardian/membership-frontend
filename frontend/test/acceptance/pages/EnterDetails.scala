@@ -7,29 +7,33 @@ import org.scalatest.selenium.Page
 case class EnterDetails(val testUser: TestUser) extends Page with Browser {
   val url = s"$baseUrl/join/supporter/enter-details"
 
-  def pageHasLoaded: Boolean = pageHasElement(id("cc-cvc"))
+  def pageHasLoaded: Boolean = pageHasElement(className("js-sign-in-note"))
 
   def userIsSignedIn: Boolean = elementHasText(userDisplayName, testUser.username)
 
   def fillInDeliveryAddress() { DeliveryAddress.fillIn() }
 
-  def fillInCardDetails() { CreditCard.fillIn() }
+  def clickContinue() = clickOn(className("js-continue-name-address"))
 
-  def fillInCardDeclined() { CreditCard.fillInCardDeclined() }
+  def fillInCreditCardPaymentDetailsStripe(): Unit = StripeCheckout.fillIn()
 
-  def fillInCardDeclinedFraud() { CreditCard.fillInCardDeclinedFraud() }
+  def changeCountry(country: String) = { DeliveryAddress.selectCountryCode(country) }
 
-  def fillInCardDeclinedCvc() { CreditCard.fillInCardDeclinedCvc() }
+  def currencyHasChanged(): Boolean = hiddenElementHasText(currency, "US$")
 
-  def fillInCardDeclinedExpired() { CreditCard.fillInCardDeclinedExpired() }
+  def pay() = clickOn(className("js-stripe-checkout"))
 
-  def fillInCardDeclinedProcessError() { CreditCard.fillInCardDeclinedProcessError() }
+  def switchToStripe() = driver.switchTo().frame(driver.findElement(StripeCheckout.container.by))
 
-  def changeCountry(country: String) { DeliveryAddress.selectCountryCode(country) }
+  def stripeCheckoutHasLoaded(): Boolean = pageHasElement(StripeCheckout.container)
 
-  def currencyHasChanged(): Boolean = elementHasText(currency, "US$")
+  def stripeCheckoutHasCC(): Boolean = pageHasElement(StripeCheckout.cardNumber)
 
-  def pay() { clickOn(payButton) }
+  def stripeCheckoutHasCVC(): Boolean = pageHasElement(StripeCheckout.cardCvc)
+
+  def stripeCheckoutHasExph(): Boolean = pageHasElement(StripeCheckout.cardExp)
+
+  def stripeCheckoutHasSubmit(): Boolean = pageHasElement(StripeCheckout.submitButton)
 
   private object DeliveryAddress {
     val country = id("country-deliveryAddress")
@@ -37,7 +41,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
     val town = id("town-deliveryAddress")
     val postCode = id("postCode-deliveryAddress")
 
-    def fillIn() {
+    def fillIn() = {
       setSingleSelectionValue(country, "GB")
       setValue(addressLine1, "Kings Place")
       setValue(town, "London")
@@ -47,20 +51,37 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
     def selectCountryCode(countryCode:  String) { setSingleSelectionValue(country, countryCode) }
   }
 
-  private object CreditCard {
-    val cardNumber = id("cc-num")
-    val cardCvc = id("cc-cvc")
-    val cardExpiryMonth = id("cc-exp-month")
-    val cardExpiryYear = id("cc-exp-year")
+  // Temporary hack to identify elements on Stripe Checkout form using xpath, since the ids are no longer consistently set.
+  private object StripeCheckout {
+    val container = name("stripe_checkout_app")
+    val cardNumber = xpath("//div[label/text() = \"Card number\"]/input")
+    val cardExp = xpath("//div[label/text() = \"Expiry\"]/input")
+    val cardCvc = xpath("//div[label/text() = \"CVC\"]/input")
+    val submitButton = xpath("//div[button]")
 
-    private def fillInHelper(cardNum: String) {
-      setValue(cardNumber, cardNum)
-      setSingleSelectionValue(cardExpiryMonth, "10")
-      setSingleSelectionValue(cardExpiryYear, "2019")
-      setValue(cardCvc, "111")
+    private def fillInHelper(cardNum: String) = {
+
+      setValueSlowly(cardNumber, cardNum)
+      setValueSlowly(cardExp, "1019")
+      setValueSlowly(cardCvc, "111")
+      continue()
+      Thread.sleep(5000)
     }
 
-    def fillIn() { fillInHelper("4242424242424242") }
+    /*
+    * Stripe wants you to pause between month and year and between each quartet in the cc
+    * This causes pain when you use Selenium. There are a few stack overflow posts- but nothing really useful.
+    * */
+    private def setValueSlowly(q: Query, value: String): Unit = {
+      for {
+        c <- value
+      } yield {
+        setValue(q, c.toString)
+        Thread.sleep(100)
+      }
+    }
+
+    def fillIn(): Unit = fillInHelper("4242 4242 4242 4242")
 
     /* https://stripe.com/docs/testing */
 
@@ -78,6 +99,8 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
     // Charge will be declined with a processing_error code.
     def fillInCardDeclinedProcessError(): Unit = fillInHelper("4000000000000119")
+
+    def continue(): Unit = clickOn(submitButton)
   }
 
   private val userDisplayName = cssSelector(".js-user-displayname")

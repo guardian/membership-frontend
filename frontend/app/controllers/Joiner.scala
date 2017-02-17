@@ -143,24 +143,14 @@ object Joiner extends Controller with ActivityTracking
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
-      Ok(
-      paypalTest match {
-        case Some(variant) => views.html.joiner.form.paymentPayPal(
-          plans,
-          countryCurrencyWhitelist,
-          identityUser,
-          pageInfo,
-          Some(countryGroup),
-          variant)
-        case None => views.html.joiner.form.payment(
-          plans,
-          countryCurrencyWhitelist,
-          identityUser,
-          pageInfo,
-          validPromo,
-          Some(countryGroup),
-          resolution)
-      })
+      Ok(views.html.joiner.form.payment(
+        plans,
+        countryCurrencyWhitelist,
+        identityUser,
+        pageInfo,
+        Some(countryGroup),
+        resolution,
+        paypalTest))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 

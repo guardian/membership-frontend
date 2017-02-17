@@ -21,6 +21,9 @@ trait Browser extends WebBrowser {
   def elementHasText(q: Query, text: String): Boolean =
     waitUntil(ExpectedConditions.textToBePresentInElementLocated(q.by, text))
 
+  def hiddenElementHasText(q: Query, text: String): Boolean =
+    waitUntil(ExpectedConditions.attributeContains(q.by, "textContent", text))
+
   def elementHasValue(q: Query, text: String): Boolean =
     waitUntil(ExpectedConditions.textToBePresentInElementValue(q.by, text))
 

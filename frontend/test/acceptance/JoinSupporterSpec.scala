@@ -17,7 +17,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
     Config.printSummary()
   }
 
-  override def afterAll() { Driver.quit() }
+  override def afterAll() = { Driver.quit() }
 
   private def checkDependenciesAreAvailable = {
     assume(Dependencies.MembershipFrontend.isAvailable,
@@ -68,11 +68,32 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       When("Users fill in delivery address details,")
       enterDetails.fillInDeliveryAddress()
 
-      And("fill in card details,")
-      enterDetails.fillInCardDetails()
+      And("click Continue")
+      enterDetails.clickContinue()
 
       And("click 'Pay' button,")
       enterDetails.pay()
+
+      Then("the Stripe Checkout iframe should display")
+      assert(enterDetails.stripeCheckoutHasLoaded())
+
+      When("the checkout iframe is present")
+      enterDetails.switchToStripe()
+
+      Then("credit card field is present")
+      assert(enterDetails.stripeCheckoutHasCC())
+
+      Then("expiry date field is present")
+      assert(enterDetails.stripeCheckoutHasExph())
+
+      Then("CVC field is present")
+      assert(enterDetails.stripeCheckoutHasCVC())
+
+      Then("submit button is present")
+      assert(enterDetails.stripeCheckoutHasSubmit())
+
+      And("they fill in credit card payment details,")
+      enterDetails.fillInCreditCardPaymentDetailsStripe()
 
       Then("they should land on 'Thank You' page,")
       assert(ThankYou.pageHasLoaded)
