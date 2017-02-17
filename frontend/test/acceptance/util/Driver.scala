@@ -35,9 +35,8 @@ object Driver {
   }
 
   private def instantiateRemoteBrowser(): WebDriver = {
-    val caps = DesiredCapabilities.internetExplorer()
-    caps.setCapability("platform", "Windows 7")
-    caps.setCapability("version", "11.0")
+    val caps = DesiredCapabilities.chrome()
+    caps.setCapability("platform", "Windows 8.1")
     caps.setCapability("name", "membership-frontend")
     new RemoteWebDriver(new URL(Config.webDriverRemoteUrl), caps)
   }
