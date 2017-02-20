@@ -1,6 +1,7 @@
 define([
-    'src/utils/helper'
-], function (utilsHelper) {
+    'src/utils/helper',
+    'src/utils/url'
+], function (utilsHelper, url) {
     'use strict';
 
     /**
@@ -33,7 +34,11 @@ define([
     };
 
     function hasPaypal () {
-        return !!document.getElementById('paypal-button-checkout');
+        var regex = /^APP_.*_MEMBERSHIP_PAYMENT_SCREEN$/; // matches Android (APP_ANDROID_MEMBERSHIP_PAYMENT), iOS (APP_IOS_MEMBERSHIP_PAYMENT) & Windows app (if they implement it one day)
+        var code = url.getQueryParameterByName('INTCMP');
+
+        var fromApps = regex.exec(code);
+        return !!document.getElementById('paypal-button-checkout') && !fromApps;
     }
 
     function hasStripeCheckout () {
