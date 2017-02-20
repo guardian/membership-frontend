@@ -138,6 +138,7 @@
                       @{summary.current.paymentMethod match {
                           case card: PaymentCard => fragments.user.cardSummary(card)
                           case payPal: PayPalMethod => <div class="card-summary">You are paying with PayPal</div>
+                          case _ =>
                         }
                       }
 
