@@ -1,7 +1,5 @@
 package services
 
-import java.net.InetAddress
-
 import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
@@ -106,7 +104,6 @@ class MemberService(identityService: IdentityService,
       fromEventId: Option[String],
       campaignCode: Option[CampaignCode],
       tier: Tier,
-      ipAddress: Option[InetAddress],
       ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)] = {
 
     def getIdentityUserDetails: Future[IdUser] =
@@ -132,7 +129,7 @@ class MemberService(identityService: IdentityService,
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, payPalEmail: Option[String], stripeCustomer: Option[Customer]): Future[String] =
       (for {
-        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, payPalEmail, ipAddress, ipCountry)
+        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, payPalEmail, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -140,7 +137,7 @@ class MemberService(identityService: IdentityService,
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
-        zuoraSub <- createFreeSubscription(sfContact, formData, email, ipAddress, ipCountry)
+        zuoraSub <- createFreeSubscription(sfContact, formData, email, ipCountry)
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
         logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)
       }
@@ -388,7 +385,6 @@ class MemberService(identityService: IdentityService,
   override def createFreeSubscription(contactId: ContactId,
                                       joinData: JoinForm,
                                       email: String,
-                                      ipAddress: Option[InetAddress],
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
     val planId = joinData.planChoice.productRatePlanId
     val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
@@ -404,8 +400,6 @@ class MemberService(identityService: IdentityService,
         address = joinData.deliveryAddress,
         email = email,
         promoCode = joinData.trackingPromoCode,
-        ipAddress = ipAddress.map(_.getHostAddress),
-        ipCountry = ipCountry,
         contractAcceptance = today,
         contractEffective = today
       ))
@@ -422,7 +416,6 @@ class MemberService(identityService: IdentityService,
                                       campaignCode: Option[CampaignCode],
                                       email: String,
                                       payPalEmail: Option[String],
-                                      ipAddress: Option[InetAddress],
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
     val country = joinData.zuoraAccountAddress.country
