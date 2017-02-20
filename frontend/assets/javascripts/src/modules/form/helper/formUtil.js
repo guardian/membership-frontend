@@ -34,8 +34,10 @@ define([
     };
 
     function hasPaypal () {
+        var regex = /^APP_.*_MEMBERSHIP_PAYMENT_SCREEN$/; // matches Android (APP_ANDROID_MEMBERSHIP_PAYMENT), iOS (APP_IOS_MEMBERSHIP_PAYMENT) & Windows app (if they implement it one day)
         var code = url.getQueryParameterByName('INTCMP');
-        var fromApps = code && code.substring(0, 3) ==='APP' && code.substring(code.length - 25) === 'MEMBERSHIP_PAYMENT_SCREEN'; // covers Android, iOS & Windows app (if they implement it one day)
+
+        var fromApps = regex.exec(code);
         return !!document.getElementById('paypal-button-checkout') && !fromApps;
     }
 
