@@ -51,7 +51,7 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
   // redirected and needs to come back.
   def returnUrl = NoCacheAction {
 
-    logger.info("User hit the PayPal returnUrl.")
+    logger.error("User hit the PayPal returnUrl.")
     Ok(views.html.paypal.errorPage())
 
   }

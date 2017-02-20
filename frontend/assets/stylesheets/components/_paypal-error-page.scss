@@ -1,0 +1,14 @@
+.paypal-error-page {
+	text-align: center;
+	margin-top: $gs-baseline * 2;
+
+	.paypal-error-page__signup-link {
+		display: block;
+		margin: $gs-baseline 0;
+	}
+
+	.action {
+		background-color: guss-colour(guardian-brand);
+        border-color: guss-colour(guardian-brand);
+	}
+}
