@@ -1,18 +1,14 @@
 package views.support
 
-import com.gu.i18n.Currency
 import com.gu.memsub.BillingPeriod.{Month, Year}
 import com.gu.memsub.Subscription.ProductRatePlanId
-import com.gu.memsub.{Subscription => S, _}
 import com.gu.memsub.subsv2._
+import com.gu.memsub.{BillingSchedule, Subscription => S, _}
 import com.gu.salesforce.PaidTier
-import com.gu.memsub.BillingSchedule
 import org.joda.time.{DateTime, LocalDate}
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
 import views.support.MembershipCompat._
 
-case class CurrentSummary(tier: PaidTier, startDate: LocalDate, payment: Price, card: PaymentCard)
+case class CurrentSummary(tier: PaidTier, startDate: LocalDate, payment: Price, paymentMethod: PaymentMethod)
 
 case class TargetSummary(tier: PaidTier, firstPayment: Price, nextPayment: Price, nextPaymentDate: LocalDate)
 
@@ -25,7 +21,7 @@ object PaidToPaidUpgradeSummary {
     override def getMessage = s"Failure while trying to display an upgrade summary for the subscription $subNumber to $targetTier: $msg"
   }
 
-  def apply(invoices: BillingSchedule, sub: Subscription[SubscriptionPlan.PaidMember], targetId: ProductRatePlanId, card: PaymentCard)(implicit catalog: Catalog): PaidToPaidUpgradeSummary = {
+  def apply(invoices: BillingSchedule, sub: Subscription[SubscriptionPlan.PaidMember], targetId: ProductRatePlanId, paymentMethod: PaymentMethod)(implicit catalog: Catalog): PaidToPaidUpgradeSummary = {
     val plan = catalog.unsafeFindPaid(targetId)
     lazy val upgradeError = UpgradeSummaryError(sub.name, plan.tier) _
     val accountCurrency = sub.plan.currency
@@ -43,7 +39,7 @@ object PaidToPaidUpgradeSummary {
         tier = sub.plan.tier,
         startDate = sub.startDate,
         payment = sub.plan.charges.price.prices.head,
-        card = card
+        paymentMethod = paymentMethod
       )
 
     val targetSummary =
@@ -60,29 +56,4 @@ object PaidToPaidUpgradeSummary {
 
     PaidToPaidUpgradeSummary(billingPeriod, currentSummary, targetSummary)
   }
-
-
-  implicit val currencyWrites = new Writes[Currency] {
-    override def writes(o: Currency): JsValue = JsString(o.glyph)
-  }
-
-  implicit val tierWrites = new Writes[PaidTier] {
-    override def writes(o: PaidTier): JsValue = JsString(o.name)
-  }
-
-  implicit val paymentCardWrites = Json.writes[PaymentCard]
-  implicit val priceWrites = Json.writes[Price]
-
-  implicit val billingPeriodWrites = new Writes[BillingPeriod] {
-    override def writes(o: BillingPeriod): JsValue = JsString(o.noun)
-  }
-
-  implicit val currentSummaryWrites = Json.writes[CurrentSummary]
-  implicit val targetSummaryWrites = Json.writes[TargetSummary]
-
-  implicit val summaryWrites: Writes[PaidToPaidUpgradeSummary] = (
-    (JsPath \ "billingPeriod").write[BillingPeriod] and
-      (JsPath \ "currentSummary").write[CurrentSummary] and
-      (JsPath \ "targetSummary").write[TargetSummary]
-    )(unlift(PaidToPaidUpgradeSummary.unapply))
 }

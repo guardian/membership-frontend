@@ -8,6 +8,8 @@
 @import views.support.PageInfo
 @import com.gu.memsub.promo.ValidPromotion
 @import com.gu.memsub.promo.Upgrades
+@import com.gu.memsub.PaymentCard
+@import com.gu.memsub.PayPalMethod
 @(
     summary: PaidToPaidUpgradeSummary,
     userFields: com.gu.identity.play.PrivateFields,
@@ -42,7 +44,6 @@
                       <div class="form-group">
                           @fragments.form.benefitsFieldset(summary.target.tier.benefits)
                           @fragments.form.featureChoiceFieldset(summary.target.tier)
-                          @fragments.form.promoCode(validPromo)
                       </div>
                       <h2 class="h-section">What happens now</h2>
                       <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@summary.current.tier.name</strong>
@@ -129,19 +130,24 @@
               <section class="page-section page-section--bordered">
                   <div class="page-section__lead-in">
                       <h2 class="page-section__headline">
-                          Card details
+                          Payment method
                           @fragments.form.securityNote()
                       </h2>
                   </div>
                   <div class="page-section__content">
-                      @fragments.user.cardSummary(summary.current.card)
+                      @{summary.current.paymentMethod match {
+                          case card: PaymentCard => fragments.user.cardSummary(card)
+                          case payPal: PayPalMethod => <div class="card-summary">You are paying with PayPal</div>
+                        }
+                      }
+
                       <p class="text-note">
                           <strong>First payment:</strong>
                           Your first payment of <strong class="js-first-payment">@summary.target.firstPayment.pretty</strong>
                           will be taken today under the name Guardian Members.
                       </p>
                       <p class="text-note">
-                          <strong>Ongoing payments:</strong> Your card will be charged
+                          <strong>Ongoing payments:</strong> You will be charged
                           <strong>@summary.target.nextPayment.pretty</strong>
                           every @{summary.billingPeriod.noun}.
                           Payments will taken on or shortly after the @dayInMonthWithSuffixAndMonth(summary.target.nextPaymentDate)

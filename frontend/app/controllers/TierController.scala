@@ -112,19 +112,6 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
-  def upgradePreview(target: PaidTier, code: Option[PromoCode]) = PaidSubscriptionAction.async { implicit request =>
-      paymentSummary(request.subscriber, catalog.findPaid(target), code)(request, catalog, IdentityRequest(request)).map { summary => {
-        Ok(summary.fold({
-          case MemberPromoError(e) => Json.obj("error" -> e.msg)
-          case _ => Json.obj("error" -> "Unknown error")
-        }, { summary => Json.obj(
-          "summary" -> Json.toJson(summary),
-          "promotion" -> Json.toJson(code.flatMap(promoService.findPromotion))
-        )
-        }))
-      }}
-  }
-
   def paymentSummary(subscriber: PaidMember, targetPlans: MonthYearPlans[com.gu.memsub.subsv2.CatalogPlan.PaidMember], code: Option[PromoCode])
                     (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
 
@@ -135,9 +122,9 @@ object TierController extends Controller with ActivityTracking
     (for {
       country <- EitherT(memberService.country(subscriber.contact).map(\/.right))
       promo <- EitherT(Future.successful(promoService.validateMany[Upgrades](country, targetChoice.productRatePlanId)(code).leftMap[MemberError](MemberPromoError)))
-      card <- EitherT(paymentService.getPaymentCard(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
+      paymentMethod <- EitherT(paymentService.getPaymentMethod(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
       preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice, promo))
-    } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, card)(c)).run
+    } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, paymentMethod)(c)).run
   }
 
   def upgrade(target: PaidTier, promoCode: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
