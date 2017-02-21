@@ -124,7 +124,13 @@ object Joiner extends Controller with ActivityTracking
       identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
     } yield {
       tier match {
-        case t: Tier.Supporter => MembersDataAPI.Service.upsertBehaviour(request, "enterPaidDetails.show", t.name)
+        case t: Tier.Supporter => {
+          MembersDataAPI.Service.upsertBehaviour(
+            request,
+            activity = Some("enterPaidDetails.show"),
+            note = Some(t.name),
+            emailAddress = Some(identityUser.email))
+        }
         case _ =>
       }
       val plans = catalog.findPaid(tier)
@@ -164,7 +170,6 @@ object Joiner extends Controller with ActivityTracking
 
       val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
       val validPromo = codeFromSession.flatMap(code => promoService.validate[NewUsers](code, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
-
 
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
@@ -271,7 +276,7 @@ object Joiner extends Controller with ActivityTracking
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request, "enterPaidDetails.show")
+        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request)
         case _ =>
       }
       Ok(views.html.joiner.thankyou(
@@ -308,7 +313,7 @@ object Joiner extends Controller with ActivityTracking
 
   private def setBehaviourNote(tier: String, errorCode: String)(implicit request: AuthRequest[_]) = {
     if (tier.toLowerCase == "supporter") {
-      MembersDataAPI.Service.upsertBehaviour(request, "enterPaidDetails.show", errorCode)
+      MembersDataAPI.Service.upsertBehaviour(request, note = Some(errorCode))
     }
   }
 
