@@ -98,8 +98,8 @@ object MembersDataAPI {
       request.user.credentials match {
         case cookies: AccessCredentials.Cookies =>
           setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity, note, emailAddress).onComplete {
-            case Success(result) => Logger.info(s"Recorded $activity for ${request.user.id}")
-            case Failure(err) => Logger.error(s"Failed to record behaviour event ($activity) via membership-data-api for user ${request.user.id}", err)
+            case Success(result) => Logger.info(s"Upserted ${request.user.id}")
+            case Failure(err) => Logger.error(s"Failed to upsert membership-data-api behaviour for user ${request.user.id}", err)
           }
         case _ => Logger.error(s"Unexpected credentials for addBehaviour ($activity) for ${request.user.credentials}")
       }
