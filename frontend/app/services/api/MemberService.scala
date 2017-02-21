@@ -1,7 +1,5 @@
 package services.api
 
-import java.net.InetAddress
-
 import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
@@ -38,7 +36,6 @@ trait MemberService {
                    fromEventId: Option[String],
                    campaignCode: Option[CampaignCode],
                    tier: Tier,
-                   ipAddress: Option[InetAddress],
                    ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)]
 
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
@@ -83,13 +80,11 @@ trait MemberService {
                              campaignCode: Option[CampaignCode],
                              email: String,
                              payPalEmail: Option[String],
-                             ipAddress: Option[InetAddress],
                              ipCountry: Option[Country]): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
                              joinData: JoinForm,
                              email: String,
-                             ipAddress: Option[InetAddress],
                              ipCountry: Option[Country]): Future[SubscribeResult]
 }
 

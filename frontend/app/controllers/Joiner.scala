@@ -226,11 +226,10 @@ object Joiner extends Controller with ActivityTracking
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
-    val ipAddress = None // Deprecated - we do not need to store this [anymore] as we store the ipCountry instead.
     val ipCountry = request.getFastlyCountry
 
     Timing.record(salesforceService.metrics, "createMember") {
-      memberService.createMember(request.user, formData, idRequest, eventId, campaignCode, tier, ipAddress, ipCountry).map {
+      memberService.createMember(request.user, formData, idRequest, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
           logger.info(s"User ${request.user.id} successfully became ${tier.name} $zuoraSubName.")
           salesforceService.metrics.putSignUp(tier)
