@@ -1,12 +1,16 @@
 var Uglify = require("webpack/lib/optimize/UglifyJsPlugin");
+var path = require("path");
 
 module.exports = function(debug) { return {
     resolve: {
-        root: ["assets/javascripts", "assets/../node_modules/"],
-        extensions: ["", ".js", ".es6"],
+        modules: [
+            path.join(__dirname, "assets/javascripts"),
+            path.join(__dirname, "node_modules/")
+        ],
+        extensions: [".js", ".es6"],
         alias: {
             '$$': 'src/utils/$',
-            'lodash': 'lodash-amd/modern',
+            'lodash': 'lodash-amd',
             'bean': 'bean/bean',
             'bonzo': 'bonzo/bonzo',
             'qwery': 'qwery/qwery',
@@ -21,11 +25,11 @@ module.exports = function(debug) { return {
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.es6$/,
                 exclude: /node_modules/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: {
                     presets: ['es2015'],
                     cacheDirectory: ''
@@ -34,16 +38,18 @@ module.exports = function(debug) { return {
         ]
     },
 
+    resolveLoader: {
+        modules: [path.join(__dirname, "node_modules")]
+    },
+
     plugins: !debug ? [
-        new Uglify({compress: {warnings: false}})
+        new Uglify(
+            {
+                sourceMap: true
+            })
     ] : [],
 
-    progress: true,
-    failOnError: true,
     watch: false,
-    keepalive: false,
-    inline: true,
-    hot: false,
 
     stats: {
         modules: true,
@@ -52,6 +58,5 @@ module.exports = function(debug) { return {
     },
 
     context: 'assets/javascripts',
-    debug: false,
     devtool: 'source-map'
 }};
