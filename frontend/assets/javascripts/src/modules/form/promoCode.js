@@ -3,10 +3,10 @@ define(
         '$',
         'ajax',
         'bean',
-        'lodash/string/template',
+        'lodash/template',
         'src/modules/form/billingPeriodChoice',
-        'text!src/templates/promoCode/promotion.html',
-        'text!src/templates/promoCode/validationError.html'
+        'text-loader!src/templates/promoCode/promotion.html',
+        'text-loader!src/templates/promoCode/validationError.html'
     ],
     function ($, ajax, bean, template, billingPeriodChoice, promotionTemplate, validationErrorTemplate) {
         'use strict';
