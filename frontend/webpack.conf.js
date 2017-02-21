@@ -1,5 +1,9 @@
 var Uglify = require("webpack/lib/optimize/UglifyJsPlugin");
+var LoaderOptions = require("webpack/lib/LoaderOptionsPlugin");
 var path = require("path");
+
+var prodPlugins = [ new Uglify({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
+var debugPlugins = [new LoaderOptions({ debug: true })];
 
 module.exports = function(debug) { return {
     resolve: {
@@ -42,12 +46,7 @@ module.exports = function(debug) { return {
         modules: [path.join(__dirname, "node_modules")]
     },
 
-    plugins: !debug ? [
-        new Uglify(
-            {
-                sourceMap: true
-            })
-    ] : [],
+    plugins: !debug ? prodPlugins :debugPlugins,
 
     watch: false,
 
