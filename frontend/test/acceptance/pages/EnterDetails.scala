@@ -23,7 +23,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def pay() = clickOn(className("js-stripe-checkout"))
 
-  def switchToStripe() = driver.switchTo().frame(driver.findElement(StripeCheckout.container.by))
+  def switchToStripe() = switchFrame(StripeCheckout.container)
 
   def stripeCheckoutHasLoaded(): Boolean = pageHasElement(StripeCheckout.container)
 
@@ -34,6 +34,30 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
   def stripeCheckoutHasExph(): Boolean = pageHasElement(StripeCheckout.cardExp)
 
   def stripeCheckoutHasSubmit(): Boolean = pageHasElement(StripeCheckout.submitButton)
+
+  def switchToPayPalVariant() = changeUrl(s"$url?countryGroup=uk&paypalTest=with_paypal")
+
+  def payPal() = clickOn(id("paypal-button-checkout"))
+
+  def switchToPayPal() = {
+    switchWindow
+    switchFrame(PayPalCheckout.container)
+  }
+
+  def payPalCheckoutHasLoaded(): Boolean = pageHasElement(PayPalCheckout.loginButton)
+
+  def payPalFillInDetails() = PayPalCheckout.fillIn
+
+  def payPalLogin() = PayPalCheckout.logIn
+
+  def payPalHasPaymentSummary() = pageHasElement(PayPalCheckout.agreeAndPay)
+
+  def payPalSummaryHasCorrectAmount() = elementHasText(PayPalCheckout.paymentAmount, "£49.00")
+
+  def acceptPayPalPayment() = {
+    PayPalCheckout.acceptPayment
+    switchToParentWindow
+  }
 
   private object DeliveryAddress {
     val country = id("country-deliveryAddress")
@@ -68,19 +92,6 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
       Thread.sleep(5000)
     }
 
-    /*
-    * Stripe wants you to pause between month and year and between each quartet in the cc
-    * This causes pain when you use Selenium. There are a few stack overflow posts- but nothing really useful.
-    * */
-    private def setValueSlowly(q: Query, value: String): Unit = {
-      for {
-        c <- value
-      } yield {
-        setValue(q, c.toString)
-        Thread.sleep(100)
-      }
-    }
-
     def fillIn(): Unit = fillInHelper("4242 4242 4242 4242")
 
     /* https://stripe.com/docs/testing */
@@ -101,6 +112,28 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
     def fillInCardDeclinedProcessError(): Unit = fillInHelper("4000000000000119")
 
     def continue(): Unit = clickOn(submitButton)
+  }
+
+  private object PayPalCheckout {
+
+    val container = name("injectedUl")
+    val loginButton = name("btnLogin")
+    val emailInput = name("login_email")
+    val passwordInput = name("login_password")
+    val agreeAndPay = id("confirmButtonTop")
+    val paymentAmount = className("formatCurrency")
+
+    def fillIn() = {
+
+      setValueSlowly(emailInput, Config.paypalBuyerEmail)
+      setValueSlowly(passwordInput, Config.paypalBuyerPassword)
+
+    }
+
+    def logIn() = clickOn(loginButton)
+
+    def acceptPayment() = clickOn(agreeAndPay)
+
   }
 
   private val userDisplayName = cssSelector(".js-user-displayname")
