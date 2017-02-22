@@ -1,8 +1,8 @@
 define(
     [
         '$',
-        'lodash/string/template',
-        'text!src/templates/checkout/ongoingCardPayments.html'
+        'lodash/template',
+        'text-loader!src/templates/checkout/ongoingCardPayments.html'
     ],
     function($, template, ongoingCardPaymentsTemplate) {
         'use strict';
