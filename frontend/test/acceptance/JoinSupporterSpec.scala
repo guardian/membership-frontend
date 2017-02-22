@@ -38,7 +38,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
 
       Given("users click 'Become a Supporter' button on Membership homepage")
 
-      When("they land on 'Identity Frontend' page,")
+      When("They land on 'Identity Frontend' page,")
       val register = pages.Register(testUser)
       go.to(register)
       assert(register.pageHasLoaded)
@@ -60,7 +60,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       And("should be logged in with their Identity account.")
       assert(enterDetails.userIsSignedIn)
 
-      When("users select USA delivery country,")
+      When("Users select USA delivery country,")
       enterDetails.changeCountry("US")
 
       Then("the currency should change.")
@@ -73,28 +73,31 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       enterDetails.clickContinue()
 
       And("click 'Pay' button,")
-      enterDetails.pay()
+      enterDetails.payStripe()
 
       Then("the Stripe Checkout iframe should display")
       assert(enterDetails.stripeCheckoutHasLoaded())
 
-      When("the checkout iframe is present")
+      When("The checkout iframe is present")
       enterDetails.switchToStripe()
 
       Then("credit card field is present")
       assert(enterDetails.stripeCheckoutHasCC())
 
-      Then("expiry date field is present")
+      And("expiry date field is present")
       assert(enterDetails.stripeCheckoutHasExph())
 
-      Then("CVC field is present")
+      And("CVC field is present")
       assert(enterDetails.stripeCheckoutHasCVC())
 
-      Then("submit button is present")
+      And("submit button is present")
       assert(enterDetails.stripeCheckoutHasSubmit())
 
-      And("they fill in credit card payment details,")
-      enterDetails.fillInCreditCardPaymentDetailsStripe()
+      When("They fill in credit card payment details,")
+      enterDetails.fillInCreditCardPaymentDetailsStripe
+
+      And("accept the payment")
+      enterDetails.acceptStripePayment
 
       Then("they should land on 'Thank You' page,")
       assert(ThankYou.pageHasLoaded)
@@ -111,7 +114,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
 
       Given("users click 'Become a Supporter' button on Membership homepage")
 
-      When("they land on 'Identity Frontend' page,")
+      When("They land on 'Identity Frontend' page,")
       val register = pages.Register(testUser)
       go.to(register)
       assert(register.pageHasLoaded)
@@ -126,7 +129,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       val enterDetails = pages.EnterDetails(testUser)
       assert(enterDetails.pageHasLoaded)
 
-      When("we switch to the PayPal AB variant")
+      When("We switch to the PayPal AB variant")
       enterDetails.switchToPayPalVariant
 
       Then("they should have Identity cookies,")
@@ -137,7 +140,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       And("should be logged in with their Identity account.")
       assert(enterDetails.userIsSignedIn)
 
-      When("users select USA delivery country,")
+      When("Users select USA delivery country,")
       enterDetails.changeCountry("US")
 
       Then("the currency should change.")
