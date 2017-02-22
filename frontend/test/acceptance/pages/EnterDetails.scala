@@ -17,7 +17,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def changeCountry(country: String) = { DeliveryAddress.selectCountryCode(country) }
 
-  def currencyHasChanged(): Boolean = hiddenElementHasText(currency, "US$")
+  def currencyHasChangedTo(currencySymbol: String): Boolean = hiddenElementHasText(currency, currencySymbol)
 
 
   // ----- Stripe Methods ----- //

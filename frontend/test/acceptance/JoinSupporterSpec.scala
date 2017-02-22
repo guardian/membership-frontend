@@ -64,7 +64,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       enterDetails.changeCountry("US")
 
       Then("the currency should change.")
-      assert(enterDetails.currencyHasChanged)
+      assert(enterDetails.currencyHasChangedTo("US$"))
 
       When("Users fill in delivery address details,")
       enterDetails.fillInDeliveryAddress()
@@ -144,7 +144,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       enterDetails.changeCountry("US")
 
       Then("the currency should change.")
-      assert(enterDetails.currencyHasChanged)
+      assert(enterDetails.currencyHasChangedTo("US$"))
 
       When("Users fill in delivery address details,")
       enterDetails.fillInDeliveryAddress()
