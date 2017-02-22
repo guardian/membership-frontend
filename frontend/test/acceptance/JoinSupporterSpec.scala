@@ -31,7 +31,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
 
   feature("Become a Supporter in UK") {
 
-    scenario("User joins as Supporter by clicking 'Become a Supporter' button on Membership homepage", Acceptance) {
+    scenario("User joins as Supporter by clicking 'Become a Supporter' button on Membership homepage, and pays using Stripe", Acceptance) {
       checkDependenciesAreAvailable
 
       val testUser = new TestUser
