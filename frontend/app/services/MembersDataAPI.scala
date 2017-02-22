@@ -36,7 +36,7 @@ object MembersDataAPI {
   )(Attributes.apply _)
 
   case class Attributes(tier: Tier, membershipNumber: Option[String])
-  case class Behaviour(userId: String, activity: Option[String], lastObserved: Option[String], note: Option[String], emailAddress: Option[String], emailed: Option[Boolean])
+  case class Behaviour(userId: String, activity: Option[String], lastObserved: Option[String], note: Option[String], emailed: Option[Boolean])
 
   object Attributes {
     def fromMember(member: Member) = Attributes(member.subscription.plan.tier, member.contact.regNumber)
@@ -54,7 +54,6 @@ object MembersDataAPI {
     (JsPath \ "activity").readNullable[String] and
     (JsPath \ "lastObserved").readNullable[String] and
     (JsPath \ "note").readNullable[String] and
-    (JsPath \ "email").readNullable[String] and
     (JsPath \ "emailed").readNullable[Boolean]
   )(Behaviour.apply _)
 
@@ -94,10 +93,10 @@ object MembersDataAPI {
       case _ => Logger.error(s"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }
 
-    def upsertBehaviour(request: AuthRequest[_], activity: Option[String] = None, note: Option[String] = None, emailAddress: Option[String] = None, emailed: Option[Boolean] = None) = {
+    def upsertBehaviour(request: AuthRequest[_], activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None) = {
       request.user.credentials match {
         case cookies: AccessCredentials.Cookies =>
-          setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity, note, emailAddress).onComplete {
+          setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity, note).onComplete {
             case Success(result) => Logger.info(s"Upserted ${request.user.id}")
             case Failure(err) => Logger.error(s"Failed to upsert membership-data-api behaviour for user ${request.user.id}", err)
           }
@@ -116,13 +115,12 @@ object MembersDataAPI {
 
     private def getAttributes(cookies: Seq[Option[Cookie]]) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
 
-    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: Option[String], note: Option[String], emailAddress: Option[String]) = {
+    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: Option[String], note: Option[String]) = {
       val json: JsValue = Json.obj(
         "userId" -> userId,
         "activity" -> activity,
         "dateTime" -> DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC),
-        "note" -> note,
-        "email" -> emailAddress
+        "note" -> note
       )
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/capture", json)
     }

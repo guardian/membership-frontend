@@ -128,8 +128,7 @@ object Joiner extends Controller with ActivityTracking
           MembersDataAPI.Service.upsertBehaviour(
             request,
             activity = Some("enterPaidDetails.show"),
-            note = Some(t.name),
-            emailAddress = Some(identityUser.email))
+            note = Some(t.name))
         }
         case _ =>
       }
