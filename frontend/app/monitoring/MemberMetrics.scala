@@ -1,6 +1,8 @@
 package monitoring
 
 import com.gu.salesforce.Tier
+import com.gu.zuora.soap.models.Commands.PaymentMethod
+import com.amazonaws.services.cloudwatch.model.Dimension
 
 class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 
@@ -24,6 +26,20 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 
   def putFailSignUp(tier: Tier) {
     put(s"failed-sign-up-${tier.name}")
+  }
+
+  def putCreationOfPaidSubscription(paymentMethod: Option[PaymentMethod]) = {
+
+    val methodName = paymentMethod match {
+      case Some(method) => method.getClass.getSimpleName
+      case None => "UnknownPaymentMethod"
+    }
+
+    val paymentDimension = new Dimension().withName("PaymentMethod")
+      .withValue(methodName)
+
+    put(s"create-paid-subscription", 1, paymentDimension)
+
   }
 
   private def put(metricName: String) {
