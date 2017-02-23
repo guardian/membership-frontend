@@ -33,7 +33,6 @@ trait EmailService extends LazyLogging {
     if (md5(feedback.email) == "[33, -110, 33, 95, -127, -114, 55, -110, 100, -54, 104, -58, 2, 10, 47, 111]") {
       logger.info("discarding email we can't do anything useful with")
     } else {
-      logger.info(s"Sending feedback for ${feedback.name} - Identity $userOpt")
       val to = new Destination().withToAddresses(feedback.category.email)
       val subjectContent = new Content(s"Membership feedback from ${feedback.name}")
       val name = userOpt.map(_.displayName).mkString
@@ -49,7 +48,6 @@ trait EmailService extends LazyLogging {
         Identity user: ${name} ${userEmail.mkString} (${id})<br/>
         User agent: ${uaOpt.mkString}
       """.stripMargin
-      logger.info(body)
       val message = new Message(subjectContent, new Body().withHtml(new Content(body)))
       val email = new SendEmailRequest(feedback.category.email, to, message).withReplyToAddresses(feedback.email)
 
