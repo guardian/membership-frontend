@@ -24,6 +24,10 @@ object Config {
 
   val waitTimout: Int = conf.getString("waitTimeout").toInt
 
+  val paypalBuyerEmail = conf.getString("paypal.sandbox.buyer.email")
+
+  val paypalBuyerPassword = conf.getString("paypal.sandbox.buyer.password")
+
   def debug() { conf.root().render() }
 
   def printSummary(): Unit = {

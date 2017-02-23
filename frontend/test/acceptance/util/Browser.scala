@@ -2,12 +2,17 @@ package acceptance.util
 
 import org.openqa.selenium.support.ui.{ExpectedCondition, ExpectedConditions, WebDriverWait}
 import org.openqa.selenium.By
+import org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe
 import org.scalatest.selenium.WebBrowser
+
 import scala.util.Try
+import scala.collection.JavaConverters.asScalaSetConverter
 
 trait Browser extends WebBrowser {
 
   lazy implicit val driver = Driver()
+  // Stores a handle to the first window opened by the driver.
+  lazy val parentWindow = driver.getWindowHandle
 
   def pageHasText(text: String): Boolean =
     waitUntil(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), text))
@@ -34,11 +39,30 @@ trait Browser extends WebBrowser {
       throw new MissingPageElementException(q)
   }
 
-  def setValue(q: Query, value: String) {
-    if (pageHasElement(q))
+  def setValue(q: Query, value: String, clear: Boolean = false) {
+    if (pageHasElement(q)) {
+
+      if (clear) q.webElement.clear
       q.webElement.sendKeys(value)
-    else
+
+    } else
       throw new MissingPageElementException(q)
+  }
+
+  /*
+    * Stripe wants you to pause between month and year and between each quartet in the cc
+    * This causes pain when you use Selenium. There are a few stack overflow posts- but nothing really useful.
+    * This pausing also seems to be necessary to make PayPal work properly,
+    * without this it starts to complain about invalid credentials after only
+    * a few characters.
+    * */
+  def setValueSlowly(q: Query, value: String): Unit = {
+    for {
+      c <- value
+    } yield {
+      setValue(q, c.toString)
+      Thread.sleep(100)
+    }
   }
 
   def setRadioButtonValue(q: NameQuery, value: String) {
@@ -54,6 +78,33 @@ trait Browser extends WebBrowser {
     else
       throw new MissingPageElementException(q)
   }
+
+  // Switches to a new iframe specified by the Query, q.
+  def switchFrame(q: Query) {
+    if (pageHasElement(q))
+      driver.switchTo().frame(q.webElement)
+    else
+      throw new MissingPageElementException(q)
+  }
+
+  /*
+   * Switches to the first window in the list of windows that doesn't match
+   * the parent window.
+   * */
+  def switchWindow() {
+    waitUntil(numberOfWindowsToBe(2))
+
+    for {
+      winHandle <- driver.getWindowHandles.asScala
+      if winHandle != parentWindow
+    } driver.switchTo().window(winHandle)
+
+  }
+
+  // Switches back to the first window opened by the driver.
+  def switchToParentWindow() = driver.switchTo().window(parentWindow)
+
+  def changeUrl(url: String) = driver.get(url)
 
   private def waitUntil[T](pred: ExpectedCondition[T]): Boolean =
     Try(new WebDriverWait(driver, Config.waitTimout).until(pred)).isSuccess
