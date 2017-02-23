@@ -19,6 +19,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc.{AnyContent, Cookie}
+import views.support.IdentityUser
 import views.support.MembershipCompat._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -35,7 +36,7 @@ object MembersDataAPI {
   )(Attributes.apply _)
 
   case class Attributes(tier: Tier, membershipNumber: Option[String])
-  case class Behaviour(userId: String, activity: String, lastObserved: String, note: String)
+  case class Behaviour(userId: String, activity: Option[String], lastObserved: Option[String], note: Option[String], emailed: Option[Boolean])
 
   object Attributes {
     def fromMember(member: Member) = Attributes(member.subscription.plan.tier, member.contact.regNumber)
@@ -50,9 +51,10 @@ object MembersDataAPI {
 
   implicit val behaviourReads: Reads[Behaviour] = (
     (JsPath \ "userId").read[String] and
-    (JsPath \ "activity").read[String] and
-    (JsPath \ "lastObserved").read[String] and
-    (JsPath \ "note").read[String]
+    (JsPath \ "activity").readNullable[String] and
+    (JsPath \ "lastObserved").readNullable[String] and
+    (JsPath \ "note").readNullable[String] and
+    (JsPath \ "emailed").readNullable[Boolean]
   )(Behaviour.apply _)
 
   case class AttributeHelper(cookies: Seq[Option[Cookie]]) extends WebServiceHelper[Attributes, ApiError] {
@@ -91,18 +93,18 @@ object MembersDataAPI {
       case _ => Logger.error(s"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }
 
-    def upsertBehaviour(request: AuthRequest[_], activity: String, note: String) = {
+    def upsertBehaviour(request: AuthRequest[_], activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None) = {
       request.user.credentials match {
         case cookies: AccessCredentials.Cookies =>
           setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity, note).onComplete {
-            case Success(result) => Logger.info(s"Recorded $activity for ${request.user.id}")
-            case Failure(err) => Logger.error(s"Failed to record behaviour event ($activity) via membership-data-api for user ${request.user.id}", err)
+            case Success(result) => Logger.info(s"Upserted ${request.user.id}")
+            case Failure(err) => Logger.error(s"Failed to upsert membership-data-api behaviour for user ${request.user.id}", err)
           }
         case _ => Logger.error(s"Unexpected credentials for addBehaviour ($activity) for ${request.user.credentials}")
       }
     }
 
-    def removeBehaviour(memberRequest: SubReqWithSub[_], activity: String) = memberRequest.user.credentials match {
+    def removeBehaviour(memberRequest: SubReqWithSub[_], activity: Option[String] = None) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
         deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id, activity).onComplete {
           case Success(result) => Logger.info(s"Cleared behaviours for ${memberRequest.user.user.id}")
@@ -113,16 +115,21 @@ object MembersDataAPI {
 
     private def getAttributes(cookies: Seq[Option[Cookie]]) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
 
-    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String, note: String) = {
-      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}","note":"${note.toLowerCase}"}"""
-      val json = Json.parse(record)
+    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: Option[String], note: Option[String]) = {
+      val json: JsValue = Json.obj(
+        "userId" -> userId,
+        "activity" -> activity,
+        "dateTime" -> DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC),
+        "note" -> note
+      )
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/capture", json)
     }
 
-    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: String) = {
-      val removeNote = "remove"
-      val record = s"""{"userId":"${userId}","activity":"${activity}","dateTime":"${DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC)}","note":"${removeNote}"}"""
-      val json = Json.parse(record)
+    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: Option[String]) = {
+      val json: JsValue = Json.obj(
+        "userId" -> userId,
+        "activity" -> activity
+      )
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/remove", json)
     }
   }
