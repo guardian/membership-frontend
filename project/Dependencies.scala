@@ -4,17 +4,15 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.10.50"
+  val awsClientVersion = "1.11.95"
   //libraries
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "7.2.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val memsubCommonPlayAuth = Seq(
-    "com.gu" %% "memsub-common-play-auth" % "0.8", // v0.8 is the latest version published for Play 2.4...
-    "com.gu" %% "identity-test-users" % "0.6"
-  )
-  val membershipCommon = "com.gu" %% "membership-common" % "0.366"
+  val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.9" // v0.9 is the latest version published for Play 2.4...
+  val membershipCommon = "com.gu" %% "membership-common" % "0.367"
   val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
+  val playFilters = PlayImport.filters
   val playCache = PlayImport.cache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
@@ -30,10 +28,10 @@ object Dependencies {
 
   //projects
 
-  val frontendDependencies = memsubCommonPlayAuth ++ Seq(scalaUri, membershipCommon,
-    contentAPI, playWS, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz, pegdown,
+  val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon,
+    contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch)
 
-  val acceptanceTestDependencies = memsubCommonPlayAuth ++ Seq(scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
+  val acceptanceTestDependencies = Seq(memsubCommonPlayAuth, scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
 
 }
