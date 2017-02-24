@@ -1,29 +1,24 @@
 package services
 
-import java.math.BigInteger
-import java.security.MessageDigest
 import java.util
 
-import com.amazonaws.regions.{Region, Regions}
-import com.typesafe.scalalogging.LazyLogging
-import com.gu.identity.play.IdMinimalUser
+import com.amazonaws.regions.Regions
 import com.amazonaws.services.simpleemail._
 import com.amazonaws.services.simpleemail.model._
-import com.google.common.hash.{HashCode, HashFunction, Hashing}
+import com.google.common.hash.Hashing
 import com.gu.aws.CredentialsProvider
-import configuration.Config
+import com.gu.identity.play.IdMinimalUser
+import com.typesafe.scalalogging.LazyLogging
 import forms.FeedbackForm
 
-import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 trait EmailService extends LazyLogging {
 
-  val client = {
-    val c = new AmazonSimpleEmailServiceClient(CredentialsProvider)
-    c.setRegion(Region.getRegion(Regions.EU_WEST_1))
-    c
-  }
+  val client = AmazonSimpleEmailServiceClientBuilder.standard
+    .withCredentials(CredentialsProvider)
+    .withRegion(Regions.EU_WEST_1)
+    .build()
 
   def md5(input: String): String = {
     val hf = Hashing.md5()
