@@ -8,5 +8,10 @@ object ThankYou extends Page with Browser {
 
   def userIsSignedInAsSupporter: Boolean = elementHasText(cssSelector(".js-user-tier"), "Supporter")
 
-  def pageHasLoaded: Boolean = (pageHasElement(id("qa-joiner-summary-tier")) && pageHasUrl("join/supporter/thankyou"))
+  def pageHasLoaded: Boolean = {
+    // ensure that we are looking at the main page, and not the Stripe/Paypal iframe that may have just closed
+    driver.switchTo().defaultContent()
+
+    pageHasElement(id("qa-joiner-summary-tier")) && pageHasUrl("join/supporter/thankyou")
+  }
 }

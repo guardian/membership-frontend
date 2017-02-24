@@ -107,7 +107,7 @@ trait Browser extends WebBrowser {
   def changeUrl(url: String) = driver.get(url)
 
   private def waitUntil[T](pred: ExpectedCondition[T]): Boolean =
-    Try(new WebDriverWait(driver, Config.waitTimout).until(pred)).isSuccess
+    Try(new WebDriverWait(driver, Config.waitTimeout).until(pred)).isSuccess
 
   private case class MissingPageElementException(q: Query)
     extends Exception(s"Could not find WebElement with locator: ${q.queryString}")
