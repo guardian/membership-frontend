@@ -30,15 +30,16 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 
   def putCreationOfPaidSubscription(paymentMethod: Option[PaymentMethod]) = {
 
-    val methodName = paymentMethod match {
-      case Some(method) => method.getClass.getSimpleName
-      case None => "UnknownPaymentMethod"
+    for {
+      method <- paymentMethod
+    } yield {
+
+      val paymentDimension = new Dimension().withName("PaymentMethod")
+        .withValue(method.getClass.getSimpleName)
+
+      put(s"create-paid-subscription", 1, paymentDimension)
+
     }
-
-    val paymentDimension = new Dimension().withName("PaymentMethod")
-      .withValue(methodName)
-
-    put(s"create-paid-subscription", 1, paymentDimension)
 
   }
 
