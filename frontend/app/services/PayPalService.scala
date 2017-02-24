@@ -74,8 +74,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
       "REFERENCEID" -> baid
     )
 
-    val response = nvpRequest(params)
-    retrieveNVPParam(response, "EMAIL")
+    retrieveNVPParam(nvpRequest(params), "EMAIL")
   }
 
   // Sets up a payment by contacting PayPal and returns the token.
@@ -93,8 +92,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
       "BILLINGTYPE" -> "MerchantInitiatedBilling",
       "NOSHIPPING" -> "1")
 
-    val response = nvpRequest(paymentParams)
-    retrieveNVPParam(response, "TOKEN")
+    retrieveNVPParam(nvpRequest(paymentParams), "TOKEN")
   }
 
   // Sends a request to PayPal to create billing agreement and returns BAID.
@@ -105,7 +103,6 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
       "METHOD" -> "CreateBillingAgreement",
       "TOKEN" -> token.token)
 
-    val response = nvpRequest(agreementParams)
-    retrieveNVPParam(response, "BILLINGAGREEMENTID")
+    retrieveNVPParam(nvpRequest(agreementParams), "BILLINGAGREEMENTID")
   }
 }
