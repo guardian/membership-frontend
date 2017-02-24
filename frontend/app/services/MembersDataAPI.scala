@@ -1,8 +1,7 @@
 package services
 
 import actions.ActionRefiners.SubReqWithSub
-import actions.AuthRequest
-import com.gu.identity.play.{AuthenticatedIdUser, AccessCredentials}
+import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser}
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.WebServiceHelper
 import com.gu.okhttp.RequestRunners
@@ -18,9 +17,8 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.mvc.{AnyContent, Cookie}
-import views.support.IdentityUser
 import views.support.MembershipCompat._
+
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
@@ -57,18 +55,18 @@ object MembersDataAPI {
     (JsPath \ "emailed").readNullable[Boolean]
   )(Behaviour.apply _)
 
-  case class AttributeHelper(cookies: Seq[Option[Cookie]]) extends WebServiceHelper[Attributes, ApiError] {
+  case class AttributeHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Attributes, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
-      req.addHeader("Cookie", cookies.flatten.map(c => s"${c.name}=${c.value}").mkString("; "))
+      req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     }
     override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(MembersDataAPIMetrics)
   }
 
-  case class BehaviourHelper(cookies: Seq[Option[Cookie]]) extends WebServiceHelper[Behaviour, ApiError] {
+  case class BehaviourHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Behaviour, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
-      req.addHeader("Cookie", cookies.flatten.map(c => s"${c.name}=${c.value}").mkString("; "))
+      req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     }
     override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(MembersDataAPIMetrics)
   }
@@ -76,7 +74,7 @@ object MembersDataAPI {
   object Service  {
     def checkMatchesResolvedMemberIn(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
-        getAttributes(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U"))).onComplete {
+        getAttributes(cookies).onComplete {
           case Success(memDataApiAttrs) =>
             val prefix = s"members-data-api-check identity=${memberRequest.user.id} salesforce=${memberRequest.subscriber.contact.salesforceContactId} : "
             val salesforceAttrs = Attributes.fromMember(memberRequest.subscriber)
@@ -93,29 +91,29 @@ object MembersDataAPI {
       case _ => Logger.error(s"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }
 
-    def upsertBehaviour(request: AuthRequest[_], activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None) = {
-      request.user.credentials match {
+    def upsertBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None) = {
+      user.credentials match {
         case cookies: AccessCredentials.Cookies =>
-          setBehaviour(Seq(request.cookies.get("GU_U"), request.cookies.get("SC_GU_U")), request.user.id, activity, note).onComplete {
-            case Success(result) => Logger.info(s"Upserted ${request.user.id}")
-            case Failure(err) => Logger.error(s"Failed to upsert membership-data-api behaviour for user ${request.user.id}", err)
+          setBehaviour(cookies, user.id, activity, note).onComplete {
+            case Success(result) => Logger.info(s"Upserted ${user.id}")
+            case Failure(err) => Logger.error(s"Failed to upsert membership-data-api behaviour for user ${user.id}", err)
           }
-        case _ => Logger.error(s"Unexpected credentials for addBehaviour ($activity) for ${request.user.credentials}")
+        case _ => Logger.error(s"Unexpected credentials for addBehaviour ($activity) for ${user.credentials}")
       }
     }
 
-    def removeBehaviour(memberRequest: SubReqWithSub[_], activity: Option[String] = None) = memberRequest.user.credentials match {
+    def removeBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None) = user.credentials match {
       case cookies: AccessCredentials.Cookies =>
-        deleteBehaviour(Seq(memberRequest.cookies.get("GU_U"), memberRequest.cookies.get("SC_GU_U")), memberRequest.user.id, activity).onComplete {
-          case Success(result) => Logger.info(s"Cleared behaviours for ${memberRequest.user.user.id}")
-          case Failure(err) => Logger.error(s"Failed to remove behaviour events via membership-data-api for user ${memberRequest.user.id}", err)
+        deleteBehaviour(cookies, user.id, activity).onComplete {
+          case Success(result) => Logger.info(s"Cleared behaviours for ${user.user.id}")
+          case Failure(err) => Logger.error(s"Failed to remove behaviour events via membership-data-api for user ${user.id}", err)
         }
-      case _ => Logger.error(s"Unexpected credentials for removeBehaviour for ${memberRequest.user.credentials}")
+      case _ => Logger.error(s"Unexpected credentials for removeBehaviour for ${user.credentials}")
     }
 
-    private def getAttributes(cookies: Seq[Option[Cookie]]) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
+    private def getAttributes(cookies: AccessCredentials.Cookies) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
 
-    private def setBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: Option[String], note: Option[String]) = {
+    private def setBehaviour(cookies: AccessCredentials.Cookies, userId: String, activity: Option[String], note: Option[String]) = {
       val json: JsValue = Json.obj(
         "userId" -> userId,
         "activity" -> activity,
@@ -125,7 +123,7 @@ object MembersDataAPI {
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/capture", json)
     }
 
-    private def deleteBehaviour(cookies: Seq[Option[Cookie]], userId: String, activity: Option[String]) = {
+    private def deleteBehaviour(cookies: AccessCredentials.Cookies, userId: String, activity: Option[String]) = {
       val json: JsValue = Json.obj(
         "userId" -> userId,
         "activity" -> activity
