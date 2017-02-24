@@ -126,7 +126,7 @@ object Joiner extends Controller with ActivityTracking
       tier match {
         case t: Tier.Supporter => {
           MembersDataAPI.Service.upsertBehaviour(
-            request,
+            request.user,
             activity = Some("enterPaidDetails.show"),
             note = Some(t.name))
         }
@@ -274,7 +274,7 @@ object Joiner extends Controller with ActivityTracking
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request)
+        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request.user)
         case _ =>
       }
       Ok(views.html.joiner.thankyou(
@@ -311,7 +311,7 @@ object Joiner extends Controller with ActivityTracking
 
   private def setBehaviourNote(tier: String, errorCode: String)(implicit request: AuthRequest[_]) = {
     if (tier.toLowerCase == "supporter") {
-      MembersDataAPI.Service.upsertBehaviour(request, note = Some(errorCode))
+      MembersDataAPI.Service.upsertBehaviour(request.user, note = Some(errorCode))
     }
   }
 
