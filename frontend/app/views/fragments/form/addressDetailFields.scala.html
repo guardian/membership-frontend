@@ -1,12 +1,9 @@
 @import com.gu.i18n.Country
 @import views.support.CountryWithCurrency
+@import com.gu.memsub.Address
 @(countriesWithCurrencies: List[CountryWithCurrency],
   formType: String,
-  address1: Option[String],
-  address2: Option[String],
-  town: Option[String],
-  postcode: Option[String],
-  county: Option[String],
+  address: Address,
   addressRequired: Boolean = true,
   heading: String = "",
   note: String = "",
@@ -21,7 +18,7 @@
                 required
                 aria-required="true">
         @for(countyOrState <- countyOrStateList) {
-            <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
+            <option value="@address.countyOrState"@if(address.countyOrState == countyOrState){ selected}>@countyOrState</option>
         }
         </select>
         @fragments.form.errorMessage(s"Please enter your ${countyOrStateLabel.capitalize}")
@@ -60,7 +57,7 @@
                    for="address-line-one-@(formType)">Address line 1</label>
             <input type="text"
                    name="@(formType).lineOne"
-                   value="@address1"
+                   value="@address.lineOne"
                    id="address-line-one-@(formType)"
                    @* Salesforce accepts up to 255 chars but this field gets concatenated with address line 2 *@
                    maxlength="126"
@@ -73,7 +70,7 @@
             <label class="label optional-marker" for="address-line-two-@(formType)">Address line 2</label>
             <input type="text"
                    name="@(formType).lineTwo"
-                   value="@address2"
+                   value="@address.lineTwo"
                    id="address-line-two-@(formType)"
                    @* Salesforce accepts up to 255 chars but this field gets concatenated with address line 1 *@
                    maxlength="126"
@@ -84,7 +81,7 @@
             <label class="label js-town-label @if(!addressRequired){optional-marker}" for="town-@(formType)">Town</label>
             <input type="text"
                    name="@(formType).town"
-                   value="@town"
+                   value="@address.town"
                    id="town-@(formType)"
                    maxlength="40"
                    class="input-text js-town"
@@ -100,7 +97,7 @@
                 <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
                 <input type="text"
                        name="@(formType).countyOrState"
-                       value="@county"
+                       value="@address.countyOrState"
                        id="county-or-state-@(formType)"
                        @* This length is limited by Zuora. Salesforce accepts up to 40 chars *@
                        maxlength="32"
@@ -112,7 +109,7 @@
             <label class="label optional-marker js-postcode-label" for="postCode-@(formType)">Post code</label>
             <input type="text"
                    name="@(formType).postCode"
-                   value="@postcode"
+                   value="@address.postCode"
                    id="postCode-@(formType)"
                    maxlength="10"
                    class="input-text js-postcode form-field__postcode"
