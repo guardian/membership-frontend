@@ -72,11 +72,7 @@
                             note = "We need your address to send you a welcome pack",
                             formType = "deliveryAddress",
                             addressRequired = true,
-                            address1 = idUser.privateFields.address1,
-                            address2 = idUser.privateFields.address2,
-                            town = idUser.privateFields.address3,
-                            postcode = idUser.privateFields.postcode,
-                            county = idUser.privateFields.address4
+                            address = idUser.deliveryAddress
                         )
                         <!-- Billing Address -->
                         @fragments.form.billingAddressFields("Billing address")
@@ -84,11 +80,7 @@
                             countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
                             addressRequired = true,
-                            address1 = idUser.privateFields.billingAddress1,
-                            address2 = idUser.privateFields.billingAddress2,
-                            town = idUser.privateFields.billingAddress3,
-                            postcode = idUser.privateFields.billingPostcode,
-                            county = idUser.privateFields.billingAddress4,
+                            address = idUser.billingAddress,
                             showHeading = false
                         )
 
