@@ -12,16 +12,16 @@ import com.gu.memsub.promo.PromotionApplicator._
 import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.PaymentService
-import com.gu.memsub.subsv2.{SubscriptionPlan, _}
 import com.gu.memsub.subsv2.reads.ChargeListReads._
 import com.gu.memsub.subsv2.reads.SubPlanReads._
 import com.gu.memsub.subsv2.services.{SubIds, _}
+import com.gu.memsub.subsv2.{SubscriptionPlan, _}
 import com.gu.memsub.util.Timing
 import com.gu.memsub.{Subscription => _, _}
 import com.gu.salesforce.Tier.{Partner, Patron}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import com.gu.stripe.{Stripe, StripeService}
+import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Commands._
@@ -429,7 +429,7 @@ class MemberService(identityService: IdentityService,
     val subscribe = zuoraService.getFeatures.map { features =>
 
       val planId = planChoice.productRatePlanId
-      val plan = RatePlan(planId.get, None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
+      val plan = RatePlan(planId.get,chargeOverride = Some(ChargeOverride(productRatePlanChargeId = Some("2c92c0f94c510a01014c569e2de37cff"), price = Some(15))), featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
       val today = DateTime.now.toLocalDate
