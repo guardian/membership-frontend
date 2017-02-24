@@ -32,7 +32,7 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 
     for {
       method <- paymentMethod
-    } yield {
+    } {
 
       val paymentDimension = new Dimension().withName("PaymentMethod")
         .withValue(method.getClass.getSimpleName)
