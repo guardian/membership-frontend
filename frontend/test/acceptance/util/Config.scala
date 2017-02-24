@@ -22,7 +22,7 @@ object Config {
 
   val screencastIdFile = conf.getString("screencastId.file")
 
-  val waitTimout: Int = conf.getString("waitTimeout").toInt
+  val waitTimeout: Int = conf.getInt("waitTimeout")
 
   val paypalBuyerEmail = conf.getString("paypal.sandbox.buyer.email")
 
