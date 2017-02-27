@@ -39,7 +39,7 @@ class DestinationServiceTest extends Specification {
         accountId = com.gu.memsub.Subscription.AccountId(""),
         startDate = new LocalDate("2015-01-01"),
         termStartDate = new LocalDate("2015-01-01"),
-        firstPaymentDate = new LocalDate("2015-01-01"),
+        acceptanceDate = new LocalDate("2015-01-01"),
         termEndDate = new LocalDate("2016-01-01"),
         promoCode = None,
         casActivationDate = None,
