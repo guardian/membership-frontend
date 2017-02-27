@@ -43,7 +43,7 @@ import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
 
 import scala.concurrent.Future
-import scala.util.Failure
+import scala.util.{Success, Failure}
 import scalaz._
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
@@ -422,6 +422,8 @@ class MemberService(identityService: IdentityService,
                                       payPalEmail: Option[String],
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
+
+    val paymentMethod = createPaymentMethod(contactId, payPalEmail, joinData.payment, stripeCustomer)
     val country = joinData.zuoraAccountAddress.country
     val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures.map { features =>
@@ -432,7 +434,7 @@ class MemberService(identityService: IdentityService,
 
       val today = DateTime.now.toLocalDate
       Subscribe(account = createAccount(contactId, currency, joinData.payment),
-        paymentMethod = createPaymentMethod(contactId, payPalEmail, joinData.payment, stripeCustomer),
+        paymentMethod = paymentMethod,
         address = joinData.zuoraAccountAddress,
         email = email,
         ratePlans = NonEmptyList(plan),
@@ -445,7 +447,10 @@ class MemberService(identityService: IdentityService,
     val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
     subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(sub)))
       .flatMap(zuoraService.createSubscription)
-      .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
+      .andThen {
+        case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
+        case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)
+      }
   }
 
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
