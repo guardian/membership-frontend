@@ -8,6 +8,7 @@ define(['$'], function ($) {
     var POST_CODE_STRING = 'Post code';
     var COUNTY_STRING = 'County';
     var STATE_STRING = 'State';
+    var PROVINCE_STRING = 'Province';
     var COUNTY_CONTAINER_SELECTOR = '.js-county-container';
     var POSTCODE_LABEL_SELECTOR = '.js-postcode-label';
     var AUSTRALIA_STRING = 'australia';
@@ -44,14 +45,14 @@ define(['$'], function ($) {
             $townLabel.text(TOWN_STRING);
             $countyContainer.append($stateSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
             $postcodeLabel.text(ZIP_CODE_STRING);
-            $countyLabel.text(COUNTY_STRING);
-            $countyLabel.addClass(OPTIONAL_CLASSNAME);
+            $countyLabel.text(STATE_STRING);
+            $countyLabel.removeClass(OPTIONAL_CLASSNAME);
         } else if (optionTxt === CANADA_STRING) {
             $townLabel.text(TOWN_STRING);
             $countyContainer.append($provinceSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
             $postcodeLabel.text(ZIP_CODE_STRING);
-            $countyLabel.text(COUNTY_STRING);
-            $countyLabel.addClass(OPTIONAL_CLASSNAME);
+            $countyLabel.text(PROVINCE_STRING);
+            $countyLabel.removeClass(OPTIONAL_CLASSNAME);
         } else if (optionTxt === AUSTRALIA_STRING){
             $townLabel.text(SUBURB_STRING);
             $countyLabel.text(STATE_STRING);
