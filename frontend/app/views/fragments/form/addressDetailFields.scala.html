@@ -18,7 +18,7 @@
                 required
                 aria-required="true">
         @for(countyOrState <- countyOrStateList) {
-            <option value="@address.countyOrState"@if(address.countyOrState == countyOrState){ selected}>@countyOrState</option>
+            <option value="@countyOrState" @if(address.countyOrState == countyOrState){ selected}>@countyOrState</option>
         }
         </select>
         @fragments.form.errorMessage(s"Please enter your ${countyOrStateLabel.capitalize}")
