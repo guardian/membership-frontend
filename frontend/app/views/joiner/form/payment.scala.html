@@ -1,14 +1,13 @@
+@import abtests.PayPalTestVariants
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.salesforce.Tier.{Supporter, Partner}
+@import com.gu.salesforce.Tier.{Partner, Supporter}
+@import tracking.AppnexusPixel
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
-@import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
-@import tracking.AppnexusPixel
-
-@import abtests.PayPalTestVariants
+@import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
 @(plans: MonthYearPlans[PaidMember],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,

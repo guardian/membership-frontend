@@ -39,13 +39,14 @@ import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
 object TierController extends Controller with ActivityTracking
-                                         with LazyLogging
-                                         with CatalogProvider
-                                         with SubscriptionServiceProvider
-                                         with MemberServiceProvider
-                                         with StripeServiceProvider
-                                         with PaymentServiceProvider
-                                         with PromoServiceProvider {
+  with LazyLogging
+  with CatalogProvider
+  with SubscriptionServiceProvider
+  with MemberServiceProvider
+  with StripeServiceProvider
+  with PayPalServiceProvider
+  with PaymentServiceProvider
+  with PromoServiceProvider {
 
   def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, request.touchpointBackend.catalogService.unsafeCatalog))
@@ -95,7 +96,7 @@ object TierController extends Controller with ActivityTracking
 
   def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
     handleErrors(memberService.cancelSubscription(request.subscriber)) {
-      if(request.subscriber.subscription.plan.isPaid) {
+      if (request.subscriber.subscription.plan.isPaid) {
         Redirect(routes.TierController.cancelFreeTierSummary())
       } else {
         Redirect(routes.TierController.cancelPaidTierSummary())
@@ -109,7 +110,7 @@ object TierController extends Controller with ActivityTracking
 
   def cancelPaidTierSummary = PaidSubscriptionAction { implicit request =>
     implicit val c = catalog
-    Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies:_*)
+    Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
   def paymentSummary(subscriber: PaidMember, targetPlans: MonthYearPlans[com.gu.memsub.subsv2.CatalogPlan.PaidMember], code: Option[PromoCode])
@@ -137,10 +138,9 @@ object TierController extends Controller with ActivityTracking
     val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
 
-    val identityUserFieldsF =
+    val idUserFuture =
       IdentityService(IdentityApi)
         .getIdentityUserView(request.user, IdentityRequest(request))
-        .map(_.privateFields)
 
     // Preselect the country from Identity fields
     // but the currency from Zuora account
@@ -149,16 +149,16 @@ object TierController extends Controller with ActivityTracking
         CountryGroup.countries.find(_.name == name)
       }
       val formI18n = CheckoutForm(selectedCountry, currency, billingPeriod)
-      PageInfo(initialCheckoutForm = formI18n, stripePublicKey = stripeKey)
+      PageInfo(initialCheckoutForm = formI18n, payPalEnvironment = Some(payPalService.config.payPalEnvironment), stripePublicKey = stripeKey)
     }
 
     val providedPromoCode = promoCode orElse codeFromSession
 
-    request.paidOrFreeSubscriber.fold({freeSubscriber =>
-      identityUserFieldsF.map(privateFields => {
+    request.paidOrFreeSubscriber.fold({ freeSubscriber =>
+      idUserFuture.map(idUser => {
 
         // is the promoCode valid for the page being rendered
-        val pageInfo = getPageInfo(privateFields, BillingPeriod.Year)
+        val pageInfo = getPageInfo(idUser.privateFields, BillingPeriod.Year)
         val planChoice = PaidPlanChoice(target, BillingPeriod.Year)
         val validPromo =
           providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
@@ -167,7 +167,7 @@ object TierController extends Controller with ActivityTracking
           c.friend,
           targetPlans,
           countriesWithCurrency,
-          privateFields,
+          idUser,
           pageInfo,
           validPromo
         )(getToken, request))
@@ -182,8 +182,8 @@ object TierController extends Controller with ActivityTracking
         (promoCode orElse codeFromSession).flatMap(promoService.validate[Upgrades](_, country, planChoice.productRatePlanId).toOption)
       }
 
-      (validPromo |@| identityUserFieldsF |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (vp, fields, summary) =>
-        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, fields, getPageInfo(fields, billingPeriod), flashError, vp)(getToken, request)))
+      (validPromo |@| idUserFuture |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (vp, idUser, summary) =>
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError, vp)(getToken, request)))
       }.map(handleResultErrors)
     })
   }
@@ -202,13 +202,13 @@ object TierController extends Controller with ActivityTracking
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target,form.promoCode))
+        Redirect(routes.TierController.upgrade(target, form.promoCode))
           .flashing("error" ->
             s"That password does not match our records. Please try again.")
       }
 
       val noEmailMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target,form.promoCode))
+        Redirect(routes.TierController.upgrade(target, form.promoCode))
           .flashing("error" ->
             s"Your email address is not on our system, please call customer services to upgrade")
       }
@@ -234,13 +234,13 @@ object TierController extends Controller with ActivityTracking
       mem => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(mem))
     )
 
-    futureResult.map(_.discardingCookies(TierChangeCookies.deletionCookies:_*)).recover {
+    futureResult.map(_.discardingCookies(TierChangeCookies.deletionCookies: _*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error: ZuoraPartialError => Forbidden
       case error: ScalaforceError => Forbidden
     }
   }
 
-  def upgradeThankyou(tier: PaidTier) = Joiner.thankyou(tier, upgrade=true)
+  def upgradeThankyou(tier: PaidTier) = Joiner.thankyou(tier, upgrade = true)
 
 }
