@@ -157,6 +157,45 @@ object Joiner extends Controller with ActivityTracking
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
+  def NonMemberAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp)
+
+  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK) = NonMemberAction.async { implicit request =>
+
+    implicit val resolution: TouchpointBackend.Resolution =
+      TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+
+    implicit val tpBackend = resolution.backend
+
+    implicit val backendProvider: BackendProvider = new BackendProvider {
+      override def touchpointBackend = tpBackend
+    }
+
+    implicit val c = catalog
+
+    val identityRequest = IdentityRequest(request)
+
+    (for {
+      identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
+    } yield {
+      val plans = catalog.contributor
+
+      val pageInfo = PageInfo(
+        stripePublicKey = Some(stripeService.publicKey),
+        payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
+      )
+
+
+      Ok(views.html.joiner.form.monthlyContribution(
+        plans,
+        countryCurrencyWhitelist,
+        identityUser,
+        pageInfo,
+        Some(countryGroup),
+        resolution))
+    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier supporter: ${identityRequest.trackingParameters}", e)}
+  }
+
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog
@@ -201,6 +240,13 @@ object Joiner extends Controller with ActivityTracking
       Future.successful(BadRequest(formWithErrors.errorsAsJson))
     },
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))))
+  }
+
+  def joinMonthlyContribution =  AuthenticatedNonMemberAction.async { implicit request =>
+    paidMemberJoinForm.bindFromRequest.fold({ formWithErrors =>
+      Future.successful(BadRequest(formWithErrors.errorsAsJson))
+    },
+      makeMember(Tier.supporter, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(Tier.supporter).url))))
   }
 
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>

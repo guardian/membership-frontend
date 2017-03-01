@@ -116,6 +116,8 @@ object ActionRefiners extends LazyLogging {
     }
   }
 
+  def redirectMemberAttemptingToSignUp(req: SubReqWithSub[_]): Result = contributorJoinRedirect(req)
+
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
     override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
   }

@@ -55,6 +55,15 @@ object MemberForm {
     val payment: PaymentForm
   }
 
+  trait ContributorForm {
+    val name: NameForm
+    val marketingChoices: MarketingChoicesForm
+    val password: Option[String]
+    val planChoice: PlanChoice
+    val featureChoice: Set[FeatureChoice]
+    val payment: PaymentForm
+  }
+
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String], trackingPromoCode: Option[PromoCode]) extends JoinForm {
     override val planChoice: FreePlanChoice = FreePlanChoice(friend)
@@ -83,6 +92,21 @@ object MemberForm {
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
     override val planChoice: PaidPlanChoice = PaidPlanChoice(tier, payment.billingPeriod)
   }
+
+  case class MonthlyContributorForm(
+                                name: NameForm,
+                                payment: PaymentForm,
+                                marketingChoices: MarketingChoicesForm,
+                                password: Option[String],
+                                casId: Option[String],
+                                subscriberOffer: Boolean,
+                                featureChoice: Set[FeatureChoice],
+                                trackingPromoCode: Option[PromoCode]
+                               ) extends ContributorForm {
+    override val planChoice: PaidPlanChoice = ContributorChoice(payment.billingPeriod)
+  }
+
+
 
   case class AddressDetails(deliveryAddress: Address, billingAddress: Option[Address])
 

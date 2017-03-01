@@ -434,6 +434,7 @@ class MemberService(identityService: IdentityService,
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
       val today = DateTime.now.toLocalDate
+
       Subscribe(account = createAccount(contactId, currency, joinData.payment),
         paymentMethod = paymentMethod,
         address = joinData.zuoraAccountAddress,
@@ -484,7 +485,7 @@ class MemberService(identityService: IdentityService,
       .flatMap(zuoraService.createSubscription)
       .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
-  
+
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
     paymentForm match {
       case PaymentForm(_, Some(stripeToken), _) =>
