@@ -88,12 +88,12 @@ trait MemberService {
                              ipCountry: Option[Country]): Future[SubscribeResult]
 
   def createContribution(contactId: ContactId,
-                             joinData: PaidMemberForm,
-                             nameData: NameForm,
-                             stripeCustomer: Option[Customer],
-                             campaignCode: Option[CampaignCode],
-                             email: String,
-                             payPalEmail: Option[String]): Future[SubscribeResult]
+                                  joinData: ContributorForm,
+                                  nameData: NameForm,
+                                  stripeCustomer: Option[Customer],
+                                  campaignCode: Option[CampaignCode],
+                                  email: String,
+                                  payPalEmail: Option[String]): Future[SubscribeResult]
 }
 
 object MemberService {

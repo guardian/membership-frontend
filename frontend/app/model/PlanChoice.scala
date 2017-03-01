@@ -25,7 +25,7 @@ case class PaidPlanChoice(tier: PaidTier, billingPeriod: BillingPeriod) extends 
 }
 case class ContributorChoice(billingPeriod: BillingPeriod) extends PlanChoice {
   override def productRatePlanId(implicit catalog: Catalog) = billingPeriod match {
-    case Month => catalog.contributor.month.id
+    case Month => catalog.contributor.id
     case _ => throw new IllegalStateException(s"Unreachable code: Expected plan choice ${this} to be either annual or monthly, but found a ${billingPeriod.noun} billing period")
   }
 }

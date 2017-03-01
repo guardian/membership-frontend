@@ -180,21 +180,20 @@ object Joiner extends Controller with ActivityTracking
       val plans = catalog.contributor
 
       val pageInfo = PageInfo(
-        stripePublicKey = Some(stripeService.publicKey),
-        payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
-        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
+        stripePublicKey = Some(stripeService.publicKey)
       )
-
 
       Ok(views.html.joiner.form.monthlyContribution(
         plans,
-        countryCurrencyWhitelist,
         identityUser,
         pageInfo,
         Some(countryGroup),
         resolution))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier supporter: ${identityRequest.trackingParameters}", e)}
   }
+
+
+
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
     implicit val backendProvider: BackendProvider = request

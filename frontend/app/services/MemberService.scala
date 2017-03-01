@@ -30,7 +30,6 @@ import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{Queries => SoapQueries}
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
-import forms.ContributorForm.ContributorForm
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
@@ -463,12 +462,12 @@ class MemberService(identityService: IdentityService,
                                   email: String,
                                   payPalEmail: Option[String]): Future[SubscribeResult] = {
 
-    val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
+    val planChoice = ContributorChoice(joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures.map { features =>
 
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get,chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f94c510a01014c569e2de37cff", price = Some(15))), featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
-      val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
+      val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(UK)
 
       val today = DateTime.now.toLocalDate
       Contribute(account = createAccount(contactId, currency, joinData.payment),
@@ -478,12 +477,14 @@ class MemberService(identityService: IdentityService,
         name = nameData,
         contractAcceptance = today,
         contractEffective = today)
-    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
+    }.andThen { case Failure(e) => logger.error(s"Could not get features for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
-    val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
-    subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(sub)))
-      .flatMap(zuoraService.createSubscription)
-      .andThen { case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
+    subscribe.map(sub => sub)
+      .map(zuoraService.createSubscription)
+      .andThen {
+        case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
+        case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)
+      }
   }
 
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =
