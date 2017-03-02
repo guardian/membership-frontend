@@ -1,90 +1,133 @@
+@import abtests.PayPalTestVariants
+@import com.gu.memsub.promo.{Upgrades, ValidPromotion}
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.{MonthYearPlans, _}
+@import com.gu.memsub.subsv2._
+@import com.gu.salesforce.Tier.{Partner, Supporter}
 @import play.api.mvc.RequestHeader
 @import play.filters.csrf
+@import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
-@import views.support.{CountryWithCurrency, PageInfo, PaidPlans}
-@import com.gu.memsub.promo.ValidPromotion
-@import com.gu.memsub.promo.Upgrades
+@import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
 @(currentPlan: CatalogPlan.Member,
-  targetPlans: MonthYearPlans[PaidMember],
-  countriesWithCurrency: List[CountryWithCurrency],
-  userFields: com.gu.identity.play.PrivateFields,
-  pageInfo: PageInfo,
-    validPromo: Option[ValidPromotion[Upgrades]]
+    targetPlans: MonthYearPlans[PaidMember],
+    countriesWithCurrency: List[CountryWithCurrency],
+    idUser: IdentityUser,
+    pageInfo: PageInfo,
+    validPromo: Option[ValidPromotion[Upgrades]],
+    paypalTestVariant: Option[String] = Some(PayPalTestVariants.withPayPal)
 )(implicit token: csrf.CSRF.Token, request: RequestHeader)
 
-@import views.html.helper._
+@main("Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name, pageInfo = pageInfo, margins = false, simpleHeader = true) {
+    <main role="main" class="page-content skin-checkout-b skin-checkout-paypal">
 
-@main("Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name, pageInfo = pageInfo) {
-      <main role="main" class="page-content l-constrained">
-          <form action="@routes.TierController.upgrade(targetPlans.tier, None)" method="POST" id="payment-form"
-          class="js-form" data-change-to-tier="@targetPlans.tier.name">
-              @CSRF.formField
-              <input type="hidden" name="tier" disabled value="@targetPlans.tier.slug"/>
-          <section class="page-header">
-              <h1 class="page-headline">Become a @targetPlans.tier.name</h1>
-              <p class="page-intro">Support the independence of the Guardian and our award-winning journalism</p>
-          </section>
+            <!-- FORM TITLE -->
+        <section class="checkout-header">
+            <h1 class="checkout-headline">@fragments.form.formCta(targetPlans.tier)</h1>
+        </section>
 
-          <section class="form-section form-section--no-padding">
-              <div class="form-section__content">
-              @fragments.form.errorMessageDisplay()
-              </div>
-          </section>
+            <!-- CHECKOUT FORM -->
+        <form action="@routes.TierController.upgrade(targetPlans.tier, None)" method="POST" id="payment-form" class="js-form" data-change-to-tier="@targetPlans.tier.name">
+            @CSRF.formField
+            <input type="hidden" name="tier" disabled value="@targetPlans.tier.slug"/>
 
-          <section class="form-section">
+            <section class="form-content">
 
-              <div class="form-section__lead-in sign-in-required">
-              @fragments.joiner.signedInAs(routes.FrontPage.index().url)
-              </div>
+                    <!-- PARTNER/PATRON BENEFITS LIST -->
+                @if(targetPlans.tier != Supporter()) {
+                    <!-- List of benefits -->
+                    @fragments.form.benefitsPanel(targetPlans.tier.benefits)
 
-              <div class="form-section__content">
+                    <!-- ACCORDION SECTION - BENEFITS CHOICE -->
+                    @fragments.form.featureChoicePanel(targetPlans.tier)
+                }
 
-                  <div class="form-group">
-                      @fragments.form.benefitsFieldset(targetPlans.tier.benefits)
-                      @fragments.form.featureChoiceFieldset(targetPlans.tier)
-                  </div>
+                    <!-- ACCORDION SECTION - NAME AND ADDRESS -->
+                <section class="form-panel sub-heading">
 
-                  <div class="form-group">
-                      <h2 class="form-group__title">Address</h2>
-                      @fragments.form.addressDetail(
-                          countriesWithCurrencies = countriesWithCurrency,
-                          formType = "deliveryAddress",
-                          heading = "Delivery address",
-                          note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
-                          addressRequired = true,
-                          address1 = userFields.address1,
-                          address2 = userFields.address2,
-                          town = userFields.address3,
-                          postcode = userFields.postcode,
-                          county = userFields.address4
-                      )
-                  </div>
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Name and address</h2>
+                        <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
+                        <div class="sign-in-required js-sign-in-note @if(targetPlans.tier == Partner()) {is-hidden}">
+                        @fragments.joiner.signedInAs(request.uri, inline = true)
+                        </div>
+                    </div>
 
-                  <div class="form-group">
-                      <h2 class="form-group__title">Billing</h2>
-                      @fragments.form.billingAddress("Billing address")
-                      @fragments.form.addressDetail(
-                          countriesWithCurrencies = countriesWithCurrency,
-                          heading = "",
-                          note = "",
-                          formType = "billingAddress",
-                          addressRequired = true,
-                          address1 = userFields.billingAddress1,
-                          address2 = userFields.billingAddress2,
-                          town = userFields.billingAddress3,
-                          postcode = userFields.billingPostcode,
-                          county = userFields.billingAddress4
-                      )
-                      @fragments.form.paymentOptions(targetPlans)
-                      @fragments.form.cardDetail(targetPlans)
-                  </div>
+                    <div class="form-panel__content js-form-panel-name-address @if(targetPlans.tier == Partner()) {is-hidden}">
 
-                  @fragments.form.submit(PaidPlans(targetPlans))
-              </div>
-          </section>
-          </form>
-      </main>
+                            <!-- Address -->
+                        @fragments.form.addressDetailFields(
+                            countriesWithCurrencies = countriesWithCurrency,
+                            heading = "Delivery address",
+                            note = "We need your address to send you a welcome pack",
+                            formType = "deliveryAddress",
+                            addressRequired = true,
+                            address = idUser.deliveryAddress,
+                            hideTopBorder = true
+                        )
+                            <!-- Billing Address -->
+                        @fragments.form.billingAddressFields("Billing address")
+                        @fragments.form.addressDetailFields(
+                            countriesWithCurrencies = countriesWithCurrency,
+                            formType = "billingAddress",
+                            addressRequired = true,
+                            address = idUser.billingAddress,
+                            showHeading = false
+                        )
+
+                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
+                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">
+                            This form has errors (see above)</div>
+                    </div>
+
+                </section>
+
+                    <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
+                <section class="form-panel form-group--little-padding">
+
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Payment</h2>
+                        <p class="text-note">Prices include VAT</p>
+                    </div>
+
+                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
+
+                            <!-- Payment Options -->
+                        @fragments.form.paymentOptionsFields(targetPlans)
+                        <fieldset class="fieldset js-payment-methods">
+
+                            <div class="fieldset__heading">
+                                <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
+                                <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top"))
+                                    Secure</p>
+                            </div>
+
+                            <div class="fieldset__fields">
+                                <div class="form-field">
+                                    <div class="loader js-payment-processing">Processing.</div>
+                                </div>
+                                <div class="form-field js-payment-type">
+                                @fragments.form.stripeCheckout(idUser)
+                                </div>
+                                @{
+                                    paypalTestVariant match {
+                                        case Some(variant) if variant == PayPalTestVariants.withPayPal => {
+                                                <div class="form-field js-payment-type">
+                                                <div id="paypal-button-checkout"></div>
+                                                </div>
+                                        }
+                                        case _ => {}
+                                    }
+                                }
+                            </div>
+                            <div class="js-payment-error flash-message flash-message--error is-hidden">
+                                Sorry, we weren't able to process your payment this time around. Please try again.</div>
+                        </fieldset>
+
+                    </div>
+                </section>
+
+            </section>
+        </form>
+    </main>
 }

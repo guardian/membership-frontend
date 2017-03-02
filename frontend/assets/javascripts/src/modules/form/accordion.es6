@@ -62,7 +62,7 @@ function getPanels (form, benefitsExists) {
 // Closes a form panel.
 function closePanel (panel, editable) {
 
-	panel.content.forEach(elem => {
+	panel.content.filter(elem => elem != null).forEach(elem => {
 		elem.classList.add('is-hidden');
 	});
 
