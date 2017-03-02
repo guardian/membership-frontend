@@ -30,7 +30,7 @@
 <fieldset class="fieldset js-@(formType)-fieldset">
 
     @if(showHeading) {
-        <div class="@if(hideTopBorder) {fieldset__heading--no-border} else {fieldset__heading}">
+        <div class="fieldset__heading @if(hideTopBorder) {fieldset__heading--no-border}">
             <h2 class="fieldset__headline">@heading</h2>
             <div class="fieldset__note">@note</div>
         </div>
