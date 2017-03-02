@@ -101,9 +101,6 @@ export function init() {
     wrappedGa('set', dimensions.isLoggedOn, isLoggedIn.toString());
     wrappedGa('set', dimensions.signedOut, signedOut.toString());
     wrappedGa('set', dimensions.platform, 'membership');
-    if (guardian.payPalTestVariant) {
-        wrappedGa('set', dimensions.experience, guardian.payPalTestVariant);
-    }
 
     if (isLoggedIn) {
         wrappedGa('set', dimensions.identityId, u.id);

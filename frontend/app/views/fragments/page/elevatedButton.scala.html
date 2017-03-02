@@ -1,11 +1,10 @@
 @import com.gu.i18n.CountryGroup
+@import com.gu.memsub.BillingPeriod.Month
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
 @import com.gu.memsub.subsv2.MonthYearPlans
-@import abtests.PayPalTestVariants
 @import views.support.Asset
 @import views.support.MembershipCompat._
 @import views.support.Pricing._
-@import com.gu.memsub.BillingPeriod.{ Month, Year}
 
 @(  supporterPlans: MonthYearPlans[PaidMember],
     countryGroup: CountryGroup,
@@ -19,7 +18,7 @@
             data-metric-action="cta click"
             data-metric-label="@dataLabel"
 
-            href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier, countryGroup=countryGroup, paypalTest = PayPalTestVariants.allocateVariant())}">
+            href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier, countryGroup=countryGroup)}">
             <div class="elevated-button__text ">
                 Become a Supporter <br/>
                 <span class="elevated-button--pricing-placeholder">for @pricing.getPhrase(Month)</span>

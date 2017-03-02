@@ -104,8 +104,6 @@ trait Browser extends WebBrowser {
   // Switches back to the first window opened by the driver.
   def switchToParentWindow() = driver.switchTo().window(parentWindow)
 
-  def changeUrl(url: String) = driver.get(url)
-
   private def waitUntil[T](pred: ExpectedCondition[T]): Boolean =
     Try(new WebDriverWait(driver, Config.waitTimeout).until(pred)).isSuccess
 
