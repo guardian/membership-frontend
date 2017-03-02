@@ -92,8 +92,7 @@ trait MemberService {
                                   nameData: NameForm,
                                   stripeCustomer: Option[Customer],
                                   campaignCode: Option[CampaignCode],
-                                  email: String,
-                                  payPalEmail: Option[String]): Future[SubscribeResult]
+                                  email: String): Future[SubscribeResult]
 }
 
 object MemberService {

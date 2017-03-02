@@ -459,19 +459,18 @@ class MemberService(identityService: IdentityService,
                                   nameData: NameForm,
                                   stripeCustomer: Option[Customer],
                                   campaignCode: Option[CampaignCode],
-                                  email: String,
-                                  payPalEmail: Option[String]): Future[SubscribeResult] = {
+                                  email: String): Future[SubscribeResult] = {
 
+    val paymentMethod = createPaymentMethod(contactId, None, joinData.payment, stripeCustomer)
     val planChoice = ContributorChoice(joinData.payment.billingPeriod)
-    val subscribe = zuoraService.getFeatures.map { features =>
-
+    val contribute = zuoraService.getFeatures.map { features =>
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(planId.get,chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f94c510a01014c569e2de37cff", price = Some(15))), featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(UK)
 
       val today = DateTime.now.toLocalDate
       Contribute(account = createAccount(contactId, currency, joinData.payment),
-        paymentMethod = createPaymentMethod(contactId, payPalEmail, joinData.payment, stripeCustomer),
+        paymentMethod = paymentMethod,
         email = email,
         ratePlans = NonEmptyList(plan),
         name = nameData,
@@ -479,12 +478,10 @@ class MemberService(identityService: IdentityService,
         contractEffective = today)
     }.andThen { case Failure(e) => logger.error(s"Could not get features for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
-    subscribe.map(sub => sub)
-      .map(zuoraService.createSubscription)
-      .andThen {
-        case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
-        case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)
-      }
+    contribute.flatMap(zuoraService.createContribution).andThen {
+      case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
+      case Failure(e) => logger.error(s"Could not create paid subscription in tier  for user with salesforceContactId ${contactId.salesforceContactId}", e)
+    }
   }
 
   private def createAccount(contactId: ContactId, currency: Currency, paymentForm: PaymentForm) =

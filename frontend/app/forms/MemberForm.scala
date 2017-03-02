@@ -59,7 +59,7 @@ object MemberForm {
     val name: NameForm
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
-    val planChoice: ContributorChoice
+    val planChoice: ContributionPlanChoice
     val featureChoice: Set[FeatureChoice]
     val payment: PaymentForm
   }
@@ -103,8 +103,7 @@ object MemberForm {
                                 featureChoice: Set[FeatureChoice],
                                 trackingPromoCode: Option[PromoCode]
                                ) extends ContributorForm {
-
-    override val planChoice: ContributorChoice = ContributorChoice(payment.billingPeriod)
+    override val planChoice = ContributorChoice(payment.billingPeriod)
   }
 
 

@@ -23,10 +23,16 @@ case class PaidPlanChoice(tier: PaidTier, billingPeriod: BillingPeriod) extends 
     case _ => throw new IllegalStateException(s"Unreachable code: Expected plan choice ${this} to be either annual or monthly, but found a ${billingPeriod.noun} billing period")
   }
 }
-case class ContributorChoice(billingPeriod: BillingPeriod) extends PlanChoice {
+
+
+sealed trait ContributionPlanChoice {
+  def productRatePlanId(implicit catalog: Catalog): ProductRatePlanId
+}
+case class ContributorChoice(billingPeriod: BillingPeriod) extends ContributionPlanChoice {
   override def productRatePlanId(implicit catalog: Catalog) = billingPeriod match {
     case Month => catalog.contributor.id
-    case _ => throw new IllegalStateException(s"Unreachable code: Expected plan choice ${this} to be either annual or monthly, but found a ${billingPeriod.noun} billing period")
+    case _ => throw new IllegalStateException(s"Unreachable code: Expected plan choice to be either annual or monthly, but found a ${billingPeriod.noun} billing period")
   }
 }
+
 
