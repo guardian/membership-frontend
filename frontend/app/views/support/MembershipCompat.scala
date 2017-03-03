@@ -8,6 +8,7 @@ import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.subsv2.{CatalogPlan, _}
 import com.gu.memsub.{Subscription => _, _}
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
+import Benefit._
 
 import scala.language.higherKinds
 import scala.util.Try
@@ -18,7 +19,7 @@ import scala.util.Try
   */
 object MembershipCompat {
 
-  implicit class MonthYearMembership(in: MonthYearPlans[CatalogPlan.PaidMember]) {
+  implicit class MonthYearMembership(in: PaidMembershipPlans[Benefit.PaidMemberTier]) {
     def tier: PaidTier = in.month.tier
   }
 
@@ -50,7 +51,7 @@ object MembershipCompat {
     }
   }
 
-  implicit class YMPlans(in: MonthYearPlans[CatalogPlan.PaidMember]) {
+  implicit class YMPlans(in: PaidMembershipPlans[Benefit.PaidMemberTier]) {
 
     def get(b: BillingPeriod): CatalogPlan.PaidMember[BillingPeriod] = b match {
       case Month => in.month
@@ -88,7 +89,7 @@ object MembershipCompat {
     def unsafeFindFree(prpId: ProductRatePlanId): CatalogPlan.FreeMember = Seq(in.friend, in.staff)
         .find(_.id == prpId).getOrElse(throw new Exception(s"no free plan with id $prpId"))
 
-    def findPaid(p: PaidTier): MonthYearPlans[CatalogPlan.PaidMember] = p match {
+    def findPaid(p: PaidTier): PaidMembershipPlans[Benefit.PaidMemberTier] = p match {
       case Tier.Supporter() => in.supporter
       case Tier.Partner() => in.partner
       case Tier.Patron() => in.patron

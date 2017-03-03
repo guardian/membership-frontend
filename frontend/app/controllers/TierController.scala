@@ -5,11 +5,12 @@ import actions.BackendProvider
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
+import com.gu.memsub.Benefit.PaidMemberTier
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.promo.Formatters.PromotionFormatters._
 import com.gu.memsub.promo.{PromoCode, Upgrades}
-import com.gu.memsub.subsv2.{Catalog, MonthYearPlans}
+import com.gu.memsub.subsv2.{Catalog, PaidMembershipPlans}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -113,7 +114,7 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
-  def paymentSummary(subscriber: PaidMember, targetPlans: MonthYearPlans[com.gu.memsub.subsv2.CatalogPlan.PaidMember], code: Option[PromoCode])
+  def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier], code: Option[PromoCode])
                     (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
 
     val targetPlan = targetPlans.get(subscriber.subscription.plan.charges.billingPeriod)

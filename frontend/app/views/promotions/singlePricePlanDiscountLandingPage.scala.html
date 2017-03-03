@@ -27,15 +27,15 @@
 @import com.gu.memsub.promo.HeroImageAlignment
 @import views.support.HeroImageAlignment._
 @import org.pegdown.PegDownProcessor
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import views.support.MembershipCompat._
 
 @import com.gu.memsub.subsv2.CatalogPlan
 @(  heroImages: model.OrientatedImages,
     heroImageAlignment: HeroImageAlignment,
     pricePlan: CatalogPlan.PaidMember[BillingPeriod],
-    pricePlans: MonthYearPlans[PaidMember],
+    pricePlans: PaidMembershipPlans[PaidMemberTier],
     pageInfo: PageInfo,
     promotionImage: ResponsiveImageGroup,
     promoCode: PromoCode,

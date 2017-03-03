@@ -3,13 +3,13 @@
 
 @import com.gu.memsub.Current
 @import configuration.Videos
-@import com.gu.memsub.subsv2.Catalog._
+@import com.gu.memsub.Benefit
 @import views.support.Asset
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import views.support.MembershipCompat._
 
 @import com.gu.memsub.subsv2.CatalogPlan
-@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
   pageInfo: PageInfo,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

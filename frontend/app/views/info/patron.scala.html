@@ -3,13 +3,13 @@
 @import com.gu.memsub.Current
 @import views.support.{Asset, PageInfo, PaidPlans}
 @import com.gu.salesforce.Tier
-@import com.gu.memsub.subsv2.Catalog._
+@import com.gu.memsub.Benefit
 
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.memsub.subsv2.CatalogPlan
-@(patronPlans: MonthYearPlans[CatalogPlan.Patron],
-  supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
-  partnerPlans: MonthYearPlans[CatalogPlan.Partner],
+@(patronPlans: PaidMembershipPlans[Benefit.Patron.type],
+  supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
+  partnerPlans: PaidMembershipPlans[Benefit.Partner.type],
   pageInfo: PageInfo,
   countryGroup: CountryGroup,
   pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
