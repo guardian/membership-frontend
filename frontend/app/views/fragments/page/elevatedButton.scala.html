@@ -1,13 +1,13 @@
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import abtests.PayPalTestVariants
 @import views.support.Asset
 @import views.support.MembershipCompat._
 @import views.support.Pricing._
 @import com.gu.memsub.BillingPeriod.{ Month, Year}
 
-@(  supporterPlans: MonthYearPlans[PaidMember],
+@(  supporterPlans: PaidMembershipPlans[PaidMemberTier],
     countryGroup: CountryGroup,
     dataLabel : String)
 

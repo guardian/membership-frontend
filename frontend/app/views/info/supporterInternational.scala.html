@@ -2,13 +2,14 @@
 @import com.gu.memsub.Current
 
 @import views.support.PageInfo
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.memsub.subsv2.CatalogPlan
 @import com.gu.salesforce.Tier.Supporter
 @import views.support.MembershipCompat._
 @import tracking.AppnexusPixel
+@import com.gu.memsub.Benefit
 
-@(heroImage: model.OrientatedImages, supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
     pageInfo: PageInfo,
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

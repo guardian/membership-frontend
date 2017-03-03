@@ -1,11 +1,10 @@
 @import com.gu.salesforce.PaidTier
-@import com.gu.memsub.Current
 @import views.support.Pricing._
 @import com.gu.memsub.BillingPeriod._
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 
-@(plans: MonthYearPlans[PaidMember])
+@import com.gu.memsub.Benefit.PaidMemberTier
+@(plans: PaidMembershipPlans[PaidMemberTier])
 
 
 <script type="text/javascript">

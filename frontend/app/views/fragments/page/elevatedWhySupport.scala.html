@@ -1,10 +1,10 @@
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
 @import model.OrientatedImages
 
 @(  image: OrientatedImages,
-	supporterPlans: MonthYearPlans[PaidMember],
+	supporterPlans: PaidMembershipPlans[PaidMemberTier],
     countryGroup: CountryGroup,
     showCurrencyPrefix: Boolean,
     title: Html

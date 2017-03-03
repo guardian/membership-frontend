@@ -4,9 +4,9 @@
 @import com.gu.memsub.Current
 @import views.support.Pricing._
 @import views.support.MembershipCompat._
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@(paidPlan: MonthYearPlans[PaidMember],
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
+@(paidPlan: PaidMembershipPlans[PaidMemberTier],
   cg: CountryGroup,
   showDescription: Boolean = true,
   descriptionAnchor: Option[String] = None,
