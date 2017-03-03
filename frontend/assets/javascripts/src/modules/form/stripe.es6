@@ -41,6 +41,4 @@ export function init() {
     };
 
     bean.on(button[0], 'click', open);
-
-
 }

@@ -184,6 +184,58 @@ class MemberService(identityService: IdentityService,
     }
   }
 
+  override def createContributor(
+                             user: IdMinimalUser,
+                             formData: ContributorForm,
+                             identityRequest: IdentityRequest,
+                             campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)] = {
+
+    def getIdentityUserDetails: Future[IdUser] =
+      identityService.getFullUserDetails(user)(identityRequest).andThen { case Failure(e) =>
+        logger.error(s"Could not get Identity user details for user ${user.id}", e)
+      }
+
+    def createSalesforceContact(user: IdUser): Future[ContactId] =
+      salesforceService.upsert(user, formData).andThen { case Failure(e) =>
+        logger.error(s"Could not create Salesforce contact for user ${user.id}", e)
+      }
+
+    def createStripeCustomer(stripeToken: String): Future[Customer] =
+      stripeService.Customer.create(user.id, stripeToken).andThen {
+        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+      }
+
+    def updateIdentity(): Future[Unit] =
+      Future {
+        formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // Update user password (social signin)
+        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // Update Identity user details in MongoDB
+      }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e) }
+
+    def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, payPalEmail: Option[String], stripeCustomer: Option[Customer]): Future[String] =
+      (for {
+        zuoraSub <- createContribution(sfContact, paid, paid.name, stripeCustomer, campaignCode, email)
+      } yield zuoraSub.subscriptionName).andThen {
+        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
+        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
+      }
+
+    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
+      salesforceService.updateContributorStatus(user, stripeCustomer).andThen { case Failure(e) =>
+        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
+      }
+
+
+    for {
+      stripeCustomer <- createStripeCustomer(formData.payment.stripeToken.get)
+      idUser <- getIdentityUserDetails
+      sfContact <- createSalesforceContact(idUser)
+      zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, None, Some(stripeCustomer))
+      _ <- updateSalesforceContactWithMembership(Some(stripeCustomer)) // FIXME: This should go!
+      _ <- updateIdentity()
+    } yield (sfContact, zuoraSubName)
+
+  }
+
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {

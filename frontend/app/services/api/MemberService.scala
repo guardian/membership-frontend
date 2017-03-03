@@ -38,6 +38,11 @@ trait MemberService {
                    tier: Tier,
                    ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)]
 
+  def createContributor(user: IdMinimalUser,
+                   formData: ContributorForm,
+                   identityRequest: IdentityRequest,
+                   campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)]
+
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 

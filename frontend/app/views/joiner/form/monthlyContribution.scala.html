@@ -15,6 +15,51 @@
     touchpointBackendResolution: services.TouchpointBackend.Resolution)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main("Become a contributor", pageInfo=pageInfo, simpleHeader=true, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+    <script>
+        (function() {
+            'use strict';
+
+            function numberAsCurrencyString(num) {
+                return (Math.round(num * 100) / 100).toFixed(2).replace('.00','');
+            }
+            function discountedPrice(price, discount) {
+                return price * ((100 - discount) / 100);
+            }
+            function formattedDiscountedPrice(currency, amount, discount) {
+                return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
+            }
+            function formattedDiscountedCharge(currency, amount, discount) {
+                return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
+            }
+            var checkoutForm = guardian.membership.checkoutForm;
+            checkoutForm.billingPeriod = "monthly";
+
+            checkoutForm.currencySymbols = {
+                GBP : "£"
+            }
+            checkoutForm.currencyIdentifiers = {
+                GBP : "£"
+            }
+            checkoutForm.billingPeriods = {
+                monthly: {
+                    amount: 6.5,
+                    generateChargeAmount: function() {
+                        return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
+                    },
+                    getOriginalChargeAmount: function() {
+                        return formattedDiscountedCharge(checkoutForm.currency, this.amount, 0);
+                    },
+                    generateDisplayAmount: function() {
+                        return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
+                    },
+                    noun: 'monthly',
+                    discount: 0,
+                    discountDurationMonths: 0
+                },
+                choices: []
+            };
+        }());
+    </script>
 
     <main class="page-content skin-checkout-b skin-checkout-paypal">
 
@@ -42,7 +87,7 @@
                     </div>
 
                     <div class="form-panel__content js-form-panel-name-address">
-                            <!-- Name -->
+                        <!-- Name -->
                         <div class="form-section__name-detail">
                         @fragments.form.nameDetailFields(
                             idUser.privateFields.firstName,
@@ -78,13 +123,13 @@
                                     <input type="text"
                                     name="monthlyContribution"
                                     id="monthly-contribution"
-                                    class="input-text js-monthly-contribution"/>
+                                    class="input-text js-monthly-contribution"
+                                    value="60"/>
                                 </div>
                             </div>
                         </fieldset>
 
-                            <!-- Payment Options -->
-                        @fragments.pricing.monthlyContribution()
+                         <!-- Payment Options -->
                         <fieldset class="fieldset js-payment-methods">
 
                             <div class="fieldset__heading">

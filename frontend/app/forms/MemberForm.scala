@@ -34,15 +34,18 @@ object MemberForm {
 
   )
 
-  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String] )
+  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String])
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
-  trait JoinForm {
+  trait CommonForm {
     val name: NameForm
-    val deliveryAddress: Address
-    val marketingChoices: MarketingChoicesForm
     val password: Option[String]
+    val marketingChoices: MarketingChoicesForm
+  }
+
+  trait JoinForm extends CommonForm {
+    val deliveryAddress: Address
     val trackingPromoCode: Option[PromoCode]
     val planChoice: PlanChoice
   }
@@ -55,10 +58,7 @@ object MemberForm {
     val payment: PaymentForm
   }
 
-  trait ContributorForm {
-    val name: NameForm
-    val marketingChoices: MarketingChoicesForm
-    val password: Option[String]
+  trait ContributorForm extends CommonForm {
     val planChoice: ContributionPlanChoice
     val featureChoice: Set[FeatureChoice]
     val payment: PaymentForm
@@ -100,8 +100,7 @@ object MemberForm {
                                 password: Option[String],
                                 casId: Option[String],
                                 subscriberOffer: Boolean,
-                                featureChoice: Set[FeatureChoice],
-                                trackingPromoCode: Option[PromoCode]
+                                featureChoice: Set[FeatureChoice]
                                ) extends ContributorForm {
     override val planChoice = ContributorChoice(payment.billingPeriod)
   }
@@ -266,6 +265,18 @@ object MemberForm {
       "trackingPromoCode" -> optional(trackingPromoCode),
       "promoCode" -> optional(promoCode)
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
+  )
+
+  val monthlyContributorForm: Form[MonthlyContributorForm] = Form(
+    mapping(
+      "name" -> nameMapping,
+      "payment" -> paymentMapping,
+      "marketingChoices" -> marketingChoicesMapping,
+      "password" -> optional(nonEmptyText),
+      "casId" -> optional(nonEmptyText),
+      "subscriberOffer" -> default(boolean, false),
+      "featureChoice" -> productFeature
+    )(MonthlyContributorForm.apply)(MonthlyContributorForm.unapply)
   )
 
   val freeMemberChangeForm: Form[FreeMemberChangeForm] = Form(
