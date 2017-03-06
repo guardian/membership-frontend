@@ -43,8 +43,6 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   // ----- PayPal Methods ----- //
 
-  def switchToPayPalVariant() = changeUrl(s"$url?countryGroup=uk&paypalTest=with_paypal")
-
   def payPal() = clickOn(id("paypal-button-checkout"))
 
   def switchToPayPal() = {
@@ -102,7 +100,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
       setValueSlowly(cardNumber, cardNum)
       setValueSlowly(cardExp, "1019")
       setValueSlowly(cardCvc, "111")
-      
+
     }
 
     def fillIn(): Unit = fillInHelper("4242 4242 4242 4242")

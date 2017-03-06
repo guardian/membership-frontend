@@ -105,8 +105,7 @@ object Joiner extends Controller with ActivityTracking
   def enterPaidDetails(
     tier: PaidTier,
     countryGroup: CountryGroup,
-    promoCode: Option[PromoCode],
-    paypalTest: Option[String]) = NonMemberAction(tier).async { implicit request =>
+    promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -154,8 +153,7 @@ object Joiner extends Controller with ActivityTracking
         identityUser,
         pageInfo,
         Some(countryGroup),
-        resolution,
-        paypalTest))
+        resolution))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 

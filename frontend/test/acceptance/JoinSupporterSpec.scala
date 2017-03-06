@@ -129,10 +129,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       val enterDetails = pages.EnterDetails(testUser)
       assert(enterDetails.pageHasLoaded)
 
-      When("We switch to the PayPal AB variant")
-      enterDetails.switchToPayPalVariant
-
-      Then("they should have Identity cookies,")
+      And("they should have Identity cookies,")
       Seq("GU_U", "SC_GU_U", "SC_GU_LA").foreach { idCookie =>
         assert(Driver.cookiesSet.map(_.getName).contains(idCookie))
       }
