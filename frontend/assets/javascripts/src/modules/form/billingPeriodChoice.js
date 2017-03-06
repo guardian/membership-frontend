@@ -2,10 +2,10 @@ define(
     [
         '$',
         'bean',
-        'lodash/template',
+        'lodash/string/template',
         'src/modules/form/submitButton',
         'src/modules/form/ongoingCardPayments',
-        'text-loader!src/templates/checkout/billingPeriodChoice.html'
+        'text!src/templates/checkout/billingPeriodChoice.html'
     ],
     function($, bean, template, submitButton, ongoingCardPayments, billingPeriodChoiceTemplate) {
         'use strict';

@@ -1,20 +1,12 @@
 var Uglify = require("webpack/lib/optimize/UglifyJsPlugin");
-var LoaderOptions = require("webpack/lib/LoaderOptionsPlugin");
-var path = require("path");
-
-var prodPlugins = [ new Uglify({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
-var debugPlugins = [new LoaderOptions({ debug: true })];
 
 module.exports = function(debug) { return {
     resolve: {
-        modules: [
-            path.join(__dirname, "assets/javascripts"),
-            path.join(__dirname, "node_modules/")
-        ],
-        extensions: [".js", ".es6"],
+        root: ["assets/javascripts", "assets/../node_modules/"],
+        extensions: ["", ".js", ".es6"],
         alias: {
             '$$': 'src/utils/$',
-            'lodash': 'lodash-amd',
+            'lodash': 'lodash-amd/modern',
             'bean': 'bean/bean',
             'bonzo': 'bonzo/bonzo',
             'qwery': 'qwery/qwery',
@@ -29,11 +21,11 @@ module.exports = function(debug) { return {
     },
 
     module: {
-        rules: [
+        loaders: [
             {
                 test: /\.es6$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader',
+                loader: 'babel',
                 query: {
                     presets: ['es2015'],
                     cacheDirectory: ''
@@ -42,13 +34,16 @@ module.exports = function(debug) { return {
         ]
     },
 
-    resolveLoader: {
-        modules: [path.join(__dirname, "node_modules")]
-    },
+    plugins: !debug ? [
+        new Uglify({compress: {warnings: false}})
+    ] : [],
 
-    plugins: !debug ? prodPlugins :debugPlugins,
-
+    progress: true,
+    failOnError: true,
     watch: false,
+    keepalive: false,
+    inline: true,
+    hot: false,
 
     stats: {
         modules: true,
@@ -57,5 +52,6 @@ module.exports = function(debug) { return {
     },
 
     context: 'assets/javascripts',
+    debug: false,
     devtool: 'source-map'
 }};

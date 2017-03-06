@@ -1,8 +1,8 @@
 define(
     [
         '$',
-        'lodash/template',
-        'text-loader!src/templates/checkout/submitButton.html'
+        'lodash/string/template',
+        'text!src/templates/checkout/submitButton.html'
     ],
     function($, template, submitButtonTemplate) {
         'use strict';
