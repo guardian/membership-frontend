@@ -43,7 +43,7 @@ import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
 
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
+import scala.util.{Failure, Success}
 import scalaz._
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
@@ -226,7 +226,7 @@ class MemberService(identityService: IdentityService,
 
 
     for {
-      stripeCustomer <- createStripeCustomer(formData.payment.stripeToken.get)
+      stripeCustomer <- createStripeCustomer(formData.payment.stripeToken)
       idUser <- getIdentityUserDetails
       sfContact <- createSalesforceContact(idUser)
       zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, None, Some(stripeCustomer))
@@ -513,21 +513,23 @@ class MemberService(identityService: IdentityService,
                                   campaignCode: Option[CampaignCode],
                                   email: String): Future[SubscribeResult] = {
 
-    val paymentMethod = createPaymentMethod(contactId, None, joinData.payment, stripeCustomer)
-    val planChoice = ContributorChoice(joinData.payment.billingPeriod)
+    val country = Country("GB", "United Kingdom")
+    val paymentMethod = createMonthlyPaymentFormMethod(contactId, None, joinData.payment, stripeCustomer)
+    val planChoice = ContributorChoice()
     val contribute = zuoraService.getFeatures.map { features =>
       val planId = planChoice.productRatePlanId
-      val plan = RatePlan(planId.get,chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f94c510a01014c569e2de37cff", price = Some(15))), featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
-      val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(UK)
-
+      val plan = RatePlan(planId.get,chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f85a6b1352015a7fcf35ab397c", price = Some(15))))
+      val currency = GBP
       val today = DateTime.now.toLocalDate
+
       Contribute(account = createAccount(contactId, currency, joinData.payment),
         paymentMethod = paymentMethod,
         email = email,
         ratePlans = NonEmptyList(plan),
         name = nameData,
         contractAcceptance = today,
-        contractEffective = today)
+        contractEffective = today,
+        country = country.alpha2)
     }.andThen { case Failure(e) => logger.error(s"Could not get features for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     contribute.flatMap(zuoraService.createContribution).andThen {
@@ -544,6 +546,9 @@ class MemberService(identityService: IdentityService,
         Account.payPal(contactId, currency, autopay = true)
     }
 
+  private def createAccount(contactId: ContactId, currency: Currency, paymentForm: MonthlyPaymentForm) =
+    Account.stripe(contactId, currency, autopay = true)
+
   private def createPaymentMethod(contactId: ContactId, email: Option[String], paymentForm: PaymentForm, stripeCustomer: Option[Customer]) =
     paymentForm match {
       case PaymentForm(_, Some(stripeToken), _) =>
@@ -553,6 +558,12 @@ class MemberService(identityService: IdentityService,
         PayPalReferenceTransaction(payPalBaid, email.get).some
       case _ => None
     }
+
+  private def createMonthlyPaymentFormMethod(contactId: ContactId, email: Option[String], paymentForm: MonthlyPaymentForm, stripeCustomer: Option[Customer]) = {
+    val card = stripeCustomer.get.card
+    CreditCardReferenceTransaction(card.id, stripeCustomer.get.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`).some
+  }
+
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =

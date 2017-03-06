@@ -34,6 +34,8 @@ object MemberForm {
 
   )
 
+  case class MonthlyPaymentForm(stripeToken: String)
+
   case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String])
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
@@ -60,8 +62,7 @@ object MemberForm {
 
   trait ContributorForm extends CommonForm {
     val planChoice: ContributionPlanChoice
-    val featureChoice: Set[FeatureChoice]
-    val payment: PaymentForm
+    val payment: MonthlyPaymentForm
   }
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
@@ -95,14 +96,14 @@ object MemberForm {
 
   case class MonthlyContributorForm(
                                 name: NameForm,
-                                payment: PaymentForm,
+                                payment: MonthlyPaymentForm,
                                 marketingChoices: MarketingChoicesForm,
                                 password: Option[String],
                                 casId: Option[String],
                                 subscriberOffer: Boolean,
-                                featureChoice: Set[FeatureChoice]
+                                country: String
                                ) extends ContributorForm {
-    override val planChoice = ContributorChoice(payment.billingPeriod)
+    override val planChoice = ContributorChoice()
   }
 
 
@@ -166,15 +167,16 @@ object MemberForm {
   }
 
 
-
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
 
-
-  private val country: Mapping[String] =
+  private val country: Mapping[String] ={
+    println("DEBUG")
+    println(text)
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
         { code => CountryGroup.countryByCode(code).fold("")(_.name)},
         { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
+  }
 
   implicit val promoCodeFormatter: Formatter[PromoCode] = new Formatter[PromoCode] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], PromoCode] =
@@ -229,7 +231,9 @@ object MemberForm {
     "payPalBaid" -> optional(text)
   )(PaymentForm.apply)(PaymentForm.unapply)
 
-
+  val  monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
+    "stripeToken" -> nonEmptyText
+  )(MonthlyPaymentForm.apply)(MonthlyPaymentForm.unapply)
 
   val friendJoinForm: Form[FriendJoinForm] = Form(
     mapping(
@@ -270,12 +274,12 @@ object MemberForm {
   val monthlyContributorForm: Form[MonthlyContributorForm] = Form(
     mapping(
       "name" -> nameMapping,
-      "payment" -> paymentMapping,
+      "payment" -> monthlyPaymentMapping,
       "marketingChoices" -> marketingChoicesMapping,
       "password" -> optional(nonEmptyText),
       "casId" -> optional(nonEmptyText),
       "subscriberOffer" -> default(boolean, false),
-      "featureChoice" -> productFeature
+      "country" -> country
     )(MonthlyContributorForm.apply)(MonthlyContributorForm.unapply)
   )
 
@@ -298,8 +302,6 @@ object MemberForm {
       "promoCode" -> optional(promoCode)
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
-
-
 
   val supportForm: Form[SupportForm] = Form(
     mapping(
