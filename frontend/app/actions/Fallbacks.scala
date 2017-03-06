@@ -17,7 +17,7 @@ object Fallbacks {
     redirectTo(controllers.routes.FrontPage.welcome)
 
   def tierChangeEnterDetails(tier: PaidTier)(implicit req: RequestHeader) =
-    redirectTo(controllers.routes.TierController.upgrade(tier, None))
+    redirectTo(controllers.routes.TierController.upgrade(tier))
 
   def contributorJoinRedirect(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Contributor.enterMonthlyContributionsDetails())

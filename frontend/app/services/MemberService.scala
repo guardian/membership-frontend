@@ -127,7 +127,7 @@ class MemberService(identityService: IdentityService,
       }
 
     formData match {
-      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, _, Some(baid)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
+      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, _, Some(baid)), _, _, _, _, _, _, _, _) => //Paid member with PayPal token
         for {
           idUser <- getIdentityUserDetails(user, identityRequest)
           sfContact <- createSalesforceContact(idUser, formData)
@@ -137,7 +137,7 @@ class MemberService(identityService: IdentityService,
           _ <- updateIdentity(formData, identityRequest, user)
         } yield (sfContact, zuoraSubName)
 
-      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _, _, _) => //Paid member with Stripe token
+      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _, _) => //Paid member with Stripe token
         for {
           stripeCustomer <- createStripeCustomer(stripeToken, user)
           idUser <- getIdentityUserDetails(user, identityRequest)
@@ -480,8 +480,7 @@ class MemberService(identityService: IdentityService,
         contractEffective = today)
     }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
-    val promo = promoService.validateMany[NewUsers](country.getOrElse(UK), planChoice.productRatePlanId)(joinData.promoCode, joinData.trackingPromoCode).toOption.flatten
-    subscribe.map(sub => promo.fold(sub)(promo => SubscribePromoApplicator.apply(promo, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(sub)))
+    subscribe
       .flatMap(zuoraService.createSubscription)
       .andThen {
         case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
@@ -607,8 +606,7 @@ class MemberService(identityService: IdentityService,
     (for {
       s <- EitherT(Future.successful(subOrPendingAmendError(sub)))
       country <- EitherT(country(contact).map(\/.right))
-      promo = promoService.validateMany[Upgrades](country, planChoice.productRatePlanId)(form.promoCode, form.trackingPromoCode).toOption.flatten
-      command <- EitherT(amend(sub, planChoice, form.featureChoice, promo).map(\/.right))
+      command <- EitherT(amend(sub, planChoice, form.featureChoice, None).map(\/.right))
       _ <- zuoraService.upgradeSubscription(command).liftM
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, None).liftM
     } yield {

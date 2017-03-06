@@ -16,7 +16,6 @@
   paymentMethod: Option[PaymentMethod],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean,
-  promotion: Option[AnyPromotion],
   touchpointBackendResolution: services.TouchpointBackend.Resolution
 )
 
@@ -145,17 +144,6 @@
                 </table>
             </div>
         </section>
-        @for(promo <- promotion) {
-            <section class="page-section page-section--bordered">
-                <div class="page-section__lead-in">
-                    <h2 class="page-section__headline">Promotion applied</h2>
-                </div>
-                <div class="page-section__content">
-                    <p>@if(promo.description.isEmpty) { @promo.name } else { @promo.description }</p>
-                    @promo.asIncentive.map {a => <p>@a.promotionType.redemptionInstructions</p> }
-                </div>
-            </section>
-        }
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">

@@ -5,7 +5,6 @@ import org.specs2.mutable.Specification
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import scalaz.syntax.std.option._
-import services.PromoSessionService._
 
 class PromoSessionServiceTest extends Specification {
 

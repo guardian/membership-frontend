@@ -6,21 +6,18 @@
 @import views.html.helper.CSRF
 
 @import views.support.PageInfo
-@import com.gu.memsub.promo.ValidPromotion
-@import com.gu.memsub.promo.Upgrades
 @import com.gu.memsub.PaymentCard
 @import com.gu.memsub.PayPalMethod
 @(
     summary: PaidToPaidUpgradeSummary,
     userFields: com.gu.identity.play.PrivateFields,
     pageInfo: PageInfo,
-    flashMessage: Option[model.FlashMessage],
-    validPromo: Option[ValidPromotion[Upgrades]]
+    flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader)
 
 @main("Upgrade to " + summary.target.tier.name, pageInfo=pageInfo) {
       <main role="main" class="page-content l-constrained">
-          <form action="@routes.TierController.upgrade(summary.target.tier,None)" method="POST" class="js-form" id="payment-form">
+          <form action="@routes.TierController.upgrade(summary.target.tier)" method="POST" class="js-form" id="payment-form">
               @CSRF.formField
 
               @fragments.page.pageHeader("Great, glad to see you've decided to become a " + summary.target.tier.name, Some("Join as an annual Partner or Patron Member and get 2 months free"))
@@ -49,7 +46,7 @@
                       <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@summary.current.tier.name</strong>
                           membership up until today and the amount remaining will be deducted from your first payment as a <strong>@summary.target.tier.name</strong>
                           .</p>
-                      <p><strong>@summary.target.tier.name</strong> payments start today and will recur @{summary.billingPeriod.adverb}.</p>
+                      <p><strong>@summary.target.tier.name</strong> payments start today and will recur @{summary.billingPeriod.adverb}. </p>
                   </div>
                   <div class="page-section__supplementary">
 

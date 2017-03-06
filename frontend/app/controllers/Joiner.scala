@@ -9,7 +9,6 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
 import com.gu.memsub.BillingPeriod
-import com.gu.memsub.promo._
 import com.gu.memsub.util.Timing
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -26,7 +25,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.AuthenticationService.authenticatedIdUserProvider
-import services.PromoSessionService.codeFromSession
+
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.Feature.MergedRegistration
@@ -118,8 +117,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   def enterPaidDetails(
     tier: PaidTier,
-    countryGroup: CountryGroup,
-    promoCode: Option[PromoCode]) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
+    countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
 
     val userOpt = authenticatedIdUserProvider(request)
     implicit val resolution: TouchpointBackend.Resolution =
@@ -154,12 +152,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         initialCheckoutForm = CheckoutForm.forIdentityUser(identityUserOpt.flatMap(_.country), plans, Some(countryGroup))
       )
 
-      val providedPromoCode = promoCode orElse codeFromSession
-
-      // is the providedPromoCode valid for the page being rendered (year is default billing period)
-      val planChoice = PaidPlanChoice(tier, BillingPeriod.Year)
-      val validPromo = providedPromoCode.flatMap(promoService.validate[NewUsers](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
-
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
 
       Ok(views.html.joiner.form.payment(
@@ -180,14 +172,12 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
 
-      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))
-      val validPromo = codeFromSession.flatMap(code => promoService.validate[NewUsers](code, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
+      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))   
 
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
         identityUser,
-        pageInfo,
-        validPromo))
+        pageInfo))
     }
   }
 
@@ -281,8 +271,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     for {
       country <- memberService.country(request.subscriber.contact)
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
-      promotion = request.subscriber.subscription.promoCode.flatMap(c => promoService.findPromotion(c))
-      validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
     } yield {
@@ -296,7 +284,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         paymentMethod,
         destination,
         upgrade,
-        validPromotion.filterNot(_.asTracking.isDefined),
         resolution
       )).discardingCookies(TierChangeCookies.deletionCookies: _*)
     }

@@ -13,8 +13,7 @@
     targetPlans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrency: List[CountryWithCurrency],
     idUser: IdentityUser,
-    pageInfo: PageInfo,
-    validPromo: Option[ValidPromotion[Upgrades]]
+    pageInfo: PageInfo
 )(implicit token: csrf.CSRF.Token, request: RequestHeader)
 
 @main(
@@ -31,7 +30,7 @@
         </section>
 
             <!-- CHECKOUT FORM -->
-        <form action="@routes.TierController.upgrade(targetPlans.tier, None)" method="POST" id="payment-form" class="js-form" data-change-to-tier="@targetPlans.tier.name">
+        <form action="@routes.TierController.upgrade(targetPlans.tier)" method="POST" id="payment-form" class="js-form" data-change-to-tier="@targetPlans.tier.name">
             @CSRF.formField
             <input type="hidden" name="tier" disabled value="@targetPlans.tier.slug"/>
             <input type="hidden" name="email" id="email" disabled value="@idUser.email"/>
