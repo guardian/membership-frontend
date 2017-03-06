@@ -300,12 +300,12 @@ class MemberService(identityService: IdentityService,
     }).run
   }
 
-  override def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
+  override def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                          (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule] = {
     (for {
       _ <- EitherT(Future.successful(subOrPendingAmendError(subscriber.subscription)))
       country <- EitherT(country(subscriber.contact).map(\/.right))
-      a <- EitherT(amend(subscriber.subscription, newPlan, Set.empty, code).map(\/.right))
+      a <- EitherT(amend(subscriber.subscription, newPlan, Set.empty).map(\/.right))
       result <- EitherT(zuoraService.upgradeSubscription(a.copy(previewMode = true)).map(\/.right))
     } yield BillingSchedule.fromPreviewInvoiceItems(_ => None)(result.invoiceItems).getOrElse(
       throw new IllegalStateException(s"Sub ${subscriber.subscription.id} upgrading to ${newPlan.tier} has no bills")
@@ -568,7 +568,7 @@ class MemberService(identityService: IdentityService,
   /**
     * Construct an Amend command (used for subscription upgrades)
     */
-  private def amend(sub: Subscription[SubscriptionPlan.Member], planChoice: PlanChoice, form: Set[FeatureChoice], code: Option[ValidPromotion[Upgrades]])
+  private def amend(sub: Subscription[SubscriptionPlan.Member], planChoice: PlanChoice, form: Set[FeatureChoice])
                    (implicit r: IdentityRequest, applicator: PromotionApplicator[Upgrades, Amend]): Future[Amend] = {
 
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
@@ -588,8 +588,7 @@ class MemberService(identityService: IdentityService,
       if (discountsToRemove.nonEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: $discountsToRemove")
       val plansToRemove = currentRatePlan +: discountsToRemove
       if (plansToRemove.isEmpty) logger.error(s"plansToRemove is empty - this could lead to overlapping rate plans on the Zuora sub: ${sub.id}")
-      val upgrade = Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), sub.promoCode)
-      code.fold(upgrade)(applicator(_, catalog.unsafeFindPaid(_).charges.billingPeriod, discountIds)(upgrade))
+      Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), None)
     }
   }
 
@@ -606,7 +605,7 @@ class MemberService(identityService: IdentityService,
     (for {
       s <- EitherT(Future.successful(subOrPendingAmendError(sub)))
       country <- EitherT(country(contact).map(\/.right))
-      command <- EitherT(amend(sub, planChoice, form.featureChoice, None).map(\/.right))
+      command <- EitherT(amend(sub, planChoice, form.featureChoice).map(\/.right))
       _ <- zuoraService.upgradeSubscription(command).liftM
       _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, None).liftM
     } yield {

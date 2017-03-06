@@ -8,8 +8,6 @@ import com.gu.identity.play.PrivateFields
 import com.gu.memsub.Benefit.PaidMemberTier
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.promo.Formatters.PromotionFormatters._
-import com.gu.memsub.promo.{PromoCode, Upgrades}
 import com.gu.memsub.subsv2.{Catalog, PaidMembershipPlans}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -113,7 +111,7 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
-  def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier], code: Option[PromoCode])
+  def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier])
                     (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
 
     val targetPlan = targetPlans.get(subscriber.subscription.plan.charges.billingPeriod)
@@ -122,9 +120,8 @@ object TierController extends Controller with ActivityTracking
 
     (for {
       country <- EitherT(memberService.country(subscriber.contact).map(\/.right))
-      promo <- EitherT(Future.successful(promoService.validateMany[Upgrades](country, targetChoice.productRatePlanId)(code).leftMap[MemberError](MemberPromoError)))
       paymentMethod <- EitherT(paymentService.getPaymentMethod(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
-      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice, promo))
+      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice))
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, paymentMethod)(c)).run
   }
 
@@ -171,7 +168,7 @@ object TierController extends Controller with ActivityTracking
       val flashError = request.flash.get("error").map(FlashMessage.error)
 
 
-      (idUserFuture |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (idUser, summary) =>
+      (idUserFuture |@| paymentSummary(paidSubscriber, targetPlans)) { case (idUser, summary) =>
         summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(getToken, request)))
       }.map(handleResultErrors)
     })

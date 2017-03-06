@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets
 
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod._
-import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Address, BillingPeriod, FullName}
 import com.gu.salesforce.PaidTier
 import com.gu.salesforce.Tier._
@@ -171,14 +170,6 @@ object MemberForm {
       .transform(
         { code => CountryGroup.countryByCode(code).fold("")(_.name)},
         { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
-
-
-  implicit val promoCodeFormatter: Formatter[PromoCode] = new Formatter[PromoCode] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], PromoCode] =
-      data.get(key).filter(_.nonEmpty).map(PromoCode).toRight(Seq(FormError(key, "Cannot find a promo code")))
-
-    override def unbind(key: String, value: PromoCode) = Map(key -> value.get)
-  }
 
   implicit val currencyFormatter = new Formatter[Currency] {
     type Result = Either[Seq[FormError], Currency]
