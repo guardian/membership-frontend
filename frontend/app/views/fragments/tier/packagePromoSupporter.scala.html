@@ -4,9 +4,9 @@
 
 @import views.support.MembershipCompat._
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@(supporterPlans: MonthYearPlans[PaidMember], cg: CountryGroup, metricLabel: String)
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
+@(supporterPlans: PaidMembershipPlans[PaidMemberTier], cg: CountryGroup, metricLabel: String)
 
 @import com.gu.salesforce.Tier._
 

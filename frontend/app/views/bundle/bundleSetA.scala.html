@@ -1,13 +1,12 @@
 @import com.gu.i18n.CountryGroup
 @import configuration.Videos
-@import com.gu.memsub.subsv2.{CatalogPlan, MonthYearPlans}
 @import views.support.PageInfo
 @import tracking.AppnexusPixel
-@import com.gu.salesforce.Tier.Supporter
 
 @import abtests.BundleVariant
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @(  heroImage: model.OrientatedImages,
-    supporterPlans: MonthYearPlans[CatalogPlan.Supporter],
+    supporterPlans: PaidMembershipPlans[com.gu.memsub.Benefit.Supporter.type],
     pageInfo: PageInfo,
     whySupportImage: model.OrientatedImages,
     bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)

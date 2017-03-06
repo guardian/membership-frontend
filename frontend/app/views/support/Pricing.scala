@@ -3,8 +3,8 @@ package views.support
 import com.gu.i18n.Currency
 import com.gu.memsub.BillingPeriod.{Month, Year}
 import com.gu.memsub.{BillingPeriod, Price}
-import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-import com.gu.memsub.subsv2.MonthYearPlans
+import com.gu.memsub.Benefit.PaidMemberTier
+import com.gu.memsub.subsv2.PaidMembershipPlans
 
 case class Pricing(yearly: Price, monthly: Price) {
   require(yearly.currency == monthly.currency, "The yearly and monthly prices should have the same currency")
@@ -33,7 +33,7 @@ case class Pricing(yearly: Price, monthly: Price) {
 }
 
 object Pricing {
-  implicit class WithPricing(plans: MonthYearPlans[PaidMember]) {
+  implicit class WithPricing(plans: PaidMembershipPlans[PaidMemberTier]) {
     lazy val allPricing: List[Pricing] = Currency.all.flatMap(pricing)
 
     def unsafePriceByCurrency(currency: Currency) = pricing(currency).getOrElse {

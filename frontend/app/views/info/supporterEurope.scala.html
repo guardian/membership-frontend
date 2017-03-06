@@ -3,13 +3,13 @@
 @import com.gu.salesforce.Tier.Supporter
 
 @import views.support.PageInfo
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
 @import views.support.MembershipCompat._
 @import com.gu.salesforce.Tier.Supporter
 @import tracking.AppnexusPixel
 
-@(images: model.OrientatedImages, supporterPlans: MonthYearPlans[PaidMember],
+@(images: model.OrientatedImages, supporterPlans: PaidMembershipPlans[PaidMemberTier],
     pageInfo: PageInfo,
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 

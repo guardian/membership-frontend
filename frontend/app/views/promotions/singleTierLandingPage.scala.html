@@ -17,11 +17,11 @@
 
 @import com.gu.memsub.promo.MembershipLandingPage
 @import org.pegdown.PegDownProcessor
-@import com.gu.memsub.subsv2.MonthYearPlans
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
 @import views.support.MembershipCompat._
 
-@(pricePlans: MonthYearPlans[PaidMember],
+@(pricePlans: PaidMembershipPlans[PaidMemberTier],
     pageInfo: PageInfo,
     headerImage: model.OrientatedImages,
     heroImageAlignment: HeroImageAlignment,

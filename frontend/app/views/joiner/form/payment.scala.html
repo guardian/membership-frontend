@@ -1,13 +1,13 @@
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.Benefit.PaidMemberTier
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.salesforce.Tier.{Partner, Supporter}
 @import tracking.AppnexusPixel
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
-@(plans: MonthYearPlans[PaidMember],
+@(plans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,

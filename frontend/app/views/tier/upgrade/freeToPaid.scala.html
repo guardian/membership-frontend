@@ -1,5 +1,5 @@
 @import com.gu.memsub.promo.{Upgrades, ValidPromotion}
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.Benefit.PaidMemberTier
 @import com.gu.memsub.subsv2._
 @import com.gu.salesforce.Tier.{Partner, Supporter}
 @import play.api.mvc.RequestHeader
@@ -9,7 +9,7 @@
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
 @(currentPlan: CatalogPlan.Member,
-    targetPlans: MonthYearPlans[PaidMember],
+    targetPlans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrency: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo,
