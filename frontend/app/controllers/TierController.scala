@@ -152,7 +152,6 @@ object TierController extends Controller with ActivityTracking
     request.paidOrFreeSubscriber.fold({ freeSubscriber =>
       idUserFuture.map(idUser => {
 
-        // is the promoCode valid for the page being rendered
         val pageInfo = getPageInfo(idUser.privateFields, BillingPeriod.Year)
 
         Ok(views.html.tier.upgrade.freeToPaid(
