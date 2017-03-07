@@ -1,6 +1,6 @@
 /* global fbq */
 /* eslint-disable no-unused-vars, no-underscore-dangle */
-define(['lodash/forEach'], function(forEach) {
+define(['lodash/collection/forEach'], function(forEach) {
     'use strict';
 
     var FACEBOOK_PROPERTY_ID = '279880532344561';

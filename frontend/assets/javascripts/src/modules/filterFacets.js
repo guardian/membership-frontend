@@ -1,4 +1,4 @@
-define(['lodash/forEach'], function(forEach) {
+define(['lodash/collection/forEach'], function(forEach) {
     'use strict';
 
     var FILTER_FACETS = '.js-facet';
