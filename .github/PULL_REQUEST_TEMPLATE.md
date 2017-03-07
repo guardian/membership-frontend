@@ -1,5 +1,10 @@
 ## Why are you doing this?
-<!-- Remember, PRs are documentation for future contributors -->
+<!-- 
+Remember, PRs are documentation for future contributors 
+
+If this PR is a fix, please include a link to the original PR that introduced
+the breakage for reference.
+-->
 
 ## Trello card: [Here](https://trello.com)
 
