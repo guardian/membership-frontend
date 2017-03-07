@@ -1,5 +1,5 @@
 define([
-    'lodash/function/debounce',
+    'lodash/debounce',
     'src/modules/metrics/logger',
     'src/modules/analytics/setup'
 ], function (debounce, logMetric,analytics) {
