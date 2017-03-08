@@ -34,7 +34,7 @@ object MemberForm {
 
   )
 
-  case class MonthlyPaymentForm(stripeToken: String)
+  case class MonthlyPaymentForm(stripeToken: String, amount: Float)
 
   case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String])
 
