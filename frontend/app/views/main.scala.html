@@ -4,11 +4,14 @@
 @import utils.TestUsers._
 @import model.Header
 @import model.Header.DefaultHeader
+@import model.Footer
+@import model.Footer.DefaultFooter
 @(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None,
-        titleOverride: Option[String] = None,
+    titleOverride: Option[String] = None,
     header: Header = DefaultHeader,
+    footer: Footer = DefaultFooter,
     touchpointBackendResolutionOpt: Option[services.TouchpointBackend.Resolution] = None,
     margins: Boolean = true
     )(content: Html)
@@ -127,7 +130,7 @@
             }
         </div>
 
-        @fragments.global.footer(pageInfo, None, countryGroup)
+        @fragments.global.footer(pageInfo, footer, None, countryGroup)
         @fragments.javaScriptRequireJS()
         @fragments.analytics.googleRemarketing()
         @fragments.analytics.sessionCam()
