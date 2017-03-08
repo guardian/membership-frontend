@@ -1,9 +1,4 @@
-@(firstName: Option[String], lastName: Option[String])(implicit request: RequestHeader)
-@import utils.TestUsers.testUsers
-
-@if(firstName.exists(testUsers.isValid)) {
-    <!-- VALID TEST USER -->
-}
+@(privateFields: Option[com.gu.identity.play.PrivateFields])(implicit request: RequestHeader)
 
 <fieldset class="fieldset">
 
@@ -21,7 +16,7 @@
                    * same size limit is imposed here.
                    *@
                    maxlength="30"
-                   value="@firstName"
+                   value="@privateFields.flatMap(_.firstName)"
                    class="input-text js-name-first"
                    required
                    aria-required="true"/>
@@ -34,7 +29,7 @@
                    name="name.last"
                    id="name-last"
                    maxlength="50"
-                   value="@lastName"
+                   value="@privateFields.flatMap(_.secondName)"
                    class="input-text js-name-last"
                    required
                    aria-required="true"/>

@@ -55,7 +55,7 @@ class CheckoutFormTest extends Specification {
         "and the country group currency is available" should {
           "set country/currency from the request" in {
             CheckoutForm.forIdentityUser(
-              idUser, PaidPlans(plans), Some(CountryGroup.Europe)
+              None, PaidPlans(plans), Some(CountryGroup.Europe)
             ).tupled2 ===(None, EUR)
           }
         }
@@ -63,7 +63,7 @@ class CheckoutFormTest extends Specification {
         "and the country group currency is not available" should {
           "fallback to the request country group and set currency to GBP" in {
             CheckoutForm.forIdentityUser(
-              idUserWithBlankCountry, PaidPlans(plans), Some(CountryGroup.Australia)
+              None, PaidPlans(plans), Some(CountryGroup.Australia)
             ).tupled2 === (Some(Country.Australia), GBP)
           }
         }
@@ -72,13 +72,13 @@ class CheckoutFormTest extends Specification {
       "when no country group is set" should {
         "set country/currency from the identity user" in {
           CheckoutForm.forIdentityUser(
-            idUser, PaidPlans(plans), None
+            Some(Country.US), PaidPlans(plans), None
           ).tupled2 === (Some(Country.US), USD)
         }
 
         "fallback to the UK country group if the identity user has no address info" in {
           CheckoutForm.forIdentityUser(
-            idUserWithBlankCountry, PaidPlans(plans), None
+            None, PaidPlans(plans), None
           ).tupled2 === (Some(Country.UK), GBP)
         }
       }
