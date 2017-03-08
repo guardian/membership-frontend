@@ -34,7 +34,7 @@ object MemberForm {
 
   )
 
-  case class MonthlyPaymentForm(stripeToken: String, amount: Float)
+  case class MonthlyPaymentForm(stripeToken: String, amount: BigDecimal)
 
   case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String])
 
@@ -232,7 +232,8 @@ object MemberForm {
   )(PaymentForm.apply)(PaymentForm.unapply)
 
   val  monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
-    "stripeToken" -> nonEmptyText
+    "stripeToken" -> nonEmptyText,
+    "amount" -> bigDecimal(10, 2)
   )(MonthlyPaymentForm.apply)(MonthlyPaymentForm.unapply)
 
   val friendJoinForm: Form[FriendJoinForm] = Form(

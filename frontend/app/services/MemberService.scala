@@ -518,7 +518,9 @@ class MemberService(identityService: IdentityService,
     val planChoice = ContributorChoice()
     val contribute = zuoraService.getFeatures.map { features =>
       val planId = planChoice.productRatePlanId
-      val plan = RatePlan(planId.get,chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f85a6b1352015a7fcf35ab397c", Some(joinData.payment.amount))))
+      val plan = RatePlan(productRatePlanId = planId.get,
+                          chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f85a6b1352015a7fcf35ab397c",
+                                                price = Some(joinData.payment.amount))))
       val currency = GBP
       val today = DateTime.now.toLocalDate
 

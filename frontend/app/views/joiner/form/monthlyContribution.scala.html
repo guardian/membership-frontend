@@ -1,6 +1,6 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.MonthYearPlans
+@import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.salesforce.Tier.{Supporter, Partner}
 @import views.html.helper._
 @import views.support.DisplayText._
@@ -124,7 +124,7 @@
                                 <div class="form-field js-monthly-contribution-section">
                                     <label class="label optional-marker" for="monthly-contribution">YOUR Monthly Contribution</label>
                                     <input type="text"
-                                    name="monthlyContribution"
+                                    name="payment.amount"
                                     id="monthly-contribution"
                                     class="input-text js-monthly-contribution"
                                     value="60"/>
