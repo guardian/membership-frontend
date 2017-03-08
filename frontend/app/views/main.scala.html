@@ -2,17 +2,20 @@
 @import com.gu.i18n.CountryGroup
 @import utils.CountryGroupLang
 @import utils.TestUsers._
+@import model.Header
+@import model.Header.DefaultHeader
 @(  title: String,
     pageInfo: PageInfo = views.support.PageInfo(),
     countryGroup: Option[CountryGroup] = None,
         titleOverride: Option[String] = None,
-    simpleHeader: Boolean = false,
+    header: Header = DefaultHeader,
     touchpointBackendResolutionOpt: Option[services.TouchpointBackend.Resolution] = None,
     margins: Boolean = true
     )(content: Html)
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
 @import views.support.Asset
+
 <!DOCTYPE html>
 <html lang="@countryGroup.flatMap(CountryGroupLang.langByCountryGroup.get).getOrElse("en-gb")" class="js-off id--signed-out">
     <head>
@@ -114,11 +117,7 @@
             Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
         </div>
         <div class="container-global">
-            @if(simpleHeader) {
-                @fragments.global.simpleHeader(pageInfo, countryGroup)
-            } else {
-                @fragments.global.header(pageInfo, countryGroup)
-            }
+            @fragments.global.header(pageInfo, countryGroup, header)
             @if(margins) {
                 <div class="l-side-margins" id="container">
                     @content

@@ -1,5 +1,6 @@
 @import com.gu.i18n.CountryGroup
 @import configuration.Videos
+@import model.Header.BundlesHeader
 @import views.support.PageInfo
 @import tracking.AppnexusPixel
 
@@ -11,7 +12,7 @@
     whySupportImage: model.OrientatedImages,
     bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Supporters", pageInfo=pageInfo) {
+@main("Supporters", pageInfo=pageInfo, header=BundlesHeader) {
 
     @* ===== First part ===== *@
     @fragments.bundle.bundleHeader(

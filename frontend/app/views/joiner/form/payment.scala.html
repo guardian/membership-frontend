@@ -3,6 +3,7 @@
 @import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.salesforce.Tier.{Partner, Supporter}
 @import tracking.AppnexusPixel
+@import model.Header.SimpleHeader
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
@@ -15,7 +16,12 @@
     touchpointBackendResolution: services.TouchpointBackend.Resolution
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main(plans.tier.cta, pageInfo = pageInfo, simpleHeader = true, margins = false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+@main(
+    plans.tier.cta,
+    pageInfo = pageInfo,
+    header = SimpleHeader,
+    margins = false,
+    touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
 
     <main class="page-content skin-checkout-b skin-checkout-paypal">
 
