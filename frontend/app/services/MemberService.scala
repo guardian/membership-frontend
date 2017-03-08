@@ -219,7 +219,7 @@ class MemberService(identityService: IdentityService,
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
-    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
+    def updateSalesforceContactWithContribution(stripeCustomer: Option[Customer]): Future[ContactId] =
       salesforceService.updateContributorStatus(user, stripeCustomer).andThen { case Failure(e) =>
         logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
       }
@@ -230,7 +230,7 @@ class MemberService(identityService: IdentityService,
       idUser <- getIdentityUserDetails
       sfContact <- createSalesforceContact(idUser)
       zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, None, Some(stripeCustomer))
-      _ <- updateSalesforceContactWithMembership(Some(stripeCustomer)) // FIXME: This should go!
+      _ <- updateSalesforceContactWithContribution(Some(stripeCustomer)) // FIXME: This should go!
       _ <- updateIdentity()
     } yield (sfContact, zuoraSubName)
 
@@ -481,7 +481,7 @@ class MemberService(identityService: IdentityService,
     val subscribe = zuoraService.getFeatures.map { features =>
 
       val planId = planChoice.productRatePlanId
-      val plan = RatePlan(planId.get,chargeOverride = None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
+      val plan = RatePlan(productRatePlanId = planId.get,chargeOverride = None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(joinData.zuoraAccountAddress.country.getOrElse(UK))
 
       val today = DateTime.now.toLocalDate
