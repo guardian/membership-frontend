@@ -10,7 +10,9 @@ object BundleVariant {
 
   val all = Seq[BundleVariant](
     BundleVariant(CONTROL, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
-    BundleVariant(VARIANT, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = false)
+    BundleVariant(VARIANT, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = false),
+    BundleVariant(PDCPRE, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
+    BundleVariant(PDCPOST, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)))
   )
 
   def lookup(name: String): Option[BundleVariant] = {
@@ -19,7 +21,7 @@ object BundleVariant {
 }
 
 case class BundleVariant(distribution: Distribution, prices: Map[BundleTier, Double], hasAdFree: Boolean = true) {
-  val testId =  s"MEMBERSHIP_A_ADX_THRASHER_UK_${distribution.name}"
+  val testId =  distribution.name
 
   def prettyMonthlyPrice(tier: BundleTier) = f"£${prices(tier)}%.2f/month"
 }
@@ -48,8 +50,10 @@ object BundleTier {
 
 
 object Distribution {
-  val CONTROL = Distribution("CONTROL")
-  val VARIANT = Distribution("VARIANT")
+  val CONTROL = Distribution("MEMBERSHIP_A_ADX_THRASHER_UK_CONTROL")
+  val VARIANT = Distribution("MEMBERSHIP_A_ADX_THRASHER_UK_VARIANT")
+  val PDCPRE = Distribution("MEMBERSHIP_A_PDCOM_PRE")
+  val PDCPOST = Distribution("MEMBERSHIP_A_PDCOM_POST")
 }
 
 case class Distribution(name: String)
