@@ -3,6 +3,7 @@
 import form from 'src/modules/form/helper/formUtil';
 import * as payment from 'src/modules/payment';
 import 'whatwg-fetch';
+import isWebView from 'is-webview';
 
 
 // ----- Functions ----- //
@@ -134,6 +135,11 @@ function makePayment (data, actions) {
 // ----- Exports ----- //
 
 export function init () {
+
+    if (isWebView(navigator.userAgent)){
+        console.log("We are running in a Webview, PayPal will not work so don't initialise it");
+        return;
+    }
 
 	paypal.Button.render({
 
