@@ -4,7 +4,7 @@ import com.gu.i18n.Currency._
 import com.gu.i18n._
 import com.gu.identity.play.{PrivateFields, StatusFields}
 import com.gu.memsub.Benefit._
-import com.gu.memsub.Subscription.ProductRatePlanId
+import com.gu.memsub.Subscription.{ProductRatePlanChargeId, ProductRatePlanId}
 import com.gu.memsub._
 import com.gu.memsub.subsv2.{CatalogPlan, PaidCharge, PaidMembershipPlans}
 import org.specs2.mutable.Specification
@@ -41,8 +41,8 @@ class CheckoutFormTest extends Specification {
   ))
 
   val plans = PaidMembershipPlans[Partner.type](
-    month = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.Month, pricingSummary), Status.current),
-    year = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.Year, pricingSummary), Status.current)
+    month = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.Month, pricingSummary, ProductRatePlanChargeId("prpcId")), Status.current),
+    year = CatalogPlan(ProductRatePlanId(""), Product.Membership, "Partner", "Partner", None, PaidCharge(Partner, BillingPeriod.Year, pricingSummary, ProductRatePlanChargeId("prpcId")), Status.current)
   )
 
   implicit class checkoutForm2Tuple2(form: CheckoutForm) {
