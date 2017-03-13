@@ -1,4 +1,4 @@
-define(['lodash/object/extend'], function (extend) {
+define(['lodash/extend'], function (extend) {
     'use strict';
 
     /**
