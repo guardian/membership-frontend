@@ -1,12 +1,20 @@
 /* Give */
 .bundle-offering-a__give {
-    @include bundle-column-narrow();
-    padding-left: $gs-gutter * 5;
+    @include mq($from: desktop) {
+        @include bundle-column-narrow();
+        padding-left: $gs-gutter * 5;
+    }
 }
 
 .bundle-offering-a__give__content {
     margin-top: $gs-baseline * 3;
-    max-width: gs-span(4.75);
+
+    @include mq($from: tablet) {
+        max-width: gs-span(3.75);
+    }
+    @include mq($from: desktop) {
+        max-width: gs-span(4.75);
+    }
 
     >h1 {
         margin-top: $gs-baseline * 3;
@@ -19,18 +27,21 @@
         margin-bottom: $gs-baseline;
         margin-left: $gs-gutter/2;
     }
+
 }
 
 .bundle-offering-a__give__content__body {
     background-color: #d4ebf8;
-    margin-top: $gs-baseline * 2;
+    @include mq($from: desktop) {
+        margin-top: $gs-baseline * 2;
 
-    >p {
-        @include fs-headline(2);
-        font-size: 18px;
-        line-height: 22px;
-        margin-bottom: $gs-baseline * 2;
-        padding: 8px $gs-gutter/2 0;
+        > p {
+            @include fs-headline(2);
+            font-size: 18px;
+            line-height: 22px;
+            margin-bottom: $gs-baseline * 2;
+            padding: 8px $gs-gutter/2 0;
+        }
     }
 }
 
@@ -46,15 +57,22 @@
 .bundle-offering-a__subscribe {
     @include bundle-column-wide();
     padding-right: $gs-gutter;
+    padding-top: $gs-baseline * 2;
+    margin-left: $gs-gutter;
+    @include mq($from: tablet) {
+        width: gs-span(9);
+    }
+    @include mq($from: desktop) {
+        width: gs-span(8);
+    }
 
-    >h1 {
-        margin-top: $gs-baseline * 3;
+    > h1 {
         padding-top: 2px;
         @include text-offering-title();
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
-    >div:first-of-type {
+    > div:first-of-type {
         padding-right: 1px;
 
         .bundle-button__content {
@@ -64,7 +82,12 @@
 }
 
 .bundle-offering-a__subscribe__offer {
-    width: gs-span(4.125);
+    @include mq($from: tablet) {
+        width: gs-span(4.5);
+    }
+    @include mq($from: desktop) {
+        width: gs-span(3.85);
+    }
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;
@@ -75,6 +98,9 @@
 
     >h2 {
         @include fs-headline(4);
+        @include mq($from: desktop) {
+            font-size: 22px;
+        }
         padding: 8px $gs-gutter/2 0;
         font-weight: 900;
     }
@@ -88,6 +114,9 @@
 .bundle-offering-a__subscribe__offer__price-description {
     padding-left: $gs-gutter / 2;
     @include fs-headline(4);
+    @include mq($from: desktop) {
+        font-size: 22px;
+    }
     font-weight: 200;
     color: guss-colour(neutral-1);
 }
@@ -118,6 +147,10 @@
 
 .bundle-offering-a__subscribe__offer__list__item__content {
     width: 251px;
+    @include mq($from: desktop) {
+        width: 224px;
+    }
+
     display: inline-block;
     vertical-align: top;
     >h1 {
