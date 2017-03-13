@@ -38,8 +38,8 @@ GET            /choose-tier                           controllers.Joiner.tierCho
 GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
 # Monthly Contribution
-GET            /monthly-contribution                  controllers.Joiner.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK)
-POST           /monthly-contribution                  controllers.Joiner.joinMonthlyContribution
+GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK)
+POST           /monthly-contribution                  controllers.Contributor.joinMonthlyContribution
 
 
 # Normal user signin:
