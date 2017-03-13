@@ -31,6 +31,12 @@ object SVG {
       width=300, height=90
     )
 
+    val guardianLogo = SVGImage(
+      "Guardian Logo",
+      s"images/logos/brand/guardian-logo.svg",
+      width=320, height=60
+    )
+
     val membersLogoTightcrop = SVGImage(
       "Guardian Membership",
       s"images/logos/brand/guardian-members-tightcrop.svg",
