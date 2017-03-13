@@ -6,12 +6,16 @@ export function init() {
     let success = false;
     const button = $('.js-stripe-checkout');
     const email = button.data('email');
+
+
     bean.on(window, 'popstate', handler.close);
     const amount = () => {
         let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
         let amount = billingPeriod.generateDisplayAmount();
         let period = billingPeriod.noun;
-        return "Pay " + amount + " per " + period;
+        const monthlyContributionField = $('.js-monthly-contribution');
+        amount = parseFloat(monthlyContributionField[1].value);
+        return "Pay £" + amount + " per " + period;
     };
     const open = (e) => {
         if (payment.validateForm()) {
@@ -37,6 +41,4 @@ export function init() {
     };
 
     bean.on(button[0], 'click', open);
-
-
 }

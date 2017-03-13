@@ -44,19 +44,24 @@ case class IdentityService(identityApi: IdentityApi) {
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     identityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
-  def updateUserFieldsBasedOnJoining(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnJoining(user: IdMinimalUser, formData: CommonForm, identityRequest: IdentityRequest) {
 
     val billingDetails = formData match {
-      case billingForm: PaidMemberJoinForm =>
+      case billingForm : PaidMemberJoinForm =>
         val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
         billingAddress(billingAddressForm)
+      case _ => Json.obj()
+    }
+
+    val deliverAddress = formData match {
+      case jf : JoinForm => deliveryAddress(jf.deliveryAddress)
       case _ => Json.obj()
     }
 
     val fields = Json.obj(
       "secondName" -> formData.name.last,
       "firstName" -> formData.name.first
-    ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
+    ) ++ deliverAddress ++ billingDetails
 
     val json = Json.obj("privateFields" -> fields)
     postFields(json, user.id, identityRequest)

@@ -1,0 +1,162 @@
+@import com.gu.i18n.CountryGroup
+@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.salesforce.Tier.{Supporter, Partner}
+@import views.html.helper._
+@import views.support.DisplayText._
+@import views.support.MembershipCompat._
+@import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
+
+@import com.gu.memsub.subsv2.CatalogPlan.Contributor
+@(plans: Contributor,
+    idUser: IdentityUser,
+    pageInfo: PageInfo,
+    countryGroup: Option[CountryGroup],
+    touchpointBackendResolution: services.TouchpointBackend.Resolution)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
+
+@main("Become a contributor", pageInfo=pageInfo, simpleHeader=true, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+    <script>
+        (function() {
+            'use strict';
+
+            function numberAsCurrencyString(num) {
+                return (Math.round(num * 100) / 100).toFixed(2).replace('.00','');
+            }
+            function discountedPrice(price, discount) {
+                return price * ((100 - discount) / 100);
+            }
+            function formattedDiscountedPrice(currency, amount, discount) {
+                return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
+            }
+            function formattedDiscountedCharge(currency, amount, discount) {
+                return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
+            }
+            var checkoutForm = guardian.membership.checkoutForm;
+            checkoutForm.billingPeriod = "monthly";
+
+            checkoutForm.currencySymbols = {
+                GBP : "£"
+            }
+            checkoutForm.currencyIdentifiers = {
+                GBP : "£"
+            }
+            checkoutForm.billingPeriods = {
+                monthly: {
+                    amount: 6.5,
+                    generateChargeAmount: function() {
+                        return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
+                    },
+                    getOriginalChargeAmount: function() {
+                        return formattedDiscountedCharge(checkoutForm.currency, this.amount, 0);
+                    },
+                    generateDisplayAmount: function() {
+                        return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
+                    },
+                    noun: 'monthly',
+                    discount: 0,
+                    discountDurationMonths: 0
+                },
+                choices: []
+            };
+        }());
+    </script>
+
+    <main class="page-content skin-checkout-b skin-checkout-paypal">
+
+        <!-- FORM TITLE -->
+        <section class="checkout-header">
+            <h1 class="checkout-headline">Become a monthly Contributor</h1>
+        </section>
+
+            <!-- CHECKOUT FORM -->
+        <form action="@routes.Joiner.joinMonthlyContribution()" method="POST" id="payment-form" class="js-form" novalidate>
+            @CSRF.formField
+
+            <section class="form-content">
+
+
+                <!-- ACCORDION SECTION - NAME AND ADDRESS -->
+                <section class="form-panel sub-heading">
+
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Name and address</h2>
+                        <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
+                        <div class="sign-in-required js-sign-in-note">
+                        @fragments.joiner.signedInAs(request.uri, inline = true)
+                        </div>
+                    </div>
+
+                    <div class="form-panel__content js-form-panel-name-address">
+                        <!-- Name -->
+                        <div class="form-section__name-detail">
+                        @fragments.form.nameDetailFields(
+                            idUser.privateFields.firstName,
+                            idUser.privateFields.secondName
+                        )
+                        </div>
+
+                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
+
+                        @if(!idUser.passwordExists) {
+                            @fragments.form.createPassword()
+                        }
+
+                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
+                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
+                    </div>
+
+                </section>
+
+                    <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
+                <section class="form-panel form-group--little-padding">
+
+                    <div class="form-panel__heading">
+                        <h2 class="form-panel__headline">Payment</h2>
+                        <p class="text-note">Prices include VAT</p>
+                    </div>
+
+
+                    <input type="hidden" name="country" id="monthly-contribution-country" value="GB"/>
+
+                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
+                        <fieldset>
+                            <div class="js-monthly-contribution">
+                                <div class="form-field js-monthly-contribution-section">
+                                    <label class="label optional-marker" for="monthly-contribution">YOUR Monthly Contribution</label>
+                                    <input type="text"
+                                    name="payment.amount"
+                                    id="monthly-contribution"
+                                    class="input-text js-monthly-contribution"
+                                    value="60"/>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                         <!-- Payment Options -->
+                        <fieldset class="fieldset js-payment-methods">
+
+                            <div class="fieldset__heading">
+                                <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
+                                <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
+                            </div>
+
+                            <div class="fieldset__fields">
+                                <div class="form-field">
+                                    <div class="loader js-payment-processing">Processing.</div>
+                                </div>
+                                <div class="form-field js-payment-type">
+                                @fragments.form.stripeCheckout(idUser)
+                                </div>
+                            </div>
+                            <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
+                        </fieldset>
+
+                    </div>
+                </section>
+
+                @fragments.form.terms(countryGroup)
+            </section>
+        </form>
+    </main>
+}
+

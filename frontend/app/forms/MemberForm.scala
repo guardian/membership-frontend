@@ -34,15 +34,20 @@ object MemberForm {
 
   )
 
-  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String] )
+  case class MonthlyPaymentForm(stripeToken: String, amount: BigDecimal)
+
+  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String])
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
-  trait JoinForm {
+  trait CommonForm {
     val name: NameForm
-    val deliveryAddress: Address
-    val marketingChoices: MarketingChoicesForm
     val password: Option[String]
+    val marketingChoices: MarketingChoicesForm
+  }
+
+  trait JoinForm extends CommonForm {
+    val deliveryAddress: Address
     val trackingPromoCode: Option[PromoCode]
     val planChoice: PlanChoice
   }
@@ -53,6 +58,11 @@ object MemberForm {
     val trackingPromoCode: Option[PromoCode]
     val promoCode: Option[PromoCode]
     val payment: PaymentForm
+  }
+
+  trait ContributorForm extends CommonForm {
+    val planChoice: ContributionPlanChoice
+    val payment: MonthlyPaymentForm
   }
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
@@ -83,6 +93,20 @@ object MemberForm {
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
     override val planChoice: PaidPlanChoice = PaidPlanChoice(tier, payment.billingPeriod)
   }
+
+  case class MonthlyContributorForm(
+                                name: NameForm,
+                                payment: MonthlyPaymentForm,
+                                marketingChoices: MarketingChoicesForm,
+                                password: Option[String],
+                                casId: Option[String],
+                                subscriberOffer: Boolean,
+                                country: String
+                               ) extends ContributorForm {
+    override val planChoice = ContributorChoice()
+  }
+
+
 
   case class AddressDetails(deliveryAddress: Address, billingAddress: Option[Address])
 
@@ -143,15 +167,16 @@ object MemberForm {
   }
 
 
-
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
 
-
-  private val country: Mapping[String] =
+  private val country: Mapping[String] ={
+    println("DEBUG")
+    println(text)
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
         { code => CountryGroup.countryByCode(code).fold("")(_.name)},
         { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
+  }
 
   implicit val promoCodeFormatter: Formatter[PromoCode] = new Formatter[PromoCode] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], PromoCode] =
@@ -206,7 +231,10 @@ object MemberForm {
     "payPalBaid" -> optional(text)
   )(PaymentForm.apply)(PaymentForm.unapply)
 
-
+  val  monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
+    "stripeToken" -> nonEmptyText,
+    "amount" -> bigDecimal(10, 2)
+  )(MonthlyPaymentForm.apply)(MonthlyPaymentForm.unapply)
 
   val friendJoinForm: Form[FriendJoinForm] = Form(
     mapping(
@@ -244,6 +272,18 @@ object MemberForm {
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
+  val monthlyContributorForm: Form[MonthlyContributorForm] = Form(
+    mapping(
+      "name" -> nameMapping,
+      "payment" -> monthlyPaymentMapping,
+      "marketingChoices" -> marketingChoicesMapping,
+      "password" -> optional(nonEmptyText),
+      "casId" -> optional(nonEmptyText),
+      "subscriberOffer" -> default(boolean, false),
+      "country" -> country
+    )(MonthlyContributorForm.apply)(MonthlyContributorForm.unapply)
+  )
+
   val freeMemberChangeForm: Form[FreeMemberChangeForm] = Form(
     mapping(
       "payment" -> paymentMapping,
@@ -263,8 +303,6 @@ object MemberForm {
       "promoCode" -> optional(promoCode)
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
-
-
 
   val supportForm: Form[SupportForm] = Form(
     mapping(
