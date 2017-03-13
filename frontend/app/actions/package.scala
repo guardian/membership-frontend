@@ -1,12 +1,14 @@
 import com.gu.googleauth
 import com.gu.identity.play.AuthenticatedIdUser
-import com.gu.memsub.Subscriber.{Member, FreeMember, PaidMember}
+import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
+import com.gu.memsub.subsv2.SubscriptionPlan
 import com.gu.salesforce._
 import com.gu.memsub.util.Timing
 import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest
-import play.api.mvc.{Request, Cookie, WrappedRequest}
+import play.api.mvc.{Cookie, Request, WrappedRequest}
 import services._
+
 import scalaz.\/
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,6 +49,10 @@ package object actions {
 
   trait PaidSubscriber {
     def subscriber: PaidMember
+  }
+
+  trait Contributor {
+    def contributor: SubscriptionPlan.Contributor
   }
 
   trait FreeSubscriber {
