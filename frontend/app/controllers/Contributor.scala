@@ -10,7 +10,6 @@ import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
 import controllers.Joiner._
-import controllers.{IdentityRequest, routes, logger => _, _}
 import forms.MemberForm._
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
