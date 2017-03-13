@@ -1,21 +1,27 @@
+package controllers
+
 import actions.ActionRefiners._
 import actions._
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.util.Timing
-import com.gu.salesforce.Tier
 import com.gu.stripe.Stripe
-import com.gu.zuora.soap.models.errors.PaymentGatewayError
+import com.gu.stripe.Stripe.Serializer._
+import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
-import controllers.{IdentityRequest, routes, logger => _, _}
 import controllers.Joiner._
+import controllers.{IdentityRequest, routes, logger => _, _}
 import forms.MemberForm._
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import services.{PreMembershipJoiningEventFromSessionExtractor, TouchpointBackend}
 import tracking.ActivityTracking
-import utils.{CampaignCode, TierChangeCookies}
+import utils.RequestCountry._
 import utils.TestUsers.PreSigninTestCookie
+import utils.{CampaignCode, TierChangeCookies}
 import views.support.PageInfo
 
 import scala.concurrent.Future
@@ -31,7 +37,7 @@ object Contributor extends Controller with ActivityTracking
   with PaymentServiceProvider
   with MemberServiceProvider {
 
-  def NonContributorAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
+  def NonContributorAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonContributorFilter()
 
   def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK) = NonContributorAction.async { implicit request =>
 
@@ -70,7 +76,7 @@ object Contributor extends Controller with ActivityTracking
     monthlyContributorForm.bindFromRequest.fold({ formWithErrors =>
       Future.successful(BadRequest(formWithErrors.errorsAsJson))
     },
-      makeContributor(Ok(Json.obj("redirect" -> routes.Joiner.thankyouContributor.url))))
+      makeContributor(Ok(Json.obj("redirect" -> routes.Contributor.thankyouContributor.url))))
   }
 
   private def makeContributor(onSuccess: => Result)(formData: ContributorForm)(implicit request: AuthRequest[_]) = {
@@ -128,6 +134,26 @@ object Contributor extends Controller with ActivityTracking
         validPromotion.filterNot(_.asTracking.isDefined),
         resolution
       )).discardingCookies(TierChangeCookies.deletionCookies: _*)
+    }
+  }
+
+
+  //TODO: copy pasted from Joiner - refactor
+  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String, String)], country: String = "") = {
+
+    def handleError(code: String) = {
+      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
+      Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
+    }
+
+    e.errType match {
+      case Fraudulent => handleError("Fraudulent")
+      case TransactionNotAllowed => handleError("TransactionNotAllowed")
+      case DoNotHonor => handleError("DoNotHonor")
+      case InsufficientFunds => handleError("InsufficientFunds")
+      case RevocationOfAuthorization => handleError("RevocationOfAuthorization")
+      case GenericDecline => handleError("GenericDecline")
+      case _ => handleError("UknownPaymentError")
     }
   }
 

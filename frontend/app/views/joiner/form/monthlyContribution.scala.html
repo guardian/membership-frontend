@@ -1,13 +1,7 @@
 @import com.gu.i18n.CountryGroup
-@import com.gu.memsub.subsv2.CatalogPlan.PaidMember
-@import com.gu.memsub.subsv2.PaidMembershipPlans
-@import com.gu.salesforce.Tier.{Supporter, Partner}
-@import views.html.helper._
-@import views.support.DisplayText._
-@import views.support.MembershipCompat._
-@import views.support.{CountryWithCurrency, IdentityUser, PageInfo, PaidPlans}
-
 @import com.gu.memsub.subsv2.CatalogPlan.Contributor
+@import views.html.helper._
+@import views.support.{IdentityUser, PageInfo}
 @(plans: Contributor,
     idUser: IdentityUser,
     pageInfo: PageInfo,
@@ -69,7 +63,7 @@
         </section>
 
             <!-- CHECKOUT FORM -->
-        <form action="@routes.Joiner.joinMonthlyContribution()" method="POST" id="payment-form" class="js-form" novalidate>
+        <form action="@routes.Contributor.joinMonthlyContribution()" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
 
             <section class="form-content">

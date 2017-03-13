@@ -122,6 +122,10 @@ object ActionRefiners extends LazyLogging {
     override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
   }
 
+  def onlyNonContributorFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
+    override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
+  }
+
   def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
