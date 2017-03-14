@@ -25,10 +25,11 @@ object Dependencies {
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.6" % "test"
   val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
+  val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
 
   //projects
 
-  val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon,
+  val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch)
 

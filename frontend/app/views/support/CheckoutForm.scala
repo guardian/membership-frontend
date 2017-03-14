@@ -10,25 +10,28 @@ case class CheckoutForm(defaultCountry: Option[Country],
                         billingPeriod: BillingPeriod)
 
 object CheckoutForm extends LazyLogging {
-  def forIdentityUser(idUser: IdentityUser, plans: TierPlans, requestCountryGroup: Option[CountryGroup]): CheckoutForm = {
-    val (country, desiredCurrency) = (requestCountryGroup, idUser.country) match {
+  def forIdentityUser(userCountry: Option[Country], plans: TierPlans, requestCountryGroup: Option[CountryGroup]): CheckoutForm = {
+    val (country, countryGroup) = (requestCountryGroup, userCountry) match {
       case (Some(cg), _) =>
-        (cg.defaultCountry, cg.currency)
+        (cg.defaultCountry, cg)
       case (_, Some(idCountry)) =>
-        val currency = CountryGroup.allGroups
-                         .find(_.countries.contains(idCountry))
-                         .getOrElse {
-                           logger.warn(s"Could not find country $idCountry in any CountryGroup, defaulting to UK")
-                           CountryGroup.UK
-                         }.currency
-        (Some(idCountry), currency)
+        (Some(idCountry), countryGroupOf(idCountry))
       case _ =>
-        (Some(Country.UK), CountryGroup.UK.currency)
+        (Some(Country.UK), CountryGroup.UK)
     }
+
+    val desiredCurrency = countryGroup.currency
 
     val currency =
       if (plans.currencies.contains(desiredCurrency)) desiredCurrency else GBP
 
     CheckoutForm(country, currency, BillingPeriod.Year)
   }
+
+   def countryGroupOf(country: Country): CountryGroup = CountryGroup.allGroups
+    .find(_.countries.contains(country))
+    .getOrElse {
+      logger.warn(s"Could not find country $country in any CountryGroup, defaulting to UK")
+      CountryGroup.UK
+    }
 }

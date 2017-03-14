@@ -68,6 +68,7 @@ object MemberForm {
 
   case class PaidMemberJoinForm(tier: PaidTier,
                                 name: NameForm,
+                                email: String,
                                 payment: PaymentForm,
                                 deliveryAddress: Address,
                                 billingAddress: Option[Address],
@@ -231,6 +232,7 @@ object MemberForm {
     mapping(
       "tier" -> nonEmptyText.transform[PaidTier](PaidTier.slugMap, _.slug),
       "name" -> nameMapping,
+      "email" -> nonEmptyText,
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),

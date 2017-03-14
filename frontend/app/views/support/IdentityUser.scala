@@ -38,6 +38,8 @@ case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFi
 }
 
 object IdentityUser {
+  val BlankAddress = Address("", "", "", "", "", "")
+
   /**
   * An Identity user, for view purposes, with default empty private and status fields
   */

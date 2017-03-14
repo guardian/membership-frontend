@@ -58,7 +58,7 @@
                             postcode = idUser.privateFields.postcode,
                             county = idUser.privateFields.address4
                         )
-                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
+                        @fragments.form.marketingChoices(Some(idUser.marketingChoices))
                         @fragments.form.trackingPromoCode(validPromo.flatMap(_.trackingCode))
 
                         @if(!idUser.passwordExists) {

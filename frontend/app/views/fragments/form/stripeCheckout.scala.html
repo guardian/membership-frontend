@@ -1,5 +1,5 @@
 @import views.support.IdentityUser
-@(idUser: IdentityUser)
+@(idUser: Option[IdentityUser])
 <script>
     guardian.stripeCheckout = {
         key: guardian.stripePublicKey,
@@ -10,4 +10,4 @@
         allowRememberMe: false
     };
 </script>
-<button type="button" class="action choose-payment-method js-stripe-checkout" data-email="@idUser.email">Credit/Debit Card</button>
+<button type="button" class="action choose-payment-method js-stripe-checkout">Credit/Debit Card</button>
