@@ -512,15 +512,14 @@ class MemberService(identityService: IdentityService,
                                   stripeCustomer: Option[Customer],
                                   campaignCode: Option[CampaignCode],
                                   email: String): Future[SubscribeResult] = {
-    //TODO: fix hard coded values
-
-    val country = Country("GB", "United Kingdom")
     val paymentMethod = createMonthlyPaymentFormMethod(contactId, None, joinData.payment, stripeCustomer)
     val planChoice = ContributorChoice()
     val contribute = zuoraService.getFeatures.map { features =>
       val planId = planChoice.productRatePlanId
+      val ratePlanChargeId = catalog.contributor.charges.chargeId.get
+
       val plan = RatePlan(productRatePlanId = planId.get,
-                          chargeOverride = Some(ChargeOverride(productRatePlanChargeId = "2c92c0f85a6b1352015a7fcf35ab397c",
+                          chargeOverride = Some(ChargeOverride(productRatePlanChargeId = ratePlanChargeId,
                                                 price = Some(joinData.payment.amount))))
       val currency = GBP
       val today = DateTime.now.toLocalDate
@@ -532,7 +531,7 @@ class MemberService(identityService: IdentityService,
         name = nameData,
         contractAcceptance = today,
         contractEffective = today,
-        country = country.alpha2)
+        country = Country.UK.alpha2)
     }.andThen { case Failure(e) => logger.error(s"Could not get features for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     contribute.flatMap(zuoraService.createContribution).andThen {
