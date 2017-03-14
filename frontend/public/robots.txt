@@ -4,6 +4,7 @@ Disallow: /patterns
 Disallow: /whats-on
 Disallow: /join-challenger
 Disallow: /bundles
+Disallow: /monthly-contribution
 
 Allow: /
 
