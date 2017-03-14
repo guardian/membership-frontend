@@ -11,8 +11,10 @@ export function init() {
         let amount = billingPeriod.generateDisplayAmount();
         let period = billingPeriod.noun;
         const monthlyContributionField = $('.js-monthly-contribution');
-        amount = parseFloat(monthlyContributionField[1].value);
-        return "Pay £" + amount + " per " + period;
+        if (monthlyContributionField.length > 0){
+            amount = "£" + parseFloat(monthlyContributionField[1].value);
+        }
+        return "Pay " + amount + " per " + period;
     };
     const open = (e) => {
         if (payment.validateForm()) {

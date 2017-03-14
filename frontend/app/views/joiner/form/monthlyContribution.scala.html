@@ -27,7 +27,7 @@
                 return checkoutForm.currencyIdentifiers[currency] + numberAsCurrencyString(discountedPrice(amount[currency], discount));
             }
             var checkoutForm = guardian.membership.checkoutForm;
-            checkoutForm.billingPeriod = "monthly";
+            checkoutForm.billingPeriod = "month";
 
             checkoutForm.currencySymbols = {
                 GBP : "£"
