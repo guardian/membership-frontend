@@ -8,6 +8,7 @@
 @(  heroImage: model.OrientatedImages,
     supporterPlans: PaidMembershipPlans[com.gu.memsub.Benefit.Supporter.type],
     pageInfo: PageInfo,
+    returnUrl: Option[String] = None,
     whySupportImage: model.OrientatedImages,
     bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
 
@@ -22,7 +23,7 @@
     )
 
     @* ===== Offerings ===== *@
-    @fragments.bundle.bundleOfferingsA(bundleVariant)
+    @fragments.bundle.bundleOfferingsA(bundleVariant, returnUrl)
 
     @* ===== Why do we need supporters? ===== *@
     @fragments.bundle.bundleSupportUs(whySupportImage, bundleVariant,
