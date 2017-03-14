@@ -512,6 +512,7 @@ class MemberService(identityService: IdentityService,
                                   stripeCustomer: Option[Customer],
                                   campaignCode: Option[CampaignCode],
                                   email: String): Future[SubscribeResult] = {
+    //TODO: fix hard coded values
 
     val country = Country("GB", "United Kingdom")
     val paymentMethod = createMonthlyPaymentFormMethod(contactId, None, joinData.payment, stripeCustomer)

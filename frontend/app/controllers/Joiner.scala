@@ -157,8 +157,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e) }
   }
 
-  def NonMemberAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp)
-
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
     implicit val c = catalog

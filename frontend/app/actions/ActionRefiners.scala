@@ -53,12 +53,10 @@ object ActionRefiners extends LazyLogging {
     implicit val pf = Membership
     val tp = request.touchpointBackend
     val contributor = Subscriber[Subscription[SubscriptionPlan.Contributor]] _
-    logger.info("getContributorRequest")
     (for {
       member <- OptionT(request.forMemberOpt(identity))
       subscription <- OptionT(tp.subscriptionService.getSubscription(member))
     } yield new SubscriptionRequest[A](tp, request) with Contributor {
-      logger.info("Subscription:" + subscription)
       override val contributor = subscription.plan
     }).run
   }
@@ -68,12 +66,10 @@ object ActionRefiners extends LazyLogging {
     val tp = request.touchpointBackend
     val FreeSubscriber = Subscriber[Subscription[SubscriptionPlan.FreeMember]] _
     val PaidSubscriber = Subscriber[Subscription[SubscriptionPlan.PaidMember]] _
-    logger.info("getSubRequest")
     (for {
       member <- OptionT(request.forMemberOpt(identity))
       subscription <- OptionT(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
     } yield new SubscriptionRequest[A](tp, request) with Subscriber {
-      logger.info("Subscription:" + subscription)
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run
   }
@@ -138,8 +134,6 @@ object ActionRefiners extends LazyLogging {
       Ok(views.html.tier.upgrade.unavailableUpgradePath(req.subscriber.subscription.plan.tier, selectedTier))
     }
   }
-
-  def redirectMemberAttemptingToSignUp(req: SubReqWithSub[_]): Result = contributorJoinRedirect(req)
 
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
     override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))

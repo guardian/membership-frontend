@@ -170,8 +170,6 @@ object MemberForm {
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
 
   private val country: Mapping[String] ={
-    println("DEBUG")
-    println(text)
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
         { code => CountryGroup.countryByCode(code).fold("")(_.name)},
