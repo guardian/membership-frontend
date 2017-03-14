@@ -39,7 +39,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-object Joiner extends Controller with ActivityTracking
+object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorHandler
   with LazyLogging
   with CatalogProvider
   with StripeServiceProvider
@@ -103,9 +103,9 @@ object Joiner extends Controller with ActivityTracking
   def NonMemberAction(tier: Tier) = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
   def enterPaidDetails(
-    tier: PaidTier,
-    countryGroup: CountryGroup,
-    promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
+                        tier: PaidTier,
+                        countryGroup: CountryGroup,
+                        promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -154,7 +154,7 @@ object Joiner extends Controller with ActivityTracking
         pageInfo,
         Some(countryGroup),
         resolution))
-    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
+    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e) }
   }
 
   def NonMemberAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp)
@@ -290,24 +290,6 @@ object Joiner extends Controller with ActivityTracking
   }
 
   def thankyouStaff = thankyou(Tier.partner)
-
-  private def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String, String)], country: String = "") = {
-
-    def handleError(code: String) = {
-      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
-      Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
-    }
-
-    e.errType match {
-      case Fraudulent => handleError("Fraudulent")
-      case TransactionNotAllowed => handleError("TransactionNotAllowed")
-      case DoNotHonor => handleError("DoNotHonor")
-      case InsufficientFunds => handleError("InsufficientFunds")
-      case RevocationOfAuthorization => handleError("RevocationOfAuthorization")
-      case GenericDecline => handleError("GenericDecline")
-      case _ => handleError("UknownPaymentError")
-    }
-  }
 
   private def setBehaviourNote(tier: String, errorCode: String)(implicit request: AuthRequest[_]) = {
     if (tier.toLowerCase == "supporter") {
