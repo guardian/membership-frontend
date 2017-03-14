@@ -80,10 +80,10 @@
     }
     h1 {
         @include text-title();
-        @include mq($from: tablet) {
+        @include mq($from: tablet, $until: desktop) {
             font-size: 46px;
         }
-        @include mq($from: desktop) {
+        @include mq($from: desktop, $until: mem-full) {
             font-size: 50px;
         }
         @include mq($from: mem-full) {
@@ -93,12 +93,11 @@
 
     p {
         @include text-tag-line();
-
-        @include mq($from: tablet) {
+        @include mq($from: tablet, $until: desktop) {
             font-size: 20px;
             width: gs-span(5.25);
         }
-        @include mq($from: desktop) {
+        @include mq($from: desktop, $until: mem-full) {
             font-size: 22px;
             width: gs-span(3.75);
         }
@@ -113,13 +112,13 @@
     @include bundle-column-narrow();
     img {
         position: absolute;
-        @include mq($from: tablet) {
+        @include mq($from: tablet, $until: desktop) {
             width: 288px;
             height: 240px;
             top: 87px;
             margin-left: 430px;
         }
-        @include mq($from: desktop) {
+        @include mq($from: desktop, $until: mem-full) {
             width: 288px;
             height: 240px;
             top: 117px;
@@ -142,6 +141,9 @@
         padding-left: $gs-gutter * 5;
     }
     p {
+        @include mq($from: mem-full) {
+            width: gs-span(6);
+        }
         margin-bottom: 0;
         @include text-paragraph();
         padding-top: $gs-baseline;
