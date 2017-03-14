@@ -4,6 +4,7 @@
 @import com.gu.salesforce.Tier.{Partner, Supporter}
 @import play.api.mvc.RequestHeader
 @import play.filters.csrf
+@import model.Header.SimpleHeader
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
@@ -16,7 +17,12 @@
     validPromo: Option[ValidPromotion[Upgrades]]
 )(implicit token: csrf.CSRF.Token, request: RequestHeader)
 
-@main("Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name, pageInfo = pageInfo, margins = false, simpleHeader = true) {
+@main(
+    "Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name,
+    pageInfo = pageInfo,
+    margins = false,
+    header = SimpleHeader) {
+
     <main role="main" class="page-content skin-checkout-b skin-checkout-paypal">
 
             <!-- FORM TITLE -->
@@ -105,7 +111,7 @@
                                     <div class="loader js-payment-processing">Processing.</div>
                                 </div>
                                 <div class="form-field js-payment-type">
-                                @fragments.form.stripeCheckout(idUser)
+                                @fragments.form.stripeCheckout(Some(idUser))
                                 </div>
                                 <div class="form-field js-payment-type">
                                     <div id="paypal-button-checkout"></div>

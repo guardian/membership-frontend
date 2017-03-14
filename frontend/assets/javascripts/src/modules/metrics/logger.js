@@ -1,4 +1,4 @@
-define(['lodash/object/extend','src/modules/analytics/ga'], function (extend, ga) {
+define(['lodash/extend','src/modules/analytics/ga'], function (extend, ga) {
     'use strict';
 
     return function(options) {

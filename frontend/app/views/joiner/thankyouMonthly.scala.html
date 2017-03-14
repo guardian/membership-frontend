@@ -1,6 +1,7 @@
 @import com.gu.memsub.subsv2.SubscriptionPlan.Contributor
 @import play.twirl.api.Html
 @import views.support.Dates._
+@import model.Header.SimpleHeader
 @import views.support.Social.joinThankyou
 @import views.support.ThankYouMonthlySummary
 @(contributor: Contributor,
@@ -34,7 +35,7 @@
 @main(
     title,
     touchpointBackendResolutionOpt = Some(touchpointBackendResolution),
-    simpleHeader = true
+    header = SimpleHeader
 ) {
     <script type="text/javascript">
         guardian.productData = {

@@ -5,9 +5,6 @@ export function init() {
     let handler = window.StripeCheckout.configure(guardian.stripeCheckout);
     let success = false;
     const button = $('.js-stripe-checkout');
-    const email = button.data('email');
-
-
     bean.on(window, 'popstate', handler.close);
     const amount = () => {
         let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
@@ -19,6 +16,7 @@ export function init() {
     };
     const open = (e) => {
         if (payment.validateForm()) {
+            const email = document.querySelector('#email').value;
             payment.showSpinner();
             handler.open({
                 description: 'Please enter your card details.',

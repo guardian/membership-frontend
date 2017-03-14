@@ -13,7 +13,7 @@ import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
-import play.api.mvc.Security.AuthenticatedBuilder
+import play.api.mvc.Security.{AuthenticatedBuilder, AuthenticatedRequest}
 import play.api.mvc._
 import utils.PlannedOutage
 import views.support.MembershipCompat._
@@ -61,15 +61,17 @@ object ActionRefiners extends LazyLogging {
     }).run
   }
 
-  private def getSubRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithSub[A]]] = {
+  private def getSubRequest[A](request: Request[A]): Future[Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
-    val tp = request.touchpointBackend
     val FreeSubscriber = Subscriber[Subscription[SubscriptionPlan.FreeMember]] _
     val PaidSubscriber = Subscriber[Subscription[SubscriptionPlan.PaidMember]] _
     (for {
-      member <- OptionT(request.forMemberOpt(identity))
+      user <- OptionT(Future.successful(AuthenticationService.authenticatedIdUserProvider(request)))
+      authRequest = new AuthenticatedRequest(user, request)
+      tp = authRequest.touchpointBackend
+      member <- OptionT(authRequest.forMemberOpt(identity))
       subscription <- OptionT(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
-    } yield new SubscriptionRequest[A](tp, request) with Subscriber {
+    } yield new SubscriptionRequest[A](tp, authRequest) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run
   }
@@ -133,6 +135,10 @@ object ActionRefiners extends LazyLogging {
       }
       Ok(views.html.tier.upgrade.unavailableUpgradePath(req.subscriber.subscription.plan.tier, selectedTier))
     }
+  }
+
+  def noAuthenticatedMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[Request] {
+    override def filter[A](request: Request[A]) = getSubRequest(request).map(_.map(onMember))
   }
 
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {

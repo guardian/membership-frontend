@@ -1,6 +1,7 @@
 package controllers
 
 import actions.ActionRefiners._
+import actions.Fallbacks.chooseRegister
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
@@ -24,9 +25,11 @@ import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.AuthenticationService.authenticatedIdUserProvider
 import services.PromoSessionService.codeFromSession
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
+import utils.Feature.MergedRegistration
 import utils.RequestCountry._
 import utils.TestUsers.PreSigninTestCookie
 import utils.{CampaignCode, TierChangeCookies}
@@ -34,7 +37,7 @@ import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.TierPlans._
-import views.support.{CheckoutForm, CountryWithCurrency, PageInfo}
+import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 
 import scala.concurrent.Future
 import scala.util.Failure
@@ -100,13 +103,25 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     }
   }
 
-  def NonMemberAction(tier: Tier) = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
+  def authenticatedIfNotMergingRegistration(onUnauthenticated: RequestHeader => Result = chooseRegister(_)) = new ActionFilter[Request] {
+    override def filter[A](request: Request[A]) = Future.successful {
+      val userSignedIn = authenticatedIdUserProvider(request).isDefined
+      if (userSignedIn || MergedRegistration.turnedOnFor(request)) None else Some(onUnauthenticated(request))
+    }
+  }
+
+  def OptionallyAuthenticatedNonMemberAction(tier: Tier) =
+    NoCacheAction andThen PlannedOutageProtection andThen authenticatedIfNotMergingRegistration() andThen noAuthenticatedMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
+
+  def NonMemberAction(tier: Tier) =
+    NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))
 
   def enterPaidDetails(
-                        tier: PaidTier,
-                        countryGroup: CountryGroup,
-                        promoCode: Option[PromoCode]) = NonMemberAction(tier).async { implicit request =>
+    tier: PaidTier,
+    countryGroup: CountryGroup,
+    promoCode: Option[PromoCode]) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
 
+    val userOpt = authenticatedIdUserProvider(request)
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
 
@@ -120,12 +135,12 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     val identityRequest = IdentityRequest(request)
 
     (for {
-      identityUser <- identityService.getIdentityUserView(request.user, identityRequest)
+      identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
       tier match {
-        case t: Tier.Supporter => {
+        case t: Tier.Supporter => for (user <- userOpt) {
           MembersDataAPI.Service.upsertBehaviour(
-            request.user,
+            user,
             activity = Some("enterPaidDetails.show"),
             note = Some(t.name))
         }
@@ -136,7 +151,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
         payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
-        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, plans, Some(countryGroup))
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUserOpt.flatMap(_.country), plans, Some(countryGroup))
       )
 
       val providedPromoCode = promoCode orElse codeFromSession
@@ -150,11 +165,11 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       Ok(views.html.joiner.form.payment(
         plans,
         countryCurrencyWhitelist,
-        identityUser,
+        identityUserOpt,
         pageInfo,
         Some(countryGroup),
         resolution))
-    }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e) }
+    }).andThen { case Failure(e) => logger.error(s"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
@@ -165,7 +180,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
 
-      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser, catalog.friend, None))
+      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))
       val validPromo = codeFromSession.flatMap(code => promoService.validate[NewUsers](code, pageInfo.initialCheckoutForm.defaultCountry.get, catalog.friend.id).toOption)
 
       Ok(views.html.joiner.form.friendSignup(

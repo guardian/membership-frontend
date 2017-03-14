@@ -1,5 +1,6 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.Contributor
+@import model.Header.SimpleHeader
 @import views.html.helper._
 @import views.support.{IdentityUser, PageInfo}
 @(plans: Contributor,
@@ -8,7 +9,7 @@
     countryGroup: Option[CountryGroup],
     touchpointBackendResolution: services.TouchpointBackend.Resolution)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main("Become a contributor", pageInfo=pageInfo, simpleHeader=true, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+@main("Become a contributor", pageInfo=pageInfo, header = SimpleHeader, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
     <script>
         (function() {
             'use strict';
@@ -84,12 +85,11 @@
                         <!-- Name -->
                         <div class="form-section__name-detail">
                         @fragments.form.nameDetailFields(
-                            idUser.privateFields.firstName,
-                            idUser.privateFields.secondName
+                            Some(idUser.privateFields)
                         )
                         </div>
 
-                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
+                        @fragments.form.marketingChoices(Some(idUser.marketingChoices))
 
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
@@ -139,7 +139,7 @@
                                     <div class="loader js-payment-processing">Processing.</div>
                                 </div>
                                 <div class="form-field js-payment-type">
-                                @fragments.form.stripeCheckout(idUser)
+                                @fragments.form.stripeCheckout(Some(idUser))
                                 </div>
                             </div>
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>

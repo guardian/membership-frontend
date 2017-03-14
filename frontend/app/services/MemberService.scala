@@ -153,7 +153,7 @@ class MemberService(identityService: IdentityService,
 
 
     formData match {
-      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, _, Some(baid)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
+      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, _, Some(baid)), _, _, _, _, _, _, _, _, _) => //Paid member with PayPal token
         for {
           idUser <- getIdentityUserDetails
           sfContact <- createSalesforceContact(idUser)
@@ -163,7 +163,7 @@ class MemberService(identityService: IdentityService,
           _ <- updateIdentity()
         } yield (sfContact, zuoraSubName)
 
-      case paid@PaidMemberJoinForm(_, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _, _, _) => //Paid member with Stripe token
+      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _, _, _) => //Paid member with Stripe token
         for {
           stripeCustomer <- createStripeCustomer(stripeToken)
           idUser <- getIdentityUserDetails

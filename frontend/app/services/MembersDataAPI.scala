@@ -117,7 +117,7 @@ object MembersDataAPI {
       val json: JsValue = Json.obj(
         "userId" -> userId,
         "activity" -> activity,
-        "dateTime" -> DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC),
+        "lastObserved" -> DateTime.now.toString(ISODateTimeFormat.dateTime.withZoneUTC),
         "note" -> note
       )
       BehaviourHelper(cookies).post[Behaviour]("user-behaviour/capture", json)

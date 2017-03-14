@@ -3,19 +3,26 @@
 @import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.salesforce.Tier.{Partner, Supporter}
 @import tracking.AppnexusPixel
+@import model.Header.SimpleHeader
 @import views.html.helper._
 @import views.support.DisplayText._
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
+@import views.support.IdentityUser.BlankAddress
 @(plans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrencies: List[CountryWithCurrency],
-    idUser: IdentityUser,
+    idUser: Option[IdentityUser],
     pageInfo: PageInfo,
     countryGroup: Option[CountryGroup],
     touchpointBackendResolution: services.TouchpointBackend.Resolution
-)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
+)(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader)
 
-@main(plans.tier.cta, pageInfo = pageInfo, simpleHeader = true, margins = false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+@main(
+    plans.tier.cta,
+    pageInfo = pageInfo,
+    header = SimpleHeader,
+    margins = false,
+    touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
 
     <main class="page-content skin-checkout-b skin-checkout-paypal">
 
@@ -56,20 +63,37 @@
                     <div class="form-panel__content js-form-panel-name-address @if(plans.tier == Partner()) {is-hidden}">
                             <!-- Name -->
                         <div class="form-section__name-detail">
-                        @fragments.form.nameDetailFields(
-                            idUser.privateFields.firstName,
-                            idUser.privateFields.secondName
-                        )
+                            @fragments.form.nameDetailFields(idUser.map(_.privateFields))
                         </div>
 
-                            <!-- Address -->
+
+                        <div class="fieldset__fields @if(idUser.isDefined) {is-hidden}">
+                            <div class="form-field">
+                                <label class="label" for="email">Email address</label>
+                                <input type="email"
+                                name="email"
+                                id="email"
+                                maxlength="80"
+                                value="@idUser.map(_.email)"
+                                class="input-text js-name-first"
+                                required
+                                aria-required="true"/>
+                                @fragments.form.errorMessage("Please enter your email")
+                            </div>
+                        </div>
+
+                        @if(!idUser.exists(_.passwordExists)) {
+                            @fragments.form.createPassword()
+                        }
+
+                        <!-- Address -->
                         @fragments.form.addressDetailFields(
                             countriesWithCurrencies = countriesWithCurrencies,
                             heading = "Delivery address",
                             note = "We need your address to send you a welcome pack",
                             formType = "deliveryAddress",
                             addressRequired = true,
-                            address = idUser.deliveryAddress
+                            address = idUser.map(_.deliveryAddress).getOrElse(BlankAddress)
                         )
                             <!-- Billing Address -->
                         @fragments.form.billingAddressFields("Billing address")
@@ -77,15 +101,11 @@
                             countriesWithCurrencies = countriesWithCurrencies,
                             formType = "billingAddress",
                             addressRequired = true,
-                            address = idUser.billingAddress,
+                            address = idUser.map(_.billingAddress).getOrElse(BlankAddress),
                             showHeading = false
                         )
 
-                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
-
-                        @if(!idUser.passwordExists) {
-                            @fragments.form.createPassword()
-                        }
+                        @fragments.form.marketingChoices(idUser.map(_.marketingChoices))
 
                         <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
                         <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">

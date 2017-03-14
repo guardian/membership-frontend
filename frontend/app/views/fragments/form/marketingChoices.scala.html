@@ -1,12 +1,12 @@
-@(gnm: Option[Boolean], thirdParty: Option[Boolean])
+@(marketingChoices: Option[com.gu.identity.play.StatusFields])
 
 <fieldset class="u-h">
 
     <input type="hidden"
            name="marketingChoices.gnnMarketing"
-           value="@gnm" />
+           value="@marketingChoices.map(_.receiveGnmMarketing)" />
 
     <input type="hidden"
            name="marketingChoices.thirdParty"
-           value="@thirdParty" />
+           value="@marketingChoices.map(_.receive3rdPartyMarketing)" />
 </fieldset>

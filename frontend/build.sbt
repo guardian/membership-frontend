@@ -87,6 +87,7 @@ riffRaffUploadManifestBucket := Option("riffraff-builds")
 
 
 play.sbt.routes.RoutesKeys.routesImport ++= Seq(
+    "utils.{Feature,OnOrOff}",
     "com.gu.salesforce.Tier",
     "com.gu.salesforce.FreeTier",
     "com.gu.salesforce.PaidTier",

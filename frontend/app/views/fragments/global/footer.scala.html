@@ -1,15 +1,18 @@
+@import model.Footer
+@import model.Footer.{SimpleFooter, BundlesFooter}
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
 @import org.joda.time.DateTime
 @import model.Nav
 
-@(pageInfo: PageInfo, extraClass: Option[String] = None, countryGroup: Option[CountryGroup] = None)
-@if(!pageInfo.url.startsWith("/bundles")) {
-<footer class="global-footer hidden-print @extraClass.mkString" role="contentinfo">
-} else {
-<footer class="global-footer-bundles hidden-print @extraClass.mkString" role="contentinfo">
-}
-    @fragments.global.brandbar()
+@(pageInfo: PageInfo, footer: Footer, extraClass: Option[String] = None,
+    countryGroup: Option[CountryGroup] = None)
+
+<footer class="@if(footer == BundlesFooter) {global-footer-bundles} else {global-footer} hidden-print @extraClass.mkString" role="contentinfo">
+
+    @if(footer != SimpleFooter) {
+        @fragments.global.brandbar()
+    }
 
     <div class="global-footer__info">
         <div class="global-footer__info__inner l-constrained">

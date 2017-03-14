@@ -2,7 +2,6 @@
 
 import form from 'src/modules/form/helper/formUtil';
 import * as payment from 'src/modules/payment';
-import 'whatwg-fetch';
 
 
 // ----- Functions ----- //
