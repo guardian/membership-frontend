@@ -1,0 +1,96 @@
+@import com.gu.memsub.subsv2.SubscriptionPlan.Contributor
+@import play.twirl.api.Html
+@import views.support.Dates._
+@import views.support.Social.joinThankyou
+@import views.support.ThankYouMonthlySummary
+@(contributor: Contributor,
+    summary: ThankYouMonthlySummary,
+    touchpointBackendResolution: services.TouchpointBackend.Resolution
+)
+
+@title = @{s"Thank you for your support"}
+
+@pageHeader = @{"Thank you for supporting the Guardian"}
+
+
+@getStarted(title: String)(content: Html) = {
+    <section class="page-section page-section--bordered">
+        <div class="page-section__lead-in">
+            <h2 class="page-section__headline">@title</h2>
+        </div>
+        <div class="page-section__content">
+        @content
+        </div>
+    </section>
+}
+
+@paymentRow(title : String, message: String) = {
+    <tr role="row">
+        <th role="rowheader">@title</th>
+        <td id="qa-joiner-summary-card">@message</td>
+    </tr>
+}
+
+@main(
+    title,
+    touchpointBackendResolutionOpt = Some(touchpointBackendResolution),
+    simpleHeader = true
+) {
+    <script type="text/javascript">
+        guardian.productData = {
+            tier: 'Monthly Contribution',
+            paymentMethod: 'CreditCard'
+        };
+    </script>
+    <main role="main" class="page-content l-constrained">
+
+        @{
+            //TODO: //fragments.analytics.appNexusPixel("id", AppnexusPixel.thankYouPageIds.get(member.subscription.plan.tier))
+        }
+
+        @fragments.page.pageHeader(
+            pageHeader,
+            Some(s"You're the newest supporter of the Guardian and we're thrilled to have you on board.")
+        )
+
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Your contribution summary</h2>
+            </div>
+            <div class="page-section__content">
+                <table class="table table--striped" role="grid">
+                    <tr role="row">
+                        <th role="rowheader">Type</th>
+                        <td id="qa-joiner-summary-tier">Monthly Contributor</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">First contribution date</th>
+                        <td id="qa-joiner-summary-start">@summary.startDate.pretty</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">Contribution amount</th>
+                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.pretty</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Tell your friends</h2>
+            </div>
+            <div class="page-section__content">
+            @fragments.social(joinThankyou)
+            </div>
+        </section>
+
+    </main>
+
+        @{
+            //TODO: fragments.analytics.googleJoinerConversion(member.subscription.plan.tier)
+            //TODO: fragments.analytics.facebookJoinerConversion(member.subscription.plan.tier)
+            //TODO: fragments.analytics.videoCampaignPHD.thankyouPage(regNumberOrFree, summary.amountPaidToday.pretty)
+        }
+    )
+}

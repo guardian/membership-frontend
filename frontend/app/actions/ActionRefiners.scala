@@ -2,7 +2,6 @@ package actions
 
 import _root_.services._
 import actions.Fallbacks._
-import com.gu.memsub.subsv2.SubscriptionPlan.Contributor
 import com.gu.memsub.subsv2.reads.ChargeListReads._
 import com.gu.memsub.subsv2.reads.SubPlanReads._
 import com.gu.memsub.subsv2.{Subscription, _}
@@ -41,6 +40,7 @@ object ActionRefiners extends LazyLogging {
     new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
 
   type SubRequestOrResult[A] = Future[Either[Result, SubReqWithSub[A]]]
+  type SubRequestWithContributorOrResult[A] = Future[Either[Result, SubReqWithContributor[A]]]
   type PaidSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with PaidSubscriber]]
   type FreeSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with FreeSubscriber]]
 
@@ -85,6 +85,12 @@ object ActionRefiners extends LazyLogging {
   def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {
     override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
       getSubRequest(request).map(_ toRight onNonMember(request))
+    }
+  }
+
+  def contributionRefiner(onNonContributor: RequestHeader => Result = contributorJoinRedirect(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
+    override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
+      getContributorRequest(request).map(_ toRight onNonContributor(request))
     }
   }
 

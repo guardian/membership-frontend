@@ -11,6 +11,7 @@ import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
 import controllers.Joiner._
 import forms.MemberForm._
+import org.joda.time.LocalDate
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -18,10 +19,10 @@ import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import services.{PreMembershipJoiningEventFromSessionExtractor, TouchpointBackend}
 import tracking.ActivityTracking
+import utils.CampaignCode
 import utils.RequestCountry._
 import utils.TestUsers.PreSigninTestCookie
-import utils.{CampaignCode, TierChangeCookies}
-import views.support.PageInfo
+import views.support.{PageInfo, ThankYouMonthlySummary}
 
 import scala.concurrent.Future
 import scala.util.Failure
@@ -71,11 +72,11 @@ object Contributor extends Controller with ActivityTracking
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier supporter: ${identityRequest.trackingParameters}", e) }
   }
 
-  def joinMonthlyContribution = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinMonthlyContribution = NonContributorAction.async { implicit request =>
     monthlyContributorForm.bindFromRequest.fold({ formWithErrors =>
       Future.successful(BadRequest(formWithErrors.errorsAsJson))
     },
-      makeContributor(Ok(Json.obj("redirect" -> routes.Contributor.thankyouContributor.url))))
+      makeContributor(Ok(Json.obj("redirect" -> routes.Contributor.thankyouContributor().url))))
   }
 
   private def makeContributor(onSuccess: => Result)(formData: ContributorForm)(implicit request: AuthRequest[_]) = {
@@ -110,30 +111,16 @@ object Contributor extends Controller with ActivityTracking
     }
   }
 
-  def thankyouContributor = SubscriptionAction.async { implicit request =>
+  def thankyouContributor = ContributorAction { implicit request =>
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
-    val prpId = request.subscriber.subscription.plan.productRatePlanId
-    implicit val idReq = IdentityRequest(request)
 
-    for {
-      country <- memberService.country(request.subscriber.contact)
-      paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
-      promotion = request.subscriber.subscription.promoCode.flatMap(c => promoService.findPromotion(c))
-      validPromotion = promotion.flatMap(_.validateFor(prpId, country).map(_ => promotion).toOption.flatten)
-      destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
-      paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
-    } yield {
+    val prpId = request.contributor.productRatePlanId
 
-      Ok(views.html.joiner.thankyou(
-        request.subscriber,
-        paymentSummary,
-        paymentMethod,
-        destination,
-        false,
-        validPromotion.filterNot(_.asTracking.isDefined),
+      Ok(views.html.joiner.thankyouMonthly(
+        request.contributor,
+        ThankYouMonthlySummary(LocalDate.now(), request.contributor.charges.price.prices.head),
         resolution
-      )).discardingCookies(TierChangeCookies.deletionCookies: _*)
-    }
+      ))
   }
 
 
