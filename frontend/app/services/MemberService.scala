@@ -219,18 +219,11 @@ class MemberService(identityService: IdentityService,
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
-    def updateSalesforceContactWithContribution(stripeCustomer: Option[Customer]): Future[ContactId] =
-      salesforceService.updateContributorStatus(user, stripeCustomer).andThen { case Failure(e) =>
-        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
-      }
-
-
     for {
       stripeCustomer <- createStripeCustomer(formData.payment.stripeToken)
       idUser <- getIdentityUserDetails
       sfContact <- createSalesforceContact(idUser)
       zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, None, Some(stripeCustomer))
-      _ <- updateSalesforceContactWithContribution(Some(stripeCustomer)) // FIXME: This should go!
       _ <- updateIdentity()
     } yield (sfContact, zuoraSubName)
 

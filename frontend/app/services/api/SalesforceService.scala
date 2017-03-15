@@ -15,6 +15,5 @@ trait SalesforceService {
   def metrics: MemberMetrics
   def upsert(user: IdUser, userData: CommonForm): Future[ContactId]
   def updateMemberStatus(user: IdMinimalUser, tier: Tier, customer: Option[Customer]): Future[ContactId]
-  def updateContributorStatus(user: IdMinimalUser, customer: Option[Customer]): Future[ContactId]
   def isAuthenticated: Boolean
 }

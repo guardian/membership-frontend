@@ -81,18 +81,15 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
 
   private def makeContributor(onSuccess: => Result)(formData: ContributorForm)(implicit request: AuthRequest[_]) = {
     logger.info(s"User ${request.user.id} attempting to become a monthly contributor...")
-    val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val bp: BackendProvider = request
     val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
     val ipCountry = request.getFastlyCountry
 
-    Timing.record(salesforceService.metrics, "createMember") {
+    Timing.record(salesforceService.metrics, "createContributor") {
       memberService.createContributor(request.user, formData, idRequest, campaignCode).map {
         case (sfContactId, zuoraSubName) =>
           logger.info(s"User ${request.user.id} successfully became monthly contributor $zuoraSubName.")
-
-          //trackRegistrationViaEvent(sfContactId, request.user, eventId, campaignCode, tier)
           onSuccess
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
