@@ -34,6 +34,7 @@
         <form action="@routes.TierController.upgrade(targetPlans.tier, None)" method="POST" id="payment-form" class="js-form" data-change-to-tier="@targetPlans.tier.name">
             @CSRF.formField
             <input type="hidden" name="tier" disabled value="@targetPlans.tier.slug"/>
+            <input type="hidden" name="email" id="email" disabled value="@idUser.email"/>
 
             <section class="form-content">
 
