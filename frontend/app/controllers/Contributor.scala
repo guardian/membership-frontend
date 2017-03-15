@@ -101,7 +101,6 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
           handlePaymentGatewayError(error, request.user.id, "monthly contributor", idRequest.trackingParameters)
 
         case error =>
-          //salesforceService.metrics.putFailSignUp(tier)
           logger.error(s"User ${request.user.id} could not become monthly contributor member: ${idRequest.trackingParameters}", error)
           Forbidden
       }
