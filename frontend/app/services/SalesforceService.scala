@@ -52,15 +52,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       Keys.DEFAULT_CARD_ID -> customer.card.id
     )
   }.getOrElse(Json.obj())
-
-  private def contributorData(customerOpt: Option[Customer]): JsObject =
-    customerOpt.map { customer =>
-    Json.obj(
-      Keys.STRIPE_CUSTOMER_ID -> customer.id,
-      Keys.DEFAULT_CARD_ID -> customer.card.id
-    )
-  }.getOrElse(Json.obj())
-
+  
   private def initialData(user: IdUser, formData: CommonForm): JsObject = {
     formData match {
       case jf : JoinForm => Seq(Json.obj(
