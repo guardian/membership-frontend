@@ -170,12 +170,12 @@ object MemberForm {
 
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
 
-  private val country: Mapping[String] ={
+  private val country: Mapping[String] =
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
         { code => CountryGroup.countryByCode(code).fold("")(_.name)},
         { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
-  }
+
 
   implicit val promoCodeFormatter: Formatter[PromoCode] = new Formatter[PromoCode] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], PromoCode] =
