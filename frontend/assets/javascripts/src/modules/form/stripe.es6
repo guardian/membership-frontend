@@ -7,6 +7,7 @@ export function init() {
     const button = $('.js-stripe-checkout');
     bean.on(window, 'popstate', handler.close);
     const amount = () => {
+
         let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
         let amount = billingPeriod.generateDisplayAmount();
         let period = billingPeriod.noun;

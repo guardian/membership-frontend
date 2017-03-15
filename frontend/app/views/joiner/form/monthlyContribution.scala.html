@@ -36,7 +36,7 @@
                 GBP : "£"
             }
             checkoutForm.billingPeriods = {
-                monthly: {
+                month: {
                     amount: 6.5,
                     generateChargeAmount: function() {
                         return formattedDiscountedCharge(checkoutForm.currency, this.amount, this.discount);
@@ -111,6 +111,13 @@
 
 
                     <input type="hidden" name="country" id="monthly-contribution-country" value="GB"/>
+
+
+
+                    <input type="email" name="email" id="email" maxlength="80" value="@idUser.email" class="input-text is-hidden"/>
+
+
+
 
                     <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
                         <fieldset>
