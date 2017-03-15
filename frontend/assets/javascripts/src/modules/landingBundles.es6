@@ -8,6 +8,7 @@ const PRINT_A_ID_SELECTOR = '.bundle-offering-a__print-option__id';
 const PRINT_B_ID_SELECTOR = '.bundle-offering-b__print-option__id';
 const SEE_MORE_CTA_SELECTOR = '.js-see-more-button';
 const CURRENT_PRINT_SELECTOR = '.subscribe_option--selected';
+const COMMIT_BUTTON_SELECTOR = '.js-commit-button';
 const PRINT_CTA_SELECTOR = '.js-print-button';
 const PRINT_OPTIONS_SELECTOR = '.bundle-offering-a__subscribe__offer__print-options__option, .bundle-offering-b__subscribe__offer__print-options__option';
 
@@ -16,7 +17,16 @@ const PRINT_B = document.querySelectorAll(PRINT_B_SELECTOR);
 const SEE_MORE_CTA = document.querySelector(SEE_MORE_CTA_SELECTOR);
 const PRINT_OPTIONS = document.querySelectorAll(PRINT_OPTIONS_SELECTOR);
 const PRINT_CTA = document.querySelector(PRINT_CTA_SELECTOR);
+const COMMIT_CTA = document.querySelector(COMMIT_BUTTON_SELECTOR);
+const COMMIT_COOKIE_NAME = 'GU_PDCOMCTA';
 
+const cookieDomain = () => {
+    return document.location.host.substr(document.location.host.indexOf('.') ? document.location.host.indexOf('.') + 1 : 0);
+};
+const setCookie = (name, value, days = 7, path = '/', domain = cookieDomain()) => {
+    const expires = new Date(Date.now() + days * 864e5).toGMTString();
+    document.cookie = name + `=${encodeURIComponent(value)}; expires=${expires}; path=${path}; domain=${domain}`;
+};
 
 export function init() {
 
@@ -38,6 +48,14 @@ function bindButtonBehaviour() {
         toggle(printSection);
         toggle(SEE_MORE_CTA);
         evt.preventDefault();
+    });
+
+    PRINT_CTA.addEventListener('click', function(evt){
+        setCookie(COMMIT_COOKIE_NAME, 1, 60);
+    });
+
+    COMMIT_CTA.addEventListener('click', function(evt){
+        setCookie(COMMIT_COOKIE_NAME, 1, 60);
     });
 }
 

@@ -78,7 +78,7 @@
                             </div>
                         </li>
                     </ul>
-                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "digital-pack").url, returnUrl = Some(java.net.URLEncoder.encode(returnUrl.getOrElse("https://www.theguardian.com"), "utf-8")))
+                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "digital-pack").url, className = Option("js-commit-button"), returnUrl = Some(java.net.URLEncoder.encode(returnUrl.getOrElse("https://www.theguardian.com"), "utf-8")))
                 </div>
             </div><div class="bundle-offering-a__subscribe__offer">
                 <div class="bundle-offering-a__subscribe__offer__content">

@@ -17,10 +17,10 @@
     @fragments.bundle.bundleHeader(
         heroImage,
         Html("Thank you for<br/>your interest"),
-        Html("We are currently evaluating the feasibility of this product, and as such, it isn’t available at this time"),
-        Html("Your participation in this test has helped us with this evaluation, and from now on you won't be directed here again.<br><br>Thank you.</p>")
+        Html("We are currently evaluating the demand for the feature you selected"),
+        Html("We have a number of tests underway that help us determine which products our readers are interested in. Your participation has helped us with this evaluation, and from now on you won't be directed here again.<br><br>Thank you.</p>")
     )
     <div class="l-constrained">
-        @fragments.bundle.bundleButton("Return to comments", returnUrl.getOrElse("https://www.theguardian.com"))
+        @fragments.bundle.bundleButton("Continue to comment", returnUrl.getOrElse("https://www.theguardian.com"))
     </div>
 }
