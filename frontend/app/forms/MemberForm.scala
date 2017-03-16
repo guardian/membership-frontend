@@ -232,7 +232,7 @@ object MemberForm {
 
   val  monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
     "stripeToken" -> nonEmptyText,
-    "amount" -> bigDecimal(10, 2)
+    "amount" -> bigDecimal(10, 2).verifying { _ >= 5 }
   )(MonthlyPaymentForm.apply)(MonthlyPaymentForm.unapply)
 
   val friendJoinForm: Form[FriendJoinForm] = Form(
