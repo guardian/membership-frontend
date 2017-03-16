@@ -40,7 +40,7 @@ GET            /choose-tier                           controllers.Joiner.tierCho
 GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
 # Monthly Contribution
-GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK)
+GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK, contributionValue : Option[Int] ?= None)
 POST           /monthly-contribution                  controllers.Contributor.joinMonthlyContribution
 
 
