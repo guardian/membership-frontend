@@ -60,7 +60,6 @@
     margin: auto;
     @include mq($from: desktop) {
         display: inherit;
-        //float: right;
     }
     @include bundle-column-wide();
     padding-right: $gs-gutter;
