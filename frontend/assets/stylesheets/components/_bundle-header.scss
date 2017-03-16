@@ -2,13 +2,30 @@
 /* Header */
 .global-header-bundles {
 
-    height: 96px;
+    @include mq($from: tablet) {
+        height: 76px;
+    }
+    @include mq($from: desktop) {
+        height: 96px;
+    }
 
     .global-header__logo__image {
         margin-top: 2px;
-        margin-right: 20px;
-        width: 320px;
-        height: 60px;
+        @include mq($from: tablet) {
+            margin-right: 10px;
+            width: 280px;
+            height: 50px;
+        }
+        @include mq($from: desktop) {
+            margin-right: 330px;
+            width: 320px;
+            height: 60px;
+        }
+        @include mq($from: mem-full) {
+            margin-right: 20px;
+            width: 320px;
+            height: 60px;
+        }
     }
 
     .global-header__inner {
@@ -52,37 +69,81 @@
 
 .bundle-header__main__content {
     @include bundle-column-wide();
-    padding-left: 100px;
-
+    @include mq($from: tablet) {
+        padding-left: $gs-gutter;
+    }
+    @include mq($from: desktop) {
+        padding-left: $gs-gutter * 2;
+    }
+    @include mq($from: mem-full) {
+        padding-left: 100px;
+    }
     h1 {
         @include text-title();
-        padding-top: $gs-baseline * 2;
+        @include mq($from: tablet, $until: desktop) {
+            font-size: 46px;
+        }
+        @include mq($from: desktop, $until: mem-full) {
+            font-size: 50px;
+        }
+        @include mq($from: mem-full) {
+            padding-top: $gs-baseline * 2;
+        }
     }
 
     p {
-         @include text-tag-line();
-         padding-bottom: $gs-baseline * 3;
-         width: gs-span(6);
-     }
+        @include text-tag-line();
+        @include mq($from: tablet, $until: desktop) {
+            font-size: 20px;
+            width: gs-span(5.25);
+        }
+        @include mq($from: desktop, $until: mem-full) {
+            font-size: 22px;
+            width: gs-span(3.75);
+        }
+        @include mq($from: mem-full) {
+            padding-bottom: $gs-baseline * 3;
+            width: gs-span(6);
+        }
+    }
 }
 
 .bundle-header__main__img {
-
     @include bundle-column-narrow();
-
     img {
         position: absolute;
-        width: 480px;
-        height: 400px;
-        top: 117px;
+        @include mq($from: tablet, $until: desktop) {
+            width: 288px;
+            height: 240px;
+            top: 87px;
+            margin-left: 430px;
+        }
+        @include mq($from: desktop, $until: mem-full) {
+            width: 288px;
+            height: 240px;
+            top: 117px;
+            margin-left: 336px;
+        }
+        @include mq($from: mem-full) {
+            width: 480px;
+            height: 400px;
+            top: 117px;
+        }
     }
 }
 
 .bundle-header__secondary__content {
     @include bundle-column-wide();
-    padding-left: $gs-gutter * 5;
+    @include mq($until: mem-full) {
+        padding-left: $gs-gutter;
+    }
+    @include mq($from: mem-full) {
+        padding-left: $gs-gutter * 5;
+    }
     p {
-        width: gs-span(6);
+        @include mq($from: mem-full) {
+            width: gs-span(6);
+        }
         margin-bottom: 0;
         @include text-paragraph();
         padding-top: $gs-baseline;

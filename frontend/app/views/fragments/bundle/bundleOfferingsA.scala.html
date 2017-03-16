@@ -2,23 +2,27 @@
 @import views.support.Asset
 @import abtests.BundleTier._
 
-@(bundleVariant: BundleVariant)
+@(bundleVariant: BundleVariant, returnUrl: Option[String])
 <section class="bundle-section">
     <div class="bundle-offering-a l-constrained">
-        <div class="bundle-offering-a__give">
-            <div class="bundle-offering-a__give__content">
-                <h1>Support through giving</h1>
-                <div class="bundle-offering-a__give__content__body">
-                    <p class="bundle-offering-a__give__content__body__description">Fund our journalism on your own terms – either a regular or one-off payment. Every penny goes to supporting our fearless, in-depth reporting and keeping our website and apps open to all.</p>
-                    <div class="bundle-offering-a__give__monthly-button">
-                        @fragments.bundle.bundleButton("Make a monthly contribution",routes.Bundle.thankYou(bundleVariant, "monthly-contribution").url)
-                    </div>
-                    <div class="bundle-offering-a__give__one-off-button">
-                        @fragments.bundle.bundleButton("Make a one-off contribution",s"https://contribute.theguardian.com?INTCMP=${bundleVariant.testId}")
+        @if(bundleVariant.hasContributions) {
+            <div class="bundle-offering-a__give">
+                <div class="bundle-offering-a__give__content">
+                    <h1>Support through giving</h1>
+                    <div class="bundle-offering-a__give__content__body">
+                        <p class="bundle-offering-a__give__content__body__description">
+                            Fund our journalism on your own terms – either a regular or one-off payment. Every penny goes to supporting our fearless, in-depth reporting and keeping our website and apps open to all.</p>
+                        <div class="bundle-offering-a__give__monthly-button">
+                        @fragments.bundle.bundleButton("Make a monthly contribution", routes.Bundle.thankYou(bundleVariant, "monthly-contribution").url)
+                        </div>
+                        <div class="bundle-offering-a__give__one-off-button">
+                        @fragments.bundle.bundleButton("Make a one-off contribution", s"https://contribute.theguardian.com?INTCMP=${bundleVariant.testId}")
+                        </div>
                     </div>
                 </div>
             </div>
-        </div><div class="bundle-offering-a__subscribe">
+        }
+        <div class="bundle-offering-a__subscribe">
             <h1>Support through subscribing</h1>
             <div class="bundle-offering-a__subscribe__offer">
                 <div class="bundle-offering-a__subscribe__offer__content">
@@ -37,6 +41,19 @@
                                 <h1>Ad-free</h1>
                                 <p>Enjoy our website and apps without adverts</p>
                             </div>
+                            </li>
+                        }
+                        @if(bundleVariant.hasPaidComments) {
+                            <li class="bundle-offering-a__subscribe__offer__list__item">
+                                <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-commenting")) {
+                                    @icon
+                                }
+                                </div>
+                                <div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                    <h1>Commenting</h1>
+                                    <p>Discussion threads on articles are reserved for paying supporters only</p>
+                                </div>
                             </li>
                         }
                         <li class="bundle-offering-a__subscribe__offer__list__item">
@@ -61,7 +78,7 @@
                             </div>
                         </li>
                     </ul>
-                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "digital-pack").url)
+                    @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "digital-pack").url, className = Option("js-commit-button"), returnUrl = Some(java.net.URLEncoder.encode(returnUrl.getOrElse("https://www.theguardian.com"), "utf-8")))
                 </div>
             </div><div class="bundle-offering-a__subscribe__offer">
                 <div class="bundle-offering-a__subscribe__offer__content">
@@ -79,6 +96,19 @@
                             <h1>Ad-free</h1>
                             <p>Enjoy our website and apps without adverts</p>
                            </div>
+                        </li>
+                    }
+                    @if(bundleVariant.hasPaidComments) {
+                        <li class="bundle-offering-a__subscribe__offer__list__item">
+                            <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                            @for(icon <- Asset.inlineSvg("bundle-commenting")) {
+                                @icon
+                            }
+                            </div>
+                            <div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Commenting</h1>
+                                <p>Discussion threads on articles are reserved for paying supporters only</p>
+                            </div>
                         </li>
                     }
 
@@ -171,7 +201,7 @@
                                 <div class="bundle-offering-a__print-option__id">seven-day</div>
                             </li>
                         </ul>
-                        @fragments.bundle.bundleButton(bundleVariant.prettyMonthlyPrice(Saturday), routes.Bundle.thankYou(bundleVariant, "saturday").url, Option("js-print-button"))
+                        @fragments.bundle.bundleButton(bundleVariant.prettyMonthlyPrice(Saturday), routes.Bundle.thankYou(bundleVariant, "saturday").url, Option("js-print-button"), returnUrl = Some(java.net.URLEncoder.encode(returnUrl.getOrElse("https://www.theguardian.com"), "utf-8")))
                     </div>
                 </div>
             </div>

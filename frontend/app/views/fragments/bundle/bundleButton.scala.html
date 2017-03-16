@@ -1,9 +1,10 @@
 @import views.support.Asset
 
-@(buttonLabel: String, target: String, className: Option[String] = None, chevron: Boolean = false, secondary: Boolean = false)
+@(buttonLabel: String, target: String, className: Option[String] = None, chevron: Boolean = false, secondary: Boolean = false, returnUrl: Option[String] = None)
 
 <div class="bundle-button">
-    <a class="@if(secondary){ bundle-button__content--secondary } else { bundle-button__content } @className.mkString" href="@target">
+    <a class="@if(secondary){bundle-button__content--secondary} else {bundle-button__content} @className.mkString"
+        href="@if(returnUrl.nonEmpty){ @if(target.indexOf("?") > 0) { @target&returnUrl=@returnUrl.get } else { @target?returnUrl=@returnUrl.get } } else { @target }">
         <p>@buttonLabel</p>
         <div class="bundle-button__content__arrow">
             @if(chevron){
