@@ -108,23 +108,21 @@
 
                     <input type="hidden" name="country" id="monthly-contribution-country" value="GB"/>
                     <input type="email" name="email" id="email" maxlength="80" value="@idUser.email" class="input-text is-hidden"/>
-                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin">
-                        <fieldset>
-                            <div class="js-monthly-contribution">
-                                <div class="form-field js-monthly-contribution-section">
-                                    <label class="label" for="monthly-contribution">Your monthly contribution</label>
-                                    <input type="text"
-                                    name="payment.amount"
-                                    id="monthly-contribution"
-                                    class="input-text js-monthly-contribution"
-                                    value="@contributionValue"/>
-                                </div>
+
+                    <div class="fieldset__fields form-panel__content js-form-panel-payment form-panel--no-margin">
+
+                        <div class="js-monthly-contribution">
+                            <div class="form-field js-monthly-contribution-section">
+                                <label class="label" for="monthly-contribution">Your monthly contribution</label>
+                                <input type="text"
+                                name="payment.amount"
+                                id="monthly-contribution"
+                                class="input-text js-monthly-contribution"
+                                value="@contributionValue"/>
                             </div>
-                        </fieldset>
-
-                         <!-- Payment Options -->
+                        </div>
+                        <!-- Payment Options -->
                         <fieldset class="fieldset js-payment-methods">
-
                             <div class="fieldset__heading">
                                 <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
                                 <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
@@ -140,7 +138,6 @@
                             </div>
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
                         </fieldset>
-
                     </div>
                 </section>
                 @fragments.form.terms(countryGroup)
