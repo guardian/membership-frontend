@@ -7,7 +7,8 @@
     idUser: IdentityUser,
     pageInfo: PageInfo,
     countryGroup: Option[CountryGroup],
-    touchpointBackendResolution: services.TouchpointBackend.Resolution)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
+    touchpointBackendResolution: services.TouchpointBackend.Resolution,
+    contributionValue: Int)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main("Become a contributor", pageInfo=pageInfo, header = SimpleHeader, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
     <script>
@@ -94,14 +95,9 @@
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
-
-                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
-                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
                     </div>
 
                 </section>
-
-                    <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
                 <section class="form-panel form-group--little-padding">
 
                     <div class="form-panel__heading">
@@ -111,24 +107,17 @@
 
 
                     <input type="hidden" name="country" id="monthly-contribution-country" value="GB"/>
-
-
-
                     <input type="email" name="email" id="email" maxlength="80" value="@idUser.email" class="input-text is-hidden"/>
-
-
-
-
-                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
+                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin">
                         <fieldset>
                             <div class="js-monthly-contribution">
                                 <div class="form-field js-monthly-contribution-section">
-                                    <label class="label optional-marker" for="monthly-contribution">YOUR Monthly Contribution</label>
+                                    <label class="label" for="monthly-contribution">Your monthly contribution</label>
                                     <input type="text"
                                     name="payment.amount"
                                     id="monthly-contribution"
                                     class="input-text js-monthly-contribution"
-                                    value="60"/>
+                                    value="@contributionValue"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -154,7 +143,6 @@
 
                     </div>
                 </section>
-
                 @fragments.form.terms(countryGroup)
             </section>
         </form>
