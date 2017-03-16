@@ -40,18 +40,31 @@ object ActionRefiners extends LazyLogging {
     new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
 
   type SubRequestOrResult[A] = Future[Either[Result, SubReqWithSub[A]]]
+  type SubRequestWithContributorOrResult[A] = Future[Either[Result, SubReqWithContributor[A]]]
   type PaidSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with PaidSubscriber]]
   type FreeSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with FreeSubscriber]]
 
   type SubReqWithPaid[A] = SubscriptionRequest[A] with PaidSubscriber
   type SubReqWithFree[A] = SubscriptionRequest[A] with FreeSubscriber
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
+  type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
+
+  private def getContributorRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithContributor[A]]] = {
+    implicit val pf = Membership
+    val tp = request.touchpointBackend
+    val contributor = Subscriber[Subscription[SubscriptionPlan.Contributor]] _
+    (for {
+      member <- OptionT(request.forMemberOpt(identity))
+      subscription <- OptionT(tp.subscriptionService.getSubscription(member))
+    } yield new SubscriptionRequest[A](tp, request) with Contributor {
+      override val contributor = subscription.plan
+    }).run
+  }
 
   private def getSubRequest[A](request: Request[A]): Future[Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
     val FreeSubscriber = Subscriber[Subscription[SubscriptionPlan.FreeMember]] _
     val PaidSubscriber = Subscriber[Subscription[SubscriptionPlan.PaidMember]] _
-
     (for {
       user <- OptionT(Future.successful(AuthenticationService.authenticatedIdUserProvider(request)))
       authRequest = new AuthenticatedRequest(user, request)
@@ -70,6 +83,12 @@ object ActionRefiners extends LazyLogging {
   def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {
     override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
       getSubRequest(request).map(_ toRight onNonMember(request))
+    }
+  }
+
+  def contributionRefiner(onNonContributor: RequestHeader => Result = contributorJoinRedirect(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
+    override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
+      getContributorRequest(request).map(_ toRight onNonContributor(request))
     }
   }
 
@@ -124,6 +143,10 @@ object ActionRefiners extends LazyLogging {
 
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
     override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
+  }
+
+  def onlyNonContributorFilter(onContributor: SubReqWithContributor[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
+    override def filter[A](request: AuthRequest[A]) = getContributorRequest(request).map(_.map(onContributor))
   }
 
   def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {

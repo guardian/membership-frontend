@@ -91,6 +91,7 @@ export function postForm (paymentToken) {
 
     let data = serializer(utilsHelper.toArray(form.elem.elements),
         paymentToken);
+    let url = form.elem.action;
 
     ajax({
         url: form.elem.action,

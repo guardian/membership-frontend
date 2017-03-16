@@ -87,6 +87,8 @@ trait CommonActions {
 
   val SubscriptionAction = AuthenticatedAction andThen subscriptionRefiner()
 
+  val ContributorAction = AuthenticatedAction andThen contributionRefiner()
+
   val StaffMemberAction = AuthenticatedAction andThen subscriptionRefiner(onNonMember = joinStaffMembership(_))
 
   val PaidSubscriptionAction = SubscriptionAction andThen paidSubscriptionRefiner()

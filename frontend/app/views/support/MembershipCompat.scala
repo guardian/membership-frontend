@@ -102,6 +102,7 @@ object MembershipCompat {
       case Tier.Friend() => in.friend
       case Tier.Staff() => in.staff
     }
+
   }
 
 }
