@@ -20,10 +20,7 @@ const PRINT_CTA = document.querySelector(PRINT_CTA_SELECTOR);
 const COMMIT_CTA = document.querySelector(COMMIT_BUTTON_SELECTOR);
 const COMMIT_COOKIE_NAME = 'GU_PDCOMCTA';
 
-const cookieDomain = () => {
-    return document.location.host.substr(document.location.host.indexOf('.') ? document.location.host.indexOf('.') + 1 : 0);
-};
-const setCookie = (name, value, days = 7, path = '/', domain = cookieDomain()) => {
+const setCookie = (name, value, days = 7, path = '/', domain = 'theguardian.com') => {
     const expires = new Date(Date.now() + days * 864e5).toGMTString();
     document.cookie = name + `=${encodeURIComponent(value)}; expires=${expires}; path=${path}; domain=${domain}`;
 };
