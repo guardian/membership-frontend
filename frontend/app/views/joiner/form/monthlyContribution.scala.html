@@ -95,6 +95,9 @@
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
+
+                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
+                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
                     </div>
 
                 </section>
@@ -109,7 +112,7 @@
                     <input type="hidden" name="country" id="monthly-contribution-country" value="GB"/>
                     <input type="email" name="email" id="email" maxlength="80" value="@idUser.email" class="input-text is-hidden"/>
 
-                    <div class="fieldset__fields form-panel__content js-form-panel-payment form-panel--no-margin">
+                    <div class="fieldset__fields form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
 
                         <div class="js-monthly-contribution">
                             <div class="form-field js-monthly-contribution-section">
