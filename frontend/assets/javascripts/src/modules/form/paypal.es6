@@ -7,7 +7,6 @@ import * as payment from "src/modules/payment";
 
 // Handles errors in the PayPal flow, reports a failed payment and throws error.
 function paypalError (err) {
-
 	payment.fail({ type: 'PayPal', code: 'PaymentError', additional: err });
 	throw new Error(err);
 
@@ -25,8 +24,9 @@ function handleSetupResponse (response) {
 }
 
 function getAmount(checkoutForm) {
-    if (checkoutForm.isMonthlyContributorCheckout)
-        return 50;
+    if (checkoutForm.isMonthlyContributorCheckout) {
+        return parseInt(document.getElementById('monthly-contribution').value);
+    }
     return checkoutForm.billingPeriods[checkoutForm.billingPeriod].amount[checkoutForm.currency];
 }
 
