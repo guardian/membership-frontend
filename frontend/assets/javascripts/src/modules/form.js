@@ -104,13 +104,19 @@ define([
 
             if (form.hasStripeCheckout) {
 
-                curl('js!stripeCheckout').then(function () {
-                    stripe.init();
-                })
+                curl('js!stripeCheckout')
+                    .then(function () {
+                        stripe.init();
+                    });
 
-                accordion.init();
+
 
             }
+
+            if (form.hasAccordion){
+                accordion.init();
+            }
+
 
         }
     };

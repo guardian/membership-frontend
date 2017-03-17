@@ -45,6 +45,10 @@ define([
         return !!document.querySelector('.js-stripe-checkout');
     }
 
+    function hasAccordion () {
+        return !!document.querySelector('.js-continue-name-address');
+    }
+
     /**
      * formUtil singleton provides:
      *    elem: DomElement - the form element
@@ -62,6 +66,7 @@ define([
             return {
                 elem: form,
                 elems: getInputsToValidate(form.elements),
+                hasAccordion: hasAccordion(),
                 hasPayment: hasPayment(),
                 hasPaypal: hasPaypal(),
                 hasStripeCheckout: hasStripeCheckout(),

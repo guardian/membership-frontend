@@ -9,6 +9,14 @@ define([
     };
 
     /**
+     * @param contributionElem
+     * @returns {*}
+     */
+    var validContributionValue = function (contributionElem) {
+        return parseFloat(contributionElem.value) >= 5;
+    };
+
+    /**
      * use stripe lib utility to check for a valid looking credit card number
      * @param cardElem
      * @returns {*}
@@ -70,6 +78,7 @@ define([
     };
 
     return {
+        validContributionValue: validContributionValue,
         validCreditCardNumber: validCreditCardNumber,
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,

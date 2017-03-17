@@ -28,7 +28,6 @@ GET            /join/:tier/enter-details              controllers.Joiner.enterPa
 POST           /join/friend/enter-details             controllers.Joiner.joinFriend
 POST           /join/staff/enter-details              controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
-GET            /join/contributor/thankyou             controllers.Contributor.thankyouContributor
 GET            /join/staff/thankyou                   controllers.Joiner.thankyouStaff
 GET            /join/:tier/thankyou                   controllers.Joiner.thankyou(tier: Tier)
 POST           /join/staff/update-email               controllers.Joiner.updateEmailStaff
@@ -40,8 +39,9 @@ GET            /choose-tier                           controllers.Joiner.tierCho
 GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
 # Monthly Contribution
-GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK)
+GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK, contributionValue : Option[Int] ?= None)
 POST           /monthly-contribution                  controllers.Contributor.joinMonthlyContribution
+GET            /monthly-contribution/thankyou         controllers.Contributor.thankyouContributor
 
 
 # Normal user signin:

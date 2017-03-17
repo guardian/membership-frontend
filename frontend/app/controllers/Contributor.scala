@@ -39,7 +39,7 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
 
   def NonContributorAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonContributorFilter()
 
-  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK) = NonContributorAction.async { implicit request =>
+  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK, contributionValue: Option[Int] = None) = NonContributorAction.async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -68,7 +68,8 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
         identityUser,
         pageInfo,
         Some(countryGroup),
-        resolution))
+        resolution,
+        contributionValue.getOrElse(5)))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier supporter: ${identityRequest.trackingParameters}", e) }
   }
 

@@ -7,7 +7,8 @@
     idUser: IdentityUser,
     pageInfo: PageInfo,
     countryGroup: Option[CountryGroup],
-    touchpointBackendResolution: services.TouchpointBackend.Resolution)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
+    touchpointBackendResolution: services.TouchpointBackend.Resolution,
+    contributionValue: Int)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main("Become a contributor", pageInfo=pageInfo, header = SimpleHeader, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
     <script>
@@ -47,7 +48,7 @@
                     generateDisplayAmount: function() {
                         return formattedDiscountedPrice(checkoutForm.currency, this.amount, this.discount);
                     },
-                    noun: 'monthly',
+                    noun: 'month',
                     discount: 0,
                     discountDurationMonths: 0
                 },
@@ -70,11 +71,11 @@
             <section class="form-content">
 
 
-                <!-- ACCORDION SECTION - NAME AND ADDRESS -->
+                <!-- ACCORDION SECTION - NAME -->
                 <section class="form-panel sub-heading">
 
                     <div class="form-panel__heading">
-                        <h2 class="form-panel__headline">Name and address</h2>
+                        <h2 class="form-panel__headline">Name</h2>
                         <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
                         <div class="sign-in-required js-sign-in-note">
                         @fragments.joiner.signedInAs(request.uri, inline = true)
@@ -94,14 +95,9 @@
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
-
-                        <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
-                        <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
                     </div>
 
                 </section>
-
-                    <!-- ACCORDION SECTION - BILLING AND PAYMENT -->
                 <section class="form-panel form-group--little-padding">
 
                     <div class="form-panel__heading">
@@ -111,35 +107,31 @@
 
 
                     <input type="hidden" name="country" id="monthly-contribution-country" value="GB"/>
-
-
-
                     <input type="email" name="email" id="email" maxlength="80" value="@idUser.email" class="input-text is-hidden"/>
 
+                    <div class="fieldset__fields form-panel__content js-form-panel-payment form-panel--no-margin">
 
-
-
-                    <div class="form-panel__content js-form-panel-payment form-panel--no-margin is-hidden">
-                        <fieldset>
-                            <div class="js-monthly-contribution">
-                                <div class="form-field js-monthly-contribution-section">
-                                    <label class="label optional-marker" for="monthly-contribution">YOUR Monthly Contribution</label>
-                                    <input type="text"
-                                    name="payment.amount"
-                                    id="monthly-contribution"
-                                    class="input-text js-monthly-contribution"
-                                    value="60"/>
-                                </div>
+                        <div class="js-monthly-contribution">
+                            <div class="form-field js-monthly-contribution-section">
+                                <label class="label" for="monthly-contribution">Your monthly contribution</label>
+                                <input type="text"
+                                name="payment.amount"
+                                id="monthly-contribution"
+                                class="input-text js-monthly-contribution"
+                                data-validation="validContributionValue"
+                                value="@contributionValue"/>
+                                @fragments.form.errorMessage("The minimum monthly contribution is £5.")
                             </div>
-                        </fieldset>
+                        </div>
 
-                         <!-- Payment Options -->
+                        <!-- Payment Options -->
                         <fieldset class="fieldset js-payment-methods">
-
                             <div class="fieldset__heading">
                                 <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
                                 <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top")) Secure</p>
                             </div>
+
+                            <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">This form has errors (see above)</div>
 
                             <div class="fieldset__fields">
                                 <div class="form-field">
@@ -151,10 +143,8 @@
                             </div>
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>
                         </fieldset>
-
                     </div>
                 </section>
-
                 @fragments.form.terms(countryGroup)
             </section>
         </form>
