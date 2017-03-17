@@ -2,8 +2,8 @@ package services
 
 import com.gu.okhttp.RequestRunners
 import com.gu.paypal.PayPalConfig
-import com.netaporter.uri.Uri.parseQuery
 import com.netaporter.uri.QueryString
+import com.netaporter.uri.Uri.parseQuery
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.PayPal.{PayPalBillingDetails, Token}
@@ -22,7 +22,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
   // Logs the result of the PayPal NVP request.
   private def logNVPResponse(response: QueryString) = {
 
-    def msg(status: String) = s"PayPal: ${status} (NVPResponse: ${response})"
+    def msg(status: String) = s"PayPal: $status (NVPResponse: $response)"
 
     retrieveNVPParam(response, "ACK") match {
       case "Success" => logger.info("Successful PayPal NVP request")
@@ -69,6 +69,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
     response.paramMap(paramName).head
 
   def retrieveEmail(baid: String) = {
+    logger.info("PayPalService.retrieveEmail")
     val params = Map(
       "METHOD" -> "BillAgreementUpdate",
       "REFERENCEID" -> baid
@@ -79,6 +80,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
 
   // Sets up a payment by contacting PayPal and returns the token.
   def retrieveToken(returnUrl : String, cancelUrl : String)(billingDetails: PayPalBillingDetails) = {
+    logger.info("PayPalService.retrieveToken")
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
@@ -97,7 +99,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
 
   // Sends a request to PayPal to create billing agreement and returns BAID.
   def retrieveBaid(token: Token) = {
-    logger.debug("Called retrieveBaid")
+    logger.info("PayPalService.retrieveBaid")
 
     val agreementParams = Map(
       "METHOD" -> "CreateBillingAgreement",

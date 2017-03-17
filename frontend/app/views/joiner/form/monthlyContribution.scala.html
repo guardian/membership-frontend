@@ -1,6 +1,5 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.Contributor
-@import model.Header.SimpleHeader
 @import views.html.helper._
 @import views.support.{IdentityUser, PageInfo}
 @(plans: Contributor,
@@ -29,13 +28,14 @@
             }
             var checkoutForm = guardian.membership.checkoutForm;
             checkoutForm.billingPeriod = "month";
+            checkoutForm.isMonthlyContributorCheckout = true;
 
             checkoutForm.currencySymbols = {
                 GBP : "£"
-            }
+            };
             checkoutForm.currencyIdentifiers = {
                 GBP : "£"
-            }
+            };
             checkoutForm.billingPeriods = {
                 month: {
                     amount: 6.5,
@@ -139,6 +139,9 @@
                                 </div>
                                 <div class="form-field js-payment-type">
                                 @fragments.form.stripeCheckout(Some(idUser))
+                                </div>
+                                <div class="form-field js-payment-type">
+                                    <div id="paypal-button-checkout"></div>
                                 </div>
                             </div>
                             <div class="js-payment-error flash-message flash-message--error is-hidden">Sorry, we weren't able to process your payment this time around. Please try again.</div>

@@ -1,7 +1,6 @@
 // ----- Imports ----- //
-
-import form from 'src/modules/form/helper/formUtil';
-import * as payment from 'src/modules/payment';
+import form from "src/modules/form/helper/formUtil";
+import * as payment from "src/modules/payment";
 
 
 // ----- Functions ----- //
@@ -25,6 +24,18 @@ function handleSetupResponse (response) {
 
 }
 
+function getAmount(checkoutForm) {
+    if (checkoutForm.isMonthlyContributorCheckout)
+        return 50;
+    return checkoutForm.billingPeriods[checkoutForm.billingPeriod].amount[checkoutForm.currency];
+}
+
+function getTier(checkoutForm) {
+    if (checkoutForm.isMonthlyContributorCheckout)
+        return "Monthly contributor";
+    return form.elem.tier.value;
+}
+
 // Sends request to server to setup payment, and returns Paypal token.
 function setupPayment (resolve, reject) {
 
@@ -33,8 +44,8 @@ function setupPayment (resolve, reject) {
 	if (payment.validateForm()) {
 
         const checkoutForm = guardian.membership.checkoutForm;
-        const amount = checkoutForm.billingPeriods[checkoutForm.billingPeriod].amount[checkoutForm.currency];
-        const tier = form.elem.tier.value;
+        const amount = getAmount(checkoutForm);
+        const tier = getTier(checkoutForm);
 
 		const SETUP_PAYMENT_URL = '/paypal/setup-payment';
 
