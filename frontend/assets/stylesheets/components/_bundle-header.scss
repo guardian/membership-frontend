@@ -17,11 +17,6 @@
             height: 50px;
         }
         @include mq($from: desktop) {
-            margin-right: 330px;
-            width: 320px;
-            height: 60px;
-        }
-        @include mq($from: mem-full) {
             margin-right: 20px;
             width: 320px;
             height: 60px;
@@ -69,6 +64,7 @@
 
 .bundle-header__main__content {
     @include bundle-column-wide();
+    width: auto;
     @include mq($from: tablet) {
         padding-left: $gs-gutter;
     }
@@ -99,7 +95,7 @@
         }
         @include mq($from: desktop, $until: mem-full) {
             font-size: 22px;
-            width: gs-span(3.75);
+            width: 400px;
         }
         @include mq($from: mem-full) {
             padding-bottom: $gs-baseline * 3;
@@ -110,21 +106,23 @@
 
 .bundle-header__main__img {
     @include bundle-column-narrow();
+    @include mq($from: tablet, $until: desktop) {
+        width: 288px;
+    }
     img {
-        position: absolute;
+        position: relative;
+        float: right;
+        margin-right: 0px;
         @include mq($from: tablet, $until: desktop) {
             width: 288px;
             height: 240px;
-            top: 87px;
-            margin-left: 430px;
         }
         @include mq($from: desktop, $until: mem-full) {
             width: 288px;
             height: 240px;
-            top: 117px;
-            margin-left: 336px;
         }
         @include mq($from: mem-full) {
+            position: absolute;
             width: 480px;
             height: 400px;
             top: 117px;
@@ -134,8 +132,15 @@
 
 .bundle-header__secondary__content {
     @include bundle-column-wide();
-    @include mq($until: mem-full) {
+    @include mq($until: desktop) {
+        margin-left: 20px;
+        width: auto;
+    }
+    @include mq($from: desktop, $until: mem-full) {
         padding-left: $gs-gutter;
+        margin-left: 120px;
+        margin-right: 120px;
+        width: auto;
     }
     @include mq($from: mem-full) {
         padding-left: $gs-gutter * 5;
