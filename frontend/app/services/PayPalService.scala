@@ -69,7 +69,6 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
     response.paramMap(paramName).head
 
   def retrieveEmail(baid: String) = {
-    logger.info("PayPalService.retrieveEmail")
     val params = Map(
       "METHOD" -> "BillAgreementUpdate",
       "REFERENCEID" -> baid
@@ -80,7 +79,6 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
 
   // Sets up a payment by contacting PayPal and returns the token.
   def retrieveToken(returnUrl : String, cancelUrl : String)(billingDetails: PayPalBillingDetails) = {
-    logger.info("PayPalService.retrieveToken")
     val paymentParams = Map(
       "METHOD" -> "SetExpressCheckout",
       "PAYMENTREQUEST_0_PAYMENTACTION" -> "SALE",
@@ -99,8 +97,6 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
 
   // Sends a request to PayPal to create billing agreement and returns BAID.
   def retrieveBaid(token: Token) = {
-    logger.info("PayPalService.retrieveBaid")
-
     val agreementParams = Map(
       "METHOD" -> "CreateBillingAgreement",
       "TOKEN" -> token.token)
