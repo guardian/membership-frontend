@@ -1,15 +1,14 @@
 package forms
 
-import java.net.{URLDecoder, URLEncoder}
+import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 import com.gu.i18n._
 import com.gu.memsub.BillingPeriod._
-import com.gu.memsub.Subscription.ProductRatePlanId
 import com.gu.memsub.promo.PromoCode
 import com.gu.memsub.{Address, BillingPeriod, FullName}
+import com.gu.salesforce.PaidTier
 import com.gu.salesforce.Tier._
-import com.gu.salesforce.{PaidTier, Tier}
 import model._
 import play.api.data.Forms._
 import play.api.data.format.Formatter
@@ -34,9 +33,14 @@ object MemberForm {
 
   )
 
-  case class MonthlyPaymentForm(stripeToken: String, amount: BigDecimal)
+  trait CommonPaymentForm {
+    val stripeToken: Option[String]
+    val payPalBaid: Option[String]
+  }
 
-  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String])
+  case class MonthlyPaymentForm(stripeToken: Option[String], payPalBaid: Option[String], amount: BigDecimal) extends CommonPaymentForm
+
+  case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String]) extends CommonPaymentForm
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
@@ -231,7 +235,8 @@ object MemberForm {
   )(PaymentForm.apply)(PaymentForm.unapply)
 
   val  monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
-    "stripeToken" -> nonEmptyText,
+    "stripeToken" -> optional(text),
+    "payPalBaid" -> optional(text),
     "amount" -> bigDecimal(10, 2).verifying { _ >= 5 }
   )(MonthlyPaymentForm.apply)(MonthlyPaymentForm.unapply)
 

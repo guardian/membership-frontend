@@ -17,7 +17,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
-import services.{PreMembershipJoiningEventFromSessionExtractor, TouchpointBackend}
+import services.TouchpointBackend
 import tracking.ActivityTracking
 import utils.CampaignCode
 import utils.RequestCountry._
@@ -60,7 +60,8 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
       val plans = catalog.contributor
 
       val pageInfo = PageInfo(
-        stripePublicKey = Some(stripeService.publicKey)
+        stripePublicKey = Some(stripeService.publicKey),
+        payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment)
       )
 
       Ok(views.html.joiner.form.monthlyContribution(
