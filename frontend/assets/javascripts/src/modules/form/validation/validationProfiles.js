@@ -12,7 +12,7 @@ define([
      * @param contributionElem
      * @returns {*}
      */
-    var validContributiondValue = function (contributionElem) {
+    var validContributionValue = function (contributionElem) {
         return parseFloat(contributionElem.value) >= 5;
     };
 
@@ -78,7 +78,7 @@ define([
     };
 
     return {
-        validContributiondValue: validContributiondValue,
+        validContributionValue: validContributionValue,
         validCreditCardNumber: validCreditCardNumber,
         validCVC: validCVC,
         validCreditCardMonth: validCreditCardMonth,
