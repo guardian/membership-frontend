@@ -34,11 +34,20 @@ define([
     };
 
     function hasPaypal () {
-        var regex = /^APP_.*_MEMBERSHIP_PAYMENT_SCREEN$/; // matches Android (APP_ANDROID_MEMBERSHIP_PAYMENT), iOS (APP_IOS_MEMBERSHIP_PAYMENT) & Windows app (if they implement it one day)
-        var code = url.getQueryParameterByName('INTCMP');
 
-        var fromApps = regex.exec(code);
+        var platform = url.getQueryParameterByName('platform');
+        var campaignCode = url.getQueryParameterByName('INTCMP');
+        var androidCampCodes = [
+            'APP_ANDROID_MEMBERSHIP_PAYMENT_SCREEN',
+            'gdnwb_copts_memco_kr3_app_epic_ask4',
+            'gdnwb_copts_memco_app_epic_always_ask'
+        ];
+
+        var fromApps = platform === 'ios' || platform === 'android' ||
+            androidCampCodes.indexOf(campaignCode) > -1;
+
         return !!document.getElementById('paypal-button-checkout') && !fromApps;
+
     }
 
     function hasStripeCheckout () {
