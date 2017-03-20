@@ -268,7 +268,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     implicit val idReq = IdentityRequest(request)
 
     for {
-      country <- memberService.country(request.subscriber.contact)
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
