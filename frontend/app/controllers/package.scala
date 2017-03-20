@@ -20,11 +20,6 @@ import scala.reflect.{ClassTag, classTag}
 
 package object controllers extends CommonActions with LazyLogging{
 
-  trait PromoServiceProvider {
-    def promoService(implicit request: BackendProvider): PromoService =
-      request.touchpointBackend.promoService
-  }
-
   trait MemberServiceProvider {
     def memberService(implicit request: BackendProvider): MemberService =
       request.touchpointBackend.memberService

@@ -65,12 +65,11 @@ define([
     'src/modules/form/submitButton',
     'src/modules/form/ongoingCardPayments',
     'src/modules/form/billingPeriodChoice',
-    'src/modules/form/promoCode',
     'src/modules/form/paypal',
     'src/modules/form/stripe',
     'src/modules/form/accordion'
 ], function (validation, form, payment, address, options, submitButton,
-    password, ongoingCardPayments, billingPeriodChoice, promoCode, paypal,
+    password, ongoingCardPayments, billingPeriodChoice, paypal,
     stripe, accordion) {
     'use strict';
 
@@ -84,7 +83,6 @@ define([
             submitButton.init();
             ongoingCardPayments.init();
             billingPeriodChoice.init();
-            promoCode.init();
 
             if (form.hasPayment) {
 

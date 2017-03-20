@@ -33,7 +33,6 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
   with StripeServiceProvider
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
-  with PromoServiceProvider
   with PaymentServiceProvider
   with MemberServiceProvider {
 
