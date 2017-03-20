@@ -2,7 +2,48 @@
    Forms: Notes
 ========================================================================== */
 
-.text-note--monthly-contribution {
-    color: rgba(guss-colour(neutral-1), 0.75);
-    @include fs-data(3);
+.skin-monthly-contribution {
+    .sign-in-required .text-note,
+    .form-field .text-note {
+        margin-left: 0;
+        padding-top: 8px;
+    }
+
+    .form-content .form-panel,
+    .fieldset .fieldset__heading {
+        border-top: none;
+    }
+
+    .fieldset .fieldset__fields {
+        margin-bottom: $gs-baseline;
+    }
+
+    .fieldset .fieldset__heading {
+        margin-bottom: $gs-baseline;
+    }
+
+    .fieldset__headline.fieldset__headline--payment {
+        @include fs-bodyCopy(2);
+        color: $c-neutral1;
+        cursor: pointer;
+        display: block;
+        font-weight: 400;
+    }
+
+    .fieldset__fields.form-panel--no-margin {
+        margin-bottom: 0;
+    }
+
+    .security-note {
+        margin-top: $gs-baseline;
+    }
+
+    .form-panel__content.js-form-panel-name-address,
+    .form-panel .form-panel__content {
+        margin-bottom: 0;
+    }
+
+    .form-panel  .form-panel__heading {
+        padding-bottom: 0;
+    }
 }
