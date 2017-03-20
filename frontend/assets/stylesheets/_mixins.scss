@@ -202,3 +202,70 @@ $gs-max-columns: 16;
         list-style-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxMiAxMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgNi44NTdjMCAxLjA4OS0uMjY4IDIuMDkzLS44MDUgMy4wMTEtLjUzNy45MTktMS4yNjUgMS42NDctMi4xODQgMi4xODQtLjkxOS41MzctMS45MjMuODA2LTMuMDExLjgwNS0xLjA4OC0uMDAxLTIuMDkyLS4yNjktMy4wMTEtLjgwNXMtMS42NDctMS4yNjQtMi4xODQtMi4xODRjLS41MzctLjkyLS44MDUtMS45MjQtLjgwNS0zLjAxMSAwLTEuMDg3LjI2OC0yLjA5MS44MDUtMy4wMTEuNTM3LS45MiAxLjI2NS0xLjY0OCAyLjE4NC0yLjE4NC45MTktLjUzNiAxLjkyMy0uODA0IDMuMDExLS44MDUgMS4wODgtLjAwMSAyLjA5Mi4yNjggMy4wMTEuODA1czEuNjQ3IDEuMjY1IDIuMTg0IDIuMTg0Yy41MzcuOTE5LjgwNSAxLjkyMi44MDUgMy4wMTF6IiBmaWxsPSIjQkRCREJEIi8+PC9zdmc+);
     }
 }
+
+@mixin button {
+    @include font-smoothing();
+    @include fs-textSans(4);
+
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: left;
+    display: inline-block;
+    vertical-align: bottom;
+    outline: none;
+
+    padding: 6px $gs-gutter/2;
+    border: none;
+    @include circular;
+
+    background-color: #ffffff;
+
+    &:hover, &:focus {
+        background-color: $comment-support-1;
+        color: $white;
+    }
+
+    &.active, &.active:hover, &.active:focus {
+        background-color: $c-neutral1;
+        color: $white;
+    }
+}
+
+@mixin button-group {
+    @include button();
+
+    display: flex;
+    padding: 0;
+
+    &:hover, &:focus, &.active {
+        background-color: #ffffff;
+    }
+
+    & .option-button {
+        flex: 1;
+        margin: 0;
+        border-radius: 0;
+        border-right: 1px solid $c-neutral4;
+        color: $c-neutral1;
+
+        &.active {
+            color: white;
+        }
+
+        &:first-of-type {
+            border-top-left-radius: $input-border-radius;
+            border-bottom-left-radius: $input-border-radius;
+        }
+
+        &:last-of-type {
+            border-top-right-radius: $input-border-radius;
+            border-bottom-right-radius: $input-border-radius;
+        }
+    }
+
+    & a:hover {
+        border-bottom: 0;
+        color: white;
+    }
+}
