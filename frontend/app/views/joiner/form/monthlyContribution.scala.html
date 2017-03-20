@@ -62,7 +62,7 @@
 
         <!-- FORM TITLE -->
         <section class="checkout-header">
-            <h1 class="checkout-headline">Become a monthly Contributor</h1>
+            <h1 class="checkout-headline">Make a monthly contribution</h1>
         </section>
 
             <!-- CHECKOUT FORM -->
@@ -70,7 +70,6 @@
             @CSRF.formField
 
             <section class="form-content">
-
 
                 <!-- ACCORDION SECTION - NAME -->
                 <section class="form-panel sub-heading">
@@ -103,7 +102,6 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Payment</h2>
-                        <p class="text-note">Prices include VAT</p>
                     </div>
 
 
@@ -114,7 +112,7 @@
 
                         <div class="js-monthly-contribution">
                             <div class="form-field js-monthly-contribution-section">
-                                <label class="label" for="monthly-contribution">Your monthly contribution</label>
+                                <label class="label" for="monthly-contribution">Your monthly contribution <span class="text-note--monthly-contribution">(includes VAT)</span></label>
                                 <input type="text"
                                 name="payment.amount"
                                 id="monthly-contribution"
