@@ -47,7 +47,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   with StripeServiceProvider
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
-  with PromoServiceProvider
   with PaymentServiceProvider
   with MemberServiceProvider {
   val JoinReferrer = "join-referrer"
@@ -172,7 +171,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
 
-      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))   
+      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))
 
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,

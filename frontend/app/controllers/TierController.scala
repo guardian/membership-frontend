@@ -43,8 +43,7 @@ object TierController extends Controller with ActivityTracking
   with MemberServiceProvider
   with StripeServiceProvider
   with PayPalServiceProvider
-  with PaymentServiceProvider
-  with PromoServiceProvider {
+  with PaymentServiceProvider {
 
   def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, request.touchpointBackend.catalogService.unsafeCatalog))
