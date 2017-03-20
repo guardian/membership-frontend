@@ -4,14 +4,18 @@
 @import model.Header.SimpleHeader
 @import views.support.Social.joinThankyou
 @import views.support.ThankYouMonthlySummary
+@import com.gu.memsub.{PaymentCard, PayPalMethod}
 @(contributor: Contributor,
+
     summary: ThankYouMonthlySummary,
     touchpointBackendResolution: services.TouchpointBackend.Resolution
 )
 
 @title = @{s"Thank you for your support"}
 
-@pageHeader = @{"Thank you for supporting the Guardian"}
+@pageHeader = @{
+    "Thank you!"
+}
 
 
 @getStarted(title: String)(content: Html) = {
@@ -40,7 +44,11 @@
     <script type="text/javascript">
         guardian.productData = {
             tier: 'Monthly Contribution',
-            paymentMethod: 'CreditCard'
+            paymentMethod: '@{summary.paymentMethod match{
+         case Some(_ :PaymentCard) => "CreditCard"
+         case Some(_ :PayPalMethod) => "PayPal"
+         case _ =>
+       }}'
         };
     </script>
     <main role="main" class="page-content l-constrained">
@@ -51,7 +59,7 @@
 
         @fragments.page.pageHeader(
             pageHeader,
-            Some(s"You're the newest supporter of the Guardian and we're thrilled to have you on board.")
+            Some(s"You’ve made a vital monthly contribution that will help us maintain our independent, investigative journalism.")
         )
 
         <section class="page-section page-section--bordered">
@@ -61,16 +69,16 @@
             <div class="page-section__content">
                 <table class="table table--striped" role="grid">
                     <tr role="row">
-                        <th role="rowheader">Type</th>
-                        <td id="qa-joiner-summary-tier">Monthly Contributor</td>
+                        <th role="rowheader">Your monthly contribution</th>
+                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.pretty</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">First contribution date</th>
                         <td id="qa-joiner-summary-start">@summary.startDate.pretty</td>
                     </tr>
                     <tr role="row">
-                        <th role="rowheader">Contribution amount</th>
-                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.pretty</td>
+                        <th role="rowheader">Your monthly contribution will be taken on or around the </th>
+                        <td id="qa-joiner-summary-start">@summary.startDate.pretty</td>
                     </tr>
                 </table>
             </div>

@@ -264,7 +264,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
-    val prpId = request.subscriber.subscription.plan.productRatePlanId
     implicit val idReq = IdentityRequest(request)
 
     for {

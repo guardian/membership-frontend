@@ -57,7 +57,7 @@ object ActionRefiners extends LazyLogging {
       member <- OptionT(request.forMemberOpt(identity))
       subscription <- OptionT(tp.subscriptionService.getSubscription(member))
     } yield new SubscriptionRequest[A](tp, request) with Contributor {
-      override val contributor = subscription.plan
+      override val contributor = subscription
     }).run
   }
 

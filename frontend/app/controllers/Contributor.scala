@@ -9,7 +9,7 @@ import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
-import controllers.Joiner._
+import controllers.Joiner.{paymentService, _}
 import forms.MemberForm._
 import org.joda.time.LocalDate
 import play.api.Play.current
@@ -108,15 +108,17 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
     }
   }
 
-  def thankyouContributor = ContributorAction { implicit request =>
+  def thankyouContributor = ContributorAction.async { implicit request =>
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
 
-    val prpId = request.contributor.productRatePlanId
-
-    Ok(views.html.joiner.thankyouMonthly(
-      request.contributor,
-      ThankYouMonthlySummary(LocalDate.now(), request.contributor.charges.price.prices.head),
-      resolution
-    ))
+    for {
+      paymentMethod <- paymentService.getPaymentMethod(request.contributor.accountId)
+    } yield {
+      Ok(views.html.joiner.thankyouMonthly(
+        request.contributor.plan,
+        ThankYouMonthlySummary(LocalDate.now(), request.contributor.plan.charges.price.prices.head, paymentMethod),
+        resolution
+      ))
+    }
   }
 }
