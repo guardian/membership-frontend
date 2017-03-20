@@ -40,7 +40,7 @@ trait MemberService {
                    identityRequest: IdentityRequest,
                    campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)]
 
-  def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice, code: Option[ValidPromotion[Upgrades]])
+  def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
   def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])

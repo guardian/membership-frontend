@@ -24,7 +24,6 @@ require([
     'src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns',
-    'src/modules/paidToPaid',
     'src/modules/memstatus',
     'src/modules/faq',
     'src/modules/landingBundles'
@@ -54,7 +53,6 @@ require([
     comparisonTable,
     metrics,
     patterns,
-    paidToPaid,
     memstatus,
     faq,
     landingBundles
@@ -102,8 +100,6 @@ require([
 
     // Pattern library
     patterns.init();
-
-    paidToPaid.init();
 
     memstatus.init();
 

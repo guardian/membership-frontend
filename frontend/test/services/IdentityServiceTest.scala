@@ -39,7 +39,6 @@ class IdentityServiceTest extends Specification with Mockito {
         NameForm("Joe", "Bloggs"),
         Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
         MarketingChoicesForm(Some(false), Some(false)),
-        None,
         None
       )
 
@@ -65,9 +64,7 @@ class IdentityServiceTest extends Specification with Mockito {
         None,
         None,
         subscriberOffer = false,
-        Set.empty,
-        None,
-        None
+        Set.empty
       )
 
       identityService.updateUserFieldsBasedOnJoining(user, paidForm, identityRequest)

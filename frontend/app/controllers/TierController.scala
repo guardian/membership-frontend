@@ -8,8 +8,6 @@ import com.gu.identity.play.PrivateFields
 import com.gu.memsub.Benefit.PaidMemberTier
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.promo.Formatters.PromotionFormatters._
-import com.gu.memsub.promo.{PromoCode, Upgrades}
 import com.gu.memsub.subsv2.{Catalog, PaidMembershipPlans}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
@@ -23,7 +21,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
-import services.PromoSessionService.codeFromSession
 import services.{IdentityApi, IdentityService}
 import tracking.ActivityTracking
 import utils.RequestCountry._
@@ -114,7 +111,7 @@ object TierController extends Controller with ActivityTracking
     Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies: _*)
   }
 
-  def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier], code: Option[PromoCode])
+  def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier])
                     (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
 
     val targetPlan = targetPlans.get(subscriber.subscription.plan.charges.billingPeriod)
@@ -123,13 +120,12 @@ object TierController extends Controller with ActivityTracking
 
     (for {
       country <- EitherT(memberService.country(subscriber.contact).map(\/.right))
-      promo <- EitherT(Future.successful(promoService.validateMany[Upgrades](country, targetChoice.productRatePlanId)(code).leftMap[MemberError](MemberPromoError)))
       paymentMethod <- EitherT(paymentService.getPaymentMethod(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
-      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice, promo))
+      preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice))
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, paymentMethod)(c)).run
   }
 
-  def upgrade(target: PaidTier, promoCode: Option[PromoCode]) = ChangeToPaidAction(target).async { implicit request =>
+  def upgrade(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val c = catalog
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
@@ -153,38 +149,26 @@ object TierController extends Controller with ActivityTracking
       PageInfo(initialCheckoutForm = formI18n, payPalEnvironment = Some(payPalService.config.payPalEnvironment), stripePublicKey = stripeKey)
     }
 
-    val providedPromoCode = promoCode orElse codeFromSession
-
     request.paidOrFreeSubscriber.fold({ freeSubscriber =>
       idUserFuture.map(idUser => {
 
-        // is the promoCode valid for the page being rendered
         val pageInfo = getPageInfo(idUser.privateFields, BillingPeriod.Year)
-        val planChoice = PaidPlanChoice(target, BillingPeriod.Year)
-        val validPromo =
-          providedPromoCode.flatMap(promoService.validate[Upgrades](_, pageInfo.initialCheckoutForm.defaultCountry.get, planChoice.productRatePlanId).toOption)
 
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
           countriesWithCurrency,
           idUser,
-          pageInfo,
-          validPromo
+          pageInfo
         )(getToken, request))
       })
     }, { paidSubscriber =>
       val billingPeriod = paidSubscriber.subscription.plan.charges.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
 
-      // get a valid promotion but don't apply it to the payment summary
-      val validPromo = memberService.country(paidSubscriber.contact).map { country =>
-        val planChoice = PaidPlanChoice(target, paidSubscriber.subscription.plan.charges.billingPeriod)
-        (promoCode orElse codeFromSession).flatMap(promoService.validate[Upgrades](_, country, planChoice.productRatePlanId).toOption)
-      }
 
-      (validPromo |@| idUserFuture |@| paymentSummary(paidSubscriber, targetPlans, None)) { case (vp, idUser, summary) =>
-        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError, vp)(getToken, request)))
+      (idUserFuture |@| paymentSummary(paidSubscriber, targetPlans)) { case (idUser, summary) =>
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(getToken, request)))
       }.map(handleResultErrors)
     })
   }
@@ -203,13 +187,13 @@ object TierController extends Controller with ActivityTracking
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target, form.promoCode))
+        Redirect(routes.TierController.upgrade(target))
           .flashing("error" ->
             s"That password does not match our records. Please try again.")
       }
 
       val noEmailMessage: Future[Result] = Future {
-        Redirect(routes.TierController.upgrade(target, form.promoCode))
+        Redirect(routes.TierController.upgrade(target))
           .flashing("error" ->
             s"Your email address is not on our system, please call customer services to upgrade")
       }
