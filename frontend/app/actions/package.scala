@@ -1,7 +1,7 @@
 import com.gu.googleauth
 import com.gu.identity.play.AuthenticatedIdUser
 import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
-import com.gu.memsub.subsv2.SubscriptionPlan
+import com.gu.memsub.subsv2.{Subscription, SubscriptionPlan}
 import com.gu.salesforce._
 import com.gu.memsub.util.Timing
 import monitoring.MemberAuthenticationMetrics
@@ -52,7 +52,7 @@ package object actions {
   }
 
   trait Contributor {
-    def contributor: SubscriptionPlan.Contributor
+    def contributor: Subscription[SubscriptionPlan.Contributor]
   }
 
   trait FreeSubscriber {
