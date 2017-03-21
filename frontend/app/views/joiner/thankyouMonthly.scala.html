@@ -12,7 +12,7 @@
 )
 
 @title = @{
-    s"Thank you for your support"
+    s"Thank you for your contribution"
 }
 
 @pageHeader = @{
@@ -39,7 +39,8 @@
 }
 
 @main(
-    title,
+    "",
+    titleOverride = Some(title),
     touchpointBackendResolutionOpt = Some(touchpointBackendResolution),
     header = SimpleHeader
 ) {

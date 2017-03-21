@@ -10,7 +10,7 @@
     touchpointBackendResolution: services.TouchpointBackend.Resolution,
     contributionValue: Int)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main("Become a contributor", pageInfo=pageInfo, header = SimpleHeader, margins=false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+@main("", pageInfo = pageInfo, titleOverride = Some("Become a contributor"), header = SimpleHeader, margins = false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
     <script>
         (function() {
             'use strict';
