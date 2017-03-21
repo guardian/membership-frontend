@@ -47,7 +47,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   with StripeServiceProvider
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
-  with PromoServiceProvider
   with PaymentServiceProvider
   with MemberServiceProvider {
   val JoinReferrer = "join-referrer"
@@ -172,7 +171,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
 
-      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))   
+      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))
 
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
@@ -265,11 +264,9 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
-    val prpId = request.subscriber.subscription.plan.productRatePlanId
     implicit val idReq = IdentityRequest(request)
 
     for {
-      country <- memberService.country(request.subscriber.contact)
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)

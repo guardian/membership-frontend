@@ -4,14 +4,20 @@
 @import model.Header.SimpleHeader
 @import views.support.Social.joinThankyou
 @import views.support.ThankYouMonthlySummary
+@import com.gu.memsub.{PaymentCard, PayPalMethod}
 @(contributor: Contributor,
+
     summary: ThankYouMonthlySummary,
     touchpointBackendResolution: services.TouchpointBackend.Resolution
 )
 
-@title = @{s"Thank you for your support"}
+@title = @{
+    s"Thank you for your support"
+}
 
-@pageHeader = @{"Thank you for supporting the Guardian"}
+@pageHeader = @{
+    "Thank you!"
+}
 
 
 @getStarted(title: String)(content: Html) = {
@@ -25,7 +31,7 @@
     </section>
 }
 
-@paymentRow(title : String, message: String) = {
+@paymentRow(title: String, message: String) = {
     <tr role="row">
         <th role="rowheader">@title</th>
         <td id="qa-joiner-summary-card">@message</td>
@@ -40,58 +46,135 @@
     <script type="text/javascript">
         guardian.productData = {
             tier: 'Monthly Contribution',
-            paymentMethod: 'CreditCard'
+            paymentMethod: '@{summary.paymentMethod match{
+         case Some(_ :PaymentCard) => "CreditCard"
+         case Some(_ :PayPalMethod) => "PayPal"
+         case _ =>
+       }}'
         };
     </script>
-    <main role="main" class="page-content l-constrained">
+    <main class="contributions__wrapper currency-gbp">
+        <div class="contributions__inner page-slice l-constrained flex-horizontal-from-tablet thanks">
+            <section>
+                <h1>Thank you!
+                    <span class="thanks--description">
+                        You’ve made a vital contribution that will help us maintain our independent, investigative journalism</span>
+                </h1>
 
-        @{
-            //TODO: //fragments.analytics.appNexusPixel("id", AppnexusPixel.thankYouPageIds.get(member.subscription.plan.tier))
-        }
-
-        @fragments.page.pageHeader(
-            pageHeader,
-            Some(s"You're the newest supporter of the Guardian and we're thrilled to have you on board.")
-        )
-
-        <section class="page-section page-section--bordered">
-            <div class="page-section__lead-in">
-                <h2 class="page-section__headline">Your contribution summary</h2>
-            </div>
-            <div class="page-section__content">
-                <table class="table table--striped" role="grid">
-                    <tr role="row">
-                        <th role="rowheader">Type</th>
-                        <td id="qa-joiner-summary-tier">Monthly Contributor</td>
-                    </tr>
-                    <tr role="row">
-                        <th role="rowheader">First contribution date</th>
-                        <td id="qa-joiner-summary-start">@summary.startDate.pretty</td>
-                    </tr>
-                    <tr role="row">
-                        <th role="rowheader">Contribution amount</th>
-                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.pretty</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
-
-
-        <section class="page-section page-section--bordered">
-            <div class="page-section__lead-in">
-                <h2 class="page-section__headline">Tell your friends</h2>
-            </div>
-            <div class="page-section__content">
-            @fragments.social(joinThankyou)
-            </div>
-        </section>
-
+            </section>
+        </div>
     </main>
+    <section class="disclaimer">
+        <div class="support-wrapper page-slice page-slice__feedback l-constrained currency-gbp">
+            <div class="feedback">
+                <section class="thanks--social">
+                    <h2>
+                        Your contribution
+                    </h2>
+                    <ul class="o-bulleted-list your-contribution__list">
+                        <li>
+                            Monthly amount : @summary.amountPaidToday.pretty
+                        </li>
+                        <li>
+                            First contribution date: @summary.startDate.pretty
+                        </li>
+                        <li>
+                            Your monthly contribution will be taken around the @addSuffix(summary.startDate.dayOfMonth().get()) of each month
+                        </li>
+                    </ul>
 
-        @{
-            //TODO: fragments.analytics.googleJoinerConversion(member.subscription.plan.tier)
-            //TODO: fragments.analytics.facebookJoinerConversion(member.subscription.plan.tier)
-            //TODO: fragments.analytics.videoCampaignPHD.thankyouPage(regNumberOrFree, summary.amountPaidToday.pretty)
-        }
-    )
+                    <p>
+                        If the above information is incorrect please <a href="mailto:contribution.support@@theguardian.com" >
+                        contact us</a>
+                    </p>
+
+                </section>
+                <section class="thanks--social">
+                    <h2>
+                        Spread the word
+                    </h2>
+                    <p>
+                        We report for everyone. Let your friends and followers know that you support independent journalism.
+                    </p>
+                    <p>
+
+
+                <ul class="social-list">
+
+                    <li class="social-list__item">
+                        <a class="social-action social-action--twitter"
+                        target="_blank"
+                        href="https://twitter.com/intent/tweet?text=I%27ve+just+contributed+to+the+Guardian.+Join+me+in+supporting+independent+journalism+https%3A%2F%2Fmembership.theguardian.com%2Fcontribute&amp;amp;related=guardian"
+                        data-metric-trigger="click"
+                        data-metric-category="social"
+                        data-metric-action="twitter"
+                        >
+                            <span class="u-h">Share on Twitter</span>
+
+
+                            <svg class="icon-inline ">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-share-twitter"></use>
+                            </svg>
+
+                        </a>
+                    </li>
+
+                    <li class="social-list__item">
+                        <a class="social-action social-action--facebook"
+                        target="_blank"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcontribute.theguardian.com%2F%3FINTCMP%3Dsocial&amp;t="
+                        data-metric-trigger="click"
+                        data-metric-category="social"
+                        data-metric-action="facebook"
+                        >
+                            <span class="u-h">Share on Facebook</span>
+
+
+                            <svg class="icon-inline ">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-share-facebook"></use>
+                            </svg>
+
+                        </a>
+                    </li>
+
+                </ul>
+
+                </section>
+                <section>
+                    <h2>Get the Guardian app</h2>
+                    <p>Up-to-the-minute coverage, personalised alerts, offline reading and more.</p>
+                    <ul class="o-bulleted-list thanks__list">
+                        <li><span data-shown="gbp eur"><a href="https://itunes.apple.com/gb/app/the-guardian/id409128287?mt=8" onClick="s.tl(true, 'o', 'iApp')">
+                            iPhone and iPad app</a></span>
+                            <span data-shown="aud"><a href="https://itunes.apple.com/au/app/the-guardian/id409128287?mt=8" onClick="s.tl(true, 'o', 'iApp')">
+                                iPhone and iPad app</a></span>
+                            <span data-shown="usd cad"><a href="https://itunes.apple.com/us/app/the-guardian/id409128287?mt=8" onClick="s.tl(true, 'o', 'iApp')">
+                                iPhone and iPad app</a></span></li>
+                        <li><a href="https://play.google.com/store/apps/details?id=com.guardian" onClick="s.tl(true, 'o', 'aApp')">
+                            Android app</a>
+                        </li>
+                    </ul>
+
+                    <h2>Subscribe to our daily email</h2>
+                    <p><span data-shown="gbp eur"><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-uk?CMP=contribution_thankyou" onClick="s.tl(true, 'o', 'email')">
+                        Get the must-read stories delivered straight to your inbox each morning in one handy email.</a></span>
+                        <span data-shown="aud"><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-au?CMP=contribution_thankyou" onClick="s.tl(true, 'o', 'email')">
+                            Get the must-read stories delivered straight to your inbox each morning in one handy email.</a></span>
+                        <span data-shown="usd cad"><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-us?CMP=contribution_thankyou" onClick="s.tl(true, 'o', 'email')">
+                            Get the must-read stories delivered straight to your inbox each morning in one handy email.</a></span></p>
+
+                </section>
+                <section>
+                    <h2>Follow us on Facebook</h2>
+                    <p><span data-shown="gbp eur usd cad nzd"><a href="https://www.facebook.com/theguardian" onClick="s.tl(true, 'o', 'follow')">
+                        Follow the Guardian's daily reporting, features and investigative journalism.</a></span>
+                        <span data-shown="aud"><a href="https://www.facebook.com/theguardianaustralia" onClick="s.tl(true, 'o', 'follow')">
+                            Follow the Guardian's daily reporting, features and investigative journalism.</a></span></p>
+                    <h2>Questions?</h2>
+                    <p>If you have any questions about contributing to the Guardian, please <a href="mailto:contribution.support@@theguardian.com" >
+                        contact us here</a></p>
+                </section>
+            </div>
+        </div>
+    </section>
 }
