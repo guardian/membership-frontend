@@ -1,8 +1,7 @@
 
 .skin-monthly-contribution {
     .sign-in-required .text-note {
-        margin-left: 0;
-        padding-top: 8px;
+        margin: 0;
     }
 
     .form-content .form-panel,
@@ -10,12 +9,8 @@
         border-top: none;
     }
 
-    .fieldset .fieldset__fields {
-        margin-bottom: $gs-baseline;
-    }
-
     .fieldset .fieldset__heading {
-        margin-bottom: $gs-baseline;
+        padding-top: 5px;
     }
 
     .fieldset__headline.fieldset__headline--payment {
@@ -26,7 +21,8 @@
         font-weight: 400;
     }
 
-    .fieldset__fields.form-panel--no-margin {
+    .fieldset__fields.form-panel--no-margin,
+    .fieldset > .fieldset__fields {
         margin-bottom: 0;
     }
 
@@ -39,7 +35,44 @@
         margin-bottom: 0;
     }
 
-    .form-panel  .form-panel__heading {
+    .form-panel > .form-panel__heading {
         padding-bottom: 0;
+    }
+
+    .sub-heading > .form-panel__heading {
+        padding-top: 7px;
+    }
+
+    section .form-panel {
+        background-color : guss-colour(multimedia-main-2);
+    }
+
+    .monthly-contribution__amount {
+        @include fs-header(5);
+        font-weight: 400;
+    }
+
+    .monthly-contribution__section {
+        padding-top: 5px;
+        padding-bottom: 18px;
+        border-top: dotted guss-colour(comment-main-1) 1px;
+        border-bottom: dotted guss-colour(comment-main-1) 1px;
+    }
+
+    .checkout-header > .checkout-headline {
+        font-weight: 900;
+    }
+
+    .form-field {
+        margin-top: 24px;
+        margin-bottom: 0;
+    }
+
+    .form-panel__payment > .fieldset__fields > .form-field {
+        margin-top: 12px;
+    }
+
+    .form-panel__payment > .fieldset__fields {
+        padding-bottom: 12px;
     }
 }
