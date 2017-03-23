@@ -15,10 +15,15 @@
 
     .fieldset__headline.fieldset__headline--payment {
         @include fs-bodyCopy(2);
-        color: $c-neutral1;
+        color: guss-colour(neutral-1);
         cursor: pointer;
-        display: block;
+        display: inline-block;
         font-weight: 400;
+
+    }
+
+    .form-panel__payment > .fieldset__heading {
+        display: inline-block;
     }
 
     .fieldset__fields.form-panel--no-margin,
@@ -26,8 +31,9 @@
         margin-bottom: 0;
     }
 
-    .security-note {
-        margin-top: $gs-baseline;
+    .fieldset__heading > .security-note {
+        margin: 0;
+        padding: 4px 0 0;
     }
 
     .form-panel__content.js-form-panel-name-address,
@@ -52,27 +58,55 @@
         font-weight: 400;
     }
 
+    .monthly-contribution__edit {
+        float: right;
+    }
+
+    .monthly-contribution__edit > .text-link,
+    .text-note > .text-link {
+        @include fs-textSans(1)
+        border-bottom-color: guss-colour(comment-main-2);
+    }
+
     .monthly-contribution__section {
-        padding-top: 5px;
-        padding-bottom: 18px;
+        padding: 2px 0 18px;
         border-top: dotted guss-colour(comment-main-1) 1px;
         border-bottom: dotted guss-colour(comment-main-1) 1px;
+        display: inline-block;
+        width: 100%;
     }
 
     .checkout-header > .checkout-headline {
         font-weight: 900;
+        line-height: 38px;
+    }
+
+    section.checkout-header {
+        padding-bottom: $gs-baseline * 2;
     }
 
     .form-field {
-        margin-top: 24px;
+        margin-top: $gs-baseline * 2;
         margin-bottom: 0;
     }
 
+
+    @include mq($from: tablet) {
+        .form-section__name-detail .form-field:first-of-type {
+            margin-top: 0;
+        }
+    }
+
+    .form-panel__payment > .fieldset__fields > .form-field:nth-of-type(2),
+    .form-panel__payment > .fieldset__fields > .form-field:first-of-type {
+        margin-top: 0;
+    }
+
     .form-panel__payment > .fieldset__fields > .form-field {
-        margin-top: 12px;
+        margin-top: $gs-baseline;
     }
 
     .form-panel__payment > .fieldset__fields {
-        padding-bottom: 12px;
+        padding-bottom: $gs-baseline;
     }
 }
