@@ -37,14 +37,16 @@ define([
 
         var platform = url.getQueryParameterByName('platform');
         var campaignCode = url.getQueryParameterByName('INTCMP');
-        var androidCampCodes = [
+        var appCampCodes = [
             'APP_ANDROID_MEMBERSHIP_PAYMENT_SCREEN',
+            'APP_IOS_MEMBERSHIP_PAYMENT_SCREEN',
             'gdnwb_copts_memco_kr3_app_epic_ask4',
             'gdnwb_copts_memco_app_epic_always_ask'
         ];
 
+        // Platform for new versions of the apps, camp codes for old versions.
         var fromApps = platform === 'ios' || platform === 'android' ||
-            androidCampCodes.indexOf(campaignCode) > -1;
+            appCampCodes.indexOf(campaignCode) > -1;
 
         return !!document.getElementById('paypal-button-checkout') && !fromApps;
 
