@@ -31,6 +31,8 @@
             <!-- FORM TITLE -->
         <section class="checkout-header">
             <h1 class="checkout-headline">@fragments.form.formCta(plans.tier)</h1>
+            <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top"))
+                Secure</p>
         </section>
 
             <!-- CHECKOUT FORM -->
@@ -54,6 +56,10 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Name and address</h2>
+                        <div class="text-note">
+                            <span>Already have a Guardian account?</span>
+                            <a class="s-prose" href="https://profile.theguardian.com/signin?returnUrl=https://membership.theguardian.com/join/supporter/enter-details">Sign in</a>
+                        </div>
                         <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
                         <div class="sign-in-required js-sign-in-note @if(plans.tier == Partner()) {is-hidden}">
                         @fragments.joiner.signedInAs(request.uri, inline = true)
@@ -130,8 +136,6 @@
 
                             <div class="fieldset__heading">
                                 <h2 class="fieldset__headline fieldset__headline--payment">Payment methods</h2>
-                                <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top"))
-                                    Secure</p>
                             </div>
 
                             <div class="fieldset__fields">
