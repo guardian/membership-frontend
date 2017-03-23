@@ -8,7 +8,7 @@
     pageInfo: PageInfo,
     countryGroup: Option[CountryGroup],
     touchpointBackendResolution: services.TouchpointBackend.Resolution,
-    contributionValue: Int)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
+    contributionValue: Double)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @main("", pageInfo = pageInfo, titleOverride = Some("Become a contributor"), header = SimpleHeader, margins = false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
     <script>
@@ -101,7 +101,7 @@
                             <div class="form-field monthly-contribution__section">
                                 <label class="label" for="monthly-contribution">Your monthly contribution</label>
                                 <input type="hidden" name="payment.amount" id="monthly-contribution" value="@contributionValue" class="js-monthly-contribution" data-validation="validContributionValue"/>
-                                <span class="monthly-contribution__amount">£@contributionValue</span><span class="monthly-contribution__edit"><a class="text-link">Edit</a></span>
+                                <span class="monthly-contribution__amount">£@("%.2f".format(contributionValue).replace(".00",""))</span><span class="monthly-contribution__edit"><a class="text-link">Edit</a></span>
                                 @fragments.form.errorMessage("The minimum monthly contribution is £5.")
                             </div>
 

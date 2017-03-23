@@ -38,7 +38,7 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
 
   def NonContributorAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonContributorFilter()
 
-  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK, contributionValue: Option[Int] = None) = NonContributorAction.async { implicit request =>
+  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK, contributionValue: Option[Double] = None) = NonContributorAction.async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
