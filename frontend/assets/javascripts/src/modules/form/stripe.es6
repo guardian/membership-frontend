@@ -13,7 +13,7 @@ export function init() {
         let period = billingPeriod.noun;
         const monthlyContributionField = $('.js-monthly-contribution');
         if (monthlyContributionField.length > 0){
-            amount = "£" + parseFloat(monthlyContributionField[1].value);
+            amount = "£" + parseFloat(monthlyContributionField[0].value);
         }
         return "Pay " + amount + " per " + period;
     };
