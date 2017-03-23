@@ -32,7 +32,6 @@ GET            /join/staff/thankyou                   controllers.Joiner.thankyo
 GET            /join/:tier/thankyou                   controllers.Joiner.thankyou(tier: Tier)
 POST           /join/staff/update-email               controllers.Joiner.updateEmailStaff
 GET            /join/unsupported-browser              controllers.Joiner.unsupportedBrowser
-GET            /lookupPromotion                       controllers.Promotions.validatePromoCode(promoCode: PromoCode, tier: Tier, country: Country)
 
 GET            /choose-tier                           controllers.Joiner.tierChooser
 
@@ -138,13 +137,6 @@ GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.b
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
-
-# Promotions
-GET            /p/:promoCodeStr                       controllers.Promotions.promotionPage(promoCodeStr)
-
-# NOCSRF
-POST           /q                                     controllers.Promotions.preview
-GET            /english-heritage                      controllers.Default.redirect(to="/p/EH2016")
 
 # REST
 # Pricing
