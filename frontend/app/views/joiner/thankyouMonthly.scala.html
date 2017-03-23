@@ -2,6 +2,7 @@
 @import play.twirl.api.Html
 @import views.support.Dates._
 @import model.Header.SimpleHeader
+@import model.Footer.SimpleFooter
 @import views.support.Social.joinThankyou
 @import views.support.ThankYouMonthlySummary
 @import com.gu.memsub.{PaymentCard, PayPalMethod}
@@ -42,7 +43,8 @@
     "",
     titleOverride = Some(title),
     touchpointBackendResolutionOpt = Some(touchpointBackendResolution),
-    header = SimpleHeader
+    header = SimpleHeader,
+    footer = SimpleFooter
 ) {
     <script type="text/javascript">
         guardian.productData = {
@@ -59,7 +61,7 @@
             <section>
                 <h1>Thank you!
                     <span class="thanks--description">
-                        You’ve made a vital contribution that will help us maintain our independent, investigative journalism</span>
+                        You're now making a vital monthly contribution that will help us maintain our independent, investigative journalism</span>
                 </h1>
 
             </section>
@@ -70,24 +72,23 @@
             <div class="feedback">
                 <section class="thanks--social">
                     <h2>
-                        Your contribution
+                        Your contribution summary
                     </h2>
-                    <ul class="o-bulleted-list your-contribution__list">
+                    <ul class="o-bulleted-list">
                         <li>
-                            Monthly amount : @summary.amountPaidToday.pretty
+                            Your monthly contribution: <strong>@summary.amountPaidToday.pretty</strong>
                         </li>
                         <li>
-                            First contribution date: @summary.startDate.pretty
+                            First contribution date: <strong>@summary.startDate.pretty</strong>
                         </li>
                         <li>
                             Your monthly contribution will be taken around the @addSuffix(summary.startDate.dayOfMonth().get()) of each month
                         </li>
+                        <li>
+                            If the above information is incorrect please contact us on <a href="mailto:contribution.support@@theguardian.com">
+                            contribution.support@@theguardian.com</a>
+                        </li>
                     </ul>
-
-                    <p>
-                        If the above information is incorrect please <a href="mailto:contribution.support@@theguardian.com" >
-                        contact us</a>
-                    </p>
 
                 </section>
                 <section class="thanks--social">
@@ -140,40 +141,6 @@
 
                 </ul>
 
-                </section>
-                <section>
-                    <h2>Get the Guardian app</h2>
-                    <p>Up-to-the-minute coverage, personalised alerts, offline reading and more.</p>
-                    <ul class="o-bulleted-list thanks__list">
-                        <li><span data-shown="gbp eur"><a href="https://itunes.apple.com/gb/app/the-guardian/id409128287?mt=8" onClick="s.tl(true, 'o', 'iApp')">
-                            iPhone and iPad app</a></span>
-                            <span data-shown="aud"><a href="https://itunes.apple.com/au/app/the-guardian/id409128287?mt=8" onClick="s.tl(true, 'o', 'iApp')">
-                                iPhone and iPad app</a></span>
-                            <span data-shown="usd cad"><a href="https://itunes.apple.com/us/app/the-guardian/id409128287?mt=8" onClick="s.tl(true, 'o', 'iApp')">
-                                iPhone and iPad app</a></span></li>
-                        <li><a href="https://play.google.com/store/apps/details?id=com.guardian" onClick="s.tl(true, 'o', 'aApp')">
-                            Android app</a>
-                        </li>
-                    </ul>
-
-                    <h2>Subscribe to our daily email</h2>
-                    <p><span data-shown="gbp eur"><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-uk?CMP=contribution_thankyou" onClick="s.tl(true, 'o', 'email')">
-                        Get the must-read stories delivered straight to your inbox each morning in one handy email.</a></span>
-                        <span data-shown="aud"><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-au?CMP=contribution_thankyou" onClick="s.tl(true, 'o', 'email')">
-                            Get the must-read stories delivered straight to your inbox each morning in one handy email.</a></span>
-                        <span data-shown="usd cad"><a href="https://www.theguardian.com/info/2015/dec/08/daily-email-us?CMP=contribution_thankyou" onClick="s.tl(true, 'o', 'email')">
-                            Get the must-read stories delivered straight to your inbox each morning in one handy email.</a></span></p>
-
-                </section>
-                <section>
-                    <h2>Follow us on Facebook</h2>
-                    <p><span data-shown="gbp eur usd cad nzd"><a href="https://www.facebook.com/theguardian" onClick="s.tl(true, 'o', 'follow')">
-                        Follow the Guardian's daily reporting, features and investigative journalism.</a></span>
-                        <span data-shown="aud"><a href="https://www.facebook.com/theguardianaustralia" onClick="s.tl(true, 'o', 'follow')">
-                            Follow the Guardian's daily reporting, features and investigative journalism.</a></span></p>
-                    <h2>Questions?</h2>
-                    <p>If you have any questions about contributing to the Guardian, please <a href="mailto:contribution.support@@theguardian.com" >
-                        contact us here</a></p>
                 </section>
             </div>
         </div>

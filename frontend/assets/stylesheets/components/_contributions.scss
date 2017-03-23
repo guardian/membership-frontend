@@ -134,7 +134,7 @@ $control-spacing: 5px;
 }
 
 .contributions__wrapper {
-    background: $dark-yellow;
+    background: $medium-yellow;
 }
 
 .contributions__inner {
@@ -551,16 +551,12 @@ $currencies: gbp usd aud eur nzd cad;
 }
 
 .thanks {
-    &.contributions__inner {
-        padding-top: $gs-baseline;
-    }
 
     @include mq(desktop) {
 
         section {
             width: 650px;
         }
-        padding-left: $gs-gutter * 3;
     }
     .thanks--description {
         color: $c-neutral1;
@@ -581,16 +577,13 @@ $currencies: gbp usd aud eur nzd cad;
         font-family: $f-serif-headline;
         font-weight: 900;
 
-        font-size: 24px;
-        line-height: 24px;
+        @include font-size(32, 34);
 
         @include mq(tablet) {
-            font-size: 36px;
-            line-height: 36px;
+            @include font-size(36, 38);
         }
         @include mq(desktop) {
-            font-size: 44px;
-            line-height: 44px;
+            @include font-size(44, 46);
         }
 
     }
@@ -601,25 +594,41 @@ $currencies: gbp usd aud eur nzd cad;
     margin-top: -1em;
 }
 
-.your-contribution__list {
-    li {
-        color: $c-neutral1;
-        @include f-bodyCopy;
-        @include fs-header(5, true);
-
-    }
-}
-
 .thanks--social {
-    margin-bottom: 50px;
+    color: $c-neutral1;
+    @include f-bodyCopy;
+
+    @include font-size(18, 22);
+    @include mq(tablet) {
+        @include font-size(20, 24);
+    }
+    @include mq(desktop) {
+        @include font-size(22, 26);
+    }
+
+    p {
+        margin-bottom: 50px;
+    }
+
     h2 {
         color: #c05303;
-        font-family: $f-sans-serif-headline;
-        @include fs-header(5);
+        font-family: $f-serif-headline;
+        font-weight: 900;
+
+        @include font-size(20, 22);
+        @include mq(tablet) {
+            @include font-size(24, 26);
+        }
+        @include mq(desktop) {
+            @include font-size(28, 30);
+        }
     }
-    p {
-        color: $c-neutral1;
-        @include f-bodyCopy;
-        @include fs-header(5, true);
+
+    a {
+        color: $blue;
+    }
+
+    .social-action {
+        color: $white;
     }
 }
