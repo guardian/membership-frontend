@@ -25,7 +25,7 @@ function handleSetupResponse (response) {
 
 function getAmount(checkoutForm) {
     if (checkoutForm.isMonthlyContributorCheckout) {
-        return parseInt(document.getElementById('monthly-contribution').value);
+        return parseFloat(document.getElementById('monthly-contribution').value);
     }
     return checkoutForm.billingPeriods[checkoutForm.billingPeriod].amount[checkoutForm.currency];
 }

@@ -11,9 +11,9 @@ export function init() {
         let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
         let amount = billingPeriod.generateDisplayAmount();
         let period = billingPeriod.noun;
-        const monthlyContributionField = $('.js-monthly-contribution');
-        if (monthlyContributionField.length > 0){
-            amount = "£" + parseFloat(monthlyContributionField[0].value);
+        const monthlyContributionField = document.getElementById('monthly-contribution');
+        if (monthlyContributionField) {
+            amount = "£" + parseFloat(monthlyContributionField.value);
         }
         return "Pay " + amount + " per " + period;
     };
