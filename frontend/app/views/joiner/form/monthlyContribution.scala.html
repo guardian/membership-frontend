@@ -100,7 +100,7 @@
 
                             <div class="form-field monthly-contribution__section">
                                 <label class="label" for="monthly-contribution">Your monthly contribution</label>
-                                <input type="hidden" name="payment.amount" id="monthly-contribution" value="@contributionValue" class="js-monthly-contribution" data-validation="validContributionValue"/>
+                                <input type="hidden" name="payment.amount" id="monthly-contribution" value="@contributionValue" data-validation="validContributionValue"/>
                                 <span class="monthly-contribution__amount">£@contributionValue</span><span class="monthly-contribution__edit"><a class="text-link">Edit</a></span>
                                 @fragments.form.errorMessage("The minimum monthly contribution is £5.")
                             </div>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
                 </section>
-                @fragments.form.terms(countryGroup)
+                @fragments.form.terms(countryGroup, monthlyContribution = true)
             </section>
         </form>
     </main>
