@@ -1,8 +1,7 @@
 
 .skin-monthly-contribution {
     .sign-in-required .text-note {
-        margin-left: 0;
-        padding-top: 8px;
+        margin: 0;
     }
 
     .form-content .form-panel,
@@ -10,28 +9,31 @@
         border-top: none;
     }
 
-    .fieldset .fieldset__fields {
-        margin-bottom: $gs-baseline;
-    }
-
     .fieldset .fieldset__heading {
-        margin-bottom: $gs-baseline;
+        padding-top: 5px;
     }
 
     .fieldset__headline.fieldset__headline--payment {
         @include fs-bodyCopy(2);
-        color: $c-neutral1;
+        color: guss-colour(neutral-1);
         cursor: pointer;
-        display: block;
+        display: inline-block;
         font-weight: 400;
+
     }
 
-    .fieldset__fields.form-panel--no-margin {
+    .form-panel__payment > .fieldset__heading {
+        display: inline-block;
+    }
+
+    .fieldset__fields.form-panel--no-margin,
+    .fieldset > .fieldset__fields {
         margin-bottom: 0;
     }
 
-    .security-note {
-        margin-top: $gs-baseline;
+    .fieldset__heading > .security-note {
+        margin: 0;
+        padding: 4px 0 0;
     }
 
     .form-panel__content.js-form-panel-name-address,
@@ -39,7 +41,72 @@
         margin-bottom: 0;
     }
 
-    .form-panel  .form-panel__heading {
+    .form-panel > .form-panel__heading {
         padding-bottom: 0;
+    }
+
+    .sub-heading > .form-panel__heading {
+        padding-top: 7px;
+    }
+
+    section .form-panel {
+        background-color : guss-colour(multimedia-main-2);
+    }
+
+    .monthly-contribution__amount {
+        @include fs-header(5);
+        font-weight: 400;
+    }
+
+    .monthly-contribution__edit {
+        float: right;
+    }
+
+    .monthly-contribution__edit > .text-link,
+    .text-note > .text-link {
+        @include fs-textSans(1)
+        border-bottom-color: guss-colour(comment-main-2);
+    }
+
+    .monthly-contribution__section {
+        padding: 2px 0 18px;
+        border-top: dotted guss-colour(comment-main-1) 1px;
+        border-bottom: dotted guss-colour(comment-main-1) 1px;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .checkout-header > .checkout-headline {
+        font-weight: 900;
+        line-height: 38px;
+    }
+
+    section.checkout-header {
+        padding-bottom: $gs-baseline * 2;
+    }
+
+    .form-field {
+        margin-top: $gs-baseline * 2;
+        margin-bottom: 0;
+    }
+
+
+    @include mq($from: tablet) {
+        .form-section__name-detail .form-field:first-of-type {
+            margin-top: 0;
+        }
+    }
+
+    .form-panel__payment > .fieldset__fields > .form-field:nth-of-type(2),
+    .form-panel__payment > .fieldset__fields > .form-field:first-of-type {
+        margin-top: 0;
+    }
+
+    .form-panel__payment > .fieldset__fields > .form-field {
+        margin-top: $gs-baseline;
+    }
+
+    .form-panel__payment > .fieldset__fields {
+        padding-bottom: $gs-baseline;
     }
 }

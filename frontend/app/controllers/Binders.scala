@@ -63,4 +63,8 @@ object Binders {
   implicit object bindableBundleVariant extends QueryParsing[BundleVariant](
     x => BundleVariant.lookup(x).get, _.testId,  (key: String, _: Exception) => s"Cannot parse parameter $key as a Bundle Variant"
   )
+
+  implicit object bindableBigDecimal extends QueryParsing[BigDecimal](
+    x => BigDecimal(x), x => "%.2f".format(x),  (key: String, _: Exception) => s"Cannot parse parameter $key as a BigDecimal"
+  )
 }

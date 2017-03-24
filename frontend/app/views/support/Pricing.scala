@@ -33,6 +33,8 @@ case class Pricing(yearly: Price, monthly: Price) {
 }
 
 object Pricing {
+  def bigDecimalToPrice(price: BigDecimal): String = "%.2f".format(price).replace(".00","")
+
   implicit class WithPricing(plans: PaidMembershipPlans[PaidMemberTier]) {
     lazy val allPricing: List[Pricing] = Currency.all.flatMap(pricing)
 

@@ -9,7 +9,7 @@ import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
-import controllers.Joiner.{paymentService, _}
+import controllers.Joiner._
 import forms.MemberForm._
 import org.joda.time.LocalDate
 import play.api.Play.current
@@ -22,7 +22,7 @@ import tracking.ActivityTracking
 import utils.CampaignCode
 import utils.RequestCountry._
 import utils.TestUsers.PreSigninTestCookie
-import views.support.{PageInfo, ThankYouMonthlySummary}
+import views.support.{PageInfo, Pricing, ThankYouMonthlySummary}
 
 import scala.concurrent.Future
 import scala.util.Failure
@@ -38,7 +38,7 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
 
   def NonContributorAction = NoCacheAction andThen PlannedOutageProtection andThen authenticated() andThen onlyNonContributorFilter()
 
-  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK, contributionValue: Option[Int] = None) = NonContributorAction.async { implicit request =>
+  def enterMonthlyContributionsDetails(countryGroup: CountryGroup = UK, contributionValue: Option[BigDecimal] = None) = NonContributorAction.async { implicit request =>
 
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -69,7 +69,7 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
         pageInfo,
         Some(countryGroup),
         resolution,
-        contributionValue.getOrElse(5)))
+        Pricing.bigDecimalToPrice(contributionValue.getOrElse(5))))
     }).andThen { case Failure(e) => logger.error(s"User ${request.user.user.id} could not enter details for paid tier supporter: ${identityRequest.trackingParameters}", e) }
   }
 
