@@ -4,6 +4,7 @@
 @import '../utilities/util-layout';
 
 $control-spacing: 5px;
+$max-content-width: 750px;
 
 .legal_notice {
     padding-top: 15px;
@@ -141,7 +142,7 @@ $control-spacing: 5px;
     background: $medium-yellow;
 
     @include mq(tablet) {
-        padding-top: 50px;
+        padding-top: 18px;
     }
 }
 
@@ -504,12 +505,8 @@ $currencies: gbp usd aud eur nzd cad;
     background: #E7E7E7;
 
     .l-constrained {
-        padding-top: $gs-baseline;
+        padding-top: 10px;
         padding-bottom: $gs-baseline;
-
-        @include mq(desktop) {
-            padding-top: $gs-baseline * 2;
-        }
 
         @include mq($until: tablet) {
             width: 100%;
@@ -555,7 +552,8 @@ $currencies: gbp usd aud eur nzd cad;
     @include mq(desktop) {
 
         section {
-            width: 650px;
+            max-width: $max-content-width;
+            margin: auto;
         }
     }
     .thanks--description {
@@ -566,10 +564,7 @@ $currencies: gbp usd aud eur nzd cad;
     }
     h1 {
         &:first-of-type {
-            padding-top: 1em;
-        }
-        &:last-of-type {
-            padding-bottom: 1em;
+            padding-top: 18px;
         }
         padding-bottom: $gs-baseline;
 
@@ -577,7 +572,7 @@ $currencies: gbp usd aud eur nzd cad;
         font-family: $f-serif-headline;
         font-weight: 900;
 
-        @include font-size(32, 34);
+        @include font-size(28, 28);
 
         @include mq(tablet) {
             @include font-size(36, 38);
@@ -596,18 +591,16 @@ $currencies: gbp usd aud eur nzd cad;
 
 .thanks--social {
     color: $c-neutral1;
+    max-width: $max-content-width;
+    margin: auto;
     @include f-bodyCopy;
-
-    @include font-size(18, 22);
-    @include mq(tablet) {
-        @include font-size(20, 24);
-    }
+    @include font-size(16, 20);
     @include mq(desktop) {
-        @include font-size(22, 26);
+        @include font-size(16, 20);
     }
 
     p {
-        margin-bottom: 50px;
+        margin-bottom: 4px;
     }
 
     h2 {
@@ -616,19 +609,29 @@ $currencies: gbp usd aud eur nzd cad;
         font-weight: 900;
 
         @include font-size(20, 22);
-        @include mq(tablet) {
-            @include font-size(24, 26);
-        }
         @include mq(desktop) {
-            @include font-size(28, 30);
+            @include font-size(24, 28);
         }
     }
 
     a {
         color: $blue;
+        border-bottom: 1px solid color(neutral-4);
+    }
+    a:hover {
+        text-decoration: none;
+        border-bottom: 1px solid $blue;
     }
 
     .social-action {
         color: $white;
+    }
+}
+
+.contribution-summary-list {
+    margin-bottom: 20px;
+    span.contribution-summary-item {
+        position: relative;
+        left: -4px;
     }
 }
