@@ -38,7 +38,7 @@ GET            /choose-tier                           controllers.Joiner.tierCho
 GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
 # Monthly Contribution
-GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK, contributionValue : Option[Double] ?= None)
+GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK, contributionValue : Option[BigDecimal] ?= None)
 POST           /monthly-contribution                  controllers.Contributor.joinMonthlyContribution
 GET            /monthly-contribution/thankyou         controllers.Contributor.thankyouContributor
 
