@@ -4,6 +4,7 @@
 @import '../utilities/util-layout';
 
 $control-spacing: 5px;
+$max-content-width: 750px;
 
 .legal_notice {
     padding-top: 15px;
@@ -134,14 +135,14 @@ $control-spacing: 5px;
 }
 
 .contributions__wrapper {
-    background: $dark-yellow;
+    background: $medium-yellow;
 }
 
 .contributions__inner {
     background: $medium-yellow;
 
     @include mq(tablet) {
-        padding-top: 50px;
+        padding-top: 18px;
     }
 }
 
@@ -504,12 +505,8 @@ $currencies: gbp usd aud eur nzd cad;
     background: #E7E7E7;
 
     .l-constrained {
-        padding-top: $gs-baseline;
+        padding-top: 10px;
         padding-bottom: $gs-baseline;
-
-        @include mq(desktop) {
-            padding-top: $gs-baseline * 2;
-        }
 
         @include mq($until: tablet) {
             width: 100%;
@@ -551,16 +548,13 @@ $currencies: gbp usd aud eur nzd cad;
 }
 
 .thanks {
-    &.contributions__inner {
-        padding-top: $gs-baseline;
-    }
 
     @include mq(desktop) {
 
         section {
-            width: 650px;
+            max-width: $max-content-width;
+            margin: auto;
         }
-        padding-left: $gs-gutter * 3;
     }
     .thanks--description {
         color: $c-neutral1;
@@ -570,10 +564,7 @@ $currencies: gbp usd aud eur nzd cad;
     }
     h1 {
         &:first-of-type {
-            padding-top: 1em;
-        }
-        &:last-of-type {
-            padding-bottom: 1em;
+            padding-top: 18px;
         }
         padding-bottom: $gs-baseline;
 
@@ -581,16 +572,13 @@ $currencies: gbp usd aud eur nzd cad;
         font-family: $f-serif-headline;
         font-weight: 900;
 
-        font-size: 24px;
-        line-height: 24px;
+        @include font-size(28, 28);
 
         @include mq(tablet) {
-            font-size: 36px;
-            line-height: 36px;
+            @include font-size(36, 38);
         }
         @include mq(desktop) {
-            font-size: 44px;
-            line-height: 44px;
+            @include font-size(44, 46);
         }
 
     }
@@ -601,25 +589,49 @@ $currencies: gbp usd aud eur nzd cad;
     margin-top: -1em;
 }
 
-.your-contribution__list {
-    li {
-        color: $c-neutral1;
-        @include f-bodyCopy;
-        @include fs-header(5, true);
+.thanks--social {
+    color: $c-neutral1;
+    max-width: $max-content-width;
+    margin: auto;
+    @include f-bodyCopy;
+    @include font-size(16, 20);
+    @include mq(desktop) {
+        @include font-size(16, 20);
+    }
 
+    p {
+        margin-bottom: 4px;
+    }
+
+    h2 {
+        color: #c05303;
+        font-family: $f-serif-headline;
+        font-weight: 900;
+
+        @include font-size(20, 22);
+        @include mq(desktop) {
+            @include font-size(24, 28);
+        }
+    }
+
+    a {
+        color: $blue;
+        border-bottom: 1px solid color(neutral-4);
+    }
+    a:hover {
+        text-decoration: none;
+        border-bottom: 1px solid $blue;
+    }
+
+    .social-action {
+        color: $white;
     }
 }
 
-.thanks--social {
-    margin-bottom: 50px;
-    h2 {
-        color: #c05303;
-        font-family: $f-sans-serif-headline;
-        @include fs-header(5);
-    }
-    p {
-        color: $c-neutral1;
-        @include f-bodyCopy;
-        @include fs-header(5, true);
+.contribution-summary-list {
+    margin-bottom: 20px;
+    span.contribution-summary-item {
+        position: relative;
+        left: -4px;
     }
 }
