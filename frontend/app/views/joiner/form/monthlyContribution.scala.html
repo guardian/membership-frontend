@@ -1,6 +1,7 @@
 @import com.gu.i18n.CountryGroup
 @import com.gu.memsub.subsv2.CatalogPlan.Contributor
 @import model.Header.GuardianHeader
+@import model.Footer.SimpleFooter
 @import views.html.helper._
 @import views.support.{IdentityUser, PageInfo}
 @(plans: Contributor,
@@ -10,7 +11,7 @@
     touchpointBackendResolution: services.TouchpointBackend.Resolution,
     contributionValue: String)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
-@main("", pageInfo = pageInfo, titleOverride = Some("Become a contributor"), header = GuardianHeader, margins = false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
+@main("", pageInfo = pageInfo, titleOverride = Some("Become a contributor"), header = GuardianHeader, footer = SimpleFooter, margins = false, touchpointBackendResolutionOpt = Some(touchpointBackendResolution)) {
     <script>
         (function() {
             'use strict';

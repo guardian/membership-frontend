@@ -174,7 +174,7 @@ $guss-column-rule: none;
 
 $mq-breakpoints: (
     mobile: gs-span(4) + $gs-gutter, // 320px
-    mobile-wider: gs-span(5), //375px
+    mobile-wider: gs-span(5), //375px - specifically for iPhone 6/7 apparently
     tablet: gs-span(9) + $gs-gutter * 2, // 740px
     desktop: gs-span(12) + $gs-gutter * 2, // 980px
     mem-full: gs-span(14) + $gs-gutter * 2, // 1140px
