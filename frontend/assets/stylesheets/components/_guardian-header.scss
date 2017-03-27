@@ -79,6 +79,44 @@
     }
 }
 
+/* Navigation
+   ========================================================================== */
+
+.guardian-header__navigation {
+    display: block;
+    float: left;
+    position: absolute;
+    bottom: 0;
+    @include font-size(16, 36);
+    @include mq($from: mobile-wider) {
+        @include font-size(19, 36);
+    }
+    @include mq($from: mobileLandscape) {
+        @include font-size(24, 42);
+    }
+    @include mq($from: tablet) {
+        @include font-size(28, 48);
+    }
+}
+
+.guardian-header__navigation__list {
+    list-style-type: none;
+    li {
+        display: inline;
+    }
+    li + li:before {
+        content: "/";
+        color: color(news-main-2);
+        margin-right: 1px;
+        margin-left: -3px;
+    }
+    a {
+        color: white;
+        font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        text-decoration: none;
+    }
+}
+
 /* Header - In App
    ========================================================================== */
 
