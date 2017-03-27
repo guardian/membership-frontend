@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Guardian Header
+   ========================================================================== */
+
+.guardian-header {
+    height: 74px;
+    @include mq($from: mobile-wider) {
+        height: 90px;
+    }
+    @include mq($from: mobileLandscape) {
+        height: 109px;
+    }
+    @include mq($from: tablet) {
+        height: 123px;
+    }
+    display: block;
+    background-color: $blue;
+    position: relative;
+    z-index: 3;
+}
+
+.guardian-header__inner {
+    @include clearfix();
+    padding: 6px 10px 0 10px;
+
+    @include mq($from: mobileLandscape) {
+        padding: 12px 20px 0 20px;
+    }
+}
+
+.guardian-header__logo {
+    float: right;
+    clear: both;
+}
+
+.guardian-header__logo__link {
+    display: block;
+}
+
+.guardian-header__roundel_height {
+    height: 36px;
+    width: 42px;
+    @include mq($from: mobile-wider) {
+        height: 46px;
+        width: 52px;
+    }
+}
+
+.guardian-header__title_height {
+    height: 32px;
+    @include mq($from: mobile-wider) {
+        height: 42px;
+    }
+    @include mq($from: mobileLandscape) {
+        height: 49px;
+    }
+    @include mq($from: tablet) {
+        height: 68px;
+    }
+}
+
+.guardian-header__logo__roundel {
+    /* additional margins for the roundel, the title svg margins are handled by padding */
+    margin-right: 19px;
+    @include mq($from: mobile-wider) {
+        margin-right: 27px;
+        margin-top: -3px; //accounts for the fact that the title changes size but the roundel doesn't
+    }
+    @include mq($from: mobileLandscape) {
+        margin-right: 35px;
+        margin-top: 3px;
+    }
+    @include mq($from: tablet) {
+        margin-right: 59px;
+        margin-top: -3px;
+    }
+    @include mq($from: desktop) {
+        margin-right: 59px;
+    }
+}
+
+/* Header - In App
+   ========================================================================== */
+
+body.in-app {
+    .guardian-header {
+        display: none;
+    }
+}

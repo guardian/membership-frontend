@@ -1,5 +1,5 @@
 @import model.Header
-@import model.Header.{SimpleHeader, BundlesHeader}
+@import model.Header.{SimpleHeader, BundlesHeader, GuardianHeader}
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
 
@@ -8,5 +8,8 @@
 @header match {
     case SimpleHeader => { @fragments.global.simpleHeader(pageInfo, countryGroup) }
     case BundlesHeader => { @fragments.global.bundlesHeader(pageInfo, countryGroup) }
+    case GuardianHeader => {
+        @fragments.global.guardianHeader(pageInfo, countryGroup)
+    }
     case _ => { @fragments.global.defaultHeader(pageInfo, countryGroup) }
 }

@@ -1,7 +1,7 @@
 @import com.gu.memsub.subsv2.SubscriptionPlan.Contributor
 @import play.twirl.api.Html
 @import views.support.Dates._
-@import model.Header.SimpleHeader
+@import model.Header.GuardianHeader
 @import model.Footer.SimpleFooter
 @import views.support.Social.joinThankyou
 @import views.support.ThankYouMonthlySummary
@@ -43,7 +43,7 @@
     "",
     titleOverride = Some(title),
     touchpointBackendResolutionOpt = Some(touchpointBackendResolution),
-    header = SimpleHeader,
+    header = GuardianHeader,
     footer = SimpleFooter
 ) {
     <script type="text/javascript">

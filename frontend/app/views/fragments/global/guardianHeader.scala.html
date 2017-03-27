@@ -1,0 +1,19 @@
+@import model.SVG.Logos
+@import views.support.PageInfo
+@import com.gu.i18n.CountryGroup
+@(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
+
+<header class="guardian-header hidden-print js-header" role="banner">
+    <div class="guardian-header__inner l-constrained header-padding">
+        <div class="guardian-header__logo">
+            <a href="/" class="guardian-header__logo__link guardian-header__title_height">
+                @fragments.common.inlineSvgImage(Logos.guardianTitlePiece, List("guardian-header__title_height"))
+            </a>
+        </div>
+        <div class="guardian-header__logo guardian-header__logo__roundel">
+            <a href="/" class="guardian-header__logo__link guardian-header__roundel_height">
+            @fragments.common.inlineSvgImage(Logos.guardianRoundel, List("guardian-header__roundel_height"))
+            </a>
+        </div>
+    </div>
+</header>
