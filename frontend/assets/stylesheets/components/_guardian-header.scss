@@ -33,11 +33,11 @@
     clear: both;
 }
 
-.guardian-header__logo__link {
+.guardian-header__logo-link {
     display: block;
 }
 
-.guardian-header__roundel_height {
+.guardian-header__roundel-height {
     height: 36px;
     width: 42px;
     @include mq($from: mobile-wider) {
@@ -46,7 +46,7 @@
     }
 }
 
-.guardian-header__title_height {
+.guardian-header__title-height {
     height: 32px;
     @include mq($from: mobile-wider) {
         height: 42px;
@@ -59,7 +59,7 @@
     }
 }
 
-.guardian-header__logo__roundel {
+.guardian-header__logo-roundel {
     /* additional margins for the roundel, the title svg margins are handled by padding */
     margin-right: 19px;
     @include mq($from: mobile-wider) {
@@ -99,7 +99,7 @@
     }
 }
 
-.guardian-header__navigation__list {
+.guardian-header__navigation-list {
     list-style-type: none;
     li {
         display: inline;
