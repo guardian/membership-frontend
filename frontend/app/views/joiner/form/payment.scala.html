@@ -56,10 +56,12 @@
 
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Name and address</h2>
-                        <div class="text-note">
-                            <span>Already have a Guardian account?</span>
-                            <a class="s-prose" href="https://profile.theguardian.com/signin?returnUrl=https://membership.theguardian.com/join/supporter/enter-details">Sign in</a>
-                        </div>
+
+                          <div class="text-note {is-hidden}">
+                              <span>Already have a Guardian account?</span>
+                              <a class="s-prose" href="https://profile.theguardian.com/signin?returnUrl=https://membership.theguardian.com/join/supporter/enter-details">Sign in</a>
+                          </div>
+
                         <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
                         <div class="sign-in-required js-sign-in-note @if(plans.tier == Partner()) {is-hidden}">
                         @fragments.joiner.signedInAs(request.uri, inline = true)
