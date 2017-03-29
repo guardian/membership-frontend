@@ -37,11 +37,11 @@ object Binders {
   )
 
   implicit object bindableCountryGroupPathParser extends PathParsing[CountryGroup](
-    id => CountryGroup.byId(id).get, _.id, (key: String, _: Exception) => s"Cannot parse path parameter $key as a CountryGroup"
+    id => (CountryGroup.byId(id) orElse CountryGroup.byCountryCode(id)).get, _.id, (key: String, _: Exception) => s"Cannot parse path parameter $key as a CountryGroup"
   )
 
   implicit object bindableCountryGroupQueryParser extends QueryParsing[CountryGroup](
-    id => CountryGroup.byId(id).get, _.id, (key: String, _: Exception) => s"Cannot parse parameter $key as a CountryGroup"
+    id => (CountryGroup.byId(id) orElse CountryGroup.byCountryCode(id)).get, _.id, (key: String, _: Exception) => s"Cannot parse parameter $key as a CountryGroup"
   )
 
   implicit object bindablePrpId extends QueryParsing[ProductRatePlanId](
