@@ -29,8 +29,7 @@ object Benefits {
   val PriorityBookingTiers = DiscountTicketTiers
   val ComplimentaryTicketTiers = Set[Tier](Partner(), Patron())
 
-  val welcomePack = Benefit("welcome_pack", "Welcome pack, card and gift")
-  val welcomeDog = Benefit("welcome_pack", "Welcome pack")
+  val welcomeGift = Benefit("welcome_pack", "Welcome gift")
   val accessTicket = Benefit("access_tickets", "Access to tickets")
   val emailUpdates = Benefit("email_updates", "Regular member emails")
   var app = Benefit("app","Free access to the premium tier of the Guardian app (includes crosswords and has no adverts)")
@@ -52,20 +51,20 @@ object Benefits {
   )
 
   val supporter = Seq(
-    welcomePack,
+    welcomeGift,
     app,
     accessTicket,
     emailUpdates
   )
 
   val ausSupporter = Seq(
-    welcomeDog,
+    welcomeGift,
     app,
     emailUpdates
   )
 
   val supporterMinimal = Seq(
-    welcomePack,
+    welcomeGift,
     app,
     emailUpdates
   )
@@ -75,7 +74,7 @@ object Benefits {
     noBookingFees,
     discount,
     guest,
-    welcomePack,
+    welcomeGift,
     app,
     emailUpdates
   )
@@ -87,13 +86,13 @@ object Benefits {
     noBookingFees,
     discount,
     guest,
-    welcomePack,
+    welcomeGift,
     app,
     emailUpdates
   )
 
   val comparisonBasicList = Seq(
-    welcomePack,
+    welcomeGift,
     app,
     accessTicket,
     emailUpdates

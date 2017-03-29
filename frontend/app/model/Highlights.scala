@@ -29,11 +29,11 @@ object Highlights {
   val bringAFriend = Highlight("Bring a guest with the same discount to Guardian Live and Local events")
   val deepSupport = Highlight("Show deep support for keeping the Guardian open and independent")
   val behindTheScenes = Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
-  val welcomePack = Highlight("Welcome pack and gift")
+  val welcomeGift = Highlight("Welcome gift")
 
   val friend = Seq(updatesAndTickets)
   val supporter = Seq(support, tickets)
-  val partner = Seq(freeTickets, priorityBooking, welcomePack)
+  val partner = Seq(freeTickets, priorityBooking, welcomeGift)
   val patron = Seq(deepSupport, behindTheScenes)
 
   val marketedOnlyToUK = Set[Highlight](tickets, freeTickets, priorityBooking)
