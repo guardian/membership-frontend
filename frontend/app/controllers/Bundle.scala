@@ -11,49 +11,33 @@ import views.support.{Asset, PageInfo}
 
 trait Bundle extends Controller {
 
-  private def landingMainImage () = {
-
-    val imgId = "d1a7088f8f2a367b0321528f081777c9b5618412/0_0_3578_2013"
-    val imgSizes = Seq(2000, 1000, 500)
-
-    ResponsiveImageGroup(
-      availableImages = ResponsiveImageGenerator(imgId, imgSizes)
+  private val landingMainImage = ResponsiveImageGroup(
+    availableImages = ResponsiveImageGenerator(
+      id = "d1a7088f8f2a367b0321528f081777c9b5618412/0_0_3578_2013",
+      sizes = Seq(2000, 1000, 500)
     )
+  )
 
-  }
-
-  private def landingMainImageWide () = {
-
-    val imgId = "bce7d14f7f837a4f6c854d95efc4b1eab93a8c65/0_0_5200_720"
-    val imgSizes = Seq(2000, 1000)
-
-    ResponsiveImageGroup(
-      availableImages = ResponsiveImageGenerator(imgId, imgSizes)
+  private val landingMainImageWide = ResponsiveImageGroup(
+    availableImages = ResponsiveImageGenerator(
+      id = "bce7d14f7f837a4f6c854d95efc4b1eab93a8c65/0_0_5200_720",
+      sizes = Seq(2000, 1000)
     )
+  )
 
-  }
-
-  private def landingPatronsImage () = {
-
-    val imgId = "137d6b217a27acddf85512657d04f6490b9e0bb1/1638_0_3571_2009"
-    val imgSizes = Seq(1000, 500, 140)
-
-    ResponsiveImageGroup(
-      availableImages = ResponsiveImageGenerator(imgId, imgSizes)
+  private val landingPatronsImage = ResponsiveImageGroup(
+    availableImages = ResponsiveImageGenerator(
+      id = "137d6b217a27acddf85512657d04f6490b9e0bb1/1638_0_3571_2009",
+      sizes = Seq(1000, 500, 140)
     )
+  )
 
-  }
-
-  private def landingEventsImage () = {
-
-    val imgId = "5f18c6428e9f31394b14215fe3c395b8f7b4238a/500_386_2373_1335"
-    val imgSizes = Seq(1000, 500, 140)
-
-    ResponsiveImageGroup(
-      availableImages = ResponsiveImageGenerator(imgId, imgSizes)
+  private val landingEventsImage = ResponsiveImageGroup(
+    availableImages = ResponsiveImageGenerator(
+      id = "5f18c6428e9f31394b14215fe3c395b8f7b4238a/500_386_2373_1335",
+      sizes = Seq(1000, 500, 140)
     )
-
-  }
+  )
 
   def get(bundleVariant: BundleVariant) = CachedAction { implicit request =>
 

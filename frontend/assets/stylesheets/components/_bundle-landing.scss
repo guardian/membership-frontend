@@ -481,6 +481,7 @@ $why-support-colour: #7cb523;
 	font-weight: 400;
 	font-size: 27px;
 	line-height: 30px;
+	word-spacing: -0.08em;
 
 	@include mq($from: tablet) {
 		font-size: 40px;
@@ -598,6 +599,7 @@ $why-support-colour: #7cb523;
 	color: guss-colour(comment-main-1);
 	margin-left: 0;
 	padding-top: $gs-baseline / 2;
+	word-spacing: -0.08em;
 
 	@include mq($from: tablet) {
 		flex-basis: gs-span(3);
@@ -854,6 +856,8 @@ p.why-support__video-caption {
 }
 
 .other-ways h1 {
+	word-spacing: -0.08em;
+
 	@include mq($from: desktop) {
 		width: 100%;
 	}
