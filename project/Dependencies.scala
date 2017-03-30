@@ -15,6 +15,7 @@ object Dependencies {
   val playFilters = PlayImport.filters
   val playCache = PlayImport.cache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
+  val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
@@ -30,7 +31,7 @@ object Dependencies {
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
-    contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, scalaz, pegdown,
+    contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch)
 
   val acceptanceTestDependencies = Seq(memsubCommonPlayAuth, scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
