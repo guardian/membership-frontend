@@ -143,6 +143,8 @@ function validateOtherAmount (elems) {
 			contribError(elems, 'badInput');
 		} else if (amount < 5 && STATE.contribPeriod === 'MONTHLY') {
 			contribError(elems, 'tooLittle');
+		} else if (amount < 1 && STATE.contribPeriod === 'ONE_OFF') {
+			contribError(elems, 'tooLittle');
 		} else if (amount > 2000) {
 			contribError(elems, 'tooMuch');
 		} else {
