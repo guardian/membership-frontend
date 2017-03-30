@@ -75,7 +75,6 @@ trait ThankYouEmailService extends LazyLogging {
 
   def thankYou(row: ContributorRow): Future[\/[Throwable, SendMessageResult]] = {
     val payload = Json.stringify(Json.toJson(row))
-    logger.info("email queue payload:\n" + payload)
 
     val handler = new AwsAsyncHandler[SendMessageRequest, SendMessageResult]
     sqsClient.sendMessageAsync(thankYouQueueUrl, payload, handler)
