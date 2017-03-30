@@ -1,0 +1,959 @@
+/* ==========================================================================
+   Vars
+   ========================================================================== */
+
+$digital-bundle-colour: #1db7d7;
+$print-bundle-colour: #58a1ce;
+$events-colour: #c52613;
+$why-support-colour: #7cb523;
+
+
+/* ==========================================================================
+   Global Layout
+   ========================================================================== */
+
+.introduction__content, .why-support__content, .other-ways__content {
+	max-width: gs-span(6) + $gs-gutter;
+	margin: 0 auto;
+
+	@include mq($from: tablet) {
+		max-width: gs-span(9) + ($gs-gutter * 2);
+	}
+
+	@include mq($from: desktop) {
+		max-width: gs-span(12) + ($gs-gutter * 2);
+	}
+
+	@include mq($from: mem-full) {
+		max-width: gs-span(14) + ($gs-gutter * 2);
+	}
+
+	@include mq($from: wide) {
+		max-width: gs-span(16) + ($gs-gutter * 2);
+	}
+}
+
+
+/* ==========================================================================
+   Bundles
+   ========================================================================== */
+
+.bundles {
+	@include mq($from: desktop) {
+		background-color: darken(guss-colour(comment-support-2), 5%);
+	}
+}
+
+.bundles__content {
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 0 auto;
+
+	@include mq($from: desktop) {
+		display: flex;
+		max-width: gs-span(12) + ($gs-gutter * 2);
+		padding-bottom: $gs-baseline * 2;
+		background-color: guss-colour(comment-support-2);
+	}
+
+	@include mq($from: mem-full) {
+		max-width: gs-span(14) + ($gs-gutter * 2);
+	}
+
+	@include mq($from: wide) {
+		max-width: gs-span(16) + ($gs-gutter * 2);
+	}
+}
+
+.bundles__bundle {
+	display: flex;
+	flex-grow: 1;
+
+	@include mq($from: desktop) {
+		flex-basis: gs-span(4);
+		flex-grow: 0;
+		margin: 0 ($gs-gutter / 2);
+	}
+}
+
+.bundles__bundle-content {
+	padding: 8px ($gs-gutter / 2) $gs-baseline;
+	flex-basis: gs-span(6) + $gs-gutter;
+	margin: 0 auto;
+
+	@include mq($from: mobileLandscape, $until: tablet) {
+		padding-left: $gs-gutter;
+		padding-right: $gs-gutter;
+	}
+
+	@include mq($from: tablet, $until: desktop) {
+		padding-top: $gs-baseline;
+		display: flex;
+		padding-left: $gs-gutter / 2;
+		padding-right: $gs-gutter / 2;
+		flex-basis: gs-span(9) + ($gs-gutter * 2);
+	}
+
+	@include mq($from: desktop) {
+		display: flex;
+		flex-direction: column;
+		// Fix for IE10.
+		max-width: gs-span(4);
+	}
+
+}
+
+.bundles__top {
+	flex-basis: gs-span(5);
+
+	// Fix for Safari 8.
+	@include mq($from: tablet, $until: desktop) {
+		max-width: gs-span(5);
+	}
+
+	@include mq($from: desktop) {
+		flex: 0 1 auto;
+	}
+}
+
+.bundles__bottom {
+	flex-basis: gs-span(4);
+
+	// Fix for Safari 8.
+	@include mq($from: tablet, $until: desktop) {
+		max-width: gs-span(4);
+	}
+
+	@include mq($from: desktop) {
+		flex: 1 0 auto;
+		display: flex;
+		justify-content: space-between;
+		flex-direction: column;
+	}
+}
+
+.bundles__top, .bundles__bottom {
+	@include mq($from: tablet, $until: desktop) {
+		margin: 0 ($gs-gutter / 2);
+	}
+}
+
+.bundles__bundle--contribution {
+	background-color: darken(guss-colour(multimedia-main-2), 5%);
+	margin-top: 0;
+
+	.bundles__bundle-content {
+		background-color: guss-colour(multimedia-main-2);
+	}
+}
+
+.bundles__bundle--digital {
+	background-color: darken($digital-bundle-colour, 5%);
+
+	.bundles__bundle-content {
+		background-color: $digital-bundle-colour;
+	}
+}
+
+.bundles__bundle--print {
+	background-color: darken($print-bundle-colour, 5%);
+
+	.bundles__bundle-content {
+		background-color: $print-bundle-colour;
+	}
+}
+
+.bundles__heading, .bundles__subheading {
+	font-family: $f-serif-headline;
+	font-weight: 900;
+	font-size: 23px;
+	line-height: 23px;
+	color: #000;
+
+	@include mq($from: tablet) {
+		font-size: 28px;
+		line-height: 27px;
+	}
+}
+
+.bundles__subheading {
+	color: #fff;
+	margin-bottom: $gs-baseline * 2;
+}
+
+.bundles__wrap-line {
+	@include mq($from: desktop) {
+		display: block;
+	}
+}
+
+.bundles__copy {
+	margin: 0;
+	@include fs-headline(2);
+	color: #000;
+}
+
+.bundles__copy--top {
+	@include mq($until: tablet) {
+		display: none;
+	}
+
+	@include mq($from: desktop) {
+		display: none;
+	}
+}
+
+.bundles__copy--bottom {
+	@include mq($until: desktop) {
+		display: none;
+		margin-top: $gs-baseline;
+	}
+
+	@include mq($from: desktop) {
+		padding-top: $gs-baseline * 3;
+	}
+}
+
+.bundles__cta, .contribution-fields, .print-fields, .bundles__more-details {
+	@include fs-textSans(3);
+	font-weight: bold;
+	color: guss-colour(neutral-1);
+}
+
+.bundles__more-details {
+	color: #000;
+
+	@include mq($from: tablet) {
+		display: none;
+	}
+}
+
+.bundles__more-details:hover {
+	cursor: pointer;
+
+	button {
+		border-color: guss-colour(neutral-1);
+	}
+}
+
+.show-details {
+	display: block;
+}
+
+.bundles__more-details button {
+	border-radius: 36px;
+	border: 1px solid rgba(guss-colour(neutral-1), 0.3);
+	background-color: transparent;
+	height: $gs-baseline * 3;
+	width: $gs-baseline * 3;
+	margin: 9px 0 -4px;
+}
+
+.bundles__cta {
+	border-radius: 600px;
+	border: none;
+	background-color: guss-colour(neutral-1);
+	color: #fff;
+	padding: ($gs-baseline / 2) $gs-gutter;
+	margin-top: $gs-baseline;
+	text-align: left;
+	width: 100%;
+	height: $gs-baseline * 3;
+	position: relative;
+	vertical-align: bottom;
+	display: block;
+	line-height: 180%;
+}
+
+.bundles__cta:hover {
+	background-color: #000;
+	text-decoration: none;
+}
+
+.bundles__cta .icon-inline {
+	position: absolute;
+	right: 0.6em;
+	top: 0.6em;
+	height: 1.3em;
+	width: 1.3em;
+}
+
+.bundles__features {
+	@include fs-header(2);
+	color: #000;
+	margin: 0;
+}
+
+.bundles__features li {
+	margin-left: $gs-gutter - 1;
+    list-style-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13"><style>.st0{fill:#fff;fill-opacity:0.25;}</style><circle class="st0" cx="6" cy="6" r="6"/></svg>');
+}
+
+.bundles__features p {
+	@include fs-data(3);
+	font-weight: normal;
+	margin: 0;
+	margin-bottom: 3px;
+}
+
+.bundles__divider {
+	flex-grow: 1;
+	flex-basis: 100%;
+
+	@include mq($until: desktop) {
+		height: $gs-baseline / 2;
+		background-image: url('https://media.guim.co.uk/8f75d2e43000b0e9c3523ca20e5bbfcec9ffe703/0_0_1860_23/500.jpg');
+		background-repeat: repeat-x;
+	}
+
+	@include mq($from: tablet, $until: desktop) {
+		height: $gs-baseline;
+		background-image: url('https://media.guim.co.uk/8f75d2e43000b0e9c3523ca20e5bbfcec9ffe703/0_0_1860_23/1000.jpg');		
+	}
+
+	@include mq($from: desktop) {
+		display: none;
+	}
+}
+
+.contribution-fields, .print-fields {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-bottom: 6px;
+}
+
+.contribution-fields__type, .contribution-fields__amount,
+	.contribution-fields__other-amount, .print-fields__type {
+	background-color: #fff;
+	border-radius: 600px;
+	border: none;
+	padding: ($gs-baseline / 2) ($gs-gutter / 2);
+	margin: ($gs-baseline / 4) 0;
+	height: $gs-baseline * 3;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+.contribution-fields__amount::placeholder {
+	font-weight: normal;
+	color: guss-colour(neutral-3);
+}
+
+.contribution-fields__type, .print-fields__type {
+	flex-basis: calc(50% - 2.5px);
+	position: relative;
+
+	// Fix for IE10.
+	@include mq($from: desktop) {
+		flex-basis: ((gs-span(4) - $gs-gutter) / 2) - 2.5px;
+		max-width: ((gs-span(4) - $gs-gutter) / 2) - 2.5px;
+	}
+}
+
+.contribution-fields__type {
+	// Fix for Safari 8.
+	min-width: 48%;
+}
+
+.contribution-fields__type, .print-fields {
+	margin-bottom: $gs-baseline * 2;
+}
+
+.contribution-fields__field--selected {
+	background-color: guss-colour(comment-main-1);
+	color: #fff;
+}
+
+.contribution-error {
+	display: none;
+	font-size: 12px;
+	line-height: 15px;
+	font-family: $f-data;
+}
+
+.contribution-error--shown {
+	display: block;
+}
+
+.print-fields__field--selected {
+	background-color: guss-colour(guardian-brand-dark);
+	color: #fff;
+}
+
+.print-fields__type.print-fields__field--selected::before {
+	border-color: guss-colour(guardian-brand-dark) transparent;
+}
+
+.contribution-fields__type.contribution-fields__field--selected::before {
+	border-color: guss-colour(comment-main-1) transparent;
+}
+
+.contribution-fields__type.contribution-fields__field--selected::before,
+	.print-fields__type.print-fields__field--selected::before {
+	content: '';
+	width: 0;
+	border-style: solid;
+	border-width: 10px 10px 0;
+	position: absolute;
+	bottom: -10px;
+	left: calc(50% - 5px);
+}
+
+.contribution-fields__amount {
+	flex-basis: calc(33.3% - 3.3px);
+	// Fix for Safari 8.
+	min-width: 32%;
+
+	// Fix for IE10.
+	@include mq($from: desktop) {
+		flex-basis: ((gs-span(4) - $gs-gutter) / 3) - 3.3px;
+		max-width: ((gs-span(4) - $gs-gutter) / 3) - 3.3px;
+	}
+}
+
+.contribution-fields__other-amount {
+	flex-basis: 100%;
+	// Fix for Safari 8.
+	min-width: 100%;
+	text-align: center;
+
+	// Fix for IE10.
+	@include mq($from: desktop) {
+		max-width: gs-span(4) - $gs-gutter;
+	}
+}
+
+
+/* ==========================================================================
+   Explainer Sections
+   ========================================================================== */
+
+.why-support h1, .other-ways h1 {
+	color: guss-colour(news-support-2);
+	font-family: 'Guardian Titlepiece Web', sans-serif;
+	font-weight: 400;
+	padding-top: 2px;
+	font-size: 28px;
+	line-height: 28px;
+	width: gs-span(3) + $gs-gutter;
+	margin: 0 ($gs-gutter / 2) ($gs-baseline * 2);
+
+	@include mq($from: tablet) {
+		width: gs-span(3);
+		margin: 0;
+		font-size: 40px;
+		line-height: 37px;
+		text-align: center;
+	}
+
+	@include mq($from: desktop) {
+		font-size: 48px;
+		line-height: 44px;
+	}
+}
+
+
+/* ==========================================================================
+   Introduction
+   ========================================================================== */
+
+.introduction {
+	background-color: darken(guss-colour(comment-support-2), 5%);
+
+	.introduction__content {
+		padding: 10px 0 $gs-baseline;
+		background-color: guss-colour(comment-support-2);
+
+		@include mq($from: tablet) {
+			padding: 18px 0 ($gs-baseline * 2);
+		}
+	}
+}
+
+.introduction h1 {
+	color: guss-colour(news-support-2);
+	font-family: 'Guardian Titlepiece Web', sans-serif;
+	font-weight: 400;
+	font-size: 27px;
+	line-height: 30px;
+	word-spacing: -0.08em;
+
+	@include mq($from: tablet) {
+		font-size: 40px;
+		line-height: 40px;
+	}
+
+	@include mq($from: desktop) {
+		font-size: 48px;
+		line-height: 44px;
+	}
+}
+
+.introduction p {
+	margin: 0 10px 4px 90px;
+	font-family: $f-serif-headline;
+	font-weight: normal;
+	font-size: 17px;
+	line-height: 19px;
+	color: guss-colour(neutral-1);
+
+	@include mq($from: mobileLandscape) {
+		margin-left: 100px;
+		margin-right: 20px;
+	}
+
+	@include mq($from: tablet) {
+		margin-left: 260px;
+		margin-bottom: 5px;
+		font-size: 18px;
+		line-height: 22px;
+	}
+
+	@include mq($from: desktop) {
+		margin-left: 340px;
+		margin-bottom: $gs-baseline;
+		font-size: 24px;
+		line-height: 28px;
+	}
+
+	@include mq($from: mem-full) {
+		margin-left: 420px;
+		margin-right: 100px;
+	}
+
+	@include mq($from: wide) {
+		margin-left: 330px;
+		margin-right: 350px;
+	}
+}
+
+.introduction__heading-one {
+	margin-left: 15px;
+
+	@include mq($from: mobileLandscape) {
+		margin-left: 25px;
+	}
+}
+
+.introduction__heading-two {
+	margin-left: 40px;
+
+	@include mq($from: mobileLandscape) {
+		margin-left: 50px;
+	}
+}
+
+.introduction__heading-three {
+	margin-left: 10px;
+
+	@include mq($from: mobileLandscape) {
+		margin-left: 20px;
+	}
+
+}
+
+.introduction__heading-one, .introduction__heading-two, .introduction__heading-three {
+	@include mq($from: tablet) {
+		margin-left: 0;
+		margin-right: gs-span(3);
+		text-align: center;
+	}
+
+	@include mq($from: desktop) {
+		margin-left: $gs-gutter;
+		margin-right: 320px;
+	}
+
+	@include mq($from: mem-full) {
+		margin-left: 100px;
+		margin-right: 400px;
+	}
+
+	@include mq($from: wide) {
+		margin-left: $gs-gutter;
+		margin-right: gs-span(8) + ($gs-gutter * 2);
+	}
+}
+
+.introduction__wrap-line {
+	@include mq($from: tablet) {
+		display: block;
+	}
+}
+
+
+/* ==========================================================================
+   Why Support
+   ========================================================================== */
+
+.why-support {
+	background-color: darken(#fff, 5%);
+}
+
+.why-support h1 {
+	color: guss-colour(comment-main-1);
+	margin-left: 0;
+	padding-top: $gs-baseline / 2;
+	word-spacing: -0.08em;
+
+	@include mq($from: tablet) {
+		flex-basis: gs-span(3);
+		padding-top: 0;
+	}
+
+	@include mq($from: desktop) {
+		flex-basis: gs-span(4);
+	}
+}
+
+.why-support__wrap-line {
+	@include mq($from: tablet) {
+		display: block;
+	}
+}
+
+.why-support__image {
+	@include mq($from: tablet) {
+		background: url('https://media.guim.co.uk/bce7d14f7f837a4f6c854d95efc4b1eab93a8c65/0_0_5200_720/1000.jpg') center center no-repeat;
+		height: 240px;
+		background-size: auto 240px;
+	}
+
+	@include mq($from: desktop) {
+		background: url('https://media.guim.co.uk/bce7d14f7f837a4f6c854d95efc4b1eab93a8c65/0_0_5200_720/2000.jpg') center center no-repeat;
+		height: 360px;
+		background-size: auto 360px;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+
+		@include mq($from: tablet) {
+			display: none;
+		}
+	}
+}
+
+.why-support p {
+	font-family: $f-serif-headline;
+	font-size: 16px;
+	line-height: 20px;
+	margin-left: 0;
+	margin-right: 0;
+
+	@include mq($from: tablet) {
+		font-size: 18px;
+		line-height: 22px;
+	}
+}
+
+.why-support__top-content {
+	position: relative;
+}
+
+.why-support__content {
+	flex-direction: row;
+	background-color: #fff;
+	padding: 0 0 8px;
+
+	@include mq($from: mobileLandscape) {
+		padding-left: $gs-gutter;
+		padding-right: $gs-gutter;
+	}
+
+	@include mq($from: tablet) {
+		padding-top: 8px;
+	}
+
+	@include mq($from: desktop) {
+		display: flex;
+		padding: $gs-baseline 0 $gs-baseline * 2;
+	}
+}
+
+.why-support__top-content, .why-support__bottom-content {
+	flex-basis: gs-span(4);
+	flex-grow: 1;
+}
+
+.why-support__top-content {
+	@include mq($from: desktop) {
+		max-width: gs-span(8);
+		margin-left: 20px;
+	}
+
+	@include mq($from: mem-full) {
+		margin-left: 100px;
+	}
+
+	@include mq($from: wide) {
+		margin-left: 180px;
+	}
+}
+
+.why-support__bottom-content {
+	@include mq($until: mobileLandscape) {
+		padding-left: $gs-gutter / 2;
+		padding-right: $gs-gutter / 2;
+	}
+
+	@include mq($from: tablet) {
+		padding-top: $gs-baseline;
+		display: flex;
+	}
+
+	@include mq($from: desktop) {
+		max-width: gs-span(4);
+		justify-content: space-between;
+		flex-direction: column;
+		margin-left: $gs-gutter;
+		padding-top: 52px;
+		margin-right: 20px;
+	}
+
+	@include mq($from: mem-full) {
+		margin-right: 100px;
+	}
+
+	@include mq($from: wide) {
+		margin-right: 180px;
+	}
+}
+
+p.why-support__video-caption {
+	font-size: small;
+	margin-top: $gs-baseline / 2;
+	font-family: $f-sans-serif-text;
+	font-size: 12px;
+	line-height: 15px;
+
+	@include mq($from: tablet, $until: desktop) {
+		max-width: gs-span(3);
+		margin-top: 0;
+	}
+
+	@include mq($from: desktop) {
+		order: 1;
+		margin-bottom: 0;
+	}
+
+	.icon-inline {
+		fill: guss-colour(comment-main-1);
+	}
+}
+
+.why-support__top-copy {
+	@include mq($until: mobileLandscape) {
+		padding-left: $gs-gutter / 2;
+		padding-right: $gs-gutter / 2;
+	}
+
+	@include mq($from: tablet) {
+		display: flex;
+	}
+
+	@include mq($from: desktop) {
+		justify-content: center;
+	}
+}
+
+.why-support__top-copy > * {
+	@include mq($from: desktop) {
+		max-width: gs-span(4);
+	}
+}
+
+.why-support__bottom-copy {
+	@include mq($from: tablet, $until: desktop) {
+		flex-basis: gs-span(5);
+		// Fix for Safari 8.
+		max-width: gs-span(5);
+		margin-left: $gs-gutter;
+	}
+}
+
+.why-support__top-right-copy {
+	@include mq($from: tablet) {
+		flex-basis: gs-span(5);
+		margin-left: $gs-gutter;
+		margin-top: $gs-baseline / 3;
+	}
+
+	// Fix for Safari 8.
+	@include mq($from: tablet, $until: desktop) {
+		max-width: gs-span(5);
+	}
+
+	@include mq($from: desktop) {
+		margin-top: 52px;
+		margin-bottom: $gs-baseline * 3;
+	}
+}
+
+
+/* ==========================================================================
+   Other Ways
+   ========================================================================== */
+
+.other-ways {
+	@include mq($from: mobileLandscape) {
+		background-color: darken(guss-colour(comment-support-2), 5%);
+	}
+}
+
+.other-ways__content {
+	flex-direction: row;
+	justify-content: center;
+	flex-wrap: wrap;
+
+	@include mq($from: mobileLandscape) {
+		display: flex;
+		background-color: guss-colour(comment-support-2);
+		padding: 0 ($gs-gutter / 2) ($gs-baseline * 2);
+	}
+
+	@include mq($from: tablet) {
+		padding-top: 8px;
+	}
+
+	@include mq($from: desktop) {
+		padding-top: $gs-baseline;
+	}
+}
+
+.other-ways__heading {
+	flex-basis: 100%;
+	padding-top: $gs-baseline / 2;
+
+	@include mq($until: mobileLandscape) {
+		border-top: 1px solid guss-colour(news-support-1);
+	}
+
+	@include mq($from: tablet) {
+		flex-basis: gs-span(3);
+		// Fix for Safari 8.
+		max-width: gs-span(3);
+		margin-left: $gs-gutter / 2;
+		margin-right: $gs-gutter / 2;
+		order: 1;
+		padding-top: 0;
+	}
+
+	@include mq($from: desktop) {
+		flex-basis: gs-span(4);
+		// Fix for Safari 8.
+		max-width: gs-span(4);
+		text-align: center;
+		border: none;
+		order: 1;
+	}
+}
+
+.other-ways h1 {
+	word-spacing: -0.08em;
+
+	@include mq($from: desktop) {
+		width: 100%;
+	}
+}
+
+.other-ways__way {
+	margin: 0 0 ($gs-baseline / 2);
+	background-color: guss-colour(comment-support-2);
+	color: guss-colour(neutral-1);
+	padding-bottom: $gs-baseline;
+
+	@include mq($from: mobileLandscape) {
+		background-color: #fff;
+		padding-bottom: 0;
+		flex-basis: 210px;
+		// Fix for Safari 8.
+		max-width: 210px;
+		position: relative;
+		margin-left: $gs-gutter / 2;
+		margin-right: $gs-gutter / 2;
+	}
+
+	@include mq($from: tablet) {
+		flex-basis: gs-span(3);
+		// Fix for Safari 8.
+		max-width: gs-span(3);
+		margin-top: $gs-baseline;
+	}
+
+	@include mq($from: desktop) {
+		flex-basis: gs-span(4);
+		// Fix for Safari 8.
+		max-width: gs-span(4);
+		margin-bottom: 0;
+	}
+
+	img {
+		width: 100%;
+		display: block;
+	}
+}
+
+.other-ways__way h2 {
+	margin: ($gs-baseline / 3) ($gs-gutter / 2) $gs-baseline;
+	font-family: $f-serif-headline;
+	font-weight: 900;
+	font-size: 23px;
+	line-height: 26px;
+}
+
+.other-ways__way p {
+	margin: 0 ($gs-gutter / 2);
+	font-family: $f-serif-headline;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.other-ways__cta {
+	display: block;
+	margin: $gs-baseline ($gs-gutter / 2);
+	text-decoration: none;
+	color: inherit;
+
+	@include mq($until: mobileLandscape) {
+		margin-bottom: 0;
+	}
+}
+
+.other-ways__cta--patron {
+	@include mq($from: mobileLandscape) {
+		position: absolute;
+		bottom: 0;
+	}
+}
+
+.other-ways__way--burnt-yellow {
+	background-color: guss-colour(comment-main-2);
+}
+
+.other-ways__cta .icon-inline {
+	height: 105%;
+	width: 105%;
+}
+
+.other-ways__cta button {
+	border-radius: 600px;
+	border: none;
+	background-color: guss-colour(neutral-1);
+	color: #fff;
+	padding: 7px 8px;
+	height: $gs-baseline * 3;
+	width: $gs-baseline * 3;
+	margin-right: 5px;
+}
+
+.other-ways__cta span {
+	@include fs-textSans(3);
+	font-weight: bold;
+}

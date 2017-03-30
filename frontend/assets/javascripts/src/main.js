@@ -26,7 +26,8 @@ require([
     'src/modules/patterns',
     'src/modules/memstatus',
     'src/modules/faq',
-    'src/modules/landingBundles'
+    'src/modules/landingBundles',
+    'src/modules/bundlesLanding'
 ], function(
     ajax,
     raven,
@@ -55,7 +56,8 @@ require([
     patterns,
     memstatus,
     faq,
-    landingBundles
+    landingBundles,
+    bundlesLanding
 ) {
     'use strict';
 
@@ -97,6 +99,7 @@ require([
 
     //Landing Bundles
     landingBundles.init();
+    bundlesLanding.init();
 
     // Pattern library
     patterns.init();
