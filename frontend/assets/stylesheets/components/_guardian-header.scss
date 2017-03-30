@@ -38,10 +38,10 @@
 }
 
 .guardian-header__roundel-height {
-    height: 36px;
+    height: 42px;
     width: 42px;
     @include mq($from: mobile-wider) {
-        height: 46px;
+        height: 52px;
         width: 52px;
     }
 }

@@ -140,6 +140,7 @@ $max-content-width: 750px;
 
 .contributions__inner {
     background: $medium-yellow;
+    clear: both;
 
     @include mq(tablet) {
         padding-top: 18px;
