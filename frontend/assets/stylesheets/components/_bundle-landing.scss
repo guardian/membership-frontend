@@ -339,9 +339,9 @@ $why-support-colour: #7cb523;
 	}
 }
 
-.contribution-fields__amount::placeholder {
-	font-weight: normal;
-	color: guss-colour(neutral-3);
+.contribution-fields__field--selected::placeholder {
+	color: #fff;
+	opacity: 0.4;
 }
 
 .contribution-fields__type, .print-fields__type {
