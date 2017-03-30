@@ -12,7 +12,14 @@
 	eventsImage: ResponsiveImageGroup
 )
 
-@main("Support The Guardian", pageInfo=pageInfo, header=GuardianHeader, footer=SimpleFooter, margins=false) {
+@main(
+	"Support The Guardian",
+	pageInfo=pageInfo,
+	header=GuardianHeader,
+	footer=SimpleFooter,
+	margins=false,
+	titleOverride=Some("Support the Guardian")
+) {
 
 	<section class="introduction">
 		<div class="introduction__content">
