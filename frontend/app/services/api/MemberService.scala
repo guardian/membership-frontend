@@ -8,6 +8,7 @@ import com.gu.memsub.subsv2._
 import com.gu.memsub.{BillingSchedule, Subscription => S}
 import com.gu.salesforce.{ContactId, PaidTier, Tier}
 import com.gu.stripe.Stripe.Customer
+import com.gu.zuora.soap.models.Commands.PaymentMethod
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -92,10 +93,9 @@ trait MemberService {
   def createContribution(contactId: ContactId,
                          joinData: ContributorForm,
                          nameData: NameForm,
-                         stripeCustomer: Option[Customer],
                          campaignCode: Option[CampaignCode],
                          email: String,
-                         payPalEmail: Option[String]): Future[SubscribeResult]
+                         paymentMethod: Option[PaymentMethod]): Future[SubscribeResult]
 }
 
 object MemberService {

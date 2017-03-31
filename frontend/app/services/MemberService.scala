@@ -17,7 +17,7 @@ import com.gu.memsub.subsv2.reads.SubPlanReads._
 import com.gu.memsub.subsv2.services.{SubIds, _}
 import com.gu.memsub.subsv2.{SubscriptionPlan, _}
 import com.gu.memsub.util.Timing
-import com.gu.memsub.{Subscription => _, _}
+import com.gu.memsub.{BillingPeriod, BillingSchedule, Price}
 import com.gu.salesforce.Tier.{Partner, Patron}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
@@ -164,9 +164,9 @@ class MemberService(identityService: IdentityService,
                              identityRequest: IdentityRequest,
                              campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)] = {
 
-    def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, payPalEmail: Option[String], stripeCustomer: Option[Customer]): Future[String] =
+    def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: Option[PaymentMethod]): Future[String] =
       (for {
-        zuoraSub <- createContribution(sfContact, paid, paid.name, stripeCustomer, campaignCode, email, payPalEmail)
+        zuoraSub <- createContribution(sfContact, paid, paid.name, campaignCode, email, paymentMethod)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -177,27 +177,25 @@ class MemberService(identityService: IdentityService,
       EmailService.thankYou(contributorRow)
     }
 
-    formData match {
+    def initialisePaymentMethod(formData: ContributorForm): Future[Option[PaymentMethod]] = formData match {
       case MonthlyContributorForm(_, MonthlyPaymentForm(_, Some(baid), _), _, _, _, _, _) => //PayPal token
         for {
-          idUser <- getIdentityUserDetails(user, identityRequest)
-          sfContact <- createSalesforceContact(idUser, formData)
           payPalEmail <- retrieveEmail(baid)
-          zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, Some(payPalEmail), None)
-          _ <- updateIdentity(formData, identityRequest, user)
-          _ <- sendThankYouEmail(idUser.primaryEmailAddress, formData.payment.amount, user.displayName)
-        } yield (sfContact, zuoraSubName)
-
+        } yield createPaymentMethod(Some(payPalEmail), formData.payment, None)
       case MonthlyContributorForm(_, MonthlyPaymentForm(Some(stripeToken), _, _), _, _, _, _, _) => //Stripe token
         for {
           stripeCustomer <- createStripeCustomer(stripeToken, user)
-          idUser <- getIdentityUserDetails(user, identityRequest)
-          sfContact <- createSalesforceContact(idUser, formData)
-          zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, None, Some(stripeCustomer))
-          _ <- updateIdentity(formData, identityRequest, user)
-          _ <- sendThankYouEmail(idUser.primaryEmailAddress, formData.payment.amount, user.displayName)
-        } yield (sfContact, zuoraSubName)
+        } yield createPaymentMethod(None, formData.payment, Some(stripeCustomer))
     }
+
+    for {
+      paymentMethod <- initialisePaymentMethod(formData)
+      idUser <- getIdentityUserDetails(user, identityRequest)
+      sfContact <- createSalesforceContact(idUser, formData)
+      zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, paymentMethod)
+      _ <- updateIdentity(formData, identityRequest, user)
+      _ <- sendThankYouEmail(idUser.primaryEmailAddress, formData.payment.amount, user.displayName)
+    } yield (sfContact, zuoraSubName)
   }
 
   def getIdentityUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
@@ -464,7 +462,7 @@ class MemberService(identityService: IdentityService,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
 
-    val paymentMethod = createPaymentMethod(contactId, payPalEmail, joinData.payment, stripeCustomer)
+    val paymentMethod = createPaymentMethod(payPalEmail, joinData.payment, stripeCustomer)
     val country = joinData.zuoraAccountAddress.country
     val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures.map { features =>
@@ -497,12 +495,10 @@ class MemberService(identityService: IdentityService,
   override def createContribution(contactId: ContactId,
                                   joinData: ContributorForm,
                                   nameData: NameForm,
-                                  stripeCustomer: Option[Customer],
                                   campaignCode: Option[CampaignCode],
                                   email: String,
-                                  payPalEmail: Option[String]
+                                  paymentMethod: Option[PaymentMethod]
                                  ): Future[SubscribeResult] = {
-    val paymentMethod = createPaymentMethod(contactId, payPalEmail, joinData.payment, stripeCustomer)
     logger.info("paymentMethod=" + paymentMethod)
     val planChoice = ContributorChoice()
     val contribute = zuoraService.getFeatures.map { features =>
@@ -539,7 +535,7 @@ class MemberService(identityService: IdentityService,
         Account.payPal(contactId, currency, autopay = true)
     }
 
-  private def createPaymentMethod(contactId: ContactId, email: Option[String], paymentForm: CommonPaymentForm, stripeCustomer: Option[Customer]) =
+  private def createPaymentMethod(email: Option[String], paymentForm: CommonPaymentForm, stripeCustomer: Option[Customer]) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
         val card = stripeCustomer.get.card
