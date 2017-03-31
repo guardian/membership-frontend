@@ -3,15 +3,17 @@
 @import com.gu.i18n.CountryGroup
 @(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
 
+@url = {https://www.theguardian.com}
+
 <header class="guardian-header hidden-print js-header" role="banner">
     <div class="guardian-header__inner l-constrained header-padding">
         <div class="guardian-header__logo">
-            <a href="/" class="guardian-header__logo-link guardian-header__title-height">
-                @fragments.common.inlineSvgImage(Logos.guardianTitlePiece, List("guardian-header__title-height"))
+            <a href="@url" class="guardian-header__logo-link guardian-header__title-height">
+            @fragments.common.inlineSvgImage(Logos.guardianTitlePiece, List("guardian-header__title-height"))
             </a>
         </div>
         <div class="guardian-header__logo guardian-header__logo-roundel">
-            <a href="/" class="guardian-header__logo-link guardian-header__roundel-height">
+            <a href="@url" class="guardian-header__logo-link guardian-header__roundel-height">
             @fragments.common.inlineSvgImage(Logos.guardianRoundel, List("guardian-header__roundel-height"))
             </a>
         </div>
