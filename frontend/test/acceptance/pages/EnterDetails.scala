@@ -88,9 +88,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
       setSingleSelectionValue(country, "US")
       setValue(addressLine1, "222 Broadway")
       setValue(town, "New York")
-
-      val state = id("state-deliveryAddress")
-      setSingleSelectionValue(state, "New York")
+      setSingleSelectionValue(id("state-deliveryAddress"), "New York")
       setValue(postCode, "10038")
     }
 
