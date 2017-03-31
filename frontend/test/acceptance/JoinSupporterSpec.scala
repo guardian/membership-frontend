@@ -29,9 +29,9 @@ class JoinSupporterSpec extends FeatureSpec with Browser
         "\nPlease run identity-frontend server before running tests.")
   }
 
-  feature("Become a Supporter in UK") {
+  feature("Become a Supporter in UK and US") {
 
-    scenario("User joins as Supporter by clicking 'Become a Supporter' button on Membership homepage, and pays using Stripe", Acceptance) {
+    scenario("User joins as Supporter using Stripe in US", Acceptance) {
       checkDependenciesAreAvailable
 
       val testUser = new TestUser
@@ -67,7 +67,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       assert(enterDetails.currencyHasChangedTo("US$"))
 
       When("Users fill in delivery address details,")
-      enterDetails.fillInDeliveryAddress()
+      enterDetails.fillInDeliveryAddressUS()
 
       And("click Continue")
       enterDetails.clickContinue()
@@ -106,7 +106,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       assert(ThankYou.userIsSignedInAsSupporter)
     }
 
-    scenario("User joins as Supporter using PayPal", Acceptance) {
+    scenario("User joins as Supporter using PayPal in UK", Acceptance) {
 
       checkDependenciesAreAvailable
 
@@ -144,7 +144,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       assert(enterDetails.currencyHasChangedTo("US$"))
 
       When("Users fill in delivery address details,")
-      enterDetails.fillInDeliveryAddress()
+      enterDetails.fillInDeliveryAddressUK()
 
       And("click Continue")
       enterDetails.clickContinue()
