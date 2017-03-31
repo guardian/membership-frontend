@@ -5,7 +5,7 @@ import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import forms.MemberForm.{CommonForm, JoinForm}
+import forms.MemberForm.{MonthlyContributorForm, CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.MemberMetrics
 import play.api.Play.current
@@ -52,7 +52,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       Keys.DEFAULT_CARD_ID -> customer.card.id
     )
   }.getOrElse(Json.obj())
-  
+
   private def initialData(user: IdUser, formData: CommonForm): JsObject = {
     formData match {
       case jf : JoinForm => Seq(Json.obj(
@@ -74,13 +74,23 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
         Keys.LAST_NAME -> formData.name.last,
-        Keys.ALLOW_MEMBERSHIP_MAIL -> true
+        Keys.ALLOW_MEMBERSHIP_MAIL -> canSendEmail(formData, Keys.ALLOW_MEMBERSHIP_MAIL)
       )) ++ Map(
-          Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
-          Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
-        ).collect { case (k, Some(v)) => Json.obj(k -> v) }
+          Keys.ALLOW_THIRD_PARTY_EMAIL -> canSendEmail(formData, Keys.ALLOW_THIRD_PARTY_EMAIL),
+          Keys.ALLOW_GU_RELATED_MAIL -> canSendEmail(formData, Keys.ALLOW_GU_RELATED_MAIL)
+        ).collect { case (k, v) => Json.obj(k -> v) }
       }
   }.reduce(_ ++ _)
+
+  private def canSendEmail(formData: CommonForm, key: String): Boolean = {
+    val allowMail = !formData.getClass.getCanonicalName.equalsIgnoreCase(MonthlyContributorForm.getClass.getCanonicalName)
+    key match {
+      case Keys.ALLOW_MEMBERSHIP_MAIL if allowMail => true
+      case Keys.ALLOW_THIRD_PARTY_EMAIL if allowMail => formData.marketingChoices.thirdParty.getOrElse(false)
+      case Keys.ALLOW_GU_RELATED_MAIL if allowMail => formData.marketingChoices.gnm.getOrElse(false)
+      case _ => false
+    }
+  }
 
   private def upsert(userId: UserId, value: JsObject) =
   // upsert is POST request but safe to retry
