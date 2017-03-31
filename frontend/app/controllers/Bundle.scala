@@ -1,13 +1,12 @@
 package controllers
 
-import abtests.{BundleVariant}
-import abtests.Distribution._
-import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
+import abtests.BundleVariant
+import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import configuration.CopyConfig
-import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
+import model._
 import play.api.mvc.Controller
-import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
-import views.support.{Asset, PageInfo}
+import services._
+import views.support.PageInfo
 
 trait Bundle extends Controller {
 

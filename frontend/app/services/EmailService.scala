@@ -3,17 +3,27 @@ package services
 import java.util
 
 import com.amazonaws.regions.Regions
-import com.amazonaws.services.simpleemail._
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model._
+import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder
+import com.amazonaws.services.sqs.model.{SendMessageRequest, SendMessageResult}
 import com.google.common.hash.Hashing
 import com.gu.aws.CredentialsProvider
 import com.gu.identity.play.IdMinimalUser
 import com.typesafe.scalalogging.LazyLogging
+import configuration.Config
 import forms.FeedbackForm
+import model.ContributorRow
+import play.api.libs.json.Json
+import utils.AwsAsyncHandler
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
+import scalaz.\/
+import scalaz.syntax.either._
 
-trait EmailService extends LazyLogging {
+trait FeedbackEmailService extends LazyLogging {
 
   val client = AmazonSimpleEmailServiceClientBuilder.standard
     .withCredentials(CredentialsProvider)
@@ -56,4 +66,28 @@ trait EmailService extends LazyLogging {
   }
 }
 
-object EmailService extends EmailService
+trait ThankYouEmailService extends LazyLogging {
+  private val sqsClient = AmazonSQSAsyncClientBuilder.standard.withCredentials(CredentialsProvider)
+    .withRegion(Regions.EU_WEST_1)
+    .build()
+
+  private val thankYouQueueUrl = sqsClient.getQueueUrl(Config.thankYouEmailQueue).getQueueUrl
+
+  def thankYou(row: ContributorRow): Future[\/[Throwable, SendMessageResult]] = {
+    val payload = Json.stringify(Json.toJson(row))
+
+    val handler = new AwsAsyncHandler[SendMessageRequest, SendMessageResult]
+    sqsClient.sendMessageAsync(thankYouQueueUrl, payload, handler)
+
+    handler.future.map { result =>
+      result.right
+    } recover {
+      case t: Throwable =>
+        logger.error(s"Unable to send message to the SQS queue $thankYouQueueUrl", t)
+        t.left
+    }
+  }
+
+}
+
+object EmailService extends FeedbackEmailService with ThankYouEmailService

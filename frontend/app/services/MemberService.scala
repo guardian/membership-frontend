@@ -172,6 +172,11 @@ class MemberService(identityService: IdentityService,
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
+    def sendThankYouEmail(email: String, amount: BigDecimal, name: Option[String]) = {
+      val contributorRow = ContributorRow(email, DateTime.now(), amount, "GBP", name.getOrElse("")) //Currency is hard coded at the moment
+      EmailService.thankYou(contributorRow)
+    }
+
     formData match {
       case MonthlyContributorForm(_, MonthlyPaymentForm(_, Some(baid), _), _, _, _, _, _) => //PayPal token
         for {
@@ -180,6 +185,7 @@ class MemberService(identityService: IdentityService,
           payPalEmail <- retrieveEmail(baid)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, Some(payPalEmail), None)
           _ <- updateIdentity(formData, identityRequest, user)
+          _ <- sendThankYouEmail(idUser.primaryEmailAddress, formData.payment.amount, user.displayName)
         } yield (sfContact, zuoraSubName)
 
       case MonthlyContributorForm(_, MonthlyPaymentForm(Some(stripeToken), _, _), _, _, _, _, _) => //Stripe token
@@ -189,9 +195,9 @@ class MemberService(identityService: IdentityService,
           sfContact <- createSalesforceContact(idUser, formData)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, None, Some(stripeCustomer))
           _ <- updateIdentity(formData, identityRequest, user)
+          _ <- sendThankYouEmail(idUser.primaryEmailAddress, formData.payment.amount, user.displayName)
         } yield (sfContact, zuoraSubName)
     }
-
   }
 
   def getIdentityUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
