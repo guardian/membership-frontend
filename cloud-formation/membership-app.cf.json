@@ -49,11 +49,6 @@
             "Description": "ELB SSL Certificate ARN",
             "Type": "String"
         },
-        "EmailSqsQueueArn": {
-            "Description": "The ARN of the email SQS queue",
-            "Type": "String",
-            "Default": "arn:aws:sqs:eu-west-1:865473395570:contributions-thanks"
-        },
         "VulnerabilityScanningSecurityGroup": {
             "Description": "Security group that grants access to the account's Vulnerability Scanner",
             "Type": "AWS::EC2::SecurityGroup::Id"
@@ -204,11 +199,7 @@
                                     "sqs:GetQueueUrl",
                                     "sqs:SendMessage"
                                 ],
-                                "Resource": [
-                                    {
-                                        "Ref": "EmailSqsQueueArn"
-                                    }
-                                ]
+                                "Resource": "arn:aws:sqs:eu-west-1:865473395570:contributions-thanks"
                             }
                         ]
                     }
