@@ -5,7 +5,7 @@ import model.Benefits
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
-import play.api.mvc.Controllerm
+import play.api.mvc.Controller
 import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
