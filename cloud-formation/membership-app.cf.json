@@ -189,6 +189,22 @@
                     }
                 },
                 {
+                    "PolicyName": "SqsMessages",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "sqs:GetQueueUrl",
+                                    "sqs:SendMessage"
+                                ],
+                                "Resource": "arn:aws:sqs:eu-west-1:865473395570:contributions-thanks"
+                            }
+                        ]
+                    }
+                },
+                    {
                     "PolicyName": "DynamoPromotions",
                     "PolicyDocument": {
                         "Statement": [
