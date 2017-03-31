@@ -58,11 +58,6 @@
         font-weight: 400;
     }
 
-    .monthly-contribution__edit {
-        float: right;
-    }
-
-    .monthly-contribution__edit > .text-link,
     .text-note > .text-link {
         @include fs-textSans(1)
         border-bottom-color: guss-colour(comment-main-2);
