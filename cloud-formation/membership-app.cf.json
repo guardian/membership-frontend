@@ -49,6 +49,11 @@
             "Description": "ELB SSL Certificate ARN",
             "Type": "String"
         },
+        "EmailSqsQueueArn": {
+            "Description": "The ARN of the email SQS queue",
+            "Type": "String",
+            "Default": "arn:aws:sqs:eu-west-1:865473395570:contributions-thanks"
+        },
         "VulnerabilityScanningSecurityGroup": {
             "Description": "Security group that grants access to the account's Vulnerability Scanner",
             "Type": "AWS::EC2::SecurityGroup::Id"
@@ -189,6 +194,26 @@
                     }
                 },
                 {
+                    "PolicyName": "SqsMessages",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "sqs:GetQueueUrl",
+                                    "sqs:SendMessage"
+                                ],
+                                "Resource": [
+                                    {
+                                        "Ref": "EmailSqsQueueArn"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                    {
                     "PolicyName": "DynamoPromotions",
                     "PolicyDocument": {
                         "Statement": [
