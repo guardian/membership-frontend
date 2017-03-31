@@ -1,3 +1,8 @@
+// ----- Imports ----- //
+
+import URLSearchParams from 'URLSearchParams';
+
+
 // ----- Setup ----- //
 
 const SELECTED_CONTRIB = 'contribution-fields__field--selected';
@@ -5,15 +10,20 @@ const SELECTED_PRINT = 'print-fields__field--selected';
 const SHOW_DETAILS = 'show-details';
 const MONTHLY_URL = '/monthly-contribution';
 const ONEOFF_URL = 'https://contribute.theguardian.com/uk';
-const PRINT_DIGI_URL = 'https://subscribe.theguardian.com/collection/paper-digital?INTCMP=GU_SIMPLE_UK_PAPER_DIGITAL';
-const PRINT_URL = 'https://subscribe.theguardian.com/collection/paper?INTCMP=GU_SIMPLE_UK_PAPER';
+const DIGI_URL = 'https://subscribe.theguardian.com/uk/digital';
+const PRINT_DIGI_URL = 'https://subscribe.theguardian.com/collection/paper-digital';
+const PRINT_URL = 'https://subscribe.theguardian.com/collection/paper';
 const CONTRIB_ERROR = 'contribution-error--shown';
+const DEFAULT_INTCMP = 'gdnwb_copts_bundles_landing_default';
 
-let STATE = {
+const STATE = {
 	contribAmount: '5',
 	contribPeriod: 'MONTHLY',
 	printBundle: 'PRINT+DIGITAL',
-	amountButton: 'ONE'
+	amountButton: 'ONE',
+	intcmp: null,
+	printUrl: PRINT_URL,
+	printDigiUrl: PRINT_DIGI_URL
 };
 
 const PRICES = {
@@ -39,6 +49,47 @@ const ERRORS = {
 
 // ----- Functions ----- //
 
+function contribLink (elems) {
+
+	let params = new URLSearchParams();
+	params.append('INTCMP', STATE.intcmp);
+
+	if (STATE.contribPeriod === 'MONTHLY') {
+		params.append('contributionValue', STATE.contribAmount);
+		elems.contribLink.href = `${MONTHLY_URL}?${params.toString()}`;
+	} else {
+		params.append('amount', STATE.contribAmount);
+		elems.contribLink.href = `${ONEOFF_URL}?${params.toString()}`;
+	}
+
+}
+
+function subsLinks (elems) {
+
+	let params = new URLSearchParams();
+	params.append('INTCMP', STATE.intcmp);
+
+	const digiUrl = `${DIGI_URL}?${params.toString()}`;
+	STATE.printDigiUrl = `${PRINT_DIGI_URL}?${params.toString()}`;
+	STATE.printUrl = `${PRINT_URL}?${params.toString()}`;
+
+	elems.digiLink.href = digiUrl;
+	elems.printLink.href = STATE.printDigiUrl;
+
+}
+
+function updateLinks (elems) {
+
+	let currentParams = new URLSearchParams(window.location.search.slice(1));
+	let campaignCode = currentParams.get('INTCMP');
+
+	STATE.intcmp = campaignCode ? campaignCode : DEFAULT_INTCMP;
+
+	contribLink(elems);
+	subsLinks(elems);
+
+}
+
 function contribUpdate (elems) {
 
 	let amount = PRICES[STATE.contribPeriod][STATE.amountButton];
@@ -48,21 +99,17 @@ function contribUpdate (elems) {
 	elems.contribTwo.textContent = `£${PRICES[STATE.contribPeriod].TWO}`;
 	elems.contribThree.textContent = `£${PRICES[STATE.contribPeriod].THREE}`;
 
-	if (STATE.contribPeriod === 'MONTHLY') {
-		elems.contribLink.href = `${MONTHLY_URL}?contributionValue=${STATE.contribAmount}`;
-	} else {
-		elems.contribLink.href = `${ONEOFF_URL}?amount=${STATE.contribAmount}`;
-	}
+	contribLink(elems);
 
 }
 
 function printUpdate (elems, bundle) {
 
 	if (bundle === 'PRINT') {
-		elems.printLink.href = PRINT_URL;
+		elems.printLink.href = STATE.printUrl;
 		elems.digitalBenefits.classList.add('is-hidden');
 	} else {
-		elems.printLink.href = PRINT_DIGI_URL;
+		elems.printLink.href = STATE.printDigiUrl;
 		elems.digitalBenefits.classList.remove('is-hidden');
 	}
 
@@ -95,6 +142,8 @@ function validateOtherAmount (elems) {
 		if (isNaN(amount)) {
 			contribError(elems, 'badInput');
 		} else if (amount < 5 && STATE.contribPeriod === 'MONTHLY') {
+			contribError(elems, 'tooLittle');
+		} else if (amount < 1 && STATE.contribPeriod === 'ONE_OFF') {
 			contribError(elems, 'tooLittle');
 		} else if (amount > 2000) {
 			contribError(elems, 'tooMuch');
@@ -241,6 +290,7 @@ function getElems () {
 		print: document.getElementsByClassName('js-print-paper')[0],
 		printDigital: document.getElementsByClassName('js-print-paper-digital')[0],
 		contribLink: document.getElementsByClassName('js-contrib-link')[0],
+		digiLink: document.getElementsByClassName('js-digi-link')[0],
 		printLink: document.getElementsByClassName('js-print-link')[0],
 		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0],
 		digitalMore: document.getElementsByClassName('js-digital-more')[0],
@@ -260,6 +310,7 @@ export function init () {
 
 		let elems = getElems();
 
+		updateLinks(elems);
 		contributionClicks(elems);
 		validateOtherAmount(elems);
 		amountClicks(elems);
