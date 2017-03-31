@@ -94,9 +94,6 @@
     @include mq($from: mobileLandscape) {
         @include font-size(24, 42);
     }
-    @include mq($from: tablet) {
-        @include font-size(28, 48);
-    }
 }
 
 .guardian-header__navigation-list {
