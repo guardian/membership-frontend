@@ -370,8 +370,9 @@ $why-support-colour: #7cb523;
 }
 
 .contribution-error {
+	color: #000;
 	display: none;
-	font-size: 12px;
+	font-size: 13px;
 	line-height: 15px;
 	font-family: $f-data;
 }
