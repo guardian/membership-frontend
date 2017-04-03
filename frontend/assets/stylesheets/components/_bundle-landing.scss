@@ -98,6 +98,7 @@ $why-support-colour: #7cb523;
 	@include mq($from: desktop) {
 		display: flex;
 		flex-direction: column;
+		height: gs-height(10) + $gs-baseline;
 		// Fix for IE10.
 		max-width: gs-span(4);
 	}
