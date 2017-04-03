@@ -206,8 +206,11 @@ $why-support-colour: #7cb523;
 }
 
 .bundles__copy--bottom {
-	@include mq($until: desktop) {
+	@include mq($from: tablet, $until: desktop) {
 		display: none;
+	}
+
+	@include mq($until: desktop) {
 		margin-top: $gs-baseline;
 	}
 
@@ -236,10 +239,6 @@ $why-support-colour: #7cb523;
 	button {
 		border-color: guss-colour(neutral-1);
 	}
-}
-
-.show-details {
-	display: block;
 }
 
 .bundles__more-details button {
