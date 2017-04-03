@@ -73,23 +73,18 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       case _ => Seq(Json.obj(
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
-        Keys.LAST_NAME -> formData.name.last,
-        Keys.ALLOW_MEMBERSHIP_MAIL -> canSendEmail(formData, Keys.ALLOW_MEMBERSHIP_MAIL)
-      )) ++ Map(
-          Keys.ALLOW_THIRD_PARTY_EMAIL -> canSendEmail(formData, Keys.ALLOW_THIRD_PARTY_EMAIL),
-          Keys.ALLOW_GU_RELATED_MAIL -> canSendEmail(formData, Keys.ALLOW_GU_RELATED_MAIL)
-        ).collect { case (k, v) => Json.obj(k -> v) }
+        Keys.LAST_NAME -> formData.name.last
+      )) ++ emailProps(formData)
       }
   }.reduce(_ ++ _)
 
-  private def canSendEmail(formData: CommonForm, key: String): Boolean = {
-    val allowMail = !formData.getClass.getCanonicalName.equalsIgnoreCase(MonthlyContributorForm.getClass.getCanonicalName)
-    key match {
-      case Keys.ALLOW_MEMBERSHIP_MAIL if allowMail => true
-      case Keys.ALLOW_THIRD_PARTY_EMAIL if allowMail => formData.marketingChoices.thirdParty.getOrElse(false)
-      case Keys.ALLOW_GU_RELATED_MAIL if allowMail => formData.marketingChoices.gnm.getOrElse(false)
-      case _ => false
-    }
+  private def emailProps(formData: CommonForm) = {
+    val allowMail = !formData.isInstanceOf[MonthlyContributorForm]
+    Seq(Json.obj(
+      Keys.ALLOW_MEMBERSHIP_MAIL -> allowMail,
+      Keys.ALLOW_THIRD_PARTY_EMAIL -> (allowMail && formData.marketingChoices.thirdParty.getOrElse(false)),
+      Keys.ALLOW_GU_RELATED_MAIL -> (allowMail && formData.marketingChoices.gnm.getOrElse(false))
+    ))
   }
 
   private def upsert(userId: UserId, value: JsObject) =
