@@ -11,7 +11,9 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def userIsSignedIn: Boolean = elementHasText(userDisplayName, testUser.username)
 
-  def fillInDeliveryAddress() { DeliveryAddress.fillIn() }
+  def fillInDeliveryAddressUK() = { DeliveryAddress.fillInUK() }
+
+  def fillInDeliveryAddressUS() = { DeliveryAddress.fillInUS() }
 
   def clickContinue() = clickOn(className("js-continue-name-address"))
 
@@ -75,11 +77,19 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
     val town = id("town-deliveryAddress")
     val postCode = id("postCode-deliveryAddress")
 
-    def fillIn() = {
+    def fillInUK() = {
       setSingleSelectionValue(country, "GB")
       setValue(addressLine1, "Kings Place")
       setValue(town, "London")
       setValue(postCode, "N1 9GU")
+    }
+
+    def fillInUS() = {
+      setSingleSelectionValue(country, "US")
+      setValue(addressLine1, "222 Broadway")
+      setValue(town, "New York")
+      setSingleSelectionValue(id("state-deliveryAddress"), "New York")
+      setValue(postCode, "10038")
     }
 
     def selectCountryCode(countryCode:  String) { setSingleSelectionValue(country, countryCode) }
