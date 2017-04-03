@@ -74,7 +74,6 @@
                 "LaunchConfigurationName" : { "Ref" : "FrontendLaunchConfig" },
                 "MinSize" : "3",
                 "MaxSize" : "6",
-                "DesiredCapacity" : "3",
                 "LoadBalancerNames" : [ { "Ref" : "FrontendElasticLoadBalancer" } ],
                 "HealthCheckType" : "ELB",
                 "HealthCheckGracePeriod" : 300,
