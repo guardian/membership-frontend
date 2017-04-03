@@ -257,26 +257,6 @@ function printClicks (elems) {
 
 }
 
-function detailsClicks (elems) {
-
-	elems.digitalMore.addEventListener('click', () => {
-		if (elems.digitalDetails.classList.contains(SHOW_DETAILS)) {
-			elems.digitalDetails.classList.remove(SHOW_DETAILS);
-		} else {
-			elems.digitalDetails.classList.add(SHOW_DETAILS);
-		}
-	});
-
-	elems.printMore.addEventListener('click', () => {
-		if (elems.printDetails.classList.contains(SHOW_DETAILS)) {
-			elems.printDetails.classList.remove(SHOW_DETAILS);
-		} else {
-			elems.printDetails.classList.add(SHOW_DETAILS);
-		}
-	});
-
-}
-
 function getElems () {
 
 	return {
@@ -292,11 +272,7 @@ function getElems () {
 		contribLink: document.getElementsByClassName('js-contrib-link')[0],
 		digiLink: document.getElementsByClassName('js-digi-link')[0],
 		printLink: document.getElementsByClassName('js-print-link')[0],
-		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0],
-		digitalMore: document.getElementsByClassName('js-digital-more')[0],
-		digitalDetails: document.getElementsByClassName('js-digital-details')[0],
-		printMore: document.getElementsByClassName('js-print-more')[0],
-		printDetails: document.getElementsByClassName('js-print-details')[0]
+		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0]
 	};
 
 }
