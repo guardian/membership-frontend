@@ -271,14 +271,14 @@
         background-color: guss-colour(guardian-brand);
         border-color: guss-colour(guardian-brand);
         border-radius: 650px;
-        // background: svg-url('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="10.41px" viewBox="0 0 20 10.41" enable-background="new 0 0 20 10.41" xml:space="preserve"><polygon fill="#fff" points="19.11,0 10.001,7.671 0.89,0 0,0.866 9.544,10.41 10.457,10.41 20,0.866 "/></svg>');
+        background: svg-url('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="10.41px" viewBox="0 0 20 10.41" enable-background="new 0 0 20 10.41" xml:space="preserve"><polygon fill="#fff" points="19.11,0 10.001,7.671 0.89,0 0,0.866 9.544,10.41 10.457,10.41 20,0.866 "/></svg>');
         background-repeat: no-repeat;
         background-position: right;
         background-position-x: 85px;
         background-position-y: 13px;
         background-size: 18%;
         background-color: guss-colour(guardian-brand);
-        // padding-right: 40px;
+        padding-right: 40px;
 
         @include mq(tablet) {
             margin-bottom: $gs-baseline * 2;
