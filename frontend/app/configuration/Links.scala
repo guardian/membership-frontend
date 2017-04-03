@@ -23,6 +23,8 @@ object Links {
     }
   }
 
+  val monthlyContributionTerms = "https://www.theguardian.com/info/2016/apr/04/contribution-terms-and-conditions"
+
   val membershipContact= "http://www.theguardian.com/help/contact-us#Membership"
 
   val membershipPollyToynbeeArticle = "http://www.theguardian.com/membership/2015/feb/06/polly-toynbee-if-you-read-the-guardian-join-the-guardian"

@@ -5,7 +5,7 @@
 @(countryGroup: Option[CountryGroup] = None, monthlyContribution: Boolean = false)
 
 <p class="ts-and-cs">@if(monthlyContribution){By proceeding,} else {By joining Guardian Members,} you are agreeing to our
-    <a href="@Links.membershipTerms(countryGroup)" class="text-link" target="_blank">Terms and Conditions</a> and
+    <a href="@if(monthlyContribution){@Links.monthlyContributionTerms}else{@Links.membershipTerms(countryGroup)}" class="text-link" target="_blank">Terms and Conditions</a> and
     <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
 </p>
 
