@@ -370,10 +370,11 @@ $why-support-colour: #7cb523;
 }
 
 .contribution-error {
-	color: #000;
+	color: guss-colour(live-support-2);
 	display: none;
 	font-size: 13px;
 	line-height: 15px;
+	font-weight: bold;
 	font-family: $f-data;
 }
 
