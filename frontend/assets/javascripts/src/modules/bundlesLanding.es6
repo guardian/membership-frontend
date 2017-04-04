@@ -292,7 +292,6 @@ export function init () {
 		amountClicks(elems);
 		printClicks(elems);
 		otherAmountEvents(elems);
-		detailsClicks(elems);
 
 	}
 
