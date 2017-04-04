@@ -5,7 +5,7 @@ import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import forms.MemberForm.{CommonForm, JoinForm}
+import forms.MemberForm.{MonthlyContributorForm, CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.MemberMetrics
 import play.api.Play.current
@@ -52,7 +52,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       Keys.DEFAULT_CARD_ID -> customer.card.id
     )
   }.getOrElse(Json.obj())
-  
+
   private def initialData(user: IdUser, formData: CommonForm): JsObject = {
     formData match {
       case jf : JoinForm => Seq(Json.obj(
@@ -73,14 +73,19 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       case _ => Seq(Json.obj(
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
-        Keys.LAST_NAME -> formData.name.last,
-        Keys.ALLOW_MEMBERSHIP_MAIL -> true
-      )) ++ Map(
-          Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
-          Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
-        ).collect { case (k, Some(v)) => Json.obj(k -> v) }
+        Keys.LAST_NAME -> formData.name.last
+      )) ++ emailProps(formData)
       }
   }.reduce(_ ++ _)
+
+  private def emailProps(formData: CommonForm) = {
+    val allowMail = !formData.isInstanceOf[MonthlyContributorForm]
+    Seq(Json.obj(
+      Keys.ALLOW_MEMBERSHIP_MAIL -> allowMail,
+      Keys.ALLOW_THIRD_PARTY_EMAIL -> (allowMail && formData.marketingChoices.thirdParty.getOrElse(false)),
+      Keys.ALLOW_GU_RELATED_MAIL -> (allowMail && formData.marketingChoices.gnm.getOrElse(false))
+    ))
+  }
 
   private def upsert(userId: UserId, value: JsObject) =
   // upsert is POST request but safe to retry
