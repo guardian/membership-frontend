@@ -5,7 +5,6 @@ Disallow: /whats-on
 Disallow: /join-challenger
 Disallow: /bundles
 Disallow: /monthly-contribution
-Disallow: /uk
 
 Allow: /
 
