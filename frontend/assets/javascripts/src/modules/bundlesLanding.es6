@@ -49,6 +49,8 @@ const ERRORS = {
 
 // ----- Functions ----- //
 
+// Sets the link to contributions to include INTCMP,
+// and based upon billing period and amount.
 function contribLink (elems) {
 
 	let params = new URLSearchParams();
@@ -64,6 +66,8 @@ function contribLink (elems) {
 
 }
 
+// Sets the links to subscriptions to include INTCMP,
+// and based upon bundle selected.
 function subsLinks (elems) {
 
 	let params = new URLSearchParams();
@@ -78,6 +82,18 @@ function subsLinks (elems) {
 
 }
 
+// Sets the patrons and events links to include INTCMP.
+function otherLinks (elems) {
+
+	let params = new URLSearchParams();
+	params.append('INTCMP', STATE.intcmp);
+
+	elems.patrons.href = `${elems.patrons.href}?${params.toString()}`;
+	elems.events.href = `${elems.events.href}?${params.toString()}`;
+
+}
+
+// Updates all the links on the page based on INTCMP.
 function updateLinks (elems) {
 
 	let currentParams = new URLSearchParams(window.location.search.slice(1));
@@ -87,9 +103,12 @@ function updateLinks (elems) {
 
 	contribLink(elems);
 	subsLinks(elems);
+	otherLinks(elems);
 
 }
 
+// Updates the contributions amount in the state object, and changes the
+// possible amount based on billing period.
 function contribUpdate (elems) {
 
 	let amount = PRICES[STATE.contribPeriod][STATE.amountButton];
@@ -103,6 +122,8 @@ function contribUpdate (elems) {
 
 }
 
+// Updates the print link and digital benefits bullet point based on bundle
+// selected.
 function printUpdate (elems, bundle) {
 
 	if (bundle === 'PRINT') {
@@ -115,6 +136,7 @@ function printUpdate (elems, bundle) {
 
 }
 
+// Displays an error for the contributions (other amount) input.
 function contribError (elems, errorType) {
 
 	if (errorType) {
@@ -126,6 +148,7 @@ function contribError (elems, errorType) {
 
 }
 
+// Checks that the other amount field is valid.
 function validateOtherAmount (elems) {
 
 	elems.contribLink.addEventListener('click', (event) => {
@@ -155,6 +178,7 @@ function validateOtherAmount (elems) {
 
 }
 
+// Handles clicks on the contributions bundle element on the page.
 function contributionClicks (elems) {
 
 	elems.contribMonth.addEventListener('click', () => {
@@ -175,6 +199,7 @@ function contributionClicks (elems) {
 
 }
 
+// Changes the visual appearance of the selected contribution amount.
 function selectAmount (elems, selectedElem) {
 
 	let amountElems = [elems.contribOne, elems.contribTwo, elems.contribThree,
@@ -188,6 +213,7 @@ function selectAmount (elems, selectedElem) {
 
 }
 
+// Handles clicks on the predefined contribution amount elements.
 function amountClicks (elems) {
 
 	elems.contribOne.addEventListener('click', () => {
@@ -219,6 +245,7 @@ function amountClicks (elems) {
 
 }
 
+// Handles clicks on the contribution other amount element.
 function otherAmountEvents (elems) {
 
 	elems.contribOther.addEventListener('click', () => {
@@ -239,6 +266,7 @@ function otherAmountEvents (elems) {
 
 }
 
+// Handles clicks on the print bundle buttons.
 function printClicks (elems) {
 
 	elems.print.addEventListener('click', () => {
@@ -257,6 +285,7 @@ function printClicks (elems) {
 
 }
 
+// Retrieves an object of references to the DOM elements in the page.
 function getElems () {
 
 	return {
@@ -272,7 +301,9 @@ function getElems () {
 		contribLink: document.getElementsByClassName('js-contrib-link')[0],
 		digiLink: document.getElementsByClassName('js-digi-link')[0],
 		printLink: document.getElementsByClassName('js-print-link')[0],
-		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0]
+		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0],
+		patrons: document.getElementsByClassName('js-patrons')[0],
+		events: document.getElementsByClassName('js-events')[0]
 	};
 
 }
