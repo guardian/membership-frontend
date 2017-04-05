@@ -108,14 +108,14 @@ class MemberService(identityService: IdentityService,
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
-        zuoraSub <- createFreeSubscription(sfContact, formData, email, ipCountry)
+        zuoraSub <- createFreeSubscription(sfContact, user.id, formData, email, ipCountry)
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
         logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)
       }
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, payPalEmail: Option[String], stripeCustomer: Option[Customer]): Future[String] =
       (for {
-        zuoraSub <- createPaidSubscription(sfContact, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, payPalEmail, ipCountry)
+        zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, payPalEmail, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -166,7 +166,7 @@ class MemberService(identityService: IdentityService,
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: Option[PaymentMethod]): Future[String] =
       (for {
-        zuoraSub <- createContribution(sfContact, paid, paid.name, campaignCode, email, paymentMethod)
+        zuoraSub <- createContribution(sfContact, user.id, paid, paid.name, campaignCode, email, paymentMethod)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -426,6 +426,7 @@ class MemberService(identityService: IdentityService,
   }
 
   override def createFreeSubscription(contactId: ContactId,
+                                      identityId: String,
                                       joinData: JoinForm,
                                       email: String,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
@@ -436,7 +437,7 @@ class MemberService(identityService: IdentityService,
     (for {
       zuoraFeatures <- zuoraService.getFeatures
       result <- zuoraService.createSubscription(Subscribe(
-        account = Account.stripe(contactId, currency, autopay = false),
+        account = Account.stripe(contactId, identityId, currency, autopay = false),
         paymentMethod = None,
         ratePlans = NonEmptyList(RatePlan(planId.get, None)),
         name = joinData.name,
@@ -452,6 +453,7 @@ class MemberService(identityService: IdentityService,
   implicit private def features = zuoraService.getFeatures
 
   override def createPaidSubscription(contactId: ContactId,
+                                      identityId: String,
                                       joinData: PaidMemberForm,
                                       nameData: NameForm,
                                       tier: PaidTier,
@@ -473,7 +475,7 @@ class MemberService(identityService: IdentityService,
 
       val today = DateTime.now.toLocalDate
 
-      Subscribe(account = createAccount(contactId, currency, joinData.payment),
+      Subscribe(account = createAccount(contactId, identityId, currency, joinData.payment),
         paymentMethod = paymentMethod,
         address = joinData.zuoraAccountAddress,
         email = email,
@@ -493,6 +495,7 @@ class MemberService(identityService: IdentityService,
   }
 
   override def createContribution(contactId: ContactId,
+                                  identityId: String,
                                   joinData: ContributorForm,
                                   nameData: NameForm,
                                   campaignCode: Option[CampaignCode],
@@ -511,7 +514,7 @@ class MemberService(identityService: IdentityService,
       val currency = GBP
       val today = DateTime.now.toLocalDate
 
-      Contribute(account = createAccount(contactId, currency, joinData.payment),
+      Contribute(account = createAccount(contactId, identityId, currency, joinData.payment),
         paymentMethod = paymentMethod,
         email = email,
         ratePlans = NonEmptyList(plan),
@@ -527,12 +530,12 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  private def createAccount(contactId: ContactId, currency: Currency, paymentForm: CommonPaymentForm) =
+  private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
-        Account.stripe(contactId, currency, autopay = true)
+        Account.stripe(contactId, identityId, currency, autopay = true)
       case PaymentForm(_, _, Some(_)) | MonthlyPaymentForm(_, Some(_), _) =>
-        Account.payPal(contactId, currency, autopay = true)
+        Account.payPal(contactId, identityId, currency, autopay = true)
     }
 
   private def createPaymentMethod(email: Option[String], paymentForm: CommonPaymentForm, stripeCustomer: Option[Customer]) =

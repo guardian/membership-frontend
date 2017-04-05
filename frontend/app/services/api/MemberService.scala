@@ -76,6 +76,7 @@ trait MemberService {
   def createEBCode(subscriber: Member, event: RichEvent): Future[Option[EBCode]]
 
   def createPaidSubscription(contactId: ContactId,
+                             identityId: String,
                              joinData: PaidMemberForm,
                              nameData: NameForm,
                              tier: PaidTier,
@@ -86,11 +87,13 @@ trait MemberService {
                              ipCountry: Option[Country]): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
+                             identityId: String,
                              joinData: JoinForm,
                              email: String,
                              ipCountry: Option[Country]): Future[SubscribeResult]
 
   def createContribution(contactId: ContactId,
+                         identityId: String,
                          joinData: ContributorForm,
                          nameData: NameForm,
                          campaignCode: Option[CampaignCode],
