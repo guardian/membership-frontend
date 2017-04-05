@@ -78,6 +78,16 @@ function subsLinks (elems) {
 
 }
 
+function otherLinks (elems) {
+
+	let params = new URLSearchParams();
+	params.append('INTCMP', STATE.intcmp);
+
+	elems.patrons.href = `${elems.patrons.href}?${params.toString()}`;
+	elems.events.href = `${elems.events.href}?${params.toString()}`;
+
+}
+
 function updateLinks (elems) {
 
 	let currentParams = new URLSearchParams(window.location.search.slice(1));
@@ -87,6 +97,7 @@ function updateLinks (elems) {
 
 	contribLink(elems);
 	subsLinks(elems);
+	otherLinks(elems);
 
 }
 
@@ -272,7 +283,9 @@ function getElems () {
 		contribLink: document.getElementsByClassName('js-contrib-link')[0],
 		digiLink: document.getElementsByClassName('js-digi-link')[0],
 		printLink: document.getElementsByClassName('js-print-link')[0],
-		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0]
+		digitalBenefits: document.getElementsByClassName('js-digital-benefits')[0],
+		patrons: document.getElementsByClassName('js-patrons')[0],
+		events: document.getElementsByClassName('js-events')[0]
 	};
 
 }
