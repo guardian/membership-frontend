@@ -15,7 +15,7 @@ import play.api.mvc._
 import play.api.routing.Router
 import services.AuthenticationService
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent._
 
 class ErrorHandler @Inject() (

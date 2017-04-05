@@ -19,7 +19,7 @@ import play.api.cache.Cache
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 import utils.StringUtils._
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 import scala.concurrent.duration._
 

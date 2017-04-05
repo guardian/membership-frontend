@@ -14,7 +14,7 @@ import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
 import views.support.{Asset, PageInfo}
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 

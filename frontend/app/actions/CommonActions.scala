@@ -14,7 +14,7 @@ import services.{TouchpointBackend, AuthenticationService}
 import utils.GuMemCookie
 import utils.TestUsers.isTestUser
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 
 trait CommonActions {
