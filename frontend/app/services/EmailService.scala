@@ -17,7 +17,7 @@ import model.ContributorRow
 import play.api.libs.json.Json
 import utils.AwsAsyncHandler
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 import scalaz.\/

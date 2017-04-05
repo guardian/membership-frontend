@@ -6,7 +6,7 @@ import com.typesafe.scalalogging.LazyLogging
 import play.api.mvc.{Controller, Cookie}
 import utils.TestUsers.testUsers
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object Testing extends Controller with LazyLogging {
 

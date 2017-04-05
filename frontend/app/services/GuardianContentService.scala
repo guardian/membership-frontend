@@ -10,7 +10,7 @@ import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.iteratee.{Iteratee, Enumerator}
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 import scala.util.{Success, Try, Failure}
 import scala.concurrent.duration._

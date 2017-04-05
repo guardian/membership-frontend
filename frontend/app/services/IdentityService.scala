@@ -13,7 +13,7 @@ import play.api.libs.json._
 import play.api.libs.ws.WS
 import views.support.IdentityUser
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
