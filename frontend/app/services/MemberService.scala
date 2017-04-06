@@ -1,5 +1,6 @@
 package services
 
+import _root_.services.paymentmethods._
 import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
@@ -48,7 +49,6 @@ import scalaz._
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
 import scalaz.syntax.monad._
-import scalaz.syntax.std.option._
 
 object MemberService {
 
@@ -90,6 +90,9 @@ class MemberService(identityService: IdentityService,
   import EventbriteService._
   import MemberService._
 
+  val availablePaymentMethods =
+    new AvailablePaymentMethods(Seq(new StripeInitialiser(stripeService), new PayPalInitialiser(payPalService)))
+
   implicit val catalog = catalogService.unsafeCatalog
 
   def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
@@ -113,9 +116,9 @@ class MemberService(identityService: IdentityService,
         logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)
       }
 
-    def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, payPalEmail: Option[String], stripeCustomer: Option[Customer]): Future[String] =
+    def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, paymentMethod: PaymentMethod): Future[String] =
       (for {
-        zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, stripeCustomer, campaignCode, email, payPalEmail, ipCountry)
+        zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, campaignCode, email, paymentMethod, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -127,26 +130,15 @@ class MemberService(identityService: IdentityService,
       }
 
     formData match {
-      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, _, Some(baid)), _, _, _, _, _, _, _) => //Paid member with PayPal token
+      case payingForm: PaidMemberJoinForm =>
         for {
+          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment).initialiseUsing(user)
           idUser <- getIdentityUserDetails(user, identityRequest)
           sfContact <- createSalesforceContact(idUser, formData)
-          payPalEmail <- retrieveEmail(baid)
-          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, Some(payPalEmail), None)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, idUser.primaryEmailAddress, paymentMethod)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
           _ <- updateIdentity(formData, identityRequest, user)
         } yield (sfContact, zuoraSubName)
-
-      case paid@PaidMemberJoinForm(_, _, _, PaymentForm(_, Some(stripeToken), _), _, _, _, _, _, _, _) => //Paid member with Stripe token
-        for {
-          stripeCustomer <- createStripeCustomer(stripeToken, user)
-          idUser <- getIdentityUserDetails(user, identityRequest)
-          sfContact <- createSalesforceContact(idUser, formData)
-          zuoraSubName <- createPaidZuoraSubscription(sfContact, paid, idUser.primaryEmailAddress, None, Some(stripeCustomer))
-          _ <- updateSalesforceContactWithMembership(Some(stripeCustomer)) // FIXME: This should go!
-          _ <- updateIdentity(formData, identityRequest, user)
-        } yield (sfContact, zuoraSubName)
-
       case _ =>
         for {
           idUser <- getIdentityUserDetails(user, identityRequest)
@@ -164,7 +156,7 @@ class MemberService(identityService: IdentityService,
                              identityRequest: IdentityRequest,
                              campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)] = {
 
-    def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: Option[PaymentMethod]): Future[String] =
+    def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: PaymentMethod): Future[String] =
       (for {
         zuoraSub <- createContribution(sfContact, user.id, paid, paid.name, campaignCode, email, paymentMethod)
       } yield zuoraSub.subscriptionName).andThen {
@@ -177,19 +169,8 @@ class MemberService(identityService: IdentityService,
       EmailService.thankYou(contributorRow)
     }
 
-    def initialisePaymentMethod(formData: ContributorForm): Future[Option[PaymentMethod]] = formData match {
-      case MonthlyContributorForm(_, MonthlyPaymentForm(_, Some(baid), _), _, _, _, _, _) => //PayPal token
-        for {
-          payPalEmail <- retrieveEmail(baid)
-        } yield createPaymentMethod(Some(payPalEmail), formData.payment, None)
-      case MonthlyContributorForm(_, MonthlyPaymentForm(Some(stripeToken), _, _), _, _, _, _, _) => //Stripe token
-        for {
-          stripeCustomer <- createStripeCustomer(stripeToken, user)
-        } yield createPaymentMethod(None, formData.payment, Some(stripeCustomer))
-    }
-
     for {
-      paymentMethod <- initialisePaymentMethod(formData)
+      paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(formData.payment).initialiseUsing(user)
       idUser <- getIdentityUserDetails(user, identityRequest)
       sfContact <- createSalesforceContact(idUser, formData)
       zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, paymentMethod)
@@ -203,10 +184,6 @@ class MemberService(identityService: IdentityService,
       logger.error(s"Could not get Identity user details for user ${user.id}", e)
     }
 
-  def createStripeCustomer(stripeToken: String, user: IdMinimalUser): Future[Customer] =
-    stripeService.Customer.create(user.id, stripeToken).andThen {
-      case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
-    }
 
   def updateIdentity(formData: CommonForm, identityRequest: IdentityRequest, user: IdMinimalUser): Future[Unit] =
     Future {
@@ -226,7 +203,7 @@ class MemberService(identityService: IdentityService,
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
-      paymentResult <- createPaymentMethod(sub, form).liftM
+      _ <- createPaymentMethod(sub, form).liftM
       memberId <- EitherT(upgradeSubscription(
         sub.subscription,
         contact = sub.contact,
@@ -457,14 +434,11 @@ class MemberService(identityService: IdentityService,
                                       joinData: PaidMemberForm,
                                       nameData: NameForm,
                                       tier: PaidTier,
-                                      stripeCustomer: Option[Customer],
                                       campaignCode: Option[CampaignCode],
                                       email: String,
-                                      payPalEmail: Option[String],
+                                      paymentMethod: PaymentMethod,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
-
-    val paymentMethod = createPaymentMethod(payPalEmail, joinData.payment, stripeCustomer)
     val country = joinData.zuoraAccountAddress.country
     val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
     val subscribe = zuoraService.getFeatures.map { features =>
@@ -476,7 +450,7 @@ class MemberService(identityService: IdentityService,
       val today = DateTime.now.toLocalDate
 
       Subscribe(account = createAccount(contactId, identityId, currency, joinData.payment),
-        paymentMethod = paymentMethod,
+        paymentMethod = Some(paymentMethod),
         address = joinData.zuoraAccountAddress,
         email = email,
         ratePlans = NonEmptyList(plan),
@@ -500,7 +474,7 @@ class MemberService(identityService: IdentityService,
                                   nameData: NameForm,
                                   campaignCode: Option[CampaignCode],
                                   email: String,
-                                  paymentMethod: Option[PaymentMethod]
+                                  paymentMethod: PaymentMethod
                                  ): Future[SubscribeResult] = {
     logger.info("paymentMethod=" + paymentMethod)
     val planChoice = ContributorChoice()
@@ -515,7 +489,7 @@ class MemberService(identityService: IdentityService,
       val today = DateTime.now.toLocalDate
 
       Contribute(account = createAccount(contactId, identityId, currency, joinData.payment),
-        paymentMethod = paymentMethod,
+        paymentMethod = Some(paymentMethod),
         email = email,
         ratePlans = NonEmptyList(plan),
         name = nameData,
@@ -538,17 +512,6 @@ class MemberService(identityService: IdentityService,
         Account.payPal(contactId, identityId, currency, autopay = true)
     }
 
-  private def createPaymentMethod(email: Option[String], paymentForm: CommonPaymentForm, stripeCustomer: Option[Customer]) =
-    paymentForm match {
-      case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
-        val card = stripeCustomer.get.card
-        CreditCardReferenceTransaction(card.id, stripeCustomer.get.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`).some
-      case PaymentForm(_, _, Some(payPalBaid)) =>
-        PayPalReferenceTransaction(payPalBaid, email.get).some
-      case MonthlyPaymentForm(_, Some(payPalBaid), _) =>
-        PayPalReferenceTransaction(payPalBaid, email.get).some
-      case _ => None
-    }
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =
