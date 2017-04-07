@@ -10,9 +10,9 @@ const SELECTED_PRINT = 'print-fields__field--selected';
 const SHOW_DETAILS = 'show-details';
 const MONTHLY_URL = '/monthly-contribution';
 const ONEOFF_URL = 'https://contribute.theguardian.com/uk';
-const DIGI_URL = 'https://subscribe.theguardian.com/uk/digital';
-const PRINT_DIGI_URL = 'https://subscribe.theguardian.com/collection/paper-digital';
-const PRINT_URL = 'https://subscribe.theguardian.com/collection/paper';
+const DIGI_URL = 'https://subscribe.theguardian.com/p/DXX83X';
+const PRINT_DIGI_URL = 'https://subscribe.theguardian.com/p/GXX83X';
+const PRINT_URL = 'https://subscribe.theguardian.com/p/GXX83P';
 const CONTRIB_ERROR = 'contribution-error--shown';
 const DEFAULT_INTCMP = 'gdnwb_copts_bundles_landing_default';
 
