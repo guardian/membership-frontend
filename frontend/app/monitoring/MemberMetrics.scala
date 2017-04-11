@@ -28,19 +28,10 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
     put(s"failed-sign-up-${tier.name}")
   }
 
-  def putCreationOfPaidSubscription(paymentMethod: Option[PaymentMethod]) = {
+  def putCreationOfPaidSubscription(paymentMethod: PaymentMethod) = {
+    val paymentDimension = new Dimension().withName("PaymentMethod").withValue(paymentMethod.getClass.getSimpleName)
 
-    for {
-      method <- paymentMethod
-    } {
-
-      val paymentDimension = new Dimension().withName("PaymentMethod")
-        .withValue(method.getClass.getSimpleName)
-
-      put(s"create-paid-subscription", 1, paymentDimension)
-
-    }
-
+    put(s"create-paid-subscription", 1, paymentDimension)
   }
 
   private def put(metricName: String) {

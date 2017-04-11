@@ -80,10 +80,9 @@ trait MemberService {
                              joinData: PaidMemberForm,
                              nameData: NameForm,
                              tier: PaidTier,
-                             stripeCustomer: Option[Customer],
                              campaignCode: Option[CampaignCode],
                              email: String,
-                             payPalEmail: Option[String],
+                             paymentMethod: PaymentMethod,
                              ipCountry: Option[Country]): Future[SubscribeResult]
 
   def createFreeSubscription(contactId: ContactId,
@@ -98,7 +97,7 @@ trait MemberService {
                          nameData: NameForm,
                          campaignCode: Option[CampaignCode],
                          email: String,
-                         paymentMethod: Option[PaymentMethod]): Future[SubscribeResult]
+                         paymentMethod: PaymentMethod): Future[SubscribeResult]
 }
 
 object MemberService {
