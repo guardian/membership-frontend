@@ -27,14 +27,12 @@ object Dependencies {
   val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.22"
-  val catsCore = "org.typelevel" %% "cats-core" % "0.9.0"
 
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
-    PlayImport.specs2 % "test", specs2Extra, dispatch, identityPlayAuth, catsCore)
+    PlayImport.specs2 % "test", specs2Extra, dispatch)
 
   val acceptanceTestDependencies = Seq(memsubCommonPlayAuth, scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
 

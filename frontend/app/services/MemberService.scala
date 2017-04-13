@@ -1,7 +1,7 @@
 package services
 
-import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import _root_.services.paymentmethods._
+import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
 import com.gu.i18n.Currency.GBP
@@ -101,8 +101,9 @@ class MemberService(identityService: IdentityService,
         .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
 
   override def createMember(
-      user: IdUser,
+      user: IdMinimalUser,
       formData: JoinForm,
+      identityRequest: IdentityRequest,
       fromEventId: Option[String],
       campaignCode: Option[CampaignCode],
       tier: Tier,
@@ -124,30 +125,35 @@ class MemberService(identityService: IdentityService,
       }
 
     def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
-      salesforceService.updateMemberStatus(user.minimal, tier, stripeCustomer).andThen { case Failure(e) =>
+      salesforceService.updateMemberStatus(user, tier, stripeCustomer).andThen { case Failure(e) =>
         logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
       }
 
     formData match {
       case payingForm: PaidMemberJoinForm =>
         for {
-          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment).initialiseUsing(user.minimal)
-          sfContact <- createSalesforceContact(user, formData)
-          zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, user.primaryEmailAddress, paymentMethod)
+          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment).initialiseUsing(user)
+          idUser <- getIdentityUserDetails(user, identityRequest)
+          sfContact <- createSalesforceContact(idUser, formData)
+          zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, idUser.primaryEmailAddress, paymentMethod)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
+          _ <- updateIdentity(formData, identityRequest, user)
         } yield (sfContact, zuoraSubName)
       case _ =>
         for {
-          sfContact <- createSalesforceContact(user, formData)
-          zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, user.primaryEmailAddress)
+          idUser <- getIdentityUserDetails(user, identityRequest)
+          sfContact <- createSalesforceContact(idUser, formData)
+          zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
+          _ <- updateIdentity(formData, identityRequest, user)
         } yield (sfContact, zuoraSubName)
     }
   }
 
   override def createContributor(
-                             user: IdUser,
+                             user: IdMinimalUser,
                              formData: ContributorForm,
+                             identityRequest: IdentityRequest,
                              campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)] = {
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: PaymentMethod): Future[String] =
@@ -164,12 +170,26 @@ class MemberService(identityService: IdentityService,
     }
 
     for {
-      paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(formData.payment).initialiseUsing(user.minimal)
-      sfContact <- createSalesforceContact(user, formData)
-      zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, user.primaryEmailAddress, paymentMethod)
-      _ <- sendThankYouEmail(user.primaryEmailAddress, formData.payment.amount, user.publicFields.displayName)
+      paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(formData.payment).initialiseUsing(user)
+      idUser <- getIdentityUserDetails(user, identityRequest)
+      sfContact <- createSalesforceContact(idUser, formData)
+      zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, idUser.primaryEmailAddress, paymentMethod)
+      _ <- updateIdentity(formData, identityRequest, user)
+      _ <- sendThankYouEmail(idUser.primaryEmailAddress, formData.payment.amount, user.displayName)
     } yield (sfContact, zuoraSubName)
   }
+
+  def getIdentityUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
+    identityService.getFullUserDetails(user)(identityRequest).andThen { case Failure(e) =>
+      logger.error(s"Could not get Identity user details for user ${user.id}", e)
+    }
+
+
+  def updateIdentity(formData: CommonForm, identityRequest: IdentityRequest, user: IdMinimalUser): Future[Unit] =
+    Future {
+      formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id)) // Update user password (social signin)
+      identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest) // Update Identity user details in MongoDB
+    }.andThen { case Failure(e) => logger.error(s"Could not update Identity for user ${user.id}", e) }
 
   def createSalesforceContact(user: IdUser, formData: CommonForm): Future[ContactId] =
     salesforceService.upsert(user, formData).andThen { case Failure(e) =>

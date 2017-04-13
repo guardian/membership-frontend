@@ -3,14 +3,10 @@ package controllers
 import configuration.Config
 import play.api.mvc.{Request, RequestHeader}
 
-case class IdentityRequest(
-  ip: String,
-  headers: List[(String, String)],
-  trackingParameters: List[(String, String)]
-)
+case class IdentityRequest(headers: List[(String, String)], trackingParameters: List[(String, String)])
 
 object IdentityRequest extends RemoteAddress {
-  def apply(request: RequestHeader): IdentityRequest = {
+  def apply(request: Request[_]): IdentityRequest = {
     val ipAddress = clientIp(request)
 
     val headers = List("X-GU-ID-Client-Access-Token" -> s"Bearer ${Config.idApiClientToken}") ++
@@ -22,7 +18,7 @@ object IdentityRequest extends RemoteAddress {
       request.headers.get("User-Agent").map("trackingUserAgent" -> _) ++
       ipAddress.map("trackingIpAddress" -> _)
 
-    IdentityRequest(ipAddress.mkString, headers, trackingParameters)
+    IdentityRequest(headers, trackingParameters)
 
   }
 }

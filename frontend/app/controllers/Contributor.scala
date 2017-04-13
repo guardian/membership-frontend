@@ -17,10 +17,10 @@ import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
-import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.TouchpointBackend
 import tracking.ActivityTracking
 import utils.CampaignCode
+import utils.RequestCountry._
 import utils.TestUsers.PreSigninTestCookie
 import views.support.{PageInfo, Pricing, ThankYouMonthlySummary}
 
@@ -83,27 +83,27 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
   private def makeContributor(onSuccess: => Result)(formData: ContributorForm)(implicit request: AuthRequest[_]) = {
     logger.info(s"User ${request.user.id} attempting to become a monthly contributor...")
     implicit val bp: BackendProvider = request
+    val idRequest = IdentityRequest(request)
     val campaignCode = CampaignCode.fromRequest
+    val ipCountry = request.getFastlyCountry
 
-    identityStrategyFor(request, formData).ensureIdUser { user =>
-      Timing.record(salesforceService.metrics, "createContributor") {
-        memberService.createContributor(user, formData, campaignCode).map {
-          case (sfContactId, zuoraSubName) =>
-            logger.info(s"User ${user.id} successfully became monthly contributor $zuoraSubName.")
-            onSuccess
-        }.recover {
-          // errors due to user's card are logged at WARN level as they are not logic errors
-          case error: Stripe.Error =>
-            logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${user.id}")
-            Forbidden(Json.toJson(error))
+    Timing.record(salesforceService.metrics, "createContributor") {
+      memberService.createContributor(request.user, formData, idRequest, campaignCode).map {
+        case (sfContactId, zuoraSubName) =>
+          logger.info(s"User ${request.user.id} successfully became monthly contributor $zuoraSubName.")
+          onSuccess
+      }.recover {
+        // errors due to user's card are logged at WARN level as they are not logic errors
+        case error: Stripe.Error =>
+          logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${request.user.id}")
+          Forbidden(Json.toJson(error))
 
-          case error: PaymentGatewayError =>
-            handlePaymentGatewayError(error, user.id, "monthly contributor")
+        case error: PaymentGatewayError =>
+          handlePaymentGatewayError(error, request.user.id, "monthly contributor", idRequest.trackingParameters)
 
-          case error =>
-            logger.error(s"User ${user.id} could not become monthly contributor member", error)
-            Forbidden
-        }
+        case error =>
+          logger.error(s"User ${request.user.id} could not become monthly contributor member: ${idRequest.trackingParameters}", error)
+          Forbidden
       }
     }
   }
