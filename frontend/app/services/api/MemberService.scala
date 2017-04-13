@@ -1,12 +1,13 @@
 package services.api
 
 import com.gu.i18n.Country
-import com.gu.identity.play.IdUser
+import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.Subscriber._
-import com.gu.memsub.promo.PromoError
+import com.gu.memsub.promo.{PromoError, Upgrades, ValidPromotion}
 import com.gu.memsub.subsv2._
 import com.gu.memsub.{BillingSchedule, Subscription => S}
 import com.gu.salesforce.{ContactId, PaidTier, Tier}
+import com.gu.stripe.Stripe.Customer
 import com.gu.zuora.soap.models.Commands.PaymentMethod
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult}
 import controllers.IdentityRequest
@@ -27,15 +28,17 @@ trait MemberService {
 
   def country(contact: GenericSFContact)(implicit i: IdentityRequest): Future[Country]
 
-  def createMember(user: IdUser,
+  def createMember(user: IdMinimalUser,
                    formData: JoinForm,
+                   identityRequest: IdentityRequest,
                    fromEventId: Option[String],
                    campaignCode: Option[CampaignCode],
                    tier: Tier,
                    ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)]
 
-  def createContributor(user: IdUser,
+  def createContributor(user: IdMinimalUser,
                    formData: ContributorForm,
+                   identityRequest: IdentityRequest,
                    campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)]
 
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)

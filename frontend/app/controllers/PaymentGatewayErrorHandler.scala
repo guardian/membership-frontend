@@ -7,10 +7,10 @@ import play.api.libs.json.Json
 
 trait PaymentGatewayErrorHandler extends LazyLogging {
 
-  def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, country: String = "") = {
+  def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, tracking: List[(String, String)], country: String = "") = {
 
     def handleError(code: String) = {
-      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\tcountry=$country")
+      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\ttracking=$tracking \n\tcountry=$country")
       Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
     }
 
