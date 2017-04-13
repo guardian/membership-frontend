@@ -215,16 +215,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email."),
       _ => Redirect(routes.Joiner.enterStaffDetails()).flashing("success" ->
         s"Your email address has been changed to $googleEmail"))
-//      yield {
-//        responseCode match {
-//          case 200 => Redirect(routes.Joiner.enterStaffDetails())
-//            .flashing("success" ->
-//              s"Your email address has been changed to $googleEmail")
-//          case _ => Redirect(routes.Joiner.staff())
-//            .flashing("error" ->
-//              s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email.")
-//        }
-//      }
   }
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
