@@ -207,8 +207,8 @@ object TierController extends Controller with ActivityTracking
 
       paidMember.contact.email.map { email =>
         for {
-          status <- IdentityService(IdentityApi).reauthUser(email, form.password, identityRequest)
-          result <- if (status == 200) doUpgrade() else reauthFailedMessage
+          reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
+          result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
         } yield result
       }.getOrElse(noEmailMessage)
     }
