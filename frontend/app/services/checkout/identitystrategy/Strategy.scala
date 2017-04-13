@@ -4,6 +4,7 @@ import com.gu.identity.play.IdUser
 import controllers.IdentityRequest
 import forms.MemberForm.CommonForm
 import play.api.mvc.{RequestHeader, Result}
+import services.AuthenticationService.authenticatedIdUserProvider
 import services.{IdentityApi, IdentityService}
 
 import scala.concurrent.Future
@@ -14,11 +15,8 @@ object Strategy {
   def identityStrategyFor(request: RequestHeader, form: CommonForm): Strategy = {
     implicit val idRequest = IdentityRequest(request)
 
-    val strategies = ExistingSignedInUser.strategyFrom(request, form) ++ NewUser.strategyFrom(form)
-
-    assert(strategies.size == 1, s"Should have exactly 1 CheckoutIdentityStrategy, instead have ${strategies.size}")
-
-    strategies.head
+    (for (user <- authenticatedIdUserProvider(request))
+      yield ExistingSignedInUser(user, form)).getOrElse(NewUser.strategyFrom(form).get)
   }
 }
 

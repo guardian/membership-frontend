@@ -13,12 +13,6 @@ import services.checkout.identitystrategy.Strategy.identityService
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ExistingSignedInUser {
-  def strategyFrom(request: RequestHeader, form: CommonForm)(implicit idRequest: IdentityRequest) = for {
-    idUser <- authenticatedIdUserProvider(request)
-  } yield ExistingSignedInUser(idUser, form)
-}
-
 case class ExistingSignedInUser(userId: IdMinimalUser, formData: CommonForm)(implicit idReq: IdentityRequest) extends Strategy with LazyLogging {
 
   def ensureIdUser(checkoutFunc: (IdUser) => Future[Result]) = {
