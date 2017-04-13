@@ -8,8 +8,7 @@ import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
-import com.gu.memsub.BillingPeriod
-import com.gu.memsub.util.Timing
+import com.gu.identity.play.{AuthenticationService => _, _}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -17,7 +16,7 @@ import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
-import forms.MemberForm._
+import forms.MemberForm.{paidMemberJoinForm, _}
 import model._
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
@@ -25,12 +24,12 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.AuthenticationService.authenticatedIdUserProvider
-
+import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.Feature.MergedRegistration
 import utils.RequestCountry._
-import utils.TestUsers.PreSigninTestCookie
+import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie}
 import utils.{CampaignCode, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
@@ -200,7 +199,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       makeMember(Tier.partner, Redirect(routes.Joiner.thankyouStaff())))
   }
 
-  def joinPaid(tier: PaidTier) = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinPaid(tier: PaidTier) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold({ formWithErrors =>
       Future.successful(BadRequest(formWithErrors.errorsAsJson))
     },
@@ -210,53 +209,56 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     val googleEmail = request.googleUser.email
     for {
-      responseCode <- IdentityService(IdentityApi).updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
-    }
-      yield {
-        responseCode match {
-          case 200 => Redirect(routes.Joiner.enterStaffDetails())
-            .flashing("success" ->
-              s"Your email address has been changed to $googleEmail")
-          case _ => Redirect(routes.Joiner.staff())
-            .flashing("error" ->
-              s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email.")
-        }
-      }
+      emailUpdateResult <- identityService.updateEmail(request.identityUser, googleEmail)(IdentityRequest(request)).value
+    } yield emailUpdateResult.fold(
+      _ => Redirect(routes.Joiner.staff()).flashing("error" ->
+        s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email."),
+      _ => Redirect(routes.Joiner.enterStaffDetails()).flashing("success" ->
+        s"Your email address has been changed to $googleEmail"))
   }
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
 
-  private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
-    logger.info(s"User ${request.user.id} attempting to become ${tier.name}...")
+  private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: Request[_]) = {
+    val userOpt = authenticatedIdUserProvider(request)
+    val userDescription = s"User id=${userOpt.map(_.id).mkString}"
+    logger.info(s"$userDescription attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
-    implicit val bp: BackendProvider = request
-    val idRequest = IdentityRequest(request)
+    implicit val resolution: TouchpointBackend.Resolution =
+      TouchpointBackend.forRequest(NameEnteredInForm, Some(formData))
+
+    implicit val tpBackend = resolution.backend
+
+    implicit val backendProvider: BackendProvider = new BackendProvider {
+      override def touchpointBackend = tpBackend
+    }
+
     val campaignCode = CampaignCode.fromRequest
     val ipCountry = request.getFastlyCountry
 
-    Timing.record(salesforceService.metrics, "createMember") {
-      memberService.createMember(request.user, formData, idRequest, eventId, campaignCode, tier, ipCountry).map {
+    identityStrategyFor(request, formData).ensureIdUser { user =>
+      memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"User ${request.user.id} successfully became ${tier.name} $zuoraSubName.")
+          logger.info(s"$userDescription successfully became ${tier.name} $zuoraSubName.")
           salesforceService.metrics.putSignUp(tier)
-          trackRegistration(formData, tier, sfContactId, request.user, campaignCode)
-          trackRegistrationViaEvent(sfContactId, request.user, eventId, campaignCode, tier)
+          trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
+          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
           onSuccess
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
-          logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${request.user.id}")
-          setBehaviourNote(tier.name, error.code)(request)
+          logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
+          setBehaviourNote(tier.name, error.code, userOpt)
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
-          setBehaviourNote(tier.name, error.code)(request)
-          handlePaymentGatewayError(error, request.user.id, tier.name, idRequest.trackingParameters, formData.deliveryAddress.countryName)
+          setBehaviourNote(tier.name, error.code, userOpt)
+          handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
-          logger.error(s"User ${request.user.id} could not become ${tier.name} member: ${idRequest.trackingParameters}", error)
-          setBehaviourNote(tier.name, "card_error")(request)
+          logger.error(s"$userDescription could not become ${tier.name} member", error)
+          setBehaviourNote(tier.name, "card_error", userOpt)
           Forbidden
       }
     }
@@ -288,9 +290,9 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   def thankyouStaff = thankyou(Tier.partner)
 
-  private def setBehaviourNote(tier: String, errorCode: String)(implicit request: AuthRequest[_]) = {
+  private def setBehaviourNote(tier: String, errorCode: String, userOpt: Option[AuthenticatedIdUser]) = for (user <- userOpt) {
     if (tier.toLowerCase == "supporter") {
-      MembersDataAPI.Service.upsertBehaviour(request.user, note = Some(errorCode))
+      MembersDataAPI.Service.upsertBehaviour(user, note = Some(errorCode))
     }
   }
 

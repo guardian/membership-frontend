@@ -8,7 +8,6 @@ import com.gu.memsub.BillingPeriod._
 import com.gu.memsub.{Address, BillingPeriod, FullName}
 import com.gu.salesforce.PaidTier
 import com.gu.salesforce.Tier._
-import forms.MemberForm.PaidForm
 import model._
 import play.api.data.Forms._
 import play.api.data.format.Formatter
@@ -44,14 +43,21 @@ object MemberForm {
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
+  trait HasDeliveryAddress {
+    val deliveryAddress: Address
+  }
+
+  trait HasBillingAddress {
+    val billingAddress: Option[Address]
+  }
+
   trait CommonForm {
     val name: NameForm
     val password: Option[String]
     val marketingChoices: MarketingChoicesForm
   }
 
-  trait JoinForm extends CommonForm {
-    val deliveryAddress: Address
+  trait JoinForm extends CommonForm with HasDeliveryAddress {
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
     val planChoice: PlanChoice
@@ -61,7 +67,7 @@ object MemberForm {
     val payment: CommonPaymentForm
   }
 
-  trait PaidMemberForm extends PaidForm {
+  trait PaidMemberForm extends PaidForm with HasBillingAddress {
     val featureChoice: Set[FeatureChoice]
     val zuoraAccountAddress : Address
     val payment: PaymentForm
