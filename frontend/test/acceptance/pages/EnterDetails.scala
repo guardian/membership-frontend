@@ -1,7 +1,8 @@
 package acceptance.pages
 
-import acceptance.util.{TestUser, Browser, Config}
+import acceptance.util.{Browser, Config, TestUser}
 import Config.baseUrl
+import org.openqa.selenium.support.ui.ExpectedConditions
 import org.scalatest.selenium.Page
 
 case class EnterDetails(val testUser: TestUser) extends Page with Browser {
@@ -63,6 +64,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
   def payPalSummaryHasCorrectAmount() = elementHasText(PayPalCheckout.paymentAmount, "£49.00")
 
   def acceptPayPalPayment() = {
+    pageDoesNotHaveElement(id("spinner"))
     PayPalCheckout.acceptPayment
     switchToParentWindow
   }
