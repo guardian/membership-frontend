@@ -62,7 +62,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
         Keys.MAILING_CITY -> jf.deliveryAddress.town,
         Keys.MAILING_STATE -> jf.deliveryAddress.countyOrState,
         Keys.MAILING_POSTCODE -> jf.deliveryAddress.postCode,
-        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.map(_.name).getOrElse(jf.deliveryAddress.countryName),
+        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.fold(jf.deliveryAddress.countryName)(_.name),
         Keys.ALLOW_MEMBERSHIP_MAIL -> true
       )) ++ Map(
         Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
