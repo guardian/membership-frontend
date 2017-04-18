@@ -1,6 +1,7 @@
 package controllers
 
 import com.gu.memsub.Subscriber
+import configuration.Config
 import model.Benefits
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
@@ -16,7 +17,10 @@ trait User extends Controller {
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)
-    MembersDataAPI.Service.checkMatchesResolvedMemberIn(request)
+
+    if (Config.stage == "PROD")
+      MembersDataAPI.Service.checkMatchesResolvedMemberIn(request)
+
     Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
   }
 
