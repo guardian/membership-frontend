@@ -12,6 +12,9 @@ import com.gu.identity.play.{AuthenticationService => _, _}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
+import com.gu.zuora.ZuoraRestService
+import com.gu.zuora.ZuoraRestService.AccountSummary
+import com.gu.zuora.soap.models.Queries.Account
 import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
@@ -39,6 +42,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 
 import scala.concurrent.Future
 import scala.util.Failure
+import scalaz.{-\/, \/, \/-}
 
 object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorHandler
   with LazyLogging
@@ -47,7 +51,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
   with PaymentServiceProvider
-  with MemberServiceProvider {
+  with MemberServiceProvider
+  with ZuoraRestServiceProvider {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
@@ -268,10 +273,18 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
     implicit val idReq = IdentityRequest(request)
 
+    val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { email =>
+      email match {
+        case \/-((accountSummary: AccountSummary)) => accountSummary.billToContact.email
+        case -\/(_) => None
+      }
+    }
+
     for {
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
+      email <- emailFromZuora
     } yield {
       tier match {
         case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request.user)
@@ -283,7 +296,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         paymentMethod,
         destination,
         upgrade,
-        resolution
+        resolution,
+        email
       )).discardingCookies(TierChangeCookies.deletionCookies: _*)
     }
   }

@@ -8,7 +8,7 @@ import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
+import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId, AccountId}
 import com.gu.memsub.promo.PromotionApplicator._
 import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
@@ -24,6 +24,8 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
+import com.gu.zuora.ZuoraRestService
+import com.gu.zuora.ZuoraRestService.AccountSummary
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Commands._
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
@@ -31,6 +33,8 @@ import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{Queries => SoapQueries}
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
+import controllers.Joiner.zuoraRestService
+import controllers.TierController.zuoraRestService
 import forms.MemberForm.{ContributorForm, _}
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
@@ -77,6 +81,7 @@ object MemberService {
 class MemberService(identityService: IdentityService,
                     salesforceService: api.SalesforceService,
                     zuoraService: ZuoraService,
+                    zuoraRestService: ZuoraRestService[Future],
                     stripeService: StripeService,
                     payPalService: PayPalService,
                     subscriptionService: SubscriptionService[Future],
@@ -585,8 +590,17 @@ class MemberService(identityService: IdentityService,
                                         payPalBaid: String): Future[UpdateResult] =
     for {
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
-      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, contact.email.getOrElse(""))
+      maybeEmail <- emailFromZuora(sub.accountId)
+      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, maybeEmail.getOrElse(""))
     } yield result
+
+  private def emailFromZuora(accountId: com.gu.memsub.Subscription.AccountId): Future[Option[String]] =
+    zuoraRestService.getAccount(accountId) map { email =>
+      email match {
+        case \/-((accountSummary: AccountSummary)) => accountSummary.billToContact.email
+        case -\/(_) => None
+      }
+  }
 
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
     if (sub.hasPendingFreePlan || sub.isCancelled)

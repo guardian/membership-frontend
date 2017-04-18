@@ -12,6 +12,7 @@ import com.gu.memsub.subsv2.{Catalog, PaidMembershipPlans}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
+import com.gu.zuora.ZuoraRestService.AccountSummary
 import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm._
@@ -34,7 +35,7 @@ import scala.language.implicitConversions
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
-import scalaz.{EitherT, \/}
+import scalaz.{-\/, EitherT, \/, \/-}
 
 object TierController extends Controller with ActivityTracking
   with LazyLogging
@@ -43,7 +44,8 @@ object TierController extends Controller with ActivityTracking
   with MemberServiceProvider
   with StripeServiceProvider
   with PayPalServiceProvider
-  with PaymentServiceProvider {
+  with PaymentServiceProvider
+  with ZuoraRestServiceProvider {
 
   def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, request.touchpointBackend.catalogService.unsafeCatalog))
@@ -205,12 +207,21 @@ object TierController extends Controller with ActivityTracking
         }
       }
 
-      paidMember.contact.email.map { email =>
-        for {
-          reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
-          result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
-        } yield result
-      }.getOrElse(noEmailMessage)
+      val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { email =>
+        email match {
+          case \/-((accountSummary: AccountSummary)) => accountSummary.billToContact.email
+          case -\/(_) => None
+        }
+      }
+
+      emailFromZuora.flatMap { maybeEmail =>
+        maybeEmail.map { email =>
+          for {
+            reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
+            result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
+          } yield result
+        }.getOrElse(noEmailMessage)
+      }
     }
 
     val futureResult = request.paidOrFreeSubscriber.fold(

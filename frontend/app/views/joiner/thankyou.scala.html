@@ -16,7 +16,8 @@
   paymentMethod: Option[PaymentMethod],
   returnDestinationOpt: Option[model.Destination],
   upgrade: Boolean,
-  touchpointBackendResolution: services.TouchpointBackend.Resolution
+  touchpointBackendResolution: services.TouchpointBackend.Resolution,
+  emailFromZuora: Option[String]
 )
 
 @title = @{
@@ -83,7 +84,7 @@
         @fragments.page.pageHeader(
             pageHeader,
             Some(s"You're the newest ${member.subscription.plan.tier.name} of the Guardian and we're thrilled to have you on board. " +
-                member.contact.email.map(email => s"We've sent confirmation of your membership to $email").getOrElse("Our system failed to store your email address, please contact customer services.")),
+                emailFromZuora.map(email => s"We've sent confirmation of your membership to $email").getOrElse("Our system failed to store your email address, please contact customer services.")),
             classes = Seq("sessioncamhidetext")
         )
 

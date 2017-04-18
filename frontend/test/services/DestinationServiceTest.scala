@@ -30,7 +30,7 @@ class DestinationServiceTest extends Specification {
 
     def createRequestWithSession(newSessions: (String, String)*) = {
 
-      val testMember = Contact("id", None, None, Some("fn"), "ln", Some("email"), new DateTime(), "contactId", "accountId", None, None, None, None, None)
+      val testMember = Contact("id", None, None, Some("fn"), "ln", new DateTime(), "contactId", "accountId", None, None, None, None, None)
       val partnerCharge: PaidCharge[Partner.type, Month.type] = PaidCharge[Partner.type, Month.type](Partner, Month, PricingSummary(Map(GBP -> Price(0.1f, GBP))), ProductRatePlanChargeId("prpcId"))
       val testSub: Subscription[SubscriptionPlan.Member] = new Subscription[SubscriptionPlan.Partner](
         id = com.gu.memsub.Subscription.Id(""),
