@@ -273,11 +273,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
     implicit val idReq = IdentityRequest(request)
 
-    val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { email =>
-      email match {
-        case \/-((accountSummary: AccountSummary)) => accountSummary.billToContact.email
-        case -\/(_) => None
-      }
+    val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { account =>
+      account.toOption.flatMap(_.billToContact.email)
     }
 
     for {

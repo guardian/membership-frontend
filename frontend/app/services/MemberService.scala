@@ -8,7 +8,7 @@ import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId, AccountId}
+import com.gu.memsub.Subscription.{AccountId, Feature, ProductRatePlanId, RatePlanId}
 import com.gu.memsub.promo.PromotionApplicator._
 import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
@@ -590,17 +590,9 @@ class MemberService(identityService: IdentityService,
                                         payPalBaid: String): Future[UpdateResult] =
     for {
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
-      maybeEmail <- emailFromZuora(sub.accountId)
+      maybeEmail <- zuoraRestService.getAccount(sub.accountId) map (_.toOption.flatMap(_.billToContact.email))
       result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, maybeEmail.getOrElse(""))
     } yield result
-
-  private def emailFromZuora(accountId: com.gu.memsub.Subscription.AccountId): Future[Option[String]] =
-    zuoraRestService.getAccount(accountId) map { email =>
-      email match {
-        case \/-((accountSummary: AccountSummary)) => accountSummary.billToContact.email
-        case -\/(_) => None
-      }
-  }
 
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
     if (sub.hasPendingFreePlan || sub.isCancelled)

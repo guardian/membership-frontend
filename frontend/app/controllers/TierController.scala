@@ -15,6 +15,7 @@ import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.ZuoraRestService.AccountSummary
 import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
+import controllers.Joiner.zuoraRestService
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
@@ -207,11 +208,8 @@ object TierController extends Controller with ActivityTracking
         }
       }
 
-      val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { email =>
-        email match {
-          case \/-((accountSummary: AccountSummary)) => accountSummary.billToContact.email
-          case -\/(_) => None
-        }
+      val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { account =>
+        account.toOption.flatMap(_.billToContact.email)
       }
 
       emailFromZuora.flatMap { maybeEmail =>
