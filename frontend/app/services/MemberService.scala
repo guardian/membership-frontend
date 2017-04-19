@@ -8,7 +8,7 @@ import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
-import com.gu.memsub.Subscription.{AccountId, Feature, ProductRatePlanId, RatePlanId}
+import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
 import com.gu.memsub.promo.PromotionApplicator._
 import com.gu.memsub.promo._
 import com.gu.memsub.services.PromoService
@@ -25,7 +25,6 @@ import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
 import com.gu.zuora.ZuoraRestService
-import com.gu.zuora.ZuoraRestService.AccountSummary
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Commands._
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
@@ -33,8 +32,6 @@ import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{Queries => SoapQueries}
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
-import controllers.Joiner.zuoraRestService
-import controllers.TierController.zuoraRestService
 import forms.MemberForm.{ContributorForm, _}
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent

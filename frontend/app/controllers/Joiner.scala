@@ -12,9 +12,6 @@ import com.gu.identity.play.{AuthenticationService => _, _}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
-import com.gu.zuora.ZuoraRestService
-import com.gu.zuora.ZuoraRestService.AccountSummary
-import com.gu.zuora.soap.models.Queries.Account
 import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
@@ -42,7 +39,6 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 
 import scala.concurrent.Future
 import scala.util.Failure
-import scalaz.{-\/, \/, \/-}
 
 object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorHandler
   with LazyLogging
