@@ -47,7 +47,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
   with PaymentServiceProvider
-  with MemberServiceProvider {
+  with MemberServiceProvider
+  with ZuoraRestServiceProvider {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
@@ -268,10 +269,15 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
     implicit val idReq = IdentityRequest(request)
 
+    val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { account =>
+      account.toOption.flatMap(_.billToContact.email)
+    }
+
     for {
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
       destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
+      email <- emailFromZuora
     } yield {
       tier match {
         case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request.user)
@@ -283,7 +289,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         paymentMethod,
         destination,
         upgrade,
-        resolution
+        resolution,
+        email
       )).discardingCookies(TierChangeCookies.deletionCookies: _*)
     }
   }

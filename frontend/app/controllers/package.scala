@@ -5,6 +5,7 @@ import com.gu.memsub.services.api.PaymentService
 import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services._
 import com.gu.stripe.StripeService
+import com.gu.zuora.ZuoraRestService
 import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
 import play.api.data.Form
@@ -48,6 +49,11 @@ package object controllers extends CommonActions with LazyLogging{
   trait ZuoraServiceProvider {
     def zuoraService(implicit request: BackendProvider): ZuoraService =
       request.touchpointBackend.zuoraService
+  }
+
+  trait ZuoraRestServiceProvider {
+    def zuoraRestService(implicit request: BackendProvider): ZuoraRestService[Future] =
+      request.touchpointBackend.zuoraRestService
   }
 
   trait SalesforceServiceProvider {

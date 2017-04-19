@@ -9,6 +9,7 @@ import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services.SubscriptionService.CatalogMap
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.okhttp.RequestRunners
+import com.gu.okhttp.RequestRunners.futureRunner
 import com.gu.paypal.PayPalConfig
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
@@ -17,7 +18,7 @@ import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.rest.SimpleClient
 import com.gu.zuora.soap.ClientWithFeatureSupplier
-import com.gu.zuora.{rest, soap, ZuoraService => ZuoraServiceImpl}
+import com.gu.zuora.{ZuoraRestService, rest, soap, ZuoraService => ZuoraServiceImpl}
 import com.netaporter.uri.Uri
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
@@ -28,7 +29,6 @@ import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
-import org.joda.time.LocalDate
 import play.api.mvc.RequestHeader
 
 import scala.concurrent.duration._
@@ -60,34 +60,34 @@ object TouchpointBackend extends LazyLogging {
       val backendEnv = config.stripe.envName
       val service = "Stripe Giraffe"
     }))
+
     val payPalService = new PayPalService(config.payPal)
-
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
-
+    implicit val simpleRestClient = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
     val paperRatePlanIds = Config.subsProductIds(restBackendConfig.envName)
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
     val runner = RequestRunners.loggingRunner(config.zuoraMetrics("zuora-soap-client"))
     // extendedRunner sets the configurable read timeout, which is used for the createSubscription call.
     val extendedRunner = RequestRunners.configurableLoggingRunner(20.seconds, config.zuoraMetrics("zuora-soap-client"))
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
 
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
     val discounter = new Discounter(Config.discountRatePlanIds(config.zuoraEnvName))
     val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
     val promoService = new PromoService(promoCollection, discounter)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient)
+    val zuoraRestService = new ZuoraRestService[Future]()
 
     val pids = Config.productIds(restBackendConfig.envName)
-    val client = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
-    val newCatalogService = new subsv2.services.CatalogService[Future](pids, client, Await.result(_, 10.seconds), restBackendConfig.envName)
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, simpleRestClient, Await.result(_, 10.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
-    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, client, zuoraService.getAccountIds)
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraService.getAccountIds)
 
     val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, stripeService, payPalService, newSubsService, newCatalogService, promoService, paymentService, discounter,
+      identityService, salesforceService, zuoraService, zuoraRestService, stripeService, payPalService, newSubsService, newCatalogService, promoService, paymentService, discounter,
         Config.discountRatePlanIds(config.zuoraEnvName))
 
     TouchpointBackend(
@@ -106,11 +106,13 @@ object TouchpointBackend extends LazyLogging {
       subscriptionService = newSubsService,
       catalogService = newCatalogService,
       zuoraService = zuoraService,
+      zuoraRestService = zuoraRestService,
       promoService = promoService,
       promos = promoCollection,
       membershipRatePlanIds = memRatePlanIds,
       paymentService = paymentService,
-      identityService = identityService
+      identityService = identityService,
+      simpleRestClient = simpleRestClient
     )
   }
 
@@ -163,11 +165,13 @@ case class TouchpointBackend(
   subscriptionService: subsv2.services.SubscriptionService[Future],
   catalogService: subsv2.services.CatalogService[Future],
   zuoraService: ZuoraService,
+  zuoraRestService: ZuoraRestService[Future],
   membershipRatePlanIds: MembershipRatePlanIds,
   promos: PromotionCollection,
   promoService: PromoService,
   paymentService: PaymentService,
-  identityService: IdentityService
+  identityService: IdentityService,
+  simpleRestClient: SimpleClient[Future]
 ) extends ActivityTracking {
 
   lazy val catalog: Catalog = catalogService.unsafeCatalog

@@ -43,7 +43,8 @@ object TierController extends Controller with ActivityTracking
   with MemberServiceProvider
   with StripeServiceProvider
   with PayPalServiceProvider
-  with PaymentServiceProvider {
+  with PaymentServiceProvider
+  with ZuoraRestServiceProvider {
 
   def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, request.touchpointBackend.catalogService.unsafeCatalog))
@@ -205,12 +206,18 @@ object TierController extends Controller with ActivityTracking
         }
       }
 
-      paidMember.contact.email.map { email =>
-        for {
-          reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
-          result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
-        } yield result
-      }.getOrElse(noEmailMessage)
+      val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { account =>
+        account.toOption.flatMap(_.billToContact.email)
+      }
+
+      emailFromZuora.flatMap { maybeEmail =>
+        maybeEmail.map { email =>
+          for {
+            reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
+            result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
+          } yield result
+        }.getOrElse(noEmailMessage)
+      }
     }
 
     val futureResult = request.paidOrFreeSubscriber.fold(

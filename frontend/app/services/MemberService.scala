@@ -24,6 +24,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
+import com.gu.zuora.ZuoraRestService
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.soap.models.Commands._
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
@@ -77,6 +78,7 @@ object MemberService {
 class MemberService(identityService: IdentityService,
                     salesforceService: api.SalesforceService,
                     zuoraService: ZuoraService,
+                    zuoraRestService: ZuoraRestService[Future],
                     stripeService: StripeService,
                     payPalService: PayPalService,
                     subscriptionService: SubscriptionService[Future],
@@ -585,7 +587,8 @@ class MemberService(identityService: IdentityService,
                                         payPalBaid: String): Future[UpdateResult] =
     for {
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
-      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, contact.email.getOrElse(""))
+      maybeEmail <- zuoraRestService.getAccount(sub.accountId) map (_.toOption.flatMap(_.billToContact.email))
+      result <- zuoraService.createPayPalPaymentMethod(sub.accountId, payPalBaid, maybeEmail.getOrElse(""))
     } yield result
 
   private def subOrPendingAmendError[P <: Subscription[SubscriptionPlan.Member]](sub: P): MemberError \/ P =
