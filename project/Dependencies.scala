@@ -6,7 +6,7 @@ object Dependencies {
   //versions
   val awsClientVersion = "1.11.95"
   //libraries
-  val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "7.2.3"
+  val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.2"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.9" // v0.9 is the latest version published for Play 2.4...
   val membershipCommon = "com.gu" %% "membership-common" % "0.390"
