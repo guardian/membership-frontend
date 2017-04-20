@@ -1,9 +1,11 @@
 package controllers
 
-import actions.AuthRequest
 import com.typesafe.scalalogging.LazyLogging
-import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
-import play.api.mvc.{AnyContent, Controller}
+import play.api.libs.json.Json.toJson
+import play.api.libs.json._
+import play.api.mvc.{Controller, Request}
+import services.{PayPalService, TouchpointBackend}
+import utils.TestUsers.PreSigninTestCookie
 
 object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
 
@@ -12,56 +14,43 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
 
   case class PayPalBillingDetails(amount: Float, billingPeriod: String, currency: String, tier: String)
 
-  // Json writers.
-  implicit val tokenWrites = Json.writes[Token]
-  implicit val tokenReads = Json.reads[Token]
-  implicit val billingDetails = Json.reads[PayPalBillingDetails]
-
-  // Wraps the PayPal token and converts it to JSON
-  // for sending back to the client.
-  private def tokenJsonResponse(token: String) = {
-    Json.toJson(Token(token))
-  }
+  // Json readers & writers.
+  implicit val formatsToken = Json.format[Token]
+  implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 
   // Sets up a payment by contacting PayPal, returns the token as JSON.
-  def setupPayment = AuthenticatedAction { implicit request =>
-    val returnUrl = routes.PayPal.returnUrl().absoluteURL(secure = true)(request)
-    val cancelUrl = routes.PayPal.cancelUrl().absoluteURL(secure = true)(request)
-    parseJsonAndRunServiceCall(request, payPalService.retrieveToken(returnUrl, cancelUrl))
+  def setupPayment = NoCacheAction(parse.json[PayPalBillingDetails]) { implicit request =>
+    readRequestAndRunServiceCall(_.retrieveToken(
+      returnUrl = routes.PayPal.returnUrl().absoluteURL(secure = true),
+      cancelUrl = routes.PayPal.cancelUrl().absoluteURL(secure = true)
+    ))
   }
 
   // Creates a billing agreement using a payment token.
-  def createAgreement = AuthenticatedAction { implicit request =>
-    parseJsonAndRunServiceCall(request, payPalService.retrieveBaid)
+  def createAgreement = NoCacheAction(parse.json[Token]) { implicit request =>
+    readRequestAndRunServiceCall(_.retrieveBaid)
   }
 
-  //Takes a request, parses it into a type T, passes this into serviceCall to retrieve a token then returns this as json
-  def parseJsonAndRunServiceCall[T](request: AuthRequest[AnyContent], serviceCall: (T) => String)(implicit fjs: Reads[T]) = {
-    request.body.asJson.map { json =>
+  //Takes a request with a body of type [T], then passes T to the payPal call 'exec' to retrieve a token and returns this as json
+  def readRequestAndRunServiceCall[T](exec: (PayPalService) => ((T) => String))(implicit request: Request[T]) = {
+    val payPalService = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies).backend.payPalService
 
-      Json.fromJson[T](json)(fjs) match {
-        case JsSuccess(parsed, _) => Ok(tokenJsonResponse(serviceCall(parsed)))
-        case e: JsError => BadRequest(JsError.toJson(e).toString)
-      }
+    val token = Token(exec(payPalService)(request.body))
 
-    }.getOrElse(BadRequest)
+    Ok(toJson(token))
   }
 
   // The endpoint corresponding to the PayPal return url, hit if the user is
   // redirected and needs to come back.
   def returnUrl = NoCacheAction {
-
     logger.error("User hit the PayPal returnUrl.")
     Ok(views.html.paypal.errorPage())
-
   }
 
   // The endpoint corresponding to the PayPal cancel url, hit if the user is
   // redirected and the payment fails.
   def cancelUrl = NoCacheAction {
-
     logger.error("User hit the PayPal cancelUrl, something went wrong.")
     Ok(views.html.paypal.errorPage())
-
   }
 }
