@@ -18,12 +18,17 @@ import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
-import play.api.libs.ws.{WS, WSResponse}
+import play.api.libs.ws.{WS, WSRequest, WSResponse}
 import services.IdentityService.DisregardResponseContent
 import views.support.IdentityUser
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Failure, Success}
+import dispatch._
+import Defaults.timer
+import play.api.http.Status
+import play.api.mvc.Results
 
 case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -86,15 +91,29 @@ case class IdentityService(identityApi: IdentityApi) {
         IdentityUser(fullUser, doesPasswordExist)
       }
 
+  def doesUserExist(email: String)(implicit idReq: IdentityRequest): Future[Boolean] = (identityApi.get("user",
+    idReq.headers,
+    idReq.trackingParameters :+ ("emailAddress" -> email),
+    "get-user-by-email") { resp =>
+    Right(resp.status == Status.OK)
+  }).valueOr(_ => false)
+
   def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
     retry.Backoff(max = 3, delay = 2.seconds, base = 2){ () =>
-      identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+      getUser(user).value
     }.map(_.getOrElse{
       val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
       val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
       val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
       throw IdentityServiceError(s"Couldn't get user's ${user.id} full details. $errContext")
     })
+
+  def getUser(user: IdMinimalUser)(implicit idReq: IdentityRequest): EitherT[Future, String, IdUser] = identityApi.get(s"user/${user.id}",
+    idReq.headers,
+    idReq.trackingParameters,
+    "get-user") {
+      _.json.validate[IdUser].asEither.leftMap(_.mkString(","))
+    }
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     identityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
@@ -149,25 +168,13 @@ trait IdentityApi {
     }
   }
 
-  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdUser]] = {
-    Timing.record(IdentityApiMetrics, "get-user") {
-      val url = s"${Config.idApiUrl}/$endpoint"
-      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get()
-        .recover { case e =>
-          Logger.error("Failure trying to retrieve user data", e)
-          throw e
-        }
-        .map { response =>
-          recordAndLogResponse(response.status, "GET user", endpoint)
-          val jsResult = (response.json \ "user").validate[IdUser]
-          if (jsResult.isError) Logger.error(s"Id Api response on $url : ${response.json.toString}")
-          jsResult.asOpt
-        }
-        .recover { case e =>
-          Logger.error("Failure trying to deserialise user data", e)
-          None
-        }
-    }
+  def get[A](
+    endpoint: String,
+    headers: List[(String, String)],
+    parameters: List[(String, String)],
+    metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
+    execute(endpoint, metricName, func,
+      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).withMethod("GET"))
   }
 
   def post[A](
@@ -175,15 +182,17 @@ trait IdentityApi {
     headers: List[(String, String)],
     parameters: List[(String, String)],
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
-      val requestHolder = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(5000)
-
-      for {
-        r <- EitherT.right(Timing.record(IdentityApiMetrics, metricName)(requestHolder.post(data.getOrElse(JsNull))))
-        _ = recordAndLogResponse(r.status, s"POST $metricName", endpoint )
-        response <- EitherT.fromEither[Future](Either.cond((r.status / 100) == 2, right = r, left = s"Identity API error: POST ${Config.idApiUrl}/$endpoint STATUS ${r.status}"))
-        result <- EitherT.fromEither[Future](func(response))
-      } yield result
+    execute(endpoint, metricName, func,
+      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*)
+          .withRequestTimeout(5000).withMethod("POST").withBody(data.getOrElse(JsNull)))
   }
+
+  private def execute[A](endpoint: String, metricName: String, func: (WSResponse) => Either[String, A], requestHolder: WSRequest): EitherT[Future, String, A] = for {
+    r <- EitherT.right(Timing.record(IdentityApiMetrics, metricName)(requestHolder.execute()))
+    _ = recordAndLogResponse(r.status, s"${requestHolder.method} $metricName", endpoint)
+    response <- EitherT.fromEither[Future](Either.cond((r.status / 100) == 2, right = r, left = s"Identity API error: ${requestHolder.method} ${Config.idApiUrl}/$endpoint STATUS ${r.status}"))
+    result <- EitherT.fromEither[Future](func(response))
+  } yield result
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
     Logger.info(s"$responseMethod response $status for endpoint $endpoint")

@@ -6,9 +6,11 @@ import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.mvc.Controller
-import services.MembersDataAPI
+import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
@@ -18,6 +20,12 @@ trait User extends Controller {
     val json = basicDetails(request.subscriber)
     MembersDataAPI.Service.checkMatchesResolvedMemberIn(request)
     Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
+  }
+
+  def checkExistingEmail(email: String) = CachedAction.async { implicit request =>
+    for {
+      doesUserExist <- IdentityService(IdentityApi).doesUserExist(email)(IdentityRequest(request))
+    } yield Ok(Json.obj("emailInUse" -> doesUserExist))
   }
 
   def basicDetails(subscriber: Subscriber.Member) = Json.obj(
