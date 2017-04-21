@@ -1,11 +1,12 @@
 package services
 
-import com.gu.i18n.Country._
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import forms.MemberForm.{MonthlyContributorForm, CommonForm, JoinForm}
+import dispatch.Defaults.timer
+import dispatch._
+import forms.MemberForm.{CommonForm, JoinForm, MonthlyContributorForm}
 import model.GenericSFContact
 import monitoring.MemberMetrics
 import play.api.Play.current
@@ -16,8 +17,6 @@ import services.FrontendMemberRepository._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import dispatch._
-import Defaults.timer
 
 object FrontendMemberRepository {
   type UserId = String
@@ -63,7 +62,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
         Keys.MAILING_CITY -> jf.deliveryAddress.town,
         Keys.MAILING_STATE -> jf.deliveryAddress.countyOrState,
         Keys.MAILING_POSTCODE -> jf.deliveryAddress.postCode,
-        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.getOrElse(UK).alpha2,
+        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.fold(jf.deliveryAddress.countryName)(_.name),
         Keys.ALLOW_MEMBERSHIP_MAIL -> true
       )) ++ Map(
         Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
