@@ -111,8 +111,8 @@ case class IdentityService(identityApi: IdentityApi) {
   def getUser(user: IdMinimalUser)(implicit idReq: IdentityRequest): EitherT[Future, String, IdUser] = identityApi.get(s"user/${user.id}",
     idReq.headers,
     idReq.trackingParameters,
-    "get-user") {
-      _.json.validate[IdUser].asEither.leftMap(_.mkString(","))
+    "get-user") { resp =>
+      (resp.json \ "user").validate[IdUser].asEither.leftMap(_.mkString(","))
     }
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
