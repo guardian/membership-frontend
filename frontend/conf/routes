@@ -124,7 +124,6 @@ GET            /patterns                              controllers.PatternLibrary
 
 # User
 GET            /user/me                               controllers.User.me
-GET            /user/check-existing-email             controllers.User.checkExistingEmail(email: String)
 
 # Vanity URLS
 GET            /subscriber-offer                      controllers.Redirects.homepageRedirect
