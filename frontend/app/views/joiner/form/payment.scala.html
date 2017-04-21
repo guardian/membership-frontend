@@ -17,6 +17,8 @@
     touchpointBackendResolution: services.TouchpointBackend.Resolution
 )(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader)
 
+@import configuration.Config.idWebAppSigninUrl
+
 @main(
     plans.tier.cta,
     pageInfo = pageInfo,
@@ -84,7 +86,7 @@
                                 required
                                 aria-required="true"/>
                                 @fragments.form.errorMessage("Please enter your email")
-                                <p id="form-field__error-message-email-checker" class="form-field__error-message is-hidden">This email is already used in our database, please use another email</p>
+                                <p id="form-field__error-message-email-checker" class="form-field__error-message is-hidden">You already have a Guardian account. Please <a href="@idWebAppSigninUrl(request.uri)">sign in</a> or use another email address.</p>
                             </div>
                         </div>
 
