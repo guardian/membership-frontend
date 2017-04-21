@@ -67,11 +67,10 @@ define([
     'src/modules/form/billingPeriodChoice',
     'src/modules/form/paypal',
     'src/modules/form/stripe',
-    'src/modules/form/accordion',
-    'src/modules/form/validation/existEmail'
+    'src/modules/form/accordion'
 ], function (validation, form, payment, address, options, submitButton,
-             password, ongoingCardPayments, billingPeriodChoice, paypal,
-             stripe, accordion, existEmail) {
+    password, ongoingCardPayments, billingPeriodChoice, paypal,
+    stripe, accordion) {
     'use strict';
 
     var init = function () {
@@ -86,15 +85,19 @@ define([
             billingPeriodChoice.init();
 
             if (form.hasPayment) {
+
                 curl('js!stripe').then(function () {
                     payment.init();
                 });
+
             }
 
             if (form.hasPaypal) {
+
                 curl('js!paypal').then(function () {
                     paypal.init();
                 });
+
             }
 
             if (form.hasStripeCheckout) {
@@ -103,15 +106,16 @@ define([
                     .then(function () {
                         stripe.init();
                     });
+
+
+
             }
 
             if (form.hasAccordion){
                 accordion.init();
             }
 
-            if (form.hasEmailInput){
-                existEmail.init();
-            }
+
         }
     };
 
