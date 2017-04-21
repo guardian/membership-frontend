@@ -60,6 +60,10 @@ define([
         return !!document.querySelector('.js-continue-name-address');
     }
 
+    function hasEmailInput () {
+        return !!document.getElementById('email') && (document.getElementById('email') instanceof HTMLInputElement);
+    }
+
     /**
      * formUtil singleton provides:
      *    elem: DomElement - the form element
@@ -81,6 +85,7 @@ define([
                 hasPayment: hasPayment(),
                 hasPaypal: hasPaypal(),
                 hasStripeCheckout: hasStripeCheckout(),
+                hasEmailInput: hasEmailInput(),
                 errs: [],
                 flush: function () {
                     this.elem = getFormElem();
