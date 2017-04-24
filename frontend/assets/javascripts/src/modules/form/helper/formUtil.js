@@ -61,7 +61,7 @@ define([
     }
 
     function hasEmailInput () {
-        return !!document.getElementById('email') && (document.getElementById('email') instanceof HTMLInputElement);
+        return !!document.getElementById('form-field__error-message-email-checker') && (document.getElementById('form-field__error-message-email-checker') instanceof HTMLParagraphElement);
     }
 
     /**
