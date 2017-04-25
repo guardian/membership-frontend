@@ -157,7 +157,7 @@ These are browser driving Selenium tests.
 ## Deployment
 
 We use continuous deployment of the `master` branch to Production (https://membership.theguardian.com/).
-See [fix-a-failed-deploy.md](https://github.com/guardian/deploy/blob/master/magenta-lib/docs/magenta-lib/howto/fix-a-failed-deploy.md)
+See [fix-a-failed-deploy.md](https://github.com/guardian/riff-raff/blob/master/riff-raff/public/docs/howto/fix-a-failed-deploy.md)
 for what to do if a deploy goes bad.
 
 ## Security
