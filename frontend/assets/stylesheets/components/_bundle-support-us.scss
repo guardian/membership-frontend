@@ -2,6 +2,10 @@
     @include bundle-column-narrow();
     padding-left: 20px;
 
+    @include mq($from: mem-full) {
+      margin-left: 80px;
+    }
+
     >img {
         @include mq($until: mem-full) {
             display: none;
@@ -26,10 +30,14 @@
 }
 
 .bundle-support__main__title {
-    @include bundle-column-wide();
+    @include bundle-column-narrow();
     padding-right: $gs-gutter;
     @include mq($until: mem-full) {
         margin-left: $gs-gutter;
+    }
+    @include mq($from: mem-full) {
+        margin-left: 650px;
+        max-width: 28rem;
     }
 
     >h1 {
@@ -37,6 +45,9 @@
         @include text-offering-title();
         border-top: 1px guss-colour(news-main-2) solid;
         margin-top: $gs-baseline * 4;
+        @include mq($from: mem-full) {
+            margin-top: 1.5rem;
+        }
         margin-bottom: $gs-baseline * 2;
     }
 }
@@ -55,10 +66,17 @@
 .bundle-support__content {
     background: guss-colour(comment-support-2);
     margin-bottom: 102px;
+    @include mq($from: mem-full) {
+        margin-right: -100px;
+    }
 }
 
 .bundle-support__content__body {
-    @include bundle-column-wide();
+    @include bundle-column-narrow();
+    @include mq($from: mem-full) {
+        margin-right: -100px;
+        margin-left: -40px;
+    }
 }
 
 .bundle-support__content__img-space,
@@ -69,13 +87,14 @@
 .bundle-support__content__body__text {
     @include text-paragraph();
     padding-top: 8px;
-    @include mq($from: mem-full) {
-        max-width: gs-span(6);
-    }
-    color: guss-colour(neutral-1);
+    max-width: gs-span(6);
     @include mq($until: mem-full){
         margin-left: $gs-gutter;
     }
+    @include mq($from: mem-full) {
+        margin-left: 150px;
+    }
+    color: guss-colour(neutral-1);
     >p {
         margin-bottom: $gs-baseline;
     }

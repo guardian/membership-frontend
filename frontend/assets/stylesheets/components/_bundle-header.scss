@@ -110,6 +110,7 @@
 
 .bundle-header__main__img {
     @include bundle-column-narrow();
+    float: right;
     img {
         position: absolute;
         @include mq($from: tablet, $until: desktop) {

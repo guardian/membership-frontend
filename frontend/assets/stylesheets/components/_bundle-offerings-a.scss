@@ -7,6 +7,10 @@
         @include bundle-column-narrow();
         padding-left: $gs-gutter * 5;
     }
+    @include mq($from: mem-full) {
+        float: right;
+        padding-left: $gs-gutter;
+    }
 }
 
 .bundle-offering-a__give__content {
@@ -16,9 +20,11 @@
         max-width: gs-span(3.75);
     }
     @include mq($from: desktop) {
-        max-width: gs-span(4.75);
+        max-width: gs-span(4.0);
     }
-
+    @include mq($from: mem-full) {
+        max-width: 28rem;
+    }
     >h1 {
         margin-top: $gs-baseline * 3;
         padding-top: 2px;
@@ -61,12 +67,16 @@
     @include mq($from: desktop) {
         display: inherit;
     }
-    @include bundle-column-wide();
+    @include mq($from: mem-full) {
+        display: inline-block;
+        margin-left: gs-span(1.5);
+    }
+    @include bundle-column-narrow();
     padding-right: $gs-gutter;
     @include mq($until: mem-full) {
         padding-top: $gs-baseline * 2;
     }
-    width: gs-span(9);
+    //width: gs-span(9);
     >h1 {
         @include mq($from: mem-full) {
             margin-top: $gs-baseline * 3;
@@ -90,6 +100,9 @@
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;
+    @include mq($from: mem-full) {
+        margin-left: 60px;
+    }
 }
 
 .bundle-offering-a__subscribe__offer__content {
