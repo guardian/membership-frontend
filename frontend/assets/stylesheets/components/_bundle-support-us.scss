@@ -32,8 +32,11 @@
 .bundle-support__main__title {
     @include bundle-column-narrow();
     padding-right: $gs-gutter;
-    @include mq($until: mem-full) {
+    @include mq($until: tablet) {
         margin-left: $gs-gutter;
+    }
+    @include mq($from: tablet, $until: mem-full) {
+        margin-left: 230px;
     }
     @include mq($from: mem-full) {
         margin-left: 650px;
@@ -45,10 +48,13 @@
         @include text-offering-title();
         border-top: 1px guss-colour(news-main-2) solid;
         margin-top: $gs-baseline * 4;
+        @include mq($from: desktop, $until: mem-full) {
+            margin-top: 1rem;
+        }
         @include mq($from: mem-full) {
             margin-top: 1.5rem;
         }
-        margin-bottom: $gs-baseline * 2;
+        margin-bottom: $gs-baseline;
     }
 }
 
@@ -73,6 +79,9 @@
 
 .bundle-support__content__body {
     @include bundle-column-narrow();
+    @include mq($from: desktop, $until: mem-full) {
+        width: gs-span(9.25);
+    }
     @include mq($from: mem-full) {
         margin-right: -100px;
         margin-left: -40px;
@@ -81,15 +90,23 @@
 
 .bundle-support__content__img-space,
 .bundle-support__one-off__img-space {
-    @include bundle-column-narrow();
+    @include mq($until: mem-full) {
+        display: none;
+    }
+    @include mq($from: mem-full) {
+        @include bundle-column-narrow();
+    }
 }
 
 .bundle-support__content__body__text {
     @include text-paragraph();
     padding-top: 8px;
     max-width: gs-span(6);
-    @include mq($until: mem-full){
+    @include mq($until: desktop){
         margin-left: $gs-gutter;
+    }
+    @include mq($from: desktop, $until: mem-full) {
+        margin-left: 230px;
     }
     @include mq($from: mem-full) {
         margin-left: 150px;

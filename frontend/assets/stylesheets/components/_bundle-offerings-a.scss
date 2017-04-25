@@ -3,11 +3,13 @@
     margin: auto;
     display: inherit;
     float: left;
-    @include mq($from: desktop) {
-        @include bundle-column-narrow();
-        padding-left: $gs-gutter * 5;
+    @include mq($from: desktop, $until: mem-full) {
+        @include bundle-column-wide();
+        width: gs-span(9.25);
+        padding-left: 230px;
     }
     @include mq($from: mem-full) {
+        @include bundle-column-narrow();
         float: right;
         padding-left: $gs-gutter;
     }
@@ -16,12 +18,6 @@
 .bundle-offering-a__give__content {
     margin-top: $gs-baseline * 3;
 
-    @include mq($from: tablet) {
-        max-width: gs-span(3.75);
-    }
-    @include mq($from: desktop) {
-        max-width: gs-span(4.0);
-    }
     @include mq($from: mem-full) {
         max-width: 28rem;
     }
@@ -40,6 +36,12 @@
 
 .bundle-offering-a__give__content__body {
     background-color: #d4ebf8;
+    margin-top: 10px;
+    @include mq($from: desktop, $until: mem-full) {
+        .bundle-button {
+            margin-left: 100px;
+        }
+    }
     @include mq($from: mem-full) {
         margin-top: $gs-baseline * 2;
 
@@ -90,7 +92,7 @@
         padding-right: 1px;
 
         .bundle-button__content {
-            margin-top: 108px;
+            margin-top: 0;
         }
     }
 }
@@ -100,6 +102,9 @@
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;
+    @include mq($from: desktop, $until: mem-full) {
+        margin-left: 80px;
+    }
     @include mq($from: mem-full) {
         margin-left: 60px;
     }
@@ -117,9 +122,12 @@
         font-weight: 900;
     }
 
+    .bundle-button {
+        margin-left: 80px;
+    }
+
     .bundle-button__content {
         margin-bottom: $gs-baseline;
-        margin-left: $gs-gutter/2;
     }
 }
 
