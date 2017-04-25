@@ -58,8 +58,6 @@ object MemberForm {
   }
 
   trait JoinForm extends CommonForm with HasDeliveryAddress {
-    val marketingChoices: MarketingChoicesForm
-    val password: Option[String]
     val planChoice: PlanChoice
   }
 
