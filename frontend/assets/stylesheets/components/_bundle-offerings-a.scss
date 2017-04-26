@@ -28,18 +28,20 @@
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
-    .bundle-button__content {
-        margin-bottom: $gs-baseline;
-        margin-left: $gs-gutter/2;
-    }
+    //.bundle-button__content {
+    //    margin-bottom: $gs-baseline;
+    //    margin-left: $gs-gutter/2;
+    //}
 }
 
 .bundle-offering-a__give__content__body {
     background-color: #d4ebf8;
     margin-top: 10px;
+    padding-bottom: 10px;
     @include mq($from: desktop, $until: mem-full) {
         .bundle-button {
-            margin-left: 100px;
+            margin-bottom: $gs-baseline;
+            margin-left: 120px;
         }
     }
     @include mq($from: mem-full) {
@@ -55,8 +57,11 @@
     }
 }
 
-.bundle-offering-a__give__monthly-button,
-.bundle-offering-a__give__one-off-button{
+.bundle-offering-a__give__content__body__description {
+    padding: 10px;
+}
+
+.bundle-offering-a__give__button {
     .bundle-button__content {
         width: gs-span(3.35);
     }

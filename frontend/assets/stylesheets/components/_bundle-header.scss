@@ -11,20 +11,12 @@
 
     .global-header__logo__image {
         margin-top: 2px;
-        @include mq($from: tablet) {
-            margin-right: 10px;
+        margin-right: 60px;
+        width: 320px;
+        height: 60px;
+        @include mq($from: tablet, $until: desktop) {
             width: 280px;
             height: 50px;
-        }
-        @include mq($from: desktop) {
-            margin-right: 330px;
-            width: 320px;
-            height: 60px;
-        }
-        @include mq($from: mem-full) {
-            margin-right: 20px;
-            width: 320px;
-            height: 60px;
         }
     }
 
@@ -99,7 +91,8 @@
         }
         @include mq($from: desktop, $until: mem-full) {
             font-size: 22px;
-            width: gs-span(3.75);
+            width: 400px;
+            padding-bottom: 25px;
         }
         @include mq($from: mem-full) {
             padding-bottom: $gs-baseline * 3;
