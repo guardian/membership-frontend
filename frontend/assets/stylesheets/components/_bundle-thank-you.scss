@@ -1,3 +1,36 @@
+.bundle-thankyou__explainer-content {
+    padding-right: $gs-gutter;
+    @include mq($from: tablet, $until: desktop) {
+        padding-left: $gs-gutter;
+    }
+    @include mq($from: desktop, $until: mem-full) {
+        padding-left: $gs-gutter * 2;
+    }
+    @include mq($from: mem-full) {
+        padding-left: 100px;
+    }
+
+    > p {
+        @include fs-headline(2);
+        font-size: 18px;
+        line-height: 22px;
+        margin-bottom: $gs-baseline * 2;
+        padding: 8px $gs-gutter/2 0;
+    }
+
+    > ul {
+        list-style: none;
+    }
+
+    > ul li {
+        @include fs-headline(2);
+        font-size: 18px;
+        line-height: 22px;
+        margin-bottom: $gs-baseline * 2;
+        padding: 0 $gs-gutter * 2;
+    }
+}
+
 .bundle-thankyou__email-form {
 
     margin-top: 24px;

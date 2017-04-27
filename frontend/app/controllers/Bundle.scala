@@ -89,7 +89,7 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("a1b0524bdd81bf9f5e92d199c0977c04b59731ec/0_0_480_400", Seq(480), "png")
+      availableImages=ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
     )
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 

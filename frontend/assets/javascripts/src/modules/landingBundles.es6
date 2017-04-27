@@ -18,7 +18,7 @@ const SEE_MORE_CTA = document.querySelector(SEE_MORE_CTA_SELECTOR);
 const PRINT_OPTIONS = document.querySelectorAll(PRINT_OPTIONS_SELECTOR);
 const PRINT_CTA = document.querySelector(PRINT_CTA_SELECTOR);
 const COMMIT_CTA = document.querySelector(COMMIT_BUTTON_SELECTOR);
-const COMMIT_COOKIE_NAME = 'GU_PDCOMCTA';
+const COMMIT_COOKIE_NAME = 'GU_DBPT1';
 
 const cookieDomain = () => {
     return document.location.host.substr(document.location.host.indexOf('.') ? document.location.host.indexOf('.') + 1 : 0);
@@ -55,7 +55,7 @@ function bindButtonBehaviour() {
     });
 
     COMMIT_CTA.addEventListener('click', function(evt){
-        setCookie(COMMIT_COOKIE_NAME, 1, 60);
+        setCookie(COMMIT_COOKIE_NAME, 1, 30);
     });
 }
 

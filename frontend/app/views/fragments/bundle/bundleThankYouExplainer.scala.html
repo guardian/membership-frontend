@@ -1,0 +1,68 @@
+@import views.support.Asset
+@import abtests.BundleVariant
+
+@(bundleVariant: BundleVariant, className: Option[String] = None, chevron: Boolean = false, secondary: Boolean = false, returnUrl: Option[String] = None)
+
+<div class="bundle-thankyou__explainer-content">
+    <p>Don't worry, nothing has broken.</p>
+    <p>We have a number of tests underway that help us determine which products our readers may be interested in, and you were selected to participate in one of these tests.</p>
+    <p>The digital subscription product you selected is not yet available, but there are still some things you can do:</p>
+    <ul>
+        <li>
+            Leave a message in the feedback form below, and we will get in touch with you if sufficient demand exists for this feature.
+        </li>
+        <li>
+            Find out more about the subscription products that are currently available by clicking the Become a supporter button.
+        </li>
+        <li>
+            Make a one-off, or a recurring financial contribution. For that you can also just click the Become a supporter button.
+        </li>
+        <li>
+            Continue reading the guardian by clicking the Continue button.
+        </li>
+    </ul>
+    <p>
+        Thank you for your participation. We hope to be able to provide the features you are interested in soon.
+    </p>
+
+    <div class="bundle-thankyou__email-form  bundle-thankyou-js">
+        <script type="text/javascript" src="https://example-memberhsip.formstack.com/forms/js.php/membership?bundle_variant=@bundleVariant.testId"></script><noscript><a href="https://example-memberhsip.formstack.com/forms/membership?bundle-variant=@bundleVariant.testId" title="Online Form">Online Form - Membership</a></noscript><div style="text-align:right; font-size:x-small;"><a href="http://www.formstack.com?utm_source=jsembed&utm_medium=product&utm_campaign=product+branding&fa=h,2576843" title="HTML Form Builder">HTML Form Builder</a></div>
+    </div>
+
+    <div class="bundle-button__content__support">
+        <a class="bundle-button" href="https://support.theguardian.com/uk">
+            <p>Become a supporter</p>
+            <div class="bundle-button__content__arrow">
+            @if(chevron){
+                @for(icon <- Asset.inlineSvg("bundle-chevron")) {
+                    @icon
+                }
+            }else{
+                @for(icon <- Asset.inlineSvg("bundle-arrow")) {
+                    @icon
+                }
+            }
+            </div>
+        </a>
+    </div>
+
+    <div class="bundle-button__content__continue">
+        <a class="bundle-button" href="https://www.theguardian.com">
+            <p>Continue</p>
+            <div class="bundle-button__content__arrow">
+            @if(chevron){
+                @for(icon <- Asset.inlineSvg("bundle-chevron")) {
+                    @icon
+                }
+            }else{
+                @for(icon <- Asset.inlineSvg("bundle-arrow")) {
+                    @icon
+                }
+            }
+            </div>
+        </a>
+    </div>
+
+</div>
+
+
