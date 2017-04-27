@@ -3,6 +3,10 @@
     margin: auto;
     display: inherit;
     float: left;
+    @include mq($from: tablet, $until: desktop) {
+        margin-left: 110px;
+        max-width: 30rem;
+    }
     @include mq($from: desktop, $until: mem-full) {
         @include bundle-column-wide();
         width: gs-span(9.25);
@@ -71,7 +75,7 @@
 
 .bundle-offering-a__subscribe {
     margin: auto;
-    @include mq($from: desktop) {
+    @include mq($from: tablet, $until: mem-full) {
         display: inherit;
     }
     @include mq($from: mem-full) {
@@ -107,6 +111,9 @@
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;
+    @include mq($from: tablet, $until: desktop) {
+        margin-left: 60px;
+    }
     @include mq($from: desktop, $until: mem-full) {
         margin-left: 80px;
     }
