@@ -40,23 +40,6 @@ object EventMetadata {
     brand = "A Guardian Live event"
   )
 
-  val localMetadata = Metadata(
-    identifier="local",
-    title="Guardian Local",
-    shortTitle="Events",
-    pluralTitle="Local events",
-    description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
-      "come together and enjoy arts, food and culture from around the UK."),
-    socialHashtag=Some("#GuardianLocal"),
-    eventListUrl=controllers.routes.WhatsOn.list.url,
-    termsUrl=Links.guardianLiveTerms,
-    chooseTier=ChooseTierMetadata(
-      "Guardian Local events are exclusively for Guardian members",
-      "Choose a membership tier to continue with your booking"
-    ),
-    brand = "A Guardian Local event"
-  )
-
   val masterclassMetadata = Metadata(
     identifier="masterclasses",
     title="Guardian Masterclasses",

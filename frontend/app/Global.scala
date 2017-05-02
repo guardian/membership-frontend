@@ -15,7 +15,6 @@ object Global extends WithFilters(
   override def onStart(app: Application) {
     SentryLogging.init()
     GuardianLiveEventService.start()
-    LocalEventService.start()
     MasterclassEventService.start()
     GuardianContentService.start()
   }

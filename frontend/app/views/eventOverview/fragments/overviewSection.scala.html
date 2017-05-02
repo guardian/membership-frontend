@@ -2,7 +2,7 @@
 @(title: String, events: Seq[model.RichEvent.RichEvent])
 @import configuration.Config
 @import model.Eventbrite.{ExternalTicketing, InternalTicketing}
-@import model.RichEvent.{LocalEvent, GuLiveEvent, MasterclassEvent}
+@import model.RichEvent.{GuLiveEvent, MasterclassEvent}
 @import views.support.Dates._
 
 @eventTrait(text: String, identifier: String = "") = {
@@ -15,7 +15,6 @@
     eventOpt.fold("") {
         case _: GuLiveEvent => "event"
         case _: MasterclassEvent => "masterclass"
-        case _: LocalEvent => "local"
     }
 }
 

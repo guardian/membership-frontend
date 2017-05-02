@@ -17,20 +17,13 @@ trait WhatsOn extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
   val guLiveEvents: EventbriteService
-  val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
-  private def allEvents = {
-    guLiveEvents.events ++ localEvents.events
-  }
+  private def allEvents = guLiveEvents.events
 
-  private def allEventsByLocation(location: String) = {
-    guLiveEvents.getEventsByLocation(location) ++ localEvents.getEventsByLocation(location)
-  }
+  private def allEventsByLocation(location: String) = guLiveEvents.getEventsByLocation(location)
 
-  private def allEventsInArchive = {
-    guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
-  }
+  private def allEventsInArchive = guLiveEvents.getEventsArchive.toList.flatten
 
   private def locationFilterItems = {
     getCitiesWithCount(allEvents).map(FilterItem.tupled)
@@ -114,6 +107,5 @@ trait WhatsOn extends Controller with ActivityTracking {
 
 object WhatsOn extends WhatsOn {
   val guLiveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
   val masterclassEvents = MasterclassEventService
 }

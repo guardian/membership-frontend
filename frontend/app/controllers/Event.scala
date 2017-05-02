@@ -1,10 +1,9 @@
 package controllers
 
-import actions.{Subscriber, SubscriptionRequest}
-import actions.Fallbacks._
 import actions.ActionRefiners._
+import actions.Fallbacks._
+import actions.{Subscriber, SubscriptionRequest}
 import com.gu.memsub.Subscriber.Member
-import com.gu.salesforce.Tier
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -16,19 +15,18 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 import services.EventbriteService._
+import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import tracking._
 import utils.CampaignCode
+import views.support.MembershipCompat._
 import views.support.PageInfo
 
 import scala.concurrent.Future
-import views.support.MembershipCompat._
 
 trait Event extends Controller with MemberServiceProvider with ActivityTracking {
 
   val guLiveEvents: EventbriteService
-  val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
@@ -115,7 +113,7 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map {
-      case event@(_: GuLiveEvent | _: LocalEvent) =>
+      case event@(_: GuLiveEvent) =>
         if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
           redirectToEventbrite(event)
         else
@@ -201,10 +199,6 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
      EventbriteService.getPreviewEvent(id).map(eventDetail)
   }
 
-  def previewLocal(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-    EventbriteService.getPreviewLocalEvent(id).map(eventDetail)
-  }
-
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
    EventbriteService.getPreviewMasterclass(id).map(eventDetail)
   }
@@ -212,6 +206,5 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
 
 object Event extends Event {
   val guLiveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
   val masterclassEvents = MasterclassEventService
 }

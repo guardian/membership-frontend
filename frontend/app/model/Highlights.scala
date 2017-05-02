@@ -25,7 +25,7 @@ object Highlights {
   val freeTickets = Highlight(
     s"""Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events
        | (or 4 Guardian-published books) per year""".stripMargin)
-  val priorityBooking = Highlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses")
+  val priorityBooking = Highlight("Get priority booking and 20% discount on Guardian Live and most Guardian Masterclasses")
   val bringAFriend = Highlight("Bring a guest with the same discount to Guardian Live and Local events")
   val deepSupport = Highlight("Show deep support for keeping the Guardian open and independent")
   val behindTheScenes = Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
