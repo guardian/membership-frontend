@@ -2,14 +2,22 @@ package services.paymentmethods
 
 import com.gu.identity.play.IdMinimalUser
 import com.gu.zuora
+import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.CommonPaymentForm
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 
-case class InitialiserAndToken(initialiser: PaymentMethodInitialiser[_ <: zuora.soap.models.Commands.PaymentMethod], token: String) {
+case class InitialiserAndToken(initialiser: PaymentMethodInitialiser[_ <: zuora.soap.models.Commands.PaymentMethod], token: String) extends LazyLogging {
   def initialiseUsing(user: IdMinimalUser): Future[zuora.soap.models.Commands.PaymentMethod] = {
-    initialiser.initialiseWith(token, user)
+    val initialiserName = initialiser.getClass.getSimpleName
+    logger.info(s"Initialising payment token for user ${user.id} with $initialiserName...")
+    initialiser.initialiseWith(token, user).andThen {
+      case Success(_) => logger.info(s"...successfully initialised payment token for user ${user.id}")
+      case Failure(e) => logger.error(s"...failed to initialise payment token with $initialiserName", e)
+    }
   }
 }
 
