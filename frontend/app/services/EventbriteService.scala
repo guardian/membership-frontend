@@ -2,24 +2,25 @@ package services
 
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
-import com.gu.monitoring.{StatusMetrics, ServiceMetrics}
+import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners.LoggingHttpClient
-import okhttp3.Request
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
 import monitoring.EventbriteMetrics
+import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 import utils.StringUtils._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
@@ -168,19 +169,6 @@ object GuardianLiveEventService extends LiveService {
   }
 }
 
-object LocalEventService extends LiveService {
-  val apiToken = Config.eventbriteLocalApiToken
-  val maxDiscountQuantityAvailable = 2
-  val wsMetrics = new EventbriteMetrics("Local")
-
-  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
-
-  def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
-    yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
-
-  override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
-}
-
 case class MasterclassEventServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
@@ -224,22 +212,17 @@ object EventbriteServiceHelpers {
 }
 
 trait EventbriteCollectiveServices {
-  val services = Seq(GuardianLiveEventService, LocalEventService, MasterclassEventService)
+  val services = Seq(GuardianLiveEventService, MasterclassEventService)
 
   implicit class RichEventProvider(event: RichEvent) {
     val service = event match {
       case _: GuLiveEvent => GuardianLiveEventService
-      case _: LocalEvent => LocalEventService
       case _: MasterclassEvent => MasterclassEventService
     }
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
     GuardianLiveEventService.getPreviewEvent(id)
-  }
-
-  def getPreviewLocalEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    LocalEventService.getPreviewEvent(id)
   }
 
   def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {

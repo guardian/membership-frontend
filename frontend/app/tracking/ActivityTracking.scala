@@ -11,7 +11,7 @@ import configuration.Config
 import controllers.Testing
 import forms.MemberForm.{AddressDetails, JoinForm, MarketingChoicesForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBOrder, EBTicketClass}
-import model.RichEvent.{GuLiveEvent, LocalEvent, MasterclassEvent, RichEvent}
+import model.RichEvent.{GuLiveEvent, MasterclassEvent, RichEvent}
 import model.GenericSFContact
 import org.joda.time._
 import play.api.Logger
@@ -122,7 +122,6 @@ case class EventData(event: RichEvent) {
 
   val group = event match {
     case _: GuLiveEvent => "Guardian Live"
-    case _: LocalEvent => "Local"
     case _: MasterclassEvent => "Masterclass"
 
   }

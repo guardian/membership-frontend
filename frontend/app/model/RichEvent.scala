@@ -2,20 +2,18 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.v1.Content
+import com.gu.memsub.images.Grid.Asset
+import com.gu.memsub.images.{Grid, _}
 import com.gu.salesforce.Tier
 import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.{EBEvent, EBOrder, EBTicketClass}
-import com.gu.memsub.images._
-import com.gu.memsub.images.Grid
-import com.gu.memsub.images.Grid.Asset
 import org.joda.time.LocalDate
 import services.MasterclassData
 import utils.StringUtils._
 
 import scala.collection.immutable.SortedMap
-import com.netaporter.uri.dsl._
 
 object RichEvent {
 
@@ -24,7 +22,6 @@ object RichEvent {
 
   case class EventBrandCollection(
     live: Seq[RichEvent],
-    local: Seq[RichEvent],
     masterclasses: Seq[RichEvent]
   )
 
@@ -135,15 +132,6 @@ object RichEvent {
     contentOpt: Option[Content]
   ) extends LiveEvent(image, contentOpt) {
     val metadata = EventMetadata.liveMetadata.copy(highlightsOpt = highlight)
-    val logoOpt = Some(ProviderLogo(this))
-  }
-
-  case class LocalEvent(
-    event: EBEvent,
-    image: Option[GridImage],
-    contentOpt: Option[Content]
-  ) extends LiveEvent(image, contentOpt) {
-    val metadata = EventMetadata.localMetadata.copy(highlightsOpt = highlight)
     val logoOpt = Some(ProviderLogo(this))
   }
 

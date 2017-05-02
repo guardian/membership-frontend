@@ -57,7 +57,6 @@ GET            /planned-outages                       controllers.Outages.summar
 
 # Staff event page to show discounted events
 GET            /staff/event-overview                  controllers.Staff.eventOverview
-GET            /staff/event-overview/local            controllers.Staff.eventOverviewLocal
 GET            /staff/event-overview/masterclasses    controllers.Staff.eventOverviewMasterclasses
 GET            /staff/event-overview/details          controllers.Staff.eventOverviewDetails
 
@@ -84,7 +83,6 @@ GET            /event/:id/thankyou/pixel              controllers.Event.thankyou
 GET            /event/:id/card                        controllers.Event.embedCard(id)
 
 GET            /preview-event/:id                     controllers.Event.preview(id)
-GET            /preview-local/:id                     controllers.Event.previewLocal(id)
 GET            /preview-masterclass/:id               controllers.Event.previewMasterclass(id)
 
 # Tier

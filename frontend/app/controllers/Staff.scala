@@ -6,15 +6,10 @@ import services._
 
 trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
   val masterclassEvents = MasterclassEventService
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
      Ok(views.html.eventOverview.live(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))
-  }
-
-  def eventOverviewLocal = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.eventOverview.local(localEvents.events, localEvents.eventsDraft, request.path))
   }
 
   def eventOverviewMasterclasses = GoogleAuthenticatedStaffAction { implicit request =>

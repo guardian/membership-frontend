@@ -10,7 +10,6 @@ import views.support.{Asset, PageInfo}
 
 trait FrontPage extends Controller {
   val liveEvents: EventbriteService
-  val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
   def index = CachedAction { implicit request =>
@@ -24,7 +23,6 @@ trait FrontPage extends Controller {
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
-      localEvents.getSortedByCreationDate.take(3),
       masterclassEvents.getSortedByCreationDate.take(3)
     )
 
@@ -126,6 +124,5 @@ trait FrontPage extends Controller {
 
 object FrontPage extends FrontPage {
   val liveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
   val masterclassEvents = MasterclassEventService
 }
