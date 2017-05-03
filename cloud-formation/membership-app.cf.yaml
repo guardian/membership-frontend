@@ -107,12 +107,7 @@ Resources:
               dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb
               chown frontend /etc/gu/membership.private.conf
               chmod 0600 /etc/gu/membership.private.conf
-              wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
-              sed -i -e s"/__DATE/$(date +%F)/" -e 's/__STAGE/${Stage}/' $CONF_DIR/logger.conf
-              python awslogs-agent-setup.py -nr ${AWS::Region} -c $CONF_DIR/logger.conf
-              systemctl enable awslogs
-              systemctl start awslogs
-            - {}
+              /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/${App}/frontend.log
   MembershipAppRole:
     Type: AWS::IAM::Role
     Properties:
