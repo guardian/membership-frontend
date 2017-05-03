@@ -47,7 +47,6 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      //https://media.gutools.co.uk/images/62a6d58f49c10d5864d024c16ba05554a32cee5a?crop=0_0_480_275
       availableImages=ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
     )
 
@@ -60,14 +59,13 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      //https://media.gutools.co.uk/images/2a88bdcbe6ff74ca49f203d70b4b8f1fab885d71?crop=0_0_460_627
       availableImages=ResponsiveImageGenerator("2a88bdcbe6ff74ca49f203d70b4b8f1fab885d71/0_0_460_627", Seq(460), "png")
     )
 
     val bottomImageOrientated = OrientatedImages(portrait = bottomImage, landscape = bottomImage)
 
     bundleVariant match {
-      case BundleVariant(_, _, _, _, _, _, _) => Ok(views.html.bundle.bundleSetA(
+      case _:BundleVariant => Ok(views.html.bundle.bundleSetA(
         heroOrientated,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
