@@ -107,7 +107,7 @@ Resources:
               dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb
               chown frontend /etc/gu/membership.private.conf
               chmod 0600 /etc/gu/membership.private.conf
-              /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/${App}/frontend.log
+              /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/frontend/frontend.log
   MembershipAppRole:
     Type: AWS::IAM::Role
     Properties:
