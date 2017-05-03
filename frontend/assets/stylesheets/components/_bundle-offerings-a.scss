@@ -44,14 +44,20 @@
     }
     @include mq($from: mem-full) {
         margin-top: $gs-baseline * 2;
-
-        > p {
-            @include fs-headline(2);
-            font-size: 18px;
-            line-height: 22px;
-            margin-bottom: $gs-baseline * 2;
-            padding: 8px $gs-gutter/2 0;
+    }
+    >h2 {
+        @include fs-headline(4);
+        @include mq($until: mem-full) {
+            font-size: 22px;
         }
+        padding: 8px $gs-gutter/2 0;
+        font-weight: 900;
+    }
+    > p {
+        @include fs-textSans(4);
+        color: guss-colour(news-support-7);
+        padding-bottom: 0;
+        line-height: 18px;
     }
 }
 

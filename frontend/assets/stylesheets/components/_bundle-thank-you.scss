@@ -1,5 +1,5 @@
 .bundle-thankyou__explainer-content {
-    padding-right: $gs-gutter;
+    padding-right: 60px;
     @include mq($from: tablet, $until: desktop) {
         padding-left: $gs-gutter;
     }
@@ -36,12 +36,16 @@
     margin-top: 24px;
 
     .fsBody {
-        padding-top: 0;
+        padding: 0;
     }
 
     .fsForm {
         margin-top: 0 !important;
         padding-top: 0 !important;
+        .fsRow,
+        .fsSubmit {
+            margin-left: -70px;
+        }
     }
 
     .fsSubmit {
