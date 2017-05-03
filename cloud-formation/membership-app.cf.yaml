@@ -20,6 +20,10 @@ Parameters:
     Description: Applied directly as a tag
     Type: String
     Default: PROD
+  App:
+    Description: Applied directly as a tag
+    Type: String
+    Default: frontend
   SiteDomain:
     Description: Site domain Name
     Type: String
@@ -74,7 +78,7 @@ Resources:
           Ref: Stack
         PropagateAtLaunch: 'true'
       - Key: App
-        Value: frontend
+        Value: !Ref App
         PropagateAtLaunch: 'true'
       - Key: Stage
         Value:
@@ -97,22 +101,16 @@ Resources:
       AssociatePublicIpAddress: true
       UserData:
         Fn::Base64:
-          !Sub
-            - |
-              #!/bin/bash -ev
-              CONF_DIR=/etc/frontend
-              aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/frontend/frontend_1.0-SNAPSHOT_all.deb /tmp
-              mkdir /etc/gu
-              aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/membership.private.conf /etc/gu
-              dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb
-              chown frontend /etc/gu/membership.private.conf
-              chmod 0600 /etc/gu/membership.private.conf
-              wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
-              sed -i -e s"/__DATE/$(date +%F)/" -e 's/__STAGE/${Stage}/' $CONF_DIR/logger.conf
-              python awslogs-agent-setup.py -nr ${AWS::Region} -c $CONF_DIR/logger.conf
-              systemctl enable awslogs
-              systemctl start awslogs
-            - {}
+          !Sub |
+            #!/bin/bash -ev
+            CONF_DIR=/etc/frontend
+            aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/frontend/frontend_1.0-SNAPSHOT_all.deb /tmp
+            mkdir /etc/gu
+            aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/membership.private.conf /etc/gu
+            dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb
+            chown frontend /etc/gu/membership.private.conf
+            chmod 0600 /etc/gu/membership.private.conf
+            /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/frontend/frontend.log
   MembershipAppRole:
     Type: AWS::IAM::Role
     Properties:
