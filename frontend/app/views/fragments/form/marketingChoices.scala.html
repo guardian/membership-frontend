@@ -1,12 +1,29 @@
-@(marketingChoices: Option[com.gu.identity.play.StatusFields])
+@(marketingChoicesOpt: Option[com.gu.identity.play.StatusFields])
+@marketingChoicesOpt match {
+    case Some(marketingChoices) => {
+        <fieldset class="u-h">
+            <input type="hidden"
+            name="marketingChoices.gnnMarketing"
+            value="@marketingChoices.receiveGnmMarketing" />
 
-<fieldset class="u-h">
+            <input type="hidden"
+            name="marketingChoices.thirdParty"
+            value="@marketingChoices.receive3rdPartyMarketing" />
+        </fieldset>
+    }
+    case None => {
+        <div class="fieldset__fields">
 
-    <input type="hidden"
-           name="marketingChoices.gnnMarketing"
-           value="@marketingChoices.map(_.receiveGnmMarketing)" />
+            <div class="form-field js-billing-input-container">
 
-    <input type="hidden"
-           name="marketingChoices.thirdParty"
-           value="@marketingChoices.map(_.receive3rdPartyMarketing)" />
-</fieldset>
+                <label class="label" for="use-delivery-address">
+                    <input type="checkbox" name="marketingChoices.gnnMarketing" id="receive-gnn-marketing" value="true"/>
+                    Keep me up to date with offers from the Guardian
+                </label>
+            </div>
+
+        </div>
+    }
+}
+
+

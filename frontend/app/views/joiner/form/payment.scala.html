@@ -94,6 +94,8 @@
                             @fragments.form.createPassword()
                         }
 
+                        @fragments.form.marketingChoices(idUser.map(_.marketingChoices))
+
                         <!-- Address -->
                         @fragments.form.addressDetailFields(
                             countriesWithCurrencies = countriesWithCurrencies,
@@ -112,8 +114,6 @@
                             address = idUser.map(_.billingAddress).getOrElse(BlankAddress),
                             showHeading = false
                         )
-
-                        @fragments.form.marketingChoices(idUser.map(_.marketingChoices))
 
                         <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
                         <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">
