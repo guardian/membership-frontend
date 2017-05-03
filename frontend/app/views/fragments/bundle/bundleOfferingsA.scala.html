@@ -42,24 +42,25 @@
                             }
                             <li class="bundle-offering-a__subscribe__offer__list__item">
                                 <div class="bundle-offering-a__subscribe__offer__list__item__icon">
-                                @for(icon <- Asset.inlineSvg("bundle-guardian_g")) {
-                                    @icon
-                                }
-                                </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
-                                <h1>Exclusive content</h1>
-                                <p>Behind-the-scenes updates from Guardian journalists, a regular newsletter and our new weekly supporter podcast</p>
-                            </div>
-                            </li>
-
-                            <li class="bundle-offering-a__subscribe__offer__list__item">
-                                <div class="bundle-offering-a__subscribe__offer__list__item__icon">
                                 @for(icon <- Asset.inlineSvg("bundle-tabletedition")) {
                                     @icon
                                 }
-                                </div><div class="bundle-offering-a__subscribe__offer__list__item__content">
-                                <h1>Tablet edition</h1>
-                                <p>Your daily newspaper optimised for tablet</p>
-                            </div>
+                                </div>
+                                <div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                    <h1>Tablet edition</h1>
+                                    <p>Your daily newspaper optimised for tablet</p>
+                                </div>
+                            </li>
+                            <li class="bundle-offering-a__subscribe__offer__list__item">
+                                <div class="bundle-offering-a__subscribe__offer__list__item__icon">
+                                @for(icon <- Asset.inlineSvg("bundle-guardian_g")) {
+                                    @icon
+                                }
+                                </div>
+                                <div class="bundle-offering-a__subscribe__offer__list__item__content">
+                                <h1>Exclusive content</h1>
+                                <p>Behind-the-scenes updates from Guardian journalists, a regular newsletter and our new weekly supporter podcast</p>
+                                </div>
                             </li>
                         </ul>
                         @fragments.bundle.bundleButton("Find out more", routes.Bundle.thankYou(bundleVariant, "digital-pack").url, className = Option("js-commit-button"), returnUrl = Some(java.net.URLEncoder.encode(returnUrl.getOrElse("https://www.theguardian.com"), "utf-8")))
