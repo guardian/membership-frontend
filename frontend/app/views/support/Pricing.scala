@@ -27,7 +27,7 @@ case class Pricing(yearly: Price, monthly: Price) {
 
   def getPhrase(period : BillingPeriod): String = {
     val price= getPriceByBillingPeriod(period)
-    price.pretty + " a " + period.noun
+    price.prettyWithoutCurrencyPrefix + " a " + period.noun
   }
 
 }
