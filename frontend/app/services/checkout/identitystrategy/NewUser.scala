@@ -23,8 +23,9 @@ object NewUser {
     paidMemberJoinForm.email,
     password,
     PublicFields(displayName = Some(s"${form.name.first} ${form.name.last}")),
-    Some(IdentityService.privateFieldsFor(form))
-  ))
+    Some(IdentityService.privateFieldsFor(form)),
+    Some(IdentityService.statusFieldsFor(form)))
+  )
 }
 
 case class NewUser(creationCommand: CreateIdUser)(implicit idReq: IdentityRequest) extends Strategy {
