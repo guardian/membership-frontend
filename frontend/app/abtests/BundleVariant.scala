@@ -12,7 +12,10 @@ object BundleVariant {
     BundleVariant(CONTROL, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50))),
     BundleVariant(VARIANT, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = false),
     BundleVariant(PDCPRE, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasPaidComments = true, hasContributions = false),
-    BundleVariant(PDCPOST, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasPaidComments = true, hasContributions = false)
+    BundleVariant(PDCPOST, Map((Supporter, 6.5), (DigitalPack, 12), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasPaidComments = true, hasContributions = false),
+    BundleVariant(DIGIPRICE1A, Map((Supporter, 6.5), (DigitalPack, 11.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
+    BundleVariant(DIGIPRICE1B, Map((Supporter, 6.5), (DigitalPack, 14.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
+    BundleVariant(DIGIPRICE1C, Map((Supporter, 6.5), (DigitalPack, 9.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false)
   )
 
   def lookup(name: String): Option[BundleVariant] = {
@@ -24,7 +27,9 @@ case class BundleVariant(distribution: Distribution,
                          prices: Map[BundleTier, Double],
                          hasAdFree: Boolean = true,
                          hasPaidComments: Boolean = false,
-                         hasContributions: Boolean = true) {
+                         hasContributions: Boolean = true,
+                         hasDigital: Boolean = true,
+                         hasPrintAndDigital: Boolean = true) {
   val testId =  distribution.name
 
   def prettyMonthlyPrice(tier: BundleTier) = f"£${prices(tier)}%.2f/month"
@@ -58,6 +63,9 @@ object Distribution {
   val VARIANT = Distribution("MEMBERSHIP_A_ADX_THRASHER_UK_VARIANT")
   val PDCPRE = Distribution("MEMBERSHIP_A_PDCOM_PRE")
   val PDCPOST = Distribution("MEMBERSHIP_A_PDCOM_POST")
+  val DIGIPRICE1A = Distribution("BUNDLE_PRICE_TEST_1_UK_A")
+  val DIGIPRICE1B = Distribution("BUNDLE_PRICE_TEST_1_UK_B")
+  val DIGIPRICE1C = Distribution("BUNDLE_PRICE_TEST_1_UK_C")
 }
 
 case class Distribution(name: String)

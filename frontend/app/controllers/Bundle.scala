@@ -47,7 +47,7 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("a1b0524bdd81bf9f5e92d199c0977c04b59731ec/0_0_480_400", Seq(480), "png")
+      availableImages=ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
@@ -59,13 +59,13 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("6bf759b538128aed0f90cebe8b2465875e85c7ce/0_0_460_650", Seq(460), "png")
+      availableImages=ResponsiveImageGenerator("2a88bdcbe6ff74ca49f203d70b4b8f1fab885d71/0_76_460_550", Seq(460), "png")
     )
 
     val bottomImageOrientated = OrientatedImages(portrait = bottomImage, landscape = bottomImage)
 
     bundleVariant match {
-      case BundleVariant(_, _, _, _, _) => Ok(views.html.bundle.bundleSetA(
+      case _:BundleVariant => Ok(views.html.bundle.bundleSetA(
         heroOrientated,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
@@ -87,7 +87,7 @@ trait Bundle extends Controller {
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("a1b0524bdd81bf9f5e92d199c0977c04b59731ec/0_0_480_400", Seq(480), "png")
+      availableImages=ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
     )
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
