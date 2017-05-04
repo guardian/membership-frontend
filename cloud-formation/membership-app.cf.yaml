@@ -274,7 +274,7 @@ Resources:
   monthlyContributorAttempts:
     Type: AWS::Logs::MetricFilter
     Properties:
-      LogGroupName: !Sub FrontendLogs-${Stage}
+      LogGroupName: !Sub membership-frontend-${Stage}
       FilterPattern: "attempting to become a monthly contributor"
       MetricTransformations:
       - MetricNamespace: !Sub ${Stage}/contributions
@@ -284,7 +284,7 @@ Resources:
   monthlyContributorSuccess:
     Type: AWS::Logs::MetricFilter
     Properties:
-      LogGroupName: !Sub FrontendLogs-${Stage}
+      LogGroupName: !Sub membership-frontend-${Stage}
       FilterPattern: "successfully became monthly contributor"
       MetricTransformations:
       - MetricNamespace: !Sub ${Stage}/contributions
