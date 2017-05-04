@@ -21,6 +21,6 @@
         Html("We have a number of tests underway that help us determine which products our readers are interested in. Your participation has helped us with this evaluation, and from now on you won't be directed here again.<br><br>Thank you.</p>")
     )
     <div class="l-constrained">
-        @fragments.bundle.bundleButton("Continue to comment", returnUrl.getOrElse("https://www.theguardian.com"))
+        @fragments.bundle.bundleButton("Continue to comment", returnUrl.getOrElse("https://www.theguardian.com"), Some("bundle-button-resume"))
     </div>
 }
