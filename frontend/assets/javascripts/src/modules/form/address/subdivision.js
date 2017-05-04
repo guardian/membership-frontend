@@ -62,6 +62,9 @@ define(['$'], function ($) {
         } else {
             $townLabel.text(TOWN_STRING);
             $countyContainer.append($countySelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
+            // In the line below we select the current label that is being display in order to update it.
+            // More information in:
+            $countyLabel= $('label',$countyContainer);
             $postcodeLabel.text(POST_CODE_STRING);
             $countyLabel.text(COUNTY_STRING);
             $countyLabel.addClass(OPTIONAL_CLASSNAME);
