@@ -7,6 +7,9 @@ import play.api.mvc.{Controller, Request}
 import services.{PayPalService, TouchpointBackend}
 import utils.TestUsers.PreSigninTestCookie
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
 
   // Payment token used to tie PayPal requests together.
@@ -19,7 +22,7 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 
   // Sets up a payment by contacting PayPal, returns the token as JSON.
-  def setupPayment = NoCacheAction(parse.json[PayPalBillingDetails]) { implicit request =>
+  def setupPayment = NoCacheAction.async(parse.json[PayPalBillingDetails]) { implicit request =>
     readRequestAndRunServiceCall(_.retrieveToken(
       returnUrl = routes.PayPal.returnUrl().absoluteURL(secure = true),
       cancelUrl = routes.PayPal.cancelUrl().absoluteURL(secure = true)
@@ -27,17 +30,17 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
   }
 
   // Creates a billing agreement using a payment token.
-  def createAgreement = NoCacheAction(parse.json[Token]) { implicit request =>
+  def createAgreement = NoCacheAction.async(parse.json[Token]) { implicit request =>
     readRequestAndRunServiceCall(_.retrieveBaid)
   }
 
   //Takes a request with a body of type [T], then passes T to the payPal call 'exec' to retrieve a token and returns this as json
-  def readRequestAndRunServiceCall[T](exec: (PayPalService) => ((T) => String))(implicit request: Request[T]) = {
+  def readRequestAndRunServiceCall[T](exec: (PayPalService) => ((T) => Future[String]))(implicit request: Request[T]) = {
     val payPalService = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies).backend.payPalService
 
-    val token = Token(exec(payPalService)(request.body))
-
-    Ok(toJson(token))
+    for {
+      token <- exec(payPalService)(request.body)
+    } yield Ok(toJson(Token(token)))
   }
 
   // The endpoint corresponding to the PayPal return url, hit if the user is

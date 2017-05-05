@@ -44,9 +44,8 @@ class PayPalInitialiser(payPalService: PayPalService) extends PaymentMethodIniti
 
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.payPalBaid
 
-  def initialiseWith(baid: String, user: IdMinimalUser): Future[PayPalReferenceTransaction] = Future {
-    val payPalEmail = payPalService.retrieveEmail(baid) // currently blocking, not async
-    PayPalReferenceTransaction(baid, payPalEmail)
-  }
+  def initialiseWith(baid: String, user: IdMinimalUser): Future[PayPalReferenceTransaction] = for {
+    payPalEmail <- payPalService.retrieveEmail(baid)
+  } yield PayPalReferenceTransaction(baid, payPalEmail)
 
 }
