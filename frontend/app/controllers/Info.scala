@@ -66,6 +66,47 @@ trait Info extends Controller {
     )
   }
 
+  def supporterAustralia = CachedAndOutageProtected { implicit request =>
+    implicit val countryGroup = Australia
+
+    val heroImage = ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
+        byline = None,
+        credit = Some("Carol Cho/AAP")
+      )),
+      availableImages = ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
+    )
+
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name = Some("coral"),
+        metadata = Some(Grid.Metadata(
+          description = Some("The impact of coral bleaching at Lizard Island on the Great Barrier Reef: (left) the coral turns white, known as 'bleaching', in March 2016; (right) the dead coral is blanketed by seaweed in May 2016"),
+          byline = None,
+          credit = None
+        )),
+        availableImages = ResponsiveImageGenerator(
+          id = "03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
+          sizes = List(1000, 500)
+        )
+      ))
+
+    Ok(views.html.info.supporterAustralia(
+      heroOrientated,
+      TouchpointBackend.Normal.catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters),
+        navigation = Nil
+      ),
+      pageImages))
+  }
+
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
 
     val heroImage = ResponsiveImageGroup(
