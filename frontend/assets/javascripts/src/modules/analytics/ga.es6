@@ -102,12 +102,16 @@ export function init() {
     wrappedGa('set', dimensions.signedOut, signedOut.toString());
     wrappedGa('set', dimensions.platform, 'membership');
 
+    if (guardian.abTests) {
+        wrappedGa('set', dimensions.experience, Object.keys(guardian.abTests).map(function(k){return k+"="+guardian.abTests[k]}).join(","));
+    }
     if (isLoggedIn) {
         wrappedGa('set', dimensions.identityId, u.id);
     }
     if (guardian.ophan) {
         wrappedGa('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
     }
+
     if("productData" in guardian) {
 
         wrappedGa('set',dimensions.membershipNumber,guardian.productData.regNumber);

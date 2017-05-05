@@ -1,5 +1,6 @@
 package controllers
 
+import abtests.ABTest
 import actions.ActionRefiners._
 import actions.Fallbacks.chooseRegister
 import actions.{RichAuthRequest, _}
@@ -27,10 +28,9 @@ import services.AuthenticationService.authenticatedIdUserProvider
 import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.{GuardianContentService, _}
 import tracking.ActivityTracking
-import utils.Feature.MergedRegistration
 import utils.RequestCountry._
-import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie}
-import utils.{CampaignCode, TierChangeCookies}
+import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
+import utils.{CampaignCode, Feature, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -102,9 +102,13 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   }
 
   def authenticatedIfNotMergingRegistration(onUnauthenticated: RequestHeader => Result = chooseRegister(_)) = new ActionFilter[Request] {
-    override def filter[A](request: Request[A]) = Future.successful {
-      val userSignedIn = authenticatedIdUserProvider(request).isDefined
-      if (userSignedIn || MergedRegistration.turnedOnFor(request)) None else Some(onUnauthenticated(request))
+    override def filter[A](req: Request[A]) = Future.successful {
+      val userOpt = authenticatedIdUserProvider(req)
+      val userSignedIn = userOpt.isDefined
+      val canWaiveAuth = abtests.MergedRegistration.allocate(req).exists(_.canWaiveAuth) || Feature.MergedRegistration.turnedOnFor(req)
+      val canAccess = userSignedIn || canWaiveAuth
+      logger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
+      if (canAccess) None else Some(onUnauthenticated(req))
     }
   }
 
@@ -148,7 +152,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
         payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
-        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUserOpt.flatMap(_.country), plans, Some(countryGroup))
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUserOpt.flatMap(_.country), plans, Some(countryGroup)),
+        abTests = abtests.ABTest.allocations(request)
       )
 
       val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
@@ -222,8 +227,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: Request[_]) = {
     val userOpt = authenticatedIdUserProvider(request)
-    val userDescription = s"User id=${userOpt.map(_.id).mkString}"
-    logger.info(s"$userDescription attempting to become ${tier.name}...")
+    logger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(NameEnteredInForm, Some(formData))
@@ -237,10 +241,11 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     val campaignCode = CampaignCode.fromRequest
     val ipCountry = request.getFastlyCountry
 
-    identityStrategyFor(request, formData).ensureIdUser { user =>
+    val identityStrategy = identityStrategyFor(request, formData)
+    identityStrategy.ensureIdUser { user =>
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"$userDescription successfully became ${tier.name} $zuoraSubName.")
+          logger.info(s"make-member-success ${tier.name} ${abtests.MergedRegistration.describeParticipation} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
@@ -258,7 +263,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
-          logger.error(s"$userDescription could not become ${tier.name} member", error)
+          logger.error(s"${s"User id=${userOpt.map(_.id).mkString}"} could not become ${tier.name} member", error)
           setBehaviourNote(tier.name, "card_error", userOpt)
           Forbidden
       }
