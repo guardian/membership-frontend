@@ -1,6 +1,6 @@
 .bundle-thankyou__explainer-content {
     padding-right: 60px;
-    @include mq($from: tablet, $until: desktop) {
+    @include mq($from: phablet, $until: desktop) {
         padding-left: $gs-gutter;
     }
     @include mq($from: desktop, $until: mem-full) {

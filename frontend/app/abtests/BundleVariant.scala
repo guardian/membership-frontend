@@ -63,9 +63,9 @@ object Distribution {
   val VARIANT = Distribution("MEMBERSHIP_A_ADX_THRASHER_UK_VARIANT")
   val PDCPRE = Distribution("MEMBERSHIP_A_PDCOM_PRE")
   val PDCPOST = Distribution("MEMBERSHIP_A_PDCOM_POST")
-  val DIGIPRICE1A = Distribution("BUNDLE_PRICE_TEST_1_UK_A")
-  val DIGIPRICE1B = Distribution("BUNDLE_PRICE_TEST_1_UK_B")
-  val DIGIPRICE1C = Distribution("BUNDLE_PRICE_TEST_1_UK_C")
+  val DIGIPRICE1A = Distribution("BUNDLE_PRICE_TEST_1M_UK_A")
+  val DIGIPRICE1B = Distribution("BUNDLE_PRICE_TEST_1M_UK_B")
+  val DIGIPRICE1C = Distribution("BUNDLE_PRICE_TEST_1M_UK_C")
 }
 
 case class Distribution(name: String)
