@@ -19,6 +19,7 @@ object Nav {
   }
 
   val primaryNavigation = List(
+    NavItem("become a supporter", "/supporter?INTCMP=gdnwb_copts_memco_internal_supporter_link", "Become a supporter"),
     NavItem("events", routes.WhatsOn.list.url, "Events", subNav = Seq(
       NavItem("archive", routes.WhatsOn.listArchive.url, "Archive")
     )),
