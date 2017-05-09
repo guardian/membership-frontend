@@ -5,8 +5,8 @@ import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import controllers.routes
-import model.PackagePromo.CtaButton
-import play.twirl.api.Html
+import views.model.PackagePromo
+import views.model.PackagePromo.CtaButton
 
 
 object PackagePromo {
