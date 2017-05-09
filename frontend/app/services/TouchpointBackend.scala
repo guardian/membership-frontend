@@ -79,7 +79,7 @@ object TouchpointBackend extends LazyLogging {
     val zuoraRestService = new ZuoraRestService[Future]()
 
     val pids = Config.productIds(restBackendConfig.envName)
-    val newCatalogService = new subsv2.services.CatalogService[Future](pids, simpleRestClient, Await.result(_, 10.seconds), restBackendConfig.envName)
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, simpleRestClient, Await.result(_, 20.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraService.getAccountIds)
 
