@@ -185,10 +185,13 @@ $mq-breakpoints: (
 );
 
 $max-widths: (
-    max-tablet: gs-span(9),
-    max-desktop: gs-span(12),
-    max-mem-full: gs-span(14),
-    max-wide: gs-span(16)
+    max-mobile: gs-span(4),             // 300px
+    max-mobileLandscape: gs-span(6),    // 460px
+    max-phablet: gs-span(8),            // 620px
+    max-tablet: gs-span(9),             // 700px
+    max-desktop: gs-span(12),           // 940px
+    max-mem-full: gs-span(14),          // 1100px
+    max-wide: gs-span(16)               // 1260px
 );
 
 // Fonts

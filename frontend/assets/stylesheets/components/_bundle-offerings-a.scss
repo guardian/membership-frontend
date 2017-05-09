@@ -8,6 +8,10 @@ body {
     display: inline-block;
     float: left;
     width: 690px;
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+        margin-left: 20px;
+    }
     @include mq($from: phablet, $until: tablet) {
         width: 460px;
         margin-left: 100px;
@@ -34,6 +38,10 @@ body {
         margin-top: $gs-baseline * 3;
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($from: mobileLandscape, $until: phablet) {
+            font-size: 30px;
+            line-height: 30px;
+        }
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
@@ -84,10 +92,18 @@ body {
     @include bundle-column-narrow();
     padding-right: 0;
     margin-left: 100px;
-    width: 460px;
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+    }
+    @include mq($from: phablet) {
+        width: 460px;
+    }
     display: inline-block;
     @include mq($until: mem-full) {
         padding-top: $gs-baseline * 2;
+    }
+    @include mq($until: phablet) {
+        margin-left: 20px;
     }
     @include mq($from: tablet, $until: desktop) {
         margin-left: 110px;
@@ -101,6 +117,10 @@ body {
         }
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($from: mobileLandscape, $until: phablet) {
+            font-size: 30px;
+            line-height: 30px;
+        }
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
@@ -114,7 +134,12 @@ body {
 }
 
 .bundle-offering-a__subscribe__offer {
-    width: 460px;
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+    }
+    @include mq($from: phablet) {
+        width: 460px;
+    }
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;

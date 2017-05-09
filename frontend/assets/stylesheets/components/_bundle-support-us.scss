@@ -28,6 +28,10 @@
 .bundle-support__main__title {
     @include bundle-column-narrow();
     padding-right: $gs-gutter;
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+        margin-left: 20px;
+    }
     @include mq($from: phablet, $until: tablet) {
         width: 480px;
         margin-left: 100px;
@@ -45,6 +49,10 @@
     >h1 {
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($from: mobileLandscape, $until: phablet) {
+            font-size: 30px;
+            line-height: 30px;
+        }
         border-top: 1px guss-colour(news-main-2) solid;
         margin-top: $gs-baseline * 4;
         @include mq($from: desktop, $until: mem-full) {
@@ -119,7 +127,11 @@
         max-width: gs-span(6);
     }
     padding-top: 8px;
-    @include mq($until: desktop){
+    @include mq($from: mobileLandscape, $until: phablet) {
+        max-width: 430px;
+        margin-left: 20px;
+    }
+    @include mq($from: phablet, $until: desktop){
         margin-left: 110px;
     }
     @include mq($from: desktop, $until: mem-full) {
