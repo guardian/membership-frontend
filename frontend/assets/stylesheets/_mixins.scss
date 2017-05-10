@@ -36,6 +36,20 @@ $gs-max-columns: 16;
 @mixin constrain-layout($offset: $gs-gutter * 2) {
     margin: 0 auto;
 
+    @include mq(tablet) {
+        max-width: map-get($max-widths, max-tablet) + $offset;
+    }
+    @include mq(desktop) {
+        max-width: map-get($max-widths, max-desktop) + $offset;
+    }
+    @include mq(mem-full) {
+        max-width: map-get($max-widths, max-mem-full) + $offset;
+    }
+}
+
+@mixin constrain-bundles-layout($offset: $gs-gutter * 2) {
+    margin: 0 auto;
+
     @include mq(mobile) {
         max-width: map-get($max-widths, max-mobile) + $offset;
     }
@@ -48,15 +62,8 @@ $gs-max-columns: 16;
     @include mq(phablet) {
         max-width: map-get($max-widths, max-phablet) + $offset;
     }
-    @include mq(tablet) {
-        max-width: map-get($max-widths, max-tablet) + $offset;
-    }
-    @include mq(desktop) {
-        max-width: map-get($max-widths, max-desktop) + $offset;
-    }
-    @include mq(mem-full) {
-        max-width: map-get($max-widths, max-mem-full) + $offset;
-    }
+
+    @include constrain-layout($offset);
 }
 
 // Side Margins
@@ -65,6 +72,25 @@ $gs-max-columns: 16;
 // The media queries and widths need to match the ones in constrain-layout()
 
 @mixin side-margins-calc($property) {
+    $offset: ($gs-gutter * 2);
+    @include mq(tablet) {
+        $width: map-get($max-widths, max-tablet);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(desktop) {
+        $width: map-get($max-widths, max-desktop);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(mem-full) {
+        $width: map-get($max-widths, max-mem-full);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+}
+
+@mixin side-margins-bundles-calc($property) {
     $offset: ($gs-gutter * 2);
     @include mq(mobile) {
         $width: map-get($max-widths, max-mobile);

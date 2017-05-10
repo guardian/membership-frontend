@@ -14,7 +14,7 @@
     whySupportImage: model.OrientatedImages,
     bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Supporters", pageInfo=pageInfo, header=BundlesHeader, footer=BundlesFooter) {
+@main("Supporters", pageInfo=pageInfo, header=BundlesHeader, footer=BundlesFooter, marginsOverride=Some("l-side-margins-bundles")) {
 
     @* ===== First part ===== *@
     @fragments.bundle.bundleHeader(
