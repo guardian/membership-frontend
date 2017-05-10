@@ -1,6 +1,6 @@
 .bundle-thankyou__explainer-content {
     padding-right: 60px;
-    @include mq($from: mobile, $until: desktop) {
+    @include mq($until: desktop) {
         padding-left: $gs-gutter;
     }
     @include mq($from: desktop, $until: mem-full) {
@@ -62,7 +62,7 @@
     }
 
     input[type=email] {
-        @include mq($from: mobile, $until: mobileLandscape) {
+        @include mq($until: mobileLandscape) {
             width: 310px !important;
         }
         @include mq($from: mobileLandscape) {
@@ -88,7 +88,7 @@
 
     textarea {
         border-radius: 18px !important;
-        @include mq($from: mobile, $until: mobileLandscape) {
+        @include mq($until: mobileLandscape) {
             width: 310px !important;
         }
         @include mq($from: mobileLandscape) {
