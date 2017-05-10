@@ -1,6 +1,6 @@
 .bundle-thankyou__explainer-content {
     padding-right: 60px;
-    @include mq($from: phablet, $until: desktop) {
+    @include mq($from: mobile, $until: desktop) {
         padding-left: $gs-gutter;
     }
     @include mq($from: desktop, $until: mem-full) {
@@ -62,7 +62,12 @@
     }
 
     input[type=email] {
-        width: 460px !important;
+        @include mq($from: mobile, $until: mobileLandscape) {
+            width: 310px !important;
+        }
+        @include mq($from: mobileLandscape) {
+            width: 460px !important;
+        }
         height: $gs-baseline * 3;
         margin-left: $gs-gutter * 3;
         border-radius: 18px !important;
@@ -83,7 +88,12 @@
 
     textarea {
         border-radius: 18px !important;
-        width: 460px !important;
+        @include mq($from: mobile, $until: mobileLandscape) {
+            width: 310px !important;
+        }
+        @include mq($from: mobileLandscape) {
+            width: 460px !important;
+        }
         margin-left: $gs-gutter * 3;
     }
 }

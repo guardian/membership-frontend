@@ -77,6 +77,11 @@
 
 .bundle-header__main__content {
     @include bundle-column-wide();
+    @include mq($from: mobile, $until: mobileLandscape) {
+        width: 380px;                       // there's no image
+        padding-left: $gs-gutter * 1.5;     //30px
+        display: block;
+    }
     @include mq($from: mobileLandscape, $until: phablet) {
         width: 240px;
         padding-left: $gs-gutter * 1.5;    //30px
@@ -192,10 +197,12 @@
 
 .bundle-header__secondary__content {
     @include bundle-column-wide();
+    @include mq($from: mobile, $until: mobileLandscape) {
+        width: 340px;
+        padding-left: 30px;
+    }
     @include mq($from: mobileLandscape, $until: phablet) {
         width: 430px;
-    }
-    @include mq($until: phablet) {
         padding-left: 20px;
     }
     @include mq($from: phablet, $until: desktop) {
@@ -219,7 +226,9 @@
             font-size: 16px;
             line-height: 18px;
         }
-        padding-top: $gs-baseline;
+        @include mq($from: phablet) {
+            padding-top: $gs-baseline;
+        }
     }
 
     p:first-of-type {

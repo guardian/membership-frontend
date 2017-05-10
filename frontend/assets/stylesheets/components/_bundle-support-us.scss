@@ -28,6 +28,10 @@
 .bundle-support__main__title {
     @include bundle-column-narrow();
     padding-right: $gs-gutter;
+    @include mq($from: mobile, $until: mobileLandscape) {
+        width: 330px;
+        margin-left: 30px;
+    }
     @include mq($from: mobileLandscape, $until: phablet) {
         width: 430px;
         margin-left: 20px;
@@ -49,6 +53,10 @@
     >h1 {
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($from: mobile, $until: mobileLandscape) {
+            font-size: 24px;
+            line-height: 24px;
+        }
         @include mq($from: mobileLandscape, $until: phablet) {
             font-size: 30px;
             line-height: 30px;
@@ -127,6 +135,10 @@
         max-width: gs-span(6);
     }
     padding-top: 8px;
+    @include mq($from: mobile, $until: mobileLandscape) {
+        max-width: 310px;
+        margin-left: 30px;
+    }
     @include mq($from: mobileLandscape, $until: phablet) {
         max-width: 430px;
         margin-left: 20px;
