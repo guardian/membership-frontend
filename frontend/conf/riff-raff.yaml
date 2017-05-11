@@ -8,9 +8,9 @@ deployments:
       amiTags:
         Recipe: xenial-membership
         AmigoStage: PROD
+      amiParameter: ImageId
   frontend:
     type: autoscaling
     dependencies: [ami]
     parameters:
       bucket: membership-dist
-
