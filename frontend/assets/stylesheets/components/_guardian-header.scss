@@ -7,6 +7,12 @@
     background-color: $blue;
     position: relative;
     z-index: 3;
+
+    .guardian-header__inner {
+        @include mq($from: wide) {
+            max-width: 1300px;
+        }
+    }
 }
 
 .guardian-header__inner {
@@ -16,7 +22,7 @@
     @include mq($from: tablet) {
         padding-left: 0;
         padding-right: 0;
-    }
+    }    
 }
 
 .guardian-header__logo {

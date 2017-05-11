@@ -427,13 +427,19 @@ $why-support-colour: #7cb523;
 	}
 }
 
-.introduction h1 {
+.introduction__heading {
 	color: guss-colour(news-support-2);
 	font-family: 'Guardian Titlepiece Web', sans-serif;
 	font-weight: 400;
 	font-size: 27px;
 	line-height: 30px;
 	word-spacing: -0.08em;
+	margin-left: 15px;
+	margin-bottom: $gs-baseline;
+
+	@include mq($from: mobileLandscape) {
+		margin-left: 25px;
+	}
 
 	@include mq($from: tablet) {
 		font-size: 40px;
@@ -443,6 +449,10 @@ $why-support-colour: #7cb523;
 	@include mq($from: desktop) {
 		font-size: 48px;
 		line-height: 44px;
+	}
+
+	@include mq($from: mem-full) {
+		margin-left: 70px;
 	}
 }
 
