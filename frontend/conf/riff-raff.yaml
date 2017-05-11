@@ -8,6 +8,9 @@ deployments:
       amiTags:
         Recipe: xenial-membership
         AmigoStage: PROD
+      cloudFormationStackName: "Memb"
+      prependStackToCloudFormationStackName : false
+      appendStageToCloudFormationStackName : true
   frontend:
     type: autoscaling
     dependencies: [ami]
