@@ -98,7 +98,7 @@ $why-support-colour: #7cb523;
 	@include mq($from: desktop) {
 		display: flex;
 		flex-direction: column;
-		height: gs-height(10) + $gs-baseline;
+		height: gs-height(9) + $gs-baseline;
 		// Fix for IE10.
 		max-width: gs-span(4);
 	}
@@ -189,65 +189,10 @@ $why-support-colour: #7cb523;
 	}
 }
 
-.bundles__copy {
-	margin: 0;
-	@include fs-headline(2);
-	color: #000;
-}
-
-.bundles__copy--top {
-	@include mq($until: tablet) {
-		display: none;
-	}
-
-	@include mq($from: desktop) {
-		display: none;
-	}
-}
-
-.bundles__copy--bottom {
-	@include mq($from: tablet, $until: desktop) {
-		display: none;
-	}
-
-	@include mq($until: desktop) {
-		margin-top: $gs-baseline;
-	}
-
-	@include mq($from: desktop) {
-		padding-top: $gs-baseline * 3;
-	}
-}
-
-.bundles__cta, .contribution-fields, .print-fields, .bundles__more-details {
+.bundles__cta, .contribution-fields, .print-fields {
 	@include fs-textSans(3);
 	font-weight: bold;
 	color: guss-colour(neutral-1);
-}
-
-.bundles__more-details {
-	color: #000;
-
-	@include mq($from: tablet) {
-		display: none;
-	}
-}
-
-.bundles__more-details:hover {
-	cursor: pointer;
-
-	button {
-		border-color: guss-colour(neutral-1);
-	}
-}
-
-.bundles__more-details button {
-	border-radius: 36px;
-	border: 1px solid rgba(guss-colour(neutral-1), 0.3);
-	background-color: transparent;
-	height: $gs-baseline * 3;
-	width: $gs-baseline * 3;
-	margin: 9px 0 -4px;
 }
 
 .bundles__cta {
@@ -287,6 +232,7 @@ $why-support-colour: #7cb523;
 
 .bundles__features li {
 	margin-left: $gs-gutter - 1;
+	margin-bottom: $gs-baseline;
     list-style-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13"><style>.st0{fill:#fff;fill-opacity:0.25;}</style><circle class="st0" cx="6" cy="6" r="6"/></svg>');
 }
 
@@ -534,29 +480,12 @@ $why-support-colour: #7cb523;
 	}
 }
 
-.introduction__heading-one {
+.introduction__heading {
 	margin-left: 15px;
 
 	@include mq($from: mobileLandscape) {
 		margin-left: 25px;
 	}
-}
-
-.introduction__heading-two {
-	margin-left: 40px;
-
-	@include mq($from: mobileLandscape) {
-		margin-left: 50px;
-	}
-}
-
-.introduction__heading-three {
-	margin-left: 10px;
-
-	@include mq($from: mobileLandscape) {
-		margin-left: 20px;
-	}
-
 }
 
 .introduction__heading-one, .introduction__heading-two, .introduction__heading-three {
