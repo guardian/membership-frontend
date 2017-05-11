@@ -3,16 +3,6 @@
    ========================================================================== */
 
 .guardian-header {
-    height: 74px;
-    @include mq($from: mobile-wider) {
-        height: 90px;
-    }
-    @include mq($from: mobileLandscape) {
-        height: 109px;
-    }
-    @include mq($from: tablet) {
-        height: 123px;
-    }
     display: block;
     background-color: $blue;
     position: relative;
@@ -21,10 +11,11 @@
 
 .guardian-header__inner {
     @include clearfix();
-    padding: 6px 10px 0 10px;
+    padding: 6px 10px 12px 10px;
 
-    @include mq($from: mobileLandscape) {
-        padding: 12px 20px 0 20px;
+    @include mq($from: tablet) {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 
@@ -35,15 +26,6 @@
 
 .guardian-header__logo-link {
     display: block;
-}
-
-.guardian-header__roundel-height {
-    height: 42px;
-    width: 42px;
-    @include mq($from: mobile-wider) {
-        height: 52px;
-        width: 52px;
-    }
 }
 
 .guardian-header__title-height {
@@ -59,60 +41,6 @@
     }
 }
 
-.guardian-header__logo-roundel {
-    /* additional margins for the roundel, the title svg margins are handled by padding */
-    margin-right: 19px;
-    @include mq($from: mobile-wider) {
-        margin-right: 27px;
-        margin-top: -3px; //accounts for the fact that the title changes size but the roundel doesn't
-    }
-    @include mq($from: mobileLandscape) {
-        margin-right: 35px;
-        margin-top: 3px;
-    }
-    @include mq($from: tablet) {
-        margin-right: 59px;
-        margin-top: -3px;
-    }
-    @include mq($from: desktop) {
-        margin-right: 59px;
-    }
-}
-
-/* Navigation
-   ========================================================================== */
-
-.guardian-header__navigation {
-    display: block;
-    float: left;
-    position: absolute;
-    bottom: 0;
-    @include font-size(16, 36);
-    @include mq($from: mobile-wider) {
-        @include font-size(19, 36);
-    }
-    @include mq($from: mobileLandscape) {
-        @include font-size(24, 42);
-    }
-}
-
-.guardian-header__navigation-list {
-    list-style-type: none;
-    li {
-        display: inline;
-    }
-    li + li:before {
-        content: "/";
-        color: color(news-main-2);
-        margin-right: 1px;
-        margin-left: -3px;
-    }
-    a {
-        color: white;
-        font-family: "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-        text-decoration: none;
-    }
-}
 
 /* Header - In App
    ========================================================================== */
