@@ -26,7 +26,7 @@ import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
 import org.joda.time.LocalDate
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import scala.concurrent.ExecutionContext.Implicits.global
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
 import play.api.mvc.RequestHeader
