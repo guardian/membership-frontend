@@ -40,10 +40,11 @@ const PRICES = {
 };
 
 const ERRORS = {
-	tooLittle: 'Please enter at least £5',
-	tooMuch: 'We are presently only able to accept contributions of £2000 or less',
-	badInput: 'Please enter a numeric amount',
-	noEntry: 'Please enter an amount'
+    tooLittleOneOff: 'Please enter at least £1',
+    tooLittle: 'Please enter at least £5',
+    tooMuch: 'We are presently only able to accept contributions of £2000 or less',
+    badInput: 'Please enter a numeric amount',
+    noEntry: 'Please enter an amount'
 };
 
 
@@ -167,7 +168,7 @@ function validateOtherAmount (elems) {
 		} else if (amount < 5 && STATE.contribPeriod === 'MONTHLY') {
 			contribError(elems, 'tooLittle');
 		} else if (amount < 1 && STATE.contribPeriod === 'ONE_OFF') {
-			contribError(elems, 'tooLittle');
+			contribError(elems, 'tooLittleOneOff');
 		} else if (amount > 2000) {
 			contribError(elems, 'tooMuch');
 		} else {
