@@ -9,9 +9,6 @@ import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
-import com.gu.memsub.promo.PromotionApplicator._
-import com.gu.memsub.promo._
-import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.PaymentService
 import com.gu.memsub.subsv2.reads.ChargeListReads._
 import com.gu.memsub.subsv2.reads.SubPlanReads._
@@ -43,7 +40,6 @@ import utils.CampaignCode
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
-
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalaz._
@@ -83,7 +79,6 @@ class MemberService(identityService: IdentityService,
                     payPalService: PayPalService,
                     subscriptionService: SubscriptionService[Future],
                     catalogService: CatalogService[Future],
-                    promoService: PromoService,
                     paymentService: PaymentService,
                     discounter: Discounter,
                     discountIds: DiscountRatePlanIds)
@@ -519,7 +514,7 @@ class MemberService(identityService: IdentityService,
     * Construct an Amend command (used for subscription upgrades)
     */
   private def amend(sub: Subscription[SubscriptionPlan.Member], planChoice: PlanChoice, form: Set[FeatureChoice])
-                   (implicit r: IdentityRequest, applicator: PromotionApplicator[Upgrades, Amend]): Future[Amend] = {
+                   (implicit r: IdentityRequest): Future[Amend] = {
 
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
     val tier = newPlan.tier

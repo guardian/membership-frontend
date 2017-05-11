@@ -2,7 +2,6 @@ package services
 
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
-import com.gu.memsub.promo.{DynamoPromoCollection, PromotionCollection}
 import com.gu.memsub.services.{PaymentService, PromoService, api => memsubapi}
 import com.gu.memsub.subsv2
 import com.gu.memsub.subsv2.Catalog
@@ -73,8 +72,6 @@ object TouchpointBackend extends LazyLogging {
 
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
     val discounter = new Discounter(Config.discountRatePlanIds(config.zuoraEnvName))
-    val promoCollection = DynamoPromoCollection.forStage(Config.config, restBackendConfig.envName)
-    val promoService = new PromoService(promoCollection, discounter)
     val zuoraService = new ZuoraServiceImpl(zuoraSoapClient)
     val zuoraRestService = new ZuoraRestService[Future]()
 
@@ -87,7 +84,7 @@ object TouchpointBackend extends LazyLogging {
     val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, zuoraRestService, stripeService, payPalService, newSubsService, newCatalogService, promoService, paymentService, discounter,
+      identityService, salesforceService, zuoraService, zuoraRestService, stripeService, payPalService, newSubsService, newCatalogService, paymentService, discounter,
         Config.discountRatePlanIds(config.zuoraEnvName))
 
     TouchpointBackend(
@@ -107,8 +104,6 @@ object TouchpointBackend extends LazyLogging {
       catalogService = newCatalogService,
       zuoraService = zuoraService,
       zuoraRestService = zuoraRestService,
-      promoService = promoService,
-      promos = promoCollection,
       membershipRatePlanIds = memRatePlanIds,
       paymentService = paymentService,
       identityService = identityService,
@@ -167,8 +162,6 @@ case class TouchpointBackend(
   zuoraService: ZuoraService,
   zuoraRestService: ZuoraRestService[Future],
   membershipRatePlanIds: MembershipRatePlanIds,
-  promos: PromotionCollection,
-  promoService: PromoService,
   paymentService: PaymentService,
   identityService: IdentityService,
   simpleRestClient: SimpleClient[Future]
