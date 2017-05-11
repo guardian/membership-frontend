@@ -50,6 +50,11 @@ $why-support-colour: #7cb523;
 	justify-content: center;
 	margin: 0 auto;
 
+	@include mq($until: mobileLandscape) {
+		background-color: guss-colour(comment-support-2);
+		padding: 0 10px $gs-baseline;
+	}
+
 	@include mq($from: desktop) {
 		display: flex;
 		max-width: gs-span(12) + ($gs-gutter * 2);
@@ -98,7 +103,7 @@ $why-support-colour: #7cb523;
 	@include mq($from: desktop) {
 		display: flex;
 		flex-direction: column;
-		height: gs-height(9) + $gs-baseline;
+		height: gs-height(9) + ($gs-baseline * 2);
 		// Fix for IE10.
 		max-width: gs-span(4);
 	}
@@ -201,7 +206,7 @@ $why-support-colour: #7cb523;
 	background-color: guss-colour(neutral-1);
 	color: #fff;
 	padding: ($gs-baseline / 2) $gs-gutter;
-	margin-top: $gs-baseline;
+	margin-top: $gs-baseline * 3;
 	text-align: left;
 	width: 100%;
 	height: $gs-baseline * 3;
@@ -246,16 +251,15 @@ $why-support-colour: #7cb523;
 .bundles__divider {
 	flex-grow: 1;
 	flex-basis: 100%;
+	background-color: #fff;
 
-	@include mq($until: desktop) {
-		height: $gs-baseline / 2;
-		background-image: url('https://media.guim.co.uk/8f75d2e43000b0e9c3523ca20e5bbfcec9ffe703/0_0_1860_23/500.jpg');
-		background-repeat: repeat-x;
+	@include mq($until: mobileLandscape) {
+		height: $gs-baseline;
+		background-color: guss-colour(comment-support-2);
 	}
 
-	@include mq($from: tablet, $until: desktop) {
+	@include mq($from: mobileLandscape, $until: desktop) {
 		height: $gs-baseline;
-		background-image: url('https://media.guim.co.uk/8f75d2e43000b0e9c3523ca20e5bbfcec9ffe703/0_0_1860_23/1000.jpg');		
 	}
 
 	@include mq($from: desktop) {
@@ -443,11 +447,11 @@ $why-support-colour: #7cb523;
 }
 
 .introduction p {
-	margin: 0 10px 4px 90px;
+	margin: 0 10px 8px 90px;
 	font-family: $f-serif-headline;
 	font-weight: normal;
-	font-size: 17px;
-	line-height: 19px;
+	font-size: 23px;
+	line-height: 23px;
 	color: guss-colour(neutral-1);
 
 	@include mq($from: mobileLandscape) {
@@ -456,26 +460,20 @@ $why-support-colour: #7cb523;
 	}
 
 	@include mq($from: tablet) {
-		margin-left: 260px;
-		margin-bottom: 5px;
-		font-size: 18px;
-		line-height: 22px;
+		margin-left: 210px;
+		font-size: 28px;
+		line-height: 27px;
 	}
 
 	@include mq($from: desktop) {
-		margin-left: 340px;
-		margin-bottom: $gs-baseline;
-		font-size: 24px;
-		line-height: 28px;
+		margin-left: 180px;
 	}
 
 	@include mq($from: mem-full) {
-		margin-left: 420px;
 		margin-right: 100px;
 	}
 
 	@include mq($from: wide) {
-		margin-left: 330px;
 		margin-right: 350px;
 	}
 }
@@ -485,6 +483,10 @@ $why-support-colour: #7cb523;
 
 	@include mq($from: mobileLandscape) {
 		margin-left: 25px;
+	}
+
+	@include mq($from: mem-full) {
+		margin-left: 70px;
 	}
 }
 
