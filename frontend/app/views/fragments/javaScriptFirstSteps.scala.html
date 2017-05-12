@@ -38,6 +38,7 @@
             buildNumber: '@app.BuildInfo.buildNumber',
             svgSprite: "@Asset.at("images/svg-sprite.svg")"
         },
+        abTests: @Html(Json.toJson(pageInfo.abTests).toString),
         googleAnalytics: {
             trackingId: '@Config.googleAnalyticsTrackingId',
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
