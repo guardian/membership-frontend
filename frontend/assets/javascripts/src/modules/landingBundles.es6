@@ -40,7 +40,7 @@ export function init() {
 }
 
 function bindCommitButtonEvents() {
-    COMMIT_CTAS.forEach(function(el) {
+    [].forEach.call(COMMIT_CTAS, function(el) {
         el.addEventListener('click', function(evt){
             setCookie(COMMIT_COOKIE_NAME, 1, COMMIT_COOKIE_DAYS);
         });
