@@ -32,7 +32,7 @@ abstract class ABTest(val slug: String, val audience: AudienceRange, canRun: Req
     v <- variantForcedBy(request) orElse variantFromABCookie(request) orElse defaultVariantFor(idFor(request)) if canRun(request)
   } yield v
 
-  def variantForcedBy(req: RequestHeader): Option[Variant] = req.getQueryString(abSlug).map(abName => variantsBySlug(abName.stripPrefix("ab.")))
+  def variantForcedBy(req: RequestHeader): Option[Variant] = req.getQueryString(abSlug).map(variantSlug => variantsBySlug(variantSlug))
 
   def variantFromABCookie(req: RequestHeader): Option[Variant] = req.cookies.get(cookieName).map(cookie => variantsBySlug(cookie.value))
 
