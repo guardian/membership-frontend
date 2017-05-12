@@ -5,11 +5,6 @@ import java.time.Duration.ofDays
 import abtests.AudienceId.idFor
 import play.api.mvc.{Cookie, Request, RequestHeader}
 
-
-case class Allocation(test: ABTest, variant: String) {
-  lazy val cookie = Cookie(test.cookieName, variant, httpOnly = false)
-}
-
 trait BaseVariant {
   val slug: String
 }
