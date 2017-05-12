@@ -2,6 +2,9 @@
 /* Header */
 .global-header-bundles {
 
+    @include mq($until: tablet) {
+       height: 56px;
+    }
     @include mq($from: tablet) {
         height: 76px;
     }
@@ -12,11 +15,19 @@
     .global-header__logo__image {
         margin-top: 2px;
         margin-right: 60px;
-        width: 320px;
-        height: 60px;
+        @include mq($until: tablet) {
+            height: 40px;
+            width: 180px;
+            margin-top: 0;
+            margin-right: 10px;
+        }
         @include mq($from: tablet, $until: desktop) {
             width: 280px;
             height: 50px;
+        }
+        @include mq($from: desktop) {
+            width: 320px;
+            height: 60px;
         }
     }
 
@@ -56,11 +67,34 @@
 /* Green Part of the Header */
 .bundle-header__main {
     background: #87be27;
-    padding-top: $gs-baseline * 2;
+    @include mq($from: phablet, $until: tablet) {
+        padding-top: $gs-baseline;
+    }
+    @include mq($from: tablet) {
+        padding-top: $gs-baseline * 2;
+    }
 }
 
 .bundle-header__main__content {
     @include bundle-column-wide();
+    @include mq($until: mobile-wider) {
+        width: 300px;                       // there's no image
+        padding-left: $gs-gutter;           //20px
+        display: block;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        width: 380px;                       // there's no image
+        padding-left: $gs-gutter * 1.5;     //30px
+        display: block;
+    }
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 240px;
+        padding-left: $gs-gutter * 1.5;    //30px
+        display: block;
+    }
+    @include mq($from: phablet, $until: tablet) {
+        padding-left: $gs-gutter;    //20px
+    }
     @include mq($from: tablet, $until: desktop) {
         padding-left: $gs-gutter;
     }
@@ -72,6 +106,17 @@
     }
     h1 {
         @include text-title();
+        @include mq($from: mobileLandscape, $until: phablet) {
+            padding-top: 5px;
+        }
+        @include mq($until: phablet) {
+            font-size: 32px;
+            line-height: 32px;
+        }
+        @include mq($from: phablet, $until: tablet) {
+            font-size: 38px;
+            line-height: 38px;
+        }
         @include mq($from: tablet, $until: desktop) {
             font-size: 46px;
             line-height: 46px;
@@ -87,6 +132,19 @@
 
     p {
         @include text-tag-line();
+        @include mq($until: phablet) {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 16px;
+            line-height: 18px;
+            margin-right: 15px;
+        }
+        @include mq($from: phablet, $until: tablet) {
+            padding-top: 5px;
+            font-size: 18px;
+            line-height: 20px;
+            width: 300px;
+        }
         @include mq($from: tablet, $until: desktop) {
             font-size: 20px;
             line-height: 24px;
@@ -110,6 +168,19 @@
     float: right;
     img {
         position: absolute;
+        @include mq($until: mobileLandscape) {
+            display: none;
+        }
+        @include mq($from: mobileLandscape, $until: phablet) {
+            height: 125px;
+            top: 60px;
+            margin-left: 270px;
+        }
+        @include mq($from: phablet, $until: tablet) {
+            height: 169px;
+            top: 56px;
+            margin-left: 180px;
+        }
         @include mq($from: tablet, $until: desktop) {
             width: 340px;
             top: 85px;
@@ -131,8 +202,21 @@
 
 .bundle-header__secondary__content {
     @include bundle-column-wide();
-    @include mq($from: tablet, $until: desktop) {
+    @include mq($until: mobile-wider) {
+        width: 300px;
         padding-left: 20px;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        width: 340px;
+        padding-left: 30px;
+    }
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+        padding-left: 20px;
+    }
+    @include mq($from: phablet, $until: desktop) {
+        width: 540px;
+        padding-left: 100px;
     }
     @include mq($from: desktop, $until: mem-full) {
         padding-left: 100px;
@@ -147,10 +231,19 @@
         }
         margin-bottom: 0;
         @include text-paragraph();
-        padding-top: $gs-baseline;
+        @include mq($until: phablet) {
+            font-size: 16px;
+            line-height: 18px;
+        }
+        @include mq($from: phablet) {
+            padding-top: $gs-baseline;
+        }
     }
 
     p:first-of-type {
-        padding-top: $gs-baseline * 2;
+        @include mq($from: phablet) {
+            padding-top: $gs-baseline * 2;
+
+        }
     }
 }

@@ -47,6 +47,25 @@ $gs-max-columns: 16;
     }
 }
 
+@mixin constrain-bundles-layout($offset: $gs-gutter * 2) {
+    margin: 0 auto;
+
+    @include mq(mobile) {
+        max-width: map-get($max-widths, max-mobile) + $offset;
+    }
+    @include mq(mobile-wider) {
+        max-width: map-get($max-widths, max-mobile-wider) + $offset;
+    }
+    @include mq(mobileLandscape) {
+        max-width: map-get($max-widths, max-mobileLandscape) + $offset;
+    }
+    @include mq(phablet) {
+        max-width: map-get($max-widths, max-phablet) + $offset;
+    }
+
+    @include constrain-layout($offset);
+}
+
 // Side Margins
 // =============================================================================
 // A mixin so we can reuse these measurements for other properties.
@@ -54,6 +73,45 @@ $gs-max-columns: 16;
 
 @mixin side-margins-calc($property) {
     $offset: ($gs-gutter * 2);
+    @include mq(tablet) {
+        $width: map-get($max-widths, max-tablet);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(desktop) {
+        $width: map-get($max-widths, max-desktop);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(mem-full) {
+        $width: map-get($max-widths, max-mem-full);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+}
+
+@mixin side-margins-bundles-calc($property) {
+    $offset: ($gs-gutter * 2);
+    @include mq(mobile) {
+        $width: map-get($max-widths, max-mobile);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(mobile-wider) {
+        $width: map-get($max-widths, max-mobile-wider);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(mobileLandscape) {
+        $width: map-get($max-widths, max-mobileLandscape);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(phablet) {
+        $width: map-get($max-widths, max-phablet);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
     @include mq(tablet) {
         $width: map-get($max-widths, max-tablet);
         #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);

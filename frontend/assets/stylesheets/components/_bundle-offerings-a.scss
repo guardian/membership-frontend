@@ -8,6 +8,14 @@ body {
     display: inline-block;
     float: left;
     width: 690px;
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+        margin-left: 20px;
+    }
+    @include mq($from: phablet, $until: tablet) {
+        width: 460px;
+        margin-left: 100px;
+    }
     @include mq($from: tablet, $until: desktop) {
         width: 460px;
         margin-left: 110px;
@@ -25,11 +33,31 @@ body {
 
 .bundle-offering-a__give__content {
     margin-top: $gs-baseline * 3;
+    @include mq($until: mobile-wider) {
+        width: 280px;
+        margin-left: 20px;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        width: 310px;
+        margin-left: 30px;
+    }
 
     >h1 {
         margin-top: $gs-baseline * 3;
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($until: mobile-wider) {
+            font-size: 20px;
+            line-height: 20px;
+        }
+        @include mq($from: mobile-wider, $until: mobileLandscape) {
+            font-size: 24px;
+            line-height: 24px;
+        }
+        @include mq($from: mobileLandscape, $until: phablet) {
+            font-size: 30px;
+            line-height: 30px;
+        }
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
@@ -39,9 +67,15 @@ body {
     background-color: #d4ebf8;
     margin-top: 10px;
     padding-bottom: 10px;
-    @include mq($from: desktop, $until: mem-full) {
-        .bundle-button {
-            margin-bottom: $gs-baseline;
+    .bundle-button {
+        margin-bottom: $gs-baseline;
+        @include mq($until: mobile-wider) {
+            margin-left: 40px;
+        }
+        @include mq($from: mobile-wider, $until: mobileLandscape) {
+            margin-left: 50px;
+        }
+        @include mq($from: desktop, $until: mem-full) {
             margin-left: 120px;
         }
     }
@@ -70,7 +104,12 @@ body {
 
 .bundle-offering-a__give__button {
     .bundle-button__content {
-        width: gs-span(3.35);
+        @include mq($until: mobileLandscape) {
+            width: 200px;
+        }
+        @include mq($from: mobileLandscape) {
+            width: gs-span(3.35);
+        }
     }
 }
 
@@ -80,7 +119,21 @@ body {
     @include bundle-column-narrow();
     padding-right: 0;
     margin-left: 100px;
-    width: 460px;
+    @include mq($until: mobile-wider) {
+        width: 280px;
+        margin-left: 20px;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        width: 310px;
+        margin-left: 30px;
+    }
+    @include mq($from: mobileLandscape, $until: phablet) {
+        margin-left: 20px;
+        width: 430px;
+    }
+    @include mq($from: phablet) {
+        width: 460px;
+    }
     display: inline-block;
     @include mq($until: mem-full) {
         padding-top: $gs-baseline * 2;
@@ -97,6 +150,18 @@ body {
         }
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($until: mobile-wider) {
+            font-size: 20px;
+            line-height: 20px;
+        }
+        @include mq($from: mobile-wider, $until: mobileLandscape) {
+            font-size: 24px;
+            line-height: 24px;
+        }
+        @include mq($from: mobileLandscape, $until: phablet) {
+            font-size: 30px;
+            line-height: 30px;
+        }
         border-top: 1px guss-colour(news-main-2) solid;
     }
 
@@ -110,7 +175,18 @@ body {
 }
 
 .bundle-offering-a__subscribe__offer {
-    width: 460px;
+    @include mq($until: mobile-wider) {
+        width: 280px;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        width: 310px;
+    }
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+    }
+    @include mq($from: phablet) {
+        width: 460px;
+    }
     display: inline-block;
     vertical-align: top;
     margin-top: $gs-baseline * 2;
@@ -130,7 +206,15 @@ body {
     }
 
     .bundle-button {
-        margin-left: 150px;
+        @include mq($until: mobile-wider) {
+            margin-left: 60px;
+        }
+        @include mq($from: mobile-wider, $until: mobileLandscape) {
+            margin-left: 80px;
+        }
+        @include mq($from: mobileLandscape) {
+            margin-left: 150px;
+        }
     }
 
     .bundle-button__content {
@@ -173,7 +257,10 @@ body {
 }
 
 .bundle-offering-a__subscribe__offer__list__item__content {
-    @include mq($until: mem-full) {
+    @include mq($until: mobile-wider) {
+        width: 210px;
+    }
+    @include mq($from: mobile-wider, $until: mem-full) {
         width: 224px;
     }
     @include mq($from: mem-full) {

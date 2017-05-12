@@ -1,19 +1,17 @@
 .bundle-support__main__img {
-    @include bundle-column-narrow();
-    padding-left: 20px;
-
+    @include mq($until: mem-full) {
+        display: none;
+    }
     @include mq($from: mem-full) {
+        @include bundle-column-narrow();
+        padding-left: 20px;
         margin-left: 80px;
-    }
 
-    >img {
-        @include mq($until: mem-full) {
-            display: none;
+        >img {
+            position: absolute;
+            margin-top: 75px;
         }
-        position: absolute;
-        margin-top: 75px;
     }
-
 }
 
 .bundle-support__line {
@@ -30,8 +28,21 @@
 .bundle-support__main__title {
     @include bundle-column-narrow();
     padding-right: $gs-gutter;
-    @include mq($until: tablet) {
-        margin-left: $gs-gutter;
+    @include mq($until: mobile-wider) {
+        width: 300px;
+        margin-left: 20px;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        width: 330px;
+        margin-left: 30px;
+    }
+    @include mq($from: mobileLandscape, $until: phablet) {
+        width: 430px;
+        margin-left: 20px;
+    }
+    @include mq($from: phablet, $until: tablet) {
+        width: 480px;
+        margin-left: 100px;
     }
     @include mq($from: tablet, $until: desktop) {
         margin-left: 110px;
@@ -46,6 +57,18 @@
     >h1 {
         padding-top: 2px;
         @include text-offering-title();
+        @include mq($until: mobile-wider) {
+            font-size: 20px;
+            line-height: 20px;
+        }
+        @include mq($from: mobile-wider, $until: mobileLandscape) {
+            font-size: 24px;
+            line-height: 24px;
+        }
+        @include mq($from: mobileLandscape, $until: phablet) {
+            font-size: 30px;
+            line-height: 30px;
+        }
         border-top: 1px guss-colour(news-main-2) solid;
         margin-top: $gs-baseline * 4;
         @include mq($from: desktop, $until: mem-full) {
@@ -71,7 +94,12 @@
 
 .bundle-support__content {
     background: guss-colour(comment-support-2);
-    margin-bottom: 102px;
+    @include mq($from: phablet, $until: tablet) {
+        margin-bottom: 0;
+    }
+    @include mq($from: tablet) {
+        margin-bottom: 102px;
+    }
     @include mq($from: mem-full) {
         margin-right: -100px;
     }
@@ -79,6 +107,9 @@
 
 .bundle-support__content__body {
     @include bundle-column-narrow();
+    @include mq($from: phablet, $until: tablet) {
+        width: 540px;
+    }
     @include mq($from: tablet, $until: desktop) {
         width: 590px;
     }
@@ -103,10 +134,28 @@
 }
 
 .bundle-support__content__body__text {
-    @include text-paragraph();
+    @include mq($until: tablet) {
+        @include fs-textSans(4);
+        line-height: 18px;
+    }
+    @include mq($from: tablet) {
+        @include text-paragraph();
+        max-width: gs-span(6);
+    }
     padding-top: 8px;
-    max-width: gs-span(6);
-    @include mq($until: desktop){
+    @include mq($until: mobile-wider) {
+        max-width: 280px;
+        margin-left: 20px;
+    }
+    @include mq($from: mobile-wider, $until: mobileLandscape) {
+        max-width: 310px;
+        margin-left: 30px;
+    }
+    @include mq($from: mobileLandscape, $until: phablet) {
+        max-width: 430px;
+        margin-left: 20px;
+    }
+    @include mq($from: phablet, $until: desktop){
         margin-left: 110px;
     }
     @include mq($from: desktop, $until: mem-full) {
