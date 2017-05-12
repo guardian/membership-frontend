@@ -243,6 +243,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
     val identityStrategy = identityStrategyFor(request, formData)
     identityStrategy.ensureIdUser { user =>
+      salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
           logger.info(s"make-member-success ${tier.name} ${abtests.MergedRegistration.describeParticipation} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} sub=$zuoraSubName")
@@ -253,11 +254,13 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
+          salesforceService.metrics.putFailSignUpStripe(tier)
           logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
           setBehaviourNote(tier.name, error.code, userOpt)
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
+          salesforceService.metrics.putFailSignUpPayPal(tier)
           setBehaviourNote(tier.name, error.code, userOpt)
           handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 
