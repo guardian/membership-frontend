@@ -82,7 +82,6 @@ object Videos {
         availableImages=supportersAUPlaceholder
       )
     )
-
   )
 
   val partners = Video(

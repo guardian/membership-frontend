@@ -106,7 +106,6 @@
    Objects: Text - Quotes
    ========================================================================== */
 
-blockquote,
 .blockquote {
     @include fs-bodyCopy(2);
     line-height: 20px;

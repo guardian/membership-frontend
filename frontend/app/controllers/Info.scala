@@ -72,28 +72,26 @@ trait Info extends Controller {
     val heroImage = ResponsiveImageGroup(
       name = Some("intro"),
       metadata = Some(Grid.Metadata(
-        description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
+        description = Some("Montage of The Guardian Australia Headlines"),
         byline = None,
-        credit = Some("Carol Cho/AAP")
+        credit = None
       )),
-      availableImages = ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
+      availableImages = ResponsiveImageGenerator("8a2003a809b699701111f10d3a0bef3c8e2ffa03/0_0_1000_486", Seq(1000, 500), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name = Some("coral"),
-        metadata = Some(Grid.Metadata(
-          description = Some("The impact of coral bleaching at Lizard Island on the Great Barrier Reef: (left) the coral turns white, known as 'bleaching', in March 2016; (right) the dead coral is blanketed by seaweed in May 2016"),
-          byline = None,
-          credit = None
-        )),
-        availableImages = ResponsiveImageGenerator(
-          id = "03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
-          sizes = List(1000, 500)
-        )
-      ))
+    val detailImage = ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("A scene in The Guardian editorial office."),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
+    )
+
+    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
     Ok(views.html.info.supporterAustralia(
       heroOrientated,
@@ -104,7 +102,7 @@ trait Info extends Controller {
         description = Some(CopyConfig.copyDescriptionSupporters),
         navigation = Nil
       ),
-      pageImages))
+      detailImageOrientated))
   }
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>

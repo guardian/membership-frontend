@@ -1,85 +1,86 @@
-@import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
-
-@import com.gu.memsub.Current
-@import views.support.Asset
 @import configuration.Videos
-@import com.gu.memsub.Benefit
 @import com.gu.memsub.subsv2.PaidMembershipPlans
-@import views.support.MembershipCompat._
-@import com.gu.salesforce.Tier.Supporter
+@import views.support.PageInfo
+@import com.gu.memsub.Benefit
 @import tracking.AppnexusPixel
+@import views.support.Asset
+@import com.gu.salesforce.Tier.Supporter
 
-@import com.gu.memsub.subsv2.CatalogPlan
-@(heroImage: model.OrientatedImages, supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
     pageInfo: PageInfo,
-    pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
-    @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIds.get(Supporter()))
+    <section class="elevated-supporter">
 
-    @* ===== About Supporters ===== *@
-    @fragments.page.heroBanner(heroImage) {
-        Become a Guardian&nbsp;Supporter
-    } {
-        Supporters keep our journalism fearless and free to tell the stories that matter
-    }()
-    @fragments.page.section(hasBorder = false) {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Top Button")
-    }
-    @fragments.page.section("Support independent journalism", isNarrow = false, hasBottomPadding = false) {
-        <div class="video-preview video-preview--plain">
-            <div class="video-preview__video">
-            @fragments.media.videoPlayer(Videos.supportersAU)
-            </div>
-            <div class="video-preview__header">
-                @fragments.inlineIcon("video", List("icon-inline--scale"))
-                Watch our journalists explain why the Guardian’s unique approach to journalism is worth defending
-            </div>
-        </div>
-    }
+        @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIds.get(Supporter()))
 
-    @fragments.page.section(hasBorder = false, hasBottomPadding = false){
-        <div class="listing__text">
-            <p>The Guardian shines a light on critical, under-reported stories across Australia and the globe.</p>
-            <p>We’ve revealed the reality of <a href="https://www.theguardian.com/australia-news/2016/jun/20/the-worst-ive-seen-trauma-expert-lifts-lid-on-atrocity-of-australias-detention-regime">Australia’s offshore detention regime</a>, and in our committed coverage of climate change, our <a href="http://www.theguardian.com/australia-news/series/reef-on-the-brink">Reef on the brink</a> series exposed the mass coral bleaching on the Great Barrier Reef.</p>
-
-        </div>
-    }
-
-    @* ===== Ensuring our independence ===== *@
-    @for(img <- pageImages.find(_.name.contains("coral"))) {
-        @fragments.page.sectionCardStack(img, topPadding = false) {
-            <div class="listing__text">
-                <p>We've led the way on discussion of <a href="https://www.theguardian.com/commentisfree/2015/jul/30/i-can-tell-you-how-adam-goodes-feels-every-indigenous-person-has-felt-it">discrimination against Indigenous people</a>. In our fearless politics coverage, we've reported scoops that have <a href="https://www.theguardian.com/world/2013/nov/18/australia-tried-to-monitor-indonesian-presidents-phone">dominated national debate</a>. We've also told the story <a href="https://www.theguardian.com/society/2015/sep/28/im-not-a-hypochondriac-i-have-a-disease-all-these-things-that-are-wrong-with-me-are-real-they-are-endometriosis">of the suffering of millions of women living with endometriosis</a>.</p>
-                <p>Our independence allows us to produce award-winning journalism free from outside influence. Your support is invaluable for us to maintain this.</p>
-                <p>
-                    <a class="action" href="@{routes.Joiner.enterPaidDetails(supporterPlans.tier)}?countryGroup=@countryGroup.id"
-                    data-metric-trigger="click"
-                    data-metric-category="Supporter Landing Page @countryGroup.id"
-                    data-metric-action="cta click"
-                    data-metric-label="Middle Button"
-                    >Become a Supporter</a>
+        @* ===== First part ===== *@
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, Html("Become a Guardian<br>Australia Supporter"), Html("Help protect our independent journalism")){
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    We want to make the world a better, fairer place. We want to keep the powerful honest. We aim to keep society informed by producing quality, independent journalism, which discovers and tells readers the truth. At Guardian Australia we shine a light on critical, under-reported stories across Australia and deliver the best of the Guardian’s work from reporters around the globe. Our independent ownership allows us to produce award-winning journalism free from commercial influence. No-one can edit our editor.
+                </p>
+                <p class="u-responsive-p">
+                    Your support is crucial for us to maintain this. We operate a lean, local news organisation with offices in Sydney, Melbourne and Canberra, and correspondents in other states. But our commercial environment is increasingly challenging and advertising revenues are in decline. So if you read us, if you like us, if you value our perspective – then it’s only fair to become a Supporter and help make our future in Australia more secure.
                 </p>
             </div>
-        }
-    }
-    @* ===== Join The Guardian and support The Guardian ===== *@
-    @fragments.page.section("If you read the Guardian, join the Guardian",contentHasTopPadding = false) {
-        @fragments.promos.promoQuote(
-            Asset.at("images/common/lenore-taylor-cutout.png"),
-            "Lenore Taylor, Editor, Guardian Australia"
-        ) {
-            <blockquote class="blockquote">
-                By becoming a Guardian Australia Member you join the community of readers who support our independent, fearless journalism and help us continue to cover the important stories, the ones that make a difference but so often don't get told.
-                <cite class="blockquote__citation">Lenore Taylor, Editor, Guardian Australia</cite>
-            </blockquote>
-        }
-    }
 
-    @* ===== Join Today ===== *@
-    @fragments.page.section("What's included") {
-        @fragments.tier.packagePromoSupporter(supporterPlans, countryGroup, "Bottom Button")
-    }
+            @fragments.page.elevatedBecomeSupporterBodyVideo(Videos.supportersAU, "Watch our journalists explain why the Guardian’s unique approach to journalism is worth defending")
+        }
+
+        @* ===== Second Part ===== *@
+        @fragments.page.elevatedCloserTheGuardian(supporterPlans, countryGroup, showCurrencyPrefix = false, Html("Supporter benefits")){
+            <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
+                <div class="elevated-closer-guardian-body__list">
+
+                    <p class="u-responsive-p">
+                        As a Guardian Australia Supporter, you can enjoy:
+                    </p>
+
+                    <ul>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            An ad-free experience in our mobile app
+                        </li>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            Regular behind-the-scenes emails from our newsroom
+                        </li>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            Welcome letter with First Dog on the Moon certificate
+                        </li>
+                        <li class="elevated-closer-guardian-body__list_item">
+                            Invitations to Guardian Live events
+                        </li>
+                    </ul>
+
+                    <p class="u-responsive-p">
+                        Most importantly, the knowledge that your contribution is directly funding our journalism in Australia.
+                    </p>
+                </div>
+            </div>
+        }
+
+        @* ===== Third Part ===== *@
+
+        <section class="elevated-quote-section l-constrained">
+            <div class="l-constrained elevated-quote-body">
+                <div class="elevated-quote-body__title u-content-width--left">
+                    If you read the Guardian,<br>join the Guardian
+                </div>
+
+                <div class="elevated-quote-body__col u-content-width--left">
+                    <blockquote class="elevated-quote">
+                        By becoming a Guardian Australia Member you join the community of readers who support our independent, fearless journalism and help us continue to cover the important stories, the ones that make a difference but so often don't get told.
+                        <cite class="elevated-quote__citation">Lenore Taylor, Editor, Guardian Australia</cite>
+                        <img src="@Asset.at("images/common/lenore-taylor-cutout.png")" alt="Lenore Taylor, Editor, Guardian Australia" class="elevated-quote__cutout">
+                    </blockquote>
+                </div>
+            </div>
+
+            @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showRightDiagonal = false)
+        </section>
+    </section>
 }
