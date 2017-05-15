@@ -21,10 +21,7 @@ const COMMIT_CTAS = document.querySelectorAll(COMMIT_BUTTON_SELECTOR);
 const COMMIT_COOKIE_NAME = 'GU_DBPT1M';
 const COMMIT_COOKIE_DAYS = 30;
 
-const cookieDomain = () => {
-    return document.location.host.substr(document.location.host.indexOf('.') ? document.location.host.indexOf('.') + 1 : 0);
-};
-const setCookie = (name, value, days = 7, path = '/', domain = cookieDomain()) => {
+const setCookie = (name, value, days = 7, path = '/', domain = 'theguardian.com') => {
     const expires = new Date(Date.now() + days * 864e5).toGMTString();
     document.cookie = name + `=${encodeURIComponent(value)}; expires=${expires}; path=${path}; domain=${domain}`;
 };
