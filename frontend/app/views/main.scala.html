@@ -13,7 +13,8 @@
     header: Header = DefaultHeader,
     footer: Footer = DefaultFooter,
     touchpointBackendResolutionOpt: Option[services.TouchpointBackend.Resolution] = None,
-    margins: Boolean = true
+    margins: Boolean = true,
+    marginsOverride: Option[String] = None
     )(content: Html)
 @import play.api.libs.json.Json
 @import configuration.{Config, Social}
@@ -122,7 +123,7 @@
         <div class="container-global">
             @fragments.global.header(pageInfo, countryGroup, header)
             @if(margins) {
-                <div class="l-side-margins" id="container">
+                <div class="@if(marginsOverride.isDefined){@marginsOverride.get}else{l-side-margins}" id="container">
                     @content
                 </div>
             } else {

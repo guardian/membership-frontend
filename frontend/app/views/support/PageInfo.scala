@@ -1,5 +1,6 @@
 package views.support
 
+import abtests.{ABTest, BaseVariant}
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.memsub.BillingPeriod
 import configuration.{Config, CopyConfig}
@@ -17,7 +18,8 @@ case class PageInfo(title: String = CopyConfig.copyTitleDefault,
                     payPalEnvironment: Option[String] = None,
                     initialCheckoutForm: CheckoutForm =
                       CheckoutForm(CountryGroup.UK.defaultCountry, CountryGroup.UK.currency, BillingPeriod.Year),
-                    navigation: Seq[NavItem] = Nav.primaryNavigation
+                    navigation: Seq[NavItem] = Nav.primaryNavigation,
+                    abTests: Map[ABTest, BaseVariant] = Map.empty
                    )
 
 object PageInfo {
@@ -35,4 +37,9 @@ object PageInfo {
   }
 
   implicit val checkoutFormWrites = Json.writes[CheckoutForm]
+
+  implicit val abTestWrites = new Writes[Map[ABTest, BaseVariant]] {
+    override def writes(tests: Map[ABTest, BaseVariant]): JsValue = JsObject(tests.map{case (t,v) => (t.slug, JsString(v.slug)) })
+  }
+
 }

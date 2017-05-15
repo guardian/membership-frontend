@@ -11,6 +11,9 @@
     @include constrain-layout();
 }
 
+.l-constrained-bundles {
+    @include constrain-bundles-layout();
+}
 // TODO: Replace l- with u- prefix
 .l-side-margins {
     &:before,
@@ -23,6 +26,26 @@
         height: 100%;
         width: 0;
         @include side-margins-calc('width');
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}
+
+.l-side-margins-bundles {
+    &:before,
+    &:after {
+        background: $c-background-transparent;
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        height: 100%;
+        width: 0;
+        @include side-margins-bundles-calc('width');
     }
     &:before {
         left: 0;

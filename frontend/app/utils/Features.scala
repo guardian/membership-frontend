@@ -14,6 +14,9 @@ sealed trait Feature extends EnumEntry {
   def stateFor(request: RequestHeader): OnOrOff = {
     request.cookies.get(cookieName).flatMap(cookie => OnOrOff.withNameOption(cookie.value)).getOrElse(OnOrOff.Off)
   }
+
+  def describeState(implicit request: RequestHeader): String =
+    s"$cookieName=${stateFor(request)}"
 }
 
 object Feature extends PlayEnum[Feature] {

@@ -1,5 +1,6 @@
 package actions
 
+import abtests.{ABTest, AudienceId}
 import actions.ActionRefiners._
 import actions.Fallbacks._
 import com.gu.googleauth
@@ -7,18 +8,23 @@ import com.gu.salesforce.PaidTier
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
-import services.{TouchpointBackend, AuthenticationService}
+import services.{AuthenticationService, TouchpointBackend}
 import utils.GuMemCookie
 import utils.TestUsers.isTestUser
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 
 trait CommonActions {
   import OAuthActions._
+
+  val AddAbTestingCookiesToResponse = new ActionBuilder[Request] {
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
+      block(request).map { _.withCookies(ABTest.cookiesWhichShouldBeDropped(request) ++ AudienceId.cookieWhichShouldBeDropped(request) :_*) }
+  }
 
   val AddUserInfoToResponse = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
@@ -31,7 +37,7 @@ trait CommonActions {
       }
     }
 
-  val NoCacheAction = resultModifier(NoCache(_)) andThen AddUserInfoToResponse
+  val NoCacheAction = resultModifier(NoCache(_)) andThen AddUserInfoToResponse andThen AddAbTestingCookiesToResponse
 
   val CachedAction = resultModifier(Cached(_))
 

@@ -18,7 +18,8 @@ const SEE_MORE_CTA = document.querySelector(SEE_MORE_CTA_SELECTOR);
 const PRINT_OPTIONS = document.querySelectorAll(PRINT_OPTIONS_SELECTOR);
 const PRINT_CTA = document.querySelector(PRINT_CTA_SELECTOR);
 const COMMIT_CTAS = document.querySelectorAll(COMMIT_BUTTON_SELECTOR);
-const COMMIT_COOKIE_NAME = 'GU_DBPT1';
+const COMMIT_COOKIE_NAME = 'GU_DBPT1M';
+const COMMIT_COOKIE_DAYS = 30;
 
 const cookieDomain = () => {
     return document.location.host.substr(document.location.host.indexOf('.') ? document.location.host.indexOf('.') + 1 : 0);
@@ -39,9 +40,9 @@ export function init() {
 }
 
 function bindCommitButtonEvents() {
-    COMMIT_CTAS.forEach(function(el) {
+    [].forEach.call(COMMIT_CTAS, function(el) {
         el.addEventListener('click', function(evt){
-            setCookie(COMMIT_COOKIE_NAME, 1, 30);
+            setCookie(COMMIT_COOKIE_NAME, 1, COMMIT_COOKIE_DAYS);
         });
     });
 }
@@ -60,7 +61,7 @@ function bindButtonBehaviour() {
     });
 
     PRINT_CTA.addEventListener('click', function(evt){
-        setCookie(COMMIT_COOKIE_NAME, 1, 60);
+        setCookie(COMMIT_COOKIE_NAME, 1, COMMIT_COOKIE_DAYS);
     });
 
 }
