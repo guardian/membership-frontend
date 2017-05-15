@@ -33,11 +33,11 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
   }
 
   def putFailSignUpStripe(tier: Tier) {
-    put(s"failed-sign-up-stripe${tier.name}")
+    put(s"failed-sign-up-stripe-${tier.name}")
   }
 
   def putFailSignUpPayPal(tier: Tier) {
-    put(s"failed-sign-up-paypal${tier.name}")
+    put(s"failed-sign-up-paypal-${tier.name}")
   }
 
   def putCreationOfPaidSubscription(paymentMethod: PaymentMethod) = {
