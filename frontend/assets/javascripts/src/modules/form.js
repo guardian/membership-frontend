@@ -13,9 +13,7 @@
  2. address rules
  - adds listeners for the address rules (subdivision choice and address validation) for delivery and billing addresses
  - sets up the billing address CTA toggle
- 3. password
- - sets up the password check work
- 4. payment
+ 3. payment
  - sets up stripe
  - adds payment listeners for masker and displaying the card image
  - sets up payment options listeners to provide different info on payment option choice
@@ -51,7 +49,6 @@
  - errs (global form errors array)
  - flush (a method to flush the elem and elems on the form - used when validation is added/removed)
  - loader (loader and processing message work)
- - password (password work)
  - serializer (serialize the form inputs into a data object for sending to stripe)
  */
 
@@ -61,7 +58,6 @@ define([
     'src/modules/form/payment',
     'src/modules/form/address',
     'src/modules/form/options',
-    'src/modules/form/helper/password',
     'src/modules/form/submitButton',
     'src/modules/form/ongoingCardPayments',
     'src/modules/form/billingPeriodChoice',
@@ -70,7 +66,7 @@ define([
     'src/modules/form/accordion',
     'src/modules/form/validation/existEmail'
 ], function (validation, form, payment, address, options, submitButton,
-             password, ongoingCardPayments, billingPeriodChoice, paypal,
+             ongoingCardPayments, billingPeriodChoice, paypal,
              stripe, accordion, existEmail) {
     'use strict';
 
@@ -79,7 +75,6 @@ define([
         if (typeof form.elems != 'undefined') {
             validation.init();
             address.init();
-            password.init();
             options.init();
             submitButton.init();
             ongoingCardPayments.init();

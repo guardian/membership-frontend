@@ -149,12 +149,6 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
-            zxcvbn: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/dist/zxcvbn.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/zxcvbn/',
-                expand: true,
-                flatten: true
-            },
             uet: {
                 src: '<%= dirs.assets.javascripts %>/lib/analytics/uet.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/uet/',
@@ -382,7 +376,6 @@ module.exports = function (grunt) {
             'webpack',
             'copy:polyfills',
             'copy:curl',
-            'copy:zxcvbn',
             'copy:uet'
         ]);
     });
