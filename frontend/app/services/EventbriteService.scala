@@ -1,5 +1,7 @@
 package services
 
+import java.net.SocketTimeoutException
+
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
 import com.gu.monitoring.StatusMetrics
@@ -71,10 +73,9 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def start() {
     Logger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
-    val timeout = (Config.eventbriteRefreshTime - 3).seconds
-    eventsTask.start(timeout)
-    draftEventsTask.start(timeout)
-    archivedEventsTask.start(timeout)
+    eventsTask.start()
+    draftEventsTask.start()
+    archivedEventsTask.start(90.seconds)
   }
 
   def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
