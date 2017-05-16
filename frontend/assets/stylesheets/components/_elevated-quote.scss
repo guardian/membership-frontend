@@ -10,25 +10,6 @@
     background: guss-colour(neutral-8);
 }
 
-.elevated-quote-title {
-    @include fs-header(5);
-    color: guss-colour(news-main-1);
-    font-weight: 500;
-    line-height: 26px;
-    padding-top: 6px;
-
-    @include mq(tablet) {
-        @include fs-headline(6);
-        font-weight: 500;
-        line-height: 34px;
-    }
-
-    @include mq(desktop) {
-        width:100%;
-    }
-}
-
-
 
 /* ==========================================================================
    Promos: Quote
@@ -46,10 +27,9 @@
 
 .elevated-quote__blockquote {
     @include fs-bodyCopy(2);
-
     line-height: 20px;
-    margin: $gs-baseline 0 0;
 
+    margin: 0;
     padding-bottom: $gs-baseline;
 
     @include mq(mobileLandscape) {
