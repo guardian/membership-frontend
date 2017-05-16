@@ -11,7 +11,7 @@
         margin-left : 20px;
         margin-right: 20px;
     }
-    
+
     @include mq($from: phablet) {
         margin-left : 20px;
         margin-right: 20px;
@@ -19,7 +19,7 @@
 
     @include mq($from: tablet) {
         /*from: 740px The margins are variable*/
-        margin-left : auto; 
+        margin-left : auto;
         margin-right: auto;
     }
 }
@@ -64,6 +64,26 @@
     }
 }
 
+.u-content-width-margins--left {
+    margin-left: 5px;
+    margin-right: 5px;
+
+    @include mq($from: phablet) {
+        margin-left: 80px;
+        margin-right: 80px;
+    }
+
+    @include mq($from: tablet) {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+    @include mq($from: desktop) {
+        margin-left: 20px;
+        margin-right: 10px;
+    }
+}
+
 .u-content-width--right {
     padding-left: 5px;
     padding-right: 5px;
@@ -90,7 +110,7 @@
     color : guss-colour(neutral-1);
     margin-bottom: 12px;
 
-    @include mq($from: tablet) {   
+    @include mq($from: tablet) {
         @include fs-header(3);
         font-weight: normal;
         color : guss-colour(neutral-1);
