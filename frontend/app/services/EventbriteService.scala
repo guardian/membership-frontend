@@ -1,7 +1,5 @@
 package services
 
-import java.net.SocketTimeoutException
-
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
 import com.gu.monitoring.StatusMetrics
