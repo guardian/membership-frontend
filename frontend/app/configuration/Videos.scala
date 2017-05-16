@@ -27,8 +27,9 @@ object Videos {
   )
 
   private val supportersAUPlaceholder = ResponsiveImageGenerator(
-    id="700dda3ef042336defa067413cba6069b1a97811/0_0_1920_1080",
-    sizes=List(1920,960,500)
+    id="5858b1158a5c290c6380aa96eace7f4697288b6e/0_0_1080_608",
+    sizes=List(1080, 500),
+    "png"
   )
 
 
