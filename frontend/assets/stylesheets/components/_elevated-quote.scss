@@ -35,6 +35,8 @@
    ========================================================================== */
 
 .elevated-quote {
+    @include clearfix();
+
     position: relative;
 
     @include mq(desktop) {
@@ -46,13 +48,16 @@
     @include fs-bodyCopy(2);
 
     line-height: 20px;
-    width: 70%;
     margin: $gs-baseline 0 0;
 
-    padding-bottom: $gs-baseline * 4;
+    padding-bottom: $gs-baseline;
 
-    @include mq(tablet){
-        @include f-bodyCopy;
+    @include mq(mobileLandscape) {
+        width: 70%;
+        padding-bottom: $gs-baseline * 4;
+    }
+
+    @include mq(tablet) {
         font-size: 20px;
         line-height: 24px;
     }
@@ -80,9 +85,14 @@
 
 .elevated-quote__cutout {
     width: 30%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    display: block;
+    float: right;
+
+    @include mq(mobileLandscape) {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
 }
 
 
