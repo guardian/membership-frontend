@@ -15,7 +15,7 @@ function recordCampaign () {
 	// Don't want JS to break if there is a problem reading query params.
 	// Just don't set the cookie if this happens.
 	try {
-
+gz
 		let urlParams = new URLSearchParams(window.location.search.slice(1));
 		campaignCode = urlParams.get('INTCMP');
 

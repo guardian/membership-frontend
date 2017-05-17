@@ -30,7 +30,7 @@ import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
-import utils.{CampaignCode, Feature, TierChangeCookies}
+import utils.{CampaignCode, Feature, RefererPageviewId, RefererUrl, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -242,16 +242,20 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
     val campaignCode = CampaignCode.fromRequest
     val ipCountry = request.getFastlyCountry
+    val refererUrl = RefererUrl.fromRequest
+    println("refererUrl from cookie: " + refererUrl)
+    val refererPvid = RefererPageviewId.fromRequest
+    println("refererPvid from cookie: " + refererPvid)
 
     val identityStrategy = identityStrategyFor(request, formData)
     identityStrategy.ensureIdUser { user =>
       salesforceService.metrics.putAttemptedSignUp(tier)
-      memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
+      memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry, refererUrl, refererPvid).map {
         case (sfContactId, zuoraSubName) =>
           logger.info(s"make-member-success ${tier.name} ${abtests.MergedRegistration.describeParticipation} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
-          trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
-          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
+          trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode, refererUrl, refererPvid)
+          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, refererUrl, refererPvid, tier)
           onSuccess
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors

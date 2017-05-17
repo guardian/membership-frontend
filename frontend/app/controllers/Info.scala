@@ -9,7 +9,7 @@ import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
-import play.api.mvc.Controller
+import play.api.mvc.{Controller, Cookie}
 import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
@@ -112,7 +112,8 @@ trait Info extends Controller {
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
 
-    println("supporterFor refererUrl is: " + request.headers.get("referer"))
+    val refUrl = request.headers.get("referer")
+    val refPvid = request.getQueryString("REFPVID")
 
     val heroImage = ResponsiveImageGroup(
       name = Some("intro"),
@@ -147,6 +148,7 @@ trait Info extends Controller {
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
       detailImageOrientated))
+      .withCookies(Cookie("gu_mem_ref_url", refUrl.getOrElse("")), Cookie("gu_refpvid", refPvid.getOrElse("")))
   }
 
   def patron() = CachedAndOutageProtected { implicit request =>

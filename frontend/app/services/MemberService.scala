@@ -36,10 +36,11 @@ import model.{Benefit => _, _}
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
-import utils.CampaignCode
+import utils.{CampaignCode, RefererPageviewId, RefererUrl}
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
+
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scalaz._
@@ -103,7 +104,9 @@ class MemberService(identityService: IdentityService,
       fromEventId: Option[String],
       campaignCode: Option[CampaignCode],
       tier: Tier,
-      ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)] = {
+      ipCountry: Option[Country],
+      refererUrl: Option[RefererUrl],
+      refererPageviewId: Option[RefererPageviewId]): Future[(ContactId, ZuoraSubName)] = {
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
@@ -177,7 +180,7 @@ class MemberService(identityService: IdentityService,
     payPalService.retrieveEmail(baid)
   }
 
-  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId])
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
       _ <- createPaymentMethod(sub, form).liftM
@@ -186,12 +189,14 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
-        campaignCode = code
+        campaignCode = code,
+        refererUrl = refererUrl,
+        refererPageviewId = refererPageviewId
       ))
     } yield memberId).run
   }
 
-  override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
+  override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId])
                                       (implicit id: IdentityRequest): Future[MemberError \/ ContactId] =
     (for {
       memberId <- EitherT(upgradeSubscription(
@@ -199,7 +204,9 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, sub.subscription.plan.charges.billingPeriod),
         form = form,
-        campaignCode = code
+        campaignCode = code,
+        refererUrl = refererUrl,
+        refererPageviewId = refererPageviewId
       ))
     } yield {
       track(MemberActivity("upgradeMembership", MemberData(
@@ -541,7 +548,9 @@ class MemberService(identityService: IdentityService,
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
-                                  campaignCode: Option[CampaignCode])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
+                                  campaignCode: Option[CampaignCode],
+                                  refererUrl: Option[RefererUrl],
+                                  refererPageviewId: Option[RefererPageviewId])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
@@ -556,7 +565,7 @@ class MemberService(identityService: IdentityService,
     } yield {
       salesforceService.metrics.putUpgrade(tier)
       addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
-      trackUpgrade(contact, sub, newPlan, addressDetails, campaignCode)
+      trackUpgrade(contact, sub, newPlan, addressDetails, campaignCode, refererUrl, refererPageviewId)
       contact
     }).run
   }

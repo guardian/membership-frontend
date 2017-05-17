@@ -18,7 +18,7 @@ import play.api.mvc._
 import services.EventbriteService._
 import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import tracking._
-import utils.CampaignCode
+import utils.{CampaignCode, RefererUrl}
 import views.support.MembershipCompat._
 import views.support.PageInfo
 
@@ -140,7 +140,8 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
           salesforceContactId = request.subscriber.contact.salesforceContactId,
           identityId = request.user.id,
           tier = request.subscriber.subscription.plan.tier,
-          campaignCode = CampaignCode.fromRequest)
+          campaignCode = CampaignCode.fromRequest
+          )
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
 

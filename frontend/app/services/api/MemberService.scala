@@ -14,7 +14,7 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{GenericSFContact, PlanChoice}
-import utils.CampaignCode
+import utils.{CampaignCode, RefererPageviewId, RefererUrl}
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
@@ -32,7 +32,10 @@ trait MemberService {
                    fromEventId: Option[String],
                    campaignCode: Option[CampaignCode],
                    tier: Tier,
-                   ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)]
+                   ipCountry: Option[Country],
+                   refererUrl: Option[RefererUrl],
+                   refererPageviewId: Option[RefererPageviewId]): Future[(ContactId, ZuoraSubName)]
+
 
   def createContributor(user: IdUser,
                    formData: ContributorForm,
@@ -41,12 +44,12 @@ trait MemberService {
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
-  def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId])
                              (implicit identity: IdentityRequest): Future[MemberError \/ ContactId]
 
   def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit]
 
-  def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
+  def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId])
                              (implicit id: IdentityRequest): Future[MemberError \/ ContactId]
 
   def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
