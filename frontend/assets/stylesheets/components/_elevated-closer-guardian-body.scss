@@ -2,6 +2,8 @@
    Elevated closer to the guardian body
    ========================================================================== */
 .elevated-closer-guardian-body {
+    @include clearfix();
+
     background: guss-colour(neutral-8);
     padding-bottom: 18px;
 
@@ -32,12 +34,17 @@
     }
 }
 
-.elevated-closer-guardian-body__video {
+.elevated-closer-guardian-body__video,
+.elevated-closer-guardian-body__img {
 	vertical-align: top;
 
     @include mq($from: desktop) {
         float: left;
     }
+}
+
+.elevated-closer-guardian-body__img {
+    padding-bottom: $gs-baseline * 2;
 }
 
 .elevated-closer-guardian-body__text {
