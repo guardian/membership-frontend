@@ -15,7 +15,9 @@ import play.api.data.{FieldMapping, Form, FormError, Mapping}
 import play.api.libs.json.{JsValue, Json}
 
 object MemberForm {
-  case class NameForm(first: String, last: String) extends FullName
+  case class NameForm(first: String, last: String) extends FullName {
+    override def title: Option[Title] = None
+  }
 
   case class SupportForm(
     name: String,
