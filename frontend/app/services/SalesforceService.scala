@@ -28,7 +28,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
 
   val metricsVal = new MemberMetrics(salesforceConfig.envName)
 
-  private val repository = new SimpleContactRepository(salesforceConfig, system.scheduler, "Frontend")
+  private val repository = new SimpleContactRepository(salesforceConfig, system.scheduler, "membership")
 
   override def getMember(userId: UserId): Future[Option[GenericSFContact]] =
     repository.get(userId)
