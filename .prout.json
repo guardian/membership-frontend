@@ -13,6 +13,6 @@
         }
     },
     "sentry": {
-        "projects": ["membership"]
+        "projects": ["membership", "membership-client-side"]
     }
 }
