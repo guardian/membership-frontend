@@ -18,7 +18,7 @@ object Dependencies {
   val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
-  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
+  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.1.1"
   val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.0.1" % "test"
   val seleniumHtmlUnitDriver ="org.seleniumhq.selenium" % "htmlunit-driver" % "2.23" % "test"
