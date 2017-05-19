@@ -73,7 +73,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     Logger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
     eventsTask.start()
     draftEventsTask.start()
-    archivedEventsTask.start(90.seconds)
+    archivedEventsTask.start()
   }
 
   def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
@@ -164,7 +164,7 @@ object GuardianLiveEventService extends LiveService {
     super.start()
     Logger.info("Starting EventsOrdering background task")
     val timeout = (Config.eventbriteRefreshTimeForPriorityEvents - 3).seconds
-    eventsOrderingTask.start(timeout)
+    eventsOrderingTask.start()
   }
 }
 
