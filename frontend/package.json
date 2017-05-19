@@ -65,7 +65,6 @@
     "url-search-params": "^0.6.1",
     "vinyl-fs": "2.2.1",
     "webpack": "~2.2.1",
-    "webpack-dev-server": "^1.14.1",
-    "zxcvbn": "3.5.0"
+    "webpack-dev-server": "^1.14.1"
   }
 }

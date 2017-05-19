@@ -11,5 +11,8 @@
                 }
             }
         }
+    },
+    "sentry": {
+        "projects": ["membership", "membership-client-side"]
     }
 }

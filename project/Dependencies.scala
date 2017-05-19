@@ -6,10 +6,10 @@ object Dependencies {
   //versions
   val awsClientVersion = "1.11.95"
   //libraries
-  val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.2"
+  val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.9" // v0.9 is the latest version published for Play 2.4...
-  val membershipCommon = "com.gu" %% "membership-common" % "0.402"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.413"
   val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
@@ -18,7 +18,7 @@ object Dependencies {
   val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
-  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
+  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.1.1"
   val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.0.1" % "test"
   val seleniumHtmlUnitDriver ="org.seleniumhq.selenium" % "htmlunit-driver" % "2.23" % "test"

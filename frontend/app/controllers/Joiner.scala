@@ -55,6 +55,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   val subscriberOfferDelayPeriod = 6.months
 
+  val ForcedRedirectToIdentity = "forcedRedirectToIdentity"
+
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
   val identityService = IdentityService(IdentityApi)
@@ -108,7 +110,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       val canWaiveAuth = abtests.MergedRegistration.allocate(req).exists(_.canWaiveAuth) || Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
       logger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
-      if (canAccess) None else Some(onUnauthenticated(req))
+      if (canAccess) None else Some(onUnauthenticated(req).addingToSession(ForcedRedirectToIdentity -> "true")(req))
     }
   }
 
@@ -243,9 +245,10 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
     val identityStrategy = identityStrategyFor(request, formData)
     identityStrategy.ensureIdUser { user =>
+      salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
@@ -253,11 +256,13 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
+          salesforceService.metrics.putFailSignUpStripe(tier)
           logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
           setBehaviourNote(tier.name, error.code, userOpt)
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
+          salesforceService.metrics.putFailSignUpPayPal(tier)
           setBehaviourNote(tier.name, error.code, userOpt)
           handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 

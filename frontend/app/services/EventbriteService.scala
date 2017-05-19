@@ -65,16 +65,15 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   // goal here is to keep the downstream cache warm (AWS CloudFront - ttl 61s).
   lazy val eventsTask = eventsTaskFor("live", 1.second, Config.eventbriteRefreshTime.seconds)
 
-  lazy val archivedEventsTask = eventsTaskFor("ended", 29.seconds, Config.eventbriteRefreshTime.seconds)
+  lazy val archivedEventsTask = eventsTaskFor("ended", 29.seconds, 3600.seconds)
 
   lazy val draftEventsTask =  eventsTaskFor("draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
 
   def start() {
     Logger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
-    val timeout = (Config.eventbriteRefreshTime - 3).seconds
-    eventsTask.start(timeout)
-    draftEventsTask.start(timeout)
-    archivedEventsTask.start(timeout)
+    eventsTask.start()
+    draftEventsTask.start()
+    archivedEventsTask.start()
   }
 
   def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
@@ -165,7 +164,7 @@ object GuardianLiveEventService extends LiveService {
     super.start()
     Logger.info("Starting EventsOrdering background task")
     val timeout = (Config.eventbriteRefreshTimeForPriorityEvents - 3).seconds
-    eventsOrderingTask.start(timeout)
+    eventsOrderingTask.start()
   }
 }
 

@@ -106,12 +106,13 @@ case class IdentityService(identityApi: IdentityApi) {
   def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
     retry.Backoff(max = 3, delay = 2.seconds, base = 2){ () =>
       getUser(user).value
-    }.map(_.getOrElse{
+    }.map(_.fold({ errorMessage =>
+      Logger.warn(s"identity get user failed with: $errorMessage")
       val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
       val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
       val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
       throw IdentityServiceError(s"Couldn't get user's ${user.id} full details. $errContext")
-    })
+    }, identity))
 
   def getUser(user: IdMinimalUser)(implicit idReq: IdentityRequest): EitherT[Future, String, IdUser] = identityApi.get(s"user/${user.id}",
     idReq.headers,
