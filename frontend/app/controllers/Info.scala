@@ -74,7 +74,7 @@ trait Info extends Controller {
     }
   }
 
-  def supporterAustraliaOld(request: RequestHeader) = {
+  def supporterAustraliaOld(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -115,7 +115,7 @@ trait Info extends Controller {
       pageImages))
   }
 
-  def supporterAustraliaNew(request: RequestHeader) = {
+  def supporterAustraliaNew(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
