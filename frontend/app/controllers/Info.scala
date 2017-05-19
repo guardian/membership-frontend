@@ -5,6 +5,7 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.netaporter.uri.dsl._
+import com.typesafe.scalalogging.LazyLogging
 import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
 import forms.FeedbackForm
@@ -18,7 +19,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 
-trait Info extends Controller {
+trait Info extends Controller with LazyLogging {
   def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
     redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
@@ -67,6 +68,8 @@ trait Info extends Controller {
   }
 
   def supporterAustralia = CachedAndOutageProtected { implicit request =>
+    logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPage.describeParticipation}")
+
     if (abtests.SupporterLandingPage.allocate(request).exists(_.showNewDesign)) {
       supporterAustraliaNew(request)
     } else {
