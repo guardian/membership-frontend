@@ -2,8 +2,8 @@
     /* !important is being used here because we cannot override the default css classes without it.
 	These css classes were imported after this file so this propersty (without the !important) is
 	being override. */
-    margin-top: 12px !important;
-    margin-bottom: 36px !important;
+    margin-top: $gs-baseline !important;
+    margin-bottom: $gs-baseline * 3 !important;
 }
 
 .elevated-quote-body {
