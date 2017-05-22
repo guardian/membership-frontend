@@ -61,8 +61,8 @@ module.exports = function (grunt) {
                 },
 
                 entry: {
-                    main: "./src/main",
-                    tools: './src/tools'
+                    main: ['core-js/fn/promise',"./src/main"],
+                    tools: ['core-js/fn/promise','./src/tools']
                 }
             }
         },
