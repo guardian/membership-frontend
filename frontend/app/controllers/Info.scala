@@ -68,7 +68,7 @@ trait Info extends Controller with LazyLogging {
   }
 
   def supporterAustralia = NoCacheAction { implicit request =>
-    logger.info(s"supporter-au-impression ${abtests.SupporterLandingPage.describeParticipation}")
+    logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPage.describeParticipation}")
 
     if (abtests.SupporterLandingPage.allocate(request).exists(_.showNewDesign)) {
       supporterAustraliaNew(request)
