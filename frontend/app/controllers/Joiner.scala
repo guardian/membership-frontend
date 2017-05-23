@@ -248,7 +248,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${abtests.MergedRegistration.describeParticipation} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)

@@ -5,11 +5,12 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.netaporter.uri.dsl._
+import com.typesafe.scalalogging.LazyLogging
 import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
-import play.api.mvc.Controller
+import play.api.mvc.{Controller, RequestHeader}
 import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
@@ -18,7 +19,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 
-trait Info extends Controller {
+trait Info extends Controller with LazyLogging {
   def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
     redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
@@ -66,7 +67,17 @@ trait Info extends Controller {
     )
   }
 
-  def supporterAustralia = CachedAndOutageProtected { implicit request =>
+  def supporterAustralia = NoCacheAction { implicit request =>
+    logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPage.describeParticipation}")
+
+    if (abtests.SupporterLandingPage.allocate(request).exists(_.showNewDesign)) {
+      supporterAustraliaNew(request)
+    } else {
+      supporterAustraliaOld(request)
+    }
+  }
+
+  def supporterAustraliaOld(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -95,7 +106,7 @@ trait Info extends Controller {
         )
       ))
 
-    Ok(views.html.info.supporterAustralia(
+    Ok(views.html.info.supporterAustraliaOld(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(
@@ -105,6 +116,45 @@ trait Info extends Controller {
         navigation = Nil
       ),
       pageImages))
+  }
+
+  def supporterAustraliaNew(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+    implicit val countryGroup = Australia
+
+    val heroImage = ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("Montage of The Guardian Australia Headlines"),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("8a2003a809b699701111f10d3a0bef3c8e2ffa03/0_0_1000_486", Seq(1000, 500), "png")
+    )
+
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val detailImage = ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("Your Guardian Membership certificate"),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("71b8bebab82bdead12273ff4e299a04dccad0d20/0_0_1080_610", Seq(1080, 500), "png")
+    )
+
+    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+
+    Ok(views.html.info.supporterAustraliaNew(
+      heroOrientated,
+      TouchpointBackend.Normal.catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters),
+        navigation = Nil
+      ),
+      detailImageOrientated))
   }
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
