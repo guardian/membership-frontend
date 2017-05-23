@@ -45,7 +45,6 @@ object ABTest {
   val CookieAge = ofDays(365).getSeconds.toInt
 
   lazy val allTests: Set[ABTest] = Set(
-    MergedRegistration,
     SupporterLandingPage
   )
 
