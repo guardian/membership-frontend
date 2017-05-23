@@ -25,12 +25,8 @@ abstract class ABTest(val slug: String, val audience: AudienceRange, canRun: Req
   def cookieFor(variant: BaseVariant) =
     Cookie(cookieName, variant.slug, maxAge = Some(ABTest.CookieAge), httpOnly = false)
 
-  def participationString(getAllocation: RequestHeader => Option[Variant])(implicit request: RequestHeader) =
-    s"ab.$cookieName=${getAllocation(request).map(_.slug).getOrElse("None")}"
-
-  def describeParticipation(implicit request: RequestHeader): String = participationString(allocate)
-
-  def describeParticipationFromCookie(implicit request: RequestHeader): String = participationString(variantFromABCookie)
+  def describeParticipation(implicit request: RequestHeader): String =
+    s"ab.$cookieName=${allocate(request).map(_.slug).getOrElse("None")}"
 
   def allocate(request: RequestHeader): Option[Variant] = for {
     v <- variantForcedBy(request) orElse variantFromABCookie(request) orElse defaultVariantFor(idFor(request)) if canRun(request)
