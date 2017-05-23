@@ -18,7 +18,7 @@ import play.api.mvc._
 import services.EventbriteService._
 import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import tracking._
-import utils.{CampaignCode, RefererUrl}
+import utils.{CampaignCode}
 import views.support.MembershipCompat._
 import views.support.PageInfo
 

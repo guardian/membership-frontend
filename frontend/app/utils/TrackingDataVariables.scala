@@ -1,7 +1,6 @@
 package utils
 
 import play.api.mvc.RequestHeader
-import play.utils.UriEncoding
 
 case class CampaignCode(get: String)
 
@@ -22,7 +21,6 @@ object RefererUrl {
     for {
       referer <- request.cookies.get("gu_mem_ref_url")
     } yield {
-      println("referer fromRequest method: " + referer)
       RefererUrl(referer.value)
     }
 }

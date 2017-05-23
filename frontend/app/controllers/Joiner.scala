@@ -243,9 +243,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     val campaignCode = CampaignCode.fromRequest
     val ipCountry = request.getFastlyCountry
     val refererUrl = RefererUrl.fromRequest
-    println("refererUrl from cookie: " + refererUrl)
     val refererPvid = RefererPageviewId.fromRequest
-    println("refererPvid from cookie: " + refererPvid)
 
     val identityStrategy = identityStrategyFor(request, formData)
     identityStrategy.ensureIdUser { user =>

@@ -21,9 +21,6 @@ import scala.concurrent.Future
 trait Info extends Controller {
   def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
-    val referrerUrl = request.headers.get("referer")
-    println("the referrerUrl: " + referrerUrl)
-    println("the REFPVID: " + request.getQueryString("REFPVID"))
     redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
   }
 
