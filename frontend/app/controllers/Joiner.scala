@@ -140,6 +140,10 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     (for {
       identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
+      for (identityUser <- identityUserOpt) {
+        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists}")
+      }
+
       tier match {
         case t: Tier.Supporter => for (user <- userOpt) {
           MembersDataAPI.Service.upsertBehaviour(
@@ -248,7 +252,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
