@@ -107,7 +107,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     override def filter[A](req: Request[A]) = Future.successful {
       val userOpt = authenticatedIdUserProvider(req)
       val userSignedIn = userOpt.isDefined
-      val canWaiveAuth = abtests.MergedRegistration.allocate(req).exists(_.canWaiveAuth) || Feature.MergedRegistration.turnedOnFor(req)
+      val canWaiveAuth = Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
       logger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
       if (canAccess) None else Some(onUnauthenticated(req).addingToSession(ForcedRedirectToIdentity -> "true")(req))
@@ -245,7 +245,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     identityStrategy.ensureIdUser { user =>
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${abtests.MergedRegistration.describeParticipation} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
