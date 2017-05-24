@@ -287,7 +287,9 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       email <- emailFromZuora
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request.user)
+        case t: Tier.Supporter if !upgrade => {salesforceService.metrics.putThankYou(tier)
+          MembersDataAPI.Service.removeBehaviour(request.user)}
+        case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
       Ok({salesforceService.metrics.putThankYou(tier)
