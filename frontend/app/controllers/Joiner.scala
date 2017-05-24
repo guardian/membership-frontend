@@ -292,8 +292,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
-      Ok({salesforceService.metrics.putThankYou(tier)
-        views.html.joiner.thankyou(
+      Ok({views.html.joiner.thankyou(
         request.subscriber,
         paymentSummary,
         paymentMethod,
