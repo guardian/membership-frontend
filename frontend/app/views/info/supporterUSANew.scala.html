@@ -1,0 +1,95 @@
+@import com.gu.i18n.CountryGroup
+@import configuration.Videos
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import views.support.PageInfo
+@import com.gu.memsub.Benefit
+@import tracking.AppnexusPixel
+@import views.support.Asset
+@import com.gu.salesforce.Tier.Supporter
+
+@(  heroImage: model.OrientatedImages,
+    supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
+    pageInfo: PageInfo,
+    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
+@main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
+
+    <section class="elevated-supporter">
+
+        @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIds.get(Supporter()))
+
+        @* ===== First part ===== *@
+        @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, Html("Become a Guardian<br>US Supporter"), Html("Help secure the future of our fearless, independent journalism")){
+            <div class="elevated-become-supporter-body__col u-content-width--left">
+                <p class="u-responsive-p">
+                    We want to make the world a better, fairer place. We want to keep the powerful honest.  And we believe that quality, independent journalism is essential to protect American democracy.
+                </p>
+                <p class="u-responsive-p">
+                    Guardian US operates outside the American media bubble to bring a global perspective to the most pressing issues facing this country.  We’re not afraid to take bold stands on the issues we care about most, from inequality to the environment to national security. Unlike many new organizations, we haven’t put up a paywall &mdash; we want to keep our journalism as open and free as possible.
+                </p>
+                <p class="u-responsive-p">
+                    But this is difficult and expensive work. While more people are reading the Guardian than ever before, far fewer are paying for it. And advertising revenues across the media are falling fast.  So if you read us, and you value our perspective &mdash; then become a Supporter and help make our future more secure.
+                </p>
+            </div>
+
+            @fragments.page.elevatedBecomeSupporterBodyVideo(Videos.supportersUSA, "Hear from Guardian journalists first-hand why your support is critical to the work we do every day")
+        }
+
+        @* ===== Second Part ===== *@
+        <section class="elevated-closer-guardian-section">
+            <div class="l-constrained elevated-closer-guardian-body">
+                <h1 class="u-supporter-title u-content-width--left">Supporter benefits</h1>
+
+                <img class="elevated-closer-guardian-body__col elevated-closer-guardian-body__img u-content-width--left" src="@detailImage.landscape.defaultImage" alt="@detailImage.landscape.altText.getOrElse("")" />
+
+                <div class="elevated-closer-guardian-body__col elevated-closer-guardian-body__text u-content-width--right">
+                    <div class="elevated-closer-guardian-body__list">
+
+                        <p class="u-responsive-p">
+                            Supporter benefits:
+                        </p>
+
+                        <ul>
+                            <li class="elevated-closer-guardian-body__list_item">
+                                Regular behind-the-scenes emails from our newsroom (optional)
+                            </li>
+                            <li class="elevated-closer-guardian-body__list_item">
+                                An ad-free experience in our mobile app
+                            </li>
+                            <li class="elevated-closer-guardian-body__list_item">
+                                A welcome certificate drawn by Guardian data editor Mona Chalabi
+                            </li>
+                        </ul>
+
+                        <p class="u-responsive-p">
+                            Most importantly, the knowledge that your contribution is directly funding our journalism in America.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @* ===== Third Part ===== *@
+        <section class="elevated-quote-section l-constrained">
+            <div class="l-constrained elevated-quote-body">
+                <div class="u-supporter-title u-content-width--left">
+                    If you read the Guardian,<br>join the Guardian
+                </div>
+
+                <p class="u-responsive-p">
+                    The Guardian’s unique ownership structure guarantees our independence from corporate and political interests. We are owned by The Scott Trust, an independent organization that reinvests all profits back into our journalism. We don’t have shareholders to please, or a billionaire owner pulling the strings.
+                </p>
+
+                <div class="elevated-quote u-content-width-margins--left">
+                    <blockquote class="elevated-quote__blockquote">
+                        Your support helps us be a distinctive voice in America and cover under-reported issues that need to be illuminated. When you join the Guardian, you are supporting journalism that makes a difference and holds power to account.
+                        <cite class="elevated-quote__citation">Lee Glendinning, Editor, Guardian US</cite>
+                    </blockquote>
+                    <img src="@Asset.at("images/common/lee-glendinning-cutout.png")" alt="Lee Glendinning, Editor, Guardian US" class="elevated-quote__cutout">
+                </div>
+            </div>
+
+            @fragments.page.elevatedFooterButton(supporterPlans, countryGroup, "Bottom Button", showRightDiagonal = false)
+        </section>
+    </section>
+}
