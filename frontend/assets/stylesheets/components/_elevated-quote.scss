@@ -10,6 +10,12 @@
     background: guss-colour(neutral-8);
 }
 
+.elevated-quote-preamble {
+    @include mq(desktop) {
+        width: 50%;
+    }
+}
+
 
 /* ==========================================================================
    Promos: Quote
