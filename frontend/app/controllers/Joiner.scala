@@ -107,7 +107,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     override def filter[A](req: Request[A]) = Future.successful {
       val userOpt = authenticatedIdUserProvider(req)
       val userSignedIn = userOpt.isDefined
-      val canWaiveAuth = abtests.MergedRegistration.allocate(req).exists(_.canWaiveAuth) || Feature.MergedRegistration.turnedOnFor(req)
+      val canWaiveAuth = Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
       logger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
       if (canAccess) None else Some(onUnauthenticated(req).addingToSession(ForcedRedirectToIdentity -> "true")(req))
@@ -123,7 +123,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   def enterPaidDetails(
     tier: PaidTier,
     countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
-
     val userOpt = authenticatedIdUserProvider(request)
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
@@ -140,6 +139,10 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     (for {
       identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
+      for (identityUser <- identityUserOpt) {
+        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists}")
+      }
+
       tier match {
         case t: Tier.Supporter => for (user <- userOpt) {
           MembersDataAPI.Service.upsertBehaviour(
@@ -235,11 +238,10 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       TouchpointBackend.forRequest(NameEnteredInForm, Some(formData))
 
     implicit val tpBackend = resolution.backend
-
     implicit val backendProvider: BackendProvider = new BackendProvider {
       override def touchpointBackend = tpBackend
     }
-
+    salesforceService.metrics.putAttemptedSignUp(tier)
     val campaignCode = CampaignCode.fromRequest
     val ipCountry = request.getFastlyCountry
     val refererUrl = RefererUrl.fromRequest
@@ -247,10 +249,9 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
     val identityStrategy = identityStrategyFor(request, formData)
     identityStrategy.ensureIdUser { user =>
-      salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry, refererUrl, refererPvid).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${abtests.MergedRegistration.describeParticipation} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode, refererUrl, refererPvid)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, refererUrl, refererPvid, tier)
@@ -264,7 +265,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
-          salesforceService.metrics.putFailSignUpPayPal(tier)
+          salesforceService.metrics.putFailSignUpGatewayError(tier)
           setBehaviourNote(tier.name, error.code, userOpt)
           handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 
@@ -292,10 +293,12 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       email <- emailFromZuora
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request.user)
+        case t: Tier.Supporter if !upgrade => {salesforceService.metrics.putThankYou(tier)
+          MembersDataAPI.Service.removeBehaviour(request.user)}
+        case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
-      Ok(views.html.joiner.thankyou(
+      Ok({views.html.joiner.thankyou(
         request.subscriber,
         paymentSummary,
         paymentMethod,
@@ -303,7 +306,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         upgrade,
         resolution,
         email
-      )).discardingCookies(TierChangeCookies.deletionCookies: _*)
+      )}).discardingCookies(TierChangeCookies.deletionCookies: _*)
     }
   }
 

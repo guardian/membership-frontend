@@ -1,0 +1,85 @@
+.elevated-quote-section {
+    /* !important is being used here because we cannot override the default css classes without it.
+	These css classes were imported after this file so this propersty (without the !important) is
+	being override. */
+    margin-top: $gs-baseline !important;
+    margin-bottom: $gs-baseline * 3 !important;
+}
+
+.elevated-quote-body {
+    background: guss-colour(neutral-8);
+}
+
+.elevated-quote-preamble {
+    @include mq(desktop) {
+        width: 50%;
+    }
+}
+
+
+/* ==========================================================================
+   Promos: Quote
+   ========================================================================== */
+
+.elevated-quote {
+    @include clearfix();
+
+    position: relative;
+
+    @include mq(desktop) {
+        width: 70%;
+    }
+}
+
+.elevated-quote__blockquote {
+    @include fs-bodyCopy(2);
+    line-height: 20px;
+
+    margin: 0;
+    padding-bottom: $gs-baseline;
+
+    @include mq(mobileLandscape) {
+        width: 70%;
+        padding-bottom: $gs-baseline * 4;
+    }
+
+    @include mq(tablet) {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    &:before {
+        content: '';
+        display: block;
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="50" height="30" viewBox="1.003 0 32 19.394"><path fill="#4bc6df" d="M9.73 19.393c3.734.066 6.722-3.01 6.788-6.78.066-3.775-3.054-6.728-6.787-6.794-1.954-.037-3.48.67-4.74 1.99-.067-.467-.117-1.01-.108-1.507C4.944 2.88 8.192.91 11.672.97l-.97-.97c-5.84 0-9.605 4.312-9.697 9.702-.095 5.388 3.248 9.592 8.726 9.69zm16.485 0c3.732.066 6.72-3.01 6.787-6.78.066-3.775-3.055-6.728-6.787-6.794-1.955-.036-3.48.672-4.74 1.99-.067-.465-.118-1.008-.11-1.506C21.43 2.88 24.678.91 28.156.97L27.188 0c-5.84 0-9.604 4.312-9.697 9.702-.094 5.388 3.248 9.592 8.728 9.69h-.003z"/></svg>');
+        background-repeat: no-repeat;
+        width: 50px; height: 30px;
+        margin: 0 ($gs-baseline / 2) ($gs-baseline / 2) 0;
+    }
+}
+
+.elevated-quote__citation {
+    @include fs-header(1);
+    display: block;
+    font-style: normal;
+    padding-top: $gs-baseline / 2;
+    color: guss-colour(neutral-1);
+
+    @include mq(tablet) {
+        @include fs-header(3);
+    }
+}
+
+.elevated-quote__cutout {
+    width: 30%;
+    display: block;
+    float: right;
+
+    @include mq(mobileLandscape) {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+}
+
+

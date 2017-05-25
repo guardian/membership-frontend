@@ -25,8 +25,12 @@ abstract class ABTest(val slug: String, val audience: AudienceRange, canRun: Req
   def cookieFor(variant: BaseVariant) =
     Cookie(cookieName, variant.slug, maxAge = Some(ABTest.CookieAge), httpOnly = false)
 
-  def describeParticipation(implicit request: RequestHeader): String =
-    s"ab.$cookieName=${allocate(request).map(_.slug).getOrElse("None")}"
+  def participationString(getAllocation: RequestHeader => Option[Variant])(implicit request: RequestHeader) =
+    s"ab.$cookieName=${getAllocation(request).map(_.slug).getOrElse("None")}"
+
+  def describeParticipation(implicit request: RequestHeader): String = participationString(allocate)
+
+  def describeParticipationFromCookie(implicit request: RequestHeader): String = participationString(variantFromABCookie)
 
   def allocate(request: RequestHeader): Option[Variant] = for {
     v <- variantForcedBy(request) orElse variantFromABCookie(request) orElse defaultVariantFor(idFor(request)) if canRun(request)
@@ -45,7 +49,8 @@ object ABTest {
   val CookieAge = ofDays(365).getSeconds.toInt
 
   lazy val allTests: Set[ABTest] = Set(
-    MergedRegistration
+    SupporterLandingPageAustralia,
+    SupporterLandingPageUSA
   )
 
   def allocations(request: Request[_]): Map[ABTest, BaseVariant] = (for {
