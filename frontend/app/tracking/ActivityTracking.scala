@@ -18,7 +18,7 @@ import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
 import services.EventbriteService
-import utils.{CampaignCode, RefererPageviewId, RefererUrl}
+import utils.ReferralData
 import utils.TestUsers.isTestUser
 import com.gu.memsub.subsv2._
 import views.support.MembershipCompat._
@@ -66,9 +66,9 @@ case class MemberData(salesforceContactId: String,
                       marketingChoices: Option[MarketingChoicesForm] = None,
                       city: Option[String] = None,
                       country: Option[String] = None,
-                      campaignCode: Option[CampaignCode] = None,
-                      refererUrl: Option[RefererUrl] = None,
-                      refererPageviewId: Option[RefererPageviewId] = None) {
+                      campaignCode: Option[String] = None,
+                      refererUrl: Option[String] = None,
+                      refererPageviewId: Option[String] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
@@ -109,13 +109,11 @@ case class MemberData(salesforceContactId: String,
             tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
           }
         } ++ campaignCode.map { code =>
-        "campaignCode" -> code.get
-        } ++ refererUrl.map {
-        refUrl =>
-          "refererUrl" -> refUrl.get
-        } ++ refererPageviewId.map{
-        refPvif =>
-          "refererPageviewId" -> refPvif.get
+          "campaignCode" -> code
+        } ++ refererUrl.map { refUrl =>
+          "refererUrl" -> refUrl
+        } ++ refererPageviewId.map{ refPvif =>
+          "refererPageviewId" -> refPvif
         }
 
     val memberMap = Map("member" -> ActivityTracking.setSubMap(dataMap))
@@ -217,7 +215,7 @@ trait ActivityTracking {
     if (!isTestUser(member)) executeTracking(data)
   }
 
-  def trackRegistration(formData: JoinForm, tier: Tier, member: ContactId, user: IdMinimalUser, campaignCode: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId]) {
+  def trackRegistration(formData: JoinForm, tier: Tier, member: ContactId, user: IdMinimalUser, referralData: ReferralData) {
     val subscriptionPaymentAnnual = formData match {
       case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.billingPeriod.annual)
       case _ => None
@@ -241,9 +239,9 @@ trait ActivityTracking {
         marketingChoices = Some(formData.marketingChoices),
         city = Some(formData.deliveryAddress.town),
         country = Some(formData.deliveryAddress.country.fold(formData.deliveryAddress.countryName)(_.name)),
-        campaignCode = campaignCode,
-        refererUrl = refererUrl,
-        refererPageviewId = refererPageviewId
+        campaignCode = referralData.campaignCode,
+        refererUrl = referralData.url,
+        refererPageviewId = referralData.pageviewId
       )
 
     track(MemberActivity("membershipRegistration", trackingInfo), user)
@@ -253,9 +251,7 @@ trait ActivityTracking {
       contactId: ContactId,
       user: IdMinimalUser,
       fromEventId: Option[String],
-      campaignCode: Option[CampaignCode],
-      refererUrl: Option[RefererUrl],
-      refererPageviewId: Option[RefererPageviewId],
+      referralData: ReferralData,
       tier: Tier) {
 
     import EventbriteService._
@@ -267,9 +263,9 @@ trait ActivityTracking {
         salesforceContactId = contactId.salesforceContactId,
         identityId = user.id,
         tier = tier,
-        campaignCode = campaignCode,
-        refererUrl = refererUrl,
-        refererPageviewId = refererPageviewId)
+        campaignCode = referralData.campaignCode,
+        refererUrl = referralData.url,
+        refererPageviewId = referralData.pageviewId)
 
       track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), user)
     }
@@ -278,9 +274,7 @@ trait ActivityTracking {
   def trackUpgrade(member: GenericSFContact, subscription: Subscription[SubscriptionPlan.Member],
                    newRatePlan: CatalogPlan.PaidMember[BillingPeriod],
                    addressDetails: Option[AddressDetails],
-                   campaignCode: Option[CampaignCode],
-                   refererUrl: Option[RefererUrl],
-                   refererPageviewId: Option[RefererPageviewId]): Unit = {
+                   referralData: ReferralData): Unit = {
 
     track(
       MemberActivity(source = "membershipUpgrade",
@@ -295,9 +289,9 @@ trait ActivityTracking {
           marketingChoices = None,
           city = addressDetails.map(_.deliveryAddress.town),
           country = addressDetails.map(addressDetails => addressDetails.deliveryAddress.country.fold(addressDetails.deliveryAddress.countryName)(_.name)),
-          campaignCode = campaignCode,
-          refererUrl = refererUrl,
-          refererPageviewId = refererPageviewId
+          campaignCode = referralData.campaignCode,
+          refererUrl = referralData.url,
+          refererPageviewId = referralData.pageviewId
         )),
       member)
   }

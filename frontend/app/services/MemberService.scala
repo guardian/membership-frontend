@@ -36,7 +36,7 @@ import model.{Benefit => _, _}
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
-import utils.{CampaignCode, RefererPageviewId, RefererUrl}
+import utils.ReferralData
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
@@ -102,11 +102,9 @@ class MemberService(identityService: IdentityService,
       user: IdUser,
       formData: JoinForm,
       fromEventId: Option[String],
-      campaignCode: Option[CampaignCode],
       tier: Tier,
       ipCountry: Option[Country],
-      refererUrl: Option[RefererUrl],
-      refererPageviewId: Option[RefererPageviewId]): Future[(ContactId, ZuoraSubName)] = {
+      referralData: ReferralData): Future[(ContactId, ZuoraSubName)] = {
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
@@ -117,7 +115,7 @@ class MemberService(identityService: IdentityService,
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, paymentMethod: PaymentMethod): Future[String] =
       (for {
-        zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, campaignCode, email, paymentMethod, ipCountry)
+        zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, email, paymentMethod, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -147,12 +145,11 @@ class MemberService(identityService: IdentityService,
 
   override def createContributor(
                              user: IdUser,
-                             formData: ContributorForm,
-                             campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)] = {
+                             formData: ContributorForm): Future[(ContactId, ZuoraSubName)] = {
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: PaymentMethod): Future[String] =
       (for {
-        zuoraSub <- createContribution(sfContact, user.id, paid, paid.name, campaignCode, email, paymentMethod)
+        zuoraSub <- createContribution(sfContact, user.id, paid, paid.name, email, paymentMethod)
       } yield zuoraSub.subscriptionName).andThen {
         case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
@@ -180,7 +177,7 @@ class MemberService(identityService: IdentityService,
     payPalService.retrieveEmail(baid)
   }
 
-  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId])
+  override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, referralData: ReferralData)
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {
     (for {
       _ <- createPaymentMethod(sub, form).liftM
@@ -189,14 +186,12 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, form.payment.billingPeriod),
         form = form,
-        campaignCode = code,
-        refererUrl = refererUrl,
-        refererPageviewId = refererPageviewId
+        referralData = referralData
       ))
     } yield memberId).run
   }
 
-  override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode], refererUrl: Option[RefererUrl], refererPageviewId: Option[RefererPageviewId])
+  override def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, referralData: ReferralData)
                                       (implicit id: IdentityRequest): Future[MemberError \/ ContactId] =
     (for {
       memberId <- EitherT(upgradeSubscription(
@@ -204,9 +199,7 @@ class MemberService(identityService: IdentityService,
         contact = sub.contact,
         planChoice = PaidPlanChoice(newTier, sub.subscription.plan.charges.billingPeriod),
         form = form,
-        campaignCode = code,
-        refererUrl = refererUrl,
-        refererPageviewId = refererPageviewId
+        referralData = referralData
       ))
     } yield {
       track(MemberActivity("upgradeMembership", MemberData(
@@ -418,7 +411,6 @@ class MemberService(identityService: IdentityService,
                                       joinData: PaidMemberForm,
                                       nameData: NameForm,
                                       tier: PaidTier,
-                                      campaignCode: Option[CampaignCode],
                                       email: String,
                                       paymentMethod: PaymentMethod,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
@@ -456,7 +448,6 @@ class MemberService(identityService: IdentityService,
                                   identityId: String,
                                   joinData: ContributorForm,
                                   nameData: NameForm,
-                                  campaignCode: Option[CampaignCode],
                                   email: String,
                                   paymentMethod: PaymentMethod
                                  ): Future[SubscribeResult] = {
@@ -548,9 +539,7 @@ class MemberService(identityService: IdentityService,
                                   contact: Contact,
                                   planChoice: PlanChoice,
                                   form: MemberChangeForm,
-                                  campaignCode: Option[CampaignCode],
-                                  refererUrl: Option[RefererUrl],
-                                  refererPageviewId: Option[RefererPageviewId])(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
+                                  referralData: ReferralData)(implicit r: IdentityRequest): Future[MemberError \/ ContactId] = {
 
     val addressDetails = form.addressDetails
     val newPlan = catalog.unsafeFindPaid(planChoice.productRatePlanId)
@@ -565,7 +554,7 @@ class MemberService(identityService: IdentityService,
     } yield {
       salesforceService.metrics.putUpgrade(tier)
       addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
-      trackUpgrade(contact, sub, newPlan, addressDetails, campaignCode, refererUrl, refererPageviewId)
+      trackUpgrade(contact, sub, newPlan, addressDetails, referralData)
       contact
     }).run
   }

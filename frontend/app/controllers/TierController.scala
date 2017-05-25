@@ -24,7 +24,7 @@ import play.filters.csrf.CSRF.Token.getToken
 import services.{IdentityApi, IdentityService}
 import tracking.ActivityTracking
 import utils.RequestCountry._
-import utils.{CampaignCode, RefererPageviewId, RefererUrl, TierChangeCookies}
+import utils.{ReferralData, TierChangeCookies}
 import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
@@ -178,7 +178,7 @@ object TierController extends Controller with ActivityTracking
     logger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
-      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, CampaignCode.fromRequest, RefererUrl.fromRequest, RefererPageviewId.fromRequest)
+      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, ReferralData.fromRequest )
       handleErrors(upgrade) {
         logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
@@ -199,7 +199,7 @@ object TierController extends Controller with ActivityTracking
       }
 
       def doUpgrade(): Future[Result] = {
-        val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, CampaignCode.fromRequest, RefererUrl.fromRequest, RefererPageviewId.fromRequest)
+        val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, ReferralData.fromRequest)
         handleErrors(upgrade) {
           logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
           Redirect(routes.TierController.upgradeThankyou(target))

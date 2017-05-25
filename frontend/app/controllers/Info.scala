@@ -16,6 +16,7 @@ import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
 import views.support.{Asset, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.ReferralData
 
 import scala.concurrent.Future
 
@@ -209,8 +210,10 @@ trait Info extends Controller with LazyLogging {
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
 
-    val refUrl = request.headers.get("referer")
-    val refPvid = request.getQueryString("REFPVID")
+    val refUrl = request.headers.get("referer").map(Cookie(ReferralData.UrlKey, _))
+    val refPvid = request.getQueryString("REFPVID").map(Cookie(ReferralData.PageviewIdKey, _))
+
+    val refererCookies = List(refUrl, refPvid).flatten
 
     val heroImage = ResponsiveImageGroup(
       name = Some("intro"),
@@ -245,7 +248,7 @@ trait Info extends Controller with LazyLogging {
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
       detailImageOrientated))
-      .withCookies(Cookie("gu_mem_ref_url", refUrl.getOrElse("")), Cookie("gu_refpvid", refPvid.getOrElse("")))
+      .withCookies(refererCookies:_*)
   }
 
   def patron() = CachedAndOutageProtected { implicit request =>
