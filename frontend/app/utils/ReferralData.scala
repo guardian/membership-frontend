@@ -10,11 +10,11 @@ object ReferralData {
   val UrlKey = "gu_mem_ref_url"
   val PageviewIdKey = "gu_refpvid"
 
-  def makeCookies(implicit request: RequestHeader): Iterable[Cookie] = {
+  def makeCookies(implicit request: RequestHeader): Seq[Cookie] = {
     val refUrl = request.headers.get("referer").map(Cookie(ReferralData.UrlKey, _))
     val refPvid = request.getQueryString("REFPVID").map(Cookie(ReferralData.PageviewIdKey, _))
 
-    refUrl ++: refPvid
+    (refUrl ++: refPvid).toList
   }
 
   def fromRequest(implicit request: RequestHeader): ReferralData = {
