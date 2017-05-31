@@ -10,12 +10,13 @@ import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
-import play.api.mvc.{Controller, RequestHeader}
+import play.api.mvc.{Controller, Cookie, RequestHeader}
 import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
 import views.support.{Asset, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.ReferralData
 
 import scala.concurrent.Future
 
@@ -233,6 +234,8 @@ trait Info extends Controller with LazyLogging {
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
+    val refererCookies = ReferralData.makeCookies
+
     Ok(views.html.info.supporter(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
@@ -242,6 +245,7 @@ trait Info extends Controller with LazyLogging {
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
       detailImageOrientated))
+      .withCookies(refererCookies:_*)
   }
 
   def patron() = CachedAndOutageProtected { implicit request =>

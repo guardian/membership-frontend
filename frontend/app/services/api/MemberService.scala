@@ -14,7 +14,7 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{GenericSFContact, PlanChoice}
-import utils.CampaignCode
+import utils.ReferralData
 import views.support.ThankyouSummary
 
 import scala.concurrent.Future
@@ -30,23 +30,23 @@ trait MemberService {
   def createMember(user: IdUser,
                    formData: JoinForm,
                    fromEventId: Option[String],
-                   campaignCode: Option[CampaignCode],
                    tier: Tier,
-                   ipCountry: Option[Country]): Future[(ContactId, ZuoraSubName)]
+                   ipCountry: Option[Country],
+                   referralData: ReferralData): Future[(ContactId, ZuoraSubName)]
+
 
   def createContributor(user: IdUser,
-                   formData: ContributorForm,
-                   campaignCode: Option[CampaignCode]): Future[(ContactId, ZuoraSubName)]
+                   formData: ContributorForm): Future[(ContactId, ZuoraSubName)]
 
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
-  def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, referralData: ReferralData)
                              (implicit identity: IdentityRequest): Future[MemberError \/ ContactId]
 
   def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit]
 
-  def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, code: Option[CampaignCode])
+  def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, referralData: ReferralData)
                              (implicit id: IdentityRequest): Future[MemberError \/ ContactId]
 
   def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
@@ -77,7 +77,6 @@ trait MemberService {
                              joinData: PaidMemberForm,
                              nameData: NameForm,
                              tier: PaidTier,
-                             campaignCode: Option[CampaignCode],
                              email: String,
                              paymentMethod: PaymentMethod,
                              ipCountry: Option[Country]): Future[SubscribeResult]
@@ -92,7 +91,6 @@ trait MemberService {
                          identityId: String,
                          joinData: ContributorForm,
                          nameData: NameForm,
-                         campaignCode: Option[CampaignCode],
                          email: String,
                          paymentMethod: PaymentMethod): Future[SubscribeResult]
 }

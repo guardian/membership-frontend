@@ -20,7 +20,6 @@ import play.api.mvc.{Controller, Result}
 import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.TouchpointBackend
 import tracking.ActivityTracking
-import utils.CampaignCode
 import utils.TestUsers.PreSigninTestCookie
 import views.support.{PageInfo, Pricing, ThankYouMonthlySummary}
 
@@ -83,11 +82,10 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
   private def makeContributor(onSuccess: => Result)(formData: ContributorForm)(implicit request: AuthRequest[_]) = {
     logger.info(s"User ${request.user.id} attempting to become a monthly contributor...")
     implicit val bp: BackendProvider = request
-    val campaignCode = CampaignCode.fromRequest
 
     identityStrategyFor(request, formData).ensureIdUser { user =>
       Timing.record(salesforceService.metrics, "createContributor") {
-        memberService.createContributor(user, formData, campaignCode).map {
+        memberService.createContributor(user, formData).map {
           case (sfContactId, zuoraSubName) =>
             logger.info(s"User ${user.id} successfully became monthly contributor $zuoraSubName.")
             onSuccess
