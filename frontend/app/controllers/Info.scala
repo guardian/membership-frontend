@@ -210,11 +210,6 @@ trait Info extends Controller with LazyLogging {
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
 
-    val refUrl = request.headers.get("referer").map(Cookie(ReferralData.UrlKey, _))
-    val refPvid = request.getQueryString("REFPVID").map(Cookie(ReferralData.PageviewIdKey, _))
-
-    val refererCookies = List(refUrl, refPvid).flatten
-
     val heroImage = ResponsiveImageGroup(
       name = Some("intro"),
       metadata = Some(Grid.Metadata(
@@ -238,6 +233,8 @@ trait Info extends Controller with LazyLogging {
     )
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+
+    val refererCookies = ReferralData.makeCookies
 
     Ok(views.html.info.supporter(
       heroOrientated,
