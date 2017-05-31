@@ -9,6 +9,7 @@
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
 @import views.support.IdentityUser.BlankAddress
+@import abtests.RemovePasswordRequirement
 @(plans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: Option[IdentityUser],
@@ -90,7 +91,8 @@
                             </div>
                         </div>
 
-                        @if(!idUser.exists(_.passwordExists)) {
+
+                        @if(abtests.RemovePasswordRequirement.testVariantOrElseControl.requirePasswordFor(idUser)){
                             @fragments.form.createPassword()
                         }
 
