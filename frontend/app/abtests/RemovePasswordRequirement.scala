@@ -1,13 +1,18 @@
 package abtests
 
 import abtests.AudienceRange.FullAudience
+import com.gu.i18n.CountryGroup
 import views.support.IdentityUser
 
-case object RemovePasswordRequirement extends ABTest("remove-password-requirement", FullAudience) {
+case object RemovePasswordRequirement extends ABTest("remove-ss-password-requirement", FullAudience) {
 
   case class Variant(slug: String, requireGuardianPasswordForSocialSignInUsers: Boolean) extends BaseVariant {
-    def requirePasswordFor(identityUser: Option[IdentityUser]) =
-      identityUser.map(u => requireGuardianPasswordForSocialSignInUsers && !u.passwordExists).getOrElse(true)
+    def requirePasswordFor(identityUser: Option[IdentityUser], cg: CountryGroup) = identityUser match {
+      case None => true
+      case Some(user) =>
+        val canWaivePasswordRequirement = (cg == CountryGroup.UK) && !requireGuardianPasswordForSocialSignInUsers
+        !(user.passwordExists || canWaivePasswordRequirement)
+    }
   }
 
   val variants = Seq(

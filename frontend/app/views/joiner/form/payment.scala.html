@@ -14,7 +14,7 @@
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: Option[IdentityUser],
     pageInfo: PageInfo,
-    countryGroup: Option[CountryGroup],
+    countryGroup: CountryGroup,
     touchpointBackendResolution: services.TouchpointBackend.Resolution
 )(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader)
 
@@ -92,7 +92,7 @@
                         </div>
 
 
-                        @if(abtests.RemovePasswordRequirement.testVariantOrElseControl.requirePasswordFor(idUser)){
+                        @if(abtests.RemovePasswordRequirement.testVariantOrElseControl.requirePasswordFor(idUser, countryGroup)){
                             @fragments.form.createPassword()
                         }
 

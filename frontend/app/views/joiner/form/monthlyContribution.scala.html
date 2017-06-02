@@ -7,7 +7,7 @@
 @(plans: Contributor,
     idUser: IdentityUser,
     pageInfo: PageInfo,
-    countryGroup: Option[CountryGroup],
+    countryGroup: CountryGroup,
     touchpointBackendResolution: services.TouchpointBackend.Resolution,
     contributionValue: String)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
