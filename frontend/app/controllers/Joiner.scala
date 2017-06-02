@@ -140,7 +140,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
       for (identityUser <- identityUserOpt) {
-        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists}")
+        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")}")
       }
 
       tier match {
@@ -168,7 +168,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         countryCurrencyWhitelist,
         identityUserOpt,
         pageInfo,
-        Some(countryGroup),
+        countryGroup,
         resolution))
     }).andThen { case Failure(e) => logger.error(s"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }

@@ -22,6 +22,8 @@ abstract class ABTest(val slug: String, val audience: AudienceRange, canRun: Req
 
   lazy val variantsBySlug: Map[String, Variant] = variants.map(v => v.slug -> v).toMap
 
+  lazy val control = variantsBySlug("control")
+
   def cookieFor(variant: BaseVariant) =
     Cookie(cookieName, variant.slug, maxAge = Some(ABTest.CookieAge), httpOnly = false)
 
@@ -31,6 +33,9 @@ abstract class ABTest(val slug: String, val audience: AudienceRange, canRun: Req
   def describeParticipation(implicit request: RequestHeader): String = participationString(allocate)
 
   def describeParticipationFromCookie(implicit request: RequestHeader): String = participationString(variantFromABCookie)
+
+  def testVariantOrElseControl(implicit request: RequestHeader): Variant =
+    allocate(request).getOrElse(control)
 
   def allocate(request: RequestHeader): Option[Variant] = for {
     v <- variantForcedBy(request) orElse variantFromABCookie(request) orElse defaultVariantFor(idFor(request)) if canRun(request)
@@ -50,7 +55,8 @@ object ABTest {
 
   lazy val allTests: Set[ABTest] = Set(
     SupporterLandingPageAustralia,
-    SupporterLandingPageUSA
+    SupporterLandingPageUSA,
+    RemovePasswordRequirement
   )
 
   def allocations(request: Request[_]): Map[ABTest, BaseVariant] = (for {
