@@ -44,4 +44,14 @@ class RemovePasswordRequirementTest extends Specification {
       RemovePasswordRequirement.PasswordNotRequiredVariant.requirePasswordFor(Some(UserWithNoPassword), UK) must beFalse
     }
   }
+
+  "users with passwords" should {
+    "not be asked for a password, no matter what variant, and what country they are in" in {
+      forall(CountryGroup.allGroups) { cg =>
+        forall(RemovePasswordRequirement.variants) { variant =>
+          variant.requirePasswordFor(Some(UserWithPassword), cg) must beFalse
+        }
+      }
+    }
+  }
 }

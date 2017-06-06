@@ -16,8 +16,13 @@ case object RemovePasswordRequirement extends ABTest("ss-no-password", FullAudie
 
   case class Variant(slug: String, waivePasswordRequirement: Boolean) extends BaseVariant {
 
-    def requirePasswordFor(identityUser: Option[IdentityUser], cg: CountryGroup) =
-      !(userEligibleForTest(identityUser, cg) && waivePasswordRequirement)
+    def requirePasswordFor(identityUser: Option[IdentityUser], cg: CountryGroup) = {
+      val userHasPassword = identityUser.exists(_.passwordExists)
+      val userCanWaivePasswordRequirement = userEligibleForTest(identityUser, cg) && waivePasswordRequirement
+
+      !userHasPassword && !userCanWaivePasswordRequirement
+    }
+
   }
 
   val PasswordNotRequiredVariant = Variant("password-not-required", waivePasswordRequirement = true)
