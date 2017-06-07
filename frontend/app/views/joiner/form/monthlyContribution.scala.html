@@ -73,8 +73,8 @@
                 <!-- ACCORDION SECTION - NAME -->
                 <section class="form-panel sub-heading">
                     <div class="form-panel__heading">
-                        <div class="sign-in-required js-sign-in-note">
-                        @fragments.joiner.signedInAs(request.uri, inline = true)
+                        <div class="sign-in-required">
+                        @fragments.joiner.signedInAs(idUser, request.uri, inline = true)
                         </div>
                     </div><div class="form-panel__content js-form-panel-name-address"><!-- Name -->
                         <div class="form-section__name-detail">
