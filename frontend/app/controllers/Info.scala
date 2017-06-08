@@ -10,12 +10,13 @@ import configuration.CopyConfig
 import controllers.Redirects.redirectToSupporterPage
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
-import play.api.mvc.{Controller, RequestHeader}
+import play.api.mvc.{Controller, Cookie, RequestHeader}
 import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.RequestCountry._
 import views.support.{Asset, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.ReferralData
 
 import scala.concurrent.Future
 
@@ -27,7 +28,18 @@ trait Info extends Controller with LazyLogging {
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
 
-   def supporterUSA = CachedAndOutageProtected { implicit request =>
+
+  def supporterUSA = NoCacheAction { implicit request =>
+    logger.info(s"supporter-usa-impression ${abtests.SupporterLandingPageUSA.describeParticipation}")
+
+    if (abtests.SupporterLandingPageUSA.allocate(request).exists(_.showNewDesign)) {
+      supporterUSANew
+    } else {
+      supporterUSAOld
+    }
+  }
+
+  def supporterUSAOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = US
 
     val pageImages = Seq(
@@ -51,9 +63,10 @@ trait Info extends Controller with LazyLogging {
       landscape = ResponsiveImageGroup(availableImages =
         ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
     )
+    val refererCookies = ReferralData.makeCookies
 
     Ok(
-      views.html.info.supporterUSA(
+      views.html.info.supporterUSAOld(
         heroImages,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
@@ -64,20 +77,63 @@ trait Info extends Controller with LazyLogging {
         ),
         pageImages
       )
+    ).withCookies(refererCookies:_*)
+
+  }
+
+  def supporterUSANew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
+    implicit val countryGroup = US
+
+    val heroImage = ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("Montage of The Guardian US Headlines"),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("3c21e0ba85d6d060f586d0313525bd271ed0a033/0_0_1000_486", Seq(1000, 500), "png")
     )
+
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val detailImage = ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("Your Guardian Membership certificate"),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("3ece34992982eff0c5afebe7fa2c04638448b543/0_0_1080_610", Seq(1080, 500))
+    )
+
+    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+    val refererCookies = ReferralData.makeCookies
+
+    Ok(views.html.info.supporterUSANew(
+      heroOrientated,
+      TouchpointBackend.Normal.catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters),
+        navigation = Nil
+      ),
+      detailImageOrientated))
+      .withCookies(refererCookies:_*)
+
   }
 
   def supporterAustralia = NoCacheAction { implicit request =>
-    logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPage.describeParticipation}")
+    logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPageAustralia.describeParticipation}")
 
-    if (abtests.SupporterLandingPage.allocate(request).exists(_.showNewDesign)) {
-      supporterAustraliaNew(request)
+    if (abtests.SupporterLandingPageAustralia.allocate(request).exists(_.showNewDesign)) {
+      supporterAustraliaNew
     } else {
-      supporterAustraliaOld(request)
+      supporterAustraliaOld
     }
   }
 
-  def supporterAustraliaOld(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+  def supporterAustraliaOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -105,6 +161,7 @@ trait Info extends Controller with LazyLogging {
           sizes = List(1000, 500)
         )
       ))
+    val refererCookies = ReferralData.makeCookies
 
     Ok(views.html.info.supporterAustraliaOld(
       heroOrientated,
@@ -116,9 +173,10 @@ trait Info extends Controller with LazyLogging {
         navigation = Nil
       ),
       pageImages))
+      .withCookies(refererCookies:_*)
   }
 
-  def supporterAustraliaNew(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+  def supporterAustraliaNew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -144,6 +202,7 @@ trait Info extends Controller with LazyLogging {
     )
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+    val refererCookies = ReferralData.makeCookies
 
     Ok(views.html.info.supporterAustraliaNew(
       heroOrientated,
@@ -155,6 +214,7 @@ trait Info extends Controller with LazyLogging {
         navigation = Nil
       ),
       detailImageOrientated))
+      .withCookies(refererCookies:_*)
   }
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
@@ -183,6 +243,8 @@ trait Info extends Controller with LazyLogging {
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
+    val refererCookies = ReferralData.makeCookies
+
     Ok(views.html.info.supporter(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
@@ -192,6 +254,7 @@ trait Info extends Controller with LazyLogging {
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
       detailImageOrientated))
+      .withCookies(refererCookies:_*)
   }
 
   def patron() = CachedAndOutageProtected { implicit request =>

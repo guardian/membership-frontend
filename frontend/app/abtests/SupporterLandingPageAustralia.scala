@@ -2,7 +2,7 @@ package abtests
 
 import abtests.AudienceRange.FullAudience
 
-case object SupporterLandingPage extends ABTest("supporter-landing-page-v2", FullAudience, _.path.startsWith("/au/supporter")) {
+case object SupporterLandingPageAustralia extends ABTest("supporter-landing-page-v2", FullAudience, _.path.startsWith("/au/supporter")) {
 
   case class Variant(slug: String, showNewDesign: Boolean) extends BaseVariant
 

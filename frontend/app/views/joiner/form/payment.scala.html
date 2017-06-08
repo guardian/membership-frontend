@@ -9,11 +9,12 @@
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
 @import views.support.IdentityUser.BlankAddress
+@import abtests.RemovePasswordRequirement
 @(plans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: Option[IdentityUser],
     pageInfo: PageInfo,
-    countryGroup: Option[CountryGroup],
+    countryGroup: CountryGroup,
     touchpointBackendResolution: services.TouchpointBackend.Resolution
 )(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader)
 
@@ -90,7 +91,8 @@
                             </div>
                         </div>
 
-                        @if(!idUser.exists(_.passwordExists)) {
+
+                        @if(abtests.RemovePasswordRequirement.testVariantOrElseControl.requirePasswordFor(idUser, countryGroup)){
                             @fragments.form.createPassword()
                         }
 

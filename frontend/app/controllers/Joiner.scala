@@ -1,6 +1,6 @@
 package controllers
 
-import abtests.ABTest
+import abtests.{ABTest, RemovePasswordRequirement}
 import actions.ActionRefiners._
 import actions.Fallbacks.chooseRegister
 import actions.{RichAuthRequest, _}
@@ -30,7 +30,7 @@ import services.{GuardianContentService, _}
 import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
-import utils.{CampaignCode, Feature, TierChangeCookies}
+import utils.{Feature, ReferralData, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -139,6 +139,12 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     (for {
       identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
+
+      val eligibleForRemovePasswordRequirementTest = RemovePasswordRequirement.userEligibleForTest(identityUserOpt, countryGroup)
+      for (identityUser <- identityUserOpt) {
+        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")} eligibleForRemovePasswordRequirementTest=$eligibleForRemovePasswordRequirementTest")
+      }
+
       tier match {
         case t: Tier.Supporter => for (user <- userOpt) {
           MembersDataAPI.Service.upsertBehaviour(
@@ -164,8 +170,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         countryCurrencyWhitelist,
         identityUserOpt,
         pageInfo,
-        Some(countryGroup),
-        resolution))
+        countryGroup,
+        resolution)).addingToSession(RemovePasswordRequirement.EligibilitySessionKey -> eligibleForRemovePasswordRequirementTest.toString)
     }).andThen { case Failure(e) => logger.error(s"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
@@ -237,18 +243,18 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     implicit val backendProvider: BackendProvider = new BackendProvider {
       override def touchpointBackend = tpBackend
     }
-    salesforceService.metrics.putAttemptedSignUp(tier)
-    val campaignCode = CampaignCode.fromRequest
+    val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry
 
     val identityStrategy = identityStrategyFor(request, formData)
     identityStrategy.ensureIdUser { user =>
-      memberService.createMember(user, formData, eventId, campaignCode, tier, ipCountry).map {
+      salesforceService.metrics.putAttemptedSignUp(tier)
+      memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${Feature.MergedRegistration.describeState} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} $ForcedRedirectToIdentity=${request.session.get(ForcedRedirectToIdentity).mkString} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} ${RemovePasswordRequirement.EligibilitySessionKey}=${request.session.get(RemovePasswordRequirement.EligibilitySessionKey).mkString} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
-          trackRegistration(formData, tier, sfContactId, user.minimal, campaignCode)
-          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, campaignCode, tier)
+          trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
+          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
           onSuccess
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
@@ -287,7 +293,9 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       email <- emailFromZuora
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => MembersDataAPI.Service.removeBehaviour(request.user)
+        case t: Tier.Supporter if !upgrade => {salesforceService.metrics.putThankYou(tier)
+          MembersDataAPI.Service.removeBehaviour(request.user)}
+        case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
       Ok({views.html.joiner.thankyou(
