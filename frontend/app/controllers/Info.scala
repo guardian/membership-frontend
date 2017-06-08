@@ -33,13 +33,13 @@ trait Info extends Controller with LazyLogging {
     logger.info(s"supporter-usa-impression ${abtests.SupporterLandingPageUSA.describeParticipation}")
 
     if (abtests.SupporterLandingPageUSA.allocate(request).exists(_.showNewDesign)) {
-      supporterUSANew(request)
+      supporterUSANew
     } else {
-      supporterUSAOld(request)
+      supporterUSAOld
     }
   }
 
-  def supporterUSAOld(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+  def supporterUSAOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = US
 
     val pageImages = Seq(
@@ -63,6 +63,7 @@ trait Info extends Controller with LazyLogging {
       landscape = ResponsiveImageGroup(availableImages =
         ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
     )
+    val refererCookies = ReferralData.makeCookies
 
     Ok(
       views.html.info.supporterUSAOld(
@@ -76,10 +77,11 @@ trait Info extends Controller with LazyLogging {
         ),
         pageImages
       )
-    )
+    ).withCookies(refererCookies:_*)
+
   }
 
-  def supporterUSANew(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+  def supporterUSANew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = US
 
     val heroImage = ResponsiveImageGroup(
@@ -105,6 +107,7 @@ trait Info extends Controller with LazyLogging {
     )
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+    val refererCookies = ReferralData.makeCookies
 
     Ok(views.html.info.supporterUSANew(
       heroOrientated,
@@ -116,19 +119,21 @@ trait Info extends Controller with LazyLogging {
         navigation = Nil
       ),
       detailImageOrientated))
+      .withCookies(refererCookies:_*)
+
   }
 
   def supporterAustralia = NoCacheAction { implicit request =>
     logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPageAustralia.describeParticipation}")
 
     if (abtests.SupporterLandingPageAustralia.allocate(request).exists(_.showNewDesign)) {
-      supporterAustraliaNew(request)
+      supporterAustraliaNew
     } else {
-      supporterAustraliaOld(request)
+      supporterAustraliaOld
     }
   }
 
-  def supporterAustraliaOld(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+  def supporterAustraliaOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -156,6 +161,7 @@ trait Info extends Controller with LazyLogging {
           sizes = List(1000, 500)
         )
       ))
+    val refererCookies = ReferralData.makeCookies
 
     Ok(views.html.info.supporterAustraliaOld(
       heroOrientated,
@@ -167,9 +173,10 @@ trait Info extends Controller with LazyLogging {
         navigation = Nil
       ),
       pageImages))
+      .withCookies(refererCookies:_*)
   }
 
-  def supporterAustraliaNew(request: RequestHeader)(implicit token: play.filters.csrf.CSRF.Token) = {
+  def supporterAustraliaNew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
     implicit val countryGroup = Australia
 
     val heroImage = ResponsiveImageGroup(
@@ -195,6 +202,7 @@ trait Info extends Controller with LazyLogging {
     )
 
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
+    val refererCookies = ReferralData.makeCookies
 
     Ok(views.html.info.supporterAustraliaNew(
       heroOrientated,
@@ -206,6 +214,7 @@ trait Info extends Controller with LazyLogging {
         navigation = Nil
       ),
       detailImageOrientated))
+      .withCookies(refererCookies:_*)
   }
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
