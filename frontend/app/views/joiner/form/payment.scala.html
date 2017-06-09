@@ -60,12 +60,18 @@
                     <div class="form-panel__heading">
                         <h2 class="form-panel__headline">Name and address</h2>
                         <div class="form-panel__edit js-edit-name-address is-hidden">edit</div>
-                        <div class="sign-in-hidden">
-                            @fragments.joiner.signedIn(request.uri)
-                        </div>
-                        <div class="sign-in-required js-sign-in-note @if(plans.tier == Partner()) {is-hidden}">
-                            @fragments.joiner.signedInAs(request.uri, inline = true)
-                        </div>
+                        @idUser match {
+                            case None => {
+                                <div>
+                                    @fragments.joiner.signIn(request.uri)
+                                </div>
+                            }
+                            case Some(user) => {
+                                <div class="sign-in-required js-sign-in-note @if(plans.tier == Partner()) {is-hidden}">
+                                    @fragments.joiner.signedInAs(user, request.uri, inline = true)
+                                </div>
+                            }
+                        }
                     </div>
 
                     <div class="form-panel__content js-form-panel-name-address @if(plans.tier == Partner()) {is-hidden}">

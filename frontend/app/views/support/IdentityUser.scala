@@ -1,13 +1,13 @@
 package views.support
 
 import com.gu.i18n.{Country, CountryGroup}
-import com.gu.identity.model.PublicFields
+import com.gu.identity.play.PublicFields
 import com.gu.identity.play.{PrivateFields, StatusFields}
 import com.gu.identity.play.IdUser
 import com.gu.memsub.Address
 import utils.TestUsers
 
-case class IdentityUser(privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean, email: String) {
+case class IdentityUser(publicFields: PublicFields, privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean, email: String) {
   private val countryName: Option[String] = privateFields.billingCountry orElse privateFields.country
 
   val country: Option[Country] =
@@ -45,6 +45,7 @@ object IdentityUser {
   */
   def apply(user: IdUser, passwordExists: Boolean): IdentityUser =
     IdentityUser(
+      publicFields = user.publicFields,
       privateFields = user.privateFields.getOrElse(PrivateFields()),
       marketingChoices = user.statusFields.getOrElse(StatusFields()),
       passwordExists = passwordExists,
