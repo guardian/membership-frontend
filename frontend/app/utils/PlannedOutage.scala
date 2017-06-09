@@ -1,7 +1,7 @@
 package utils
 
 import org.joda.time.DateTimeZone.UTC
-import org.joda.time.{DateTime, Interval}
+import org.joda.time.{DateTime, DateTimeZone, Interval}
 
 
 object PlannedOutage {
@@ -22,10 +22,12 @@ object PlannedOutage {
   /*
   Salesforce is performing their Summer '17 Major Release on Friday 9 June 2017 at 10pm BST.
   The maintenance window is expected to last 5 minutes. Typical releases like this usually result in one minute's downtime.
+  https://status.salesforce.com/status/maintenances/22710
    */
+  private val BST = DateTimeZone.forID("Europe/London")
   val salesforceUpgrade = new Interval(
-    new DateTime(2017, 6, 9, 21, 0, UTC),
-    new DateTime(2017, 6, 9, 21, 5, UTC)
+    new DateTime(2017, 6, 9, 22, 0, BST),
+    new DateTime(2017, 6, 9, 22, 5, BST)
   )
 
   val outages = Seq(
