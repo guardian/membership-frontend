@@ -3,7 +3,7 @@ package controllers
 import play.api.mvc.Controller
 
 object Outages extends Controller {
-  def maintenanceMessage = CachedAction {
+  def maintenanceMessage = NoCacheAction {
     Ok(views.html.info.maintenanceMessage())
   }
 

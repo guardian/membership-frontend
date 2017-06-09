@@ -19,9 +19,19 @@ object PlannedOutage {
     new DateTime(2016,11, 6, 4,45, UTC)
   )
 
+  /*
+  Salesforce is performing their Summer '17 Major Release on Friday 9 June 2017 at 10pm BST.
+  The maintenance window is expected to last 5 minutes. Typical releases like this usually result in one minute's downtime.
+   */
+  val salesforceUpgrade = new Interval(
+    new DateTime(2017, 6, 9, 21, 0, UTC),
+    new DateTime(2017, 6, 9, 21, 5, UTC)
+  )
+
   val outages = Seq(
     // rightNow,
-    salesforceOutage
+    salesforceOutage,
+    salesforceUpgrade
   ).sortBy(_.getStartMillis)
 
   def currentOutage = outages.find(_.containsNow)
