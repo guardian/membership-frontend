@@ -162,7 +162,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   }
 
-  private val userDisplayName = cssSelector(".js-user-displayname")
+  private val userDisplayName = cssSelector(".qa-user-displayname")
 
   private val payButton = className("js-submit-input")
 
