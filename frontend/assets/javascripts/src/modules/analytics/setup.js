@@ -38,7 +38,6 @@ define([
         ophan.init();
         ophan.loaded.then(ga.init,ga.init);
         uet.init();
-        campaignCode.init();
     }
 
     function setupThirdParties() {
@@ -48,6 +47,7 @@ define([
 
     function init() {
 
+        campaignCode.init();
         if (analyticsEnabled) {
             setupAnalytics();
         }
