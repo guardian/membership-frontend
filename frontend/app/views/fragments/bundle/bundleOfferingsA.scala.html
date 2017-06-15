@@ -203,9 +203,9 @@
                     <div class="bundle-offering-a__give__content__body">
                         <h2>Contribute to the Guardian</h2>
                         <p class="bundle-offering-a__give__content__body__description">
-                            Fund our journalism on your own terms – either a regular or one-off payment. Every penny goes to supporting our fearless, in-depth reporting and keeping our website and apps open to all.</p>
+                            Fund our journalism on your own terms with a one-off payment of your choosing. Every penny goes to supporting our fearless, in-depth reporting and keeping our website and apps open to all.</p>
                         <div class="bundle-offering-a__give__button">
-                        @fragments.bundle.bundleButton("Make a contribution", routes.Bundle.thankYou(bundleVariant, "contribution").url, className = Option("js-commit-button"))
+                        @fragments.bundle.bundleButton("Make a contribution", "https://contribute.theguardian.com/uk?INTCMP=" + bundleVariant.distribution.name, className = Option("js-commit-button"))
                         </div>
                     </div>
                 </div>
