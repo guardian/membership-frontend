@@ -55,8 +55,7 @@ object ABTest {
 
   lazy val allTests: Set[ABTest] = Set(
     SupporterLandingPageAustralia,
-    SupporterLandingPageUSA,
-    RemovePasswordRequirement
+    SupporterLandingPageUSA
   )
 
   def allocations(request: Request[_]): Map[ABTest, BaseVariant] = (for {

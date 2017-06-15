@@ -1,6 +1,6 @@
 package controllers
 
-import abtests.{ABTest, RemovePasswordRequirement}
+import abtests.ABTest
 import actions.ActionRefiners._
 import actions.Fallbacks.chooseRegister
 import actions.{RichAuthRequest, _}
@@ -140,9 +140,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
 
-      val eligibleForRemovePasswordRequirementTest = RemovePasswordRequirement.userEligibleForTest(identityUserOpt, countryGroup)
       for (identityUser <- identityUserOpt) {
-        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")} eligibleForRemovePasswordRequirementTest=$eligibleForRemovePasswordRequirementTest")
+        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")}")
       }
 
       tier match {
@@ -171,7 +170,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
         identityUserOpt,
         pageInfo,
         countryGroup,
-        resolution)).addingToSession(RemovePasswordRequirement.EligibilitySessionKey -> eligibleForRemovePasswordRequirementTest.toString)
+        resolution))
     }).andThen { case Failure(e) => logger.error(s"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
@@ -251,7 +250,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case (sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} ${RemovePasswordRequirement.EligibilitySessionKey}=${request.session.get(RemovePasswordRequirement.EligibilitySessionKey).mkString} sub=$zuoraSubName")
+          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
           trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
