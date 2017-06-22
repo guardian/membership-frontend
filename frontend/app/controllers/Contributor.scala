@@ -82,23 +82,27 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
   private def makeContributor(onSuccess: => Result)(formData: ContributorForm)(implicit request: AuthRequest[_]) = {
     logger.info(s"User ${request.user.id} attempting to become a monthly contributor...")
     implicit val bp: BackendProvider = request
-
     identityStrategyFor(request, formData).ensureIdUser { user =>
+      salesforceService.contributorMetrics.putAttemptedSignUp
       Timing.record(salesforceService.metrics, "createContributor") {
         memberService.createContributor(user, formData).map {
           case (sfContactId, zuoraSubName) =>
+            salesforceService.contributorMetrics.putSignUp
             logger.info(s"User ${user.id} successfully became monthly contributor $zuoraSubName.")
             onSuccess
         }.recover {
           // errors due to user's card are logged at WARN level as they are not logic errors
           case error: Stripe.Error =>
+            salesforceService.contributorMetrics.putFailSignUpStripe
             logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=${user.id}")
             Forbidden(Json.toJson(error))
 
           case error: PaymentGatewayError =>
+            salesforceService.contributorMetrics.putFailSignUpGatewayError
             handlePaymentGatewayError(error, user.id, "monthly contributor")
 
           case error =>
+            salesforceService.contributorMetrics.putFailSignUp
             logger.error(s"User ${user.id} could not become monthly contributor member", error)
             Forbidden
         }
@@ -112,6 +116,8 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
     for {
       paymentMethod <- paymentService.getPaymentMethod(request.contributor.accountId)
     } yield {
+      salesforceService.contributorMetrics.putThankYou
+      logger.info(s"Thank you page displayed. \n\tuser=${request.user.id}")
       Ok(views.html.joiner.thankyouMonthly(
         request.contributor.plan,
         ThankYouMonthlySummary(LocalDate.now(), request.contributor.plan.charges.price.prices.head, paymentMethod),
