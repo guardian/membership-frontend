@@ -32,6 +32,16 @@ $global-header-height-mobile: 116px;
         height : 100%;
     }
 }
+
+.master-classes-header__inner {
+    background: color(brand-main) url(/assets/images/headers/masterclasses_header_130.png) no-repeat;
+    background-position: center;
+}
+
+.live-header__inner {
+    background: color(brand-main) url(/assets/images/headers/live_header_130.png) no-repeat;
+    background-position: center;
+}
 .global-header__branding {
     @include clearfix();
     padding: ($gs-gutter / 2);

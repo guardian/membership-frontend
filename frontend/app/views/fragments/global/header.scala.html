@@ -1,8 +1,8 @@
 @import model.Header
-@import model.Header.{SimpleHeader, BundlesHeader, GuardianHeader}
+@import model.Header.{SimpleHeader, BundlesHeader, GuardianHeader, MasterClassesHeader, LiveHeader}
+@import model.SVG.Logos
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
-
 @(pageInfo: PageInfo, countryGroup: Option[CountryGroup], header: Header)
 
 @header match {
@@ -10,6 +10,12 @@
     case BundlesHeader => { @fragments.global.bundlesHeader(pageInfo, countryGroup) }
     case GuardianHeader => {
         @fragments.global.guardianHeader(pageInfo, countryGroup)
+    }
+    case MasterClassesHeader => {
+        @fragments.global.defaultHeader(pageInfo, countryGroup, "master-classes-header__inner", Logos.guardianMasterclassesHeader)
+    }
+    case LiveHeader => {
+        @fragments.global.defaultHeader(pageInfo, countryGroup, "live-header__inner", Logos.guardianLiveHeader)
     }
     case _ => { @fragments.global.defaultHeader(pageInfo, countryGroup) }
 }

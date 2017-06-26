@@ -1,6 +1,7 @@
 @import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
 @import views.support.MembershipCompat
+@import model.Header.MasterClassesHeader
 @import com.gu.memsub.subsv2.Catalog
 @(catalog: Catalog,
   pageInfo: PageInfo,
@@ -12,7 +13,7 @@
 @import model.SVG.Logos
 @import model.RichEvent.MasterclassEvent._
 
-@main("Masterclasses", pageInfo=pageInfo) {
+@main("Masterclasses", pageInfo = pageInfo, header = MasterClassesHeader) {
 
     <main>
 

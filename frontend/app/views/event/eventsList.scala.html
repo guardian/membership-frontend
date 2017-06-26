@@ -2,6 +2,7 @@
 @import com.gu.i18n.CountryGroup
 @import views.support.PageInfo
 @import com.gu.memsub.subsv2.Catalog
+@import model.Header.LiveHeader
 @(
     catalog: Catalog,
     pageInfo: PageInfo,
@@ -24,7 +25,7 @@
     } else events
 }
 
-@main("Events", pageInfo=pageInfo) {
+    @main("Events", pageInfo = pageInfo, header = LiveHeader) {
     <main>
         <div class="l-constrained">
             @fragments.event.headerBar(

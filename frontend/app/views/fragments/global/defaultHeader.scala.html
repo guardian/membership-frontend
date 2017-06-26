@@ -3,10 +3,10 @@
 @import com.gu.i18n.CountryGroup
 @import configuration.Config
 
-@(pageInfo: PageInfo, countryGroup: Option[CountryGroup])
+@(pageInfo: PageInfo, countryGroup: Option[CountryGroup], innerHeaderClass: String = "", svg: model.SVG.SVGImage = Logos.membersLogo)
 
 <header class="global-header hidden-print js-header" role="banner">
-	<div class="global-header__inner">
+    <div class="global-header__inner @innerHeaderClass">
         <div class="global-header__branding l-constrained">
             <div class="global-header__primary">
                 @fragments.global.controlNavigation(pageInfo, countryGroup)
@@ -15,7 +15,7 @@
             <div class="global-header__logo">
 	            <a href="/" class="global-header__logo__link" id="qa-header-logo">
                     <span class="u-h">@Config.siteTitle</span>
-                    @fragments.common.inlineSvgImage(Logos.membersLogo, List("global-header__logo__image"))
+                    @fragments.common.inlineSvgImage(svg, List("global-header__logo__image"))
                 </a>
             </div>
         </div>

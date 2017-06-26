@@ -9,6 +9,7 @@ import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.{EBEvent, EBOrder, EBTicketClass}
+import model.Header.{LiveHeader, MasterClassesHeader}
 import org.joda.time.LocalDate
 import services.MasterclassData
 import utils.StringUtils._
@@ -68,6 +69,7 @@ object RichEvent {
     val imgOpt: Option[ResponsiveImageGroup]
     val socialImgUrl: Option[String]
     val gridImgUrl: Option[String]
+    val header: Header = LiveHeader
     val schema: EventSchema
     val tags: Seq[String]
     val metadata: Metadata
@@ -148,6 +150,7 @@ object RichEvent {
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = EventMetadata.masterclassMetadata
     val logoOpt = Some(ProviderLogo(this))
+    override val header = MasterClassesHeader
     val contentOpt = None
     val pastImageOpt = None
     override val gridImgUrl = None
