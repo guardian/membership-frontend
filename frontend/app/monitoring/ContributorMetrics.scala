@@ -11,31 +11,31 @@ class ContributorMetrics(val backendEnv: String) extends TouchpointBackendMetric
 
   val service = "Contributor"
 
-  def putAttemptedSignUp: Unit ={
+  def putAttemptedSignUp: Unit = {
     put(s"contributor-attempted-sign-up")
   }
 
-  def putSignUp: Unit ={
+  def putSignUp: Unit = {
     put(s"contributor-sign-up")
   }
 
-  def putThankYou: Unit ={
+  def putThankYou: Unit = {
     put(s"contributor-sign-up-thank-you")
   }
 
-  def putFailSignUp: Unit ={
+  def putFailSignUp: Unit = {
     put(s"contributor-failed-sign-up")
   }
 
-  def putFailSignUpGatewayError: Unit ={
+  def putFailSignUpGatewayError: Unit = {
     put(s"contributor-failed-sign-up-gateway-error")
   }
 
-  def putFailSignUpStripe: Unit ={
+  def putFailSignUpStripe: Unit = {
     put(s"contributor-failed-sign-up-stripe")
   }
 
-  private def put(metricName: String) {
+  private def put(metricName: String): Unit = {
     put(metricName, 1)
   }
 }
