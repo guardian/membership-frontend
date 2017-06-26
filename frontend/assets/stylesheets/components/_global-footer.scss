@@ -45,6 +45,17 @@
         background-position: top center;
     }
 }
+
+.global-brandbar__live {
+    background: color(brand-main) url(/assets/images/headers/live_header_130.png) no-repeat;
+    background-position: center;
+}
+
+.global-brandbar__masterclasses {
+    background: color(brand-main) url(/assets/images/headers/masterclasses_header_130.png) no-repeat;
+    background-position: center;
+}
+
 .global-brandbar__inner {
    @include clearfix();
    padding: ($gs-gutter / 2) ($gs-gutter / 4);

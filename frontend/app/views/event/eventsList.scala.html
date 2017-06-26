@@ -3,6 +3,7 @@
 @import views.support.PageInfo
 @import com.gu.memsub.subsv2.Catalog
 @import model.Header.LiveHeader
+@import model.Footer.LiveFooter
 @(
     catalog: Catalog,
     pageInfo: PageInfo,
@@ -25,7 +26,7 @@
     } else events
 }
 
-    @main("Events", pageInfo = pageInfo, header = LiveHeader) {
+    @main("Events", pageInfo = pageInfo, header = LiveHeader, footer = LiveFooter) {
     <main>
         <div class="l-constrained">
             @fragments.event.headerBar(

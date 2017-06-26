@@ -2,6 +2,7 @@
 @import views.support.PageInfo
 @import views.support.MembershipCompat
 @import model.Header.MasterClassesHeader
+@import model.Footer.MasterClassesFooter
 @import com.gu.memsub.subsv2.Catalog
 @(catalog: Catalog,
   pageInfo: PageInfo,
@@ -13,7 +14,7 @@
 @import model.SVG.Logos
 @import model.RichEvent.MasterclassEvent._
 
-@main("Masterclasses", pageInfo = pageInfo, header = MasterClassesHeader) {
+@main("Masterclasses", pageInfo = pageInfo, header = MasterClassesHeader, footer = MasterClassesFooter) {
 
     <main>
 
