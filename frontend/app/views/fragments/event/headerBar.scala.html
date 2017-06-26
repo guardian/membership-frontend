@@ -1,8 +1,5 @@
-@(title: String, logo: model.SVG.SVGImage)
+@(title: String)
 
 <section class="header-bar">
     <h1 class="header-bar__title">@title</h1>
-    <div class="header-bar__logo">
-        @fragments.common.inlineSvgImage(logo, List("header-bar__logo__image"))
-    </div>
 </section>
