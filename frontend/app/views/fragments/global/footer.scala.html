@@ -14,6 +14,7 @@
         case DefaultFooter | BundlesFooter => {@fragments.global.brandbar()}
         case LiveFooter => {@fragments.global.brandbar("global-brandbar__live", Logos.guardianLiveHeader)}
         case MasterClassesFooter  => {@fragments.global.brandbar("global-brandbar__masterclasses", Logos.guardianMasterclassesHeader)}
+        case _ => {}
     }
 
     <div class="global-footer__info">
