@@ -265,13 +265,13 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
         case error: PaymentGatewayError =>
           salesforceService.metrics.putFailSignUpGatewayError(tier)
-          setBehaviourNote(tier.name, error.code, userOpt)
+          setBehaviourNote(tier.name, Some(error.code), userOpt)
           handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
           logger.error(s"${s"User id=${userOpt.map(_.id).mkString}"} could not become ${tier.name} member", error)
-          setBehaviourNote(tier.name, "card_error", userOpt)
+          setBehaviourNote(tier.name, Some("card_error"), userOpt)
           Forbidden
       }
     }
@@ -312,9 +312,9 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   def thankyouStaff = thankyou(Tier.partner)
 
-  private def setBehaviourNote(tier: String, errorCode: String, userOpt: Option[AuthenticatedIdUser]) = for (user <- userOpt) {
+  private def setBehaviourNote(tier: String, errorCode: Option[String], userOpt: Option[AuthenticatedIdUser]) = for (user <- userOpt) {
     if (tier.toLowerCase == "supporter") {
-      MembersDataAPI.Service.upsertBehaviour(user, note = Some(errorCode))
+      MembersDataAPI.Service.upsertBehaviour(user, note = errorCode)
     }
   }
 
