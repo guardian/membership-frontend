@@ -391,7 +391,7 @@ class MemberService(identityService: IdentityService,
     (for {
       zuoraFeatures <- zuoraService.getFeatures
       result <- zuoraService.createSubscription(Subscribe(
-        account = Account.stripe(contactId, identityId, currency, autopay = false),
+        account = Account.stripe(contactId, identityId, currency, autopay = false, deliveryInstructions = None),
         paymentMethod = None,
         ratePlans = NonEmptyList(RatePlan(planId.get, None)),
         name = joinData.name,
@@ -482,9 +482,9 @@ class MemberService(identityService: IdentityService,
   private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
-        Account.stripe(contactId, identityId, currency, autopay = true)
+        Account.stripe(contactId, identityId, currency, autopay = true, deliveryInstructions = None)
       case PaymentForm(_, _, Some(_)) | MonthlyPaymentForm(_, Some(_), _) =>
-        Account.payPal(contactId, identityId, currency, autopay = true)
+        Account.payPal(contactId, identityId, currency, autopay = true, deliveryInstructions = None)
     }
 
 
