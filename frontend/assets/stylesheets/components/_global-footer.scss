@@ -49,11 +49,19 @@
 .global-brandbar__live {
     background: color(brand-main) url(/assets/images/headers/live_header_130.png) no-repeat;
     background-position: center;
+
+    .global-brandbar__logo__image {
+        height: 35px;
+    }
 }
 
 .global-brandbar__masterclasses {
     background: color(brand-main) url(/assets/images/headers/masterclasses_header_130.png) no-repeat;
     background-position: center;
+
+    .global-brandbar__logo__image {
+        height: 35px;
+    }
 }
 
 .global-brandbar__inner {

@@ -46,13 +46,13 @@ object SVG {
     val guardianLiveHeader = SVGImage(
       "Guardian Live",
       "images/providers/guardian-live-header.svg",
-      width = 320, height = 90
+      width = 478, height = 68
     )
 
     val guardianMasterclassesHeader = SVGImage(
       "Guardian Masterclasses",
       "images/providers/masterclasses-header.svg",
-      width = 320, height = 60
+      width = 789, height = 68
     )
 
     val guardianTitlePiece = SVGImage(
