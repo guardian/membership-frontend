@@ -18,7 +18,10 @@ object BundleVariant {
     BundleVariant(DIGIPRICE1C, Map((Supporter, 6.5), (DigitalPack, 9.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
     BundleVariant(DIGIPRICE1TA, Map((Supporter, 6.5), (DigitalPack, 11.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
     BundleVariant(DIGIPRICE1TB, Map((Supporter, 6.5), (DigitalPack, 14.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
-    BundleVariant(DIGIPRICE1TC, Map((Supporter, 6.5), (DigitalPack, 9.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false)
+    BundleVariant(DIGIPRICE1TC, Map((Supporter, 6.5), (DigitalPack, 9.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
+    BundleVariant(DIGIPRICE1BA, Map((Supporter, 6.5), (DigitalPack, 11.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
+    BundleVariant(DIGIPRICE1BB, Map((Supporter, 6.5), (DigitalPack, 14.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false),
+    BundleVariant(DIGIPRICE1BC, Map((Supporter, 6.5), (DigitalPack, 9.99), (Saturday, 18), (GuardianWeekly, 18), (Weekend, 25), (SatGW, 25), (SixDay, 45), (SevenDay, 50)), hasAdFree = true, hasPaidComments = false, hasContributions = true, hasDigital = true, hasPrintAndDigital = false)
   )
 
   def lookup(name: String): Option[BundleVariant] = {
@@ -74,6 +77,10 @@ object Distribution {
   val DIGIPRICE1TA = Distribution("BUNDLE_PRICE_TEST_1M_T_UK_A")
   val DIGIPRICE1TB = Distribution("BUNDLE_PRICE_TEST_1M_T_UK_B")
   val DIGIPRICE1TC = Distribution("BUNDLE_PRICE_TEST_1M_T_UK_C")
+  // banner variants
+  val DIGIPRICE1BA = Distribution("BUNDLE_PRICE_TEST_1M_B_UK_A")
+  val DIGIPRICE1BB = Distribution("BUNDLE_PRICE_TEST_1M_B_UK_B")
+  val DIGIPRICE1BC = Distribution("BUNDLE_PRICE_TEST_1M_B_UK_C")
 }
 
 case class Distribution(name: String)
