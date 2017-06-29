@@ -16,7 +16,7 @@ const errorMessages = {
         InsufficientFunds: 'Sorry we could not take your payment because your bank indicates insufficient funds. Please try a different card or contact your bank to find the cause.',
         RevocationOfAuthorization: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.',
         GenericDecline: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.',
-        UknownPaymentError: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.'
+        UnknownPaymentError: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.'
     },
     PayPal: {
         PaymentError: genericErrorMessage,

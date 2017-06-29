@@ -85,7 +85,7 @@ define(function () {
                 elem: CREDIT_CARD_NUMBER_ELEM,
                 msg: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.'
             },
-            UknownPaymentError: {
+            UnknownPaymentError: {
                 elem: CREDIT_CARD_NUMBER_ELEM,
                 msg: 'Sorry we could not take your payment. Please try a different card or contact your bank to find the cause.'
             }

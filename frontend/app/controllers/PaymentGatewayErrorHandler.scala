@@ -21,7 +21,7 @@ trait PaymentGatewayErrorHandler extends LazyLogging {
       case InsufficientFunds => handleError("InsufficientFunds")
       case RevocationOfAuthorization => handleError("RevocationOfAuthorization")
       case GenericDecline => handleError("GenericDecline")
-      case _ => handleError("UknownPaymentError")
+      case _ => handleError("UnknownPaymentError")
     }
   }
 
