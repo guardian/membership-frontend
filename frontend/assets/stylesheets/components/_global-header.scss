@@ -31,7 +31,70 @@ $global-header-height-mobile: 116px;
     @include mq(tablet, desktop){
         height : 100%;
     }
+
+    .control__info {
+        @include mq($until: mem-full) {
+            text-overflow: ellipsis;
+            display: inline-block;
+            vertical-align: middle;
+            max-width: 150px;
+        }
+    }
+
 }
+
+.master-classes-header__inner {
+    background: color(brand-main) url(/assets/images/headers/masterclasses.svg) no-repeat;
+    background-position: center;
+
+    .control__info {
+        color: #fff;
+    }
+
+    .control__icon {
+        border-color: #fff;
+    }
+
+    .icon-inline {
+        fill: #fff;
+    }
+
+    .global-header__logo__image {
+        height: 40px;
+
+        @include mq($until: desktop) {
+            height: 30px;
+        }
+    }
+
+    .control:hover .control__icon {
+        border-color: #fff;
+    }
+}
+
+.live-header__inner {
+    background: color(brand-main) url(/assets/images/headers/live.svg) no-repeat;
+    background-position: center;
+
+    .global-header__logo__image {
+        height: 40px;
+    }
+
+    .global-header__logo__image {
+        height: 40px;
+
+        @include mq($until: desktop) {
+            height: 30px;
+        }
+    }
+}
+
+.live-header__inner ~ .global-navigation {
+    .global-navigation__link {
+        color: #000;
+    }
+}
+
 .global-header__branding {
     @include clearfix();
     padding: ($gs-gutter / 2);

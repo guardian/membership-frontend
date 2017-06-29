@@ -7,7 +7,7 @@
 @import views.support.Dates._
 @import views.support.Social
 
-@main(pageInfo.title, pageInfo=pageInfo) {
+@main(pageInfo.title, pageInfo=pageInfo, header=event.header, footer = event.footer) {
 
     @* Event Name *@
     <div class="event-header">
@@ -48,9 +48,6 @@
                         </div>
                     }
                 </div>
-            }
-            @for(logo <- event.logoOpt) {
-                <img class="event-header__logo" src="@logo.path" alt="@logo.title">
             }
         </div>
     </div>

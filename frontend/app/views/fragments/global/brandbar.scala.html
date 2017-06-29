@@ -1,9 +1,8 @@
-@()
-
-@import configuration.Config
+@import model.Footer
 @import model.SVG.Logos
-
-<div class="global-brandbar">
+@import configuration.Config
+@(brandClass: String = "", svg: model.SVG.SVGImage = Logos.membersLogo)
+<div class="global-brandbar @brandClass">
     <div class="global-brandbar__inner l-constrained">
         <div class="global-brandbar__top">
             @* Back to top *@
@@ -20,7 +19,7 @@
         </div>
         <a href="/" class="global-brandbar__logo">
             <span class="u-h">@Config.siteTitle</span>
-            @fragments.common.inlineSvgImage(Logos.membersLogo, List("global-brandbar__logo__image"))
+            @fragments.common.inlineSvgImage(svg, List("global-brandbar__logo__image"))
         </a>
     </div>
 </div>

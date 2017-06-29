@@ -45,6 +45,25 @@
         background-position: top center;
     }
 }
+
+.global-brandbar__live {
+    background: color(brand-main) url(/assets/images/headers/live.svg) no-repeat;
+    background-position: center;
+
+    .global-brandbar__logo__image {
+        height: 35px;
+    }
+}
+
+.global-brandbar__masterclasses {
+    background: color(brand-main) url(/assets/images/headers/masterclasses.svg) no-repeat;
+    background-position: center;
+
+    .global-brandbar__logo__image {
+        height: 35px;
+    }
+}
+
 .global-brandbar__inner {
    @include clearfix();
    padding: ($gs-gutter / 2) ($gs-gutter / 4);

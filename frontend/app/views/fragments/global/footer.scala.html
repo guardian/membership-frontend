@@ -1,17 +1,20 @@
 @import model.Footer
-@import model.Footer.{SimpleFooter, BundlesFooter}
+@import model.Footer.{SimpleFooter, BundlesFooter, DefaultFooter, LiveFooter, MasterClassesFooter}
+@import model.SVG.Logos
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
 @import org.joda.time.DateTime
 @import model.Nav
-
 @(pageInfo: PageInfo, footer: Footer, extraClass: Option[String] = None,
     countryGroup: Option[CountryGroup] = None)
 
 <footer class="@if(footer == BundlesFooter) {global-footer-bundles} else {global-footer} hidden-print @extraClass.mkString" role="contentinfo">
 
-    @if(footer != SimpleFooter) {
-        @fragments.global.brandbar()
+    @footer match {
+        case DefaultFooter | BundlesFooter => {@fragments.global.brandbar()}
+        case LiveFooter => {@fragments.global.brandbar("global-brandbar__live", Logos.guardianLiveHeader)}
+        case MasterClassesFooter  => {@fragments.global.brandbar("global-brandbar__masterclasses", Logos.guardianMasterclassesHeader)}
+        case _ => {}
     }
 
     <div class="global-footer__info">
