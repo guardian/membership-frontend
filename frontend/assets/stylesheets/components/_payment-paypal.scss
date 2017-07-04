@@ -264,6 +264,33 @@
     }
 
     /* ==========================================================================
+       Social sign-in: buttons
+       ========================================================================== */
+
+    .signin-facebook {
+        background-color: $c-thirdparty-facebook;
+        border-color: $c-thirdparty-facebook;
+    }
+
+    .signin-facebook {
+        &:hover {
+            background-color: darken($c-thirdparty-facebook, 10);
+        }
+    }
+
+    .signin-gplus {
+        background-color: $c-thirdparty-gplus;
+        border-color: $c-thirdparty-gplus;
+    }
+
+    .signin-gplus {
+        &:hover {
+            background-color: darken($c-thirdparty-gplus, 10);
+        }
+    }
+
+
+    /* ==========================================================================
        Forms: Buttons
        ========================================================================== */
 

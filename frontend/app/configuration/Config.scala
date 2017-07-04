@@ -44,6 +44,12 @@ object Config {
 
   private val idSkipConfirmation: (String, String) = "skipConfirmation" -> "true"
 
+  def googleSigninUrl = oauthWebAppSigninUrl("google")(_)
+  def facebookSigninUrl = oauthWebAppSigninUrl("facebook")(_)
+
+  private def oauthWebAppSigninUrl(socialProvider: String)(uri: String): String =
+    ("https://oauth.theguardian.com" / socialProvider / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
+
   def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
 
