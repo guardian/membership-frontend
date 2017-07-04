@@ -1,5 +1,13 @@
 
 .skin-monthly-contribution {
+    background-color: guss-colour(multimedia-main-2);
+
+    &:after {
+        height: 30vh;
+        width: 100%;
+        background-color: guss-colour(multimedia-main-2);
+    }
+
     .sign-in-required .text-note {
         margin: 0;
     }
