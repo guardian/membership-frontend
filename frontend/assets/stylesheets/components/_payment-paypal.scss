@@ -267,25 +267,73 @@
        Social sign-in: buttons
        ========================================================================== */
 
-    .signin-facebook {
-        background-color: $c-thirdparty-facebook;
-        border-color: $c-thirdparty-facebook;
+    .form-section__social-signin {
+        margin-top: $gs-baseline;
+        margin-bottom: $gs-baseline;
+
+        @include mq($from: tablet) {
+            margin-right: $gs-gutter / 2;
+        }
+
+        &:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .signin-text {
+            padding-left: 5px;
+        }
+    }
+
+    .social-or {
+        text-align: center;
+        font-family: $f-serif-headline;
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: bold;
+
+        @include mq($from: tablet) {
+            margin-right: $gs-gutter / 2;
+        }
     }
 
     .signin-facebook {
+        background-color: #fff;
+        width: 47%;
+        box-sizing: border-box;
+        color: guss-colour(neutral-1);
+        float: left;
+        font-weight: bold;
+        border: 1px solid #fff;
+        @include fs-textSans(4);
+        border-radius: 600px;
+        padding: ($gs-baseline / 2) ($gs-gutter / 2);
+        text-decoration: none;
+        display: inline-block;
+
         &:hover {
-            background-color: darken($c-thirdparty-facebook, 10);
+            border: 1px solid guss-colour(neutral-4);
         }
     }
 
     .signin-gplus {
-        background-color: $c-thirdparty-gplus;
-        border-color: $c-thirdparty-gplus;
-    }
+        background-color: #fff;
+        width: 47%;
+        box-sizing: border-box;
+        margin-right: 0;
+        float: right;
+        color: guss-colour(neutral-1);
+        font-weight: bold;
+        border: 1px solid #fff;
+        @include fs-textSans(4);
+        border-radius: 600px;
+        padding: ($gs-baseline / 2) ($gs-gutter / 2);
+        text-decoration: none;
+        display: inline-block;
 
-    .signin-gplus {
         &:hover {
-            background-color: darken($c-thirdparty-gplus, 10);
+            border: 1px solid guss-colour(neutral-4);
         }
     }
 

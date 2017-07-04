@@ -9,6 +9,9 @@
 @import views.support.MembershipCompat._
 @import views.support.{CountryWithCurrency, IdentityUser, PageInfo}
 @import views.support.IdentityUser.BlankAddress
+@import configuration.Config.googleSigninUrl
+@import configuration.Config.facebookSigninUrl
+
 @(plans: PaidMembershipPlans[PaidMemberTier],
     countriesWithCurrencies: List[CountryWithCurrency],
     idUser: Option[IdentityUser],
@@ -74,6 +77,17 @@
                     </div>
 
                     <div class="form-panel__content js-form-panel-name-address @if(plans.tier == Partner()) {is-hidden}">
+                        <div class="form-section__social-signin">
+                            <a class="signin-facebook" href="@facebookSigninUrl(request.uri)">
+                                @fragments.inlineIcon("icon-facebook")
+                                <span class="signin-text">Facebook sign in</span>
+                            </a>
+                            <a class="signin-gplus" href="@googleSigninUrl(request.uri)">
+                                @fragments.inlineIcon("icon-google")
+                                <span class="signin-text">Google sign in</span>
+                            </a>
+                        </div>
+                        <p class="social-or">or</p>
                             <!-- Name -->
                         <div class="form-section__name-detail">
                             @fragments.form.nameDetailFields(idUser.map(_.privateFields))
