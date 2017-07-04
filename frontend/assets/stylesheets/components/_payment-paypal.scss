@@ -281,12 +281,12 @@
             clear: both;
         }
 
-        .signin-text {
+        .social-signin__text {
             padding-left: 5px;
         }
     }
 
-    .social-or {
+    .social-signin__or {
         text-align: center;
         font-family: $f-serif-headline;
         font-size: 20px;
@@ -298,43 +298,30 @@
         }
     }
 
-    .signin-facebook {
+    .social-signin__facebook, .social-signin__google {
+        @include fs-textSans(4);
         background-color: #fff;
-        width: 47%;
+        border-radius: 600px;
+        border: 1px solid #fff;
         box-sizing: border-box;
         color: guss-colour(neutral-1);
-        float: left;
+        display: inline-block;
         font-weight: bold;
-        border: 1px solid #fff;
-        @include fs-textSans(4);
-        border-radius: 600px;
         padding: ($gs-baseline / 2) ($gs-gutter / 2);
         text-decoration: none;
-        display: inline-block;
+        width: 47%;
 
         &:hover {
             border: 1px solid guss-colour(neutral-4);
         }
     }
 
-    .signin-gplus {
-        background-color: #fff;
-        width: 47%;
-        box-sizing: border-box;
-        margin-right: 0;
-        float: right;
-        color: guss-colour(neutral-1);
-        font-weight: bold;
-        border: 1px solid #fff;
-        @include fs-textSans(4);
-        border-radius: 600px;
-        padding: ($gs-baseline / 2) ($gs-gutter / 2);
-        text-decoration: none;
-        display: inline-block;
+    .social-signin__facebook {
+        float: left;
+    }
 
-        &:hover {
-            border: 1px solid guss-colour(neutral-4);
-        }
+    .social-signin__google {
+        float: right;
     }
 
 
