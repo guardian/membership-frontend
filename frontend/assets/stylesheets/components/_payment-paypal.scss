@@ -305,23 +305,33 @@
         border: 1px solid #fff;
         box-sizing: border-box;
         color: guss-colour(neutral-1);
-        display: inline-block;
+        display: block;
         font-weight: bold;
         padding: ($gs-baseline / 2) ($gs-gutter / 2);
         text-decoration: none;
-        width: 47%;
+        margin-bottom: $gs-baseline;
 
         &:hover {
             border: 1px solid guss-colour(neutral-4);
         }
+
+        @include mq($from: mobile-wider) {
+            display: inline-block;
+            width: 47%;
+            margin-bottom: 0;
+        }
     }
 
     .social-signin__facebook {
-        float: left;
+        @include mq($from: mobile-wider) {
+            float: left;
+        }
     }
 
     .social-signin__google {
-        float: right;
+        @include mq($from: mobile-wider) {
+            float: right;
+        }
     }
 
 
