@@ -1,5 +1,6 @@
 package controllers
 
+import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import actions.ActionRefiners._
 import actions.Fallbacks._
 import actions.{Subscriber, SubscriptionRequest}
@@ -7,8 +8,9 @@ import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
+import com.typesafe.scalalogging.LazyLogging
 import model.EmbedSerializer._
-import model.Eventbrite.{EBEvent, EBOrder}
+import model.Eventbrite.{EBCode, EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
 import model._
 import org.joda.time.format.ISODateTimeFormat
@@ -16,7 +18,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.EventbriteService._
-import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import tracking._
 import utils.ReferralData
 import views.support.MembershipCompat._
@@ -24,7 +25,7 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-trait Event extends Controller with MemberServiceProvider with ActivityTracking {
+trait Event extends Controller with MemberServiceProvider with ActivityTracking with LazyLogging {
 
   val guLiveEvents: EventbriteService
   val masterclassEvents: EventbriteService
@@ -40,8 +41,8 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
     }
   }
 
-  private def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen
-    authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen subscriptionRefiner()
+  private def BuyAction(id: String, onUnauthenticated: RequestHeader => Result = notYetAMemberOn(_)) = NoCacheAction andThen recordBuyIntention(id) andThen
+    authenticated(onUnauthenticated = onUnauthenticated) andThen subscriptionRefiner(onNonMember = onUnauthenticated)
 
   def details(slug: String) = CachedAction { implicit request =>
     val eventOpt = for {
@@ -110,45 +111,57 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
     Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
+  def buy(id: String): Action[AnyContent] = EventbriteService.getEvent(id) match {
+      case Some(event@(_: GuLiveEvent)) =>
+        BuyAction(id).async { implicit request =>
+          if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
+            redirectSignedInMemberToEventbrite(event)
+          else suggestUserUpgrades
+        }
+      case Some(event@(_: MasterclassEvent)) =>
+        BuyAction(id, onUnauthenticated = redirectAnonUserToEventbrite(event)(_)).async { implicit request =>
+          redirectSignedInMemberToEventbrite(event)
+        }
+      case _ =>
+        Action(NotFound)
+    }
 
-  def buy(id: String) = BuyAction(id).async { implicit request =>
-    EventbriteService.getEvent(id).map {
-      case event@(_: GuLiveEvent) =>
-        if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
-          redirectToEventbrite(event)
-        else
-          Future.successful(Redirect(routes.TierController.change()).addingToSession("preJoinReturnUrl" -> request.uri))
-      case event@(_: MasterclassEvent) =>
-        redirectToEventbrite(event)
-    }.getOrElse(Future.successful(NotFound))
-  }
+  private def suggestUserUpgrades(implicit request: SubReqWithSub[AnyContent]) =
+    Future.successful(Redirect(routes.TierController.change()).addingToSession("preJoinReturnUrl" -> request.uri))
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
-  private def addEventBriteGACrossDomainParam(uri: Uri)(implicit request: Request[AnyContent]): Uri = {
+  private def addEventBriteGACrossDomainParam(uri: Uri)(implicit req: RequestHeader): Uri = {
     // https://www.eventbrite.co.uk/support/articles/en_US/Troubleshooting/how-to-enable-cross-domain-and-ecommerce-tracking-with-google-universal-analytics
-    request.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
+    req.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
   }
 
-  private def redirectToEventbrite(event: RichEvent)(implicit request: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
-    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.subscriber.subscription.plan.tier}") {
-
-      memberService.createEBCode(request.subscriber, event).map { code =>
-        val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
-
+  private def redirectSignedInMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
+    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${req.subscriber.subscription.plan.tier}") {
+      memberService.createEBCode(req.subscriber, event).map { codeOpt =>
         val memberData = MemberData(
-          salesforceContactId = request.subscriber.contact.salesforceContactId,
-          identityId = request.user.id,
-          tier = request.subscriber.subscription.plan.tier,
+          salesforceContactId = req.subscriber.contact.salesforceContactId,
+          identityId = req.user.id,
+          tier = req.subscriber.subscription.plan.tier,
           campaignCode = ReferralData.fromRequest.campaignCode
-          )
+        )
 
-        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
+        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)), req.user)
 
-        Found(addEventBriteGACrossDomainParam(eventUrl))
-          .withCookies(Cookie(eventCookie(event), "", Some(3600)))
+        eventbriteRedirect(event, codeOpt)
       }
     }
+
+  private def redirectAnonUserToEventbrite(event: RichEvent)(implicit req: RequestHeader): Result = {
+    trackAnon(EventActivity("redirectToEventbrite", None, EventData(event)))
+
+    eventbriteRedirect(event, None)
+  }
+
+  def eventbriteRedirect(event: RichEvent, discountCodeOpt: Option[EBCode])(implicit req: RequestHeader) = {
+    val eventUrl = discountCodeOpt.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
+    Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
+  }
 
   private def trackConversionToThankyou(event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member])(implicit request: Request[_]) {
