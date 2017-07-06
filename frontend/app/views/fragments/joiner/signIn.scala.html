@@ -1,7 +1,6 @@
-@import configuration.Config.googleSigninUrl
-@import configuration.Config.facebookSigninUrl
 @(returnUri: String)
 
-<div class="text-note">
-<p >Create a new Guardian account, or sign-in</p>
-</div>
+@import configuration.Config.idWebAppSigninUrl
+
+<p class="text-note">Already have a Guardian account? <a class="s-prose" href="@idWebAppSigninUrl(returnUri)" class="text-link">Sign in</a>
+</p>
