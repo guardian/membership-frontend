@@ -5,11 +5,13 @@
 @import com.gu.memsub.Benefit
 @import tracking.AppnexusPixel
 @import com.gu.salesforce.Tier.Supporter
+@import com.gu.i18n.CountryGroup._
 
 @(  heroImage: model.OrientatedImages,
     supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
     pageInfo: PageInfo,
     detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 

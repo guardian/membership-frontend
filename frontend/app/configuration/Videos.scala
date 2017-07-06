@@ -26,14 +26,9 @@ object Videos {
     sizes=List(960, 500)
   )
 
-  private val supportersAUNewPlaceholder = ResponsiveImageGenerator(
+  private val supportersAUPlaceholder = ResponsiveImageGenerator(
     id="9d500e5de293fcd81b15f0144cb39d2ff0c3f79c/0_0_1080_608",
     sizes=List(1080, 500)
-  )
-
-  private val supportersAUOldPlaceholder = ResponsiveImageGenerator(
-    id="700dda3ef042336defa067413cba6069b1a97811/0_0_1920_1080",
-    sizes=List(1920,960,500)
   )
 
   val supporters = Video(
@@ -78,22 +73,12 @@ object Videos {
     )
   )
 
-  val supportersAUNew = Video(
+  val supportersAU = Video(
     srcUrl = "https://www.youtube.com/embed/OIHC_zxU9c4?enablejsapi=1&wmode=transparent",
     posterImage = Some(
       ResponsiveImageGroup(
         altText=Some("Support the Guardian"),
-        availableImages=supportersAUNewPlaceholder
-      )
-    )
-  )
-
-  val supportersAUOld = Video(
-    srcUrl = "https://www.youtube.com/embed/OIHC_zxU9c4?enablejsapi=1&wmode=transparent",
-    posterImage = Some(
-      ResponsiveImageGroup(
-        altText=Some("Support the Guardian"),
-        availableImages=supportersAUOldPlaceholder
+        availableImages=supportersAUPlaceholder
       )
     )
   )
