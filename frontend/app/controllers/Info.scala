@@ -3,88 +3,31 @@ package controllers
 import actions.ActionRefiners.PlannedOutageProtection
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
-import com.gu.memsub.images.{Grid, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
-import com.netaporter.uri.dsl._
+import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.typesafe.scalalogging.LazyLogging
 import configuration.CopyConfig
-import controllers.Redirects.redirectToSupporterPage
 import forms.FeedbackForm
-import model.{ContentItemOffer, FlashMessage, Nav, OrientatedImages}
-import play.api.mvc.{Controller, Cookie, RequestHeader}
+import model.{ContentItemOffer, FlashMessage, OrientatedImages}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.Controller
 import services._
 import tracking.RedirectWithCampaignCodes._
-import utils.RequestCountry._
-import views.support.{Asset, PageInfo}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import utils.ReferralData
+import utils.RequestCountry._
+import views.support.PageInfo
 
 import scala.concurrent.Future
 
 trait Info extends Controller with LazyLogging {
   def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
-    redirectWithCampaignCodes(redirectToSupporterPage(determinedCountryGroup).url, SEE_OTHER)
+    redirectWithCampaignCodes(routes.Info.supporterFor(determinedCountryGroup).url, SEE_OTHER)
   }
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
 
-
-  def supporterUSA = NoCacheAction { implicit request =>
-    logger.info(s"supporter-usa-impression ${abtests.SupporterLandingPageUSA.describeParticipation}")
-
-    if (abtests.SupporterLandingPageUSA.allocate(request).exists(_.showNewDesign)) {
-      supporterUSANew
-    } else {
-      supporterUSAOld
-    }
-  }
-
-  def supporterUSAOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
-    implicit val countryGroup = US
-
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name = Some("fearless"),
-        metadata = Some(Grid.Metadata(
-          description = Some("The Counted: people killed by police in the United States in 2015"),
-          byline = Some("The Guardian US"),
-          credit = None
-        )),
-        availableImages = ResponsiveImageGenerator(
-          id = "201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
-          sizes = List(1000, 500)
-        )
-      )
-    )
-
-    val heroImages = OrientatedImages(
-      portrait = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/1066_0_1866_2333", Seq(1866, 1600, 800))),
-      landscape = ResponsiveImageGroup(availableImages =
-        ResponsiveImageGenerator("8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/0_613_3500_1500", Seq(3500, 2000, 1000, 500)))
-    )
-    val refererCookies = ReferralData.makeCookies
-
-    Ok(
-      views.html.info.supporterUSAOld(
-        heroImages,
-        TouchpointBackend.Normal.catalog.supporter,
-        PageInfo(
-          title = CopyConfig.copyTitleSupporters,
-          url = request.path,
-          description = Some(CopyConfig.copyDescriptionSupporters),
-          navigation = Nav.internationalLandingPageNavigation
-        ),
-        pageImages
-      )
-    ).withCookies(refererCookies:_*)
-
-  }
-
-  def supporterUSANew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
-    implicit val countryGroup = US
-
-    val heroImage = ResponsiveImageGroup(
+  private def heroImageFor(countryGroup: CountryGroup) = countryGroup match {
+    case US => ResponsiveImageGroup(
       name = Some("intro"),
       metadata = Some(Grid.Metadata(
         description = Some("Montage of The Guardian US Headlines"),
@@ -94,92 +37,7 @@ trait Info extends Controller with LazyLogging {
       availableImages = ResponsiveImageGenerator("3c21e0ba85d6d060f586d0313525bd271ed0a033/0_0_1000_486", Seq(1000, 500), "png")
     )
 
-    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
-
-    val detailImage = ResponsiveImageGroup(
-      name = Some("intro"),
-      metadata = Some(Grid.Metadata(
-        description = Some("Your Guardian Membership certificate"),
-        byline = None,
-        credit = None
-      )),
-      availableImages = ResponsiveImageGenerator("3ece34992982eff0c5afebe7fa2c04638448b543/0_0_1080_610", Seq(1080, 500))
-    )
-
-    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
-    val refererCookies = ReferralData.makeCookies
-
-    Ok(views.html.info.supporterUSANew(
-      heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters),
-        navigation = Nil
-      ),
-      detailImageOrientated))
-      .withCookies(refererCookies:_*)
-
-  }
-
-  def supporterAustralia = NoCacheAction { implicit request =>
-    logger.info(s"supporter-australia-impression ${abtests.SupporterLandingPageAustralia.describeParticipation}")
-
-    if (abtests.SupporterLandingPageAustralia.allocate(request).exists(_.showNewDesign)) {
-      supporterAustraliaNew
-    } else {
-      supporterAustraliaOld
-    }
-  }
-
-  def supporterAustraliaOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
-    implicit val countryGroup = Australia
-
-    val heroImage = ResponsiveImageGroup(
-      name = Some("intro"),
-      metadata = Some(Grid.Metadata(
-        description = Some("""Same-Sex marriage activists march in the street during a Same-Sex Marriage rally in Sydney, Sunday, Aug. 9, 2015""".stripMargin),
-        byline = None,
-        credit = Some("Carol Cho/AAP")
-      )),
-      availableImages = ResponsiveImageGenerator("73f50662f5834f4194a448e966637fc88c0b36f6/0_0_5760_3840", Seq(2000, 1000))
-    )
-
-    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
-
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name = Some("coral"),
-        metadata = Some(Grid.Metadata(
-          description = Some("The impact of coral bleaching at Lizard Island on the Great Barrier Reef: (left) the coral turns white, known as 'bleaching', in March 2016; (right) the dead coral is blanketed by seaweed in May 2016"),
-          byline = None,
-          credit = None
-        )),
-        availableImages = ResponsiveImageGenerator(
-          id = "03d7db325026227b0832bfcd17b2f16f8eb5cfed/0_167_5000_3000",
-          sizes = List(1000, 500)
-        )
-      ))
-    val refererCookies = ReferralData.makeCookies
-
-    Ok(views.html.info.supporterAustraliaOld(
-      heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters),
-        navigation = Nil
-      ),
-      pageImages))
-      .withCookies(refererCookies:_*)
-  }
-
-  def supporterAustraliaNew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
-    implicit val countryGroup = Australia
-
-    val heroImage = ResponsiveImageGroup(
+    case Australia => ResponsiveImageGroup(
       name = Some("intro"),
       metadata = Some(Grid.Metadata(
         description = Some("Montage of The Guardian Australia Headlines"),
@@ -189,9 +47,29 @@ trait Info extends Controller with LazyLogging {
       availableImages = ResponsiveImageGenerator("8a2003a809b699701111f10d3a0bef3c8e2ffa03/0_0_1000_486", Seq(1000, 500), "png")
     )
 
-    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+    case _ => ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("Montage of The Guardian Headlines"),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
+    )
+  }
 
-    val detailImage = ResponsiveImageGroup(
+  private def detailImageFor(countryGroup: CountryGroup) = countryGroup match {
+    case US => ResponsiveImageGroup(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
+        description = Some("Your Guardian Membership certificate"),
+        byline = None,
+        credit = None
+      )),
+      availableImages = ResponsiveImageGenerator("3ece34992982eff0c5afebe7fa2c04638448b543/0_0_1080_610", Seq(1080, 500))
+    )
+
+    case Australia => ResponsiveImageGroup(
       name = Some("intro"),
       metadata = Some(Grid.Metadata(
         description = Some("Your Guardian Membership certificate"),
@@ -201,37 +79,7 @@ trait Info extends Controller with LazyLogging {
       availableImages = ResponsiveImageGenerator("71b8bebab82bdead12273ff4e299a04dccad0d20/0_0_1080_610", Seq(1080, 500), "png")
     )
 
-    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
-    val refererCookies = ReferralData.makeCookies
-
-    Ok(views.html.info.supporterAustraliaNew(
-      heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters),
-        navigation = Nil
-      ),
-      detailImageOrientated))
-      .withCookies(refererCookies:_*)
-  }
-
-  def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
-
-    val heroImage = ResponsiveImageGroup(
-      name = Some("intro"),
-      metadata = Some(Grid.Metadata(
-        description = Some("Montage of The Guardian Headlines"),
-        byline = None,
-        credit = None
-      )),
-      availableImages = ResponsiveImageGenerator("7b6e7b64f194b1f85bfc0791a23b8a25b72f39ba/0_0_1300_632", Seq(1300, 500), "png")
-    )
-
-    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
-
-    val detailImage = ResponsiveImageGroup(
+    case _ => ResponsiveImageGroup(
       name = Some("intro"),
       metadata = Some(Grid.Metadata(
         description = Some("A scene in The Guardian editorial office."),
@@ -240,12 +88,25 @@ trait Info extends Controller with LazyLogging {
       )),
       availableImages = ResponsiveImageGenerator("dcd0f0f703b1e784a3280438806f2feedf27dfab/0_0_1080_648", Seq(1080, 500))
     )
+  }
 
+  def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
+
+    val heroImage = heroImageFor(countryGroup)
+    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
+
+    val detailImage = detailImageFor(countryGroup)
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
     val refererCookies = ReferralData.makeCookies
 
-    Ok(views.html.info.supporter(
+    val template = countryGroup match {
+      case US => views.html.info.supporterUSA.apply _
+      case Australia => views.html.info.supporterAustralia.apply _
+      case _ => views.html.info.supporter.apply _
+    }
+
+    Ok(template(
       heroOrientated,
       TouchpointBackend.Normal.catalog.supporter,
       PageInfo(

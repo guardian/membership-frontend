@@ -101,8 +101,6 @@ GET            /tier/change/:tier/summary             controllers.TierController
 # Information
 GET            /patrons                               controllers.Info.patron
 GET            /supporter                             controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
-GET            /us/supporter                          controllers.Info.supporterUSA
-GET            /au/supporter                          controllers.Info.supporterAustralia
 GET            /about/supporter                       controllers.Redirects.supporterRedirect
 GET            /:countryGroup/supporter               controllers.Info.supporterFor(countryGroup: CountryGroup)
 GET            /help                                  controllers.Info.help
