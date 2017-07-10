@@ -13,7 +13,8 @@ define([
      * @returns {*}
      */
     var validContributionValue = function (contributionElem) {
-        return parseFloat(contributionElem.value) >= 5;
+        var contribValue = parseFloat(contributionElem.value);
+        return contribValue >= 5 && contribValue <= 2000;
     };
 
     /**
