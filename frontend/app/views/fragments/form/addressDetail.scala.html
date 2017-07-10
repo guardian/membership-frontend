@@ -11,19 +11,19 @@
   heading: String = "",
   note: String = "")
 
-@countyOrStateSelect(countyOrStateList: List[String], countyOrStateLabel: String) = {
+@countyOrStateSelect(countyOrStateList: List[String], jsClass: String, label: String) = {
     <div class="form-field u-h">
-        <label class="label" for="@countyOrStateLabel-@(formType)">@countyOrStateLabel.capitalize</label>
+        <label class="label" for="@label-@(formType)">@label.capitalize</label>
         <select name="@(formType).countyOrState"
-                id="@countyOrStateLabel-@(formType)"
-                class="select js-@countyOrStateLabel"
+                id="@label-@(formType)"
+                class="select js-@jsClass"
                 required
                 aria-required="true">
         @for(countyOrState <- countyOrStateList) {
             <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
         }
         </select>
-        @fragments.form.errorMessage(s"Please enter your ${countyOrStateLabel.capitalize}")
+        @fragments.form.errorMessage(s"Please enter your ${label.capitalize}")
     </div>
 }
 
@@ -89,8 +89,9 @@
             @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} town")
         </div>
 
-        @countyOrStateSelect(Country.US.states.toList, "state")
-        @countyOrStateSelect(Country.Canada.states.toList, "province")
+        @countyOrStateSelect(Country.US.states.toList, "us-state", "state")
+        @countyOrStateSelect(Country.Canada.states.toList, "ca-province", "province")
+        @countyOrStateSelect(Country.Australia.states.toList, "aus-state", "state")
 
         <div class="js-county-container">
             <div class="form-field js-county-section">

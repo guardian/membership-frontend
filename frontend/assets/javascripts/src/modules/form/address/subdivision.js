@@ -13,7 +13,7 @@ define(['$'], function ($) {
     var POSTCODE_LABEL_SELECTOR = '.js-postcode-label';
     var AUSTRALIA_STRING = 'australia';
     var OPTIONAL_CLASSNAME = 'optional-marker';
-    var TOWN_LABEL_SELECTOR='.js-town-label'
+    var TOWN_LABEL_SELECTOR='.js-town-label';
     var TOWN_STRING = 'Town';
     var SUBURB_STRING = 'Suburb';
 
@@ -30,34 +30,33 @@ define(['$'], function ($) {
      * @param context
      * @param optionTxt
      * @param $countySelectParent
-     * @param $stateSelectParent
-     * @param $provinceSelectParent
+     * @param $usStateSelectParent
+     * @param $caProvinceSelectParent
      */
-    var toggle = function (context, optionTxt, $countySelectParent, $stateSelectParent, $provinceSelectParent) {
+    var toggle = function (context, optionTxt, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent) {
         var $countyContainer = $(COUNTY_CONTAINER_SELECTOR, context);
         var $postcodeLabel = $(POSTCODE_LABEL_SELECTOR, context);
         var $countyLabel= $('label',$countyContainer);
         var $townLabel = $(TOWN_LABEL_SELECTOR,context);
 
-        detachElems([$countySelectParent, $stateSelectParent, $provinceSelectParent]);
-
+        detachElems([$countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent]);
         if (optionTxt === UNITED_STATES_STRING) {
             $townLabel.text(TOWN_STRING);
-            $countyContainer.append($stateSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
+            $countyContainer.append($usStateSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
             $postcodeLabel.text(ZIP_CODE_STRING);
             $countyLabel.text(STATE_STRING);
             $countyLabel.removeClass(OPTIONAL_CLASSNAME);
         } else if (optionTxt === CANADA_STRING) {
             $townLabel.text(TOWN_STRING);
-            $countyContainer.append($provinceSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
+            $countyContainer.append($caProvinceSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
             $postcodeLabel.text(ZIP_CODE_STRING);
             $countyLabel.text(PROVINCE_STRING);
             $countyLabel.removeClass(OPTIONAL_CLASSNAME);
         } else if (optionTxt === AUSTRALIA_STRING){
             $townLabel.text(SUBURB_STRING);
+            $countyContainer.append($ausStateSelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
             $countyLabel.text(STATE_STRING);
             $countyLabel.removeClass(OPTIONAL_CLASSNAME);
-            $countyContainer.append($countySelectParent.removeClass(HIDE_CONTENT_VISUALLY_CLASSNAME));
             $postcodeLabel.text(POST_CODE_STRING);
         } else {
             $townLabel.text(TOWN_STRING);
