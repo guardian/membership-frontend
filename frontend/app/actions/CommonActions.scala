@@ -5,6 +5,7 @@ import actions.ActionRefiners._
 import actions.Fallbacks._
 import com.gu.googleauth
 import com.gu.salesforce.PaidTier
+import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
@@ -14,16 +15,23 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import services.{AuthenticationService, TouchpointBackend}
 import utils.GuMemCookie
-import utils.TestUsers.isTestUser
+import utils.TestUsers.{PreSigninTestCookie, isTestUser}
 
 import scala.concurrent.Future
 
-trait CommonActions {
+trait CommonActions extends LazyLogging {
   import OAuthActions._
 
   val AddAbTestingCookiesToResponse = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
-      block(request).map { _.withCookies(ABTest.cookiesWhichShouldBeDropped(request) ++ AudienceId.cookieWhichShouldBeDropped(request) :_*) }
+      block(request).map { result =>
+        val newABTestCookies = ABTest.cookiesWhichShouldBeDropped(request)
+        if (newABTestCookies.nonEmpty) {
+          val testUser = isTestUser(PreSigninTestCookie, request.cookies)(request).isDefined
+          logger.info(s"dropping-new-ab-test-cookies (path=${request.path} testUser=$testUser) : ${newABTestCookies.map(c => s"${c.name}=${c.value}").mkString(" ")}")
+        }
+        result.withCookies(newABTestCookies ++ AudienceId.cookieWhichShouldBeDropped(request) :_*)
+      }
   }
 
   val AddUserInfoToResponse = new ActionBuilder[Request] {

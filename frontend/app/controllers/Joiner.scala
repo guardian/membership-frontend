@@ -55,8 +55,6 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
 
   val subscriberOfferDelayPeriod = 6.months
 
-  val ForcedRedirectToIdentity = "forcedRedirectToIdentity"
-
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
   val identityService = IdentityService(IdentityApi)
@@ -103,14 +101,15 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
     }
   }
 
+
   def authenticatedIfNotMergingRegistration(onUnauthenticated: RequestHeader => Result = chooseRegister(_)) = new ActionFilter[Request] {
     override def filter[A](req: Request[A]) = Future.successful {
       val userOpt = authenticatedIdUserProvider(req)
       val userSignedIn = userOpt.isDefined
-      val canWaiveAuth = Feature.MergedRegistration.turnedOnFor(req)
+      val canWaiveAuth = abtests.MergedSocialRegistration.allocate(req).exists(_.canWaiveAuth) || Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
       logger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
-      if (canAccess) None else Some(onUnauthenticated(req).addingToSession(ForcedRedirectToIdentity -> "true")(req))
+      if (canAccess) None else Some(onUnauthenticated(req))
     }
   }
 
