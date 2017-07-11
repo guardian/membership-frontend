@@ -1,4 +1,6 @@
+import configuration.Config
 import filters._
+import loghandling.Logstash
 import monitoring.SentryLogging
 import play.api.Application
 import play.api.mvc.{EssentialAction, EssentialFilter, WithFilters}
@@ -14,6 +16,7 @@ object Global extends WithFilters(
   AddEC2InstanceHeader) {
   override def onStart(app: Application) {
     SentryLogging.init()
+    Logstash.init(Config)
     GuardianLiveEventService.start()
     MasterclassEventService.start()
     GuardianContentService.start()
