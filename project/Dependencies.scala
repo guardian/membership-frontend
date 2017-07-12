@@ -29,15 +29,12 @@ object Dependencies {
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.22"
   val catsCore = "org.typelevel" %% "cats-core" % "0.9.0"
-  val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
-  val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
-  val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
-  val dataFormat =  "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.7"
+
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
-    PlayImport.specs2 % "test", specs2Extra, dispatch, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat )
+    PlayImport.specs2 % "test", specs2Extra, dispatch, identityPlayAuth, catsCore)
 
   val acceptanceTestDependencies = Seq(memsubCommonPlayAuth, scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
 

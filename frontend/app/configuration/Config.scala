@@ -20,8 +20,6 @@ object Config {
 
   val config = ConfigFactory.load()
 
-  val appName = "membership-frontend"
-
   lazy val siteTitle = config.getString("site.title")
 
   lazy val sentryDsn = Try(new Dsn(config.getString("sentry.dsn")))
@@ -168,13 +166,6 @@ object Config {
 
   def productIds(env: String): com.gu.memsub.subsv2.reads.ChargeListReads.ProductIds =
     SubsV2ProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds"))
-
-  object Logstash {
-    private val param = Try{config.getConfig("param.logstash")}.toOption
-    val stream = Try{param.map(_.getString("stream"))}.toOption.flatten
-    val streamRegion = Try{param.map(_.getString("streamRegion"))}.toOption.flatten
-    val enabled = Try{config.getBoolean("logstash.enabled")}.toOption.contains(true)
-  }
 
 
   object Implicits {
