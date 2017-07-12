@@ -50,6 +50,12 @@ Parameters:
     Description: Security group that grants access to the account's Vulnerability
       Scanner
     Type: AWS::EC2::SecurityGroup::Id
+  LoggingKinesisStream:
+    Description: Kinesis stream id to send logging to e.g. elk-stack-ElkKinesisStream-12345
+    Type: String
+  LoggingPolicy:
+    Description: Policy needed to access the kinesis stream
+    Type: String
 Mappings:
   StageVariables:
     PROD:
@@ -107,6 +113,13 @@ Resources:
             aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/frontend/frontend_1.0-SNAPSHOT_all.deb /tmp
             mkdir /etc/gu
             aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/membership.private.conf /etc/gu
+             cat <<EOF >>/etc/gu/subscriptions-frontend.private.conf
+                      param.logstash {
+                        stream="${LoggingKinesisStream}"
+                        streamRegion="${AWS::Region}"
+                      }
+                      EOF
+
             dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb
             chown frontend /etc/gu/membership.private.conf
             chmod 0600 /etc/gu/membership.private.conf
@@ -179,6 +192,8 @@ Resources:
             - dynamodb:Query
             Resource:
               Fn::FindInMap: [ StageVariables, { Ref: Stage }, DynamoDBTables ]
+      ManagedPolicyArns:
+            - !Ref 'LoggingPolicy'
   MembershipAppInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
