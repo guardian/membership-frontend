@@ -34,11 +34,11 @@ define([
         implementRules(context, countrySelect, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent);
     };
 
-    var implementRules = function (context, select, $countySelectParent, $stateSelectParent, $provinceSelectParent, $ausStateSelectParent) {
+    var implementRules = function (context, select, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent) {
         var optionTxt = selectOptionTxt(select);
 
         validationDisplay.resetErrorState($('[required]', context));
-        subdivision.toggle(context, optionTxt, $countySelectParent, $stateSelectParent, $provinceSelectParent, $ausStateSelectParent);
+        subdivision.toggle(context, optionTxt, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent);
         postcode.toggle(context, optionTxt);
     };
 
