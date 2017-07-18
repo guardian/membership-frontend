@@ -10,8 +10,9 @@ define([
     var FORM_FIELD_CLASSNAME = 'form-field';
     var COUNTRY_SELECTOR = '.js-country';
     var COUNTY_OR_STATE_SELECTOR = '.js-county-or-state';
-    var STATE_SELECTOR = '.js-state';
-    var PROVINCE_SELECTOR = '.js-province';
+    var US_STATE_SELECTOR = '.js-us-state';
+    var CA_PROVINCE_SELECTOR = '.js-ca-province';
+    var AUS_STATE_SELECTOR = '.js-aus-state';
 
     /**
      * on load apply the subdivision and country rules
@@ -22,22 +23,22 @@ define([
     var addRules = function (context) {
         var countrySelect = context.querySelector(COUNTRY_SELECTOR);
         var $countySelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(COUNTY_OR_STATE_SELECTOR), FORM_FIELD_CLASSNAME));
-        var $stateSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(STATE_SELECTOR), FORM_FIELD_CLASSNAME));
-        var $provinceSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(PROVINCE_SELECTOR), FORM_FIELD_CLASSNAME));
-
+        var $usStateSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(US_STATE_SELECTOR), FORM_FIELD_CLASSNAME));
+        var $caProvinceSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(CA_PROVINCE_SELECTOR), FORM_FIELD_CLASSNAME));
+        var $ausStateSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(AUS_STATE_SELECTOR), FORM_FIELD_CLASSNAME));
         countrySelect.addEventListener('change', function (e) {
             var select = e && e.target;
-            implementRules(context, select, $countySelectParent, $stateSelectParent, $provinceSelectParent);
+            implementRules(context, select, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent);
         });
 
-        implementRules(context, countrySelect, $countySelectParent, $stateSelectParent, $provinceSelectParent);
+        implementRules(context, countrySelect, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent);
     };
 
-    var implementRules = function (context, select, $countySelectParent, $stateSelectParent, $provinceSelectParent) {
+    var implementRules = function (context, select, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent) {
         var optionTxt = selectOptionTxt(select);
 
         validationDisplay.resetErrorState($('[required]', context));
-        subdivision.toggle(context, optionTxt, $countySelectParent, $stateSelectParent, $provinceSelectParent);
+        subdivision.toggle(context, optionTxt, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent);
         postcode.toggle(context, optionTxt);
     };
 
