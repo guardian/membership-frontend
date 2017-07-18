@@ -59,6 +59,18 @@ Mappings:
       DynamoDBTables:
       - arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-PROD
       - arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-UAT
+      MinInstances: '3'
+      MaxInstances: '6'
+      InstanceName: PROD:membership-frontend
+    CODE:
+      DynamoDBTables:
+      - arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-DEV
+      - arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-UAT
+      MinInstances: '0'
+      MaxInstances: '2'
+      InstanceName: CODE:membership-frontend
+Conditions:
+  IsProd: !Equals [!Ref Stage, 'PROD']
 Resources:
   FrontendAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -69,8 +81,10 @@ Resources:
         Ref: Subnets
       LaunchConfigurationName:
         Ref: FrontendLaunchConfig
-      MinSize: '3'
-      MaxSize: '6'
+      MinSize:
+        Fn::FindInMap: [ StageVariables, { Ref: Stage }, MinInstances ]
+      MaxSize:
+        Fn::FindInMap: [ StageVariables, { Ref: Stage }, MaxInstances ]
       LoadBalancerNames:
       - Ref: FrontendElasticLoadBalancer
       HealthCheckType: ELB
@@ -86,6 +100,10 @@ Resources:
       - Key: Stage
         Value:
           Ref: Stage
+        PropagateAtLaunch: 'true'
+      - Key: Name
+        Value:
+          Fn::FindInMap: [ StageVariables, { Ref: Stage }, InstanceName ]
         PropagateAtLaunch: 'true'
   FrontendLaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -106,14 +124,12 @@ Resources:
         Fn::Base64:
           !Sub |
             #!/bin/bash -ev
-            CONF_DIR=/etc/frontend
-            aws --region ${AWS::Region} s3 cp s3://membership-dist/${Stack}/${Stage}/frontend/frontend_1.0-SNAPSHOT_all.deb /tmp
-            mkdir /etc/gu
-            aws --region ${AWS::Region} s3 cp s3://membership-private/${Stage}/membership.private.conf /etc/gu
-            dpkg -i /tmp/frontend_1.0-SNAPSHOT_all.deb
-            chown frontend /etc/gu/membership.private.conf
-            chmod 0600 /etc/gu/membership.private.conf
-            /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/frontend/frontend.log
+            export stack='${Stack}'
+            export app='${App}'
+            export stage='${Stage}'
+            export region='${AWS::Region}'
+            aws s3 cp --region ${AWS::Region} s3://membership-dist/${Stack}/${Stage}/frontend/init-instance.sh .
+            . init-instance.sh
   MembershipAppRole:
     Type: AWS::IAM::Role
     Properties:
@@ -278,6 +294,7 @@ Resources:
 
   monthlyContributorAttempts:
     Type: AWS::Logs::MetricFilter
+    Condition: IsProd
     Properties:
       LogGroupName: !Sub membership-frontend-${Stage}
       FilterPattern: "attempting to become a monthly contributor"
@@ -288,6 +305,7 @@ Resources:
 
   monthlyContributorSuccess:
     Type: AWS::Logs::MetricFilter
+    Condition: IsProd
     Properties:
       LogGroupName: !Sub membership-frontend-${Stage}
       FilterPattern: "successfully became monthly contributor"
