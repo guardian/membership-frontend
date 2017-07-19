@@ -66,7 +66,8 @@ javaOptions in Universal ++= Seq(
     "-J-XX:+PrintGCDateStamps",
     s"-J-Xloggc:/var/log/${name.value}/gc.log",
     "-Dcom.sun.management.jmxremote.port=17264",
-    "-Dcom.sun.management.jmxremote.password.file=/etc/gu/jmxremote.password"
+    "-Dcom.sun.management.jmxremote.password.file=/etc/gu/jmxremote.password",
+    "-Dcom.sun.management.jmxremote.ssl=false"
 )
 
 maintainer := "Membership Dev <membership.dev@theguardian.com>"
