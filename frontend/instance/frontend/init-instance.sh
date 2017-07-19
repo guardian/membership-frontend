@@ -57,6 +57,9 @@ sed -f /private/liberato.sed /opt/collectd/etc/collectd.conf.d/librato.conf.old 
 mv /opt/collectd/etc/collectd.conf.d/jvm.conf /opt/collectd/etc/collectd.conf.d/jvm.conf.old
 sed -e "s/ServiceURL.*$/\\0\nUser \"collectd\"\nPassword \"$SECRET\"/" /opt/collectd/etc/collectd.conf.d/jvm.conf.old >/opt/collectd/etc/collectd.conf.d/jvm.conf
 
+#turn on collectd logging
+mv /opt/collectd/etc/collectd.conf /opt/collectd/etc/collectd.conf.old
+sed -e 's/#LoadPlugin syslog/LoadPlugin syslog/' /opt/collectd/etc/collectd.conf.old >/opt/collectd/etc/collectd.conf
 sudo service collectd restart
 
 echo "finished instance init script"
