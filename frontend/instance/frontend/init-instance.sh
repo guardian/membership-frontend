@@ -19,7 +19,9 @@ if [ "${#SECRET}" -lt "100" ]; then
 else
  echo ok
 fi
-echo "collectd $SECRET" >>/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/management/jmxremote.password
+echo "collectd $SECRET" >/etc/gu/jmxremote.password
+chmod 600 /etc/gu/jmxremote.password
+chown frontend /etc/gu/jmxremote.password
 
 # download private for this stage
 mkdir /etc/gu
