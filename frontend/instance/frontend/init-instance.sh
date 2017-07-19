@@ -8,7 +8,7 @@ mkdir /dist
 aws --region $region s3 cp --recursive s3://membership-dist/${stack}/${stage}/frontend/ /dist
 # download all private
 mkdir /private
-aws --region ${region} s3 cp s3://membership-private/ALLSTAGE/ /private
+aws --region ${region} s3 cp --recursive s3://membership-private/ALLSTAGE/ /private
 
 
 apt install pwgen
