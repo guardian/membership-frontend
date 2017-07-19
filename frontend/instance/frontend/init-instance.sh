@@ -23,6 +23,7 @@ else
  echo ok
 fi
 echo "collectd $SECRET" >/etc/gu/jmxremote.password
+echo "collectd readonly" >/etc/gu/jmxremote.access
 
 # install and start play app and create frontend user
 dpkg -i /dist/frontend_1.0-SNAPSHOT_all.deb

@@ -67,6 +67,7 @@ javaOptions in Universal ++= Seq(
     s"-J-Xloggc:/var/log/${name.value}/gc.log",
     "-Dcom.sun.management.jmxremote.port=17264",
     "-Dcom.sun.management.jmxremote.password.file=/etc/gu/jmxremote.password",
+    "-Dcom.sun.management.jmxremote.access.file=/etc/gu/jmxremote.access",
     "-Dcom.sun.management.jmxremote.ssl=false"
 )
 
