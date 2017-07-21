@@ -52,15 +52,30 @@ sudo apt-get update
 sudo apt-get -y install collectd
 
 mv /opt/collectd/etc/collectd.conf.d/librato.conf /opt/collectd/etc/collectd.conf.d/librato.conf.old
-sed -f /private/liberato.sed /opt/collectd/etc/collectd.conf.d/librato.conf.old >/opt/collectd/etc/collectd.conf.d/librato.conf
+cat /opt/collectd/etc/collectd.conf.d/librato.conf.old | \
+  sed -e "s/</Node>/LogHttpError true\nStoreRates true\n</Node>" - | \
+  sed -f /private/liberato.sed - \
+  >/opt/collectd/etc/collectd.conf.d/librato.conf
+
+cd /opt/collectd/etc/collectd.conf.d/
+rm apache.conf haproxy.conf mysql.conf nginx* postgresql.conf zookeeper.conf redis.conf varnish.conf mongodb.conf memcached.conf elasticsearch.conf docker.conf
+cd -
 
 # tell collectd how to talk to the JVM JMX interface
 mv /opt/collectd/etc/collectd.conf.d/jvm.conf /opt/collectd/etc/collectd.conf.d/jvm.conf.old
-sed -e "s/ServiceURL.*$/\\0\nUser \"collectd\"\nPassword \"$SECRET\"/" /opt/collectd/etc/collectd.conf.d/jvm.conf.old >/opt/collectd/etc/collectd.conf.d/jvm.conf
+cat /opt/collectd/etc/collectd.conf.d/jvm.conf.old | \
+  sed -e "s/ServiceURL.*$/\\0\nUser \"collectd\"\nPassword \"$SECRET\"/" - | \
+  sed -e "s/Host \"localhost\"//" - \
+  >/opt/collectd/etc/collectd.conf.d/jvm.conf2
+
+HOST=`curl http://169.254.169.254/latest/meta-data/instance-id`
 
 #turn on collectd logging
 mv /opt/collectd/etc/collectd.conf /opt/collectd/etc/collectd.conf.old
-sed -e 's/#LoadPlugin syslog/LoadPlugin syslog/' /opt/collectd/etc/collectd.conf.old >/opt/collectd/etc/collectd.conf
+cat /opt/collectd/etc/collectd.conf.old | \
+  sed -e "s/Hostname    \"localhost\/Hostname \"$HOST\""
+  sed -e 's/#LoadPlugin syslog/LoadPlugin syslog/' - | \
+  >/opt/collectd/etc/collectd.conf
 sudo service collectd restart
 
-echo "finished instance init script"
+echo "finished instance init script (hopefully it worked ...due to not much error handling)"
