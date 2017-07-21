@@ -54,7 +54,6 @@ object ABTest {
   val CookieAge = ofDays(365).getSeconds.toInt
 
   lazy val allTests: Set[ABTest] = Set(
-    MergedSocialRegistration
   )
 
   def allocations(request: Request[_]): Map[ABTest, BaseVariant] = (for {
