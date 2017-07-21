@@ -15,7 +15,7 @@ object Global extends WithFilters(
   Gzipper,
   AddEC2InstanceHeader) {
   override def onStart(app: Application) {
-    HealthMonitoringTask.start(app.actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage)
+    HealthMonitoringTask.start(app.actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage, Config.appName)
     SentryLogging.init()
     Logstash.init(Config)
     GuardianLiveEventService.start()
