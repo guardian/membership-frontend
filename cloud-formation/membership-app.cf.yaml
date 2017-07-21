@@ -50,6 +50,9 @@ Parameters:
     Description: Security group that grants access to the account's Vulnerability
       Scanner
     Type: AWS::EC2::SecurityGroup::Id
+  LoggingPolicy:
+    Description: Policy needed to access the kinesis stream
+    Type: String
 Mappings:
   StageVariables:
     PROD:
@@ -179,6 +182,8 @@ Resources:
             - dynamodb:Query
             Resource:
               Fn::FindInMap: [ StageVariables, { Ref: Stage }, DynamoDBTables ]
+      ManagedPolicyArns:
+            - !Ref 'LoggingPolicy'
   MembershipAppInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
