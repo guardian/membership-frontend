@@ -4,6 +4,7 @@ import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
 import com.gu.memsub.subsv2.{Subscription, SubscriptionPlan}
 import com.gu.salesforce._
 import com.gu.memsub.util.Timing
+import model.GenericSFContact
 import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.{Cookie, Request, WrappedRequest}
@@ -24,11 +25,11 @@ package object actions {
   implicit class RichAuthRequest[A](req: AuthRequest[A]) extends BackendProvider {
     lazy val touchpointBackend = TouchpointBackend.forUser(req.user)
 
-    def forMemberOpt[T](f: Option[Contact] => T)(implicit executor: ExecutionContext): Future[T] =
+    def forMemberOpt(implicit executor: ExecutionContext): Future[String \/ Option[GenericSFContact]] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
           memberOpt <- touchpointBackend.salesforceService.getMember(req.user.id)
-        } yield f(memberOpt)
+        } yield memberOpt
       }
     }
 

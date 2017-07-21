@@ -19,7 +19,7 @@ import utils.PlannedOutage
 import views.support.MembershipCompat._
 
 import scala.concurrent.Future
-import scalaz.OptionT
+import scalaz.{-\/, EitherT, OptionT, \/, \/-}
 import scalaz.std.scalaFuture._
 
 /**
@@ -49,31 +49,31 @@ object ActionRefiners extends LazyLogging {
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
 
-  private def getContributorRequest[A](request: AuthRequest[A]): Future[Option[SubReqWithContributor[A]]] = {
+  private def getContributorRequest[A](request: AuthRequest[A]): Future[String \/ Option[SubReqWithContributor[A]]] = {
     implicit val pf = Membership
     val tp = request.touchpointBackend
     val contributor = Subscriber[Subscription[SubscriptionPlan.Contributor]] _
     (for {
-      member <- OptionT(request.forMemberOpt(identity))
-      subscription <- OptionT(tp.subscriptionService.getSubscription(member))
+      member <- OptionEither(request.forMemberOpt)
+      subscription <- OptionEither.liftEither(tp.subscriptionService.getSubscription(member))
     } yield new SubscriptionRequest[A](tp, request) with Contributor {
       override val contributor = subscription
-    }).run
+    }).run.run
   }
 
-  private def getSubRequest[A](request: Request[A]): Future[Option[SubReqWithSub[A]]] = {
+  private def getSubRequest[A](request: Request[A]): Future[String \/ Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
     val FreeSubscriber = Subscriber[Subscription[SubscriptionPlan.FreeMember]] _
     val PaidSubscriber = Subscriber[Subscription[SubscriptionPlan.PaidMember]] _
     (for {
-      user <- OptionT(Future.successful(AuthenticationService.authenticatedIdUserProvider(request)))
+      user <- OptionEither.liftFutureEither(AuthenticationService.authenticatedIdUserProvider(request))
       authRequest = new AuthenticatedRequest(user, request)
       tp = authRequest.touchpointBackend
-      member <- OptionT(authRequest.forMemberOpt(identity))
-      subscription <- OptionT(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
+      member <- OptionEither(authRequest.forMemberOpt)
+      subscription <- OptionEither.liftEither(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
     } yield new SubscriptionRequest[A](tp, authRequest) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
-    }).run
+    }).run.run
   }
 
   val PlannedOutageProtection = new ActionFilter[Request] {
@@ -82,13 +82,22 @@ object ActionRefiners extends LazyLogging {
 
   def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {
     override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
-      getSubRequest(request).map(_ toRight onNonMember(request))
+      getSubRequest(request).map {
+        case -\/(message) =>
+          logger.warn(s"error while sub refining: $message")
+          Left(InternalServerError(views.html.error500(new Throwable)))
+        case \/-(maybeMember) => maybeMember toRight onNonMember(request)}
     }
   }
 
   def contributionRefiner(onNonContributor: RequestHeader => Result = contributorJoinRedirect(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
     override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
-      getContributorRequest(request).map(_ toRight onNonContributor(request))
+      getContributorRequest(request).map {
+        case -\/(message) =>
+          logger.warn(s"error while contribution refining: $message")
+          Left(InternalServerError(views.html.error500(new Throwable)))
+        case \/-(maybeMember) => maybeMember toRight onNonContributor(request)
+      }
     }
   }
 
@@ -138,15 +147,33 @@ object ActionRefiners extends LazyLogging {
   }
 
   def noAuthenticatedMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[Request] {
-    override def filter[A](request: Request[A]) = getSubRequest(request).map(_.map(onMember))
+    override def filter[A](request: Request[A]) =
+      getSubRequest(request).map {
+        case -\/(message) =>
+          logger.warn(s"error while filtering: $message")
+          Some(InternalServerError(views.html.error500(new Throwable)))
+        case \/-(maybeSub) => maybeSub.map(onMember)
+      }
   }
 
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-    override def filter[A](request: AuthRequest[A]) = getSubRequest(request).map(_.map(onMember))
+    override def filter[A](request: AuthRequest[A]) =
+      getSubRequest(request).map {
+        case -\/(message) =>
+          logger.warn(s"error while filtering: $message")
+          Some(InternalServerError(views.html.error500(new Throwable)))
+        case \/-(maybeSub) => maybeSub.map(onMember)
+      }
   }
 
   def onlyNonContributorFilter(onContributor: SubReqWithContributor[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-    override def filter[A](request: AuthRequest[A]) = getContributorRequest(request).map(_.map(onContributor))
+    override def filter[A](request: AuthRequest[A]) =
+      getContributorRequest(request).map {
+        case -\/(message) =>
+          logger.warn(s"error while filtering contributors: $message")
+          Some(InternalServerError(views.html.error500(new Throwable)))
+        case \/-(maybeSub) => maybeSub.map(onContributor)
+      }
   }
 
   def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
@@ -175,4 +202,23 @@ object ActionRefiners extends LazyLogging {
         block(request)
       }
   }
+}
+
+// this is helping us stack future/either/option
+object OptionEither {
+
+  type FutureEither[X] = EitherT[Future, String, X]
+
+  def apply[A](m: Future[\/[String, Option[A]]]): OptionT[FutureEither, A] =
+    OptionT[FutureEither, A](EitherT[Future, String, Option[A]](m))
+
+  def liftEither[A](x: Future[Option[A]]): OptionT[FutureEither, A] =
+    apply(x.map(\/.right))
+
+  def liftFutureOption[A](x: \/[String, A]): OptionT[FutureEither, A] =
+    apply(Future.successful(x.map[Option[A]](Some.apply)))
+
+  def liftFutureEither[A](x: Option[A]): OptionT[FutureEither, A] =
+    apply(Future.successful(\/.right(x)))
+
 }

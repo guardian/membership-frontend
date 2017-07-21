@@ -17,6 +17,7 @@ import services.FrontendMemberRepository._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scalaz.\/
 
 object FrontendMemberRepository {
   type UserId = String
@@ -32,7 +33,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
 
   private val repository = new SimpleContactRepository(salesforceConfig, system.scheduler, "membership")
 
-  override def getMember(userId: UserId): Future[Option[GenericSFContact]] =
+  override def getMember(userId: UserId): Future[String \/ Option[GenericSFContact]] =
     repository.get(userId)
 
   override def metrics = metricsVal
