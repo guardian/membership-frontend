@@ -53,7 +53,7 @@ sudo apt-get -y install collectd
 
 mv /opt/collectd/etc/collectd.conf.d/librato.conf /opt/collectd/etc/collectd.conf.d/librato.conf.old
 cat /opt/collectd/etc/collectd.conf.d/librato.conf.old | \
-  sed -e "s/</Node>/LogHttpError true\nStoreRates true\n</Node>" - | \
+  sed -e "s/<\/Node>/LogHttpError true\nStoreRates true\n<\/Node>/" - | \
   sed -f /private/liberato.sed - \
   >/opt/collectd/etc/collectd.conf.d/librato.conf
 
@@ -66,16 +66,17 @@ mv /opt/collectd/etc/collectd.conf.d/jvm.conf /opt/collectd/etc/collectd.conf.d/
 cat /opt/collectd/etc/collectd.conf.d/jvm.conf.old | \
   sed -e "s/ServiceURL.*$/\\0\nUser \"collectd\"\nPassword \"$SECRET\"/" - | \
   sed -e "s/Host \"localhost\"//" - \
-  >/opt/collectd/etc/collectd.conf.d/jvm.conf2
+  >/opt/collectd/etc/collectd.conf.d/jvm.conf
 
 HOST=`curl http://169.254.169.254/latest/meta-data/instance-id`
 
 #turn on collectd logging
 mv /opt/collectd/etc/collectd.conf /opt/collectd/etc/collectd.conf.old
 cat /opt/collectd/etc/collectd.conf.old | \
-  sed -e "s/Hostname    \"localhost\/Hostname \"$HOST\""
-  sed -e 's/#LoadPlugin syslog/LoadPlugin syslog/' - | \
+  sed -e "s/#Hostname    \"localhost\"/Hostname \"$stack.$stage.$app.$HOST\"/" | \
+  sed -e 's/#LoadPlugin logfile/LoadPlugin logfile\n<Plugin logfile>\nLogLevel info\nFile "\/var\/log\/collectd"\nTimestamp true\nPrintSeverity false\n<\/Plugin>\n/' - \
   >/opt/collectd/etc/collectd.conf
+
 sudo service collectd restart
 
 echo "finished instance init script (hopefully it worked ...due to not much error handling)"
