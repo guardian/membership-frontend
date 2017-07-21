@@ -1,5 +1,6 @@
+import configuration.Config
 import filters._
-import monitoring.SentryLogging
+import monitoring.{HealthMonitoringTask, SentryLogging}
 import play.api.Application
 import play.api.mvc.{EssentialAction, EssentialFilter, WithFilters}
 import play.filters.cors.{CORSConfig, CORSFilter}
@@ -13,6 +14,7 @@ object Global extends WithFilters(
   Gzipper,
   AddEC2InstanceHeader) {
   override def onStart(app: Application) {
+    HealthMonitoringTask.start(app.actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage)
     SentryLogging.init()
     GuardianLiveEventService.start()
     MasterclassEventService.start()
