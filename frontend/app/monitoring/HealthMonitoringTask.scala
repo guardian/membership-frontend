@@ -74,7 +74,7 @@ object Scheduler extends StrictLogging {
     system.scheduler.schedule(initialDelay, interval) {
       task.task().onComplete {
         case Success(t) =>
-          logger.error(s"Scheduled task $task.name succeeded. This task will retry in: $interval")
+          logger.info(s"Scheduled task $task.name succeeded. This task will repeat in: $interval")
         case Failure(e) =>
           logger.error(s"Scheduled task $task.name failed due to: $e. This task will retry in: $interval")
       }
