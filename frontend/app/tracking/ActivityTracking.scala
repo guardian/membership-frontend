@@ -307,17 +307,19 @@ trait ActivityTracking {
     }
   }
 
-  private def getTracker: Tracker = {
-    val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
-    emitter.setRequestMethod(RequestMethod.Asynchronous)
-    val subject = new Subject
-    new Tracker(emitter, subject, "membership", "membership-frontend")
-  }
+  def getTracker: Tracker = ActivityTracking.getTracker
 
 }
 
 object ActivityTracking {
   val url = Config.trackerUrl
+
+  val getTracker: Tracker = {
+    val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
+    emitter.setRequestMethod(RequestMethod.Asynchronous)
+    val subject = new Subject
+    new Tracker(emitter, subject, "membership", "membership-frontend")
+  }
 
   def setSubMap(in:Map[String, Any]): JMap[String, Object] =
     mapAsJavaMap(in).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]]
