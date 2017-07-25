@@ -66,7 +66,7 @@ Mappings:
       DynamoDBTables:
       - arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-DEV
       - arn:aws:dynamodb:*:*:table/MembershipSub-Promotions-UAT
-      MinInstances: '0'
+      MinInstances: '1'
       MaxInstances: '2'
       InstanceName: CODE:membership-frontend
 Conditions:

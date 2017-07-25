@@ -8,7 +8,7 @@ mkdir /dist
 aws --region $region s3 cp --recursive s3://membership-dist/${stack}/${stage}/frontend/ /dist
 # download private for this stage
 mkdir /etc/gu
-aws --region ${region} s3 cp s3://membership-private/${stage}/membership.private.conf /etc/gu
+aws --region $region s3 cp s3://membership-private/${stage}/membership.private.conf /etc/gu
 
 # install and start play app and create frontend user
 dpkg -i /dist/frontend_1.0-SNAPSHOT_all.deb
