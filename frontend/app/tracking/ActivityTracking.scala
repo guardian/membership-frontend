@@ -298,7 +298,7 @@ trait ActivityTracking {
 
   private def executeTracking(data: TrackerData) {
     try {
-      val tracker = getTracker
+      val tracker = ActivityTracking.getTracker
       val dataMap = data.toMap
       tracker.trackUnstructuredEvent(dataMap)
     } catch {
@@ -306,8 +306,6 @@ trait ActivityTracking {
       Logger.error(s"Activity tracking error: ${error.getMessage}")
     }
   }
-
-  def getTracker: Tracker = ActivityTracking.getTracker
 
 }
 
