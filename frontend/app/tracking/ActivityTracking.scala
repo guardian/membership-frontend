@@ -298,7 +298,9 @@ trait ActivityTracking {
 
   private def executeTracking(data: TrackerData) {
     try {
-      val tracker = ActivityTracking.getTracker
+      val emitter = ActivityTracking.getEmitter
+      val subject = new Subject
+      val tracker = new Tracker(emitter, subject, "membership", "membership-frontend")
       val dataMap = data.toMap
       tracker.trackUnstructuredEvent(dataMap)
     } catch {
@@ -312,11 +314,10 @@ trait ActivityTracking {
 object ActivityTracking {
   val url = Config.trackerUrl
 
-  val getTracker: Tracker = {
+  val getEmitter: Emitter = {
     val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
     emitter.setRequestMethod(RequestMethod.Asynchronous)
-    val subject = new Subject
-    new Tracker(emitter, subject, "membership", "membership-frontend")
+    emitter
   }
 
   def setSubMap(in:Map[String, Any]): JMap[String, Object] =
