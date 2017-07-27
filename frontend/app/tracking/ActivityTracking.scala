@@ -307,7 +307,7 @@ trait ActivityTracking {
       }
     } catch {
       case error: Throwable =>
-      Logger.error(s"Activity tracking error: ${error.getMessage}")
+      Logger.error(s"Activity tracking error", error)
     }
   }
 
