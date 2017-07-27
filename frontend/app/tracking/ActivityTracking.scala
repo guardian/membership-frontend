@@ -302,7 +302,7 @@ trait ActivityTracking {
       val subject = new Subject
       val tracker = new Tracker(emitter, subject, "membership", "membership-frontend")
       val dataMap = data.toMap
-      tracker.synchronized {
+      emitter.synchronized {
         tracker.trackUnstructuredEvent(dataMap)
       }
     } catch {
@@ -318,7 +318,11 @@ object ActivityTracking {
 
   val getEmitter: Emitter = {
     val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
-    emitter.setRequestMethod(RequestMethod.Asynchronous)
+//    emitter.setRequestMethod(RequestMethod.Asynchronous)
+    // if you use "Asynchronous", it blocks until the async operation finishes....!!
+    // so all the thread pools we were leaking were for nothing.
+    // https://github.com/snowplow/snowplow-java-tracker/blob/java-0.5.2/snowplow-java-tracker-core/src/main/java/com/snowplowanalytics/snowplow/tracker/core/emitter/Emitter.java#L212
+
     emitter
   }
 
