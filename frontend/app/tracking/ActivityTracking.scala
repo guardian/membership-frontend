@@ -302,7 +302,9 @@ trait ActivityTracking {
       val subject = new Subject
       val tracker = new Tracker(emitter, subject, "membership", "membership-frontend")
       val dataMap = data.toMap
-      tracker.trackUnstructuredEvent(dataMap)
+      tracker.synchronized {
+        tracker.trackUnstructuredEvent(dataMap)
+      }
     } catch {
       case error: Throwable =>
       Logger.error(s"Activity tracking error: ${error.getMessage}")
