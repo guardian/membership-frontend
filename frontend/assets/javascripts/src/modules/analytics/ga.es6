@@ -111,6 +111,11 @@ export function init() {
     if (guardian.ophan) {
         wrappedGa('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
     }
+    // The hash on the url is set in identity-federation-api to indicate user has come via facebook login, this identifies that and stops the referrer being counted as www.facebook.com
+    if(document.location.hash === '#fbLogin') {
+        wrappedGa('set', 'referrer', null);
+        document.location.hash = '';
+    }
 
     if("productData" in guardian) {
 
