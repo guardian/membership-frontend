@@ -72,11 +72,8 @@ object Scheduler extends StrictLogging {
   )(implicit system: ActorSystem, executionContext: ExecutionContext) = {
     logger.info(s"Starting $task.name scheduled task with an initial delay of: $initialDelay. This task will refresh every: $interval")
     system.scheduler.schedule(initialDelay, interval) {
-      task.task().onComplete {
-        case Success(t) =>
-          logger.info(s"Scheduled task $task.name succeeded. This task will repeat in: $interval")
-        case Failure(e) =>
-          logger.error(s"Scheduled task $task.name failed due to: $e. This task will retry in: $interval")
+      task.task().onFailure {
+        case error => logger.error(s"Scheduled task $task.name failed due to: $error. This task will retry in: $interval")
       }
     }
   }
