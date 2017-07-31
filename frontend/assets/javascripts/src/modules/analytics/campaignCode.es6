@@ -25,7 +25,7 @@ function recordCampaign () {
 	} catch (ex) {
 		console.log('Failed to retrieve campaign code:', ex.message);
 	} finally {
-        var campaignCode = intcmp || cmp;
+        let campaignCode = intcmp || cmp;
 		if (campaignCode) {
 			setCookie('mem_campaign_code', campaignCode);
 		}
