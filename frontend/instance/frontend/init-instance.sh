@@ -1,4 +1,4 @@
-#!/bin/bash -ev
+#!/bin/bash -v
 # this script is called by all instances when they first start.
 # you can test it standalone by exporting the stack/stage/app/region variables and running it manually
 
