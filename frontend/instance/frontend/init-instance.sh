@@ -15,11 +15,11 @@ lsof /var/lib/dpkg/lock
 rc=$?
 echo "Return code is $rc"
 until [ "$rc" -eq "1" ]; do
-echo "Waiting for dpkg lock to become free"
-sleep 1s;
-lsof /var/lib/dpkg/lock
-rc=$?
-echo "Return code is $rc"
+  echo "Waiting for dpkg lock to become free"
+  sleep 1s;
+  lsof /var/lib/dpkg/lock
+  rc=$?
+  echo "Return code is $rc"
 done
 echo "dpkg lock is free, ready to install application"
 
