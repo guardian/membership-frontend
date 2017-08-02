@@ -69,7 +69,7 @@ object Faq {
       Item("My question hasn’t been answered here", Html(
         """
           <p>Please email <a href='mailto:membershipsupport@theguardian.com'>membershipsupport@theguardian.com</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Members customer services team in the UK on 0330 333 6898 from 8am to 8pm Monday to Friday and 8am to 6pm at weekends.</p>
-          <p>Readers in Australia can email <a href='mailto:australia.membership@theguardian.com'>australia.membership@theguardian.com</a> or call the Guardian Australia office and ask the membership team for assistance on 02 8076 8400.</p>
+          <p>Readers in Australia can email <a href='mailto:australia.membership@theguardian.com'>australia.membership@theguardian.com</a> or call the Guardian Australia office on 1800 773 766, lines are open 9am-5:00pm Monday - Friday (AEDT).</p>
           <p>Readers in the US can email <a href='mailto:membershipsupport@theguardian.com'>membershipsupport@theguardian.com</a></p>
           <p>You can also leave feedback via <a href='https://membership.theguardian.com/feedback'>this form</a>. </p>"""))
     )),
