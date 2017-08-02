@@ -129,7 +129,8 @@ Resources:
             export stage='${Stage}'
             export region='${AWS::Region}'
             aws s3 cp --region ${AWS::Region} s3://membership-dist/${Stack}/${Stage}/frontend/init-instance.sh .
-            . init-instance.sh
+            chmod o+x init-instance.sh
+            ./init-instance.sh
   MembershipAppRole:
     Type: AWS::IAM::Role
     Properties:
