@@ -123,7 +123,9 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
           redirectSignedInMemberToEventbrite(event)
         }
       case _ =>
-        Action(NotFound)
+        // We seem to have a crawler(?) hitting the buy urls for past events
+        logger.info(s"User hit the buy url for event $id - neither a GuLiveEvent or Masterclass could be retrieved, returning 404...")
+        CachedAction(NotFound)
     }
 
   private def suggestUserUpgrades(implicit request: SubReqWithSub[AnyContent]) =
