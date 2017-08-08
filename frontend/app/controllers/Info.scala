@@ -98,8 +98,6 @@ trait Info extends Controller with LazyLogging {
     val detailImage = detailImageFor(countryGroup)
     val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
 
-    val refererCookies = ReferralData.makeCookies
-
     val template = countryGroup match {
       case US => views.html.info.supporterUSA.apply _
       case Australia => views.html.info.supporterAustralia.apply _
@@ -115,7 +113,6 @@ trait Info extends Controller with LazyLogging {
         description = Some(CopyConfig.copyDescriptionSupporters)
       ),
       detailImageOrientated))
-      .withCookies(refererCookies:_*)
   }
 
   def patron() = CachedAndOutageProtected { implicit request =>
