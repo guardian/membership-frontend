@@ -6,7 +6,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import dispatch.Defaults.timer
 import dispatch._
-import forms.MemberForm.{CommonForm, JoinForm}
+import forms.MemberForm.{CommonForm, JoinForm, MonthlyContributorForm}
 import model.GenericSFContact
 import monitoring.{ContributorMetrics, MemberMetrics}
 import play.api.Play.current
@@ -78,7 +78,7 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
         Keys.LAST_NAME -> formData.name.last,
-        Keys.ALLOW_MEMBERSHIP_MAIL -> true
+        Keys.ALLOW_MEMBERSHIP_MAIL -> !formData.isInstanceOf[MonthlyContributorForm] // yes, if not monthly contributor
       )) ++ Map(
         Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
         Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
