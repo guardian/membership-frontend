@@ -6,7 +6,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import dispatch.Defaults.timer
 import dispatch._
-import forms.MemberForm.{CommonForm, JoinForm, MonthlyContributorForm}
+import forms.MemberForm.{CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.{ContributorMetrics, MemberMetrics}
 import play.api.Play.current
@@ -77,19 +77,14 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
       case _ => Seq(Json.obj(
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
-        Keys.LAST_NAME -> formData.name.last
-      )) ++ emailProps(formData)
-      }
+        Keys.LAST_NAME -> formData.name.last,
+        Keys.ALLOW_MEMBERSHIP_MAIL -> true
+      )) ++ Map(
+        Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
+        Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
+      ).collect { case (k, Some(v)) => Json.obj(k -> v) }
+    }
   }.reduce(_ ++ _)
-
-  private def emailProps(formData: CommonForm) = {
-    val allowMail = !formData.isInstanceOf[MonthlyContributorForm]
-    Seq(Json.obj(
-      Keys.ALLOW_MEMBERSHIP_MAIL -> allowMail,
-      Keys.ALLOW_THIRD_PARTY_EMAIL -> (allowMail && formData.marketingChoices.thirdParty.getOrElse(false)),
-      Keys.ALLOW_GU_RELATED_MAIL -> (allowMail && formData.marketingChoices.gnm.getOrElse(false))
-    ))
-  }
 
   private def upsert(userId: UserId, value: JsObject) =
   // upsert is POST request but safe to retry
