@@ -13,7 +13,6 @@ class JoinSupporterSpec extends FeatureSpec with Browser
   before { /* each test */ Driver.reset() }
 
   override def beforeAll() {
-    Screencast.storeId()
     Config.printSummary()
   }
 
@@ -85,7 +84,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       assert(enterDetails.stripeCheckoutHasCC())
 
       And("expiry date field is present")
-      assert(enterDetails.stripeCheckoutHasExph())
+      assert(enterDetails.stripeCheckoutHasExpiry())
 
       And("CVC field is present")
       assert(enterDetails.stripeCheckoutHasCVC())

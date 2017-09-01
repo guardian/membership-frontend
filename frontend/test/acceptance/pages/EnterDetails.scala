@@ -35,7 +35,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def stripeCheckoutHasCVC(): Boolean = pageHasElement(StripeCheckout.cardCvc)
 
-  def stripeCheckoutHasExph(): Boolean = pageHasElement(StripeCheckout.cardExp)
+  def stripeCheckoutHasExpiry(): Boolean = pageHasElement(StripeCheckout.cardExp)
 
   def stripeCheckoutHasSubmit(): Boolean = pageHasElement(StripeCheckout.submitButton)
 
