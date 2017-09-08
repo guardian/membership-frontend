@@ -287,7 +287,15 @@ class MemberService(identityService: IdentityService,
 
   override def getMembershipSubscriptionSummary(contact: GenericSFContact): Future[ThankyouSummary] = {
 
-    val latestSubEither = subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](contact).map(_.get)
+    def getFreeOrPaidSubscription = subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](contact)
+
+    val latestSubEither = getFreeOrPaidSubscription.map {
+      case -\/(e) =>
+        logger.error(s"Could not get free or paid subscription for contact $contact: $e")
+        None
+      case \/-(x) => x
+    }.map(_.get)
+
     val latestSubF = latestSubEither.map(_.fold(identity, identity))
 
     for {

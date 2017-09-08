@@ -6,7 +6,7 @@ import com.gu.memsub.subsv2.reads.ChargeListReads._
 import com.gu.memsub.subsv2.reads.SubPlanReads._
 import com.gu.memsub.subsv2.{Subscription, _}
 import com.gu.memsub.util.Timing
-import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
+import com.gu.memsub._
 import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
 import com.typesafe.scalalogging.LazyLogging
@@ -21,7 +21,6 @@ import views.support.MembershipCompat._
 import scala.concurrent.Future
 import scalaz.{-\/, EitherT, OptionT, \/, \/-}
 import scalaz.std.scalaFuture._
-
 /**
  * These ActionFunctions serve as components that can be composed to build the
  * larger, more-generally useful pipelines in 'CommonActions'.
@@ -70,7 +69,7 @@ object ActionRefiners extends LazyLogging {
       authRequest = new AuthenticatedRequest(user, request)
       tp = authRequest.touchpointBackend
       member <- OptionEither(authRequest.forMemberOpt)
-      subscription <- OptionEither.liftEither(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
+      subscription <- OptionEither(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
     } yield new SubscriptionRequest[A](tp, authRequest) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run.run
