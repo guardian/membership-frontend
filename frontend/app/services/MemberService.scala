@@ -480,7 +480,7 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, transactingCountry: Country) = {
+  private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, transactingCountry: Country) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
         val paymentGateway = if (transactingCountry == Country.Australia) auStripeService.paymentGateway else ukStripeService.paymentGateway
@@ -488,7 +488,6 @@ class MemberService(identityService: IdentityService,
       case PaymentForm(_, _, Some(_)) | MonthlyPaymentForm(_, Some(_), _) =>
         Account(contactId, identityId, currency, autopay = true, PayPal)
     }
-  }
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =
