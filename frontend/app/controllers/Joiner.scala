@@ -43,7 +43,8 @@ import scala.util.Failure
 object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorHandler
   with LazyLogging
   with CatalogProvider
-  with StripeServiceProvider
+  with StripeUKMembershipServiceProvider
+  with StripeAUMembershipServiceProvider
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
   with PaymentServiceProvider
@@ -155,7 +156,8 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
-        stripePublicKey = Some(stripeService.publicKey),
+        stripeUKMembershipPublicKey = Some(stripeUKMembershipService.publicKey),
+        stripeAUMembershipPublicKey = Some(stripeAUMembershipService.publicKey),
         payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
         initialCheckoutForm = CheckoutForm.forIdentityUser(identityUserOpt.flatMap(_.country), plans, Some(countryGroup)),
         abTests = abtests.ABTest.allocations(request)

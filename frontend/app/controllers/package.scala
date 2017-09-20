@@ -1,6 +1,5 @@
 import actions._
 import com.gu.memsub.Subscriber.Member
-import com.gu.memsub.services.PromoService
 import com.gu.memsub.services.api.PaymentService
 import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services._
@@ -36,9 +35,14 @@ package object controllers extends CommonActions with LazyLogging{
       request.touchpointBackend.catalogService.unsafeCatalog
   }
 
-  trait StripeServiceProvider {
-    def stripeService(implicit request: BackendProvider): StripeService =
-      request.touchpointBackend.stripeService
+  trait StripeUKMembershipServiceProvider {
+    def stripeUKMembershipService(implicit request: BackendProvider): StripeService =
+      request.touchpointBackend.stripeUKMembershipService
+  }
+
+  trait StripeAUMembershipServiceProvider {
+    def stripeAUMembershipService(implicit request: BackendProvider): StripeService =
+      request.touchpointBackend.stripeAUMembershipService
   }
 
   trait PayPalServiceProvider {

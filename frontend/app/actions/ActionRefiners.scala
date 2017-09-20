@@ -70,7 +70,7 @@ object ActionRefiners extends LazyLogging {
       authRequest = new AuthenticatedRequest(user, request)
       tp = authRequest.touchpointBackend
       member <- OptionEither(authRequest.forMemberOpt)
-      subscription <- OptionEither.liftEither(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member))
+      subscription <- OptionEither.liftEither(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member).map(_.toOption.flatten))
     } yield new SubscriptionRequest[A](tp, authRequest) with Subscriber {
       override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
     }).run.run

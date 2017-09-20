@@ -29,7 +29,8 @@ import scala.util.Failure
 object Contributor extends Controller with ActivityTracking with PaymentGatewayErrorHandler
   with LazyLogging
   with CatalogProvider
-  with StripeServiceProvider
+  with StripeUKMembershipServiceProvider
+  with StripeAUMembershipServiceProvider
   with SalesforceServiceProvider
   with SubscriptionServiceProvider
   with PaymentServiceProvider
@@ -58,7 +59,8 @@ object Contributor extends Controller with ActivityTracking with PaymentGatewayE
       val plans = catalog.contributor
 
       val pageInfo = PageInfo(
-        stripePublicKey = Some(stripeService.publicKey),
+        stripeUKMembershipPublicKey = Some(stripeUKMembershipService.publicKey),
+        stripeAUMembershipPublicKey = Some(stripeAUMembershipService.publicKey),
         payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment)
       )
 

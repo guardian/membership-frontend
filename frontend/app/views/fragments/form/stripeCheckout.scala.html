@@ -2,7 +2,7 @@
 @(idUser: Option[IdentityUser])
 <script>
     guardian.stripeCheckout = {
-        key: guardian.stripePublicKey,
+        key: guardian.getStripePublicKeyForCountry(),
         image: 'https://d24w1tjgih0o9s.cloudfront.net/gu.png',
         locale: 'auto',
         name: 'Guardian',
