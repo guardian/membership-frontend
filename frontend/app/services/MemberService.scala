@@ -3,7 +3,7 @@ package services
 import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import _root_.services.paymentmethods._
 import com.gu.config.DiscountRatePlanIds
-import com.gu.i18n.Country.UK
+import com.gu.i18n.Country.{Australia, UK}
 import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
@@ -118,7 +118,7 @@ class MemberService(identityService: IdentityService,
       (for {
         zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, email, paymentMethod, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
-        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
+        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora membership due to payment gateway failure: ID=${user.id}, Country: ${paid.billingAddress.flatMap(_.country)}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
@@ -152,7 +152,7 @@ class MemberService(identityService: IdentityService,
       (for {
         zuoraSub <- createContribution(sfContact, user.id, paid, paid.name, email, paymentMethod)
       } yield zuoraSub.subscriptionName).andThen {
-        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora subscription due to payment gateway failure: ID=${user.id}", e)
+        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora contribution due to payment gateway failure: ID=${user.id}", e)
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
@@ -417,11 +417,10 @@ class MemberService(identityService: IdentityService,
                                       paymentMethod: PaymentMethod,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
-    val country = joinData.zuoraAccountAddress.country
-    val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
-    val subscribe = zuoraService.getFeatures.map { features =>
+    val transactingCountry = joinData.zuoraAccountAddress.country orElse joinData.billingAddress.flatMap(_.country) orElse ipCountry getOrElse UK
 
-      val transactingCountry = joinData.zuoraAccountAddress.country orElse joinData.billingAddress.flatMap(_.country) orElse ipCountry getOrElse UK
+    val subscribe = zuoraService.getFeatures.map { features =>
+      val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
       val planId = planChoice.productRatePlanId
       val plan = RatePlan(productRatePlanId = planId.get,chargeOverride = None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(transactingCountry)
@@ -442,7 +441,7 @@ class MemberService(identityService: IdentityService,
       .flatMap(zuoraService.createSubscription)
       .andThen {
         case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
-        case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e)
+        case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId} for transacting country: $transactingCountry", e)
       }
   }
 
@@ -483,7 +482,7 @@ class MemberService(identityService: IdentityService,
   private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, transactingCountry: Country) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
-        val paymentGateway = if (transactingCountry == Country.Australia) auStripeService.paymentGateway else ukStripeService.paymentGateway
+        val paymentGateway = if (transactingCountry == Australia) auStripeService.paymentGateway else ukStripeService.paymentGateway
         Account(contactId, identityId, currency, autopay = true, paymentGateway)
       case PaymentForm(_, _, Some(_)) | MonthlyPaymentForm(_, Some(_), _) =>
         Account(contactId, identityId, currency, autopay = true, PayPal)
@@ -573,7 +572,7 @@ class MemberService(identityService: IdentityService,
   private def createStripePaymentMethod(contact: Contact,
                                         stripeToken: String,
                                         transactingCountry: Option[Country]): Future[UpdateResult] = {
-    val stripeService = if (transactingCountry.contains(Country.Australia)) auStripeService else ukStripeService
+    val stripeService = if (transactingCountry.contains(Australia)) auStripeService else ukStripeService
     val paymentGateway = stripeService.paymentGateway
     for {
       customer <- stripeService.Customer.create(contact.identityId, stripeToken)
