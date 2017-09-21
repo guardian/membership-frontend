@@ -22,6 +22,7 @@ export function init() {
             const email = document.querySelector('#email').value;
             payment.showSpinner();
             handler.open({
+                key: guardian.getStripePublicKeyForCountry(),
                 description: 'Please enter your card details.',
                 panelLabel: amount(),
                 email: email,

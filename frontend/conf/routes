@@ -37,12 +37,6 @@ GET            /choose-tier                           controllers.Joiner.tierCho
 
 GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
-# Monthly Contribution
-GET            /monthly-contribution                  controllers.Contributor.enterMonthlyContributionsDetails(countryGroup: CountryGroup ?= CountryGroup.UK, contributionValue : Option[BigDecimal] ?= None)
-POST           /monthly-contribution                  controllers.Contributor.joinMonthlyContribution
-GET            /monthly-contribution/thankyou         controllers.Contributor.thankyouContributor
-
-
 # Normal user signin:
 GET            /signin                                controllers.Login.chooseSigninOrRegister(returnUrl: String)
 
@@ -108,7 +102,7 @@ GET            /feedback                              controllers.Info.feedback
 POST           /feedback                              controllers.Info.submitFeedback
 GET            /offers-competitions                   controllers.Info.offersAndCompetitions
 
-# Bundles
+# Bundles - deprecated - TODO: remove
 GET            /bundles                               controllers.Bundle.get(INTCMP: abtests.BundleVariant)
 GET            /bundles/thankyou                      controllers.Bundle.thankYou(INTCMP: abtests.BundleVariant, selectedOption: String)
 GET            /uk                                    controllers.Bundle.landing

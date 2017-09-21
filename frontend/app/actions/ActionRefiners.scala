@@ -90,7 +90,7 @@ object ActionRefiners extends LazyLogging {
     }
   }
 
-  def contributionRefiner(onNonContributor: RequestHeader => Result = contributorJoinRedirect(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
+  def contributionRefiner(onNonContributor: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
     override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
       getContributorRequest(request).map {
         case -\/(message) =>

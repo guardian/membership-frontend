@@ -48,14 +48,20 @@ object TouchpointBackend extends LazyLogging {
   }
 
   def apply(config: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
-    val stripeUKMembershipService = new StripeService(config.stripeUKMembership, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv: String = config.stripeUKMembership.envName
-      val service = "Stripe UK Membership"
-    }))
-    val stripeAUMembershipService = new StripeService(config.stripeAUMembership, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv: String = config.stripeAUMembership.envName
-      val service = "Stripe AU Membership"
-    }))
+    val stripeUKMembershipService = new StripeService(
+      apiConfig = config.stripeUKMembership,
+      client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+        val backendEnv: String = config.stripeUKMembership.envName
+        val service = "Stripe UK Membership"
+      })
+    )
+    val stripeAUMembershipService = new StripeService(
+      apiConfig = config.stripeAUMembership,
+      client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+        val backendEnv: String = config.stripeAUMembership.envName
+        val service = "Stripe AU Membership"
+      })
+    )
     val payPalService = new PayPalService(config.payPal)
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
     implicit val simpleRestClient = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)

@@ -34,10 +34,6 @@ trait MemberService {
                    ipCountry: Option[Country],
                    referralData: ReferralData): Future[(ContactId, ZuoraSubName)]
 
-
-  def createContributor(user: IdUser,
-                   formData: ContributorForm): Future[(ContactId, ZuoraSubName)]
-
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
@@ -86,13 +82,6 @@ trait MemberService {
                              joinData: JoinForm,
                              email: String,
                              ipCountry: Option[Country]): Future[SubscribeResult]
-
-  def createContribution(contactId: ContactId,
-                         identityId: String,
-                         joinData: ContributorForm,
-                         nameData: NameForm,
-                         email: String,
-                         paymentMethod: PaymentMethod): Future[SubscribeResult]
 }
 
 object MemberService {

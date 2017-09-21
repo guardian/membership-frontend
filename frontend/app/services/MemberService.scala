@@ -29,7 +29,7 @@ import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{Queries => SoapQueries}
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
-import forms.MemberForm.{ContributorForm, _}
+import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{Benefit => _, _}
@@ -89,8 +89,11 @@ class MemberService(identityService: IdentityService,
   import EventbriteService._
   import MemberService._
 
-  val availablePaymentMethods =
-    new AvailablePaymentMethods(Seq(new StripeInitialiser(ukStripeService), new StripeInitialiser(auStripeService), new PayPalInitialiser(payPalService)))
+  val availablePaymentMethods = new AvailablePaymentMethods(Set(
+    new StripeInitialiser(ukStripeService, countryBlacklist = Set(Australia)),
+    new StripeInitialiser(auStripeService, countryWhitelist = Set(Australia)),
+    new PayPalInitialiser(payPalService)
+  ))
 
   implicit val catalog = catalogService.unsafeCatalog
 
@@ -129,8 +132,9 @@ class MemberService(identityService: IdentityService,
 
     formData match {
       case payingForm: PaidMemberJoinForm =>
+        val transactingCountry = payingForm.billingAddress.flatMap(_.country) orElse payingForm.deliveryAddress.country orElse ipCountry getOrElse UK
         for {
-          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment).initialiseUsing(user.minimal)
+          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment, transactingCountry).initialiseUsing(user.minimal)
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, user.primaryEmailAddress, paymentMethod)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
@@ -142,31 +146,6 @@ class MemberService(identityService: IdentityService,
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
         } yield (sfContact, zuoraSubName)
     }
-  }
-
-  override def createContributor(
-                             user: IdUser,
-                             formData: ContributorForm): Future[(ContactId, ZuoraSubName)] = {
-
-    def createPaidZuoraSubscription(sfContact: ContactId, paid: ContributorForm, email: String, paymentMethod: PaymentMethod): Future[String] =
-      (for {
-        zuoraSub <- createContribution(sfContact, user.id, paid, paid.name, email, paymentMethod)
-      } yield zuoraSub.subscriptionName).andThen {
-        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora contribution due to payment gateway failure: ID=${user.id}", e)
-        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
-      }
-
-    def sendThankYouEmail(email: String, amount: BigDecimal, name: Option[String]) = {
-      val contributorRow = ContributorRow(email, DateTime.now(), amount, "GBP", name.getOrElse("")) //Currency is hard coded at the moment
-      EmailService.thankYou(contributorRow)
-    }
-
-    for {
-      paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(formData.payment).initialiseUsing(user.minimal)
-      sfContact <- createSalesforceContact(user, formData)
-      zuoraSubName <- createPaidZuoraSubscription(sfContact, formData, user.primaryEmailAddress, paymentMethod)
-      _ <- sendThankYouEmail(user.primaryEmailAddress, formData.payment.amount, user.publicFields.displayName)
-    } yield (sfContact, zuoraSubName)
   }
 
   def createSalesforceContact(user: IdUser, formData: CommonForm): Future[ContactId] =
@@ -387,13 +366,15 @@ class MemberService(identityService: IdentityService,
                                       email: String,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
     val planId = joinData.planChoice.productRatePlanId
-    val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
     val today = DateTime.now.toLocalDate
+    val transactingCountry = joinData.deliveryAddress.country orElse ipCountry getOrElse UK
+    val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
+    val paymentGateway = if (transactingCountry == Australia) auStripeService.paymentGateway else ukStripeService.paymentGateway
 
     (for {
       zuoraFeatures <- zuoraService.getFeatures
       result <- zuoraService.createSubscription(Subscribe(
-        account = Account(contactId, identityId, currency, autopay = false, DefaultGateway),
+        account = Account(contactId, identityId, currency, autopay = false, paymentGateway),
         paymentMethod = None,
         ratePlans = NonEmptyList(RatePlan(planId.get, None)),
         name = joinData.name,
@@ -443,40 +424,6 @@ class MemberService(identityService: IdentityService,
         case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
         case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId} for transacting country: $transactingCountry", e)
       }
-  }
-
-  override def createContribution(contactId: ContactId,
-                                  identityId: String,
-                                  joinData: ContributorForm,
-                                  nameData: NameForm,
-                                  email: String,
-                                  paymentMethod: PaymentMethod
-                                 ): Future[SubscribeResult] = {
-    logger.info("paymentMethod=" + paymentMethod)
-    val planChoice = ContributorChoice()
-    val contribute = zuoraService.getFeatures.map { features =>
-      val planId = planChoice.productRatePlanId
-      val ratePlanChargeId = catalog.contributor.charges.chargeId.get
-      val plan = RatePlan(productRatePlanId = planId.get,
-                          chargeOverride = Some(ChargeOverride(productRatePlanChargeId = ratePlanChargeId,
-                                                price = Some(joinData.payment.amount))))
-      val currency = GBP
-      val today = DateTime.now.toLocalDate
-      val transactingCountry = Country.UK // TODO get from GEO-IP
-      Contribute(account = createAccount(contactId, identityId, currency, joinData.payment, transactingCountry),
-        paymentMethod = Some(paymentMethod),
-        email = email,
-        ratePlans = NonEmptyList(plan),
-        name = nameData,
-        contractAcceptance = today,
-        contractEffective = today,
-        country = transactingCountry.alpha2)
-    }.andThen { case Failure(e) => logger.error(s"Could not get features for user with salesforceContactId ${contactId.salesforceContactId}", e) }
-
-    contribute.flatMap(zuoraService.createContribution).andThen {
-      case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
-      case Failure(e) => logger.error(s"Could not create paid subscription in tier  for user with salesforceContactId ${contactId.salesforceContactId}", e)
-    }
   }
 
   private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, transactingCountry: Country) =
@@ -560,9 +507,9 @@ class MemberService(identityService: IdentityService,
   }
 
   private def createPaymentMethod(sub: FreeMember, form: FreeMemberChangeForm): Future[UpdateResult] = {
+    val transactingCountry = form.billingAddress.flatMap(_.country) orElse form.deliveryAddress.country
     form.payment match {
       case PaymentForm(_, Some(stripeToken), _) =>
-        val transactingCountry = form.billingAddress.flatMap(_.country) orElse form.deliveryAddress.country
         createStripePaymentMethod(sub.contact, stripeToken, transactingCountry)
       case PaymentForm(_, _, Some(payPalBaid)) =>
         createPayPalPaymentMethod(sub.contact, payPalBaid)
@@ -573,11 +520,10 @@ class MemberService(identityService: IdentityService,
                                         stripeToken: String,
                                         transactingCountry: Option[Country]): Future[UpdateResult] = {
     val stripeService = if (transactingCountry.contains(Australia)) auStripeService else ukStripeService
-    val paymentGateway = stripeService.paymentGateway
     for {
       customer <- stripeService.Customer.create(contact.identityId, stripeToken)
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
-      result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer, paymentGateway)
+      result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer, stripeService.paymentGateway)
     } yield result
   }
 
