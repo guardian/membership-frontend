@@ -398,7 +398,7 @@ class MemberService(identityService: IdentityService,
                                       paymentMethod: PaymentMethod,
                                       ipCountry: Option[Country]): Future[SubscribeResult] = {
 
-    val transactingCountry = joinData.zuoraAccountAddress.country orElse joinData.billingAddress.flatMap(_.country) orElse ipCountry getOrElse UK
+    val transactingCountry = joinData.billingAddress.flatMap(_.country) orElse joinData.zuoraAccountAddress.country orElse ipCountry getOrElse UK
 
     val subscribe = zuoraService.getFeatures.map { features =>
       val planChoice = PaidPlanChoice(tier, joinData.payment.billingPeriod)
@@ -507,7 +507,7 @@ class MemberService(identityService: IdentityService,
   }
 
   private def createPaymentMethod(sub: FreeMember, form: FreeMemberChangeForm): Future[UpdateResult] = {
-    val transactingCountry = form.billingAddress.flatMap(_.country) orElse form.deliveryAddress.country
+    val transactingCountry = form.billingAddress.flatMap(_.country) orElse form.deliveryAddress.country getOrElse UK
     form.payment match {
       case PaymentForm(_, Some(stripeToken), _) =>
         createStripePaymentMethod(sub.contact, stripeToken, transactingCountry)
@@ -518,8 +518,8 @@ class MemberService(identityService: IdentityService,
 
   private def createStripePaymentMethod(contact: Contact,
                                         stripeToken: String,
-                                        transactingCountry: Option[Country]): Future[UpdateResult] = {
-    val stripeService = if (transactingCountry.contains(Australia)) auStripeService else ukStripeService
+                                        transactingCountry: Country): Future[UpdateResult] = {
+    val stripeService = if (transactingCountry == Australia) auStripeService else ukStripeService
     for {
       customer <- stripeService.Customer.create(contact.identityId, stripeToken)
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)

@@ -41,7 +41,7 @@
         analyticsEnabled: true,
         isDev: @(Config.stage == "DEV"),
         getStripePublicKeyForCountry: function() {
-            return guardian.membership.checkoutForm.deliveryCountry === 'AU' ? '@pageInfo.stripeAUMembershipPublicKey.mkString' : '@pageInfo.stripeUKMembershipPublicKey.mkString'
+            return guardian.membership.checkoutForm.billingCountry === 'AU' ? '@pageInfo.stripeAUMembershipPublicKey.mkString' : '@pageInfo.stripeUKMembershipPublicKey.mkString'
         }
     };
 

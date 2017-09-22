@@ -33,8 +33,6 @@ class StripeInitialiser(stripeService: StripeService, countryWhitelist: Set[Coun
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.stripeToken
 
   def initialiseWith(stripeToken: String, user: IdMinimalUser): Future[CreditCardReferenceTransaction] = {
-    println(stripeService.paymentGateway)
-    println(stripeService.publicKey)
     for {
       stripeCustomer <- stripeService.Customer.create(user.id, stripeToken).andThen {
         case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
