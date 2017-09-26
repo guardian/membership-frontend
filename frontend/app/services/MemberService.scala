@@ -3,7 +3,7 @@ package services
 import _root_.services.api.MemberService.{MemberError, PendingAmendError}
 import _root_.services.paymentmethods._
 import com.gu.config.DiscountRatePlanIds
-import com.gu.i18n.Country.{Australia, UK}
+import com.gu.i18n.Country.UK
 import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
 import com.gu.identity.play.{IdMinimalUser, IdUser}
@@ -88,6 +88,8 @@ class MemberService(identityService: IdentityService,
 
   import EventbriteService._
   import MemberService._
+
+  private val stripeServicesByPaymentGateway = Set(ukStripeService, auStripeService).map(x => x.paymentGateway -> x).toMap
 
   val availablePaymentMethods = new AvailablePaymentMethods(Set(
     new StripeInitialiser(ukStripeService),
@@ -369,7 +371,7 @@ class MemberService(identityService: IdentityService,
     val today = DateTime.now.toLocalDate
     val transactingCountry = joinData.deliveryAddress.country orElse ipCountry getOrElse UK
     val currency = catalog.unsafeFindFree(planId).currencyOrGBP(joinData.deliveryAddress.country.getOrElse(UK))
-    val paymentGateway = if (transactingCountry == Australia) auStripeService.paymentGateway else ukStripeService.paymentGateway
+    val paymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
 
     (for {
       zuoraFeatures <- zuoraService.getFeatures
@@ -429,7 +431,7 @@ class MemberService(identityService: IdentityService,
   private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, transactingCountry: Country) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
-        val paymentGateway = if (transactingCountry == Australia) auStripeService.paymentGateway else ukStripeService.paymentGateway
+        val paymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
         Account(contactId, identityId, currency, autopay = true, paymentGateway)
       case PaymentForm(_, _, Some(_)) | MonthlyPaymentForm(_, Some(_), _) =>
         Account(contactId, identityId, currency, autopay = true, PayPal)
@@ -519,7 +521,8 @@ class MemberService(identityService: IdentityService,
   private def createStripePaymentMethod(contact: Contact,
                                         stripeToken: String,
                                         transactingCountry: Country): Future[UpdateResult] = {
-    val stripeService = if (transactingCountry == Australia) auStripeService else ukStripeService
+    val paymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
+    val stripeService = stripeServicesByPaymentGateway.getOrElse(paymentGateway, ukStripeService)
     for {
       customer <- stripeService.Customer.create(contact.identityId, stripeToken)
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
