@@ -41,7 +41,8 @@ object TierController extends Controller with ActivityTracking
   with CatalogProvider
   with SubscriptionServiceProvider
   with MemberServiceProvider
-  with StripeServiceProvider
+  with StripeUKMembershipServiceProvider
+  with StripeAUMembershipServiceProvider
   with PayPalServiceProvider
   with PaymentServiceProvider
   with ZuoraRestServiceProvider {
@@ -129,7 +130,6 @@ object TierController extends Controller with ActivityTracking
     implicit val c = catalog
     implicit val r = IdentityRequest(request)
     val sub = request.subscriber.subscription
-    val stripeKey = Some(stripeService.publicKey)
     val currency = sub.plan.currency
     val targetPlans = c.findPaid(target)
     val supportedCurrencies = targetPlans.allPricing.map(_.currency).toSet
@@ -145,27 +145,27 @@ object TierController extends Controller with ActivityTracking
       val selectedCountry = pf.billingCountry.orElse(pf.country).flatMap { name =>
         CountryGroup.countries.find(_.name == name)
       }
-      val formI18n = CheckoutForm(selectedCountry, currency, billingPeriod)
-      PageInfo(initialCheckoutForm = formI18n, payPalEnvironment = Some(payPalService.config.payPalEnvironment), stripePublicKey = stripeKey)
+      PageInfo(
+        initialCheckoutForm = CheckoutForm(selectedCountry, currency, billingPeriod),
+        payPalEnvironment = Some(payPalService.config.payPalEnvironment),
+        stripeUKMembershipPublicKey = Some(stripeUKMembershipService.publicKey),
+        stripeAUMembershipPublicKey = Some(stripeAUMembershipService.publicKey)
+      )
     }
 
     request.paidOrFreeSubscriber.fold({ freeSubscriber =>
       idUserFuture.map(idUser => {
-
-        val pageInfo = getPageInfo(idUser.privateFields, BillingPeriod.Year)
-
         Ok(views.html.tier.upgrade.freeToPaid(
           c.friend,
           targetPlans,
           countriesWithCurrency,
           idUser,
-          pageInfo
+          getPageInfo(idUser.privateFields, BillingPeriod.Year)
         )(getToken, request))
       })
     }, { paidSubscriber =>
       val billingPeriod = paidSubscriber.subscription.plan.charges.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
-
 
       (idUserFuture |@| paymentSummary(paidSubscriber, targetPlans)) { case (idUser, summary) =>
         summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(getToken, request)))

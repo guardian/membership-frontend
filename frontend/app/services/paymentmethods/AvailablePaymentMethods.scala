@@ -1,5 +1,6 @@
 package services.paymentmethods
 
+import com.gu.i18n.Country
 import com.gu.identity.play.IdMinimalUser
 import com.gu.zuora
 import com.typesafe.scalalogging.LazyLogging
@@ -21,11 +22,12 @@ case class InitialiserAndToken(initialiser: PaymentMethodInitialiser[_ <: zuora.
   }
 }
 
-class AvailablePaymentMethods(initialisers: Seq[PaymentMethodInitialiser[_ <: zuora.soap.models.Commands.PaymentMethod]]) {
+class AvailablePaymentMethods(initialisers: Set[PaymentMethodInitialiser[_ <: zuora.soap.models.Commands.PaymentMethod]]) {
 
-  def deriveInitialiserAndTokenFrom(form: CommonPaymentForm): InitialiserAndToken = (for {
+  def deriveInitialiserAndTokenFrom(form: CommonPaymentForm, transactingCountry: Country): InitialiserAndToken = (for {
     initialiser <- initialisers
     token <- initialiser.extractTokenFrom(form)
-  } yield InitialiserAndToken(initialiser, token)).head
-
+  } yield InitialiserAndToken(initialiser, token))
+    .filter(_.initialiser.appliesToCountry(transactingCountry))
+    .head
 }

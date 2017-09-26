@@ -2,8 +2,8 @@ package controllers
 
 import com.gu.zuora.soap.models.errors._
 import com.typesafe.scalalogging.LazyLogging
-import controllers.Contributor.Forbidden
 import play.api.libs.json.Json
+import play.api.mvc.Results.Forbidden
 
 trait PaymentGatewayErrorHandler extends LazyLogging {
 

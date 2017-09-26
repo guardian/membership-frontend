@@ -2,14 +2,12 @@ package services
 
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
-import com.gu.memsub.services.{PaymentService, PromoService, api => memsubapi}
+import com.gu.memsub.services.{PaymentService, api => memsubapi}
 import com.gu.memsub.subsv2
 import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services.SubscriptionService.CatalogMap
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.okhttp.RequestRunners
-import com.gu.okhttp.RequestRunners.futureRunner
-import com.gu.paypal.PayPalConfig
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
@@ -17,19 +15,18 @@ import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.rest.SimpleClient
 import com.gu.zuora.soap.ClientWithFeatureSupplier
-import com.gu.zuora.{ZuoraRestService, rest, soap, ZuoraService => ZuoraServiceImpl}
+import com.gu.zuora.{ZuoraRestService, soap, ZuoraService => ZuoraServiceImpl}
 import com.netaporter.uri.Uri
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
-import org.joda.time.LocalDate
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.mvc.RequestHeader
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
-import play.api.mvc.RequestHeader
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scalaz.std.scalaFuture._
@@ -51,15 +48,20 @@ object TouchpointBackend extends LazyLogging {
   }
 
   def apply(config: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
-    val stripeService = new StripeService(config.stripe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv = config.stripe.envName
-      val service = "Stripe"
-    }))
-    val giraffeStripeService = new StripeService(config.giraffe, RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-      val backendEnv = config.stripe.envName
-      val service = "Stripe Giraffe"
-    }))
-
+    val stripeUKMembershipService = new StripeService(
+      apiConfig = config.stripeUKMembership,
+      client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+        val backendEnv: String = config.stripeUKMembership.envName
+        val service = "Stripe UK Membership"
+      })
+    )
+    val stripeAUMembershipService = new StripeService(
+      apiConfig = config.stripeAUMembership,
+      client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
+        val backendEnv: String = config.stripeAUMembership.envName
+        val service = "Stripe AU Membership"
+      })
+    )
     val payPalService = new PayPalService(config.payPal)
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
     implicit val simpleRestClient = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
@@ -80,19 +82,19 @@ object TouchpointBackend extends LazyLogging {
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraService.getAccountIds)
 
-    val paymentService = new PaymentService(stripeService, zuoraService, newCatalogService.unsafeCatalog.productMap)
+    val paymentService = new PaymentService(zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, zuoraRestService, stripeService, payPalService, newSubsService, newCatalogService, paymentService, discounter,
+      identityService, salesforceService, zuoraService, zuoraRestService, stripeUKMembershipService, stripeAUMembershipService, payPalService, newSubsService, newCatalogService, paymentService, discounter,
         Config.discountRatePlanIds(config.zuoraEnvName))
 
     TouchpointBackend(
       config.environmentName,
       salesforceService = salesforceService,
-      stripeService = stripeService,
       payPalService = payPalService,
-      giraffeStripeService = giraffeStripeService,
+      stripeUKMembershipService = stripeUKMembershipService,
+      stripeAUMembershipService = stripeAUMembershipService,
       zuoraSoapClient = zuoraSoapClient,
       destinationService = new DestinationService[Future](
         EventbriteService.getBookableEvent,
@@ -151,9 +153,9 @@ object TouchpointBackend extends LazyLogging {
 case class TouchpointBackend(
   environmentName: String,
   salesforceService: api.SalesforceService,
-  stripeService: StripeService,
   payPalService: PayPalService,
-  giraffeStripeService: StripeService,
+  stripeUKMembershipService: StripeService,
+  stripeAUMembershipService: StripeService,
   zuoraSoapClient: soap.ClientWithFeatureSupplier,
   destinationService: DestinationService[Future],
   memberService: api.MemberService,

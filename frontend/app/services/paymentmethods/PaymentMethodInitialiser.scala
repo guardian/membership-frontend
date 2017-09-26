@@ -1,9 +1,10 @@
 package services.paymentmethods
 
-import com.gu.i18n.CountryGroup
+import com.gu.i18n.{Country, CountryGroup}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.stripe.StripeService
 import com.gu.zuora
+import com.gu.zuora.api.RegionalStripeGateways
 import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.CommonPaymentForm
@@ -23,6 +24,8 @@ trait PaymentMethodInitialiser[PMCommand <: zuora.soap.models.Commands.PaymentMe
   def extractTokenFrom(form: CommonPaymentForm): Option[String]
 
   def initialiseWith(token: String, user: IdMinimalUser): Future[PMCommand]
+
+  def appliesToCountry(country: Country): Boolean
 }
 
 class StripeInitialiser(stripeService: StripeService) extends
@@ -30,14 +33,18 @@ class StripeInitialiser(stripeService: StripeService) extends
 
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.stripeToken
 
-  def initialiseWith(stripeToken: String, user: IdMinimalUser): Future[CreditCardReferenceTransaction] = for {
-    stripeCustomer <- stripeService.Customer.create(user.id, stripeToken).andThen {
-      case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+  def initialiseWith(stripeToken: String, user: IdMinimalUser): Future[CreditCardReferenceTransaction] = {
+    for {
+      stripeCustomer <- stripeService.Customer.create(user.id, stripeToken).andThen {
+        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+      }
+    } yield {
+      val card = stripeCustomer.card
+      CreditCardReferenceTransaction(card.id, stripeCustomer.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`)
     }
-  } yield {
-    val card = stripeCustomer.card
-    CreditCardReferenceTransaction(card.id, stripeCustomer.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`)
   }
+
+  def appliesToCountry(country: Country): Boolean = RegionalStripeGateways.getGatewayForCountry(country) == stripeService.paymentGateway
 }
 
 class PayPalInitialiser(payPalService: PayPalService) extends PaymentMethodInitialiser[PayPalReferenceTransaction] {
@@ -48,4 +55,5 @@ class PayPalInitialiser(payPalService: PayPalService) extends PaymentMethodIniti
     payPalEmail <- payPalService.retrieveEmail(baid)
   } yield PayPalReferenceTransaction(baid, payPalEmail)
 
+  def appliesToCountry(country: Country): Boolean = true
 }
