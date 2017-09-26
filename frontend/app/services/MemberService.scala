@@ -90,8 +90,8 @@ class MemberService(identityService: IdentityService,
   import MemberService._
 
   val availablePaymentMethods = new AvailablePaymentMethods(Set(
-    new StripeInitialiser(ukStripeService, countryBlacklist = Set(Australia)),
-    new StripeInitialiser(auStripeService, countryWhitelist = Set(Australia)),
+    new StripeInitialiser(ukStripeService),
+    new StripeInitialiser(auStripeService),
     new PayPalInitialiser(payPalService)
   ))
 

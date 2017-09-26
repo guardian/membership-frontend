@@ -4,6 +4,7 @@ import com.gu.i18n.{Country, CountryGroup}
 import com.gu.identity.play.IdMinimalUser
 import com.gu.stripe.StripeService
 import com.gu.zuora
+import com.gu.zuora.api.RegionalStripeGateways
 import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.CommonPaymentForm
@@ -27,7 +28,7 @@ trait PaymentMethodInitialiser[PMCommand <: zuora.soap.models.Commands.PaymentMe
   def appliesToCountry(country: Country): Boolean
 }
 
-class StripeInitialiser(stripeService: StripeService, countryWhitelist: Set[Country] = Set.empty, countryBlacklist: Set[Country] = Set.empty) extends
+class StripeInitialiser(stripeService: StripeService) extends
   PaymentMethodInitialiser[CreditCardReferenceTransaction] with LazyLogging {
 
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.stripeToken
@@ -43,7 +44,7 @@ class StripeInitialiser(stripeService: StripeService, countryWhitelist: Set[Coun
     }
   }
 
-  def appliesToCountry(country: Country): Boolean = countryWhitelist.contains(country) || !countryBlacklist.contains(country)
+  def appliesToCountry(country: Country): Boolean = RegionalStripeGateways.getGatewayForCountry(country) == stripeService.paymentGateway
 }
 
 class PayPalInitialiser(payPalService: PayPalService) extends PaymentMethodInitialiser[PayPalReferenceTransaction] {
