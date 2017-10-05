@@ -78,6 +78,7 @@ object TouchpointBackend extends LazyLogging {
     val zuoraRestService = new ZuoraRestService[Future]()
 
     val pids = Config.productIds(restBackendConfig.envName)
+
     val newCatalogService = new subsv2.services.CatalogService[Future](pids, simpleRestClient, Await.result(_, 10.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.mkString}"); Map()}, _.map))
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraService.getAccountIds)
@@ -86,8 +87,20 @@ object TouchpointBackend extends LazyLogging {
     val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(IdentityApi)
     val memberService = new MemberService(
-      identityService, salesforceService, zuoraService, zuoraRestService, stripeUKMembershipService, stripeAUMembershipService, payPalService, newSubsService, newCatalogService, paymentService, discounter,
-        Config.discountRatePlanIds(config.zuoraEnvName))
+      identityService = identityService,
+      salesforceService = salesforceService,
+      zuoraService = zuoraService,
+      zuoraRestService = zuoraRestService,
+      ukStripeService = stripeUKMembershipService,
+      auStripeService = stripeAUMembershipService,
+      payPalService = payPalService,
+      subscriptionService = newSubsService,
+      catalogService = newCatalogService,
+      paymentService = paymentService,
+      discounter = discounter,
+      discountIds = Config.discountRatePlanIds(config.zuoraEnvName),
+      invoiceIdsByCountry = Config.invoiceTemplateOverrides(config.zuoraEnvName)
+    )
 
     TouchpointBackend(
       config.environmentName,

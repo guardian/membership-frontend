@@ -1,9 +1,11 @@
 package configuration
 import com.getsentry.raven.dsn.Dsn
 import com.gu.config._
+import com.gu.i18n.Country
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
 import com.gu.salesforce.Tier
+import com.gu.zuora.api.{InvoiceTemplate, InvoiceTemplates}
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
@@ -168,6 +170,9 @@ object Config {
 
   def productIds(env: String): com.gu.memsub.subsv2.reads.ChargeListReads.ProductIds =
     SubsV2ProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds"))
+
+  def invoiceTemplateOverrides(env: String): Map[Country, InvoiceTemplate] =
+    InvoiceTemplates.fromConfig(config.getConfig(s"touchpoint.backend.environments.$env.zuora.invoiceTemplateIds")).map(it => (it.country, it)).toMap
 
   object Logstash {
     private val param = Try{config.getConfig("param.logstash")}.toOption
