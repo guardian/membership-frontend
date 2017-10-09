@@ -137,7 +137,7 @@
 
                     @{paymentMethod match {
                         case Some(card : PaymentCard) =>
-                            paymentRow("Card", s"•••• •••• •••• ${card.paymentCardDetails.map(_.lastFourDigits).getOrElse("••••")}")
+                            paymentRow("Card", "•••• •••• •••• •••• " + card.lastFourDigits)
                         case Some(payPal : PayPalMethod) =>
                             paymentRow("Payment method", "You are paying with PayPal")
                         case _ =>

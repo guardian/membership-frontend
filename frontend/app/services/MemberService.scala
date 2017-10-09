@@ -83,8 +83,7 @@ class MemberService(identityService: IdentityService,
                     catalogService: CatalogService[Future],
                     paymentService: PaymentService,
                     discounter: Discounter,
-                    discountIds: DiscountRatePlanIds,
-                    invoiceIdsByCountry: Map[Country, InvoiceTemplate])
+                    discountIds: DiscountRatePlanIds)
   extends api.MemberService with ActivityTracking with LazyLogging {
 
   import EventbriteService._
@@ -409,10 +408,8 @@ class MemberService(identityService: IdentityService,
       val plan = RatePlan(productRatePlanId = planId.get,chargeOverride = None, featuresPerTier(features)(planId, joinData.featureChoice).map(_.id.get))
       val currency = catalog.unsafeFindPaid(planId).currencyOrGBP(transactingCountry)
       val today = DateTime.now.toLocalDate
-      val invoiceTemplateId = invoiceIdsByCountry.get(transactingCountry)
-      val stripePaymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
 
-      Subscribe(account = createAccount(contactId, identityId, currency, joinData.payment, stripePaymentGateway, invoiceTemplateId),
+      Subscribe(account = createAccount(contactId, identityId, currency, joinData.payment, transactingCountry),
         paymentMethod = Some(paymentMethod),
         address = joinData.zuoraAccountAddress,
         email = email,
@@ -431,12 +428,13 @@ class MemberService(identityService: IdentityService,
       }
   }
 
-  private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, stripePaymentGateway: PaymentGateway, invoiceTemplateId: Option[InvoiceTemplate]) =
+  private def createAccount(contactId: ContactId, identityId: String, currency: Currency, paymentForm: CommonPaymentForm, transactingCountry: Country) =
     paymentForm match {
       case PaymentForm(_, Some(_), _) | MonthlyPaymentForm(Some(_), _, _) =>
-        Account(contactId, identityId, currency, autopay = true, stripePaymentGateway, invoiceTemplateId)
+        val paymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
+        Account(contactId, identityId, currency, autopay = true, paymentGateway)
       case PaymentForm(_, _, Some(_)) | MonthlyPaymentForm(_, Some(_), _) =>
-        Account(contactId, identityId, currency, autopay = true, PayPal, invoiceTemplateId)
+        Account(contactId, identityId, currency, autopay = true, PayPal)
     }
 
   private def featuresPerTier(zuoraFeatures: Seq[SoapQueries.Feature])(productRatePlanId: ProductRatePlanId, choice: Set[FeatureChoice]): Seq[SoapQueries.Feature] = {
