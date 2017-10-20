@@ -128,11 +128,6 @@ class MemberService(identityService: IdentityService,
         case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
-    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
-      salesforceService.updateMemberStatus(user.minimal, tier, stripeCustomer).andThen { case Failure(e) =>
-        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
-      }
-
     formData match {
       case payingForm: PaidMemberJoinForm =>
         val transactingCountry = payingForm.billingAddress.flatMap(_.country) orElse payingForm.deliveryAddress.country orElse ipCountry getOrElse UK
@@ -140,13 +135,11 @@ class MemberService(identityService: IdentityService,
           paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment, transactingCountry).initialiseUsing(user.minimal)
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, user.primaryEmailAddress, paymentMethod)
-          _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
         } yield (sfContact, zuoraSubName)
       case _ =>
         for {
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, user.primaryEmailAddress)
-          _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
         } yield (sfContact, zuoraSubName)
     }
   }
@@ -501,7 +494,6 @@ class MemberService(identityService: IdentityService,
       country <- EitherT(country(contact).map(\/.right))
       command <- EitherT(amend(sub, planChoice, form.featureChoice).map(\/.right))
       _ <- zuoraService.upgradeSubscription(command).liftM
-      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, None).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
       addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
