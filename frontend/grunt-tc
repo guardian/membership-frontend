@@ -12,7 +12,7 @@ set -o errexit
 # Files will now be found in Public folder
 ################################################################################
 
-npm cache clean
-npm install
+yarn cache clean
+yarn install
 
 ./node_modules/.bin/grunt "$@"
