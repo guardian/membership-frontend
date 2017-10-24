@@ -4,15 +4,15 @@
   "version": "1.0.0",
   "scripts": {
     "copyHooks": "cp  -f ../git-hooks/pre-commit ../.git/hooks/",
-    "devSetup": "npm run compile --dev && npm run copyHooks",
+    "devSetup": "yarn compile --dev && yarn copyHooks",
     "bowerCss": "cd assets/stylesheets && rimraf bower_components &&  bower install",
-    "bowerSetup": "npm run bowerCss",
+    "bowerSetup": "yarn bowerCss",
     "compile": "echo 'compiling assets' && grunt compile",
     "compileCss": "grunt compile:css --dev",
     "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
     "test": "grunt validate && grunt karma",
-    "postinstall": "npm run bowerSetup"
+    "postinstall": "yarn bowerSetup"
   },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
