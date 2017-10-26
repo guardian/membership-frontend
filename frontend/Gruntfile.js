@@ -3,6 +3,7 @@ module.exports = function (grunt) {
     'use strict';
 
     require('time-grunt')(grunt);
+    var path = require("path");
 
     /**
      * Setup
@@ -54,7 +55,7 @@ module.exports = function (grunt) {
             options: require('./webpack.conf.js')(isDev),
             frontend: {
                 output: {
-                    path: 'public/',
+                    path: path.join(__dirname, 'public/'),
                     chunkFilename:  'webpack/[chunkhash].js',
                     filename: "javascripts/[name].js",
                     publicPath: '/assets/'

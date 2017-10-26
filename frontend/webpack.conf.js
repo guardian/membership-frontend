@@ -56,6 +56,6 @@ module.exports = function(debug) { return {
         colors: true
     },
 
-    context: 'assets/javascripts',
+    context: path.join(__dirname, 'assets/javascripts'),
     devtool: 'source-map'
 }};
