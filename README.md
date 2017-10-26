@@ -30,6 +30,7 @@ We require the following to be installed:
 
 - `Java 8`
 - [Node.js](https://nodejs.org) - version is specified by [.nvmrc](.nvmrc), execute [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it
+- [Yarn](https://yarnpkg.com/en/docs/getting-started) - for JavaScript package management
 - `NGINX`
 
 ### Setup AWS credentials
@@ -49,14 +50,14 @@ Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this proje
 
 ```
 cd frontend/
-npm install
-npm run devSetup
+yarn install
+yarn devSetup
 ```
 
 A good way to check everything is setup correctly is to run the tests
 
 ```
-npm test
+yarn test
 ```
 
 For development you'll also need the following commands:
@@ -64,13 +65,13 @@ For development you'll also need the following commands:
 ###### Compile assets
 
 ```
-npm run compile
+yarn compile
 ```
 
 ###### Watch files for changes
 
 ```
-npm run watch
+yarn watch
 ```
 
 *Note:* We use `grunt` and `bower` behind the scenes but provide [facades for common tasks](https://bocoup.com/weblog/a-facade-for-tooling-with-npm-scripts/) to make setup easier and reduce the number of tools needed for most developers. If you want to work with the full set of build tools install `grunt-cli` and run `grunt --help` to see the list of available tasks.
@@ -97,7 +98,7 @@ sudo aws s3 cp s3://membership-private/DEV/membership.private.conf /etc/gu/ --pr
 In an ideal world, your Ubuntu package install would be:
 
 ```
-sudo apt-get install nginx openjdk-8-jdk nodejs npm
+sudo apt-get install nginx openjdk-8-jdk nodejs npm yarn
 ```
 
 #### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
@@ -107,6 +108,10 @@ If the available [nodejs](http://packages.ubuntu.com/trusty/nodejs) or [NPM](htt
 package for your version of Ubuntu is old, you'll [probably](http://askubuntu.com/questions/49390/how-do-i-install-the-latest-version-of-node-js)
 want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
 which includes both Node.js and NPM.
+
+#### Yarn
+
+For `yarn` you may have to [add the package repository](https://yarnpkg.com/lang/en/docs/install/#linux-tab).
 
 ## Run
 
@@ -133,7 +138,7 @@ Note that we read the shared secret for these from the `identity.test.users.secr
 
 ```
 cd frontend/
-npm test
+yarn test
 ```
 
 
