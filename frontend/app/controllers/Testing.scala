@@ -27,6 +27,7 @@ object Testing extends Controller with LazyLogging {
       "membership.testusers@guardian.co.uk",
       "touchpoint@guardian.co.uk",
       "crm@guardian.co.uk",
+      "dig.qa@guardian.co.uk",
       "identitydev@guardian.co.uk"
     ), unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
 
