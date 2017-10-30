@@ -232,28 +232,15 @@ Resources:
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Permit incoming HTTP access on port 80, egress to port 9000
+      GroupDescription: Permit incoming HTTPS access on port 443, egress to port 9000
       VpcId:
         Ref: VpcId
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: '80'
-        ToPort: '80'
-        CidrIp:
-          Ref: AllowedIngressIps
       - IpProtocol: tcp
         FromPort: '443'
         ToPort: '443'
         CidrIp:
           Ref: AllowedIngressIps
-      - IpProtocol: tcp
-        FromPort: '80'
-        ToPort: '80'
-        CidrIp: 80.254.158.92/32
-      - IpProtocol: tcp
-        FromPort: '80'
-        ToPort: '80'
-        CidrIp: 80.254.146.68/32
       SecurityGroupEgress:
       - IpProtocol: tcp
         FromPort: '9000'
