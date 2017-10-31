@@ -67,5 +67,8 @@
     "vinyl-fs": "^2.4.4",
     "webpack": "~3.8.1",
     "webpack-dev-server": "^2.9.3"
+  },
+  "resolutions": {
+    "uglify-js": "2.8.29"
   }
 }
