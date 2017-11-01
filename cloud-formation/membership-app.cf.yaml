@@ -12,10 +12,6 @@ Parameters:
   Stack:
     Description: Applied directly as a tag ('membership', or 'memb-masterclasses')
     Type: String
-  KeyName:
-    Description: The EC2 Key Pair to allow SSH access to the instance
-    Type: String
-    Default: aws-membership
   Stage:
     Description: Applied directly as a tag
     Type: String
@@ -115,8 +111,6 @@ Resources:
       - Ref: VulnerabilityScanningSecurityGroup
       InstanceType:
         Ref: InstanceType
-      KeyName:
-        Ref: KeyName
       IamInstanceProfile:
         Ref: MembershipAppInstanceProfile
       AssociatePublicIpAddress: true
