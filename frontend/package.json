@@ -12,7 +12,9 @@
     "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
     "test": "grunt validate && grunt karma",
-    "postinstall": "npm run bowerSetup"
+    "postinstall": "npm run bowerSetup",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "autoprefixer-core": "^6.0.1",
@@ -66,9 +68,11 @@
     "url-search-params": "^0.6.1",
     "vinyl-fs": "^2.4.4",
     "webpack": "~3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack-dev-server": "^2.9.3",
+    "snyk": "^1.47.0"
   },
   "resolutions": {
     "uglify-js": "2.8.29"
-  }
+  },
+  "snyk": true
 }
