@@ -4,7 +4,7 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.11.222"
+  val awsClientVersion = "1.11.223"
   //libraries
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
@@ -24,7 +24,7 @@ object Dependencies {
   val seleniumHtmlUnitDriver = "org.seleniumhq.selenium" % "htmlunit-driver" % "2.23.2" % "test"
   val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "1.4.10" % "test"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.6.6" % "test"
-  val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.13.2"
+  val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.4"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.22"
