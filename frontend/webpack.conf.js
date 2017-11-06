@@ -21,7 +21,6 @@ module.exports = function(debug) { return {
             'reqwest': 'reqwest/reqwest',
             'respimage': 'respimage/respimage',
             'lazySizes': 'lazysizes/lazysizes',
-            'gumshoe': 'gumshoe/dist/js/gumshoe',
             'smoothScroll': 'smooth-scroll/dist/js/smooth-scroll',
             'ajax': 'src/utils/ajax',
             'URLSearchParams': 'url-search-params'
