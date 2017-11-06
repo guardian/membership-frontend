@@ -261,11 +261,6 @@ Resources:
         ToPort: '9000'
         SourceSecurityGroupId:
           Ref: LoadBalancerSecurityGroup
-      SecurityGroupEgress:
-      - IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
-        CidrIp: 0.0.0.0/0
   FrontendELBDNSrecord:
     Type: AWS::Route53::RecordSet
     Properties:
