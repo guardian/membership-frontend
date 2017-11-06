@@ -1,5 +1,5 @@
 define([
-    'gumshoe',
+    'gumshoejs',
     'smoothScroll',
     'src/utils/helper'
 ], function (gumshoe, smoothScroll, helper) {
