@@ -2985,9 +2985,9 @@ gulplog@^1.0.0:
   dependencies:
     glogg "^1.0.0"
 
-gumshoe@cferdinandi/gumshoe:
+gumshoejs@^3.5.0:
   version "3.5.0"
-  resolved "https://codeload.github.com/cferdinandi/gumshoe/tar.gz/28cf9b73c7e2dbaac2c18c1a0d7661753a0a7878"
+  resolved "https://registry.yarnpkg.com/gumshoejs/-/gumshoejs-3.5.0.tgz#407f468e760d3817994f8afc107defa5fd4a7d0a"
 
 handle-thing@^1.2.5:
   version "1.2.5"
@@ -5569,9 +5569,9 @@ slice-ansi@1.0.0:
   dependencies:
     is-fullwidth-code-point "^2.0.0"
 
-smooth-scroll@cferdinandi/smooth-scroll:
+smooth-scroll@^12.1.5:
   version "12.1.5"
-  resolved "https://codeload.github.com/cferdinandi/smooth-scroll/tar.gz/f3c1810115cf8c44035278cb6368ccadf5f61e15"
+  resolved "https://registry.yarnpkg.com/smooth-scroll/-/smooth-scroll-12.1.5.tgz#b6d8deca371a9edd5ea3ad291ef0fb7e741ed41e"
 
 sntp@1.x.x:
   version "1.0.9"
