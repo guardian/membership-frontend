@@ -2,7 +2,7 @@ package services
 
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
 import com.gu.contentapi.client.model.v1._
-import com.gu.contentapi.client.{ContentApiClientLogic, GuardianContentApiError, GuardianContentClient}
+import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.memsub.util.ScheduledTask
 import configuration.Config
 import configuration.Config.Implicits.akkaSystem
@@ -94,10 +94,8 @@ object GuardianContentService extends GuardianContentService
 
 trait GuardianContent {
 
-  val client = new ContentApiClientLogic{
+  val client = new GuardianContentClient(Config.contentApiKey) {
     override val targetUrl = "https://content.guardianapis.com"
-    val apiKey = Config.contentApiKey
-    val useThrift = false
   }
 
   val logAndRecord: PartialFunction[Try[_], Unit] = {
