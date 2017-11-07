@@ -10,7 +10,7 @@
 @(friendPlan: CatalogPlan.Friend,
   idUser: IdentityUser,
   pageInfo: PageInfo
-)(implicit token: play.filters.csrf.CSRF.Token)
+)(implicit request: RequestHeader)
 
 @main("Become a Friend", pageInfo) {
 

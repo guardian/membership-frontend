@@ -6,7 +6,7 @@
 @(staffPlan: CatalogPlan.Staff,
   idUser: IdentityUser,
   flashMessage: Option[model.FlashMessage]
-)(implicit token: play.filters.csrf.CSRF.Token)
+)(implicit request: RequestHeader)
 
 @import views.html.helper._
 

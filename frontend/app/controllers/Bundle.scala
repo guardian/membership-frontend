@@ -41,31 +41,31 @@ trait Bundle extends Controller {
   def get(bundleVariant: BundleVariant) = CachedAction { implicit request =>
 
     val heroImage = ResponsiveImageGroup(
-      name=Some("intro"),
-      metadata=Some(Grid.Metadata(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
         description = Some("Montage of The Guardian Headlines"),
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
+      availableImages = ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
     )
 
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
     val bottomImage = ResponsiveImageGroup(
-      name=Some("intro"),
-      metadata=Some(Grid.Metadata(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
         description = Some("Montage of The Guardian Headlines"),
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("2a88bdcbe6ff74ca49f203d70b4b8f1fab885d71/0_76_460_550", Seq(460), "png")
+      availableImages = ResponsiveImageGenerator("2a88bdcbe6ff74ca49f203d70b4b8f1fab885d71/0_76_460_550", Seq(460), "png")
     )
 
     val bottomImageOrientated = OrientatedImages(portrait = bottomImage, landscape = bottomImage)
 
     bundleVariant match {
-      case _:BundleVariant => Ok(views.html.bundle.bundleSetA(
+      case _: BundleVariant => Ok(views.html.bundle.bundleSetA(
         heroOrientated,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
@@ -81,27 +81,27 @@ trait Bundle extends Controller {
 
   def thankYou(bundleVariant: BundleVariant, selectedOption: String) = CachedAction { implicit request =>
     val heroImage = ResponsiveImageGroup(
-      name=Some("intro"),
-      metadata=Some(Grid.Metadata(
+      name = Some("intro"),
+      metadata = Some(Grid.Metadata(
         description = Some("Montage of The Guardian Headlines"),
         byline = None,
         credit = None
       )),
-      availableImages=ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
+      availableImages = ResponsiveImageGenerator("62a6d58f49c10d5864d024c16ba05554a32cee5a/0_0_480_275", Seq(480), "png")
     )
     val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
 
     Ok(views.html.bundle.thankYou(
-        PageInfo(
-          title = CopyConfig.copyTitleSupporters,
-          url = request.path,
-          description = Some(CopyConfig.copyDescriptionSupporters)
-        ),
-        bundleVariant,
-        selectedOption,
-        heroOrientated,
-        request.getQueryString("returnUrl")))
-    }
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters)
+      ),
+      bundleVariant,
+      selectedOption,
+      heroOrientated,
+      request.getQueryString("returnUrl")))
+  }
 
   def landing() = CachedAction { implicit request =>
 

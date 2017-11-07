@@ -167,7 +167,7 @@ trait IdentityApi {
     val endpoint = "user/password-exists"
     val url = s"${Config.idApiUrl}/$endpoint"
     Timing.record(IdentityApiMetrics, "get-user-password-exists") {
-      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
+      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000 milli).get().map { response =>
         recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
         (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
       }
@@ -180,7 +180,7 @@ trait IdentityApi {
     parameters: List[(String, String)],
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
     execute(endpoint, metricName, func,
-      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).withMethod("GET"))
+      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000 milli).withMethod("GET"))
   }
 
   def post[A](
@@ -190,7 +190,7 @@ trait IdentityApi {
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
     execute(endpoint, metricName, func,
       WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*)
-          .withRequestTimeout(5000).withMethod("POST").withBody(data.getOrElse(JsNull)))
+        .withRequestTimeout(5000 milli).withMethod("POST").withBody(data.getOrElse(JsNull)))
   }
 
   private def execute[A](endpoint: String, metricName: String, func: (WSResponse) => Either[String, A], requestHolder: WSRequest): EitherT[Future, String, A] = for {

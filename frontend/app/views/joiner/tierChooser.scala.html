@@ -11,7 +11,7 @@
   eventOpt: Option[model.RichEvent.RichEvent],
   accessOpt: Option[ContentAccess],
   signInUrl: String
-)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+)(implicit countryGroup: CountryGroup)
 
 @pageHeaderTitle = @{
     val default = "Choose a membership tier"

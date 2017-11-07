@@ -5,7 +5,7 @@
 @import views.support.FreePlan
 @import views.support.MembershipCompat._
 
-@(tierPlans: TierPlans)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+@(tierPlans: TierPlans)(implicit countryGroup: CountryGroup)
 
 @actionPath = {
   @tierPlans match {

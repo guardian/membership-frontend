@@ -11,7 +11,7 @@
     signInUrl: String,
     content: CapiContent,
     titleOverride: String
-)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+)(implicit request: RequestHeader, countryGroup: CountryGroup)
 
 @actionAttrs = {
     href="@{routes.Info.supporterRedirect(None)}?INTCMP=gdnwb_copts_memberscontent_signinpage"

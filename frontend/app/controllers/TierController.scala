@@ -20,7 +20,6 @@ import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
-import play.filters.csrf.CSRF.Token.getToken
 import services.{IdentityApi, IdentityService}
 import tracking.ActivityTracking
 import utils.RequestCountry._
@@ -161,15 +160,15 @@ object TierController extends Controller with ActivityTracking
           countriesWithCurrency,
           idUser,
           getPageInfo(idUser.privateFields, BillingPeriod.Year)
-        )(getToken, request))
+        )(request))
       })
     }, { paidSubscriber =>
       val billingPeriod = paidSubscriber.subscription.plan.charges.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
 
       (idUserFuture |@| paymentSummary(paidSubscriber, targetPlans)) { case (idUser, summary) =>
-        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(getToken, request)))
-      }.map(handleResultErrors)
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(request)))
+      }.map(handleResultErrors(_))
     })
   }
 
