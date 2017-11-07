@@ -1,6 +1,6 @@
 package services
 
-import com.gu.contentapi.client.model.{SearchQuery, ItemQuery}
+import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.memsub.util.ScheduledTask
@@ -9,10 +9,11 @@ import configuration.Config.Implicits.akkaSystem
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import play.api.Logger
-import play.api.libs.iteratee.{Iteratee, Enumerator}
+import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import scala.concurrent.Future
-import scala.util.{Success, Try, Failure}
+import scala.util.{Failure, Success, Try}
 import scala.concurrent.duration._
 
 case class ContentAPIPagination(currentPage: Int, pages: Int) {
@@ -93,7 +94,9 @@ object GuardianContentService extends GuardianContentService
 
 trait GuardianContent {
 
-  val client = new GuardianContentClient(Config.contentApiKey)
+  val client = new GuardianContentClient(Config.contentApiKey) {
+    override val targetUrl = "https://content.guardianapis.com"
+  }
 
   val logAndRecord: PartialFunction[Try[_], Unit] = {
     case Success(_) =>
