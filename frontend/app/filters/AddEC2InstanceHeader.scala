@@ -1,5 +1,8 @@
 package filters
 
+import javax.inject.Inject
+
+import akka.stream.Materializer
 import configuration.Config
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -8,7 +11,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-object AddEC2InstanceHeader extends Filter {
+class AddEC2InstanceHeader @Inject()(implicit val mat: Materializer) extends Filter {
 
   // http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
   lazy val instanceIdOptF = if (Config.stageProd)

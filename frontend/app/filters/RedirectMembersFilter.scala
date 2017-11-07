@@ -1,6 +1,9 @@
 package filters
 
 
+import javax.inject.Inject
+
+import akka.stream.Materializer
 import com.netaporter.uri.Uri
 import configuration.Config
 import play.api.http.Status.FOUND
@@ -10,7 +13,7 @@ import tracking.RedirectWithCampaignCodes.internalCampaignCode
 
 import scala.concurrent.Future
 
-object RedirectMembersFilter extends Filter {
+class RedirectMembersFilter @Inject()(implicit val mat: Materializer) extends Filter {
 
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     if (requestHeader.host.toLowerCase.startsWith("members.")) {
