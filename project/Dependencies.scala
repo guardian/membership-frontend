@@ -11,6 +11,7 @@ object Dependencies {
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "1.2"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "1.3"
   val membershipCommon = "com.gu" %% "membership-common" % "0.1-SNAPSHOT"
+  val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.cache
