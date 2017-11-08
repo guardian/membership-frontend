@@ -128,10 +128,10 @@ trait OAuthActions extends googleauth.Actions with googleauth.Filters {
     GoogleAuthenticatedStaffAction andThen
       requireGroup[GoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
 
-  def AuthenticatedStaffNonMemberAction(oAuthActions: OAuthActions) =
+  def AuthenticatedStaffNonMemberAction =
     AuthenticatedAction andThen
       onlyNonMemberFilter() andThen
-      googleAuthenticationRefiner(oAuthActions) andThen
+      googleAuthenticationRefiner(this) andThen
       requireGroup[IdentityGoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
 
 }

@@ -60,7 +60,7 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller with 
 
   val subscriberOfferDelayPeriod = 6.months
 
-  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction(this) andThen matchingGuardianEmail()
+  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
   val identityService = IdentityService(IdentityApi)
 
@@ -223,7 +223,7 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller with 
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))))
   }
 
-  def updateEmailStaff() = AuthenticatedStaffNonMemberAction(this).async { implicit request =>
+  def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     val googleEmail = request.googleUser.email
     for {
       emailUpdateResult <- identityService.updateEmail(request.identityUser, googleEmail)(IdentityRequest(request)).value

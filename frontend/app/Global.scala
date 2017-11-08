@@ -11,7 +11,7 @@ object Global extends GlobalSettings {
     HealthMonitoringTask.start(app.actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage, Config.appName)
     SentryLogging.init()
     Logstash.init(Config)
-    //GuardianLiveEventService.start()
+    GuardianLiveEventService.start()
     MasterclassEventService.start()
     GuardianContentService.start()
   }
