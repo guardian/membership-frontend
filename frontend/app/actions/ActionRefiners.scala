@@ -176,10 +176,10 @@ object ActionRefiners extends LazyLogging {
       }
   }
 
-  def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
+  def googleAuthenticationRefiner(oAuthActions: OAuthActions) = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
-        OAuthActions.userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(onNonAuthentication(request))
+        oAuthActions.userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(oAuthActions.sendForAuth(request))
       }
     }
   }

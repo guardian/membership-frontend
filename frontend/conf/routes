@@ -3,101 +3,97 @@
 # ~~~~
 
 GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt", aggressiveCaching:Boolean ?= false )
-GET            /humans.txt                            controllers.CachedAssets.at(path="/public", file="humans.txt", aggressiveCaching:Boolean ?= false )
-GET            /favicon.ico                           controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
-GET            /sitemap.xml                           controllers.SiteMap.sitemap()
+GET         /humans.txt                                controllers.CachedAssets.at(path="/public", file="humans.txt", aggressiveCaching:Boolean ?= false )
+GET         /favicon.ico                               controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
+GET         /sitemap.xml                               controllers.SiteMap.sitemap()
 
 # Home page
-GET            /                                      controllers.FrontPage.index
-GET            /welcome                               controllers.FrontPage.welcome
+GET         /                                          controllers.FrontPage.index
+GET         /welcome                                   controllers.FrontPage.welcome
 
 # System
-GET            /healthcheck                           controllers.Healthcheck.healthcheck
-GET            /test-users                            controllers.Testing.testUser
-GET            /analytics-off                         controllers.Testing.analyticsOff
-GET            /feature/:feature                      controllers.FeatureOptIn.state(feature: Feature)
-GET            /feature/:feature/:onOrOff             controllers.FeatureOptIn.setFeatureOnOrOff(feature: Feature, onOrOff: OnOrOff)
+GET         /healthcheck                               controllers.Healthcheck.healthcheck
+GET         /test-users                                @controllers.Testing.testUser
+GET         /analytics-off                             @controllers.Testing.analyticsOff
+GET         /feature/:feature                          controllers.FeatureOptIn.state(feature: Feature)
+GET         /feature/:feature/:onOrOff                 controllers.FeatureOptIn.setFeatureOnOrOff(feature: Feature, onOrOff: OnOrOff)
 
 # Join
-GET            /join/staff                            controllers.Joiner.staff
-GET            /join/staff/enter-details              controllers.Joiner.enterStaffDetails
-GET            /join/friend/enter-details             controllers.Joiner.enterFriendDetails
-GET            /join/:tier/enter-details              controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK)
+GET         /join/staff                                @controllers.Joiner.staff
+GET         /join/staff/enter-details                  @controllers.Joiner.enterStaffDetails
+GET         /join/friend/enter-details                 @controllers.Joiner.enterFriendDetails
+GET         /join/:tier/enter-details                  @controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK)
+POST        /join/friend/enter-details                 @controllers.Joiner.joinFriend
+POST        /join/staff/enter-details                  @controllers.Joiner.joinStaff
+POST        /join/:tier/enter-details                  @controllers.Joiner.joinPaid(tier: PaidTier)
+GET         /join/staff/thankyou                       @controllers.Joiner.thankyouStaff
+GET         /join/:tier/thankyou                       @controllers.Joiner.thankyou(tier: Tier, upgrade: Boolean ?= false)
+POST        /join/staff/update-email                   @controllers.Joiner.updateEmailStaff
+GET         /join/unsupported-browser                  @controllers.Joiner.unsupportedBrowser
+GET         /choose-tier                               @controllers.Joiner.tierChooser
 
-
-POST           /join/friend/enter-details             controllers.Joiner.joinFriend
-POST           /join/staff/enter-details              controllers.Joiner.joinStaff
-POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
-GET            /join/staff/thankyou                   controllers.Joiner.thankyouStaff
-GET            /join/:tier/thankyou                   controllers.Joiner.thankyou(tier: Tier)
-POST           /join/staff/update-email               controllers.Joiner.updateEmailStaff
-GET            /join/unsupported-browser              controllers.Joiner.unsupportedBrowser
-
-GET            /choose-tier                           controllers.Joiner.tierChooser
-
-GET            /membership-content                    controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
+GET         /membership-content                        controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
 # Normal user signin:
-GET            /signin                                controllers.Login.chooseSigninOrRegister(returnUrl: String)
+GET         /signin                                    controllers.Login.chooseSigninOrRegister(returnUrl: String)
 
 # Staff signin (note, done by OAuth, in addition to regular signin)
-GET            /staff/unauthorised                    controllers.StaffAuth.unauthorised
-GET            /staff/login                           controllers.OAuth.login
-GET            /staff/loginAction                     controllers.OAuth.loginAction
-GET            /oauth2callback                        controllers.OAuth.oauth2Callback
+GET         /staff/unauthorised                        @controllers.StaffAuth.unauthorised
+GET         /staff/login                               @controllers.OAuth.login
+GET         /staff/loginAction                         @controllers.OAuth.loginAction
+GET         /oauth2callback                            @controllers.OAuth.oauth2Callback
 
-GET            /maintenance                           controllers.Outages.maintenanceMessage
-GET            /planned-outages                       controllers.Outages.summary
+GET         /maintenance                               @controllers.Outages.maintenanceMessage
+GET         /planned-outages                           @controllers.Outages.summary
 
 # Staff event page to show discounted events
-GET            /staff/event-overview                  controllers.Staff.eventOverview
-GET            /staff/event-overview/masterclasses    controllers.Staff.eventOverviewMasterclasses
-GET            /staff/event-overview/details          controllers.Staff.eventOverviewDetails
+GET         /staff/event-overview                      @controllers.Staff.eventOverview
+GET         /staff/event-overview/masterclasses        @controllers.Staff.eventOverviewMasterclasses
+GET         /staff/event-overview/details              @controllers.Staff.eventOverviewDetails
 
 # Subscription
-GET            /subscription/remaining-tickets        controllers.Subscription.remainingTickets
+GET         /subscription/remaining-tickets            controllers.Subscription.remainingTickets
 
 # What's On
-GET            /events                                controllers.WhatsOn.list
-GET            /events.json                           controllers.rest.EventApi.events
+GET         /events                                    controllers.WhatsOn.list
+GET         /events.json                               controllers.rest.EventApi.events
 
-GET            /events/archive                        controllers.WhatsOn.listArchive
-GET            /events/calendar                       controllers.WhatsOn.calendar
-GET            /masterclasses                         controllers.WhatsOn.masterclassesList
-GET            /masterclasses/all                     controllers.WhatsOn.masterclassesList
-GET            /masterclasses/:tag                    controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag = "")
-GET            /masterclasses/:tag/:subTag            controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag)
+GET         /events/archive                            controllers.WhatsOn.listArchive
+GET         /events/calendar                           controllers.WhatsOn.calendar
+GET         /masterclasses                             controllers.WhatsOn.masterclassesList
+GET         /masterclasses/all                         controllers.WhatsOn.masterclassesList
+GET         /masterclasses/:tag                        controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag = "")
+GET         /masterclasses/:tag/:subTag                controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag)
 
 # Event Details
-GET            /event/:id                             controllers.Event.details(id)
-GET            /event/:id/embed                       controllers.Event.embedData(id)
-GET            /event/:id/buy                         controllers.Event.buy(id)
-GET            /event/:id/thankyou                    controllers.Event.thankyou(id, oid: Option[String])
-GET            /event/:id/thankyou/pixel              controllers.Event.thankyouPixel(id)
-GET            /event/:id/card                        controllers.Event.embedCard(id)
-
-GET            /preview-event/:id                     controllers.Event.preview(id)
-GET            /preview-masterclass/:id               controllers.Event.previewMasterclass(id)
+GET         /event/:id                                 @controllers.Event.details(id)
+GET         /event/:id/embed                           @controllers.Event.embedData(id)
+GET         /event/:id/buy                             @controllers.Event.buy(id)
+GET         /event/:id/thankyou                        @controllers.Event.thankyou(id, oid: Option[String])
+GET         /event/:id/thankyou/pixel                  @controllers.Event.thankyouPixel(id)
+GET         /event/:id/card                            @controllers.Event.embedCard(id)
+GET         /preview-event/:id                         @controllers.Event.preview(id)
+GET         /preview-masterclass/:id                   @controllers.Event.previewMasterclass(id)
 
 # Tier
-GET            /tier/change                           controllers.TierController.change
-GET            /tier/cancel                           controllers.TierController.cancelTier
-POST           /tier/cancel/confirm                   controllers.TierController.cancelTierConfirm
-GET            /tier/cancel/paid/summary              controllers.TierController.cancelPaidTierSummary
-GET            /tier/cancel/free/summary    controllers.TierController.cancelFreeTierSummary
-GET            /tier/change/friend                    controllers.TierController.downgradeToFriend
-POST           /tier/change/friend                    controllers.TierController.downgradeToFriendConfirm
-GET            /tier/change/friend/summary            controllers.TierController.downgradeToFriendSummary
-GET            /tier/change/:tier                     controllers.TierController.upgrade(tier: PaidTier)
-POST           /tier/change/:tier                     controllers.TierController.upgradeConfirm(tier: PaidTier)
-GET            /tier/change/:tier/summary             controllers.TierController.upgradeThankyou(tier: PaidTier)
+GET         /tier/change                               @controllers.TierController.change
+GET         /tier/cancel                               @controllers.TierController.cancelTier
+POST        /tier/cancel/confirm                       @controllers.TierController.cancelTierConfirm
+GET         /tier/cancel/paid/summary                  @controllers.TierController.cancelPaidTierSummary
+GET         /tier/cancel/free/summary                  @controllers.TierController.cancelFreeTierSummary
+GET         /tier/change/friend                        @controllers.TierController.downgradeToFriend
+POST        /tier/change/friend                        @controllers.TierController.downgradeToFriendConfirm
+GET         /tier/change/friend/summary                @controllers.TierController.downgradeToFriendSummary
+GET         /tier/change/:tier                         @controllers.TierController.upgrade(tier: PaidTier)
+POST        /tier/change/:tier                         @controllers.TierController.upgradeConfirm(tier: PaidTier)
+GET         /tier/change/:tier/summary                 @controllers.TierController.upgradeThankyou(tier: PaidTier)
 
 # Information
-GET            /patrons                               controllers.Info.patron
-GET            /supporter                             controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
-GET            /about/supporter                       controllers.Redirects.supporterRedirect
-GET            /:countryGroup/supporter               controllers.Info.supporterFor(countryGroup: CountryGroup)
-GET            /help                                  controllers.Info.help
+GET         /patrons                                   controllers.Info.patron
+GET         /supporter                                 controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
+GET         /about/supporter                           controllers.Redirects.supporterRedirect
+GET         /:countryGroup/supporter                   controllers.Info.supporterFor(countryGroup: CountryGroup)
+GET         /help                                      controllers.Info.help
 GET            /feedback                              controllers.Info.feedback
 POST           /feedback                              controllers.Info.submitFeedback
 GET            /offers-competitions                   controllers.Info.offersAndCompetitions
@@ -126,21 +122,21 @@ GET            /join                                  controllers.Info.supporter
 GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
+GET         /assets/*assetFile                         controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
 
 # REST
 # Pricing
-GET            /currencies                            controllers.PricingApi.currencies
-GET            /rate-plans                            controllers.PricingApi.ratePlans
+GET         /currencies                                controllers.PricingApi.currencies
+GET         /rate-plans                                controllers.PricingApi.ratePlans
 
 # Giraffe
-GET            /contribute                            controllers.Giraffe.redirectToContributions()
-GET            /:countryGroup/contribute              controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
+GET         /contribute                                controllers.Giraffe.redirectToContributions()
+GET         /:countryGroup/contribute                  controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
 
-GET            /change-mem-status-permission          controllers.MembershipStatus.load
+GET         /change-mem-status-permission              @controllers.MembershipStatus.load
 
 # Paypal NVP endpoints.
-POST           /paypal/setup-payment                  controllers.PayPal.setupPayment
-POST           /paypal/create-agreement               controllers.PayPal.createAgreement
-GET            /paypal/return                         controllers.PayPal.returnUrl
-GET            /paypal/cancel                         controllers.PayPal.cancelUrl
+POST        /paypal/setup-payment                      controllers.PayPal.setupPayment
+POST        /paypal/create-agreement                   controllers.PayPal.createAgreement
+GET         /paypal/return                             controllers.PayPal.returnUrl
+GET         /paypal/cancel                             controllers.PayPal.cancelUrl

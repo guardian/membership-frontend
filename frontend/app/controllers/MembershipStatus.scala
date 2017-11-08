@@ -1,5 +1,7 @@
 package controllers
 
+import javax.inject.Inject
+
 import actions.Fallbacks._
 import actions._
 import com.gu.i18n._
@@ -12,14 +14,15 @@ import play.api.libs.json.{JsArray, JsString, Json}
 import play.api.mvc.{Controller, Cookie, Result}
 import services.{AuthenticationService, TouchpointBackend}
 import com.netaporter.uri.dsl._
+import play.api.libs.ws.WSClient
 import views.support.{TestTrait, _}
 
 import scalaz.syntax.std.option._
 import scala.concurrent.Future
 
-object MembershipStatus extends Controller {
+class MembershipStatus @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
 
-  val AuthorisedTester = GoogleAuthenticatedStaffAction andThen OAuthActions.requireGroup[GoogleAuthRequest](Set(
+  val AuthorisedTester = GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](Set(
     "membership.dev@guardian.co.uk",
     "mobile.core@guardian.co.uk",
     "membership.team@guardian.co.uk",

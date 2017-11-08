@@ -1,10 +1,14 @@
 package controllers
 
+import javax.inject.Inject
+
+import actions.OAuthActions
+import play.api.libs.ws.WSClient
 import play.api.mvc.Controller
 import services._
 
 
-trait Staff extends Controller {
+class Staff @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
   val guLiveEvents = GuardianLiveEventService
   val masterclassEvents = MasterclassEventService
 
@@ -19,7 +23,5 @@ trait Staff extends Controller {
   def eventOverviewDetails = GoogleAuthenticatedStaffAction { implicit request =>
     Ok(views.html.eventOverview.details(request.path))
   }
-
 }
 
-object Staff extends Staff

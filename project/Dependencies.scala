@@ -8,7 +8,8 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.9" // v0.9 is the latest version published for Play 2.4...
+  val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "1.2"
+  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "1.3"
   val membershipCommon = "com.gu" %% "membership-common" % "0.475"
   val contentAPI = "com.gu" %% "content-api-client" % "8.5"
   val playWS = PlayImport.ws
@@ -27,7 +28,6 @@ object Dependencies {
   val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.4"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.22"
   val catsCore = "org.typelevel" %% "cats-core" % "0.9.0"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"

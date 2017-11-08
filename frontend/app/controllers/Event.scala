@@ -1,9 +1,11 @@
 package controllers
 
+import javax.inject.Inject
+
 import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import actions.ActionRefiners._
 import actions.Fallbacks._
-import actions.{Subscriber, SubscriptionRequest}
+import actions.{OAuthActions, Subscriber, SubscriptionRequest}
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
@@ -16,6 +18,7 @@ import model._
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services.EventbriteService._
 import tracking._
@@ -25,10 +28,7 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-trait Event extends Controller with MemberServiceProvider with ActivityTracking with LazyLogging {
-
-  val guLiveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+class Event @Inject()(override val wsClient: WSClient) extends Controller with MemberServiceProvider with OAuthActions with ActivityTracking with LazyLogging {
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
@@ -218,9 +218,4 @@ trait Event extends Controller with MemberServiceProvider with ActivityTracking 
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
    EventbriteService.getPreviewMasterclass(id).map(eventDetail)
   }
-}
-
-object Event extends Event {
-  val guLiveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

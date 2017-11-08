@@ -1,19 +1,24 @@
 package controllers
 
+import javax.inject.Inject
+
 import actions.OAuthActions
 import com.gu.googleauth.{GoogleAuth, UserIdentity}
+import com.gu.googleauth.GoogleAuthFilters.LOGIN_ORIGIN_KEY
 import configuration.Config
 import model.FlashMessage
 import play.api.Play.current
 import play.api.libs.json.Json
-import play.api.mvc.{Session, Action, Controller}
-
+import play.api.mvc.{Action, Controller, Session}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.ws.WSClient
+
 import scala.concurrent.Future
 
 
-object OAuth extends Controller with OAuthActions {
+class OAuth @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
   val ANTI_FORGERY_KEY = "antiForgeryToken"
+  implicit val iWsClient = wsClient
 
   def login = NoCacheAction { request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)

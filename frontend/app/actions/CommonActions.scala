@@ -11,6 +11,7 @@ import controllers._
 import play.api.http.HeaderNames._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+import play.api.libs.ws.WSClient
 import play.api.mvc.Results._
 import play.api.mvc._
 import services.{AuthenticationService, TouchpointBackend}
@@ -20,7 +21,6 @@ import utils.TestUsers.{PreSigninTestCookie, isTestUser}
 import scala.concurrent.Future
 
 trait CommonActions extends LazyLogging {
-  import OAuthActions._
 
   val AddAbTestingCookiesToResponse = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
@@ -80,25 +80,6 @@ trait CommonActions extends LazyLogging {
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
 
-  val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = AuthAction
-
-  val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
-
-  val permanentStaffGroups = Config.staffAuthorisedEmailGroups
-
-  val PermanentStaffNonMemberAction =
-    GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
-
-  val AuthorisedStaff =
-    GoogleAuthenticatedStaffAction andThen
-      requireGroup[GoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
-
-  val AuthenticatedStaffNonMemberAction =
-    AuthenticatedAction andThen
-    onlyNonMemberFilter() andThen
-    googleAuthenticationRefiner() andThen
-      requireGroup[IdentityGoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
-
   val SubscriptionAction = AuthenticatedAction andThen subscriptionRefiner()
 
   val ContributorAction = AuthenticatedAction andThen contributionRefiner()
@@ -129,9 +110,28 @@ trait CommonActions extends LazyLogging {
 trait OAuthActions extends googleauth.Actions with googleauth.Filters {
   val authConfig = Config.googleAuthConfig
 
-  val loginTarget = routes.OAuth.loginAction()
+  //routes
+  override val loginTarget = routes.OAuth.loginAction()
+  override val defaultRedirectTarget = routes.FrontPage.welcome()
+  override val failureRedirectTarget = routes.OAuth.login()
 
   lazy val groupChecker = Config.googleGroupChecker
-}
 
-object OAuthActions extends OAuthActions
+  val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = AuthAction
+  val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
+  val permanentStaffGroups = Config.staffAuthorisedEmailGroups
+
+  val PermanentStaffNonMemberAction =
+    GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
+
+  val AuthorisedStaff =
+    GoogleAuthenticatedStaffAction andThen
+      requireGroup[GoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
+
+  def AuthenticatedStaffNonMemberAction(oAuthActions: OAuthActions) =
+    AuthenticatedAction andThen
+      onlyNonMemberFilter() andThen
+      googleAuthenticationRefiner(oAuthActions) andThen
+      requireGroup[IdentityGoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
+
+}
