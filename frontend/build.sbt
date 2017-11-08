@@ -13,6 +13,8 @@ buildInfoKeys := Seq[BuildInfoKey](
     }))
 )
 
+name := "membership-frontend"
+
 buildInfoOptions += BuildInfoOption.ToMap
 
 buildInfoPackage := "app"
@@ -21,7 +23,7 @@ organization := "com.gu"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.11.12"
 
 resolvers ++= Seq(
     "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",

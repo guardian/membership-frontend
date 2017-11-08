@@ -528,7 +528,7 @@ class MemberService(identityService: IdentityService,
     for {
       customer <- stripeService.Customer.create(contact.identityId, stripeToken)
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
-      result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer, stripeService.paymentGateway)
+      result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer, stripeService.paymentGateway, None)
     } yield result
   }
 
