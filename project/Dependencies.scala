@@ -11,7 +11,7 @@ object Dependencies {
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "1.2"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "1.3"
   val membershipCommon = "com.gu" %% "membership-common" % "0.1-SNAPSHOT"
-  val contentAPI = "com.gu" %% "content-api-client" % "8.5"
+  val contentAPI = "com.gu" %% "content-api-client" % "11.40"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.cache
@@ -33,6 +33,7 @@ object Dependencies {
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.10"
+
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
