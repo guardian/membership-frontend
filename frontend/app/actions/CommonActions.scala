@@ -131,7 +131,14 @@ trait OAuthActions extends googleauth.Actions with googleauth.Filters {
   def AuthenticatedStaffNonMemberAction =
     AuthenticatedAction andThen
       onlyNonMemberFilter() andThen
-      googleAuthenticationRefiner(this) andThen
+      googleAuthenticationRefiner andThen
       requireGroup[IdentityGoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
 
+  def googleAuthenticationRefiner = {
+    new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
+      override def refine[A](request: AuthRequest[A]) = Future.successful {
+        userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(sendForAuth(request))
+      }
+    }
+  }
 }
