@@ -10,7 +10,7 @@ object Dependencies {
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "1.2"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "1.3"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.1-SNAPSHOT"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.478"
   val contentAPI = "com.gu" %% "content-api-client" % "11.40"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
