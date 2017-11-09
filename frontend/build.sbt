@@ -13,8 +13,6 @@ buildInfoKeys := Seq[BuildInfoKey](
     }))
 )
 
-name := "membership-frontend"
-
 buildInfoOptions += BuildInfoOption.ToMap
 
 buildInfoPackage := "app"
@@ -42,6 +40,8 @@ updateOptions := updateOptions.value.withCachedResolution(true)
 assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary to tell us about clashes - we DON'T use the generated uber-jar, instead the native-packaged zip
     case x if x.startsWith("com/google/gdata/util/common/base/") => MergeStrategy.first // https://github.com/playframework/playframework/issues/3365#issuecomment-198399016
     case "version.txt"                                           => MergeStrategy.discard // identity jars all include version.txt
+    case "shared.thrift" => MergeStrategy.first
+    case PathList("META-INF", xs@_*) => MergeStrategy.discard
     case x =>
         val oldStrategy = (assemblyMergeStrategy in assembly).value
         oldStrategy(x)
