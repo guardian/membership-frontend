@@ -19,7 +19,7 @@ import views.support.PageInfo
 import scala.concurrent.Future
 
 trait Info extends Controller with LazyLogging {
-  def supporterRedirect(countryGroup: Option[CountryGroup]) = NoCacheAction { implicit request =>
+  def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
     redirectWithCampaignCodes(routes.Info.supporterFor(determinedCountryGroup).url, SEE_OTHER)
   }

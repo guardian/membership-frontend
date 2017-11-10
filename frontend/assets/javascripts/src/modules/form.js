@@ -107,6 +107,8 @@ define([
             if (form.hasEmailInput){
                 existEmail.init();
             }
+
+            form.attachOphanPageviewId();
         }
     };
 

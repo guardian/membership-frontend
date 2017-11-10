@@ -11,6 +11,7 @@ import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
+import dispatch.FutureEither
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.{AuthenticatedBuilder, AuthenticatedRequest}
@@ -19,7 +20,7 @@ import utils.PlannedOutage
 import views.support.MembershipCompat._
 
 import scala.concurrent.Future
-import scalaz.{-\/, EitherT, OptionT, \/, \/-}
+import scalaz.{-\/, EitherT, Functor, Monad, OptionT, \/, \/-}
 import scalaz.std.scalaFuture._
 
 /**
@@ -201,11 +202,22 @@ object OptionEither {
 
   type FutureEither[X] = EitherT[Future, String, X]
 
+  implicit val futureEitherMonad: Monad[FutureEither] = new Monad[FutureEither] {
+    override def point[A](a: => A) =
+      EitherT.right(Future.successful(a))
+
+    override def bind[A, B](fa: FutureEither[A])(f: A => FutureEither[B]) =
+      fa.flatMap(f)
+  }
+
   def apply[A](m: Future[\/[String, Option[A]]]): OptionT[FutureEither, A] =
     OptionT[FutureEither, A](EitherT[Future, String, Option[A]](m))
 
   def liftEither[A](x: Future[Option[A]]): OptionT[FutureEither, A] =
     apply(x.map(\/.right))
+
+  def liftFuture[A](x: Future[A]): OptionT[FutureEither, A] =
+    liftEither(x.map(Some.apply))
 
   def liftFutureOption[A](x: \/[String, A]): OptionT[FutureEither, A] =
     apply(Future.successful(x.map[Option[A]](Some.apply)))

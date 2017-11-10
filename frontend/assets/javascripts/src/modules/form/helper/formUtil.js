@@ -1,7 +1,8 @@
 define([
     'src/utils/helper',
-    'src/utils/url'
-], function (utilsHelper, url) {
+    'src/utils/url',
+    'ophan-tracker-js/build/ophan.membership',
+], function (utilsHelper, url, ophan) {
     'use strict';
 
     /**
@@ -64,6 +65,11 @@ define([
         return !!document.getElementById('form-field__error-message-email-checker') && (document.getElementById('form-field__error-message-email-checker') instanceof HTMLParagraphElement);
     }
 
+    function attachOphanPageviewId() {
+        var input = getFormElem().querySelector('.js-ophan-pageview-id')
+        input.setAttribute('value', ophan.viewId);
+    }
+
     /**
      * formUtil singleton provides:
      *    elem: DomElement - the form element
@@ -86,6 +92,7 @@ define([
                 hasPaypal: hasPaypal(),
                 hasStripeCheckout: hasStripeCheckout(),
                 hasEmailInput: hasEmailInput(),
+                attachOphanPageviewId: attachOphanPageviewId,
                 errs: [],
                 flush: function () {
                     this.elem = getFormElem();
