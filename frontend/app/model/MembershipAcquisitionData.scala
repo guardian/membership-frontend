@@ -61,19 +61,20 @@ object MembershipAcquisitionData {
     override def buildAcquisition(data: MembershipAcquisitionData): Either[String, Acquisition] = for {
       product <- data.product
     } yield Acquisition(
-      product,
-      data.paymentFrequency,
-      data.amountPaidToday.currency.iso,
-      data.amountPaidToday.amount.toDouble,
-      data.paymentProvider,
-      data.referrerAcquisitionData.map(_.campaignCode.toSet),
-      data.referrerAcquisitionData.map(data => AbTestInfo(data.abTest.toSet)),
-      data.countryCode,
-      data.referrerAcquisitionData.flatMap(_.referrerPageviewId),
-      data.referrerAcquisitionData.flatMap(_.referrerUrl),
-      data.referrerAcquisitionData.flatMap(_.componentId),
-      data.referrerAcquisitionData.flatMap(_.componentType),
-      data.referrerAcquisitionData.flatMap(_.source)
+      product = product,
+      paymentFrequency = data.paymentFrequency,
+      currency = data.amountPaidToday.currency.iso,
+      amount = data.amountPaidToday.amount.toDouble,
+      paymentProvider = data.paymentProvider,
+      campaignCode = data.referrerAcquisitionData.map(_.campaignCode.toSet),
+      abTests = data.referrerAcquisitionData.map(data => AbTestInfo(data.abTest.toSet)),
+      countryCode = data.countryCode,
+      referrerPageViewId = data.referrerAcquisitionData.flatMap(_.referrerPageviewId),
+      referrerUrl = data.referrerAcquisitionData.flatMap(_.referrerUrl),
+      componentId = data.referrerAcquisitionData.flatMap(_.componentId),
+      componentTypeV2 = data.referrerAcquisitionData.flatMap(_.componentType),
+      source = data.referrerAcquisitionData.flatMap(_.source),
+      platform = Some(Platform.Membership)
     )
   }
 }
