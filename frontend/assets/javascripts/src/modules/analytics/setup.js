@@ -2,7 +2,6 @@
 define([
     'src/utils/cookie',
     'src/modules/analytics/ga',
-    'src/modules/analytics/ophan',
     'src/modules/analytics/krux',
     'src/modules/analytics/facebook',
     'src/modules/analytics/uet',
@@ -10,7 +9,6 @@ define([
 ], function (
     cookie,
     ga,
-    ophan,
     krux,
     facebook,
     uet,
@@ -35,8 +33,7 @@ define([
     );
 
     function setupAnalytics() {
-        ophan.init();
-        ophan.loaded.then(ga.init,ga.init);
+        ga.init();
         uet.init();
     }
 
