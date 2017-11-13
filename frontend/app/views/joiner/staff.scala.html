@@ -8,7 +8,7 @@
   displayName: Option[String],
   avatarUrl: Option[String],
   flashMessage: Option[model.FlashMessage]
-)(implicit token: play.filters.csrf.CSRF.Token)
+)(implicit request: RequestHeader)
 
 @import configuration.Config
 @import model.Faq

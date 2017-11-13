@@ -1,5 +1,7 @@
 package controllers
 
+import javax.inject.Inject
+
 import _root_.services.api.MemberService._
 import actions.BackendProvider
 import com.gu.i18n.CountryGroup
@@ -20,7 +22,6 @@ import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
-import play.filters.csrf.CSRF.Token.getToken
 import services.{IdentityApi, IdentityService}
 import tracking.ActivityTracking
 import utils.RequestCountry._
@@ -36,7 +37,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-object TierController extends Controller with ActivityTracking
+class TierController @Inject()(val joinerController: Joiner) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider
@@ -113,7 +114,7 @@ object TierController extends Controller with ActivityTracking
   }
 
   def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier])
-                    (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
+    (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
 
     val targetPlan = targetPlans.get(subscriber.subscription.plan.charges.billingPeriod)
     val targetChoice = PaidPlanChoice(targetPlan.tier, targetPlan.charges.billingPeriod)
@@ -161,15 +162,15 @@ object TierController extends Controller with ActivityTracking
           countriesWithCurrency,
           idUser,
           getPageInfo(idUser.privateFields, BillingPeriod.Year)
-        )(getToken, request))
+        )(request))
       })
     }, { paidSubscriber =>
       val billingPeriod = paidSubscriber.subscription.plan.charges.billingPeriod
       val flashError = request.flash.get("error").map(FlashMessage.error)
 
       (idUserFuture |@| paymentSummary(paidSubscriber, targetPlans)) { case (idUser, summary) =>
-        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(getToken, request)))
-      }.map(handleResultErrors)
+        summary.map(s => Ok(views.html.tier.upgrade.paidToPaid(s, idUser.privateFields, getPageInfo(idUser.privateFields, billingPeriod), flashError)(request)))
+      }.map(handleResultErrors(_))
     })
   }
 
@@ -178,7 +179,7 @@ object TierController extends Controller with ActivityTracking
     logger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
-      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, ReferralData.fromRequest )
+      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, ReferralData.fromRequest)
       handleErrors(upgrade) {
         logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
@@ -232,6 +233,6 @@ object TierController extends Controller with ActivityTracking
     }
   }
 
-  def upgradeThankyou(tier: PaidTier) = Joiner.thankyou(tier, upgrade = true)
+  def upgradeThankyou(tier: PaidTier) = joinerController.thankyou(tier, upgrade = true)
 
 }

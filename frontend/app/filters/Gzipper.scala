@@ -1,7 +1,10 @@
 package filters
 
+import javax.inject.Inject
+
+import akka.stream.Materializer
 import play.filters.gzip.GzipFilter
 
-object Gzipper extends GzipFilter(
-  shouldGzip = (req, resp) => !resp.headers.get("Content-Type").exists(_.startsWith("image/"))
+class Gzipper @Inject()(implicit val mat: Materializer) extends GzipFilter(
+  shouldGzip = (req, resp) => !resp.header.headers.get("Content-Type").exists(_.startsWith("image/"))
 )

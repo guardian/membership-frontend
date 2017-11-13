@@ -176,14 +176,6 @@ object ActionRefiners extends LazyLogging {
       }
   }
 
-  def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
-    new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
-      override def refine[A](request: AuthRequest[A]) = Future.successful {
-        OAuthActions.userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(onNonAuthentication(request))
-      }
-    }
-  }
-
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {

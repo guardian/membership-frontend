@@ -14,7 +14,7 @@
     countriesWithCurrency: List[CountryWithCurrency],
     idUser: IdentityUser,
     pageInfo: PageInfo
-)(implicit token: csrf.CSRF.Token, request: RequestHeader)
+)(implicit request: RequestHeader)
 
 @main(
     "Change Tier | " + targetPlans.tier.name + " from " + currentPlan.tier.name,

@@ -1,5 +1,7 @@
 package services
 
+import java.time.Instant
+
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
@@ -73,13 +75,13 @@ trait GuardianContentService extends GuardianContent {
     "GuardianContentService - Masterclass content", Nil, 2.seconds, contentApiPeriod)(masterclasses)
 
   val contentTask = ScheduledTask[Seq[Content]](
-      "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
+    "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
 
   val offersAndCompetitionsContentTask = ScheduledTask[Seq[Content]](
-      "GuardianContentService - Content with Guardian Members Only", Nil, 1.second, contentApiPeriod)(offersAndCompetitions)
+    "GuardianContentService - Content with Guardian Members Only", Nil, 1.second, contentApiPeriod)(offersAndCompetitions)
 
   val membershipFrontContentTask = ScheduledTask[Seq[Content]](
-      "GuardianContentService - Content from Membership front", Nil, 1.second, contentApiPeriod)(membershipFront)
+    "GuardianContentService - Content from Membership front", Nil, 1.second, contentApiPeriod)(membershipFront)
 
   def start() {
     masterclassContentTask.start()
@@ -107,9 +109,10 @@ trait GuardianContent {
   }
 
   def masterclassesQuery(page: Int): Future[ItemResponse] = {
-    val date = new DateTime(2014, 1, 1, 0, 0)
+    val date = Instant.parse("2014-01-01T00:00:00Z")
+
     val itemQuery = ItemQuery("guardian-masterclasses")
-      .fromDate(date)
+      .fromDate(Some(date))
       .pageSize(100)
       .page(page)
       .showReferences("eventbrite")

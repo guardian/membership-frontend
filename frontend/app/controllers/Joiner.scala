@@ -1,5 +1,7 @@
 package controllers
 
+import javax.inject.Inject
+
 import abtests.ABTest
 import actions.ActionRefiners._
 import actions.Fallbacks.chooseRegister
@@ -23,6 +25,7 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services.AuthenticationService.authenticatedIdUserProvider
 import services.checkout.identitystrategy.Strategy.identityStrategyFor
@@ -40,7 +43,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorHandler
+class Joiner @Inject()(override val wsClient: WSClient) extends Controller with ActivityTracking with PaymentGatewayErrorHandler with OAuthActions
   with LazyLogging
   with CatalogProvider
   with StripeUKMembershipServiceProvider
@@ -50,6 +53,7 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
   with PaymentServiceProvider
   with MemberServiceProvider
   with ZuoraRestServiceProvider {
+
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService

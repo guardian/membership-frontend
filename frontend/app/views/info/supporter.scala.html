@@ -10,7 +10,7 @@
 @(  heroImage: model.OrientatedImages,
     supporterPlans: PaidMembershipPlans[Benefit.Supporter.type],
     pageInfo: PageInfo,
-    detailImage: model.OrientatedImages)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+    detailImage: model.OrientatedImages)(implicit request: RequestHeader, countryGroup: CountryGroup)
 
 
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {

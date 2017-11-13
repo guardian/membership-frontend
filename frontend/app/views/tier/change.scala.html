@@ -5,7 +5,7 @@
 @import views.support.TierPlans._
 @import views.support.MembershipCompat._
 @import com.gu.memsub.subsv2.Catalog
-@(currentTier: Tier, catalog: Catalog)(implicit token: play.filters.csrf.CSRF.Token, countryGroup: CountryGroup)
+@(currentTier: Tier, catalog: Catalog)(implicit countryGroup: CountryGroup)
 
 @main("Change Tier") {
 

@@ -4,13 +4,14 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.11.223"
+  val awsClientVersion = "1.11.226"
   //libraries
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "0.9" // v0.9 is the latest version published for Play 2.4...
-  val membershipCommon = "com.gu" %% "membership-common" % "0.475"
-  val contentAPI = "com.gu" %% "content-api-client" % "8.5"
+  val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "1.2"
+  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "1.3"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.478"
+  val contentAPI = "com.gu" %% "content-api-client" % "11.40"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.cache
@@ -24,15 +25,15 @@ object Dependencies {
   val seleniumHtmlUnitDriver = "org.seleniumhq.selenium" % "htmlunit-driver" % "2.23.2" % "test"
   val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "1.4.10" % "test"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.6.6" % "test"
-  val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.11.4"
+  val dispatch = "net.databinder.dispatch" %% "dispatch-core" % "0.13.2"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.22"
   val catsCore = "org.typelevel" %% "cats-core" % "0.9.0"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.10"
+
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,

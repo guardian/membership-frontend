@@ -1,6 +1,7 @@
 package services
+
 import com.github.nscala_time.time.Imports._
-import com.gu.contentapi.client.parser.JsonParser
+import com.gu.contentapi.client.model.v1.{Content, ItemResponse}
 import com.gu.i18n.Currency.GBP
 import com.gu.memsub.Benefit._
 import com.gu.memsub.BillingPeriod.Month
@@ -14,17 +15,15 @@ import model.{ContentDestination, EventDestination}
 import org.joda.time.LocalDate
 import org.specs2.mutable.Specification
 import play.api.mvc.Session
-import utils.Resource
 
 import scalaz.Id._
 
 class DestinationServiceTest extends Specification {
-
   "DestinationService" should {
 
     val destinationService = new DestinationService[Id](
       getBookableEvent = _ => Some(TestRichEvent(eventWithName().copy(id = "0123456"))),
-      capiItemQuery = _ => JsonParser.parseItemThrift(Resource.get("model/content.api/item.json")),
+      capiItemQuery = _ => DestinationServiceTest.createContentItem,
       createCode = (_, _) => Some(EBAccessCode("some-discount-code", 2))
     )
 
@@ -76,5 +75,13 @@ class DestinationServiceTest extends Specification {
         case ContentDestination(item) => item.content.id mustEqual "membership/2015/apr/17/guardian-live-diversity-in-the-arts"
       }
     }
+  }
+}
+
+object DestinationServiceTest {
+  def createContentItem = {
+    ItemResponse("", "", content = Some(Content(
+      "membership/2015/apr/17/guardian-live-diversity-in-the-arts", webTitle = "", webUrl = "", apiUrl = ""
+    )))
   }
 }

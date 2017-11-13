@@ -1,4 +1,8 @@
-@(flashMsgOpt: Option[model.FlashMessage] = None, feedbackText: Option[String] = None, name: Option[String] = None, email: Option[String] = None)(implicit token: play.filters.csrf.CSRF.Token)
+@(flashMsgOpt: Option[model.FlashMessage] = None,
+    feedbackText: Option[String] = None,
+    name: Option[String] = None,
+    email: Option[String] = None
+)(implicit request: RequestHeader)
 
 @import views.html.helper.CSRF
 

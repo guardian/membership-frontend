@@ -1,35 +1,34 @@
 package controllers
 
+import javax.inject.Inject
+
 import actions.Fallbacks._
 import actions._
 import com.typesafe.scalalogging.LazyLogging
 import play.api.mvc.{Controller, Cookie}
 import utils.TestUsers.testUsers
-
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.ws.WSClient
 
-object Testing extends Controller with LazyLogging {
+class Testing @Inject()(override val wsClient: WSClient) extends Controller with LazyLogging with OAuthActions {
 
-  val AnalyticsCookieName = "ANALYTICS_OFF_KEY"
-
+  import Testing._
   val analyticsOffCookie = Cookie(AnalyticsCookieName, "true", httpOnly = false)
-
-  val PreSigninTestCookieName = "pre-signin-test-user"
 
   /**
    * Make sure to use canonical @guardian.co.uk for addresses
    */
-  val AuthorisedTester = GoogleAuthenticatedStaffAction andThen OAuthActions.requireGroup[GoogleAuthRequest](Set(
-      "membership.dev@guardian.co.uk",
-      "mobile.core@guardian.co.uk",
-      "membership.team@guardian.co.uk",
-      "dig.dev.web-engineers@guardian.co.uk",
-      "membership.testusers@guardian.co.uk",
-      "touchpoint@guardian.co.uk",
-      "crm@guardian.co.uk",
-      "dig.qa@guardian.co.uk",
-      "identitydev@guardian.co.uk"
-    ), unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
+  val AuthorisedTester = GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](Set(
+    "membership.dev@guardian.co.uk",
+    "mobile.core@guardian.co.uk",
+    "membership.team@guardian.co.uk",
+    "dig.dev.web-engineers@guardian.co.uk",
+    "membership.testusers@guardian.co.uk",
+    "touchpoint@guardian.co.uk",
+    "crm@guardian.co.uk",
+    "dig.qa@guardian.co.uk",
+    "identitydev@guardian.co.uk"
+  ), unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
 
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()
@@ -42,4 +41,10 @@ object Testing extends Controller with LazyLogging {
     Ok(s"${analyticsOffCookie.name} cookie dropped").withCookies(analyticsOffCookie)
   }
 
+}
+
+object Testing {
+  val AnalyticsCookieName = "ANALYTICS_OFF_KEY"
+
+  val PreSigninTestCookieName = "pre-signin-test-user"
 }

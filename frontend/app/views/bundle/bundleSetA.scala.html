@@ -12,7 +12,7 @@
     pageInfo: PageInfo,
     returnUrl: Option[String] = None,
     whySupportImage: model.OrientatedImages,
-    bundleVariant: BundleVariant)(implicit token: play.filters.csrf.CSRF.Token)
+    bundleVariant: BundleVariant)
 
 @main("Supporters", pageInfo=pageInfo, header=BundlesHeader, footer=BundlesFooter, marginsOverride=Some("l-side-margins-bundles")) {
 
