@@ -259,20 +259,18 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case CreateMemberResult(sfContactId, zuoraSubName, paymentMethod) =>
-          import OptionEither._
-
           logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
 
           trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
 
-          for {
-            contact <- OptionEither(salesforceService.getMember(sfContactId.salesforceContactId))
-            summary <- OptionEither.liftFuture(memberService.getMembershipSubscriptionSummary(contact))
-          } yield trackAcquisition(summary, paymentMethod, formData, tier, request, isTestUser(user.minimal))
-
-          onSuccess
+          formData match {
+            case paid: PaidMemberJoinForm =>
+              onSuccess.withSession(paid.pageviewId.map(id => request.session + ("pageviewId" -> id)).getOrElse(request.session))
+            case _ =>
+              onSuccess
+          }
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
@@ -316,6 +314,9 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
         case _ =>
       }
       logger.info(s"thank you displayed for user: ${request.user.user.id} subscription: ${request.subscriber.subscription.accountId.get} tier: ${tier.name}")
+
+      trackAcquisition(paymentSummary, paymentMethod, tier, request)
+
       Ok({views.html.joiner.thankyou(
         request.subscriber,
         paymentSummary,

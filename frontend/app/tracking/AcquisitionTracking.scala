@@ -1,9 +1,12 @@
 package tracking
 
+import actions.ActionRefiners.SubReqWithSub
+import actions.{AuthRequest, SubscriptionRequest}
 import cats.data.EitherT
 import com.gu.acquisition.model.{AcquisitionSubmission, ReferrerAcquisitionData}
 import com.gu.acquisition.model.errors.OphanServiceError
 import com.gu.acquisition.services.{MockOphanService, OphanService}
+import com.gu.memsub.PaymentMethod
 import com.gu.okhttp.RequestRunners
 import com.gu.salesforce.Tier
 import com.gu.zuora.soap.models.Commands
@@ -12,6 +15,7 @@ import forms.MemberForm.JoinForm
 import model.MembershipAcquisitionData
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc.{Request, Session}
+import utils.TestUsers
 import views.support.ThankyouSummary
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,22 +45,21 @@ trait AcquisitionTracking extends LazyLogging {
 
   def trackAcquisition(
     summary: ThankyouSummary,
-    paymentMethod: Option[Commands.PaymentMethod],
-    form: JoinForm,
+    paymentMethod: Option[PaymentMethod],
     tier: Tier,
-    request: Request[_],
-    isTestUser: Boolean
+    request: SubReqWithSub[_]
   )(implicit ec: ExecutionContext): EitherT[Future, OphanServiceError, AcquisitionSubmission] = {
 
     def cookieValue(name: String): Option[String] =
       request.cookies.get(name).map(_.value)
 
-    ophanService(isTestUser).submit(MembershipAcquisitionData(
+    ophanService(TestUsers.isTestUser(request.user.user)).submit(MembershipAcquisitionData(
       summary.amountPaidToday,
       summary.billingPeriod,
       paymentMethod,
-      form,
       tier,
+      request.subscriber.contact.mailingCountryParsed.map(_.alpha2),
+      request.session.get("pageviewId"),
       cookieValue("vsid"),
       cookieValue("bwid"),
       decodeAcquisitionData(request.session)

@@ -3,20 +3,18 @@ package model
 import cats.syntax.either._
 import com.gu.acquisition.model.{OphanIds, ReferrerAcquisitionData}
 import com.gu.acquisition.typeclasses.AcquisitionSubmissionBuilder
-import com.gu.memsub.{BillingPeriod, Price}
+import com.gu.memsub.{Product => _, _}
 import com.gu.memsub.BillingPeriod.OneOffPeriod
 import com.gu.salesforce.Tier
-import com.gu.zuora.soap.models.Commands
-import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
-import forms.MemberForm.{JoinForm, PaidMemberJoinForm}
 import ophan.thrift.event._
 
 case class MembershipAcquisitionData(
   amountPaidToday: Price,
   billingPeriod: BillingPeriod,
-  paymentMethod: Option[Commands.PaymentMethod],
-  form: JoinForm,
+  paymentMethod: Option[PaymentMethod],
   tier: Tier,
+  countryCode: Option[String],
+  pageviewId: Option[String],
   visitId: Option[String],
   browserId: Option[String],
   referrerAcquisitionData: Option[ReferrerAcquisitionData]) {
@@ -30,12 +28,7 @@ case class MembershipAcquisitionData(
 
   val paymentFrequency: PaymentFrequency = billingPeriodToPaymentFrequency(billingPeriod)
 
-  val paymentProvider: Option[PaymentProvider] = paymentMethod.flatMap(paymentMethodToProvider)
-
-  val pageviewId: Option[String] = form match {
-    case paid: PaidMemberJoinForm => paid.pageviewId
-    case _ => None
-  }
+  val paymentProvider: Option[PaymentProvider] = paymentMethod.map(paymentMethodToProvider)
 }
 
 object MembershipAcquisitionData {
@@ -48,10 +41,10 @@ object MembershipAcquisitionData {
     case _: OneOffPeriod => PaymentFrequency.OneOff
   }
 
-  private def paymentMethodToProvider(method: Commands.PaymentMethod): Option[PaymentProvider] = method match {
-    case _: CreditCardReferenceTransaction => Some(PaymentProvider.Stripe)
-    case _: PayPalReferenceTransaction => Some(PaymentProvider.Paypal)
-    case _ => None
+  private def paymentMethodToProvider(method: PaymentMethod): PaymentProvider = method match {
+    case _: PaymentCard => PaymentProvider.Stripe
+    case _: PayPalMethod => PaymentProvider.Paypal
+    case _: GoCardless => PaymentProvider.Gocardless
   }
 
   private val tierToProduct: Map[Tier, Product] = Map(
@@ -75,7 +68,7 @@ object MembershipAcquisitionData {
       data.paymentProvider,
       data.referrerAcquisitionData.map(_.campaignCode.toSet),
       data.referrerAcquisitionData.map(data => AbTestInfo(data.abTest.toSet)),
-      data.form.deliveryAddress.country.map(_.alpha2),
+      data.countryCode,
       data.referrerAcquisitionData.flatMap(_.referrerPageviewId),
       data.referrerAcquisitionData.flatMap(_.referrerUrl),
       data.referrerAcquisitionData.flatMap(_.componentId),
