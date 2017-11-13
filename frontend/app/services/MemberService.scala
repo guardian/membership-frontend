@@ -140,13 +140,13 @@ class MemberService(identityService: IdentityService,
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, user.primaryEmailAddress, paymentMethod)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
-        } yield CreateMemberResult(sfContact, zuoraSubName, Some(paymentMethod))
+        } yield CreateMemberResult(sfContact, zuoraSubName)
       case _ =>
         for {
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, user.primaryEmailAddress)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
-        } yield CreateMemberResult(sfContact, zuoraSubName, None)
+        } yield CreateMemberResult(sfContact, zuoraSubName)
     }
   }
 

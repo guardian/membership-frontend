@@ -87,7 +87,7 @@ trait MemberService {
 object MemberService {
   sealed trait MemberError extends Throwable
 
-  case class CreateMemberResult(sfContact: ContactId, zuoraSubName: String, paymentMethod: Option[PaymentMethod])
+  case class CreateMemberResult(sfContact: ContactId, zuoraSubName: String)
 
   case class MemberPromoError(get: PromoError) extends MemberError {
     override def getMessage = s"Promo error: ${get.msg}"

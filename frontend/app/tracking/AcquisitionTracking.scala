@@ -1,7 +1,6 @@
 package tracking
 
 import actions.ActionRefiners.SubReqWithSub
-import actions.{AuthRequest, SubscriptionRequest}
 import cats.data.EitherT
 import com.gu.acquisition.model.{AcquisitionSubmission, ReferrerAcquisitionData}
 import com.gu.acquisition.model.errors.OphanServiceError
@@ -9,12 +8,10 @@ import com.gu.acquisition.services.{MockOphanService, OphanService}
 import com.gu.memsub.PaymentMethod
 import com.gu.okhttp.RequestRunners
 import com.gu.salesforce.Tier
-import com.gu.zuora.soap.models.Commands
 import com.typesafe.scalalogging.LazyLogging
-import forms.MemberForm.JoinForm
 import model.MembershipAcquisitionData
 import play.api.libs.json.{JsError, Json}
-import play.api.mvc.{Request, Session}
+import play.api.mvc.{Session}
 import utils.TestUsers
 import views.support.ThankyouSummary
 
