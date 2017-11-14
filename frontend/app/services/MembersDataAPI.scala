@@ -1,6 +1,5 @@
 package services
 
-import actions.ActionRefiners.SubReqWithSub
 import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser}
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.WebServiceHelper
@@ -18,7 +17,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import views.support.MembershipCompat._
-
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
@@ -72,24 +70,6 @@ object MembersDataAPI {
   }
 
   object Service  {
-    def checkMatchesResolvedMemberIn(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
-      case cookies: AccessCredentials.Cookies =>
-        getAttributes(cookies).onComplete {
-          case Success(memDataApiAttrs) =>
-            val prefix = s"members-data-api-check identity=${memberRequest.user.id} salesforce=${memberRequest.subscriber.contact.salesforceContactId} : "
-            val salesforceAttrs = Attributes.fromMember(memberRequest.subscriber)
-            if (memDataApiAttrs != salesforceAttrs) {
-              val message = s"$prefix MISMATCH salesforce=$salesforceAttrs mem-data-api=$memDataApiAttrs"
-              if (memDataApiAttrs.tier != salesforceAttrs.tier) Logger.error(message) else Logger.warn(message)
-              MembersDataAPIMetrics.put("members-data-api-mismatch", 1)
-            } else {
-              Logger.debug(s"$prefix MATCH")
-              MembersDataAPIMetrics.put("members-data-api-match", 1)
-            }
-          case Failure(err) => Logger.error(s"Failed to get membership attributes from membership-data-api for user ${memberRequest.user.id} (OK in dev)", err)
-        }
-      case _ => Logger.error(s"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
-    }
 
     def upsertBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None) = {
       user.credentials match {

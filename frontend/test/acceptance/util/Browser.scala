@@ -4,7 +4,6 @@ import org.openqa.selenium.support.ui.{ExpectedCondition, ExpectedConditions, We
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe
 import org.scalatest.selenium.WebBrowser
-
 import scala.util.Try
 import scala.collection.JavaConverters.asScalaSetConverter
 
@@ -96,12 +95,10 @@ trait Browser extends WebBrowser {
    * */
   def switchWindow() {
     waitUntil(numberOfWindowsToBe(2))
-
     for {
       winHandle <- driver.getWindowHandles.asScala
       if winHandle != parentWindow
     } driver.switchTo().window(winHandle)
-
   }
 
   // Switches back to the first window opened by the driver.

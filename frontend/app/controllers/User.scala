@@ -18,7 +18,6 @@ trait User extends Controller {
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)
-    MembersDataAPI.Service.checkMatchesResolvedMemberIn(request)
     Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
   }
 
