@@ -33,7 +33,10 @@ object Dependencies {
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.10"
-  val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer" % "2.0.1"
+  val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer" % "2.0.1" % "compile" excludeAll(
+    ExclusionRule(organization = "org.scalatest"),
+    ExclusionRule(organization = "org.scalactic")
+  )
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
