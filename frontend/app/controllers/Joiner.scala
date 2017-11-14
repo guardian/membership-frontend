@@ -47,7 +47,8 @@ import scala.util.Failure
 class Joiner @Inject()(override val wsClient: WSClient) extends Controller
   with ActivityTracking
   with AcquisitionTracking
-  with PaymentGatewayErrorHandler with OAuthActions
+  with PaymentGatewayErrorHandler
+  with OAuthActions
   with LazyLogging
   with CatalogProvider
   with StripeUKMembershipServiceProvider
