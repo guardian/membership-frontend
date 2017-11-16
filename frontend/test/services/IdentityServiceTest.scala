@@ -67,7 +67,8 @@ class IdentityServiceTest extends Specification with Mockito {
         None,
         None,
         subscriberOffer = false,
-        Set.empty
+        Set.empty,
+        None
       )
 
       identityService.updateUser(UpdateIdUser(privateFields = Some(IdentityService.privateFieldsFor(paidForm))), user.id)

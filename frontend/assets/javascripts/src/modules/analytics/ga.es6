@@ -1,5 +1,6 @@
 import * as user  from 'src/utils/user'
 import * as cookie from 'src/utils/cookie'
+import ophan from 'ophan-tracker-js/build/ophan.membership'
 
 const tracker = 'membershipPropertyTracker';
 const dimensions = {
@@ -108,8 +109,8 @@ export function init() {
     if (isLoggedIn) {
         wrappedGa('set', dimensions.identityId, u.id);
     }
-    if (guardian.ophan) {
-        wrappedGa('set', dimensions.ophanPageViewId, guardian.ophan.pageViewId);
+    if (ophan) {
+        wrappedGa('set', dimensions.ophanPageViewId, ophan.viewId);
     }
     // The hash on the url is set in identity-federation-api to indicate user has come via facebook login, this identifies that and stops the referrer being counted as www.facebook.com
     if(document.location.hash === '#fbLogin') {

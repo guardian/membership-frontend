@@ -98,6 +98,15 @@ trait CommonActions extends LazyLogging {
 
   val AjaxPaidSubscriptionAction = AjaxSubscriptionAction andThen paidSubscriptionRefiner(onFreeMember = _ => Forbidden)
 
+  val StoreAcquisitionDataAction = new ActionBuilder[Request] {
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] =
+      block(request).map { result =>
+        request.getQueryString("acquisitionData").fold(result)(acquisitionData =>
+          result.withSession(request.session + ("acquisitionData" -> acquisitionData))
+        )
+      }
+  }
+
   def setGuMemCookie(implicit request: RequestHeader) =
     AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
       val json = Json.obj("userId" -> user.id)

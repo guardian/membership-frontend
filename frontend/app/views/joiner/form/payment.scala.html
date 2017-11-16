@@ -44,6 +44,7 @@
         <form action="@routes.Joiner.joinPaid(plans.tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
             <input type="hidden" name="tier" value="@plans.tier.slug"/>
+            <input type="hidden" name="ophanPageviewId" class="js-ophan-pageview-id" />
 
             <section class="form-content">
 

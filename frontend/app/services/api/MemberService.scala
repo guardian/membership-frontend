@@ -32,7 +32,7 @@ trait MemberService {
                    fromEventId: Option[String],
                    tier: Tier,
                    ipCountry: Option[Country],
-                   referralData: ReferralData): Future[(ContactId, ZuoraSubName)]
+                   referralData: ReferralData): Future[CreateMemberResult]
 
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
@@ -86,6 +86,8 @@ trait MemberService {
 
 object MemberService {
   sealed trait MemberError extends Throwable
+
+  case class CreateMemberResult(sfContact: ContactId, zuoraSubName: String)
 
   case class MemberPromoError(get: PromoError) extends MemberError {
     override def getMessage = s"Promo error: ${get.msg}"

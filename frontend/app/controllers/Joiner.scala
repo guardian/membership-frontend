@@ -28,9 +28,10 @@ import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services.AuthenticationService.authenticatedIdUserProvider
+import services.api.MemberService.CreateMemberResult
 import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.{GuardianContentService, _}
-import tracking.ActivityTracking
+import tracking.{AcquisitionTracking, ActivityTracking}
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
 import utils.{Feature, ReferralData, TierChangeCookies}
@@ -43,7 +44,11 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner @Inject()(override val wsClient: WSClient) extends Controller with ActivityTracking with PaymentGatewayErrorHandler with OAuthActions
+class Joiner @Inject()(override val wsClient: WSClient) extends Controller
+  with ActivityTracking
+  with AcquisitionTracking
+  with PaymentGatewayErrorHandler
+  with OAuthActions
   with LazyLogging
   with CatalogProvider
   with StripeUKMembershipServiceProvider
@@ -254,12 +259,19 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller with 
     identityStrategy.ensureIdUser { user =>
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
-        case (sfContactId, zuoraSubName) =>
+        case CreateMemberResult(sfContactId, zuoraSubName) =>
           logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
+
           trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
           trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
-          onSuccess
+
+          formData match {
+            case paid: PaidMemberJoinForm =>
+              onSuccess.withSession(paid.pageviewId.map(id => request.session + ("pageviewId" -> id)).getOrElse(request.session))
+            case _ =>
+              onSuccess
+          }
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
@@ -303,6 +315,9 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller with 
         case _ =>
       }
       logger.info(s"thank you displayed for user: ${request.user.user.id} subscription: ${request.subscriber.subscription.accountId.get} tier: ${tier.name}")
+
+      trackAcquisition(paymentSummary, paymentMethod, tier, request)
+
       Ok({views.html.joiner.thankyou(
         request.subscriber,
         paymentSummary,

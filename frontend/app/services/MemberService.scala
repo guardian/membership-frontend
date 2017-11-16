@@ -1,6 +1,6 @@
 package services
 
-import _root_.services.api.MemberService.{MemberError, PendingAmendError}
+import _root_.services.api.MemberService.{MemberError, PendingAmendError, CreateMemberResult}
 import _root_.services.paymentmethods._
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
@@ -49,7 +49,6 @@ import scalaz.syntax.either._
 import scalaz.syntax.monad._
 
 object MemberService {
-
   import api.MemberService.MemberError
 
   type EitherTErr[F[_], A] = EitherT[F, MemberError, A]
@@ -111,7 +110,7 @@ class MemberService(identityService: IdentityService,
       fromEventId: Option[String],
       tier: Tier,
       ipCountry: Option[Country],
-      referralData: ReferralData): Future[(ContactId, ZuoraSubName)] = {
+      referralData: ReferralData): Future[CreateMemberResult] = {
 
     def createFreeZuoraSubscription(sfContact: ContactId, formData: JoinForm, email: String) =
       (for {
@@ -141,13 +140,13 @@ class MemberService(identityService: IdentityService,
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, user.primaryEmailAddress, paymentMethod)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
-        } yield (sfContact, zuoraSubName)
+        } yield CreateMemberResult(sfContact, zuoraSubName)
       case _ =>
         for {
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createFreeZuoraSubscription(sfContact, formData, user.primaryEmailAddress)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!
-        } yield (sfContact, zuoraSubName)
+        } yield CreateMemberResult(sfContact, zuoraSubName)
     }
   }
 

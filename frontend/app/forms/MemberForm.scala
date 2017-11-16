@@ -98,7 +98,8 @@ object MemberForm {
                                 password: Option[String],
                                 casId: Option[String],
                                 subscriberOffer: Boolean,
-                                featureChoice: Set[FeatureChoice]
+                                featureChoice: Set[FeatureChoice],
+                                pageviewId: Option[String]
                                ) extends JoinForm with PaidMemberForm {
 
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
@@ -261,7 +262,8 @@ object MemberForm {
       "password" -> optional(nonEmptyText),
       "casId" -> optional(nonEmptyText),
       "subscriberOffer" -> default(boolean, false),
-      "featureChoice" -> productFeature
+      "featureChoice" -> productFeature,
+      "ophanPageviewId" -> optional(nonEmptyText)
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
