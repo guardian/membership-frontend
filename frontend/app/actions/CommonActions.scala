@@ -99,10 +99,12 @@ trait CommonActions extends LazyLogging {
   val AjaxPaidSubscriptionAction = AjaxSubscriptionAction andThen paidSubscriptionRefiner(onFreeMember = _ => Forbidden)
 
   val StoreAcquisitionDataAction = new ActionBuilder[Request] {
+    import CommonActions._
+
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] =
       block(request).map { result =>
-        request.getQueryString("acquisitionData").fold(result)(acquisitionData =>
-          result.withSession(request.session + ("acquisitionData" -> acquisitionData))
+        request.getQueryString(acquisitionDataSessionKey).fold(result)(acquisitionData =>
+          result.withSession(request.session + (acquisitionDataSessionKey -> acquisitionData))
         )
       }
   }
@@ -114,6 +116,10 @@ trait CommonActions extends LazyLogging {
     }
 
   def ChangeToPaidAction(targetTier: PaidTier) = SubscriptionAction andThen checkTierChangeTo(targetTier)
+}
+
+object CommonActions {
+  val acquisitionDataSessionKey: String = "acquisitionData"
 }
 
 trait OAuthActions extends googleauth.Actions with googleauth.Filters {

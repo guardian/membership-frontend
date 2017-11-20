@@ -24,21 +24,21 @@ trait AcquisitionTracking extends LazyLogging {
     else OphanService(OphanService.prodEndpoint)(RequestRunners.client)
   }
 
-//  private def decodeAcquisitionData(session: Session): Option[ReferrerAcquisitionData] = {
-//    import ReferrerAcquisitionData._
-//    import cats.syntax.either._
-//
-//    val decodeAttempt: Either[String, ReferrerAcquisitionData] = for {
-//      json <- Either.fromOption(session.get("acquisitionData"), "Session does not contain acquisitionData")
-//      jsValue <- Either.catchNonFatal(Json.parse(json)).leftMap(_.getMessage)
-//      acquisitionData <- Json.fromJson(jsValue).fold(
-//        errs => Left(s"Unable to decode JSON $jsValue to an instance of ReferrerAcquisitionData. ${JsError.toJson(errs)}"),
-//        acquisitionData => Right(acquisitionData)
-//      )
-//    } yield acquisitionData
-//
-//    decodeAttempt.leftMap(error => logger.warn(error)).toOption
-//  }
+  private[tracking] def decodeAcquisitionData(session: Session): Option[ReferrerAcquisitionData] = {
+    import actions.CommonActions._
+    import cats.syntax.either._
+
+    val decodeAttempt: Either[String, ReferrerAcquisitionData] = for {
+      json <- Either.fromOption(session.get(acquisitionDataSessionKey), "Session does not contain acquisitionData")
+      jsValue <- Either.catchNonFatal(Json.parse(json)).leftMap(_.getMessage)
+      acquisitionData <- Json.fromJson[ReferrerAcquisitionData](jsValue).fold(
+        errs => Left(s"Unable to decode JSON $jsValue to an instance of ReferrerAcquisitionData. ${JsError.toJson(errs)}"),
+        acquisitionData => Right(acquisitionData)
+      )
+    } yield acquisitionData
+
+    decodeAttempt.leftMap(error => logger.warn(error)).toOption
+  }
 
   def trackAcquisition(
     summary: ThankyouSummary,
@@ -59,7 +59,7 @@ trait AcquisitionTracking extends LazyLogging {
       request.session.get("pageviewId"),
       cookieValue("vsid"),
       cookieValue("bwid"),
-      None // Temporary workaround for play-json incompatibility issue
+      decodeAcquisitionData(request.session)
     ))
   }
 }
