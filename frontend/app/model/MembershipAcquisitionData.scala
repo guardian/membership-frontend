@@ -67,7 +67,7 @@ object MembershipAcquisitionData {
       amount = data.amountPaidToday.amount.toDouble,
       paymentProvider = data.paymentProvider,
       campaignCode = data.referrerAcquisitionData.map(_.campaignCode.toSet),
-      abTests = data.referrerAcquisitionData.map(data => AbTestInfo(data.abTest.toSet)),
+      abTests = data.referrerAcquisitionData.map(data => AbTestInfo(data.abTests.toSet.flatten ++ data.abTest)),
       countryCode = data.countryCode,
       referrerPageViewId = data.referrerAcquisitionData.flatMap(_.referrerPageviewId),
       referrerUrl = data.referrerAcquisitionData.flatMap(_.referrerUrl),
