@@ -17,7 +17,6 @@ object Dependencies {
   val playCache = PlayImport.cache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
-  val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "3.1"
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.1.3"
