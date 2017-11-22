@@ -28,12 +28,11 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-class Event @Inject()(override val wsClient: WSClient) extends Controller with MemberServiceProvider with OAuthActions with ActivityTracking with LazyLogging {
+class Event @Inject()(override val wsClient: WSClient) extends Controller with MemberServiceProvider with OAuthActions with LazyLogging {
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
-        trackAnon(EventActivity("buyActionInvoked", None, EventData(event)))(request)
         Timing.record(event.service.wsMetrics, "buy-action-invoked") {
           block(request)
         }
@@ -50,7 +49,6 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
       correctEvent <-(Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(EventbriteService.getEvent).headOption
     } yield {
       if (slug == correctEvent.slug) {
-        trackAnon(EventActivity("viewEventDetails", None, EventData(correctEvent)))
         eventDetail(correctEvent)
       } else Redirect(routes.Event.details(correctEvent.slug))
     }
@@ -141,22 +139,11 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
   private def redirectSignedInMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${req.subscriber.subscription.plan.tier}") {
       memberService.createEBCode(req.subscriber, event).map { codeOpt =>
-        val memberData = MemberData(
-          salesforceContactId = req.subscriber.contact.salesforceContactId,
-          identityId = req.user.id,
-          tier = req.subscriber.subscription.plan.tier,
-          campaignCode = ReferralData.fromRequest.campaignCode
-        )
-
-        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)), req.user)
-
         eventbriteRedirect(event, codeOpt)
       }
     }
 
   private def redirectAnonUserToEventbrite(event: RichEvent)(implicit req: RequestHeader): Result = {
-    trackAnon(EventActivity("redirectToEventbrite", None, EventData(event)))
-
     eventbriteRedirect(event, None)
   }
 
@@ -165,17 +152,6 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
     Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
   }
 
-  private def trackConversionToThankyou(event: RichEvent, order: Option[EBOrder],
-                                        member: Option[Member])(implicit request: Request[_]) {
-
-    val memberData = member.map(m => MemberData(
-      salesforceContactId = m.contact.salesforceContactId,
-      identityId = m.contact.identityId,
-      tier = m.subscription.plan.tier,
-      campaignCode = ReferralData.fromRequest.campaignCode))
-
-    trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
-  }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = SubscriptionAction.async { implicit request =>
     orderIdOpt.fold {
@@ -188,8 +164,6 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
           if (count > 0) {
             memberService.recordFreeEventUsage(request.subscriber.subscription, event, order, count)
           }
-
-          trackConversionToThankyou(event, Some(order), Some(request.subscriber))
 
           Ok(views.html.event.thankyou(event, order))
             .discardingCookies(DiscardingCookie(eventCookie(event)))
@@ -204,9 +178,6 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
       // only log a conversion if the user came from a membership event page
-      request.cookies.get(eventCookie(event)).foreach { _ =>
-        trackConversionToThankyou(event, None, None)
-      }
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
   }

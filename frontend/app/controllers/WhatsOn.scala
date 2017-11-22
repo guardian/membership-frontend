@@ -7,13 +7,12 @@ import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
 import play.api.mvc.Controller
 import services._
-import tracking.ActivityTracking
 import views.support.PageInfo
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-trait WhatsOn extends Controller with ActivityTracking {
+trait WhatsOn extends Controller {
   implicit val countryGroup = UK
 
   val guLiveEvents: EventbriteService

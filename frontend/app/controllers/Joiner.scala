@@ -31,7 +31,7 @@ import services.AuthenticationService.authenticatedIdUserProvider
 import services.api.MemberService.CreateMemberResult
 import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.{GuardianContentService, _}
-import tracking.{AcquisitionTracking, ActivityTracking}
+import tracking.AcquisitionTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
 import utils.{Feature, ReferralData, TierChangeCookies}
@@ -45,7 +45,6 @@ import scala.concurrent.Future
 import scala.util.Failure
 
 class Joiner @Inject()(override val wsClient: WSClient) extends Controller
-  with ActivityTracking
   with AcquisitionTracking
   with PaymentGatewayErrorHandler
   with OAuthActions
@@ -262,10 +261,6 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
         case CreateMemberResult(sfContactId, zuoraSubName) =>
           logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           salesforceService.metrics.putSignUp(tier)
-
-          trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
-          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
-
           formData match {
             case paid: PaidMemberJoinForm =>
               onSuccess.withSession(paid.pageviewId.map(id => request.session + ("pageviewId" -> id)).getOrElse(request.session))

@@ -23,7 +23,6 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import services.{IdentityApi, IdentityService}
-import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.{ReferralData, TierChangeCookies}
 import views.support.MembershipCompat._
@@ -37,7 +36,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController @Inject()(val joinerController: Joiner) extends Controller with ActivityTracking
+class TierController @Inject()(val joinerController: Joiner) extends Controller
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider
