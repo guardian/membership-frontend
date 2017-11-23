@@ -23,7 +23,7 @@ define([
             activeClass: ACTIVE_CLASS,
             offset: navOffset + 100
         });
-        smoothScroll.init({
+        new smoothScroll('a[href*="#"]', {
             speed: 500,
             easing: 'easeInQuad',
             offset: navOffset + 20
