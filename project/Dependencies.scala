@@ -39,7 +39,7 @@ object Dependencies {
   //projects
 
   val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
-    contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
+    contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, sqs, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     acquisitionEventProducer)
 
