@@ -45,7 +45,6 @@
     "grunt-webpack": "^3.0.2",
     "gumshoejs": "^3.5.0",
     "jasmine-core": "^2.8.0",
-    "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
@@ -68,12 +67,7 @@
     "text-loader": "0.0.1",
     "time-grunt": "^1.4.0",
     "url-search-params": "^0.10.0",
-    "vinyl-fs": "^2.4.4",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.5"
-  },
-  "resolutions": {
-    "uglify-js": "2.8.29"
+    "vinyl-fs": "^2.4.4"
   },
   "snyk": true
 }
