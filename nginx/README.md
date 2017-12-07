@@ -3,7 +3,7 @@
 ## Setup Nginx for `Identity-Platform`
 
 Membership depends on Identity, so **you'll need to perform the**
-[**Nginx setup for identity-platform**](https://github.com/guardian/identity-platform/blob/master/README.md#setup-nginx-for-local-development)
+[**Nginx setup for identity-platform**](https://github.com/guardian/identity-platform/tree/master/nginx)
 **first**, before you do anything else.
 
 ## Membership-specific setup
