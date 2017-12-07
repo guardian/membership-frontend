@@ -12,7 +12,9 @@
     "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
     "test": "grunt validate && grunt karma",
-    "postinstall": "npm run bowerSetup"
+    "postinstall": "npm run bowerSetup",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "autoprefixer-core": "^6.0.1",
@@ -37,9 +39,9 @@
     "grunt-karma": "^2.0.0",
     "grunt-postcss": "^0.9.0",
     "grunt-px-to-rem": "^0.4.0",
-    "grunt-sass": "^2.0.0",
+    "grunt-sass": "2.0.0",
     "grunt-svgmin": "^4.0.0",
-    "grunt-svgstore": "^1.0.0",
+    "grunt-svgstore": "1.0.0",
     "grunt-webpack": "^3.0.2",
     "gumshoejs": "^3.5.0",
     "jasmine-core": "^2.8.0",
@@ -62,14 +64,13 @@
     "respimage": "^1.4.2",
     "rimraf": "^2.6.2",
     "smooth-scroll": "^12.1.5",
+    "snyk": "^1.52.1",
     "text-loader": "0.0.1",
     "time-grunt": "^1.4.0",
     "url-search-params": "^0.10.0",
     "vinyl-fs": "^2.4.4",
-    "webpack": "~3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.5"
   },
-  "resolutions": {
-    "uglify-js": "2.8.29"
-  }
+  "snyk": true
 }
