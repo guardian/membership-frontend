@@ -138,6 +138,13 @@
                             address = idUser.map(_.billingAddress).getOrElse(BlankAddress),
                             showHeading = false
                         )
+                            <!-- Marketing consent -->
+                        <div class="fieldset__heading">
+                            <h2 class="fieldset__headline">Emails</h2>
+                            <div class="fieldset__note">
+                                If you would like to receive occasional emails about how you can help secure our future by making a contribution, becoming a member, or by subscribing to our print or digital editions please check the checkbox below</div>
+                            <label><input type="checkbox" name="marketing.supporter" id="marketing-consent"></label>
+                        </div>
 
                         <button class="action form-panel__continue js-continue-name-address" type="button">Continue</button>
                         <div class="flash-message flash-message--error is-hidden js-payment-errors qa-form-error">
