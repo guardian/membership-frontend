@@ -54,11 +54,6 @@ object IdentityService {
     )
   }
 
-  def statusFieldsFor(form: CommonForm): StatusFields = StatusFields(
-    receiveGnmMarketing = form.marketingChoices.gnm,
-    receive3rdPartyMarketing = form.marketingChoices.thirdParty
-  )
-
   def privateFieldsFor(
     firstName: Option[String] = None,
     lastName: Option[String] = None,

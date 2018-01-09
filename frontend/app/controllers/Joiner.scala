@@ -243,7 +243,7 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: Request[_]) = {
     val userOpt = authenticatedIdUserProvider(request)
-    logger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
+    logger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}... data: $formData")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =
       TouchpointBackend.forRequest(NameEnteredInForm, Some(formData))

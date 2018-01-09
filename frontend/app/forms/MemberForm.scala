@@ -15,6 +15,7 @@ import play.api.data.{FieldMapping, Form, FormError, Mapping}
 import play.api.libs.json.{JsValue, Json}
 
 object MemberForm {
+
   case class NameForm(first: String, last: String) extends FullName {
     override def title: Option[Title] = None
   }
@@ -43,8 +44,6 @@ object MemberForm {
 
   case class PaymentForm(billingPeriod: BillingPeriod, stripeToken: Option[String], payPalBaid: Option[String]) extends CommonPaymentForm
 
-  case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
-
   trait HasDeliveryAddress {
     val deliveryAddress: Address
   }
@@ -56,7 +55,7 @@ object MemberForm {
   trait CommonForm {
     val name: NameForm
     val password: Option[String]
-    val marketingChoices: MarketingChoicesForm
+    val marketingConsent: Boolean
   }
 
   trait JoinForm extends CommonForm with HasDeliveryAddress {
@@ -69,7 +68,7 @@ object MemberForm {
 
   trait PaidMemberForm extends PaidForm with HasBillingAddress {
     val featureChoice: Set[FeatureChoice]
-    val zuoraAccountAddress : Address
+    val zuoraAccountAddress: Address
     val payment: PaymentForm
   }
 
@@ -78,47 +77,37 @@ object MemberForm {
     val payment: MonthlyPaymentForm
   }
 
-  case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
-                            password: Option[String]) extends JoinForm {
+  case class FriendJoinForm(name: NameForm,
+    deliveryAddress: Address,
+    marketingConsent: Boolean,
+    password: Option[String]) extends JoinForm {
     override val planChoice: FreePlanChoice = FreePlanChoice(friend)
   }
 
-  case class StaffJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
-                            password: Option[String]) extends JoinForm {
+  case class StaffJoinForm(name: NameForm,
+    deliveryAddress: Address,
+    marketingConsent: Boolean,
+    password: Option[String]) extends JoinForm {
     override val planChoice: FreePlanChoice = FreePlanChoice(staff)
   }
 
   case class PaidMemberJoinForm(tier: PaidTier,
-                                name: NameForm,
-                                email: String,
-                                payment: PaymentForm,
-                                deliveryAddress: Address,
-                                billingAddress: Option[Address],
-                                marketingChoices: MarketingChoicesForm,
-                                password: Option[String],
-                                casId: Option[String],
-                                subscriberOffer: Boolean,
-                                featureChoice: Set[FeatureChoice],
-                                pageviewId: Option[String]
-                               ) extends JoinForm with PaidMemberForm {
+    name: NameForm,
+    email: String,
+    payment: PaymentForm,
+    deliveryAddress: Address,
+    billingAddress: Option[Address],
+    marketingConsent: Boolean,
+    password: Option[String],
+    casId: Option[String],
+    subscriberOffer: Boolean,
+    featureChoice: Set[FeatureChoice],
+    pageviewId: Option[String]
+  ) extends JoinForm with PaidMemberForm {
 
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
     override val planChoice: PaidPlanChoice = PaidPlanChoice(tier, payment.billingPeriod)
   }
-
-  case class MonthlyContributorForm(
-                                name: NameForm,
-                                payment: MonthlyPaymentForm,
-                                marketingChoices: MarketingChoicesForm,
-                                password: Option[String],
-                                casId: Option[String],
-                                subscriberOffer: Boolean,
-                                country: String
-                               ) extends ContributorForm {
-    override val planChoice = ContributorChoice()
-  }
-
-
 
   case class AddressDetails(deliveryAddress: Address, billingAddress: Option[Address])
 
@@ -132,21 +121,22 @@ object MemberForm {
   }
 
   case class FreeMemberChangeForm(payment: PaymentForm,
-                                  deliveryAddress: Address,
-                                  billingAddress: Option[Address],
-                                  featureChoice: Set[FeatureChoice]
-                                  ) extends MemberChangeForm with PaidMemberForm {
+    deliveryAddress: Address,
+    billingAddress: Option[Address],
+    featureChoice: Set[FeatureChoice]
+  ) extends MemberChangeForm with PaidMemberForm {
     val addressDetails = Some(AddressDetails(deliveryAddress, billingAddress))
     lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
   }
 
 
   val abTestFormatter: Formatter[JsValue] = new Formatter[JsValue] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError],JsValue] = {
-      val parse: JsValue = Json.parse(URLDecoder.decode(data(key),StandardCharsets.UTF_8.name()))
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], JsValue] = {
+      val parse: JsValue = Json.parse(URLDecoder.decode(data(key), StandardCharsets.UTF_8.name()))
       Right(parse)
     }
-    override def unbind(key: String, data: JsValue): Map[String,String] = Map()
+
+    override def unbind(key: String, data: JsValue): Map[String, String] = Map()
 
   }
 
@@ -180,13 +170,15 @@ object MemberForm {
   private val country: Mapping[String] =
     text.verifying { code => CountryGroup.countryByCode(code).isDefined }
       .transform(
-        { code => CountryGroup.countryByCode(code).fold("")(_.name)},
-        { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2)})
+        { code => CountryGroup.countryByCode(code).fold("")(_.name) },
+        { name => CountryGroup.countryByNameOrCode(name).fold("")(_.alpha2) })
 
   implicit val currencyFormatter = new Formatter[Currency] {
     type Result = Either[Seq[FormError], Currency]
+
     override def bind(key: String, data: Map[String, String]): Result =
       data.get(key).map(_.toUpperCase).flatMap(Currency.fromString).fold[Result](Left(Seq.empty))(currency => Right(currency))
+
     override def unbind(key: String, value: Currency): Map[String, String] =
       Map(key -> value.identifier)
   }
@@ -196,7 +188,7 @@ object MemberForm {
     "lineTwo" -> text,
     "town" -> text,
     "countyOrState" -> text,
-    "postCode" -> text(maxLength=20),
+    "postCode" -> text(maxLength = 20),
     "country" -> country
   )(Address.apply)(Address.unapply).verifying(_.valid)
 
@@ -205,7 +197,7 @@ object MemberForm {
     "lineTwo" -> text,
     "town" -> nonEmptyText,
     "countyOrState" -> text,
-    "postCode" -> text(maxLength=20),
+    "postCode" -> text(maxLength = 20),
     "country" -> country
   )(Address.apply)(Address.unapply).verifying(_.valid)
 
@@ -214,29 +206,27 @@ object MemberForm {
     "last" -> nonEmptyText
   )(NameForm.apply)(NameForm.unapply)
 
-  val marketingChoicesMapping: Mapping[MarketingChoicesForm] = mapping(
-    "gnnMarketing" -> optional(boolean),
-    "thirdParty" -> optional(boolean)
-  )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
-  val  paymentMapping: Mapping[PaymentForm] = mapping(
+  val paymentMapping: Mapping[PaymentForm] = mapping(
     "type" -> nonEmptyText.transform[BillingPeriod](b =>
-      if (Seq("annual","subscriberOfferAnnual").contains(b)) Year else Month, _.noun),
+      if (Seq("annual", "subscriberOfferAnnual").contains(b)) Year else Month, _.noun),
     "stripeToken" -> optional(text),
     "payPalBaid" -> optional(text)
   )(PaymentForm.apply)(PaymentForm.unapply)
 
-  val  monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
+  val monthlyPaymentMapping: Mapping[MonthlyPaymentForm] = mapping(
     "stripeToken" -> optional(text),
     "payPalBaid" -> optional(text),
-    "amount" -> bigDecimal(10, 2).verifying { _ >= 5 }
+    "amount" -> bigDecimal(10, 2).verifying {
+      _ >= 5
+    }
   )(MonthlyPaymentForm.apply)(MonthlyPaymentForm.unapply)
 
   val friendJoinForm: Form[FriendJoinForm] = Form(
     mapping(
       "name" -> nameMapping,
       "deliveryAddress" -> nonPaidAddressMapping,
-      "marketingChoices" -> marketingChoicesMapping,
+      "marketingConsent" -> default(boolean, false),
       "password" -> optional(nonEmptyText)
     )(FriendJoinForm.apply)(FriendJoinForm.unapply)
   )
@@ -245,7 +235,7 @@ object MemberForm {
     mapping(
       "name" -> nameMapping,
       "deliveryAddress" -> nonPaidAddressMapping,
-      "marketingChoices" -> marketingChoicesMapping,
+      "marketingConsent" -> default(boolean, false),
       "password" -> optional(nonEmptyText)
     )(StaffJoinForm.apply)(StaffJoinForm.unapply)
   )
@@ -258,7 +248,7 @@ object MemberForm {
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),
-      "marketingChoices" -> marketingChoicesMapping,
+      "marketingConsent" -> default(boolean, false),
       "password" -> optional(nonEmptyText),
       "casId" -> optional(nonEmptyText),
       "subscriberOffer" -> default(boolean, false),
@@ -267,25 +257,13 @@ object MemberForm {
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
-  val monthlyContributorForm: Form[MonthlyContributorForm] = Form(
-    mapping(
-      "name" -> nameMapping,
-      "payment" -> monthlyPaymentMapping,
-      "marketingChoices" -> marketingChoicesMapping,
-      "password" -> optional(nonEmptyText),
-      "casId" -> optional(nonEmptyText),
-      "subscriberOffer" -> default(boolean, false),
-      "country" -> country
-    )(MonthlyContributorForm.apply)(MonthlyContributorForm.unapply)
-  )
-
   val freeMemberChangeForm: Form[FreeMemberChangeForm] = Form(
     mapping(
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),
       "featureChoice" -> productFeature
-  )(FreeMemberChangeForm.apply)(FreeMemberChangeForm.unapply)
+    )(FreeMemberChangeForm.apply)(FreeMemberChangeForm.unapply)
   )
 
   val paidMemberChangeForm: Form[PaidMemberChangeForm] = Form(
