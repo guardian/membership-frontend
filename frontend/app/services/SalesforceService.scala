@@ -67,19 +67,13 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
         Keys.MAILING_CITY -> jf.deliveryAddress.town,
         Keys.MAILING_STATE -> jf.deliveryAddress.countyOrState,
         Keys.MAILING_POSTCODE -> jf.deliveryAddress.postCode,
-        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.fold(jf.deliveryAddress.countryName)(_.name),
-        Keys.ALLOW_MEMBERSHIP_MAIL -> true,
-        Keys.ALLOW_THIRD_PARTY_EMAIL -> false,
-        Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingConsent
+        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.fold(jf.deliveryAddress.countryName)(_.name)
       )
 
       case _ => Json.obj(
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
-        Keys.LAST_NAME -> formData.name.last,
-        Keys.ALLOW_MEMBERSHIP_MAIL -> true,
-        Keys.ALLOW_THIRD_PARTY_EMAIL -> false,
-        Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingConsent
+        Keys.LAST_NAME -> formData.name.last
       )
     }
 
