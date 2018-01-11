@@ -5,22 +5,22 @@ import com.github.t3hnar.bcrypt._
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.BillingPeriod
 import com.gu.salesforce._
-import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
+import com.snowplowanalytics.snowplow.tracker.core.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import controllers.Testing
-import forms.MemberForm.{AddressDetails, JoinForm, MarketingChoicesForm, PaidMemberJoinForm}
+import forms.MemberForm.{AddressDetails, JoinForm, PaidMemberJoinForm}
 import model.Eventbrite.{EBOrder, EBTicketClass}
-import model.RichEvent.{GuLiveEvent, MasterclassEvent, RichEvent}
 import model.GenericSFContact
+import model.RichEvent.{GuLiveEvent, MasterclassEvent, RichEvent}
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
 import services.EventbriteService
+import com.gu.memsub.subsv2._
 import utils.ReferralData
 import utils.TestUsers.isTestUser
-import com.gu.memsub.subsv2._
 import views.support.MembershipCompat._
 
 import scala.collection.JavaConversions._
@@ -63,7 +63,6 @@ case class MemberData(salesforceContactId: String,
                       deliveryPostcode: Option[String] = None,
                       billingPostcode: Option[String] = None,
                       subscriptionPaymentAnnual: Option[Boolean] = None,
-                      marketingChoices: Option[MarketingChoicesForm] = None,
                       city: Option[String] = None,
                       country: Option[String] = None,
                       campaignCode: Option[String] = None,
@@ -91,15 +90,6 @@ case class MemberData(salesforceContactId: String,
         subscriptionPlan.map("subscriptionPlan" -> _) ++
         city.map("city" -> _) ++
         country.map("country" -> _) ++
-        marketingChoices.map { mc =>
-          "marketingChoicesForm" -> ActivityTracking.setSubMap {
-            Map(
-              "gnm" -> mc.gnm.getOrElse(false),
-              "thirdParty" -> mc.thirdParty.getOrElse(false),
-              "membership" -> true
-            )
-          }
-        } ++
         tierAmendment.map { tierAmend =>
           "amendTier" -> ActivityTracking.setSubMap {
             Map(
@@ -236,7 +226,6 @@ trait ActivityTracking {
         deliveryPostcode = Some(formData.deliveryAddress.postCode),
         billingPostcode = billingPostcode,
         subscriptionPaymentAnnual = subscriptionPaymentAnnual,
-        marketingChoices = Some(formData.marketingChoices),
         city = Some(formData.deliveryAddress.town),
         country = Some(formData.deliveryAddress.country.fold(formData.deliveryAddress.countryName)(_.name)),
         campaignCode = referralData.campaignCode,
@@ -286,7 +275,6 @@ trait ActivityTracking {
           deliveryPostcode = addressDetails.map(_.deliveryAddress.postCode),
           billingPostcode = addressDetails.flatMap(f => f.billingAddress.map(_.postCode)).orElse(addressDetails.map(_.deliveryAddress.postCode)),
           subscriptionPaymentAnnual = Some(newRatePlan.charges.billingPeriod.annual),
-          marketingChoices = None,
           city = addressDetails.map(_.deliveryAddress.town),
           country = addressDetails.map(addressDetails => addressDetails.deliveryAddress.country.fold(addressDetails.deliveryAddress.countryName)(_.name)),
           campaignCode = referralData.campaignCode,

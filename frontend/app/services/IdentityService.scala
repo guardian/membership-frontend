@@ -7,6 +7,7 @@ import com.gu.identity.play._
 import com.gu.identity.play.idapi.{CreateIdUser, UpdateIdUser, UserRegistrationResult}
 import com.gu.memsub.Address
 import com.gu.memsub.util.Timing
+import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import dispatch.Defaults.timer
@@ -15,6 +16,7 @@ import forms.MemberForm._
 import monitoring.IdentityApiMetrics
 import play.api.Logger
 import play.api.Play.current
+import play.api.http.Status
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
@@ -24,18 +26,17 @@ import views.support.IdentityUser
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
-import dispatch._
-import Defaults.timer
-import play.api.http.Status
-import play.api.mvc.Results
 
 case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-object IdentityService {
-  val DisregardResponseContent: (WSResponse => Either[String, Unit]) = resp => Right(Unit)
+object IdentityService extends LazyLogging {
+  val DisregardResponseContent: (WSResponse => Either[String, Unit]) = {
+    resp =>
+      logger.debug(s"Webservice returned code ${resp.status}, and body: ${resp.body}")
+      Right(Unit)
+  }
 
   def privateFieldsFor(form: CommonForm): PrivateFields = {
     val deliveryOpt = form match {
@@ -53,11 +54,6 @@ object IdentityService {
       }
     )
   }
-
-  def statusFieldsFor(form: CommonForm): StatusFields = StatusFields(
-    receiveGnmMarketing = form.marketingChoices.gnm,
-    receive3rdPartyMarketing = form.marketingChoices.thirdParty
-  )
 
   def privateFieldsFor(
     firstName: Option[String] = None,
@@ -148,6 +144,13 @@ case class IdentityService(identityApi: IdentityApi) {
     idReq.trackingParameters ++ Seq("authenticate" -> "true", "format" -> "cookies"),
     "create-user") {
     _.json.validate[UserRegistrationResult].asEither.leftMap(_.mkString(","))
+  }
+
+  def consentEmail(email: String, idReq: IdentityRequest): EitherT[Future, String, Unit] = {
+    identityApi.post("/consent-email",
+      Some(Json.obj("email" -> email, "set-consents" -> List("supporter"))),
+      idReq.headers,
+      Nil, "consentEmail")(DisregardResponseContent)
   }
 
   def updateUser(userUpdateCommand: UpdateIdUser, userId: String)(implicit idReq: IdentityRequest): EitherT[Future, String, Unit] = {

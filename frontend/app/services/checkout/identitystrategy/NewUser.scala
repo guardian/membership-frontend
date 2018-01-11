@@ -23,8 +23,7 @@ object NewUser {
     paidMemberJoinForm.email,
     password,
     PublicFields(displayName = Some(s"${form.name.first} ${form.name.last}")),
-    Some(IdentityService.privateFieldsFor(form)),
-    Some(IdentityService.statusFieldsFor(form)))
+    Some(IdentityService.privateFieldsFor(form)))
   )
 }
 

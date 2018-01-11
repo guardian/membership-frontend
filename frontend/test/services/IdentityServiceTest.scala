@@ -41,7 +41,7 @@ class IdentityServiceTest extends Specification with Mockito {
       val friendForm = FriendJoinForm(
         NameForm("Joe", "Bloggs"),
         Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
-        MarketingChoicesForm(Some(false), Some(false)),
+        false,
         None
       )
 
@@ -63,7 +63,7 @@ class IdentityServiceTest extends Specification with Mockito {
         PaymentForm(Year, Some("stripeToken"), None),
         Address("line one", "line 2", "town", "country", "postcode", Country.UK.name),
         Some(Address("line one", "line 2", "town", "country", "postcode", Country.UK.name)),
-        MarketingChoicesForm(Some(false), Some(false)),
+        false,
         None,
         None,
         subscriberOffer = false,

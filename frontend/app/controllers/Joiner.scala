@@ -261,6 +261,9 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case CreateMemberResult(sfContactId, zuoraSubName) =>
           logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
+          if (formData.marketingConsent)
+            identityService.consentEmail(user.primaryEmailAddress, IdentityRequest(request))
+
           salesforceService.metrics.putSignUp(tier)
 
           trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
