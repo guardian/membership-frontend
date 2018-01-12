@@ -128,7 +128,7 @@
 
     .fieldset__heading, .fieldset__fields {
         display: block;
-        margin: 0 0 ($gs-baseline * 2);
+        margin: 0 0 ($gs-baseline);
 
         @include mq(tablet) {
             display: block;
