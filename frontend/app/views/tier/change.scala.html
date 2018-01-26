@@ -30,7 +30,7 @@
                     @for(tier <- availableTiers) {
                         <li class="grid__item">
                             @tier match {
-                                case free: FreeTier => { @fragments.tier.packageChanger(catalog.findFree(free)) }
+                                case free: FreeTier => { }
                                 case paid: PaidTier => { @fragments.tier.packageChanger(catalog.findPaid(paid)) }
                             }
                         </li>
@@ -39,9 +39,14 @@
 
                 <h3 class="h-section">What's included</h3>
                 @for(tier <- availableTiers) {
-                    <div id="package-benefits-@tier.slug">
-                        @fragments.tier.packageStack(tier)
-                    </div>
+                    @tier match {
+                        case free: FreeTier => {}
+                        case paid: PaidTier => {
+                            <div id="package-benefits-@paid.slug">
+                            @fragments.tier.packageStack(paid)
+                            </div>
+                        }
+                    }
                 }
 
                 @* Help & cancellation links *@
