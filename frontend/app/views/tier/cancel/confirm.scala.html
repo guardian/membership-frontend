@@ -19,21 +19,6 @@
     </div>
 }
 
-@downgradeDetails = {
-    <form action="@routes.TierController.downgradeToFriend()" method="POST" class="u-cf">
-        @CSRF.formField
-        <button class="action u-align-right u-margin-bottom" id="qa-confirm-downgrade">@catalog.friend.tier.cta</button>
-    </form>
-    <h3 class="h-stack">Why not stay as a Friend</h3>
-    @fragments.tier.tierTrail(Friend(), showCaption=false)
-    <div class="copy">
-        <ul>
-            @for(benefit <- catalog.friend.tier.benefits) {
-                <li>@benefit.title</li>
-            }
-        </ul>
-    </div>
-}
 
 @main("Cancel Tier") {
 
@@ -58,9 +43,6 @@
                                 <span class="action__label">Stay as a @tier.name</span>
                             </a>
                             @currentTierDetails
-                        </li>
-                        <li class="grid__item">
-                            @downgradeDetails
                         </li>
                     </ul>
                 }
