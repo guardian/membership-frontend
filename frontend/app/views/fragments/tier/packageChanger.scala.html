@@ -31,9 +31,7 @@
             </ul>
         </div>
         @tierPlans match {
-            case FreePlan(_) => {
-                @fragments.pricing.freePriceInfo()
-            }
+            case FreePlan(_) => {}
             case PaidPlans(plans) => {
                 <div class="package-promo__actions">
                     <div class="package-promo__actions__pricing">
