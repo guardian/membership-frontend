@@ -36,7 +36,6 @@
     .membership-event__brand {
         @include fs-header(2);
         font-weight: bold;
-        text-transform: lowercase;
         margin: 0;
     }
     .membership-event__media img {

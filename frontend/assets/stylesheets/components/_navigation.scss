@@ -68,7 +68,6 @@
 }
 .global-navigation__item {
     vertical-align: middle;
-    text-transform: lowercase;
 
     @include mq(tablet) {
         display: block;
@@ -203,7 +202,6 @@
     font-weight: normal;
     display: inline-block;
     vertical-align: middle;
-    text-transform: lowercase;
     color: $black;
     padding: rem($gs-gutter / 2) 0;
 }
