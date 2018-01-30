@@ -19,10 +19,10 @@ define([
         });
 
         /********************************************************
-         * $ util - $.js, bonzo.js, qwery.js
+         * jQuery via $ ref
          ********************************************************/
 
-        it('should instantiate a bonzo.js object from a qwery.js selector using $ util', function() {
+        it('should instantiate an object from a jQuery selector using the $ short ref', function() {
 
             var el = $('body');
 

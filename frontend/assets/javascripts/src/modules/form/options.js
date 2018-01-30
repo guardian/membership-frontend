@@ -114,7 +114,7 @@ define([
     }
 
     function selectCountry(selectEl, country) {
-        $('option', selectEl).each(function (el) {
+        $('option', selectEl).each(function (i, el) {
             if ($(el).val() === country) {
                 $(el)[0].selected = true;
             }

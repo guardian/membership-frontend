@@ -1,4 +1,4 @@
-define(['bean', 'qwery'], function(bean, qwery) {
+define(['bean', '$'], function(bean, $) {
     'use strict';
 
     var Component = function() {};
@@ -17,7 +17,7 @@ define(['bean', 'qwery'], function(bean, qwery) {
     Component.prototype.getElem = function(elemName) {
         if (this.elems[elemName]) { return this.elems[elemName]; }
 
-        var elem = qwery(this.getClass(elemName), this.elem);
+        var elem = $(this.getClass(elemName), this.elem);
         var element;
 
         if (elem.length) {

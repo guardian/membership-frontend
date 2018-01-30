@@ -17,7 +17,7 @@ define(['$'], function ($) {
     // (eg. title, price) to DOM elements
     var index = FILTER_ITEMS.map(function (item) {
         var filters = {};
-        $('[data-filter-key]', item).each(function (f) {
+        $('[data-filter-key]', item).each(function (i, f) {
             var elm = $(f);
             filters[elm.data('filter-key')] = elm.text();
         });

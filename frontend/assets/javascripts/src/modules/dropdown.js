@@ -38,6 +38,7 @@ define(['$', 'bean'], function ($, bean) {
     }
 
     // bonzo doesn't provide this so had to write my own
+    // TODO: Now we've removed bonzo in favour of jQuery, we might use JQ's native function instead
     function closest(elem, className) {
         do {
             if ($(elem).hasClass(className)) {
