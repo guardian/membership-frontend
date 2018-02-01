@@ -15,9 +15,9 @@ define(['$'], function ($) {
 
     // Create an index mapping any filter "key"
     // (eg. title, price) to DOM elements
-    var index = FILTER_ITEMS.map(function (item) {
+    var index = FILTER_ITEMS.map(function (_, item) {
         var filters = {};
-        $('[data-filter-key]', item).each(function (i, f) {
+        $('[data-filter-key]', item).each(function (_, f) {
             var elm = $(f);
             filters[elm.data('filter-key')] = elm.text();
         });
@@ -73,7 +73,7 @@ define(['$'], function ($) {
             show: [],
             hide: []
         };
-        index.forEach(function (item) {
+        index.each(function (_, item) {
             // use simple substring matching for now...
             var isFound = item.filters[FILTER_INPUT.getAttribute('data-filter-field')].toLowerCase().search(value);
             if (isFound !== -1) {
