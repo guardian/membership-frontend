@@ -5,7 +5,7 @@ import com.gu.contentapi.client.model.v1.{Content, ItemResponse}
 import com.gu.i18n.Currency.GBP
 import com.gu.memsub.Benefit._
 import com.gu.memsub.BillingPeriod.Month
-import com.gu.memsub.Subscription.{ProductRatePlanChargeId, ProductRatePlanId, RatePlanId}
+import com.gu.memsub.Subscription.{ProductRatePlanChargeId, ProductRatePlanId, RatePlanId, SubscriptionRatePlanChargeId}
 import com.gu.memsub._
 import com.gu.memsub.subsv2.{Subscription, _}
 import com.gu.salesforce._
@@ -29,8 +29,22 @@ class DestinationServiceTest extends Specification {
 
     def createRequestWithSession(newSessions: (String, String)*) = {
 
-      val testMember = Contact("id", None, None, Some("fn"), "ln", new DateTime(), "contactId", "accountId", None, None, None, None, None)
-      val partnerCharge: PaidCharge[Partner.type, Month.type] = PaidCharge[Partner.type, Month.type](Partner, Month, PricingSummary(Map(GBP -> Price(0.1f, GBP))), ProductRatePlanChargeId("prpcId"))
+      val testMember = Contact(
+        identityId= "id",
+        regNumber= None,
+        title = None,
+        firstName= Some("fn"),
+        lastName= "ln",
+        joinDate= new DateTime(),
+        salesforceContactId= "contactId",
+        salesforceAccountId= "accountId",
+        mailingStreet= None,
+        mailingCity= None,
+        mailingState= None,
+        mailingPostcode= None,
+        mailingCountry= None
+      )
+      val partnerCharge: PaidCharge[Partner.type, Month.type] = PaidCharge[Partner.type, Month.type](Partner, Month, PricingSummary(Map(GBP -> Price(0.1f, GBP))), ProductRatePlanChargeId("prpcId"),SubscriptionRatePlanChargeId("srpcid"))
       val testSub: Subscription[SubscriptionPlan.Member] = new Subscription[SubscriptionPlan.Partner](
         id = com.gu.memsub.Subscription.Id(""),
         name = com.gu.memsub.Subscription.Name(""),
