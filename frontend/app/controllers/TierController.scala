@@ -48,24 +48,6 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller 
   with PaymentServiceProvider
   with ZuoraRestServiceProvider {
 
-  def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
-    Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, request.touchpointBackend.catalogService.unsafeCatalog))
-  }
-
-  def downgradeToFriendConfirm = PaidSubscriptionAction.async { implicit request => // POST
-    for {
-      cancelledSubscription <- memberService.downgradeSubscription(request.subscriber)
-    } yield Redirect(routes.TierController.downgradeToFriendSummary)
-  }
-
-  def downgradeToFriendSummary = PaidSubscriptionAction { implicit request =>
-    val startDate = request.subscriber.subscription.plan.chargedThrough.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
-    implicit val c = catalog
-    Ok(views.html.tier.downgrade.summary(
-      request.subscriber.subscription,
-      catalog.friend, startDate)).discardingCookies(TierChangeCookies.deletionCookies: _*)
-  }
-
   def change() = SubscriptionAction.async { implicit request =>
     implicit val countryGroup = UK
     implicit val c = catalog

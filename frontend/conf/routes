@@ -81,9 +81,6 @@ GET         /tier/cancel                               @controllers.TierControll
 POST        /tier/cancel/confirm                       @controllers.TierController.cancelTierConfirm
 GET         /tier/cancel/paid/summary                  @controllers.TierController.cancelPaidTierSummary
 GET         /tier/cancel/free/summary                  @controllers.TierController.cancelFreeTierSummary
-GET         /tier/change/friend                        @controllers.TierController.downgradeToFriend
-POST        /tier/change/friend                        @controllers.TierController.downgradeToFriendConfirm
-GET         /tier/change/friend/summary                @controllers.TierController.downgradeToFriendSummary
 GET         /tier/change/:tier                         @controllers.TierController.upgrade(tier: PaidTier)
 POST        /tier/change/:tier                         @controllers.TierController.upgradeConfirm(tier: PaidTier)
 GET         /tier/change/:tier/summary                 @controllers.TierController.upgradeThankyou(tier: PaidTier)
