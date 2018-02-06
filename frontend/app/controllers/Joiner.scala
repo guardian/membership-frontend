@@ -45,7 +45,7 @@ import scala.concurrent.Future
 import scala.util.Failure
 
 @Singleton
-class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi) extends Controller
+class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, eventbriteService: EventbriteCollectiveServices) extends Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
@@ -72,7 +72,7 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail(identityService)
 
   def tierChooser = NoCacheAction { implicit request =>
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(EventbriteService.getBookableEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(eventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
     val contentRefererOpt = request.headers.get(REFERER)
 
@@ -269,7 +269,7 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
           salesforceService.metrics.putSignUp(tier)
 
           trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
-          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
+          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)(eventbriteService)
 
           formData match {
             case paid: PaidMemberJoinForm =>
@@ -307,9 +307,17 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
       account.toOption.flatMap(_.billToContact.email)
     }
 
+    import scalaz.std.scalaFuture._
+
+    val destinationService = new DestinationService[Future](
+      eventbriteService.getBookableEvent,
+      GuardianContentService.contentItemQuery,
+      memberService.createEBCode
+    )
+
     for {
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
-      destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
+      destination <- destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
       email <- emailFromZuora
     } yield {

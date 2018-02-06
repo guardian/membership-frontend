@@ -18,10 +18,13 @@ import play.api.Play.current
 import play.api.cache.Cache
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{Json, Reads}
+import play.api.cache.CacheApi
 import utils.StringUtils._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+
+import javax.inject.{Inject, Singleton}
 
 trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
@@ -217,21 +220,24 @@ object EventbriteServiceHelpers {
   }
 }
 
-trait EventbriteCollectiveServices {
-  val services = Seq(GuardianLiveEventService, MasterclassEventService)
-
+object EventbriteService {
   implicit class RichEventProvider(event: RichEvent) {
     val service = event match {
       case _: GuLiveEvent => GuardianLiveEventService
       case _: MasterclassEvent => MasterclassEventService
     }
   }
+}
 
-  def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+@Singleton
+class EventbriteCollectiveServices @Inject()(val cache: CacheApi) {
+  val services = Seq(GuardianLiveEventService, MasterclassEventService)
+
+  def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
     GuardianLiveEventService.getPreviewEvent(id)
   }
 
-  def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+  def getPreviewMasterclass(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
     MasterclassEventService.getPreviewEvent(id)
   }
 
@@ -241,5 +247,3 @@ trait EventbriteCollectiveServices {
   def getBookableEvent(id: String): Option[RichEvent] = searchServices(_.getBookableEvent(id))
   def getEvent(id: String): Option[RichEvent] = searchServices(_.getEvent(id))
 }
-
-object EventbriteService extends EventbriteCollectiveServices

@@ -111,11 +111,6 @@ object TouchpointBackend extends LazyLogging {
       stripeUKMembershipService = stripeUKMembershipService,
       stripeAUMembershipService = stripeAUMembershipService,
       zuoraSoapClient = zuoraSoapClient,
-      destinationService = new DestinationService[Future](
-        EventbriteService.getBookableEvent,
-        GuardianContentService.contentItemQuery,
-        memberService.createEBCode
-      ),
       memberService = memberService,
       subscriptionService = newSubsService,
       catalogService = newCatalogService,
@@ -172,7 +167,6 @@ case class TouchpointBackend(
   stripeUKMembershipService: StripeService,
   stripeAUMembershipService: StripeService,
   zuoraSoapClient: soap.ClientWithFeatureSupplier,
-  destinationService: DestinationService[Future],
   memberService: api.MemberService,
   subscriptionService: subsv2.services.SubscriptionService[Future],
   catalogService: subsv2.services.CatalogService[Future],
