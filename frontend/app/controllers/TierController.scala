@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import _root_.services.api.MemberService._
 import actions.BackendProvider
@@ -37,7 +37,8 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController @Inject()(val joinerController: Joiner) extends Controller with ActivityTracking
+@Singleton
+class TierController @Inject()(val joinerController: Joiner, val identityApi: IdentityApi) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider
@@ -119,7 +120,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller 
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
 
     val idUserFuture =
-      IdentityService(IdentityApi)
+      IdentityService(identityApi)
         .getIdentityUserView(request.user, IdentityRequest(request))
 
     // Preselect the country from Identity fields
@@ -196,7 +197,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller 
       emailFromZuora.flatMap { maybeEmail =>
         maybeEmail.map { email =>
           for {
-            reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
+            reauthResult <- IdentityService(identityApi).reauthUser(email, form.password).value
             result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
           } yield result
         }.getOrElse(noEmailMessage)

@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import abtests.ABTest
 import actions.ActionRefiners._
@@ -44,7 +44,8 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: MessagesApi) extends Controller
+@Singleton
+class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi) extends Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
@@ -66,9 +67,9 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
 
   val subscriberOfferDelayPeriod = 6.months
 
-  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
+  val identityService = IdentityService(identityApi)
 
-  val identityService = IdentityService(IdentityApi)
+  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail(identityService)
 
   def tierChooser = NoCacheAction { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(EventbriteService.getBookableEvent)
@@ -99,7 +100,7 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
 
     userSignedIn match {
       case Some(user) => for {
-        fullUser <- IdentityService(IdentityApi).getFullUserDetails(user)(IdentityRequest(request))
+        fullUser <- identityService.getFullUserDetails(user)(IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
@@ -256,7 +257,7 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
     val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry
 
-    val identityStrategy = identityStrategyFor(request, formData)
+    val identityStrategy = identityStrategyFor(identityService, request, formData)
     identityStrategy.ensureIdUser { user =>
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {

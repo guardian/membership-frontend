@@ -10,9 +10,8 @@ import services.{IdentityApi, IdentityService}
 import scala.concurrent.Future
 
 object Strategy {
-  val identityService = IdentityService(IdentityApi)
-
-  def identityStrategyFor(request: RequestHeader, form: CommonForm): Strategy = {
+  def identityStrategyFor(identityService: IdentityService, request: RequestHeader, form: CommonForm): Strategy = {
+    implicit val idService = identityService
     implicit val idRequest = IdentityRequest(request)
 
     (for (user <- authenticatedIdUserProvider(request))

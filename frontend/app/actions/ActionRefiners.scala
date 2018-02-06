@@ -176,11 +176,11 @@ object ActionRefiners extends LazyLogging {
       }
   }
 
-  def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result =
+  def matchingGuardianEmail(identityService: IdentityService, onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
-        user <- IdentityService(IdentityApi).getFullUserDetails(request.identityUser)(IdentityRequest(request))
+        user <- identityService.getFullUserDetails(request.identityUser)(IdentityRequest(request))
       } yield {
         if (GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
         else Some(onNonGuEmail(request))

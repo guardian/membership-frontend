@@ -86,14 +86,14 @@ POST        /tier/change/:tier                         @controllers.TierControll
 GET         /tier/change/:tier/summary                 @controllers.TierController.upgradeThankyou(tier: PaidTier)
 
 # Information
-GET         /patrons                                   controllers.Info.patron
-GET         /supporter                                 controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
+GET         /patrons                                   @controllers.Info.patron
+GET         /supporter                                 @controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 GET         /about/supporter                           controllers.Redirects.supporterRedirect
-GET         /:countryGroup/supporter                   controllers.Info.supporterFor(countryGroup: CountryGroup)
-GET         /help                                      controllers.Info.help
-GET            /feedback                              controllers.Info.feedback
-POST           /feedback                              controllers.Info.submitFeedback
-GET            /offers-competitions                   controllers.Info.offersAndCompetitions
+GET         /:countryGroup/supporter                   @controllers.Info.supporterFor(countryGroup: CountryGroup)
+GET         /help                                      @controllers.Info.help
+GET            /feedback                              @controllers.Info.feedback
+POST           /feedback                              @controllers.Info.submitFeedback
+GET            /offers-competitions                   @controllers.Info.offersAndCompetitions
 
 # Bundles - deprecated - TODO: remove
 GET            /bundles                               controllers.Bundle.get(INTCMP: abtests.BundleVariant)
@@ -104,8 +104,8 @@ GET            /uk                                    controllers.Redirects.supp
 GET            /patterns                              controllers.PatternLibrary.patterns
 
 # User
-GET            /user/me                               controllers.User.me
-GET            /user/check-existing-email             controllers.User.checkExistingEmail(email: String)
+GET            /user/me                               @controllers.User.me
+GET            /user/check-existing-email             @controllers.User.checkExistingEmail(email: String)
 
 # Vanity URLS
 GET            /subscriber-offer                      controllers.Redirects.homepageRedirect
@@ -114,7 +114,7 @@ GET            /subscriber-offer                      controllers.Redirects.home
 GET            /about                                 controllers.Redirects.homepageRedirect
 GET            /founder                               controllers.VanityUrl.redirect
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
-GET            /join                                  controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
+GET            /join                                  @controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 
 GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 

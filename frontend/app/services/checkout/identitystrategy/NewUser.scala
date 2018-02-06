@@ -10,13 +10,12 @@ import controllers.IdentityRequest
 import forms.MemberForm.{CommonForm, PaidMemberJoinForm}
 import play.api.mvc.{Result, Results}
 import services.IdentityService
-import services.checkout.identitystrategy.Strategy.identityService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object NewUser {
-  def strategyFrom(form: CommonForm)(implicit idReq: IdentityRequest) = for {
+  def strategyFrom(form: CommonForm)(implicit idReq: IdentityRequest, identityService: IdentityService) = for {
     paidMemberJoinForm <- Option(form).collect { case p: PaidMemberJoinForm => p }
     password <- paidMemberJoinForm.password
   } yield NewUser(CreateIdUser(
@@ -27,7 +26,7 @@ object NewUser {
   )
 }
 
-case class NewUser(creationCommand: CreateIdUser)(implicit idReq: IdentityRequest) extends Strategy {
+case class NewUser(creationCommand: CreateIdUser)(implicit idReq: IdentityRequest, identityService: IdentityService) extends Strategy {
 
   def ensureIdUser(checkoutFunc: (IdUser) => Future[Result]) = (for {
     userRegAndAuthResponse <- identityService.createUser(creationCommand)

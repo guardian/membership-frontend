@@ -22,7 +22,9 @@ import configuration.Config
 import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
+import play.api.libs.ws.WS
 import play.api.mvc.RequestHeader
+import play.api.Play.current
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
 
@@ -85,7 +87,7 @@ object TouchpointBackend extends LazyLogging {
 
     val paymentService = new PaymentService(zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
-    val identityService = IdentityService(IdentityApi)
+    val identityService = IdentityService(new IdentityApi(WS.client))
     val memberService = new MemberService(
       identityService = identityService,
       salesforceService = salesforceService,

@@ -17,8 +17,11 @@ import utils.RequestCountry._
 import views.support.PageInfo
 
 import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
 
-trait Info extends Controller with LazyLogging {
+@Singleton
+class Info @Inject()(val identityApi: IdentityApi) extends Controller with LazyLogging {
+
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
     redirectWithCampaignCodes(routes.Info.supporterFor(determinedCountryGroup).url, SEE_OTHER)
@@ -182,7 +185,7 @@ trait Info extends Controller with LazyLogging {
     Ok(views.html.info.help())
   }
 
-  val identityService = IdentityService(IdentityApi)
+  val identityService = IdentityService(identityApi)
 
 
 
@@ -221,5 +224,3 @@ trait Info extends Controller with LazyLogging {
   }
 
 }
-
-object Info extends Info

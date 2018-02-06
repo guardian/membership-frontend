@@ -10,9 +10,10 @@ import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
 import scala.concurrent.ExecutionContext.Implicits.global
+import javax.inject.{Inject, Singleton}
 
-
-trait User extends Controller {
+@Singleton
+class User @Inject()(val identityApi: IdentityApi) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
@@ -24,7 +25,7 @@ trait User extends Controller {
 
   def checkExistingEmail(email: String) = CachedAction.async { implicit request =>
     for {
-      doesUserExist <- IdentityService(IdentityApi).doesUserExist(email)(IdentityRequest(request))
+      doesUserExist <- IdentityService(identityApi).doesUserExist(email)(IdentityRequest(request))
     } yield Ok(Json.obj("emailInUse" -> doesUserExist))
   }
 
@@ -41,5 +42,3 @@ trait User extends Controller {
     )
   )
 }
-
-object User extends User

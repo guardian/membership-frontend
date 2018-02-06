@@ -8,12 +8,11 @@ import forms.MemberForm.CommonForm
 import play.api.mvc.{RequestHeader, Result}
 import services.AuthenticationService.authenticatedIdUserProvider
 import services.IdentityService
-import services.checkout.identitystrategy.Strategy.identityService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class ExistingSignedInUser(userId: IdMinimalUser, formData: CommonForm)(implicit idReq: IdentityRequest) extends Strategy with LazyLogging {
+case class ExistingSignedInUser(userId: IdMinimalUser, formData: CommonForm)(implicit idReq: IdentityRequest, identityService: IdentityService) extends Strategy with LazyLogging {
 
   def ensureIdUser(checkoutFunc: (IdUser) => Future[Result]) = {
     val fieldsFromForm = Some(IdentityService.privateFieldsFor(formData))
