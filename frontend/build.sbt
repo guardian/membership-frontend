@@ -88,8 +88,6 @@ riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 
-routesGenerator := StaticRoutesGenerator
-
 play.sbt.routes.RoutesKeys.routesImport ++= Seq(
     "utils.{Feature,OnOrOff}",
     "com.gu.salesforce.Tier",
