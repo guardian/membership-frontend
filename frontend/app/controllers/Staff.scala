@@ -9,8 +9,8 @@ import services._
 
 
 class Staff @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
-  val guLiveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
+  lazy val guLiveEvents = GuardianLiveEventService
+  lazy val masterclassEvents = MasterclassEventService
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
      Ok(views.html.eventOverview.live(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))

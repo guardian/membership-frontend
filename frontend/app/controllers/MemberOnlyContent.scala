@@ -18,7 +18,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class MemberOnlyContent @Inject()() extends Controller with LazyLogging {
 
-  val contentApiService = GuardianContentService
+  lazy val contentApiService = GuardianContentService
 
   def membershipContentRedirect = Action { Redirect("/supporter") }
 

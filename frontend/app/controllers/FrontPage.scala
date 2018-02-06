@@ -11,8 +11,8 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class FrontPage @Inject()() extends Controller {
-  val liveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
+  lazy val liveEvents = GuardianLiveEventService
+  lazy val masterclassEvents = MasterclassEventService
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK

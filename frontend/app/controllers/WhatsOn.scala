@@ -18,8 +18,8 @@ import javax.inject.{Inject, Singleton}
 class WhatsOn @Inject()() extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
-  val guLiveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
+  lazy val guLiveEvents = GuardianLiveEventService
+  lazy val masterclassEvents = MasterclassEventService
 
   private def allEvents = guLiveEvents.events
 
@@ -31,7 +31,7 @@ class WhatsOn @Inject()() extends Controller with ActivityTracking {
     getCitiesWithCount(allEvents).map(FilterItem.tupled)
   }
 
-  private val normalCatalog =
+  private lazy val normalCatalog =
     Future.successful(TouchpointBackend.Normal.catalogService.unsafeCatalog)
 
   def list = CachedAction.async { implicit request =>

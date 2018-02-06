@@ -59,7 +59,7 @@ class PricingApi @Inject()() extends Controller {
   import PricingFormats._
   import views.support.Pricing._
 
-  val membersCatalog: Catalog = TouchpointBackend.Normal.catalog
+  lazy val membersCatalog: Catalog = TouchpointBackend.Normal.catalog
 
   def currencies = CachedAction {
     Ok(Json.toJson(CountryWithCurrency.all))

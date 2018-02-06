@@ -231,7 +231,7 @@ object EventbriteService {
 
 @Singleton
 class EventbriteCollectiveServices @Inject()(val cache: CacheApi) {
-  val services = Seq(GuardianLiveEventService, MasterclassEventService)
+  lazy val services = Seq(GuardianLiveEventService, MasterclassEventService)
 
   def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
     GuardianLiveEventService.getPreviewEvent(id)

@@ -63,7 +63,7 @@ class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: Message
 
   val JoinReferrer = "join-referrer"
 
-  val contentApiService = GuardianContentService
+  lazy val contentApiService = GuardianContentService
 
   val subscriberOfferDelayPeriod = 6.months
 

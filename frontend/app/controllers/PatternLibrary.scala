@@ -8,7 +8,7 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class PatternLibrary @Inject()() extends Controller {
-  val guLiveEvents = GuardianLiveEventService
+  lazy val guLiveEvents = GuardianLiveEventService
   implicit val countryGroup = UK
 
   val pageImages = Seq(
