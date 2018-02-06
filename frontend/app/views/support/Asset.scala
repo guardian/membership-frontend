@@ -2,12 +2,13 @@ package views.support
 
 
 import com.amazonaws.util.IOUtils
-import play.api.Play
-import play.api.Play.current
 import play.api.libs.json.{JsObject, Json}
 import play.twirl.api.Html
+
 import scala.io.Source
 import configuration.Config
+
+import scala.util.Try
 
 object Asset {
   lazy val map = {
@@ -24,7 +25,7 @@ object Asset {
   def bookmarklet(path: String): String = Config.membershipUrl + "/assets/bookmarklets/" + path
 
   def inlineResource(path: String): Option[String] = {
-    val resource = Play.resourceAsStream(pathAt(path))
+    val resource = Try { getClass.getClassLoader.getResourceAsStream(pathAt(path)) }.toOption
     resource.map(file => IOUtils.toString(file))
   }
 
