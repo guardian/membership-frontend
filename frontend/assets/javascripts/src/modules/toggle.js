@@ -68,7 +68,7 @@ define(['$', 'bean'], function ($, bean) {
 
     var bindToggles = function() {
         var $toggles = $(TOGGLE_BTN_SELECTOR);
-        $toggles.each(function (elem) {
+        $toggles.each(function (i, elem) {
             bean.on(elem, 'click', toggleElement($(elem)));
         });
     };

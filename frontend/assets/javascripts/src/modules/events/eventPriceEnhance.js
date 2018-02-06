@@ -1,4 +1,4 @@
-define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
+define(['$', 'src/utils/user'], function ($, userUtil) {
     'use strict';
 
     var selectors = {

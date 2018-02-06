@@ -5,7 +5,7 @@ import form from 'src/modules/form/helper/formUtil';
 import validity from 'src/modules/form/validation/validity';
 import serializer from 'src/modules/form/helper/serializer';
 import utilsHelper from 'src/utils/helper';
-import $ from 'src/utils/$'
+import $ from 'jquery'; //'src/utils/$';
 import * as paymentError from 'src/modules/form/payment/paymentError';
 
 

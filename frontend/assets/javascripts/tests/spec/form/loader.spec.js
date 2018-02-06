@@ -26,20 +26,20 @@ define(['$', 'src/modules/form/helper/loader'], function ($, loader) {
             removeFixtures();
         });
 
-        it('should disabled an input', function () {
+        it('should disable an input', function () {
             var inputElem = $(SUBMIT_SELECTOR);
             loader.disableSubmitButton(true);
             expect(inputElem.val()).toEqual('Submit');
-            expect(inputElem.attr('disabled')).toBe(true);
+            expect(inputElem.prop('disabled')).toBe(true);
         });
 
         it('should re-enabled previously disabled input', function () {
             var inputElem = $(SUBMIT_SELECTOR);
             inputElem.attr('disabled', true);
-            expect(inputElem.attr('disabled')).toBe(true);
+            expect(inputElem.prop('disabled')).toBe(true);
             loader.disableSubmitButton(false);
             expect(inputElem.val()).toEqual('Submit');
-            expect(inputElem.attr('disabled')).toBe(false);
+            expect(inputElem.prop('disabled')).toBe(false);
         });
 
     });

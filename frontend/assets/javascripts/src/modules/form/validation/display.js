@@ -61,7 +61,7 @@ define([
     var resetErrorState = function ($elems) {
         var errIds = [];
 
-        $elems.each(function (elem) {
+        $elems.each(function (i, elem) {
             if (!elem.hasAttribute('required')) { return; }
 
             var formField = utilsHelper.getSpecifiedParent(elem, FORM_FIELD_CLASSNAME);
