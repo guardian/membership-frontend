@@ -21,8 +21,8 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{paidMemberJoinForm, _}
 import model._
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
@@ -44,7 +44,8 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner @Inject()(override val wsClient: WSClient) extends Controller
+class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: MessagesApi) extends Controller
+  with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
   with PaymentGatewayErrorHandler
