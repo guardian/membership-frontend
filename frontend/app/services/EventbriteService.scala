@@ -17,8 +17,7 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Reads
-import play.api.libs.ws._
+import play.api.libs.json.{Json, Reads}
 import utils.StringUtils._
 
 import scala.concurrent.Future
@@ -150,10 +149,18 @@ object GuardianLiveEventService extends LiveService {
 
   override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
 
+  private def getJson(url: String) = {
+    val req = new Request.Builder().url(url).build()
+    httpClient(req).run(s"${req.method} $url").map { response =>
+      val responseBody = response.body.string()
+      Json.parse(responseBody)
+    }
+  }
+
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
     for {
-      ordering <- WS.url(Config.eventOrderingJsonUrl).get()
-    } yield (ordering.json \ "order").as[Seq[String]]
+      ordering <- getJson(Config.eventOrderingJsonUrl)
+    } yield (ordering \ "order").as[Seq[String]]
   }
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
