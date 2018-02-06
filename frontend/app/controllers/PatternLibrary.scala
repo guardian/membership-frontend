@@ -4,9 +4,11 @@ import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services.{EventbriteService, GuardianLiveEventService, TouchpointBackend}
+import javax.inject.{Inject, Singleton}
 
-trait PatternLibrary extends Controller {
-  val guLiveEvents: EventbriteService
+@Singleton
+class PatternLibrary @Inject()() extends Controller {
+  val guLiveEvents = GuardianLiveEventService
   implicit val countryGroup = UK
 
   val pageImages = Seq(
@@ -35,8 +37,4 @@ trait PatternLibrary extends Controller {
       pageImages))
   }
 
-}
-
-object PatternLibrary extends PatternLibrary {
-  val guLiveEvents = GuardianLiveEventService
 }

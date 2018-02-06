@@ -1,8 +1,9 @@
 package controllers
 
 import play.api.mvc.Controller
+import javax.inject.{Inject, Singleton}
 
-object Login extends Controller {
+class Login @Inject()() extends Controller {
 
   /*
    *   Interstitial sign in page =========================================

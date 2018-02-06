@@ -2,21 +2,21 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt", aggressiveCaching:Boolean ?= false )
-GET         /humans.txt                                controllers.CachedAssets.at(path="/public", file="humans.txt", aggressiveCaching:Boolean ?= false )
-GET         /favicon.ico                               controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
-GET         /sitemap.xml                               controllers.SiteMap.sitemap()
+GET            /robots.txt                            @controllers.CachedAssets.at(path="/public", file="robots.txt", aggressiveCaching:Boolean ?= false )
+GET         /humans.txt                                @controllers.CachedAssets.at(path="/public", file="humans.txt", aggressiveCaching:Boolean ?= false )
+GET         /favicon.ico                               @controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
+GET         /sitemap.xml                               @controllers.SiteMap.sitemap()
 
 # Home page
-GET         /                                          controllers.FrontPage.index
-GET         /welcome                                   controllers.FrontPage.welcome
+GET         /                                          @controllers.FrontPage.index
+GET         /welcome                                   @controllers.FrontPage.welcome
 
 # System
-GET         /healthcheck                               controllers.Healthcheck.healthcheck
+GET         /healthcheck                               @controllers.Healthcheck.healthcheck
 GET         /test-users                                @controllers.Testing.testUser
 GET         /analytics-off                             @controllers.Testing.analyticsOff
-GET         /feature/:feature                          controllers.FeatureOptIn.state(feature: Feature)
-GET         /feature/:feature/:onOrOff                 controllers.FeatureOptIn.setFeatureOnOrOff(feature: Feature, onOrOff: OnOrOff)
+GET         /feature/:feature                          @controllers.FeatureOptIn.state(feature: Feature)
+GET         /feature/:feature/:onOrOff                 @controllers.FeatureOptIn.setFeatureOnOrOff(feature: Feature, onOrOff: OnOrOff)
 
 # Join
 GET         /join/staff                                @controllers.Joiner.staff
@@ -32,10 +32,10 @@ POST        /join/staff/update-email                   @controllers.Joiner.updat
 GET         /join/unsupported-browser                  @controllers.Joiner.unsupportedBrowser
 GET         /choose-tier                               @controllers.Joiner.tierChooser
 
-GET         /membership-content                        controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
+GET         /membership-content                        @controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 
 # Normal user signin:
-GET         /signin                                    controllers.Login.chooseSigninOrRegister(returnUrl: String)
+GET         /signin                                    @controllers.Login.chooseSigninOrRegister(returnUrl: String)
 
 # Staff signin (note, done by OAuth, in addition to regular signin)
 GET         /staff/unauthorised                        @controllers.StaffAuth.unauthorised
@@ -52,18 +52,18 @@ GET         /staff/event-overview/masterclasses        @controllers.Staff.eventO
 GET         /staff/event-overview/details              @controllers.Staff.eventOverviewDetails
 
 # Subscription
-GET         /subscription/remaining-tickets            controllers.Subscription.remainingTickets
+GET         /subscription/remaining-tickets            @controllers.Subscription.remainingTickets
 
 # What's On
-GET         /events                                    controllers.WhatsOn.list
-GET         /events.json                               controllers.rest.EventApi.events
+GET         /events                                    @controllers.WhatsOn.list
+GET         /events.json                               @controllers.rest.EventApi.events
 
-GET         /events/archive                            controllers.WhatsOn.listArchive
-GET         /events/calendar                           controllers.WhatsOn.calendar
-GET         /masterclasses                             controllers.WhatsOn.masterclassesList
-GET         /masterclasses/all                         controllers.WhatsOn.masterclassesList
-GET         /masterclasses/:tag                        controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag = "")
-GET         /masterclasses/:tag/:subTag                controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag)
+GET         /events/archive                            @controllers.WhatsOn.listArchive
+GET         /events/calendar                           @controllers.WhatsOn.calendar
+GET         /masterclasses                             @controllers.WhatsOn.masterclassesList
+GET         /masterclasses/all                         @controllers.WhatsOn.masterclassesList
+GET         /masterclasses/:tag                        @controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag = "")
+GET         /masterclasses/:tag/:subTag                @controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag)
 
 # Event Details
 GET         /event/:id                                 @controllers.Event.details(id)
@@ -88,7 +88,7 @@ GET         /tier/change/:tier/summary                 @controllers.TierControll
 # Information
 GET         /patrons                                   @controllers.Info.patron
 GET         /supporter                                 @controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
-GET         /about/supporter                           controllers.Redirects.supporterRedirect
+GET         /about/supporter                           @controllers.Redirects.supporterRedirect
 GET         /:countryGroup/supporter                   @controllers.Info.supporterFor(countryGroup: CountryGroup)
 GET         /help                                      @controllers.Info.help
 GET            /feedback                              @controllers.Info.feedback
@@ -96,44 +96,44 @@ POST           /feedback                              @controllers.Info.submitFe
 GET            /offers-competitions                   @controllers.Info.offersAndCompetitions
 
 # Bundles - deprecated - TODO: remove
-GET            /bundles                               controllers.Bundle.get(INTCMP: abtests.BundleVariant)
-GET            /bundles/thankyou                      controllers.Bundle.thankYou(INTCMP: abtests.BundleVariant, selectedOption: String)
-GET            /uk                                    controllers.Redirects.supportRedirect
+GET            /bundles                               @controllers.Bundle.get(INTCMP: abtests.BundleVariant)
+GET            /bundles/thankyou                      @controllers.Bundle.thankYou(INTCMP: abtests.BundleVariant, selectedOption: String)
+GET            /uk                                    @controllers.Redirects.supportRedirect
 
 # Styleguide
-GET            /patterns                              controllers.PatternLibrary.patterns
+GET            /patterns                              @controllers.PatternLibrary.patterns
 
 # User
 GET            /user/me                               @controllers.User.me
 GET            /user/check-existing-email             @controllers.User.checkExistingEmail(email: String)
 
 # Vanity URLS
-GET            /subscriber-offer                      controllers.Redirects.homepageRedirect
+GET            /subscriber-offer                      @controllers.Redirects.homepageRedirect
 
 # Redirects
-GET            /about                                 controllers.Redirects.homepageRedirect
-GET            /founder                               controllers.VanityUrl.redirect
-GET            /join-challenger                       controllers.Redirects.homepageRedirect
+GET            /about                                 @controllers.Redirects.homepageRedirect
+GET            /founder                               @controllers.VanityUrl.redirect
+GET            /join-challenger                       @controllers.Redirects.homepageRedirect
 GET            /join                                  @controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 
-GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
+GET            /assets/bookmarklets/*bookmarklet      @controllers.CachedAssets.bookmarkletAt(path="/public/bookmarklets/", bookmarklet)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*assetFile                         controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
+GET         /assets/*assetFile                         @controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
 
 # REST
 # Pricing
-GET         /currencies                                controllers.PricingApi.currencies
-GET         /rate-plans                                controllers.PricingApi.ratePlans
+GET         /currencies                                @controllers.PricingApi.currencies
+GET         /rate-plans                                @controllers.PricingApi.ratePlans
 
 # Giraffe
-GET         /contribute                                controllers.Giraffe.redirectToContributions()
-GET         /:countryGroup/contribute                  controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
+GET         /contribute                                @controllers.Giraffe.redirectToContributions()
+GET         /:countryGroup/contribute                  @controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
 
 GET         /change-mem-status-permission              @controllers.MembershipStatus.load
 
 # Paypal NVP endpoints.
-POST        /paypal/setup-payment                      controllers.PayPal.setupPayment
-POST        /paypal/create-agreement                   controllers.PayPal.createAgreement
-GET         /paypal/return                             controllers.PayPal.returnUrl
-GET         /paypal/cancel                             controllers.PayPal.cancelUrl
+POST        /paypal/setup-payment                      @controllers.PayPal.setupPayment
+POST        /paypal/create-agreement                   @controllers.PayPal.createAgreement
+GET         /paypal/return                             @controllers.PayPal.returnUrl
+GET         /paypal/cancel                             @controllers.PayPal.cancelUrl

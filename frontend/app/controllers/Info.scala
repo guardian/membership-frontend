@@ -24,7 +24,7 @@ class Info @Inject()(val identityApi: IdentityApi) extends Controller with LazyL
 
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
-    redirectWithCampaignCodes(routes.Info.supporterFor(determinedCountryGroup).url, SEE_OTHER)
+    Redirect(routes.Info.supporterFor(determinedCountryGroup).url, campaignCodes(request), SEE_OTHER)
   }
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection

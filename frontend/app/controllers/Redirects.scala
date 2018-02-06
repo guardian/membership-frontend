@@ -1,8 +1,10 @@
 package controllers
 
 import play.api.mvc._
+import javax.inject.{Inject, Singleton}
 
-trait Redirects extends Controller {
+@Singleton
+class Redirects @Inject()() extends Controller {
 
   def homepageRedirect = CachedAction(MovedPermanently("/"))
 
@@ -12,5 +14,3 @@ trait Redirects extends Controller {
 
   def supportRedirect = CachedAction(MovedPermanently("https://support.theguardian.com/"))
 }
-
-object Redirects extends Redirects

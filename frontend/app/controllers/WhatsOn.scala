@@ -12,12 +12,14 @@ import views.support.PageInfo
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
 
-trait WhatsOn extends Controller with ActivityTracking {
+@Singleton
+class WhatsOn @Inject()() extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
-  val guLiveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+  val guLiveEvents = GuardianLiveEventService
+  val masterclassEvents = MasterclassEventService
 
   private def allEvents = guLiveEvents.events
 
@@ -103,9 +105,4 @@ trait WhatsOn extends Controller with ActivityTracking {
       Ok(views.html.event.masterclassesList(c, pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
     )
   }
-}
-
-object WhatsOn extends WhatsOn {
-  val guLiveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

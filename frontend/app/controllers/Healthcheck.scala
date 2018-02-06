@@ -5,6 +5,7 @@ import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger.warn
 import play.api.mvc.{Action, Controller}
 import services.{GuardianLiveEventService, TouchpointBackend}
+import javax.inject.{Inject, Singleton}
 
 trait Test {
   def ok: Boolean
@@ -16,7 +17,8 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
   override def ok = exec()
 }
 
-object Healthcheck extends Controller {
+@Singleton
+class Healthcheck @Inject()() extends Controller {
   import TouchpointBackend.Normal._
 
   def tests = Seq(

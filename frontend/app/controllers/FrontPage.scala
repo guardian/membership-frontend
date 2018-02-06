@@ -7,10 +7,12 @@ import model.RichEvent.EventBrandCollection
 import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}
+import javax.inject.{Inject, Singleton}
 
-trait FrontPage extends Controller {
-  val liveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+@Singleton
+class FrontPage @Inject()() extends Controller {
+  val liveEvents = GuardianLiveEventService
+  val masterclassEvents = MasterclassEventService
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK
@@ -120,9 +122,4 @@ trait FrontPage extends Controller {
 
     Ok(views.html.welcome(PageInfo(title = "Welcome", url = request.path), slideShowImages))
   }
-}
-
-object FrontPage extends FrontPage {
-  val liveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

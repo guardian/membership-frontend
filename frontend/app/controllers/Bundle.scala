@@ -7,8 +7,10 @@ import model._
 import play.api.mvc.Controller
 import services._
 import views.support.PageInfo
+import javax.inject.{Inject, Singleton}
 
-trait Bundle extends Controller {
+@Singleton
+class Bundle @Inject()() extends Controller {
 
   private val landingMainImage = ResponsiveImageGroup(
     availableImages = ResponsiveImageGenerator(
@@ -122,5 +124,3 @@ trait Bundle extends Controller {
   }
 
 }
-
-object Bundle extends Bundle

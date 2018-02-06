@@ -3,15 +3,17 @@ package controllers
 import com.gu.i18n._
 import play.api.mvc._
 import tracking.RedirectWithCampaignCodes._
+import javax.inject.{Inject, Singleton}
 
-object Giraffe extends Controller {
+@Singleton
+class Giraffe @Inject()() extends Controller {
 
   def redirectToContributions() = NoCacheAction { implicit request =>
-    redirectWithCampaignCodes("https://contribute.theguardian.com/", MOVED_PERMANENTLY)
+    Redirect("https://contribute.theguardian.com/", campaignCodes(request), MOVED_PERMANENTLY)
   }
 
   def redirectToContributionsFor(countryGroup: CountryGroup) = NoCacheAction { implicit request =>
-    redirectWithCampaignCodes(s"https://contribute.theguardian.com/${countryGroup.id}", MOVED_PERMANENTLY)
+    Redirect(s"https://contribute.theguardian.com/${countryGroup.id}", campaignCodes(request), MOVED_PERMANENTLY)
   }
 
 }

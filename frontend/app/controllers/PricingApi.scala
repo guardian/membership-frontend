@@ -10,6 +10,7 @@ import services.TouchpointBackend
 import views.support.{CountryWithCurrency, Pricing}
 import views.support.Pricing._
 import views.support.MembershipCompat._
+import javax.inject.{Inject, Singleton}
 
 case class MembershipPlan(tier: PaidTier, prices: List[Pricing])
 
@@ -52,7 +53,8 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-object PricingApi extends Controller {
+@Singleton
+class PricingApi @Inject()() extends Controller {
 
   import PricingFormats._
   import views.support.Pricing._
