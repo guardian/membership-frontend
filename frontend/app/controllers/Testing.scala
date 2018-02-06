@@ -1,7 +1,5 @@
 package controllers
 
-import javax.inject.Inject
-
 import actions.Fallbacks._
 import actions._
 import com.typesafe.scalalogging.LazyLogging
@@ -10,7 +8,7 @@ import utils.TestUsers.testUsers
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 
-class Testing @Inject()(override val wsClient: WSClient) extends Controller with LazyLogging with OAuthActions {
+class Testing(override val wsClient: WSClient) extends Controller with LazyLogging with OAuthActions {
 
   import Testing._
   val analyticsOffCookie = Cookie(AnalyticsCookieName, "true", httpOnly = false)

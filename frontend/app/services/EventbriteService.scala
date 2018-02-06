@@ -24,8 +24,6 @@ import utils.StringUtils._
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-import javax.inject.{Inject, Singleton}
-
 trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
@@ -229,8 +227,7 @@ object EventbriteService {
   }
 }
 
-@Singleton
-class EventbriteCollectiveServices @Inject()(val cache: CacheApi) {
+class EventbriteCollectiveServices(val cache: CacheApi) {
   lazy val services = Seq(GuardianLiveEventService, MasterclassEventService)
 
   def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {

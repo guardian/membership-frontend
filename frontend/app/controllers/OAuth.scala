@@ -1,7 +1,5 @@
 package controllers
 
-import javax.inject.Inject
-
 import actions.OAuthActions
 import com.gu.googleauth.GoogleAuthFilters.LOGIN_ORIGIN_KEY
 import com.gu.googleauth.{GoogleAuth, UserIdentity}
@@ -15,7 +13,7 @@ import play.api.mvc.{Action, Controller, Session}
 import scala.concurrent.Future
 
 
-class OAuth @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
+class OAuth(override val wsClient: WSClient) extends Controller with OAuthActions {
   val ANTI_FORGERY_KEY = "antiForgeryToken"
   implicit val iWsClient = wsClient
 

@@ -10,10 +10,8 @@ import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
 import scala.concurrent.ExecutionContext.Implicits.global
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class User @Inject()(val identityApi: IdentityApi) extends Controller {
+class User(val identityApi: IdentityApi) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 

@@ -7,10 +7,8 @@ import play.api.mvc._
 import utils.CountryGroupLang
 
 import scala.xml.Elem
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class SiteMap @Inject()() extends Controller with LazyLogging {
+class SiteMap() extends Controller with LazyLogging {
 
   def sitemap() = CachedAction { implicit request =>
     val foo = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"

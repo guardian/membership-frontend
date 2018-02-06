@@ -4,10 +4,8 @@ import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services.{EventbriteService, GuardianLiveEventService, TouchpointBackend}
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class PatternLibrary @Inject()() extends Controller {
+class PatternLibrary() extends Controller {
   lazy val guLiveEvents = GuardianLiveEventService
   implicit val countryGroup = UK
 

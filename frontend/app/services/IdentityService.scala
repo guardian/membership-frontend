@@ -1,7 +1,5 @@
 package services
 
-import javax.inject.{Inject, Singleton}
-
 import cats.data.EitherT
 import cats.instances.all._
 import cats.syntax.either._
@@ -83,9 +81,15 @@ object IdentityService extends LazyLogging {
       country(billing)
     )
   }
+
+  def apply(identityApiProvider: => IdentityApi) =
+    new IdentityService(identityApiProvider)
 }
 
-case class IdentityService(identityApi: IdentityApi) {
+class IdentityService(identityApiProvider: => IdentityApi) {
+
+  lazy val identityApi = identityApiProvider
+
   def getIdentityUserView(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdentityUser] =
     getFullUserDetails(user)(identityRequest)
       .zip(doesUserPasswordExist(identityRequest))
@@ -165,8 +169,7 @@ case class IdentityService(identityApi: IdentityApi) {
   }
 }
 
-@Singleton
-class IdentityApi @Inject()(val wsClient: WSClient) {
+class IdentityApi(val wsClient: WSClient) {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"

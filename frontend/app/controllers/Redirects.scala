@@ -1,10 +1,8 @@
 package controllers
 
 import play.api.mvc._
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class Redirects @Inject()() extends Controller {
+class Redirects() extends Controller {
 
   def homepageRedirect = CachedAction(MovedPermanently("/"))
 

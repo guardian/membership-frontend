@@ -13,7 +13,7 @@ import tracking.RedirectWithCampaignCodes.internalCampaignCode
 
 import scala.concurrent.Future
 
-class RedirectMembersFilter @Inject()(implicit val mat: Materializer) extends Filter {
+class RedirectMembersFilter(implicit val mat: Materializer) extends Filter {
 
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     if (requestHeader.host.toLowerCase.startsWith("members.")) {

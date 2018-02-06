@@ -1,14 +1,12 @@
 package controllers
 
-import javax.inject.Inject
-
 import actions.OAuthActions
 import play.api.libs.ws.WSClient
 import play.api.mvc.Controller
 import services._
 
 
-class Staff @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
+class Staff(override val wsClient: WSClient) extends Controller with OAuthActions {
   lazy val guLiveEvents = GuardianLiveEventService
   lazy val masterclassEvents = MasterclassEventService
 

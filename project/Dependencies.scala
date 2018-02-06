@@ -6,6 +6,7 @@ object Dependencies {
   //versions
   val awsClientVersion = "1.11.226"
   //libraries
+  val macWire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
   val memsubCommonPlayAuth = "com.gu" %% "memsub-common-play-auth" % "1.2"
@@ -39,7 +40,7 @@ object Dependencies {
   )
   //projects
 
-  val frontendDependencies =  Seq(memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
+  val frontendDependencies =  Seq(macWire, memsubCommonPlayAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, dispatch, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     acquisitionEventProducer)

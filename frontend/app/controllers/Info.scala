@@ -17,10 +17,8 @@ import utils.RequestCountry._
 import views.support.PageInfo
 
 import scala.concurrent.Future
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class Info @Inject()(val identityApi: IdentityApi) extends Controller with LazyLogging {
+class Info(val identityApi: IdentityApi) extends Controller with LazyLogging {
 
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)

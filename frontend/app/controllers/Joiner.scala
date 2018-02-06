@@ -1,6 +1,5 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
 
 import abtests.ABTest
 import actions.ActionRefiners._
@@ -44,8 +43,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-@Singleton
-class Joiner @Inject()(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, eventbriteService: EventbriteCollectiveServices) extends Controller
+class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, eventbriteService: EventbriteCollectiveServices) extends Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking

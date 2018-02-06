@@ -13,10 +13,8 @@ import services.{GuardianContentService, _}
 import views.support.PageInfo
 
 import scala.concurrent.Future
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class MemberOnlyContent @Inject()() extends Controller with LazyLogging {
+class MemberOnlyContent() extends Controller with LazyLogging {
 
   lazy val contentApiService = GuardianContentService
 

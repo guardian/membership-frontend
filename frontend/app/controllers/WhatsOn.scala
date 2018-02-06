@@ -12,10 +12,8 @@ import views.support.PageInfo
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class WhatsOn @Inject()() extends Controller with ActivityTracking {
+class WhatsOn() extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
   lazy val guLiveEvents = GuardianLiveEventService

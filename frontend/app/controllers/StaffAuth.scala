@@ -1,13 +1,11 @@
 package controllers
 
-import javax.inject.Inject
-
 import actions.OAuthActions
 import model.FlashMessage
 import play.api.libs.ws.WSClient
 import play.api.mvc.Controller
 
-class StaffAuth @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
+class StaffAuth(override val wsClient: WSClient) extends Controller with OAuthActions {
 
   def unauthorised = GoogleAuthenticatedStaffAction { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)

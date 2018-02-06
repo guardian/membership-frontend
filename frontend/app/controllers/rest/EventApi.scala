@@ -6,7 +6,6 @@ import play.api.libs.json.Json
 import play.api.libs.json.Json.toJson
 import play.api.mvc.Controller
 import services.GuardianLiveEventService
-import javax.inject.{Inject, Singleton}
 
 object EventApi {
   case class EventsResponse(events: Seq[Event])
@@ -16,8 +15,7 @@ object EventApi {
   }
 }
 
-@Singleton
-class EventApi @Inject()() extends Controller with LazyLogging {
+class EventApi() extends Controller with LazyLogging {
 
   import EventApi._
 

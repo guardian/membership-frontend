@@ -7,10 +7,8 @@ import model.RichEvent.EventBrandCollection
 import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class FrontPage @Inject()() extends Controller {
+class FrontPage() extends Controller {
   lazy val liveEvents = GuardianLiveEventService
   lazy val masterclassEvents = MasterclassEventService
 

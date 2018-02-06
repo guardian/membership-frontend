@@ -1,7 +1,5 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import _root_.services.api.MemberService._
 import actions.BackendProvider
 import com.gu.i18n.CountryGroup
@@ -37,8 +35,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-@Singleton
-class TierController @Inject()(val joinerController: Joiner, val identityApi: IdentityApi) extends Controller with ActivityTracking
+class TierController(val joinerController: Joiner, val identityApi: IdentityApi) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider

@@ -9,7 +9,6 @@ import utils.TestUsers.PreSigninTestCookie
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import javax.inject.{Inject, Singleton}
 
 object PayPal {
   // Payment token used to tie PayPal requests together.
@@ -22,8 +21,7 @@ object PayPal {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 }
 
-@Singleton
-class PayPal @Inject()() extends Controller with LazyLogging with PayPalServiceProvider {
+class PayPal() extends Controller with LazyLogging with PayPalServiceProvider {
 
   import PayPal._
 

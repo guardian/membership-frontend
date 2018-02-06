@@ -10,7 +10,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-class AddEC2InstanceHeader @Inject()(implicit val mat: Materializer, wsClient: WSClient) extends Filter {
+class AddEC2InstanceHeader(val mat: Materializer, wsClient: WSClient) extends Filter {
 
   // http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
   lazy val instanceIdOptF = if (Config.stageProd)
