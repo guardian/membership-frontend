@@ -7,7 +7,7 @@ import play.api.mvc.{RequestHeader, Result}
 import services.AuthenticationService.authenticatedIdUserProvider
 import services.{IdentityApi, IdentityService}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object Strategy {
   def identityStrategyFor(identityService: IdentityService, request: RequestHeader, form: CommonForm): Strategy = {
@@ -20,5 +20,5 @@ object Strategy {
 }
 
 trait Strategy {
-  def ensureIdUser(checkoutFunc: (IdUser) => Future[Result]): Future[Result]
+  def ensureIdUser(checkoutFunc: (IdUser) => Future[Result])(implicit executionContext: ExecutionContext): Future[Result]
 }

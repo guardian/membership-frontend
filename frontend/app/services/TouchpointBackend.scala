@@ -29,9 +29,8 @@ import play.api.Play.current
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scalaz.std.scalaFuture._
 
 object TouchpointBackend {
@@ -42,12 +41,12 @@ object TouchpointBackend {
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
 
-  def apply(backendType: BackendType)(implicit system: ActorSystem): TouchpointBackend = {
+  def apply(backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext): TouchpointBackend = {
     val backendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
     TouchpointBackend(backendConfig, backendType)
   }
 
-  def apply(config: TouchpointBackendConfig, backendType: BackendType)(implicit system: ActorSystem): TouchpointBackend = {
+  def apply(config: TouchpointBackendConfig, backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext): TouchpointBackend = {
     val stripeUKMembershipService = new StripeService(
       apiConfig = config.stripeUKMembership,
       client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
@@ -62,7 +61,7 @@ object TouchpointBackend {
         val service = "Stripe AU Membership"
       })
     )
-    val payPalService = new PayPalService(config.payPal)
+    val payPalService = new PayPalService(config.payPal, executionContext)
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
     implicit val simpleRestClient = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
@@ -128,7 +127,7 @@ object TouchpointBackend {
   )
 }
 
-class TouchpointBackendProvider(implicit val system: ActorSystem) extends LazyLogging {
+class TouchpointBackendProvider(implicit val system: ActorSystem, implicit val executionContext: ExecutionContext) extends LazyLogging {
 
   import TouchpointBackend._
   import TouchpointBackendConfig.BackendType

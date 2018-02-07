@@ -7,8 +7,7 @@ import play.api.mvc.{Controller, Request}
 import services.{PayPalService, TouchpointBackend, TouchpointBackendProvider}
 import utils.TestUsers.PreSigninTestCookie
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object PayPal {
   // Payment token used to tie PayPal requests together.
@@ -21,7 +20,7 @@ object PayPal {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 }
 
-class PayPal(touchpointBackend: TouchpointBackendProvider) extends Controller with LazyLogging with PayPalServiceProvider {
+class PayPal(touchpointBackend: TouchpointBackendProvider, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging with PayPalServiceProvider {
 
   import PayPal._
 

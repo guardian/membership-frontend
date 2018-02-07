@@ -25,6 +25,8 @@ trait AppComponents
   with CSRFComponents {
   self: BuiltInComponentsFromContext =>
 
+  private lazy val ec = actorSystem.dispatcher
+
   override lazy val httpErrorHandler: HttpErrorHandler = new monitoring.ErrorHandler(environment, configuration, sourceMapper, Some(router))
 
   private lazy val redirectMembersFilter = wire[filters.RedirectMembersFilter]
@@ -46,7 +48,7 @@ trait AppComponents
   private lazy val masterclassEventService = new services.MasterclassEventService()(actorSystem.dispatcher, actorSystem, guardianContentService)
   private lazy val eventbriteCollectiveServices = new services.EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
 
-  private lazy val touchpointBackendProvider = new TouchpointBackendProvider()(actorSystem)
+  private lazy val touchpointBackendProvider = new TouchpointBackendProvider()(actorSystem, actorSystem.dispatcher)
   private lazy val touchpointActionRefiners = new actions.TouchpointActionRefiners()(touchpointBackendProvider, actorSystem.dispatcher)
   private lazy val touchpointCommonActions = new actions.TouchpointCommonActions(touchpointBackendProvider, touchpointActionRefiners)
   private lazy val touchpointOAuthActions = new TouchpointOAuthActions(

@@ -10,9 +10,10 @@ import play.api.mvc.Controller
 import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions) extends Controller {
+import scala.concurrent.ExecutionContext
+
+class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
