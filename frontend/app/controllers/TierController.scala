@@ -1,7 +1,7 @@
 package controllers
 
 import _root_.services.api.MemberService._
-import actions.BackendProvider
+import actions.{BackendProvider, TouchpointCommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
@@ -20,7 +20,7 @@ import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
-import services.{IdentityApi, IdentityService}
+import services.{IdentityApi, IdentityService, TouchpointBackendProvider}
 import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.{ReferralData, TierChangeCookies}
@@ -35,7 +35,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController(val joinerController: Joiner, val identityApi: IdentityApi) extends Controller with ActivityTracking
+class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackendProvider: TouchpointBackendProvider) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider
@@ -45,6 +45,8 @@ class TierController(val joinerController: Joiner, val identityApi: IdentityApi)
   with PayPalServiceProvider
   with PaymentServiceProvider
   with ZuoraRestServiceProvider {
+
+  import touchpointCommonActions._
 
   def change() = SubscriptionAction.async { implicit request =>
     implicit val countryGroup = UK

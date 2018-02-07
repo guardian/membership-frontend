@@ -1,5 +1,6 @@
 package controllers
 
+import actions.TouchpointCommonActions
 import com.gu.memsub.Subscriber
 import model.Benefits
 import org.joda.time.Instant
@@ -11,9 +12,11 @@ import utils.GuMemCookie
 import views.support.MembershipCompat._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class User(val identityApi: IdentityApi) extends Controller {
+class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
+
+  import touchpointCommonActions._
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)

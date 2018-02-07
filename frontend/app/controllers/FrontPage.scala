@@ -8,7 +8,7 @@ import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}
 
-class FrontPage(eventbriteService: EventbriteCollectiveServices) extends Controller {
+class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackendProvider) extends Controller {
   val liveEvents = eventbriteService.guardianLiveEventService
   val masterclassEvents = eventbriteService.masterclassEventService
 
@@ -39,7 +39,7 @@ class FrontPage(eventbriteService: EventbriteCollectiveServices) extends Control
 
     Ok(views.html.index(
       heroImages,
-      TouchpointBackend.Normal.catalog,
+      touchpointBackend.Normal.catalog,
       pageImages,
       eventCollections))
   }

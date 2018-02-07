@@ -18,7 +18,7 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService) extends Controller with LazyLogging {
+class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService, touchpointBackend: TouchpointBackendProvider) extends Controller with LazyLogging {
 
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
@@ -107,7 +107,7 @@ class Info(val identityApi: IdentityApi, guardianContentService: GuardianContent
 
     Ok(template(
       heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
+      touchpointBackend.Normal.catalog.supporter,
       PageInfo(
         title = CopyConfig.copyTitleSupporters,
         url = request.path,
@@ -160,9 +160,9 @@ class Info(val identityApi: IdentityApi, guardianContentService: GuardianContent
     )
 
     Ok(views.html.info.patron(
-      patronPlans = TouchpointBackend.Normal.catalog.patron,
-      partnerPlans = TouchpointBackend.Normal.catalog.partner,
-      supporterPlans = TouchpointBackend.Normal.catalog.supporter,
+      patronPlans = touchpointBackend.Normal.catalog.patron,
+      partnerPlans = touchpointBackend.Normal.catalog.partner,
+      supporterPlans = touchpointBackend.Normal.catalog.supporter,
       pageInfo = pageInfo,
       countryGroup = UK,
       pageImages = pageImages)
@@ -176,7 +176,7 @@ class Info(val identityApi: IdentityApi, guardianContentService: GuardianContent
       guardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
         item.content.fields.flatMap(_.membershipAccess).isEmpty && !item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
-    Ok(views.html.info.offersAndCompetitions(TouchpointBackend.Normal.catalog, results))
+    Ok(views.html.info.offersAndCompetitions(touchpointBackend.Normal.catalog, results))
   }
 
   def help = CachedAction { implicit request =>

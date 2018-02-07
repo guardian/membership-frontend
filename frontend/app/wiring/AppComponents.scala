@@ -1,5 +1,6 @@
 package wiring
 
+import actions.{TouchpointActionRefiners, TouchpointOAuthActions}
 import play.api.routing.Router
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc.EssentialFilter
@@ -11,8 +12,11 @@ import monitoring.{HealthMonitoringTask, SentryLogging}
 import play.api.cache.EhCacheComponents
 import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
+import play.api.libs.ws.WSClient
 import play.filters.csrf.CSRFComponents
-import services.{GuardianContentService, GuardianLiveEventService, MasterclassEventService}
+import services.{GuardianContentService, GuardianLiveEventService, MasterclassEventService, TouchpointBackendProvider}
+
+import scala.concurrent.ExecutionContext
 
 trait AppComponents
   extends AhcWSComponents
@@ -41,6 +45,13 @@ trait AppComponents
   private lazy val guardianLiveEventService = new services.GuardianLiveEventService()(actorSystem.dispatcher, actorSystem, guardianContentService)
   private lazy val masterclassEventService = new services.MasterclassEventService()(actorSystem.dispatcher, actorSystem, guardianContentService)
   private lazy val eventbriteCollectiveServices = new services.EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
+
+  private lazy val touchpointBackendProvider = new TouchpointBackendProvider()(actorSystem)
+  private lazy val touchpointActionRefiners = new actions.TouchpointActionRefiners()(touchpointBackendProvider, actorSystem.dispatcher)
+  private lazy val touchpointCommonActions = new actions.TouchpointCommonActions(touchpointBackendProvider, touchpointActionRefiners)
+  private lazy val touchpointOAuthActions = new TouchpointOAuthActions(
+    touchpointBackendProvider,touchpointActionRefiners, actorSystem.dispatcher, wsClient
+  )
 
   private lazy val bundle = wire[controllers.Bundle]
   private lazy val cacheBustedAssets = wire[controllers.CacheBustedAssets]

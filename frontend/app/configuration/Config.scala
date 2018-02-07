@@ -181,8 +181,4 @@ object Config {
     val enabled = Try{config.getBoolean("logstash.enabled")}.toOption.contains(true)
   }
 
-
-  object Implicits {
-    implicit val akkaSystem = Akka.system
-  }
 }

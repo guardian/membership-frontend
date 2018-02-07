@@ -8,7 +8,7 @@ import play.api.mvc.Controller
 import services._
 import views.support.PageInfo
 
-class Bundle() extends Controller {
+class Bundle(touchpointBackend: TouchpointBackendProvider) extends Controller {
 
   private val landingMainImage = ResponsiveImageGroup(
     availableImages = ResponsiveImageGenerator(
@@ -67,7 +67,7 @@ class Bundle() extends Controller {
     bundleVariant match {
       case _: BundleVariant => Ok(views.html.bundle.bundleSetA(
         heroOrientated,
-        TouchpointBackend.Normal.catalog.supporter,
+        touchpointBackend.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
           url = request.path,

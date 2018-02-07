@@ -6,7 +6,7 @@ import com.gu.memsub.subsv2.Catalog
 import com.gu.salesforce.PaidTier
 import play.api.libs.json.{JsArray, JsString, JsValue, Json, Writes}
 import play.api.mvc.Controller
-import services.TouchpointBackend
+import services.{TouchpointBackend, TouchpointBackendProvider}
 import views.support.{CountryWithCurrency, Pricing}
 import views.support.Pricing._
 import views.support.MembershipCompat._
@@ -53,13 +53,12 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-@Singleton
-class PricingApi @Inject()() extends Controller {
+class PricingApi(touchpointBackend: TouchpointBackendProvider) extends Controller {
 
   import PricingFormats._
   import views.support.Pricing._
 
-  lazy val membersCatalog: Catalog = TouchpointBackend.Normal.catalog
+  lazy val membersCatalog: Catalog = touchpointBackend.Normal.catalog
 
   def currencies = CachedAction {
     Ok(Json.toJson(CountryWithCurrency.all))

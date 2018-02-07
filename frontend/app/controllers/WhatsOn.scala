@@ -13,7 +13,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-class WhatsOn(eventbriteService: EventbriteCollectiveServices) extends Controller with ActivityTracking {
+class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackendProvider) extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
   lazy val guLiveEvents = eventbriteService.guardianLiveEventService
@@ -30,7 +30,7 @@ class WhatsOn(eventbriteService: EventbriteCollectiveServices) extends Controlle
   }
 
   private lazy val normalCatalog =
-    Future.successful(TouchpointBackend.Normal.catalogService.unsafeCatalog)
+    Future.successful(touchpointBackend.Normal.catalogService.unsafeCatalog)
 
   def list = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(

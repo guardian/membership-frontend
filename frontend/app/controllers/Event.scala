@@ -3,7 +3,7 @@ package controllers
 import _root_.services.{EventbriteCollectiveServices, EventbriteService, GuardianLiveEventService, MasterclassEventService}
 import actions.ActionRefiners._
 import actions.Fallbacks._
-import actions.{OAuthActions, Subscriber, SubscriptionRequest}
+import actions.{OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
@@ -26,7 +26,19 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-class Event(override val wsClient: WSClient, implicit val eventbriteService: EventbriteCollectiveServices) extends Controller with MemberServiceProvider with OAuthActions with ActivityTracking with LazyLogging {
+class Event(
+  override val wsClient: WSClient,
+  implicit val eventbriteService: EventbriteCollectiveServices,
+  touchpointActionRefiners: TouchpointActionRefiners,
+  touchpointCommonActions: TouchpointCommonActions
+) extends Controller
+  with MemberServiceProvider
+  with OAuthActions
+  with ActivityTracking
+  with LazyLogging {
+
+  import touchpointActionRefiners._
+  import touchpointCommonActions._
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {

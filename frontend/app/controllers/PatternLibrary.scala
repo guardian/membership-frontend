@@ -3,9 +3,9 @@ package controllers
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.{EventbriteCollectiveServices, EventbriteService, GuardianLiveEventService, TouchpointBackend}
+import services._
 
-class PatternLibrary(eventbriteService: EventbriteCollectiveServices) extends Controller {
+class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackendProvider) extends Controller {
   val guLiveEvents = eventbriteService.guardianLiveEventService
   implicit val countryGroup = UK
 
@@ -30,7 +30,7 @@ class PatternLibrary(eventbriteService: EventbriteCollectiveServices) extends Co
 
   def patterns = NoCacheAction { implicit request =>
     Ok(views.html.patterns.patterns(
-      TouchpointBackend.Normal.catalog,
+      touchpointBackend.Normal.catalog,
       guLiveEvents.events,
       pageImages))
   }

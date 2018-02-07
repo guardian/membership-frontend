@@ -43,7 +43,17 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, implicit val eventbriteService: EventbriteCollectiveServices, contentApiService: GuardianContentService) extends Controller
+class Joiner(
+  override val wsClient: WSClient,
+  val messagesApi: MessagesApi,
+  val identityApi: IdentityApi,
+  implicit val eventbriteService: EventbriteCollectiveServices,
+  contentApiService: GuardianContentService,
+  implicit val touchpointBackend: TouchpointBackendProvider,
+  touchpointOAuthActions: TouchpointOAuthActions,
+  touchpointActionRefiners: TouchpointActionRefiners,
+  touchpointCommonActions: TouchpointCommonActions
+) extends Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
@@ -58,6 +68,10 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
   with PaymentServiceProvider
   with MemberServiceProvider
   with ZuoraRestServiceProvider {
+
+  import touchpointOAuthActions._
+  import touchpointActionRefiners._
+  import touchpointCommonActions._
 
   val JoinReferrer = "join-referrer"
 
@@ -84,14 +98,14 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
       customSignInUrl = Some(signInUrl)
     )
 
-    Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
+    Ok(views.html.joiner.tierChooser(touchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
       .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-    val catalog = TouchpointBackend.Normal.catalog
+    val catalog = touchpointBackend.Normal.catalog
     implicit val countryGroup = UK
 
     userSignedIn match {
@@ -132,12 +146,12 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
     countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
     val userOpt = authenticatedIdUserProvider(request)
     implicit val resolution: TouchpointBackend.Resolution =
-      TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+      touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
 
     implicit val tpBackend = resolution.backend
 
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend = tpBackend
+      override def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tpBackend
     }
     implicit val c = catalog
 
@@ -244,11 +258,11 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
     logger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =
-      TouchpointBackend.forRequest(NameEnteredInForm, Some(formData))
+      touchpointBackend.forRequest(NameEnteredInForm, Some(formData))
 
     implicit val tpBackend = resolution.backend
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend = tpBackend
+      override def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tpBackend
     }
     val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry
@@ -296,7 +310,7 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
-    implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+    implicit val resolution: TouchpointBackend.Resolution = touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
     implicit val idReq = IdentityRequest(request)
 
     val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { account =>
