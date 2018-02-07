@@ -5,10 +5,14 @@ import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc.EssentialFilter
 import play.api.{BuiltInComponentsFromContext, OptionalSourceMapper}
 import com.softwaremill.macwire.wire
+import configuration.Config
+import loghandling.Logstash
+import monitoring.{HealthMonitoringTask, SentryLogging}
 import play.api.cache.EhCacheComponents
 import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
 import play.filters.csrf.CSRFComponents
+import services.{GuardianContentService, GuardianLiveEventService, MasterclassEventService}
 
 trait AppComponents
   extends AhcWSComponents
@@ -69,4 +73,11 @@ trait AppComponents
     val prefix = "/"
     wire[_root_.router.Routes]
   }
+
+  HealthMonitoringTask.start(actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage, Config.appName)
+  SentryLogging.init()
+  Logstash.init(Config)
+  GuardianLiveEventService.start()
+  MasterclassEventService.start()
+  GuardianContentService.start()
 }
