@@ -6,9 +6,9 @@ import play.api.mvc.Controller
 import services._
 
 
-class Staff(override val wsClient: WSClient) extends Controller with OAuthActions {
-  lazy val guLiveEvents = GuardianLiveEventService
-  lazy val masterclassEvents = MasterclassEventService
+class Staff(override val wsClient: WSClient, eventbriteService: EventbriteCollectiveServices) extends Controller with OAuthActions {
+  val guLiveEvents = eventbriteService.guardianLiveEventService
+  val masterclassEvents = eventbriteService.masterclassEventService
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
      Ok(views.html.eventOverview.live(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))

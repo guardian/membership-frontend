@@ -5,7 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.Json
 import play.api.libs.json.Json.toJson
 import play.api.mvc.Controller
-import services.GuardianLiveEventService
+import services.{EventbriteCollectiveServices, GuardianLiveEventService}
 
 object EventApi {
   case class EventsResponse(events: Seq[Event])
@@ -15,7 +15,7 @@ object EventApi {
   }
 }
 
-class EventApi() extends Controller with LazyLogging {
+class EventApi(eventbriteService: EventbriteCollectiveServices) extends Controller with LazyLogging {
 
   import EventApi._
 
@@ -23,6 +23,6 @@ class EventApi() extends Controller with LazyLogging {
     * @return for now, only Guardian Live Events - other types may be added in the future
     */
   def events = CachedAction {
-    Ok(toJson(EventsResponse(GuardianLiveEventService.events.map(Event.forRichEvent(_)))))
+    Ok(toJson(EventsResponse(eventbriteService.guardianLiveEventService.events.map(Event.forRichEvent(_)))))
   }
 }

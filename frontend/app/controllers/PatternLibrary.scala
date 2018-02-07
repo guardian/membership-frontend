@@ -3,10 +3,10 @@ package controllers
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.{EventbriteService, GuardianLiveEventService, TouchpointBackend}
+import services.{EventbriteCollectiveServices, EventbriteService, GuardianLiveEventService, TouchpointBackend}
 
-class PatternLibrary() extends Controller {
-  lazy val guLiveEvents = GuardianLiveEventService
+class PatternLibrary(eventbriteService: EventbriteCollectiveServices) extends Controller {
+  val guLiveEvents = eventbriteService.guardianLiveEventService
   implicit val countryGroup = UK
 
   val pageImages = Seq(

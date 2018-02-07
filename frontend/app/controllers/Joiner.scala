@@ -43,7 +43,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, eventbriteService: EventbriteCollectiveServices) extends Controller
+class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, implicit val eventbriteService: EventbriteCollectiveServices) extends Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking

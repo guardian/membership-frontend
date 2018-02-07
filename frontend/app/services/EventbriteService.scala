@@ -1,12 +1,12 @@
 package services
 
+import akka.actor.ActorSystem
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
 import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import configuration.Config
-import configuration.Config.Implicits.akkaSystem
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
@@ -14,17 +14,16 @@ import monitoring.EventbriteMetrics
 import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
 import play.api.Logger
-import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{Json, Reads}
 import play.api.cache.CacheApi
 import utils.StringUtils._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
-trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
+abstract class EventbriteService(implicit ec: ExecutionContext, system: ActorSystem) extends WebServiceHelper[EBObject, EBError] {
+
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
 
@@ -129,7 +128,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
-abstract class LiveService extends EventbriteService {
+abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem) extends EventbriteService {
 
   val contentApiService = GuardianContentService
 
@@ -137,7 +136,7 @@ abstract class LiveService extends EventbriteService {
     event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
 }
 
-object GuardianLiveEventService extends LiveService {
+class GuardianLiveEventService(implicit ec: ExecutionContext, system: ActorSystem) extends LiveService {
   val apiToken = Config.eventbriteApiToken
   // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
   // maximum 2 discounted tickets and 1 complimentary ticket.
@@ -185,7 +184,7 @@ object MasterclassEventsProvider {
     _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
 }
 
-object MasterclassEventService extends EventbriteService {
+class MasterclassEventService(implicit ec: ExecutionContext, system: ActorSystem) extends EventbriteService {
   import MasterclassEventsProvider._
 
   val apiToken = Config.eventbriteMasterclassesApiToken
@@ -220,22 +219,22 @@ object EventbriteServiceHelpers {
 
 object EventbriteService {
   implicit class RichEventProvider(event: RichEvent) {
-    val service = event match {
-      case _: GuLiveEvent => GuardianLiveEventService
-      case _: MasterclassEvent => MasterclassEventService
+    def service(implicit services: EventbriteCollectiveServices) = event match {
+      case _: GuLiveEvent => services.guardianLiveEventService
+      case _: MasterclassEvent => services.masterclassEventService
     }
   }
 }
 
-class EventbriteCollectiveServices(val cache: CacheApi) {
-  lazy val services = Seq(GuardianLiveEventService, MasterclassEventService)
+class EventbriteCollectiveServices(val cache: CacheApi, val guardianLiveEventService: GuardianLiveEventService, val masterclassEventService: MasterclassEventService) {
+  lazy val services = Seq(guardianLiveEventService, masterclassEventService)
 
   def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
-    GuardianLiveEventService.getPreviewEvent(id)
+    guardianLiveEventService.getPreviewEvent(id)
   }
 
   def getPreviewMasterclass(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
-    MasterclassEventService.getPreviewEvent(id)
+    masterclassEventService.getPreviewEvent(id)
   }
 
   def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =

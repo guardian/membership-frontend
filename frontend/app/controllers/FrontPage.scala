@@ -8,9 +8,9 @@ import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}
 
-class FrontPage() extends Controller {
-  lazy val liveEvents = GuardianLiveEventService
-  lazy val masterclassEvents = MasterclassEventService
+class FrontPage(eventbriteService: EventbriteCollectiveServices) extends Controller {
+  val liveEvents = eventbriteService.guardianLiveEventService
+  val masterclassEvents = eventbriteService.masterclassEventService
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK

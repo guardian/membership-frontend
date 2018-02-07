@@ -37,7 +37,9 @@ trait AppComponents
   )
 
   private lazy val identityApi = wire[services.IdentityApi]
-  private lazy val eventbriteCollectiveServices = new services.EventbriteCollectiveServices(defaultCacheApi)
+  private lazy val guardianLiveEventService = new services.GuardianLiveEventService()(actorSystem.dispatcher, actorSystem)
+  private lazy val masterclassEventService = new services.MasterclassEventService()(actorSystem.dispatcher, actorSystem)
+  private lazy val eventbriteCollectiveServices = new services.EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
 
   private lazy val bundle = wire[controllers.Bundle]
   private lazy val cacheBustedAssets = wire[controllers.CacheBustedAssets]
@@ -77,7 +79,7 @@ trait AppComponents
   HealthMonitoringTask.start(actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage, Config.appName)
   SentryLogging.init()
   Logstash.init(Config)
-  GuardianLiveEventService.start()
-  MasterclassEventService.start()
+  guardianLiveEventService.start()
+  masterclassEventService.start()
   GuardianContentService.start()
 }

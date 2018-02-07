@@ -26,7 +26,7 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-class Event(override val wsClient: WSClient, val eventbriteService: EventbriteCollectiveServices) extends Controller with MemberServiceProvider with OAuthActions with ActivityTracking with LazyLogging {
+class Event(override val wsClient: WSClient, implicit val eventbriteService: EventbriteCollectiveServices) extends Controller with MemberServiceProvider with OAuthActions with ActivityTracking with LazyLogging {
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
