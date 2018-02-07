@@ -10,7 +10,7 @@ define(['$'], function ($) {
             params.url = makeAbsolute(params.url);
         }
 
-        const jqParams = {
+        var jqParams = {
             url: params.url
         };
 
