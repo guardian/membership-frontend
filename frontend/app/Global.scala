@@ -17,21 +17,3 @@ object Global extends GlobalSettings {
   }
 }
 
-// taken from http://dominikdorn.com/2014/07/playframework-2-3-global-csrf-protection-disable-csrf-selectively/
-// play 2.5 removes the need for this by considering trusted CORS routes exempt from CSRF
-private class ExcludingCSRFFilter(filter: CSRFFilter) extends EssentialFilter {
-
-  override def apply(nextFilter: EssentialAction) = new EssentialAction {
-
-    import play.api.mvc._
-
-    override def apply(rh: RequestHeader) = {
-      val chainedFilter = filter.apply(nextFilter)
-      if (rh.tags.getOrElse("ROUTE_COMMENTS", "").contains("NOCSRF")) {
-        nextFilter(rh)
-      } else {
-        chainedFilter(rh)
-      }
-    }
-  }
-}
