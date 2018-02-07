@@ -128,15 +128,13 @@ abstract class EventbriteService(implicit ec: ExecutionContext, system: ActorSys
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
-abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem) extends EventbriteService {
-
-  val contentApiService = GuardianContentService
+abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService {
 
   def gridImageFor(event: EBEvent) =
     event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
 }
 
-class GuardianLiveEventService(implicit ec: ExecutionContext, system: ActorSystem) extends LiveService {
+class GuardianLiveEventService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends LiveService {
   val apiToken = Config.eventbriteApiToken
   // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
   // maximum 2 discounted tickets and 1 complimentary ticket.
@@ -184,7 +182,7 @@ object MasterclassEventsProvider {
     _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
 }
 
-class MasterclassEventService(implicit ec: ExecutionContext, system: ActorSystem) extends EventbriteService {
+class MasterclassEventService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService {
   import MasterclassEventsProvider._
 
   val apiToken = Config.eventbriteMasterclassesApiToken
@@ -193,8 +191,6 @@ class MasterclassEventService(implicit ec: ExecutionContext, system: ActorSystem
   val wsMetrics = new EventbriteMetrics("Masterclasses")
 
   override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
-
-  val contentApiService = GuardianContentService
 
   override def events: Seq[RichEvent] =
     super.events.filter(MasterclassesWithAvailableMemberDiscounts)

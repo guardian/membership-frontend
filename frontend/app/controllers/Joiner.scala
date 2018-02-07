@@ -43,7 +43,7 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, implicit val eventbriteService: EventbriteCollectiveServices) extends Controller
+class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val identityApi: IdentityApi, implicit val eventbriteService: EventbriteCollectiveServices, contentApiService: GuardianContentService) extends Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
@@ -60,8 +60,6 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
   with ZuoraRestServiceProvider {
 
   val JoinReferrer = "join-referrer"
-
-  lazy val contentApiService = GuardianContentService
 
   val subscriberOfferDelayPeriod = 6.months
 
@@ -309,7 +307,7 @@ class Joiner(override val wsClient: WSClient, val messagesApi: MessagesApi, val 
 
     val destinationService = new DestinationService[Future](
       eventbriteService.getBookableEvent,
-      GuardianContentService.contentItemQuery,
+      contentApiService.contentItemQuery,
       memberService.createEBCode
     )
 

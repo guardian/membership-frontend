@@ -18,7 +18,7 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-class Info(val identityApi: IdentityApi) extends Controller with LazyLogging {
+class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService) extends Controller with LazyLogging {
 
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
@@ -173,7 +173,7 @@ class Info(val identityApi: IdentityApi) extends Controller with LazyLogging {
     implicit val countryGroup = UK
 
     val results =
-      GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
+      guardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
         item.content.fields.flatMap(_.membershipAccess).isEmpty && !item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
     Ok(views.html.info.offersAndCompetitions(TouchpointBackend.Normal.catalog, results))
