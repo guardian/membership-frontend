@@ -45,7 +45,7 @@ trait AppComponents
   private lazy val masterclassEventService = new services.MasterclassEventService()(actorSystem.dispatcher, actorSystem, guardianContentService)
   private lazy val eventbriteCollectiveServices = new services.EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
 
-  private lazy val touchpointBackendProvider = new TouchpointBackendProvider()(actorSystem, actorSystem.dispatcher)
+  private lazy val touchpointBackendProvider = new TouchpointBackendProvider()(actorSystem, actorSystem.dispatcher, wsClient)
   private lazy val touchpointActionRefiners = new actions.TouchpointActionRefiners()(touchpointBackendProvider, actorSystem.dispatcher)
   private lazy val touchpointCommonActions = new actions.TouchpointCommonActions(touchpointBackendProvider, touchpointActionRefiners)
   private lazy val touchpointOAuthActions = new TouchpointOAuthActions(

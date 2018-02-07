@@ -23,9 +23,8 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
-import play.api.libs.ws.WS
+import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
-import play.api.Play.current
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
 
@@ -41,12 +40,12 @@ object TouchpointBackend {
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
 
-  def apply(backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext): TouchpointBackend = {
+  def apply(backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient): TouchpointBackend = {
     val backendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
     TouchpointBackend(backendConfig, backendType)
   }
 
-  def apply(config: TouchpointBackendConfig, backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext): TouchpointBackend = {
+  def apply(config: TouchpointBackendConfig, backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient): TouchpointBackend = {
     val stripeUKMembershipService = new StripeService(
       apiConfig = config.stripeUKMembership,
       client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
@@ -84,7 +83,7 @@ object TouchpointBackend {
 
     val paymentService = new PaymentService(zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
-    val identityService = IdentityService(new IdentityApi(WS.client))
+    val identityService = IdentityService(new IdentityApi(wsClient))
     val memberService = new MemberService(
       identityService = identityService,
       salesforceService = salesforceService,
@@ -127,7 +126,7 @@ object TouchpointBackend {
   )
 }
 
-class TouchpointBackendProvider(implicit val system: ActorSystem, implicit val executionContext: ExecutionContext) extends LazyLogging {
+class TouchpointBackendProvider(implicit val system: ActorSystem, implicit val executionContext: ExecutionContext, implicit val wsClient: WSClient) extends LazyLogging {
 
   import TouchpointBackend._
   import TouchpointBackendConfig.BackendType
