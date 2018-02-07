@@ -1,10 +1,10 @@
 package wiring
 
-import actions.{TouchpointActionRefiners, TouchpointOAuthActions}
+import actions.TouchpointOAuthActions
 import play.api.routing.Router
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc.EssentialFilter
-import play.api.{BuiltInComponentsFromContext, OptionalSourceMapper}
+import play.api.BuiltInComponentsFromContext
 import com.softwaremill.macwire.wire
 import configuration.Config
 import loghandling.Logstash
@@ -12,11 +12,8 @@ import monitoring.{HealthMonitoringTask, SentryLogging}
 import play.api.cache.EhCacheComponents
 import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
-import play.api.libs.ws.WSClient
 import play.filters.csrf.CSRFComponents
-import services.{GuardianContentService, GuardianLiveEventService, MasterclassEventService, TouchpointBackendProvider}
-
-import scala.concurrent.ExecutionContext
+import services.TouchpointBackendProvider
 
 trait AppComponents
   extends AhcWSComponents
