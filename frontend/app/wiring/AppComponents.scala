@@ -76,7 +76,7 @@ trait AppComponents
     wire[_root_.router.Routes]
   }
 
-  HealthMonitoringTask.start(actorSystem, play.api.libs.concurrent.Execution.Implicits.defaultContext, Config.stage, Config.appName)
+  HealthMonitoringTask.start(actorSystem, actorSystem.dispatcher, Config.stage, Config.appName)
   SentryLogging.init()
   Logstash.init(Config)
   guardianLiveEventService.start()
