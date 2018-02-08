@@ -5,7 +5,7 @@ import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services._
 
-class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackendProvider) extends Controller {
+class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackends) extends Controller {
   val guLiveEvents = eventbriteService.guardianLiveEventService
   implicit val countryGroup = UK
 

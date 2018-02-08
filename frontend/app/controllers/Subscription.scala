@@ -5,9 +5,9 @@ import model.FreeEventTickets
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.TouchpointBackendProvider
+import services.TouchpointBackends
 
-class Subscription(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackendProvider: TouchpointBackendProvider) extends Controller with MemberServiceProvider {
+class Subscription(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackendProvider: TouchpointBackends) extends Controller with MemberServiceProvider {
 
   import touchpointCommonActions._
 

@@ -13,7 +13,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackendProvider) extends Controller with ActivityTracking {
+class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackends) extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
   lazy val guLiveEvents = eventbriteService.guardianLiveEventService

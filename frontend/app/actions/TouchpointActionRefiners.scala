@@ -6,7 +6,7 @@ import com.gu.memsub.{Membership, Subscriber => MemSubscriber}
 import com.gu.memsub.subsv2.SubscriptionPlan
 import com.gu.salesforce.PaidTier
 import play.api.mvc.Results.{InternalServerError, Ok}
-import services.{AuthenticationService, TouchpointBackendProvider}
+import services.{AuthenticationService, TouchpointBackends}
 import com.gu.memsub.subsv2.reads.ChargeListReads._
 import com.gu.memsub.subsv2.reads.SubPlanReads._
 import com.gu.memsub.subsv2.{Subscription, _}
@@ -21,7 +21,7 @@ import scalaz.std.scalaFuture._
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
 
-class TouchpointActionRefiners(touchpointBackend: TouchpointBackendProvider, executionContext: ExecutionContext) extends LazyLogging {
+class TouchpointActionRefiners(touchpointBackend: TouchpointBackends, executionContext: ExecutionContext) extends LazyLogging {
 
   implicit private val ec = executionContext
   implicit private val tpb = touchpointBackend

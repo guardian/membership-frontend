@@ -19,13 +19,13 @@ package object actions {
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
   trait BackendProvider {
-    def touchpointBackend(implicit touchpointBackend: TouchpointBackendProvider): TouchpointBackend
+    def touchpointBackend(implicit touchpointBackend: TouchpointBackends): TouchpointBackend
   }
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) extends BackendProvider {
-    def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tbp.forUser(req.user)
+    def touchpointBackend(implicit tbp: TouchpointBackends) = tbp.forUser(req.user)
 
-    def forMemberOpt(implicit executor: ExecutionContext, tbp: TouchpointBackendProvider): Future[String \/ Option[GenericSFContact]] =
+    def forMemberOpt(implicit executor: ExecutionContext, tbp: TouchpointBackends): Future[String \/ Option[GenericSFContact]] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
           memberOpt <- touchpointBackend.salesforceService.getMember(req.user.id)
@@ -36,7 +36,7 @@ package object actions {
   case class SubscriptionRequest[A](tb: TouchpointBackend,
                                     request: AuthRequest[A]) extends AuthRequest(request.user, request) with BackendProvider {
 
-    def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tb
+    def touchpointBackend(implicit tbp: TouchpointBackends) = tb
 
     def this(other: SubscriptionRequest[A]) =
       this(other.tb, other.request)
@@ -44,7 +44,7 @@ package object actions {
 
   case class OptionallyAuthenticatedRequest[A](tb: TouchpointBackend, user: Option[AuthenticatedIdUser], request: Request[A])
     extends WrappedRequest[A](request) with BackendProvider {
-    def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tb
+    def touchpointBackend(implicit tbp: TouchpointBackends) = tb
   }
 
   trait Subscriber {
@@ -65,7 +65,7 @@ package object actions {
   }
 
   case class IdentityGoogleAuthRequest[A](googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) with BackendProvider {
-    def touchpointBackend(implicit touchpointBackend: TouchpointBackendProvider): TouchpointBackend = touchpointBackend.forUser(request.user)
+    def touchpointBackend(implicit touchpointBackend: TouchpointBackends): TouchpointBackend = touchpointBackend.forUser(request.user)
     val identityUser = request.user
   }
 }

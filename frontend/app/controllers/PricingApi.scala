@@ -6,7 +6,7 @@ import com.gu.memsub.subsv2.Catalog
 import com.gu.salesforce.PaidTier
 import play.api.libs.json.{JsArray, JsString, JsValue, Json, Writes}
 import play.api.mvc.Controller
-import services.{TouchpointBackend, TouchpointBackendProvider}
+import services.{TouchpointBackend, TouchpointBackends}
 import views.support.{CountryWithCurrency, Pricing}
 import views.support.Pricing._
 import views.support.MembershipCompat._
@@ -53,7 +53,7 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-class PricingApi(touchpointBackend: TouchpointBackendProvider) extends Controller {
+class PricingApi(touchpointBackend: TouchpointBackends) extends Controller {
 
   import PricingFormats._
   import views.support.Pricing._

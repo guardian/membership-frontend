@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class Event(
   override val wsClient: WSClient,
   implicit val eventbriteService: EventbriteCollectiveServices,
-  implicit val touchpointBackend: TouchpointBackendProvider,
+  implicit val touchpointBackend: TouchpointBackends,
   touchpointActionRefiners: TouchpointActionRefiners,
   touchpointCommonActions: TouchpointCommonActions
 ) extends Controller

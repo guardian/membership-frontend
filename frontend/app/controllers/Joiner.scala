@@ -49,7 +49,7 @@ class Joiner(
   val identityApi: IdentityApi,
   implicit val eventbriteService: EventbriteCollectiveServices,
   contentApiService: GuardianContentService,
-  implicit val touchpointBackend: TouchpointBackendProvider,
+  implicit val touchpointBackend: TouchpointBackends,
   touchpointOAuthActions: TouchpointOAuthActions,
   touchpointActionRefiners: TouchpointActionRefiners,
   touchpointCommonActions: TouchpointCommonActions
@@ -151,7 +151,7 @@ class Joiner(
     implicit val tpBackend = resolution.backend
 
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tpBackend
+      override def touchpointBackend(implicit tbp: TouchpointBackends) = tpBackend
     }
     implicit val c = catalog
 
@@ -262,7 +262,7 @@ class Joiner(
 
     implicit val tpBackend = resolution.backend
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend(implicit tbp: TouchpointBackendProvider) = tpBackend
+      override def touchpointBackend(implicit tbp: TouchpointBackends) = tpBackend
     }
     val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry

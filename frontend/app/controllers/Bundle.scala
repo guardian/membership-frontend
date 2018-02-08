@@ -8,7 +8,7 @@ import play.api.mvc.Controller
 import services._
 import views.support.PageInfo
 
-class Bundle(touchpointBackend: TouchpointBackendProvider) extends Controller {
+class Bundle(touchpointBackend: TouchpointBackends) extends Controller {
 
   private val landingMainImage = ResponsiveImageGroup(
     availableImages = ResponsiveImageGenerator(

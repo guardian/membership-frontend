@@ -13,7 +13,7 @@ import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
 import play.filters.csrf.CSRFComponents
 import services.{GuardianContentService, GuardianLiveEventService, MasterclassEventService}
-import services.{IdentityApi, EventbriteCollectiveServices, TouchpointBackendProvider}
+import services.{IdentityApi, EventbriteCollectiveServices, TouchpointBackends}
 import filters.{AddEC2InstanceHeader, CheckCacheHeadersFilter, Gzipper, RedirectMembersFilter}
 import controllers._
 
@@ -42,7 +42,7 @@ trait AppComponents
   private lazy val masterclassEventService = new MasterclassEventService(executionContext, actorSystem, contentApiService)
   private lazy val eventbriteCollectiveServices = new EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
 
-  private lazy val touchpointBackends = new TouchpointBackendProvider(actorSystem, executionContext, wsClient)
+  private lazy val touchpointBackends = new TouchpointBackends(actorSystem, executionContext, wsClient)
   private lazy val actionRefiners = new TouchpointActionRefiners(touchpointBackends, executionContext)
   private lazy val commonActions = new TouchpointCommonActions(touchpointBackends, actionRefiners)
   private lazy val oauthActions = new TouchpointOAuthActions(

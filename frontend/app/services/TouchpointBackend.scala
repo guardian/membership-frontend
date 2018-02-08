@@ -126,7 +126,7 @@ object TouchpointBackend {
   )
 }
 
-class TouchpointBackendProvider(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) extends LazyLogging {
+class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) extends LazyLogging {
 
   import TouchpointBackend._
   import TouchpointBackendConfig.BackendType

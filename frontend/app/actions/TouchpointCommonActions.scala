@@ -5,11 +5,11 @@ import actions.Fallbacks.joinStaffMembership
 import com.gu.salesforce.PaidTier
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.{ActionTransformer, Request}
-import services.{AuthenticationService, TouchpointBackendProvider}
+import services.{AuthenticationService, TouchpointBackends}
 
 import scala.concurrent.Future
 
-class TouchpointCommonActions(touchpointBackendProvider: TouchpointBackendProvider, touchpointActionRefiners: TouchpointActionRefiners) {
+class TouchpointCommonActions(touchpointBackendProvider: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners) {
 
   import touchpointActionRefiners._
 
