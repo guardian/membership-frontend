@@ -47,15 +47,16 @@ define([
             if (hasTier && memberDetail.benefits && memberDetail.benefits.complimentaryEventTickets) {
                 ajax({
                     url: '/subscription/remaining-tickets',
-                    type: 'json'
-                }).then(function(data) {
-                    var props = {
-                        mode: elem.data('mode'),
-                        total: data.totalAllocation,
-                        remaining: data.remainingAllocation
-                    };
-                    if (props.remaining > 0) {
-                        setMessage(props, elem);
+                    type: 'json',
+                    success: function(data) {
+                        var props = {
+                            mode: elem.data('mode'),
+                            total: data.totalAllocation,
+                            remaining: data.remainingAllocation
+                        };
+                        if (props.remaining > 0) {
+                            setMessage(props, elem);
+                        }
                     }
                 });
             }
