@@ -1,6 +1,6 @@
 package controllers
 
-import _root_.services.{EventbriteCollectiveServices, EventbriteService, GuardianLiveEventService, MasterclassEventService}
+import _root_.services._
 import actions.ActionRefiners._
 import actions.Fallbacks._
 import actions.{OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
@@ -29,6 +29,7 @@ import scala.concurrent.Future
 class Event(
   override val wsClient: WSClient,
   implicit val eventbriteService: EventbriteCollectiveServices,
+  implicit val touchpointBackend: TouchpointBackendProvider,
   touchpointActionRefiners: TouchpointActionRefiners,
   touchpointCommonActions: TouchpointCommonActions
 ) extends Controller

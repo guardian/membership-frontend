@@ -126,10 +126,14 @@ object TouchpointBackend {
   )
 }
 
-class TouchpointBackendProvider(implicit val system: ActorSystem, implicit val executionContext: ExecutionContext, implicit val wsClient: WSClient) extends LazyLogging {
+class TouchpointBackendProvider(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) extends LazyLogging {
 
   import TouchpointBackend._
   import TouchpointBackendConfig.BackendType
+
+  implicit private val as = actorSystem
+  implicit private val ec = executionContext
+  implicit private val ws = wsClient
 
   // TestUser (especially) has to be lazy as otherwise the app can't come up without the test catalog being valid.
   lazy val Normal = TouchpointBackend(BackendType.Default)

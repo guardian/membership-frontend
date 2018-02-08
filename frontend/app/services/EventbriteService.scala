@@ -22,7 +22,7 @@ import utils.StringUtils._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
-abstract class EventbriteService(implicit ec: ExecutionContext, system: ActorSystem) extends WebServiceHelper[EBObject, EBError] {
+abstract class EventbriteService(implicit val ec: ExecutionContext, system: ActorSystem) extends WebServiceHelper[EBObject, EBError] {
 
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
@@ -134,7 +134,10 @@ abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem, c
     event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
 }
 
-class GuardianLiveEventService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends LiveService {
+class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService) extends LiveService()(executionContext, actorSystem, contentApiService) {
+
+  implicit private val as = actorSystem
+
   val apiToken = Config.eventbriteApiToken
   // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
   // maximum 2 discounted tickets and 1 complimentary ticket.
@@ -182,8 +185,10 @@ object MasterclassEventsProvider {
     _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
 }
 
-class MasterclassEventService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService {
+class MasterclassEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService()(executionContext: ExecutionContext, actorSystem: ActorSystem) {
   import MasterclassEventsProvider._
+
+  implicit private val as = actorSystem
 
   val apiToken = Config.eventbriteMasterclassesApiToken
   val maxDiscountQuantityAvailable = 1

@@ -21,7 +21,11 @@ import scalaz.std.scalaFuture._
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
 
-class TouchpointActionRefiners(implicit val touchpointBackend: TouchpointBackendProvider, implicit private val ec: ExecutionContext) extends LazyLogging {
+class TouchpointActionRefiners(touchpointBackend: TouchpointBackendProvider, executionContext: ExecutionContext) extends LazyLogging {
+
+  implicit private val ec = executionContext
+  implicit private val tpb = touchpointBackend
+
   private def getContributorRequest[A](request: AuthRequest[A]): Future[String \/ Option[SubReqWithContributor[A]]] = {
     implicit val pf = Membership
     val tp = request.touchpointBackend

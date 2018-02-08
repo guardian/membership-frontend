@@ -22,7 +22,9 @@ case class ContentAPIPagination(currentPage: Int, pages: Int) {
   lazy val nextPageOpt = Some(currentPage + 1).filter(_ <= pages)
 }
 
-class GuardianContentService(implicit val actorSystem: ActorSystem) extends GuardianContent {
+class GuardianContentService(actorSystem: ActorSystem) extends GuardianContent {
+
+  implicit private val as = actorSystem
 
   private def eventbrite: Future[Seq[Content]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
