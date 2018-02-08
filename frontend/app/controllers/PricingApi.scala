@@ -53,12 +53,12 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-class PricingApi(touchpointBackend: TouchpointBackends) extends Controller {
+class PricingApi(touchpointBackends: TouchpointBackends) extends Controller {
 
   import PricingFormats._
   import views.support.Pricing._
 
-  lazy val membersCatalog: Catalog = touchpointBackend.Normal.catalog
+  lazy val membersCatalog: Catalog = touchpointBackends.Normal.catalog
 
   def currencies = CachedAction {
     Ok(Json.toJson(CountryWithCurrency.all))

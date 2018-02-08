@@ -7,7 +7,7 @@ import services.TouchpointBackends
 
 import scala.concurrent.ExecutionContext
 
-class TouchpointOAuthActions(touchpointBackendProvider: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners, implicit private val ec: ExecutionContext, val wsClient: WSClient) extends OAuthActions {
+class TouchpointOAuthActions(touchpointBackends: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners, implicit private val ec: ExecutionContext, val wsClient: WSClient) extends OAuthActions {
 
   import touchpointActionRefiners._
 

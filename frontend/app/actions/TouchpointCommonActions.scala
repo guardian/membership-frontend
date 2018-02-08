@@ -9,7 +9,7 @@ import services.{AuthenticationService, TouchpointBackends}
 
 import scala.concurrent.Future
 
-class TouchpointCommonActions(touchpointBackendProvider: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners) {
+class TouchpointCommonActions(touchpointBackends: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners) {
 
   import touchpointActionRefiners._
 
@@ -22,7 +22,7 @@ class TouchpointCommonActions(touchpointBackendProvider: TouchpointBackends, tou
   val OptionallyAuthenticatedAction = NoCacheAction andThen new ActionTransformer[Request, OptionallyAuthenticatedRequest]{
     override protected def transform[A](request: Request[A]): Future[OptionallyAuthenticatedRequest[A]] = {
       val user = AuthenticationService.authenticatedUserFor(request)
-      val touchpointBackend = user.fold(touchpointBackendProvider.Normal)(touchpointBackendProvider.forUser(_))
+      val touchpointBackend = user.fold(touchpointBackends.Normal)(touchpointBackends.forUser(_))
       Future.successful(OptionallyAuthenticatedRequest[A](touchpointBackend,user,request))
     }
   }

@@ -19,13 +19,13 @@ package object actions {
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
   trait BackendProvider {
-    def touchpointBackend(implicit touchpointBackend: TouchpointBackends): TouchpointBackend
+    def touchpointBackend(implicit touchpointBackends: TouchpointBackends): TouchpointBackend
   }
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) extends BackendProvider {
-    def touchpointBackend(implicit tbp: TouchpointBackends) = tbp.forUser(req.user)
+    def touchpointBackend(implicit tpbs: TouchpointBackends) = tpbs.forUser(req.user)
 
-    def forMemberOpt(implicit executor: ExecutionContext, tbp: TouchpointBackends): Future[String \/ Option[GenericSFContact]] =
+    def forMemberOpt(implicit executor: ExecutionContext, tpbs: TouchpointBackends): Future[String \/ Option[GenericSFContact]] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
           memberOpt <- touchpointBackend.salesforceService.getMember(req.user.id)
@@ -33,18 +33,18 @@ package object actions {
       }
     }
 
-  case class SubscriptionRequest[A](tb: TouchpointBackend,
+  case class SubscriptionRequest[A](tpb: TouchpointBackend,
                                     request: AuthRequest[A]) extends AuthRequest(request.user, request) with BackendProvider {
 
-    def touchpointBackend(implicit tbp: TouchpointBackends) = tb
+    def touchpointBackend(implicit tpbs: TouchpointBackends) = tpb
 
     def this(other: SubscriptionRequest[A]) =
-      this(other.tb, other.request)
+      this(other.tpb, other.request)
   }
 
-  case class OptionallyAuthenticatedRequest[A](tb: TouchpointBackend, user: Option[AuthenticatedIdUser], request: Request[A])
+  case class OptionallyAuthenticatedRequest[A](tpb: TouchpointBackend, user: Option[AuthenticatedIdUser], request: Request[A])
     extends WrappedRequest[A](request) with BackendProvider {
-    def touchpointBackend(implicit tbp: TouchpointBackends) = tb
+    def touchpointBackend(implicit tpbs: TouchpointBackends) = tpb
   }
 
   trait Subscriber {
@@ -65,7 +65,7 @@ package object actions {
   }
 
   case class IdentityGoogleAuthRequest[A](googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) with BackendProvider {
-    def touchpointBackend(implicit touchpointBackend: TouchpointBackends): TouchpointBackend = touchpointBackend.forUser(request.user)
+    def touchpointBackend(implicit touchpointBackends: TouchpointBackends): TouchpointBackend = touchpointBackends.forUser(request.user)
     val identityUser = request.user
   }
 }

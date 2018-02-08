@@ -20,7 +20,7 @@ object PayPal {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 }
 
-class PayPal(touchpointBackend: TouchpointBackends, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging with PayPalServiceProvider {
+class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging with PayPalServiceProvider {
 
   import PayPal._
 
@@ -39,7 +39,7 @@ class PayPal(touchpointBackend: TouchpointBackends, implicit val executionContex
 
   //Takes a request with a body of type [T], then passes T to the payPal call 'exec' to retrieve a token and returns this as json
   def readRequestAndRunServiceCall[T](exec: (PayPalService) => ((T) => Future[String]))(implicit request: Request[T]) = {
-    val payPalService = touchpointBackend.forRequest(PreSigninTestCookie, request.cookies).backend.payPalService
+    val payPalService = touchpointBackends.forRequest(PreSigninTestCookie, request.cookies).backend.payPalService
 
     for {
       token <- exec(payPalService)(request.body)

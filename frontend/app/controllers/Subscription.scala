@@ -7,7 +7,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import services.TouchpointBackends
 
-class Subscription(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackendProvider: TouchpointBackends) extends Controller with MemberServiceProvider {
+class Subscription(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends) extends Controller with MemberServiceProvider {
 
   import touchpointCommonActions._
 

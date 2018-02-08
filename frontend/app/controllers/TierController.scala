@@ -35,7 +35,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackendProvider: TouchpointBackends) extends Controller with ActivityTracking
+class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider

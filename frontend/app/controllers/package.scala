@@ -21,52 +21,52 @@ import scala.reflect.{ClassTag, classTag}
 package object controllers extends CommonActions with LazyLogging{
 
   trait MemberServiceProvider {
-    def memberService(implicit request: BackendProvider, tbp: TouchpointBackends): MemberService =
+    def memberService(implicit request: BackendProvider, tpbs: TouchpointBackends): MemberService =
       request.touchpointBackend.memberService
   }
 
   trait PaymentServiceProvider {
-    def paymentService(implicit request: BackendProvider, tbp: TouchpointBackends): PaymentService =
+    def paymentService(implicit request: BackendProvider, tpbs: TouchpointBackends): PaymentService =
       request.touchpointBackend.paymentService
   }
 
   trait CatalogProvider {
-    def catalog(implicit request: BackendProvider, tbp: TouchpointBackends): Catalog =
+    def catalog(implicit request: BackendProvider, tpbs: TouchpointBackends): Catalog =
       request.touchpointBackend.catalogService.unsafeCatalog
   }
 
   trait StripeUKMembershipServiceProvider {
-    def stripeUKMembershipService(implicit request: BackendProvider, tbp: TouchpointBackends): StripeService =
+    def stripeUKMembershipService(implicit request: BackendProvider, tpbs: TouchpointBackends): StripeService =
       request.touchpointBackend.stripeUKMembershipService
   }
 
   trait StripeAUMembershipServiceProvider {
-    def stripeAUMembershipService(implicit request: BackendProvider, tbp: TouchpointBackends): StripeService =
+    def stripeAUMembershipService(implicit request: BackendProvider, tpbs: TouchpointBackends): StripeService =
       request.touchpointBackend.stripeAUMembershipService
   }
 
   trait PayPalServiceProvider {
-    def payPalService(implicit request: AuthRequest[AnyContent], tbp: TouchpointBackends): PayPalService =
+    def payPalService(implicit request: AuthRequest[AnyContent], tpbs: TouchpointBackends): PayPalService =
       request.touchpointBackend.payPalService
   }
 
   trait ZuoraServiceProvider {
-    def zuoraService(implicit request: BackendProvider, tbp: TouchpointBackends): ZuoraService =
+    def zuoraService(implicit request: BackendProvider, tpbs: TouchpointBackends): ZuoraService =
       request.touchpointBackend.zuoraService
   }
 
   trait ZuoraRestServiceProvider {
-    def zuoraRestService(implicit request: BackendProvider, tbp: TouchpointBackends): ZuoraRestService[Future] =
+    def zuoraRestService(implicit request: BackendProvider, tpbs: TouchpointBackends): ZuoraRestService[Future] =
       request.touchpointBackend.zuoraRestService
   }
 
   trait SalesforceServiceProvider {
-    def salesforceService(implicit request: BackendProvider, tbp: TouchpointBackends): SalesforceService =
+    def salesforceService(implicit request: BackendProvider, tpbs: TouchpointBackends): SalesforceService =
       request.touchpointBackend.salesforceService
   }
 
   trait SubscriptionServiceProvider {
-    def subscriptionService(implicit request: BackendProvider, tbp: TouchpointBackends): SubscriptionService[Future] =
+    def subscriptionService(implicit request: BackendProvider, tpbs: TouchpointBackends): SubscriptionService[Future] =
       request.touchpointBackend.subscriptionService
   }
 

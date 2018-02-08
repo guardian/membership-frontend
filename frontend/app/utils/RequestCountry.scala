@@ -14,7 +14,7 @@ object RequestCountry {
   }
   implicit class AuthenticatedRequestWithIdentity(r:AuthRequest[_])
   {
-    def getIdentityCountryGroup(implicit touchpointBackend: TouchpointBackends) = {
+    def getIdentityCountryGroup(implicit touchpointBackends: TouchpointBackends) = {
       implicit val identityRequest = IdentityRequest(r)
       r.touchpointBackend.identityService
         .getFullUserDetails(r.user)

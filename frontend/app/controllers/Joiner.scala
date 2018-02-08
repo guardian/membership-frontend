@@ -151,7 +151,7 @@ class Joiner(
     implicit val tpBackend = resolution.backend
 
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend(implicit tbp: TouchpointBackends) = tpBackend
+      override def touchpointBackend(implicit tpbs: TouchpointBackends) = tpBackend
     }
     implicit val c = catalog
 
@@ -262,7 +262,7 @@ class Joiner(
 
     implicit val tpBackend = resolution.backend
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend(implicit tbp: TouchpointBackends) = tpBackend
+      override def touchpointBackend(implicit tpbs: TouchpointBackends) = tpBackend
     }
     val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry

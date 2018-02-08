@@ -16,13 +16,13 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
   override def ok = exec()
 }
 
-class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBackend: TouchpointBackends) extends Controller {
+class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller {
 
   def tests = Seq(
     new BoolTest("Events", () => eventbriteService.guardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    new BoolTest("ZuoraPing", () => touchpointBackend.Normal.zuoraSoapClient.lastPingTimeWithin(2.minutes)),
-    new BoolTest("Salesforce", () => touchpointBackend.Normal.salesforceService.isAuthenticated)
+    new BoolTest("ZuoraPing", () => touchpointBackends.Normal.zuoraSoapClient.lastPingTimeWithin(2.minutes)),
+    new BoolTest("Salesforce", () => touchpointBackends.Normal.salesforceService.isAuthenticated)
   )
 
   def healthcheck() = Action {
