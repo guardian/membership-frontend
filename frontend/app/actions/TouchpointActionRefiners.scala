@@ -1,6 +1,6 @@
 package actions
 
-import actions.ActionRefiners.{SubReqWithContributor, SubReqWithSub, SubRequestOrResult, SubRequestWithContributorOrResult, logger}
+import actions.ActionRefiners.{SubReqWithContributor, SubReqWithSub, SubRequestOrResult, SubRequestWithContributorOrResult}
 import actions.Fallbacks.{memberHome, notYetAMemberOn}
 import com.gu.memsub.{Membership, Subscriber => MemSubscriber}
 import com.gu.memsub.subsv2.SubscriptionPlan
