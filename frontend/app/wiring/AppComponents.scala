@@ -24,6 +24,7 @@ trait AppComponents
   extends AhcWSComponents
   with EhCacheComponents
   with I18nComponents
+  with AssetsComponents
   with CSRFComponents {
   self: BuiltInComponentsFromContext =>
 
@@ -74,8 +75,8 @@ trait AppComponents
   lazy val router: Router = {
     new _root_.router.Routes(
       httpErrorHandler,
-      new CachedAssets(),
-      new CacheBustedAssets(),
+      new CachedAssets(assets),
+      new CacheBustedAssets(assets),
       new SiteMap(commonActions),
       new FrontPage(eventbriteCollectiveServices, touchpointBackends, commonActions),
       new Healthcheck(eventbriteCollectiveServices, touchpointBackends),
