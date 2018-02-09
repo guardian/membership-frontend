@@ -30,7 +30,7 @@ trait TestTrait {
 
   val variantsByCountry: Map[CountryGroup, Set[Variant]] = {
 
-    def filterVariants(countryGroup: CountryGroup) = variants.list.filter(_.matches(countryGroup)).toSet
+    def filterVariants(countryGroup: CountryGroup) = variants.list.toList.filter(_.matches(countryGroup)).toSet
 
     CountryGroup.allGroups.map(country => country -> filterVariants(country)).toMap
   }
