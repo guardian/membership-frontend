@@ -8,7 +8,7 @@ import play.api.BuiltInComponentsFromContext
 import configuration.Config
 import loghandling.Logstash
 import monitoring.{HealthMonitoringTask, SentryLogging}
-import play.api.cache.EhCacheComponents
+import play.api.cache.ehcache.EhCacheComponents
 import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
 import play.filters.csrf.CSRFComponents

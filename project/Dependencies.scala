@@ -14,7 +14,7 @@ object Dependencies {
   val contentAPI = "com.gu" %% "content-api-client" % "11.40"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
-  val playCache = PlayImport.cache
+  val playCache = PlayImport.ehcache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
