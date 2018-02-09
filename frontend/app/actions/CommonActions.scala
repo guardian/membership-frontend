@@ -70,33 +70,9 @@ trait CommonActions extends LazyLogging {
 
   val AuthenticatedAction = NoCacheAction andThen authenticated()
 
-  val OptionallyAuthenticatedAction = NoCacheAction andThen new ActionTransformer[Request, OptionallyAuthenticatedRequest]{
-    override protected def transform[A](request: Request[A]): Future[OptionallyAuthenticatedRequest[A]] = {
-      val user = AuthenticationService.authenticatedUserFor(request)
-      val touchpointBackend = user.fold(TouchpointBackend.Normal)(TouchpointBackend.forUser(_))
-      Future.successful(OptionallyAuthenticatedRequest[A](touchpointBackend,user,request))
-    }
-  }
-
-  val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
-
-  val SubscriptionAction = AuthenticatedAction andThen subscriptionRefiner()
-
-  val ContributorAction = AuthenticatedAction andThen contributionRefiner()
-
-  val StaffMemberAction = AuthenticatedAction andThen subscriptionRefiner(onNonMember = joinStaffMembership(_))
-
-  val PaidSubscriptionAction = SubscriptionAction andThen paidSubscriptionRefiner()
-
-  val FreeSubscriptionAction = SubscriptionAction andThen freeSubscriptionRefiner()
-
   val CorsPublicCachedAction = CorsPublic andThen CachedAction
 
   val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = setGuMemCookie(_))
-
-  val AjaxSubscriptionAction = AjaxAuthenticatedAction andThen subscriptionRefiner(onNonMember = setGuMemCookie(_))
-
-  val AjaxPaidSubscriptionAction = AjaxSubscriptionAction andThen paidSubscriptionRefiner(onFreeMember = _ => Forbidden)
 
   val StoreAcquisitionDataAction = new ActionBuilder[Request] {
     import CommonActions._
@@ -115,7 +91,6 @@ trait CommonActions extends LazyLogging {
       Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }
 
-  def ChangeToPaidAction(targetTier: PaidTier) = SubscriptionAction andThen checkTierChangeTo(targetTier)
 }
 
 object CommonActions {
@@ -142,12 +117,6 @@ trait OAuthActions extends googleauth.Actions with googleauth.Filters {
   val AuthorisedStaff =
     GoogleAuthenticatedStaffAction andThen
       requireGroup[GoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffWrongGroup())(_))
-
-  def AuthenticatedStaffNonMemberAction =
-    AuthenticatedAction andThen
-      onlyNonMemberFilter() andThen
-      googleAuthenticationRefiner andThen
-      requireGroup[IdentityGoogleAuthRequest](permanentStaffGroups, unauthorisedStaff(views.html.fragments.oauth.staffUnauthorisedError())(_))
 
   def googleAuthenticationRefiner = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {

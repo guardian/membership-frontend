@@ -4,14 +4,12 @@ import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
 import play.api.mvc.{Controller, Request}
-import services.{PayPalService, TouchpointBackend}
+import services.{PayPalService, TouchpointBackend, TouchpointBackends}
 import utils.TestUsers.PreSigninTestCookie
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
-
+object PayPal {
   // Payment token used to tie PayPal requests together.
   case class Token(token: String)
 
@@ -20,6 +18,11 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
   // Json readers & writers.
   implicit val formatsToken = Json.format[Token]
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
+}
+
+class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging with PayPalServiceProvider {
+
+  import PayPal._
 
   // Sets up a payment by contacting PayPal, returns the token as JSON.
   def setupPayment = NoCacheAction.async(parse.json[PayPalBillingDetails]) { implicit request =>
@@ -36,7 +39,7 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
 
   //Takes a request with a body of type [T], then passes T to the payPal call 'exec' to retrieve a token and returns this as json
   def readRequestAndRunServiceCall[T](exec: (PayPalService) => ((T) => Future[String]))(implicit request: Request[T]) = {
-    val payPalService = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies).backend.payPalService
+    val payPalService = touchpointBackends.forRequest(PreSigninTestCookie, request.cookies).backend.payPalService
 
     for {
       token <- exec(payPalService)(request.body)

@@ -11,8 +11,6 @@ import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
 import services._
 
 import scala.util.Try
@@ -181,8 +179,4 @@ object Config {
     val enabled = Try{config.getBoolean("logstash.enabled")}.toOption.contains(true)
   }
 
-
-  object Implicits {
-    implicit val akkaSystem = Akka.system
-  }
 }

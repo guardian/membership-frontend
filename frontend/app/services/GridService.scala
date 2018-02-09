@@ -1,5 +1,8 @@
 package services
 
+import java.util.concurrent.atomic.AtomicReference
+import java.util.function.UnaryOperator
+
 import akka.agent.Agent
 import com.gu.memsub.images.Grid
 import com.gu.memsub.images.Grid.{Export, GridObject, GridResult}
@@ -37,10 +40,15 @@ object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLog
       } yield ImageIdWithCrop(imageId, crop)
   }
 
-  private lazy val agent = Agent[Map[ImageIdWithCrop, GridImage]](Map.empty)
+  private lazy val atomicReference = new AtomicReference[Map[ImageIdWithCrop, GridImage]](Map.empty)
+
+  // todo: remove once we upgrade to scala 2.12
+  implicit def unarayConverter[T](f: T => T) = new UnaryOperator[T] {
+    override def apply(t: T): T = f(t)
+  }
 
   def getRequestedCrop(gridId: ImageIdWithCrop) : Future[Option[GridImage]] = {
-    val currentImageData = agent.get()
+    val currentImageData = atomicReference.get()
     if(currentImageData.contains(gridId)) Future.successful(currentImageData.get(gridId))
     else {
       getGrid(gridId).map { grid =>
@@ -50,12 +58,11 @@ object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLog
           if export.assets.nonEmpty
         } yield {
           val image = GridImage(export.assets, grid.data.metadata, export.master)
-          agent send {
-            oldImageData =>
-              val newImageData = oldImageData + (gridId -> image)
-              logger.trace(s"Adding image $gridId to the event image map")
-              newImageData
-          }
+          atomicReference.updateAndGet({ oldImageData: Map[ImageIdWithCrop, GridImage] =>
+            val newImageData = oldImageData + (gridId -> image)
+            logger.trace(s"Adding image $gridId to the event image map")
+            newImageData
+          })
           image
         }
       }

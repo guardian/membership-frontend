@@ -5,6 +5,7 @@ import com.gu.i18n.CountryGroup
 import controllers.IdentityRequest
 import play.api.mvc.Request
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.TouchpointBackends
 
 object RequestCountry {
   implicit class RequestWithFastlyCountry(r: Request[_]) {
@@ -13,7 +14,7 @@ object RequestCountry {
   }
   implicit class AuthenticatedRequestWithIdentity(r:AuthRequest[_])
   {
-    def getIdentityCountryGroup = {
+    def getIdentityCountryGroup(implicit touchpointBackends: TouchpointBackends) = {
       implicit val identityRequest = IdentityRequest(r)
       r.touchpointBackend.identityService
         .getFullUserDetails(r.user)

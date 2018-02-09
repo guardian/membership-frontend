@@ -8,9 +8,9 @@ import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}
 
-trait FrontPage extends Controller {
-  val liveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller {
+  val liveEvents = eventbriteService.guardianLiveEventService
+  val masterclassEvents = eventbriteService.masterclassEventService
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK
@@ -39,7 +39,7 @@ trait FrontPage extends Controller {
 
     Ok(views.html.index(
       heroImages,
-      TouchpointBackend.Normal.catalog,
+      touchpointBackends.Normal.catalog,
       pageImages,
       eventCollections))
   }
@@ -120,9 +120,4 @@ trait FrontPage extends Controller {
 
     Ok(views.html.welcome(PageInfo(title = "Welcome", url = request.path), slideShowImages))
   }
-}
-
-object FrontPage extends FrontPage {
-  val liveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

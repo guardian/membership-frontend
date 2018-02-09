@@ -1,7 +1,5 @@
 package controllers
 
-import javax.inject.Inject
-
 import actions.Fallbacks._
 import actions._
 import com.gu.i18n._
@@ -20,7 +18,7 @@ import views.support.{TestTrait, _}
 import scalaz.syntax.std.option._
 import scala.concurrent.Future
 
-class MembershipStatus @Inject()(override val wsClient: WSClient) extends Controller with OAuthActions {
+class MembershipStatus(override val wsClient: WSClient) extends Controller with OAuthActions {
 
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](Set(
     "membership.dev@guardian.co.uk",

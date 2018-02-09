@@ -19,6 +19,7 @@ import play.api.Logger
 import play.api.mvc.RequestHeader
 import services.EventbriteService
 import com.gu.memsub.subsv2._
+import _root_.services.EventbriteCollectiveServices
 import utils.ReferralData
 import utils.TestUsers.isTestUser
 import views.support.MembershipCompat._
@@ -241,11 +242,11 @@ trait ActivityTracking {
       user: IdMinimalUser,
       fromEventId: Option[String],
       referralData: ReferralData,
-      tier: Tier) {
+      tier: Tier)(implicit eventbriteService: EventbriteCollectiveServices) {
 
     import EventbriteService._
 
-    fromEventId.flatMap(EventbriteService.getBookableEvent).foreach { event =>
+    fromEventId.flatMap(eventbriteService.getBookableEvent).foreach { event =>
       event.service.wsMetrics.put(s"join-${tier.name}-event", 1)
 
       val memberData = MemberData(

@@ -10,10 +10,9 @@ import controllers.PayPal.{PayPalBillingDetails, Token}
 import okhttp3.{FormBody, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
+class PayPalService(apiConfig: PayPalConfig, implicit val executionContext: ExecutionContext) extends LazyLogging {
 
   val config = apiConfig
   // The parameters sent with every NVP request.

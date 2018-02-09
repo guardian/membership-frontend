@@ -1,12 +1,12 @@
 package services
 
+import akka.actor.ActorSystem
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
 import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import configuration.Config
-import configuration.Config.Implicits.akkaSystem
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
@@ -14,17 +14,16 @@ import monitoring.EventbriteMetrics
 import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
 import play.api.Logger
-import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Reads
-import play.api.libs.ws._
+import play.api.libs.json.{Json, Reads}
+import play.api.cache.CacheApi
 import utils.StringUtils._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
-trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
+abstract class EventbriteService(implicit val ec: ExecutionContext, system: ActorSystem) extends WebServiceHelper[EBObject, EBError] {
+
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
 
@@ -129,15 +128,16 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
-abstract class LiveService extends EventbriteService {
-
-  val contentApiService = GuardianContentService
+abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService {
 
   def gridImageFor(event: EBEvent) =
     event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
 }
 
-object GuardianLiveEventService extends LiveService {
+class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService) extends LiveService()(executionContext, actorSystem, contentApiService) {
+
+  implicit private val as = actorSystem
+
   val apiToken = Config.eventbriteApiToken
   // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
   // maximum 2 discounted tickets and 1 complimentary ticket.
@@ -150,10 +150,18 @@ object GuardianLiveEventService extends LiveService {
 
   override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
 
+  private def getJson(url: String) = {
+    val req = new Request.Builder().url(url).build()
+    httpClient(req).run(s"${req.method} $url").map { response =>
+      val responseBody = response.body.string()
+      Json.parse(responseBody)
+    }
+  }
+
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, Config.eventbriteRefreshTimeForPriorityEvents.seconds) {
     for {
-      ordering <- WS.url(Config.eventOrderingJsonUrl).get()
-    } yield (ordering.json \ "order").as[Seq[String]]
+      ordering <- getJson(Config.eventOrderingJsonUrl)
+    } yield (ordering \ "order").as[Seq[String]]
   }
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
@@ -177,8 +185,10 @@ object MasterclassEventsProvider {
     _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
 }
 
-object MasterclassEventService extends EventbriteService {
+class MasterclassEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService()(executionContext: ExecutionContext, actorSystem: ActorSystem) {
   import MasterclassEventsProvider._
+
+  implicit private val as = actorSystem
 
   val apiToken = Config.eventbriteMasterclassesApiToken
   val maxDiscountQuantityAvailable = 1
@@ -186,8 +196,6 @@ object MasterclassEventService extends EventbriteService {
   val wsMetrics = new EventbriteMetrics("Masterclasses")
 
   override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
-
-  val contentApiService = GuardianContentService
 
   override def events: Seq[RichEvent] =
     super.events.filter(MasterclassesWithAvailableMemberDiscounts)
@@ -210,22 +218,24 @@ object EventbriteServiceHelpers {
   }
 }
 
-trait EventbriteCollectiveServices {
-  val services = Seq(GuardianLiveEventService, MasterclassEventService)
-
+object EventbriteService {
   implicit class RichEventProvider(event: RichEvent) {
-    val service = event match {
-      case _: GuLiveEvent => GuardianLiveEventService
-      case _: MasterclassEvent => MasterclassEventService
+    def service(implicit services: EventbriteCollectiveServices) = event match {
+      case _: GuLiveEvent => services.guardianLiveEventService
+      case _: MasterclassEvent => services.masterclassEventService
     }
   }
+}
 
-  def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    GuardianLiveEventService.getPreviewEvent(id)
+class EventbriteCollectiveServices(val cache: CacheApi, val guardianLiveEventService: GuardianLiveEventService, val masterclassEventService: MasterclassEventService) {
+  lazy val services = Seq(guardianLiveEventService, masterclassEventService)
+
+  def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
+    guardianLiveEventService.getPreviewEvent(id)
   }
 
-  def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    MasterclassEventService.getPreviewEvent(id)
+  def getPreviewMasterclass(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
+    masterclassEventService.getPreviewEvent(id)
   }
 
   def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
@@ -234,5 +244,3 @@ trait EventbriteCollectiveServices {
   def getBookableEvent(id: String): Option[RichEvent] = searchServices(_.getBookableEvent(id))
   def getEvent(id: String): Option[RichEvent] = searchServices(_.getEvent(id))
 }
-
-object EventbriteService extends EventbriteCollectiveServices

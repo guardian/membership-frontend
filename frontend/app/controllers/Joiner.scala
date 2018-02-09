@@ -1,6 +1,5 @@
 package controllers
 
-import javax.inject.Inject
 
 import abtests.ABTest
 import actions.ActionRefiners._
@@ -21,8 +20,8 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{paidMemberJoinForm, _}
 import model._
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
@@ -44,7 +43,18 @@ import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 import scala.concurrent.Future
 import scala.util.Failure
 
-class Joiner @Inject()(override val wsClient: WSClient) extends Controller
+class Joiner(
+  override val wsClient: WSClient,
+  val messagesApi: MessagesApi,
+  val identityApi: IdentityApi,
+  implicit val eventbriteService: EventbriteCollectiveServices,
+  contentApiService: GuardianContentService,
+  implicit val touchpointBackend: TouchpointBackends,
+  touchpointOAuthActions: TouchpointOAuthActions,
+  touchpointActionRefiners: TouchpointActionRefiners,
+  touchpointCommonActions: TouchpointCommonActions
+) extends Controller
+  with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
   with PaymentGatewayErrorHandler
@@ -59,18 +69,20 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
   with MemberServiceProvider
   with ZuoraRestServiceProvider {
 
-  val JoinReferrer = "join-referrer"
+  import touchpointOAuthActions._
+  import touchpointActionRefiners._
+  import touchpointCommonActions._
 
-  val contentApiService = GuardianContentService
+  val JoinReferrer = "join-referrer"
 
   val subscriberOfferDelayPeriod = 6.months
 
-  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
+  val identityService = IdentityService(identityApi)
 
-  val identityService = IdentityService(IdentityApi)
+  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail(identityService)
 
   def tierChooser = NoCacheAction { implicit request =>
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(EventbriteService.getBookableEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(eventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
     val contentRefererOpt = request.headers.get(REFERER)
 
@@ -86,19 +98,19 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
       customSignInUrl = Some(signInUrl)
     )
 
-    Ok(views.html.joiner.tierChooser(TouchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
+    Ok(views.html.joiner.tierChooser(touchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
       .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-    val catalog = TouchpointBackend.Normal.catalog
+    val catalog = touchpointBackend.Normal.catalog
     implicit val countryGroup = UK
 
     userSignedIn match {
       case Some(user) => for {
-        fullUser <- IdentityService(IdentityApi).getFullUserDetails(user)(IdentityRequest(request))
+        fullUser <- identityService.getFullUserDetails(user)(IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
@@ -134,12 +146,12 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
     countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
     val userOpt = authenticatedIdUserProvider(request)
     implicit val resolution: TouchpointBackend.Resolution =
-      TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+      touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
 
     implicit val tpBackend = resolution.backend
 
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend = tpBackend
+      override def touchpointBackend(implicit tpbs: TouchpointBackends) = tpBackend
     }
     implicit val c = catalog
 
@@ -246,16 +258,16 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
     logger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =
-      TouchpointBackend.forRequest(NameEnteredInForm, Some(formData))
+      touchpointBackend.forRequest(NameEnteredInForm, Some(formData))
 
     implicit val tpBackend = resolution.backend
     implicit val backendProvider: BackendProvider = new BackendProvider {
-      override def touchpointBackend = tpBackend
+      override def touchpointBackend(implicit tpbs: TouchpointBackends) = tpBackend
     }
     val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry
 
-    val identityStrategy = identityStrategyFor(request, formData)
+    val identityStrategy = identityStrategyFor(identityService, request, formData)
     identityStrategy.ensureIdUser { user =>
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
@@ -267,7 +279,7 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
           salesforceService.metrics.putSignUp(tier)
 
           trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
-          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)
+          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)(eventbriteService)
 
           formData match {
             case paid: PaidMemberJoinForm =>
@@ -298,16 +310,24 @@ class Joiner @Inject()(override val wsClient: WSClient) extends Controller
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
-    implicit val resolution: TouchpointBackend.Resolution = TouchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+    implicit val resolution: TouchpointBackend.Resolution = touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
     implicit val idReq = IdentityRequest(request)
 
     val emailFromZuora = zuoraRestService.getAccount(request.subscriber.subscription.accountId) map { account =>
       account.toOption.flatMap(_.billToContact.email)
     }
 
+    import scalaz.std.scalaFuture._
+
+    val destinationService = new DestinationService[Future](
+      eventbriteService.getBookableEvent,
+      contentApiService.contentItemQuery,
+      memberService.createEBCode
+    )
+
     for {
       paymentSummary <- memberService.getMembershipSubscriptionSummary(request.subscriber.contact)
-      destination <- request.touchpointBackend.destinationService.returnDestinationFor(request.session, request.subscriber)
+      destination <- destinationService.returnDestinationFor(request.session, request.subscriber)
       paymentMethod <- paymentService.getPaymentMethod(request.subscriber.subscription.accountId)
       email <- emailFromZuora
     } yield {

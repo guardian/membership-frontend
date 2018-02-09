@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.Controller
 
-object Login extends Controller {
+class Login() extends Controller {
 
   /*
    *   Interstitial sign in page =========================================

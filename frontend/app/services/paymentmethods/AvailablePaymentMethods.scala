@@ -6,13 +6,12 @@ import com.gu.zuora
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.CommonPaymentForm
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
 case class InitialiserAndToken(initialiser: PaymentMethodInitialiser[_ <: zuora.soap.models.Commands.PaymentMethod], token: String) extends LazyLogging {
-  def initialiseUsing(user: IdMinimalUser): Future[zuora.soap.models.Commands.PaymentMethod] = {
+  def initialiseUsing(user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[zuora.soap.models.Commands.PaymentMethod] = {
     val initialiserName = initialiser.getClass.getSimpleName
     logger.info(s"Initialising payment token for user ${user.id} with $initialiserName...")
     initialiser.initialiseWith(token, user).andThen {
@@ -24,7 +23,7 @@ case class InitialiserAndToken(initialiser: PaymentMethodInitialiser[_ <: zuora.
 
 class AvailablePaymentMethods(initialisers: Set[PaymentMethodInitialiser[_ <: zuora.soap.models.Commands.PaymentMethod]]) {
 
-  def deriveInitialiserAndTokenFrom(form: CommonPaymentForm, transactingCountry: Country): InitialiserAndToken = (for {
+  def deriveInitialiserAndTokenFrom(form: CommonPaymentForm, transactingCountry: Country)(implicit executionContext: ExecutionContext): InitialiserAndToken = (for {
     initialiser <- initialisers
     token <- initialiser.extractTokenFrom(form)
   } yield InitialiserAndToken(initialiser, token))
