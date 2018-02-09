@@ -1,7 +1,7 @@
 package controllers
 
 import _root_.services.api.MemberService._
-import actions.{BackendProvider, TouchpointCommonActions}
+import actions.{BackendProvider, CommonActions, TouchpointCommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
@@ -35,7 +35,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends) extends Controller with ActivityTracking
+class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider
@@ -47,6 +47,7 @@ class TierController(val joinerController: Joiner, val identityApi: IdentityApi,
   with ZuoraRestServiceProvider {
 
   import touchpointCommonActions._
+  import commonActions.AuthenticatedAction
 
   def change() = SubscriptionAction.async { implicit request =>
     implicit val countryGroup = UK

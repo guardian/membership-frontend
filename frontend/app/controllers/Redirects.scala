@@ -1,8 +1,11 @@
 package controllers
 
+import actions.CommonActions
 import play.api.mvc._
 
-class Redirects() extends Controller {
+class Redirects(commonActions: CommonActions) extends Controller {
+
+  import commonActions.CachedAction
 
   def homepageRedirect = CachedAction(MovedPermanently("/"))
 

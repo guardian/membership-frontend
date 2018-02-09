@@ -12,6 +12,8 @@ import views.support.Pricing._
 import views.support.MembershipCompat._
 import javax.inject.{Inject, Singleton}
 
+import actions.CommonActions
+
 case class MembershipPlan(tier: PaidTier, prices: List[Pricing])
 
 case class MembershipPlanResponse(plans: List[MembershipPlan])
@@ -53,8 +55,9 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-class PricingApi(touchpointBackends: TouchpointBackends) extends Controller {
+class PricingApi(touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
 
+  import commonActions.CachedAction
   import PricingFormats._
   import views.support.Pricing._
 

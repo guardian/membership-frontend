@@ -1,5 +1,6 @@
 package controllers
 
+import actions.CommonActions
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
@@ -20,8 +21,9 @@ object PayPal {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 }
 
-class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging with PayPalServiceProvider {
+class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, commonActions: CommonActions) extends Controller with LazyLogging with PayPalServiceProvider {
 
+  import commonActions.NoCacheAction
   import PayPal._
 
   // Sets up a payment by contacting PayPal, returns the token as JSON.

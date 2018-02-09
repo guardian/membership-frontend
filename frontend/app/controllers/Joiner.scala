@@ -7,6 +7,7 @@ import actions.Fallbacks.chooseRegister
 import actions.{RichAuthRequest, _}
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
+import com.gu.googleauth.GoogleAuthConfig
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
@@ -40,7 +41,7 @@ import views.support.Pricing._
 import views.support.TierPlans._
 import views.support.{CheckoutForm, CountryWithCurrency, IdentityUser, PageInfo}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
 
 class Joiner(
@@ -52,13 +53,18 @@ class Joiner(
   implicit val touchpointBackend: TouchpointBackends,
   touchpointOAuthActions: TouchpointOAuthActions,
   touchpointActionRefiners: TouchpointActionRefiners,
-  touchpointCommonActions: TouchpointCommonActions
-) extends Controller
+  touchpointCommonActions: TouchpointCommonActions,
+  implicit val parser: BodyParser[AnyContent],
+  executionContext: ExecutionContext,
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions,
+  actionRefiners: ActionRefiners
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
+  with Controller
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking
   with PaymentGatewayErrorHandler
-  with OAuthActions
   with LazyLogging
   with CatalogProvider
   with StripeUKMembershipServiceProvider
@@ -69,9 +75,11 @@ class Joiner(
   with MemberServiceProvider
   with ZuoraRestServiceProvider {
 
+  import actionRefiners.{matchingGuardianEmail, PlannedOutageProtection, redirectMemberAttemptingToSignUp, authenticated}
   import touchpointOAuthActions._
   import touchpointActionRefiners._
   import touchpointCommonActions._
+  import commonActions.{CachedAction, NoCacheAction}
 
   val JoinReferrer = "join-referrer"
 
@@ -125,6 +133,9 @@ class Joiner(
 
 
   def authenticatedIfNotMergingRegistration(onUnauthenticated: RequestHeader => Result = chooseRegister(_)) = new ActionFilter[Request] {
+
+    override protected def executionContext = Joiner.this.executionContext
+
     override def filter[A](req: Request[A]) = Future.successful {
       val userOpt = authenticatedIdUserProvider(req)
       val userSignedIn = userOpt.isDefined

@@ -2,13 +2,19 @@ package controllers
 
 import actions.Fallbacks._
 import actions._
+import com.gu.googleauth.GoogleAuthConfig
 import com.typesafe.scalalogging.LazyLogging
-import play.api.mvc.{Controller, Cookie}
+import play.api.mvc.{AnyContent, BodyParser, Controller, Cookie}
 import utils.TestUsers.testUsers
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 
-class Testing(override val wsClient: WSClient) extends Controller with LazyLogging with OAuthActions {
+import scala.concurrent.ExecutionContext
+
+class Testing(override val wsClient: WSClient, parser: BodyParser[AnyContent], executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
+  extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller with LazyLogging {
+
+  import commonActions.CachedAction
 
   import Testing._
   val analyticsOffCookie = Cookie(AnalyticsCookieName, "true", httpOnly = false)

@@ -1,13 +1,24 @@
 package actions
 
 import actions.Fallbacks.unauthorisedStaff
-import controllers.AuthenticatedAction
+import com.gu.googleauth.GoogleAuthConfig
 import play.api.libs.ws.WSClient
+import play.api.mvc.{AnyContent, BodyParser}
 import services.TouchpointBackends
 
 import scala.concurrent.ExecutionContext
 
-class TouchpointOAuthActions(touchpointBackends: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners, implicit private val ec: ExecutionContext, val wsClient: WSClient) extends OAuthActions {
+class TouchpointOAuthActions(
+  touchpointBackends: TouchpointBackends,
+  touchpointActionRefiners: TouchpointActionRefiners,
+  implicit private val ec: ExecutionContext,
+  val wsClient: WSClient,
+  parser: BodyParser[AnyContent],
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions
+) extends OAuthActions(parser, ec, googleAuthConfig, commonActions) {
+
+  import commonActions.AuthenticatedAction
 
   import touchpointActionRefiners._
 

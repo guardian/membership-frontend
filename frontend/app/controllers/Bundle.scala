@@ -1,6 +1,7 @@
 package controllers
 
 import abtests.BundleVariant
+import actions.CommonActions
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import configuration.CopyConfig
 import model._
@@ -8,7 +9,9 @@ import play.api.mvc.Controller
 import services._
 import views.support.PageInfo
 
-class Bundle(touchpointBackends: TouchpointBackends) extends Controller {
+class Bundle(touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+
+  import commonActions.CachedAction
 
   private val landingMainImage = ResponsiveImageGroup(
     availableImages = ResponsiveImageGenerator(

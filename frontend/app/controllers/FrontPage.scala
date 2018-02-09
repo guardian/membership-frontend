@@ -1,5 +1,6 @@
 package controllers
 
+import actions.CommonActions
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import model.OrientatedImages
@@ -8,7 +9,10 @@ import play.api.mvc.Controller
 import services._
 import views.support.{Asset, PageInfo}
 
-class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller {
+class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+
+  import commonActions.CachedAction
+
   val liveEvents = eventbriteService.guardianLiveEventService
   val masterclassEvents = eventbriteService.masterclassEventService
 

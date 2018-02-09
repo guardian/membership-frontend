@@ -18,7 +18,7 @@ import services.api.{MemberService, SalesforceService}
 import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}
 
-package object controllers extends CommonActions with LazyLogging{
+package object controllers extends LazyLogging {
 
   trait MemberServiceProvider {
     def memberService(implicit request: BackendProvider, tpbs: TouchpointBackends): MemberService =

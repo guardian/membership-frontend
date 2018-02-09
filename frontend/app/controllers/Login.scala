@@ -1,8 +1,11 @@
 package controllers
 
+import actions.CommonActions
 import play.api.mvc.Controller
 
-class Login() extends Controller {
+class Login(commonActions: CommonActions) extends Controller {
+
+  import commonActions.NoCacheAction
 
   /*
    *   Interstitial sign in page =========================================

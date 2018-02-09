@@ -1,25 +1,34 @@
 package actions
 
-import actions.ActionRefiners.{freeSubscriptionRefiner, paidSubscriptionRefiner}
 import actions.Fallbacks.joinStaffMembership
 import com.gu.salesforce.PaidTier
 import play.api.mvc.Results.Forbidden
-import play.api.mvc.{ActionTransformer, Request}
+import play.api.mvc.{ActionTransformer, AnyContent, BodyParser, Request}
 import services.{AuthenticationService, TouchpointBackends}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class TouchpointCommonActions(touchpointBackends: TouchpointBackends, touchpointActionRefiners: TouchpointActionRefiners) {
+class TouchpointCommonActions(
+  touchpointBackends: TouchpointBackends,
+  touchpointActionRefiners: TouchpointActionRefiners,
+  parser: BodyParser[AnyContent],
+  val executionContext: ExecutionContext,
+  actionRefiners: ActionRefiners
+) {
 
+  import actionRefiners.{paidSubscriptionRefiner, freeSubscriptionRefiner}
   import touchpointActionRefiners._
 
-  object BaseCommonActions extends CommonActions
+  object BaseCommonActions extends CommonActions(parser, executionContext, actionRefiners)
 
   private val NoCacheAction = BaseCommonActions.NoCacheAction
   private val AuthenticatedAction = BaseCommonActions.AuthenticatedAction
   private val AjaxAuthenticatedAction = BaseCommonActions.AjaxAuthenticatedAction
 
   val OptionallyAuthenticatedAction = NoCacheAction andThen new ActionTransformer[Request, OptionallyAuthenticatedRequest]{
+
+    override def executionContext = TouchpointCommonActions.this.executionContext
+
     override protected def transform[A](request: Request[A]): Future[OptionallyAuthenticatedRequest[A]] = {
       val user = AuthenticationService.authenticatedUserFor(request)
       val touchpointBackend = user.fold(touchpointBackends.Normal)(touchpointBackends.forUser(_))

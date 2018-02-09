@@ -1,10 +1,17 @@
 package controllers
 
-import actions.OAuthActions
+import actions.{CommonActions, OAuthActions}
+import com.gu.googleauth.GoogleAuthConfig
 import play.api.libs.ws.WSClient
-import play.api.mvc.Controller
+import play.api.mvc.{AnyContent, BodyParser, Controller}
 
-class Outages(override val wsClient: WSClient) extends Controller with OAuthActions {
+import scala.concurrent.ExecutionContext
+
+class Outages(override val wsClient: WSClient, parser: BodyParser[AnyContent], executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
+  extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
+
+  import commonActions.CachedAction
+
   def maintenanceMessage = CachedAction {
     Ok(views.html.info.maintenanceMessage())
   }
