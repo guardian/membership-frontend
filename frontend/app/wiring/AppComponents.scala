@@ -78,7 +78,7 @@ trait AppComponents
       new OAuth(wsClient),
       new Outages(wsClient),
       new Staff(wsClient, eventbriteCollectiveServices),
-      new Subscription(commonActions, touchpointBackends),
+      new SubscriptionController(commonActions, touchpointBackends),
       new WhatsOn(eventbriteCollectiveServices, touchpointBackends),
       new rest.EventApi(eventbriteCollectiveServices),
       new Event(wsClient, eventbriteCollectiveServices, touchpointBackends, actionRefiners, commonActions),
