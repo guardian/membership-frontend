@@ -61,7 +61,7 @@ class DestinationServiceTest extends Specification {
         plans = CovariantNonEmptyList(new PaidSubscriptionPlan[Product.Membership, PaidCharge[Partner.type, Month.type]](
           id = RatePlanId(""), productRatePlanId = ProductRatePlanId(""), name = "name", product = Product.Membership, description = "", features = Nil,
           charges = partnerCharge,
-          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = "")),
+          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = ""), Nil),
         hasPendingFreePlan = false,
         readerType = ReaderType.Direct,
         autoRenew = true
