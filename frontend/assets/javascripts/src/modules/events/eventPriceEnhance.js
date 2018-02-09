@@ -18,7 +18,7 @@ define(['$', 'src/utils/user'], function ($, userUtil) {
 
     var enhanceWithTier = function (memberDetail) {
         if (memberDetail && memberDetail.benefits && memberDetail.benefits.discountedEventTickets) {
-            events.each(function(el) {
+            events.each(function(_, el) {
                 updateEventPricing(el);
             });
         }
