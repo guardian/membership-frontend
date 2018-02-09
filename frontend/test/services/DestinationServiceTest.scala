@@ -21,7 +21,9 @@ import scalaz.Id._
 class DestinationServiceTest extends Specification {
   "DestinationService" should {
 
-    val destinationService = new DestinationService[Id](
+    type OldId[+X] = X
+
+    val destinationService = new DestinationService[OldId](
       getBookableEvent = _ => Some(TestRichEvent(eventWithName().copy(id = "0123456"))),
       capiItemQuery = _ => DestinationServiceTest.createContentItem,
       createCode = (_, _) => Some(EBAccessCode("some-discount-code", 2))
