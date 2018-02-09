@@ -373,7 +373,7 @@ object EventbriteDeserializer {
   // Remove any leading/trailing spaces left by the events team
   implicit val readsTrimString = Reads[String] {
     case JsString(s) => JsSuccess(s.trim)
-    case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jsstring"))))
+    case _ => JsError(JsPath() -> JsonValidationError("error.expected.jsstring"))
   }
 
   implicit val instant: Reads[Instant] = JsPath.read[String].map(convertInstantText)
