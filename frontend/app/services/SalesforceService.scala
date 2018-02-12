@@ -9,8 +9,7 @@ import dispatch._
 import forms.MemberForm.{CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.{ContributorMetrics, MemberMetrics}
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import akka.actor.ActorSystem
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import services.FrontendMemberRepository._
@@ -23,9 +22,7 @@ object FrontendMemberRepository {
   type UserId = String
 }
 
-class SalesforceService(salesforceConfig: SalesforceConfig) extends api.SalesforceService {
-
-  private implicit val system = Akka.system
+class SalesforceService(salesforceConfig: SalesforceConfig)(implicit val system: ActorSystem) extends api.SalesforceService {
 
   val metricsVal = new MemberMetrics(salesforceConfig.envName)
 

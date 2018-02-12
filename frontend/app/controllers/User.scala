@@ -1,5 +1,6 @@
 package controllers
 
+import actions.TouchpointCommonActions
 import com.gu.memsub.Subscriber
 import model.Benefits
 import org.joda.time.Instant
@@ -9,12 +10,14 @@ import play.api.mvc.Controller
 import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext
 
-trait User extends Controller {
+class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
+
+  import touchpointCommonActions._
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)
@@ -24,7 +27,7 @@ trait User extends Controller {
 
   def checkExistingEmail(email: String) = CachedAction.async { implicit request =>
     for {
-      doesUserExist <- IdentityService(IdentityApi).doesUserExist(email)(IdentityRequest(request))
+      doesUserExist <- IdentityService(identityApi).doesUserExist(email)(IdentityRequest(request))
     } yield Ok(Json.obj("emailInUse" -> doesUserExist))
   }
 
@@ -41,5 +44,3 @@ trait User extends Controller {
     )
   )
 }
-
-object User extends User

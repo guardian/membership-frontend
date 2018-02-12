@@ -1,9 +1,7 @@
 package controllers
 
-import javax.inject.Inject
-
 import _root_.services.api.MemberService._
-import actions.BackendProvider
+import actions.{BackendProvider, TouchpointCommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
@@ -22,7 +20,7 @@ import org.joda.time.LocalDate
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
-import services.{IdentityApi, IdentityService}
+import services.{IdentityApi, IdentityService, TouchpointBackends}
 import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.{ReferralData, TierChangeCookies}
@@ -37,7 +35,7 @@ import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController @Inject()(val joinerController: Joiner) extends Controller with ActivityTracking
+class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider
@@ -47,6 +45,8 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller 
   with PayPalServiceProvider
   with PaymentServiceProvider
   with ZuoraRestServiceProvider {
+
+  import touchpointCommonActions._
 
   def change() = SubscriptionAction.async { implicit request =>
     implicit val countryGroup = UK
@@ -119,7 +119,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller 
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
 
     val idUserFuture =
-      IdentityService(IdentityApi)
+      IdentityService(identityApi)
         .getIdentityUserView(request.user, IdentityRequest(request))
 
     // Preselect the country from Identity fields
@@ -196,7 +196,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller 
       emailFromZuora.flatMap { maybeEmail =>
         maybeEmail.map { email =>
           for {
-            reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
+            reauthResult <- IdentityService(identityApi).reauthUser(email, form.password).value
             result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
           } yield result
         }.getOrElse(noEmailMessage)

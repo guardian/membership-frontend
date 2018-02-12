@@ -4,7 +4,7 @@ import play.Logger
 import play.api.mvc.{Action, Controller}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-object CachedAssets extends Controller {
+class CachedAssets() extends Controller {
 
   def at(path: String, file: String, aggressiveCaching: Boolean = false) = Action.async { request =>
     controllers.Assets.at(path, file, aggressiveCaching).apply(request).recover {

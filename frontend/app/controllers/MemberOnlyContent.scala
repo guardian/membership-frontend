@@ -14,9 +14,7 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-object MemberOnlyContent extends Controller with LazyLogging {
-
-  val contentApiService = GuardianContentService
+class MemberOnlyContent(contentApiService: GuardianContentService) extends Controller with LazyLogging {
 
   def membershipContentRedirect = Action { Redirect("/supporter") }
 

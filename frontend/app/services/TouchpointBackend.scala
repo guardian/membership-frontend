@@ -1,5 +1,6 @@
 package services
 
+import akka.actor.ActorSystem
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.services.{PaymentService, api => memsubapi}
@@ -12,6 +13,7 @@ import com.gu.salesforce._
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
 import com.gu.touchpoint.TouchpointBackendConfig
+import com.gu.touchpoint.TouchpointBackendConfig.BackendType
 import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.rest.SimpleClient
 import com.gu.zuora.soap.ClientWithFeatureSupplier
@@ -19,22 +21,18 @@ import com.gu.zuora.{ZuoraRestService, soap, ZuoraService => ZuoraServiceImpl}
 import com.netaporter.uri.Uri
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
-import configuration.Config.Implicits.akkaSystem
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
+import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scalaz.std.scalaFuture._
 
-object TouchpointBackend extends LazyLogging {
-
-  import TouchpointBackendConfig.BackendType
-
+object TouchpointBackend {
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
     def zuoraEnvName: String = tpbc.zuoraSoap.envName
     def zuoraMetrics(component: String): ServiceMetrics = new ServiceMetrics(zuoraEnvName, "membership", component)
@@ -42,12 +40,12 @@ object TouchpointBackend extends LazyLogging {
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
 
-  def apply(backendType: BackendType): TouchpointBackend = {
+  def apply(backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient): TouchpointBackend = {
     val backendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
     TouchpointBackend(backendConfig, backendType)
   }
 
-  def apply(config: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
+  def apply(config: TouchpointBackendConfig, backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient): TouchpointBackend = {
     val stripeUKMembershipService = new StripeService(
       apiConfig = config.stripeUKMembership,
       client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
@@ -62,7 +60,7 @@ object TouchpointBackend extends LazyLogging {
         val service = "Stripe AU Membership"
       })
     )
-    val payPalService = new PayPalService(config.payPal)
+    val payPalService = new PayPalService(config.payPal, executionContext)
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
     implicit val simpleRestClient = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
@@ -85,7 +83,7 @@ object TouchpointBackend extends LazyLogging {
 
     val paymentService = new PaymentService(zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
-    val identityService = IdentityService(IdentityApi)
+    val identityService = IdentityService(new IdentityApi(wsClient))
     val memberService = new MemberService(
       identityService = identityService,
       salesforceService = salesforceService,
@@ -109,11 +107,6 @@ object TouchpointBackend extends LazyLogging {
       stripeUKMembershipService = stripeUKMembershipService,
       stripeAUMembershipService = stripeAUMembershipService,
       zuoraSoapClient = zuoraSoapClient,
-      destinationService = new DestinationService[Future](
-        EventbriteService.getBookableEvent,
-        GuardianContentService.contentItemQuery,
-        memberService.createEBCode
-      ),
       memberService = memberService,
       subscriptionService = newSubsService,
       catalogService = newCatalogService,
@@ -126,6 +119,22 @@ object TouchpointBackend extends LazyLogging {
     )
   }
 
+  case class Resolution(
+    backend: TouchpointBackend,
+    typ: BackendType,
+    validTestUserCredentialOpt: Option[TestUserCredentialType[_]]
+  )
+}
+
+class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) extends LazyLogging {
+
+  import TouchpointBackend._
+  import TouchpointBackendConfig.BackendType
+
+  implicit private val as = actorSystem
+  implicit private val ec = executionContext
+  implicit private val ws = wsClient
+
   // TestUser (especially) has to be lazy as otherwise the app can't come up without the test catalog being valid.
   lazy val Normal = TouchpointBackend(BackendType.Default)
   lazy val TestUser = TouchpointBackend(BackendType.Testing)
@@ -134,12 +143,6 @@ object TouchpointBackend extends LazyLogging {
     case BackendType.Testing => TestUser
     case BackendType.Default => Normal
   }
-
-  case class Resolution(
-    backend: TouchpointBackend,
-    typ: BackendType,
-    validTestUserCredentialOpt: Option[TestUserCredentialType[_]]
-  )
 
   /**
     * Alternate credentials are used *only* when the user is not signed in - if you're logged in as
@@ -170,7 +173,6 @@ case class TouchpointBackend(
   stripeUKMembershipService: StripeService,
   stripeAUMembershipService: StripeService,
   zuoraSoapClient: soap.ClientWithFeatureSupplier,
-  destinationService: DestinationService[Future],
   memberService: api.MemberService,
   subscriptionService: subsv2.services.SubscriptionService[Future],
   catalogService: subsv2.services.CatalogService[Future],

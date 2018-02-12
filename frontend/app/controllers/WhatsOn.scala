@@ -13,11 +13,11 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-trait WhatsOn extends Controller with ActivityTracking {
+class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller with ActivityTracking {
   implicit val countryGroup = UK
 
-  val guLiveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+  lazy val guLiveEvents = eventbriteService.guardianLiveEventService
+  lazy val masterclassEvents = eventbriteService.masterclassEventService
 
   private def allEvents = guLiveEvents.events
 
@@ -29,8 +29,8 @@ trait WhatsOn extends Controller with ActivityTracking {
     getCitiesWithCount(allEvents).map(FilterItem.tupled)
   }
 
-  private val normalCatalog =
-    Future.successful(TouchpointBackend.Normal.catalogService.unsafeCatalog)
+  private lazy val normalCatalog =
+    Future.successful(touchpointBackends.Normal.catalogService.unsafeCatalog)
 
   def list = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
@@ -103,9 +103,4 @@ trait WhatsOn extends Controller with ActivityTracking {
       Ok(views.html.event.masterclassesList(c, pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
     )
   }
-}
-
-object WhatsOn extends WhatsOn {
-  val guLiveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

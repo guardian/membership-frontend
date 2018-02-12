@@ -354,7 +354,7 @@ class MemberService(identityService: IdentityService,
     }
   }
 
-  override def createEBCode(subscriber: com.gu.memsub.Subscriber.Member, event: RichEvent): Future[Option[EBCode]] = {
+  override def createEBCode(subscriber: com.gu.memsub.Subscriber.Member, event: RichEvent)(implicit services: EventbriteCollectiveServices): Future[Option[EBCode]] = {
     retrieveComplimentaryTickets(subscriber.subscription, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${subscriber.contact.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ event.retrieveDiscountedTickets(subscriber.subscription.plan.tier)

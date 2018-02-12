@@ -2,7 +2,6 @@ package monitoring
 
 import java.lang.Long
 import java.lang.System.currentTimeMillis
-import javax.inject._
 
 import com.gu.googleauth.UserIdentity
 import controllers.{Cached, NoCache}
@@ -14,15 +13,16 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.routing.Router
 import services.AuthenticationService
-
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.core.SourceMapper
+
 import scala.concurrent._
 
-class ErrorHandler @Inject() (
+class ErrorHandler(
                                env: Environment,
                                config: Configuration,
-                               sourceMapper: OptionalSourceMapper,
-                               router: Provider[Router]
+                               sourceMapper: Option[SourceMapper],
+                               router: => Option[Router]
                                ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) {
 
   override def logServerError(request: RequestHeader, usefulException: UsefulException) {

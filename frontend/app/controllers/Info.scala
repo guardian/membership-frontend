@@ -18,10 +18,11 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-trait Info extends Controller with LazyLogging {
+class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService, touchpointBackends: TouchpointBackends) extends Controller with LazyLogging {
+
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
-    redirectWithCampaignCodes(routes.Info.supporterFor(determinedCountryGroup).url, SEE_OTHER)
+    Redirect(routes.Info.supporterFor(determinedCountryGroup).url, campaignCodes(request), SEE_OTHER)
   }
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
@@ -106,7 +107,7 @@ trait Info extends Controller with LazyLogging {
 
     Ok(template(
       heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
+      touchpointBackends.Normal.catalog.supporter,
       PageInfo(
         title = CopyConfig.copyTitleSupporters,
         url = request.path,
@@ -159,9 +160,9 @@ trait Info extends Controller with LazyLogging {
     )
 
     Ok(views.html.info.patron(
-      patronPlans = TouchpointBackend.Normal.catalog.patron,
-      partnerPlans = TouchpointBackend.Normal.catalog.partner,
-      supporterPlans = TouchpointBackend.Normal.catalog.supporter,
+      patronPlans = touchpointBackends.Normal.catalog.patron,
+      partnerPlans = touchpointBackends.Normal.catalog.partner,
+      supporterPlans = touchpointBackends.Normal.catalog.supporter,
       pageInfo = pageInfo,
       countryGroup = UK,
       pageImages = pageImages)
@@ -172,17 +173,17 @@ trait Info extends Controller with LazyLogging {
     implicit val countryGroup = UK
 
     val results =
-      GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
+      guardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
         item.content.fields.flatMap(_.membershipAccess).isEmpty && !item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
-    Ok(views.html.info.offersAndCompetitions(TouchpointBackend.Normal.catalog, results))
+    Ok(views.html.info.offersAndCompetitions(touchpointBackends.Normal.catalog, results))
   }
 
   def help = CachedAction { implicit request =>
     Ok(views.html.info.help())
   }
 
-  val identityService = IdentityService(IdentityApi)
+  val identityService = IdentityService(identityApi)
 
 
 
@@ -221,5 +222,3 @@ trait Info extends Controller with LazyLogging {
   }
 
 }
-
-object Info extends Info
