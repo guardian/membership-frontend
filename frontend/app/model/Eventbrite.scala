@@ -385,7 +385,16 @@ object EventbriteDeserializer {
 
   implicit val ebError = Json.reads[EBError]
   implicit val ebLocation = Json.reads[EBAddress]
-  implicit val ebVenue = Json.reads[EBVenue]
+
+  implicit val ebVenue = new Reads[EBVenue] {
+
+    private val reader = Json.reads[EBVenue]
+
+    override def reads(json: JsValue) = json match {
+      case JsNull => JsSuccess(EBVenue(None, None))
+      case _ => reader.reads(json)
+    }
+  }
 
   implicit val ebRichText: Reads[EBRichText] = (
     (JsPath \ "text").readNullable[String].map(_.getOrElse("")) and
