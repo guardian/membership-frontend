@@ -33,7 +33,7 @@ object Dependencies {
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.10"
-  val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play25" % "2.0.4" % "compile" excludeAll(
+  val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play26" % "2.0.5-SNAPSHOT" % "compile" excludeAll(
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
   )
