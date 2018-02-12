@@ -7,7 +7,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model._
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder
 import com.amazonaws.services.sqs.model.{SendMessageRequest, SendMessageResult}
-import com.google.common.hash.Hashing
+import utils.LegacyHashing
 import com.gu.aws.CredentialsProvider
 import com.gu.identity.play.IdMinimalUser
 import com.typesafe.scalalogging.LazyLogging
@@ -31,7 +31,7 @@ trait FeedbackEmailService extends LazyLogging {
     .build()
 
   def md5(input: String): String = {
-    val hf = Hashing.md5()
+    val hf = LegacyHashing.md5()
     util.Arrays.toString(hf.newHasher().putBytes(input.getBytes("UTF-8")).hash().asBytes())
   }
   def sendFeedback(feedback: FeedbackForm, userOpt: Option[IdMinimalUser], userEmail:Option[String], uaOpt: Option[String]) = {
