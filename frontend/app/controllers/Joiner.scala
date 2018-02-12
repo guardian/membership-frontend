@@ -45,7 +45,6 @@ import scala.util.Failure
 
 class Joiner(
   override val wsClient: WSClient,
-  val messagesApi: MessagesApi,
   val identityApi: IdentityApi,
   implicit val eventbriteService: EventbriteCollectiveServices,
   contentApiService: GuardianContentService,
@@ -58,9 +57,10 @@ class Joiner(
   googleAuthConfig: GoogleAuthConfig,
   commonActions: CommonActions,
   actionRefiners: ActionRefiners,
-  membersDataAPI: MembersDataAPI
+  membersDataAPI: MembersDataAPI,
+  override protected val controllerComponents: ControllerComponents
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
-  with Controller
+  with BaseController
   with I18nSupport
   with ActivityTracking
   with AcquisitionTracking

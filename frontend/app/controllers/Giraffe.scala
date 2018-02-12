@@ -5,7 +5,7 @@ import com.gu.i18n._
 import play.api.mvc._
 import tracking.RedirectWithCampaignCodes._
 
-class Giraffe(commonActions: CommonActions) extends Controller {
+class Giraffe(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.NoCacheAction
 

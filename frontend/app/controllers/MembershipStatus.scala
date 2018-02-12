@@ -23,8 +23,9 @@ class MembershipStatus(
   parser: BodyParser[AnyContent],
   override implicit val executionContext: ExecutionContext,
   googleAuthConfig: GoogleAuthConfig,
-  commonActions: CommonActions
-) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
+  commonActions: CommonActions,
+  override protected val controllerComponents: ControllerComponents
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with BaseController {
 
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](Set(
     "membership.dev@guardian.co.uk",

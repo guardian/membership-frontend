@@ -18,7 +18,7 @@ import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, Result}
+import play.api.mvc.{BaseController, ControllerComponents, Result}
 import services.{IdentityApi, IdentityService, TouchpointBackends}
 import tracking.ActivityTracking
 import utils.RequestCountry._
@@ -41,7 +41,7 @@ class TierController(
   implicit val touchpointBackends: TouchpointBackends,
   commonActions: CommonActions,
   implicit val executionContext: ExecutionContext
-) extends Controller with ActivityTracking
+, override protected val controllerComponents: ControllerComponents) extends BaseController with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider

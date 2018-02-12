@@ -5,11 +5,11 @@ import actions.CommonActions
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import configuration.CopyConfig
 import model._
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import views.support.PageInfo
 
-class Bundle(touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+class Bundle(touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.CachedAction
 
@@ -123,5 +123,4 @@ class Bundle(touchpointBackends: TouchpointBackends, commonActions: CommonAction
     ))
 
   }
-
 }

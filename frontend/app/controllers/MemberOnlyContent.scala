@@ -15,7 +15,7 @@ import views.support.PageInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging {
+class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions, implicit val executionContext: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
 
   import commonActions.CachedAction
 

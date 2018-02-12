@@ -12,8 +12,14 @@ import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class OAuth(override val wsClient: WSClient, parser: BodyParser[AnyContent], override implicit val executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
-  extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
+class OAuth(
+  override val wsClient: WSClient,
+  parser: BodyParser[AnyContent],
+  override implicit val executionContext: ExecutionContext,
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions,
+  override protected val controllerComponents: ControllerComponents
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with BaseController {
 
   import commonActions.NoCacheAction
 

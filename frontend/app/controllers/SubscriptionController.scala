@@ -8,7 +8,7 @@ import services.TouchpointBackends
 
 import scala.concurrent.ExecutionContext
 
-class SubscriptionController(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext) extends Controller with MemberServiceProvider {
+class SubscriptionController(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController with MemberServiceProvider {
 
   import touchpointCommonActions._
 

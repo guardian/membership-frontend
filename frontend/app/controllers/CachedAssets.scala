@@ -1,11 +1,11 @@
 package controllers
 
 import play.Logger
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, BaseController, ControllerComponents}
 
 import scala.concurrent.ExecutionContext
 
-class CachedAssets(assets: Assets, implicit val ec: ExecutionContext) extends Controller {
+class CachedAssets(assets: Assets, implicit val ec: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   def at(path: String, file: String, aggressiveCaching: Boolean = false) = Action.async { request =>
     assets.at(path, file, aggressiveCaching).apply(request).recover {

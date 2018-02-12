@@ -4,7 +4,7 @@ import actions.CommonActions
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
-import play.api.mvc.{Controller, Request}
+import play.api.mvc.{BaseController, ControllerComponents, Request}
 import services.{PayPalService, TouchpointBackend, TouchpointBackends}
 import utils.TestUsers.PreSigninTestCookie
 
@@ -21,7 +21,7 @@ object PayPal {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 }
 
-class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, commonActions: CommonActions) extends Controller with LazyLogging with PayPalServiceProvider {
+class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging with PayPalServiceProvider {
 
   import commonActions.NoCacheAction
   import PayPal._
