@@ -11,7 +11,6 @@ import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
 import com.typesafe.scalalogging.LazyLogging
 import controllers.IdentityRequest
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.{AuthenticatedBuilder, AuthenticatedRequest}
 import play.api.mvc._
@@ -41,7 +40,7 @@ object ActionRefiners {
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
 }
 
-class ActionRefiners(parser: BodyParser[AnyContent], executionContext: ExecutionContext) extends LazyLogging {
+class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext) extends LazyLogging {
   import ActionRefiners._
   import model.TierOrdering.upgradeOrdering
   implicit val pf: ProductFamily = Membership
@@ -50,7 +49,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], executionContext: Execution
 
     override def parser = ActionRefiners.this.parser
 
-    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
@@ -60,14 +59,14 @@ class ActionRefiners(parser: BodyParser[AnyContent], executionContext: Execution
 
   val PlannedOutageProtection = new ActionFilter[Request] {
 
-    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
 
     override def filter[A](request: Request[A]) = Future.successful(PlannedOutage.currentOutage.map(_ => maintenance(request)))
   }
 
   def paidSubscriptionRefiner(onFreeMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithPaid] {
 
-    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
 
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithPaid[A]]] =
       Future.successful(request.paidOrFreeSubscriber.bimap(free => onFreeMember(request), paid =>
@@ -79,7 +78,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], executionContext: Execution
 
   def freeSubscriptionRefiner(onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithFree] {
 
-    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
 
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithFree[A]]] =
       Future.successful(request.paidOrFreeSubscriber.bimap(free =>
@@ -103,7 +102,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], executionContext: Execution
   def matchingGuardianEmail(identityService: IdentityService, onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
 
-    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
 
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
@@ -119,7 +118,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], executionContext: Execution
 
     override def parser = ActionRefiners.this.parser
 
-    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       Timing.record(cloudWatch, metricName) {
@@ -136,7 +135,7 @@ object OptionEither {
   def apply[A](m: Future[\/[String, Option[A]]]): OptionT[FutureEither, A] =
     OptionT[FutureEither, A](EitherT[Future, String, Option[A]](m))
 
-  def liftEither[A](x: Future[Option[A]]): OptionT[FutureEither, A] =
+  def liftEither[A](x: Future[Option[A]])(implicit ec: ExecutionContext): OptionT[FutureEither, A] =
     apply(x.map(\/.right))
 
   def liftFutureOption[A](x: \/[String, A]): OptionT[FutureEither, A] =

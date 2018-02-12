@@ -13,13 +13,12 @@ import okhttp3.Request
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.Logger
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import views.support.MembershipCompat._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 object MembersDataAPI {
@@ -30,8 +29,8 @@ object MembersDataAPI {
 
   implicit val attributesReads: Reads[Attributes] = (
     (JsPath \ "tier").read[Tier] and
-    (JsPath \ "membershipNumber").readNullable[String]
-  )(Attributes.apply _)
+      (JsPath \ "membershipNumber").readNullable[String]
+    )(Attributes.apply _)
 
   case class Attributes(tier: Tier, membershipNumber: Option[String])
   case class Behaviour(userId: String, activity: Option[String], lastObserved: Option[String], note: Option[String], emailed: Option[Boolean])
@@ -44,18 +43,25 @@ object MembersDataAPI {
 
   implicit val errorReads: Reads[ApiError] = (
     (JsPath \ "message").read[String] and
-    (JsPath \ "details").read[String]
-  )(ApiError)
+      (JsPath \ "details").read[String]
+    )(ApiError)
 
   implicit val behaviourReads: Reads[Behaviour] = (
     (JsPath \ "userId").read[String] and
-    (JsPath \ "activity").readNullable[String] and
-    (JsPath \ "lastObserved").readNullable[String] and
-    (JsPath \ "note").readNullable[String] and
-    (JsPath \ "emailed").readNullable[Boolean]
-  )(Behaviour.apply _)
+      (JsPath \ "activity").readNullable[String] and
+      (JsPath \ "lastObserved").readNullable[String] and
+      (JsPath \ "note").readNullable[String] and
+      (JsPath \ "emailed").readNullable[Boolean]
+    )(Behaviour.apply _)
+}
 
-  case class AttributeHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Attributes, ApiError] {
+class MembersDataAPI(executionContext: ExecutionContext) {
+
+  private implicit val ec = executionContext
+
+  import MembersDataAPI._
+
+  private case class AttributeHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Attributes, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
       req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
@@ -63,7 +69,7 @@ object MembersDataAPI {
     override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(MembersDataAPIMetrics)
   }
 
-  case class BehaviourHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Behaviour, ApiError] {
+  private case class BehaviourHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Behaviour, ApiError] {
     override val wsUrl: String = Config.membersDataAPIUrl
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
       req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
@@ -91,7 +97,7 @@ object MembersDataAPI {
       case _ => Logger.error(s"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }
 
-    def upsertBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None) = {
+    def upsertBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None, note: Option[String] = None, emailed: Option[Boolean] = None)(implicit ec: ExecutionContext) = {
       user.credentials match {
         case cookies: AccessCredentials.Cookies =>
           setBehaviour(cookies, user.id, activity, note).onComplete {
@@ -102,7 +108,7 @@ object MembersDataAPI {
       }
     }
 
-    def removeBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None) = user.credentials match {
+    def removeBehaviour(user: AuthenticatedIdUser, activity: Option[String] = None)(implicit ec: ExecutionContext) = user.credentials match {
       case cookies: AccessCredentials.Cookies =>
         deleteBehaviour(cookies, user.id, activity).onComplete {
           case Success(result) => Logger.info(s"Cleared behaviours for ${user.user.id}")

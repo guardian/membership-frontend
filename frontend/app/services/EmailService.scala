@@ -17,8 +17,7 @@ import model.ContributorRow
 import play.api.libs.json.Json
 import utils.AwsAsyncHandler
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 import scalaz.\/
 import scalaz.syntax.either._
@@ -73,7 +72,7 @@ trait ThankYouEmailService extends LazyLogging {
 
   private val thankYouQueueUrl = sqsClient.getQueueUrl(Config.thankYouEmailQueue).getQueueUrl
 
-  def thankYou(row: ContributorRow): Future[\/[Throwable, SendMessageResult]] = {
+  def thankYou(row: ContributorRow)(implicit ec: ExecutionContext): Future[\/[Throwable, SendMessageResult]] = {
     val payload = Json.stringify(Json.toJson(row))
 
     val handler = new AwsAsyncHandler[SendMessageRequest, SendMessageResult]

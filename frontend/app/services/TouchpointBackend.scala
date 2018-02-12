@@ -83,7 +83,7 @@ object TouchpointBackend {
 
     val paymentService = new PaymentService(zuoraService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
-    val identityService = IdentityService(new IdentityApi(wsClient))
+    val identityService = IdentityService(new IdentityApi(wsClient, executionContext))
     val memberService = new MemberService(
       identityService = identityService,
       salesforceService = salesforceService,
@@ -97,7 +97,8 @@ object TouchpointBackend {
       paymentService = paymentService,
       discounter = discounter,
       discountIds = Config.discountRatePlanIds(config.zuoraEnvName),
-      invoiceIdsByCountry = Config.invoiceTemplateOverrides(config.zuoraEnvName)
+      invoiceIdsByCountry = Config.invoiceTemplateOverrides(config.zuoraEnvName),
+      ec = executionContext
     )
 
     TouchpointBackend(

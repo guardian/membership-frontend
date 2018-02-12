@@ -9,7 +9,6 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc.Results._
@@ -20,7 +19,7 @@ import utils.TestUsers.{PreSigninTestCookie, isTestUser}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CommonActions(parser: BodyParser[AnyContent], executionContext: ExecutionContext, actionRefiners: ActionRefiners) extends LazyLogging {
+class CommonActions(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext, actionRefiners: ActionRefiners) extends LazyLogging {
 
   import actionRefiners.{authenticated, resultModifier}
 
@@ -28,7 +27,7 @@ class CommonActions(parser: BodyParser[AnyContent], executionContext: ExecutionC
 
     override def parser = CommonActions.this.parser
 
-    override protected def executionContext: ExecutionContext = CommonActions.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = CommonActions.this.executionContext
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       block(request).map { result =>
@@ -45,7 +44,7 @@ class CommonActions(parser: BodyParser[AnyContent], executionContext: ExecutionC
 
     override def parser = CommonActions.this.parser
 
-    override protected def executionContext: ExecutionContext = CommonActions.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = CommonActions.this.executionContext
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       block(request).map { result =>
@@ -65,7 +64,7 @@ class CommonActions(parser: BodyParser[AnyContent], executionContext: ExecutionC
 
     override def parser = CommonActions.this.parser
 
-    override protected def executionContext: ExecutionContext = CommonActions.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = CommonActions.this.executionContext
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
       block(request).map { result =>
@@ -96,7 +95,7 @@ class CommonActions(parser: BodyParser[AnyContent], executionContext: ExecutionC
 
     override def parser = CommonActions.this.parser
 
-    override protected def executionContext: ExecutionContext = CommonActions.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = CommonActions.this.executionContext
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] =
       block(request).map { result =>
@@ -118,7 +117,7 @@ object CommonActions {
   val acquisitionDataSessionKey: String = "acquisitionData"
 }
 
-abstract class OAuthActions(parser: BodyParser[AnyContent], executionContext: ExecutionContext, val authConfig: GoogleAuthConfig, commonActions: CommonActions) extends googleauth.LoginSupport with googleauth.Filters {
+abstract class OAuthActions(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext, val authConfig: GoogleAuthConfig, commonActions: CommonActions) extends googleauth.LoginSupport with googleauth.Filters {
 
   import commonActions.NoCacheAction
   //routes
@@ -142,7 +141,7 @@ abstract class OAuthActions(parser: BodyParser[AnyContent], executionContext: Ex
 
   def googleAuthenticationRefiner = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
-      override protected def executionContext: ExecutionContext = OAuthActions.this.executionContext
+      override protected implicit def executionContext: ExecutionContext = OAuthActions.this.executionContext
 
       override def refine[A](request: AuthRequest[A]) = Future.successful {
         userIdentity(request).map(IdentityGoogleAuthRequest(_, request)).toRight(GoogleAuthAction.sendForAuth(request))

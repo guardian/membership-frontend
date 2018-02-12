@@ -127,13 +127,14 @@ abstract class EventbriteService(implicit val ec: ExecutionContext, system: Acto
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
-abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService {
+abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService, gridService: GridService) extends EventbriteService {
 
   def gridImageFor(event: EBEvent) =
-    event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(GridService.getRequestedCrop)
+    event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 }
 
-class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService) extends LiveService()(executionContext, actorSystem, contentApiService) {
+class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService, gridService: GridService)
+  extends LiveService()(executionContext, actorSystem, contentApiService, gridService) {
 
   implicit private val as = actorSystem
 

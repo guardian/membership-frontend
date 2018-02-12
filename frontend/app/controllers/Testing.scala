@@ -6,12 +6,11 @@ import com.gu.googleauth.GoogleAuthConfig
 import com.typesafe.scalalogging.LazyLogging
 import play.api.mvc.{AnyContent, BodyParser, Controller, Cookie}
 import utils.TestUsers.testUsers
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 
 import scala.concurrent.ExecutionContext
 
-class Testing(override val wsClient: WSClient, parser: BodyParser[AnyContent], executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
+class Testing(override val wsClient: WSClient, parser: BodyParser[AnyContent], override implicit val executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
   extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller with LazyLogging {
 
   import commonActions.CachedAction

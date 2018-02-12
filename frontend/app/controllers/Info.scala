@@ -8,7 +8,6 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.CopyConfig
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, OrientatedImages}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services._
 import tracking.RedirectWithCampaignCodes._
@@ -16,9 +15,16 @@ import utils.ReferralData
 import utils.RequestCountry._
 import views.support.PageInfo
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService, touchpointBackends: TouchpointBackends, commonActions: CommonActions, actionRefiners: ActionRefiners) extends Controller with LazyLogging {
+class Info(
+  val identityApi: IdentityApi,
+  guardianContentService: GuardianContentService,
+  touchpointBackends: TouchpointBackends,
+  commonActions: CommonActions,
+  actionRefiners: ActionRefiners,
+  implicit val executionContext: ExecutionContext
+) extends Controller with LazyLogging {
 
   import commonActions.{CachedAction, NoCacheAction, StoreAcquisitionDataAction}
   import actionRefiners.PlannedOutageProtection

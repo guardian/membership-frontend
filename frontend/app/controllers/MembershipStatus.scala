@@ -8,7 +8,6 @@ import com.gu.stripe.Stripe
 import configuration.Config
 import com.gu.stripe.Stripe.Serializer._
 import forms.MemberForm.supportForm
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.{JsArray, JsString, Json}
 import play.api.mvc._
 import services.{AuthenticationService, TouchpointBackend}
@@ -22,7 +21,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class MembershipStatus(
   override val wsClient: WSClient,
   parser: BodyParser[AnyContent],
-  executionContext: ExecutionContext,
+  override implicit val executionContext: ExecutionContext,
   googleAuthConfig: GoogleAuthConfig,
   commonActions: CommonActions
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {

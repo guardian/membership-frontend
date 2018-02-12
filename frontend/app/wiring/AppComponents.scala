@@ -14,8 +14,7 @@ import play.api.cache.ehcache.EhCacheComponents
 import play.api.http.HttpErrorHandler
 import play.api.i18n.I18nComponents
 import play.filters.csrf.CSRFComponents
-import services.{GuardianContentService, GuardianLiveEventService, MasterclassEventService}
-import services.{EventbriteCollectiveServices, IdentityApi, TouchpointBackends}
+import services._
 import filters.{AddEC2InstanceHeader, CheckCacheHeadersFilter, Gzipper, RedirectMembersFilter}
 import configuration.Config.config
 import controllers._
@@ -28,7 +27,7 @@ trait AppComponents
   with CSRFComponents {
   self: BuiltInComponentsFromContext =>
 
-  override lazy val httpErrorHandler: HttpErrorHandler = new monitoring.ErrorHandler(environment, configuration, sourceMapper, Some(router))
+  override lazy val httpErrorHandler: HttpErrorHandler = new monitoring.ErrorHandler(environment, configuration, sourceMapper, Some(router), executionContext)
 
   override lazy val httpFilters: Seq[EssentialFilter] = Seq(
     new RedirectMembersFilter(),
@@ -40,11 +39,13 @@ trait AppComponents
 
   lazy val googleAuthConfig: GoogleAuthConfig = googleAuthConfigFor(config, httpConfiguration = httpConfiguration)
 
-  private lazy val identityApi = new IdentityApi(wsClient)
-  private lazy val contentApiService = new GuardianContentService(actorSystem)
-  private lazy val guardianLiveEventService = new GuardianLiveEventService(executionContext, actorSystem, contentApiService)
+  private lazy val gridService = new GridService(executionContext)
+  private lazy val identityApi = new IdentityApi(wsClient, executionContext)
+  private lazy val contentApiService = new GuardianContentService(actorSystem, executionContext)
+  private lazy val guardianLiveEventService = new GuardianLiveEventService(executionContext, actorSystem, contentApiService, gridService)
   private lazy val masterclassEventService = new MasterclassEventService(executionContext, actorSystem, contentApiService)
   private lazy val eventbriteCollectiveServices = new EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
+  private lazy val membersDataAPI = new MembersDataAPI(executionContext)
 
   private lazy val commonActionRefiners = new ActionRefiners(defaultBodyParser, executionContext)
   private lazy val commonActions = new CommonActions(defaultBodyParser, executionContext, commonActionRefiners)
@@ -69,13 +70,14 @@ trait AppComponents
     executionContext,
     googleAuthConfig,
     commonActions,
-    commonActionRefiners
+    commonActionRefiners,
+    membersDataAPI
   )
 
   lazy val router: Router = {
     new _root_.router.Routes(
       httpErrorHandler,
-      new CachedAssets(assets),
+      new CachedAssets(assets, executionContext),
       new CacheBustedAssets(assets),
       new SiteMap(commonActions),
       new FrontPage(eventbriteCollectiveServices, touchpointBackends, commonActions),
@@ -83,22 +85,22 @@ trait AppComponents
       new Testing(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions),
       new FeatureOptIn(commonActions),
       joiner,
-      new MemberOnlyContent(contentApiService, commonActions),
+      new MemberOnlyContent(contentApiService, commonActions, executionContext),
       new Login(commonActions),
       new StaffAuth(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions),
       new OAuth(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions),
       new Outages(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions),
       new Staff(wsClient, eventbriteCollectiveServices, defaultBodyParser, executionContext, googleAuthConfig, commonActions),
-      new SubscriptionController(touchpointCommonActions, touchpointBackends),
-      new WhatsOn(eventbriteCollectiveServices, touchpointBackends, commonActions),
+      new SubscriptionController(touchpointCommonActions, touchpointBackends, executionContext),
+      new WhatsOn(eventbriteCollectiveServices, touchpointBackends, commonActions, executionContext),
       new rest.EventApi(eventbriteCollectiveServices, commonActions),
       new Event(wsClient, eventbriteCollectiveServices, touchpointBackends, actionRefiners, touchpointCommonActions, defaultBodyParser, executionContext, googleAuthConfig, commonActions, commonActionRefiners),
-      new TierController(joiner, identityApi, touchpointCommonActions, touchpointBackends, commonActions),
-      new Info(identityApi, contentApiService, touchpointBackends, commonActions, commonActionRefiners),
+      new TierController(joiner, identityApi, touchpointCommonActions, touchpointBackends, commonActions, executionContext),
+      new Info(identityApi, contentApiService, touchpointBackends, commonActions, commonActionRefiners, executionContext),
       new Redirects(commonActions),
       new Bundle(touchpointBackends, commonActions),
       new PatternLibrary(eventbriteCollectiveServices, touchpointBackends, commonActions),
-      new User(identityApi, touchpointCommonActions, executionContext, commonActions),
+      new User(identityApi, touchpointCommonActions, executionContext, commonActions, membersDataAPI),
       new VanityUrl(commonActions),
       new PricingApi(touchpointBackends, commonActions),
       new Giraffe(commonActions),

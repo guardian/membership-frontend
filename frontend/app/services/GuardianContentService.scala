@@ -12,9 +12,8 @@ import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.iteratee.{Enumerator, Iteratee}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.duration._
 
@@ -22,9 +21,10 @@ case class ContentAPIPagination(currentPage: Int, pages: Int) {
   lazy val nextPageOpt = Some(currentPage + 1).filter(_ <= pages)
 }
 
-class GuardianContentService(actorSystem: ActorSystem) extends GuardianContent {
+class GuardianContentService(actorSystem: ActorSystem, executionContext: ExecutionContext) extends GuardianContent {
 
   implicit private val as = actorSystem
+  override implicit val ec = executionContext
 
   private def eventbrite: Future[Seq[Content]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -95,6 +95,8 @@ class GuardianContentService(actorSystem: ActorSystem) extends GuardianContent {
 }
 
 trait GuardianContent {
+
+  implicit val ec: ExecutionContext
 
   val client = new GuardianContentClient(Config.contentApiKey) {
     override val targetUrl = "https://content.guardianapis.com"

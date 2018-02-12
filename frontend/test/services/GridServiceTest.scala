@@ -4,11 +4,12 @@ import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.gu.memsub.images.Grid.GridResult
 import com.gu.memsub.images.GridDeserializer._
+import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mutable.Specification
 import services.GridService.ImageIdWithCrop.fromGuToolsUri
 import utils.Resource
 
-class GridServiceTest extends Specification {
+class GridServiceTest(implicit ev: ExecutionEnv) extends Specification {
   import GridService.ImageIdWithCrop
 
   val validGridUrl: Uri = "https://media.gutools.co.uk/images/aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288"
@@ -26,7 +27,8 @@ class GridServiceTest extends Specification {
       val gridResponse = grid.as[GridResult]
       val exports = gridResponse.data.exports.get
       val requestedCrop = "0_130_1703_1022"
-      val export = GridService.findExport(exports, requestedCrop)
+      val gridService = new GridService(ev.executionContext)
+      val export = gridService.findExport(exports, requestedCrop)
 
       export must beSome
       export.get.assets.size mustEqual(3)

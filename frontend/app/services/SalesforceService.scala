@@ -10,11 +10,10 @@ import forms.MemberForm.{CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.{ContributorMetrics, MemberMetrics}
 import akka.actor.ActorSystem
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import services.FrontendMemberRepository._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 import scalaz.\/
 
@@ -22,7 +21,7 @@ object FrontendMemberRepository {
   type UserId = String
 }
 
-class SalesforceService(salesforceConfig: SalesforceConfig)(implicit val system: ActorSystem) extends api.SalesforceService {
+class SalesforceService(salesforceConfig: SalesforceConfig)(implicit val system: ActorSystem, implicit val executionContext: ExecutionContext) extends api.SalesforceService {
 
   val metricsVal = new MemberMetrics(salesforceConfig.envName)
 

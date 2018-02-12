@@ -15,7 +15,6 @@ import model.Eventbrite.{EBCode, EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
 import model._
 import org.joda.time.format.ISODateTimeFormat
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -34,7 +33,7 @@ class Event(
   touchpointActionRefiners: TouchpointActionRefiners,
   touchpointCommonActions: TouchpointCommonActions,
   implicit val parser: BodyParser[AnyContent],
-  executionContext: ExecutionContext,
+  override implicit val executionContext: ExecutionContext,
   googleAuthConfig: GoogleAuthConfig,
   commonActions: CommonActions,
   actionRefiners: ActionRefiners
@@ -53,7 +52,7 @@ class Event(
 
     override def parser = Event.this.parser
 
-    override protected def executionContext: ExecutionContext = Event.this.executionContext
+    override protected implicit def executionContext: ExecutionContext = Event.this.executionContext
 
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       eventbriteService.getEvent(eventId).map { event =>

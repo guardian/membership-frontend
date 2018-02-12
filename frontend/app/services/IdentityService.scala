@@ -16,14 +16,13 @@ import forms.MemberForm._
 import monitoring.IdentityApiMetrics
 import play.api.Logger
 import play.api.http.Status
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import services.IdentityService.DisregardResponseContent
 import views.support.IdentityUser
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
 case class IdentityServiceError(s: String) extends Throwable {
@@ -82,11 +81,11 @@ object IdentityService extends LazyLogging {
     )
   }
 
-  def apply(identityApiProvider: => IdentityApi) =
-    new IdentityService(identityApiProvider)
+  def apply(identityApiProvider: => IdentityApi)(implicit ec: ExecutionContext) =
+    new IdentityService(identityApiProvider, ec)
 }
 
-class IdentityService(identityApiProvider: => IdentityApi) {
+class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: ExecutionContext) {
 
   lazy val identityApi = identityApiProvider
 
@@ -169,7 +168,7 @@ class IdentityService(identityApiProvider: => IdentityApi) {
   }
 }
 
-class IdentityApi(val wsClient: WSClient) {
+class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"

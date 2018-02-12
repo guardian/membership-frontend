@@ -5,7 +5,6 @@ import com.gu.googleauth.GoogleAuthFilters.LOGIN_ORIGIN_KEY
 import com.gu.googleauth.{GoogleAuth, GoogleAuthConfig, UserIdentity}
 import configuration.Config
 import model.FlashMessage
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -13,7 +12,7 @@ import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class OAuth(override val wsClient: WSClient, parser: BodyParser[AnyContent], executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
+class OAuth(override val wsClient: WSClient, parser: BodyParser[AnyContent], override implicit val executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
   extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
 
   import commonActions.NoCacheAction
