@@ -1,10 +1,13 @@
 package controllers
 
+import actions.CommonActions
 import com.gu.i18n._
 import play.api.mvc._
 import tracking.RedirectWithCampaignCodes._
 
-class Giraffe() extends Controller {
+class Giraffe(commonActions: CommonActions) extends Controller {
+
+  import commonActions.NoCacheAction
 
   def redirectToContributions() = NoCacheAction { implicit request =>
     Redirect("https://contribute.theguardian.com/", campaignCodes(request), MOVED_PERMANENTLY)

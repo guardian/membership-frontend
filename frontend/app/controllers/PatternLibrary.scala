@@ -1,11 +1,15 @@
 package controllers
 
+import actions.CommonActions
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services._
 
-class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller {
+class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+
+  import commonActions.NoCacheAction
+
   val guLiveEvents = eventbriteService.guardianLiveEventService
   implicit val countryGroup = UK
 

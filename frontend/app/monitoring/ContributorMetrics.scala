@@ -4,7 +4,6 @@ import com.gu.salesforce.Tier
 import com.gu.zuora.soap.models.Commands.PaymentMethod
 import com.amazonaws.services.cloudwatch.model.Dimension
 import com.gu.memsub.subsv2.SubscriptionPlan
-import controllers.Subscription
 import model.{ContributionPlanChoice, PlanChoice}
 
 class ContributorMetrics(val backendEnv: String) extends TouchpointBackendMetrics {

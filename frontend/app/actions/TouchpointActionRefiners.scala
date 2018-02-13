@@ -1,6 +1,6 @@
 package actions
 
-import actions.ActionRefiners.{SubReqWithContributor, SubReqWithSub, SubRequestOrResult, SubRequestWithContributorOrResult, logger}
+import actions.ActionRefiners.{SubReqWithContributor, SubReqWithSub, SubRequestOrResult, SubRequestWithContributorOrResult}
 import actions.Fallbacks.{memberHome, notYetAMemberOn}
 import com.gu.memsub.{Membership, Subscriber => MemSubscriber}
 import com.gu.memsub.subsv2.SubscriptionPlan
@@ -54,6 +54,9 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
   }
 
   def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {
+
+    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
+
     override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
       getSubRequest(request).map {
         case -\/(message) =>
@@ -64,6 +67,9 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
   }
 
   def contributionRefiner(onNonContributor: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
+
+    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
+
     override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
       getContributorRequest(request).map {
         case -\/(message) =>
@@ -75,6 +81,9 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
   }
 
   def noAuthenticatedMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[Request] {
+
+    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
+
     override def filter[A](request: Request[A]) =
       getSubRequest(request).map {
         case -\/(message) =>
@@ -85,6 +94,9 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
   }
 
   def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
+
+    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
+
     override def filter[A](request: AuthRequest[A]) =
       getSubRequest(request).map {
         case -\/(message) =>
@@ -95,6 +107,9 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
   }
 
   def onlyNonContributorFilter(onContributor: SubReqWithContributor[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
+
+    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
+
     override def filter[A](request: AuthRequest[A]) =
       getContributorRequest(request).map {
         case -\/(message) =>
@@ -105,6 +120,9 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
   }
 
   def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {
+
+    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
+
     override protected def filter[A](request: SubReqWithSub[A]): Future[Option[Result]] = {
       val currentSubscription = request.subscriber.subscription
       val memberService = request.touchpointBackend.memberService

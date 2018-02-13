@@ -1,6 +1,6 @@
 package controllers
 
-import actions.ActionRefiners.PlannedOutageProtection
+import actions.{ActionRefiners, CommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
@@ -18,7 +18,10 @@ import views.support.PageInfo
 
 import scala.concurrent.Future
 
-class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService, touchpointBackends: TouchpointBackends) extends Controller with LazyLogging {
+class Info(val identityApi: IdentityApi, guardianContentService: GuardianContentService, touchpointBackends: TouchpointBackends, commonActions: CommonActions, actionRefiners: ActionRefiners) extends Controller with LazyLogging {
+
+  import commonActions.{CachedAction, NoCacheAction, StoreAcquisitionDataAction}
+  import actionRefiners.PlannedOutageProtection
 
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)

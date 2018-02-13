@@ -21,7 +21,9 @@ import scalaz.Id._
 class DestinationServiceTest extends Specification {
   "DestinationService" should {
 
-    val destinationService = new DestinationService[Id](
+    type OldId[+X] = X
+
+    val destinationService = new DestinationService[OldId](
       getBookableEvent = _ => Some(TestRichEvent(eventWithName().copy(id = "0123456"))),
       capiItemQuery = _ => DestinationServiceTest.createContentItem,
       createCode = (_, _) => Some(EBAccessCode("some-discount-code", 2))
@@ -56,10 +58,10 @@ class DestinationServiceTest extends Specification {
         promoCode = None,
         casActivationDate = None,
         isCancelled = false,
-        plans = scalaz.NonEmptyList(new PaidSubscriptionPlan[Product.Membership, PaidCharge[Partner.type, Month.type]](
+        plans = CovariantNonEmptyList(new PaidSubscriptionPlan[Product.Membership, PaidCharge[Partner.type, Month.type]](
           id = RatePlanId(""), productRatePlanId = ProductRatePlanId(""), name = "name", product = Product.Membership, description = "", features = Nil,
           charges = partnerCharge,
-          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = "")),
+          chargedThrough = None, start = new LocalDate("2015-01-01"), end = new LocalDate("2099-01-01"), productName = ""), Nil),
         hasPendingFreePlan = false,
         readerType = ReaderType.Direct,
         autoRenew = true

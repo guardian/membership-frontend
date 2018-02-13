@@ -18,7 +18,7 @@ import play.api.mvc._
 import utils.PlannedOutage
 import views.support.MembershipCompat._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, EitherT, OptionT, \/, \/-}
 import scalaz.std.scalaFuture._
 
@@ -28,17 +28,8 @@ import scalaz.std.scalaFuture._
  *
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
-object ActionRefiners extends LazyLogging {
-  import model.TierOrdering.upgradeOrdering
-  implicit val pf: ProductFamily = Membership
 
-  def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
-    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
-  }
-
-  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_)): ActionBuilder[AuthRequest] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
-
+object ActionRefiners {
   type SubRequestOrResult[A] = Future[Either[Result, SubReqWithSub[A]]]
   type SubRequestWithContributorOrResult[A] = Future[Either[Result, SubReqWithContributor[A]]]
   type PaidSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with PaidSubscriber]]
@@ -48,12 +39,36 @@ object ActionRefiners extends LazyLogging {
   type SubReqWithFree[A] = SubscriptionRequest[A] with FreeSubscriber
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
+}
+
+class ActionRefiners(parser: BodyParser[AnyContent], executionContext: ExecutionContext) extends LazyLogging {
+  import ActionRefiners._
+  import model.TierOrdering.upgradeOrdering
+  implicit val pf: ProductFamily = Membership
+
+  def resultModifier(f: Result => Result) = new ActionBuilder[Request, AnyContent] {
+
+    override def parser = ActionRefiners.this.parser
+
+    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
+  }
+
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_))(implicit bodyParser: BodyParser[AnyContent]): ActionBuilder[AuthRequest, AnyContent] =
+    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, bodyParser, onUnauthenticated)
 
   val PlannedOutageProtection = new ActionFilter[Request] {
+
+    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override def filter[A](request: Request[A]) = Future.successful(PlannedOutage.currentOutage.map(_ => maintenance(request)))
   }
 
   def paidSubscriptionRefiner(onFreeMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithPaid] {
+
+    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithPaid[A]]] =
       Future.successful(request.paidOrFreeSubscriber.bimap(free => onFreeMember(request), paid =>
         new SubscriptionRequest[A](request) with PaidSubscriber {
@@ -63,6 +78,9 @@ object ActionRefiners extends LazyLogging {
   }
 
   def freeSubscriptionRefiner(onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithFree] {
+
+    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithFree[A]]] =
       Future.successful(request.paidOrFreeSubscriber.bimap(free =>
         new SubscriptionRequest[A](request) with FreeSubscriber {
@@ -84,6 +102,9 @@ object ActionRefiners extends LazyLogging {
 
   def matchingGuardianEmail(identityService: IdentityService, onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
+
+    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
         user <- identityService.getFullUserDetails(request.identityUser)(IdentityRequest(request))
@@ -94,7 +115,12 @@ object ActionRefiners extends LazyLogging {
     }
   }
 
-  def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
+  def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request, AnyContent] {
+
+    override def parser = ActionRefiners.this.parser
+
+    override protected def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       Timing.record(cloudWatch, metricName) {
         block(request)

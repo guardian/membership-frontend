@@ -1,16 +1,19 @@
+import scala.sys.process._
 import Dependencies._
 
 def env(key: String, default: String): String = Option(System.getenv(key)).getOrElse(default)
+
+def commitId(): String = try {
+    "git rev-parse HEAD".!!.trim
+} catch {
+    case _: Exception => "unknown"
+}
 
 buildInfoKeys := Seq[BuildInfoKey](
     name,
     BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),
     BuildInfoKey.constant("buildTime", System.currentTimeMillis),
-    BuildInfoKey.constant("gitCommitId", Option(System.getenv("BUILD_VCS_NUMBER")) getOrElse(try {
-        "git rev-parse HEAD".!!.trim
-    } catch {
-        case e: Exception => "unknown"
-    }))
+    BuildInfoKey.constant("gitCommitId", Option(System.getenv("BUILD_VCS_NUMBER")) getOrElse(commitId()))
 )
 
 buildInfoOptions += BuildInfoOption.ToMap
@@ -43,6 +46,9 @@ assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary t
     case "version.txt"                                           => MergeStrategy.discard // identity jars all include version.txt
     case "shared.thrift" => MergeStrategy.first
     case PathList("META-INF", xs@_*) => MergeStrategy.discard
+    case "play/reference-overrides.conf" => MergeStrategy.concat
+    case PathList("ahc-version.properties") => MergeStrategy.first
+    case PathList("ahc-default.properties") => MergeStrategy.concat
     case x =>
         val oldStrategy = (assemblyMergeStrategy in assembly).value
         oldStrategy(x)
@@ -55,8 +61,7 @@ javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf"
 testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
 
 
-import com.typesafe.sbt.packager.archetypes.ServerLoader.Systemd
-serverLoading in Debian := Systemd
+enablePlugins(SystemdPlugin)
 
 debianPackageDependencies := Seq("openjdk-8-jre-headless")
 

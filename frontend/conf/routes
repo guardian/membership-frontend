@@ -52,7 +52,7 @@ GET         /staff/event-overview/masterclasses        controllers.Staff.eventOv
 GET         /staff/event-overview/details              controllers.Staff.eventOverviewDetails
 
 # Subscription
-GET         /subscription/remaining-tickets            controllers.Subscription.remainingTickets
+GET         /subscription/remaining-tickets            controllers.SubscriptionController.remainingTickets
 
 # What's On
 GET         /events                                    controllers.WhatsOn.list

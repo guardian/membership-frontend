@@ -3,8 +3,8 @@ package controllers
 import play.api.mvc.{AnyContent, Action, Controller}
 import views.support.Asset
 
-class CacheBustedAssets() extends Controller{
+class CacheBustedAssets(assets: Assets) extends Controller {
   def at(path: String): Action[AnyContent] =  {
-    controllers.Assets.at("/public", Asset.map(path), true)
+    assets.at("/public", Asset.map(path), true)
   }
 }

@@ -4,10 +4,10 @@ import play.Logger
 import play.api.mvc.{Action, Controller}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-class CachedAssets() extends Controller {
+class CachedAssets(assets: Assets) extends Controller {
 
   def at(path: String, file: String, aggressiveCaching: Boolean = false) = Action.async { request =>
-    controllers.Assets.at(path, file, aggressiveCaching).apply(request).recover {
+    assets.at(path, file, aggressiveCaching).apply(request).recover {
       case e: RuntimeException => {
         Logger.warn(s"Asset run time exception for path $path $file. Does this file exist?", e)
         Cached(NotFound)
@@ -18,7 +18,7 @@ class CachedAssets() extends Controller {
   }
 
   def bookmarkletAt(path: String, file: String) = Action.async { request =>
-    controllers.Assets.at(path, file).apply(request).recover {
+    assets.at(path, file).apply(request).recover {
       case e: RuntimeException => {
         Logger.warn(s"Bookmarklet run time exception for path $path $file. Does this file exist?", e)
         Cached(NotFound)

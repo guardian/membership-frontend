@@ -3,7 +3,8 @@ package controllers
 import _root_.services._
 import actions.ActionRefiners._
 import actions.Fallbacks._
-import actions.{OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
+import actions.{ActionRefiners, CommonActions, OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
+import com.gu.googleauth.GoogleAuthConfig
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
@@ -24,24 +25,36 @@ import utils.ReferralData
 import views.support.MembershipCompat._
 import views.support.PageInfo
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class Event(
-  override val wsClient: WSClient,
+  val wsClient: WSClient,
   implicit val eventbriteService: EventbriteCollectiveServices,
   implicit val touchpointBackends: TouchpointBackends,
   touchpointActionRefiners: TouchpointActionRefiners,
-  touchpointCommonActions: TouchpointCommonActions
-) extends Controller
+  touchpointCommonActions: TouchpointCommonActions,
+  implicit val parser: BodyParser[AnyContent],
+  executionContext: ExecutionContext,
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions,
+  actionRefiners: ActionRefiners
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
+  with Controller
   with MemberServiceProvider
-  with OAuthActions
   with ActivityTracking
   with LazyLogging {
 
   import touchpointActionRefiners._
   import touchpointCommonActions._
+  import actionRefiners.authenticated
+  import commonActions.{CachedAction, CorsPublicCachedAction, Cors, NoCacheAction}
 
-  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
+  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request, AnyContent] {
+
+    override def parser = Event.this.parser
+
+    override protected def executionContext: ExecutionContext = Event.this.executionContext
+
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       eventbriteService.getEvent(eventId).map { event =>
         trackAnon(EventActivity("buyActionInvoked", None, EventData(event)))(request)
@@ -50,6 +63,7 @@ class Event(
         }
       }.getOrElse(Future.successful(NotFound))
     }
+
   }
 
   private def BuyAction(id: String, onUnauthenticated: RequestHeader => Result = notYetAMemberOn(_)) = NoCacheAction andThen recordBuyIntention(id) andThen

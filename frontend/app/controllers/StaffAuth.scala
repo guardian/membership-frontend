@@ -1,11 +1,15 @@
 package controllers
 
-import actions.OAuthActions
+import actions.{CommonActions, OAuthActions}
+import com.gu.googleauth.GoogleAuthConfig
 import model.FlashMessage
 import play.api.libs.ws.WSClient
-import play.api.mvc.Controller
+import play.api.mvc.{AnyContent, BodyParser, Controller}
 
-class StaffAuth(override val wsClient: WSClient) extends Controller with OAuthActions {
+import scala.concurrent.ExecutionContext
+
+class StaffAuth(override val wsClient: WSClient, parser: BodyParser[AnyContent], executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
+  extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
 
   def unauthorised = GoogleAuthenticatedStaffAction { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)

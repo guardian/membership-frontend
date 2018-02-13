@@ -29,7 +29,7 @@ case class NewUser(creationCommand: CreateIdUser)(implicit idReq: IdentityReques
 
   def ensureIdUser(checkoutFunc: (IdUser) => Future[Result])(implicit executionContext: ExecutionContext) = (for {
     userRegAndAuthResponse <- identityService.createUser(creationCommand)
-    result <- EitherT.right[Future, String, Result](checkoutFunc(userRegAndAuthResponse.user))
+    result <- EitherT.right[String](checkoutFunc(userRegAndAuthResponse.user))
   } yield result.withCookies(cookiesFromDescription(userRegAndAuthResponse.cookies.get, Some(Config.guardianShortDomain)): _*)
     ).valueOr { error => Results.InternalServerError(error) }
 

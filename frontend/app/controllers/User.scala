@@ -1,23 +1,25 @@
 package controllers
 
-import actions.TouchpointCommonActions
+import actions.{CommonActions, TouchpointCommonActions}
 import com.gu.memsub.Subscriber
 import model.Benefits
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.mvc.Controller
+import play.cache.CachedAction
 import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
 import views.support.MembershipCompat._
 
 import scala.concurrent.ExecutionContext
 
-class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext) extends Controller {
+class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext, commonActions: CommonActions) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
   import touchpointCommonActions._
+  import commonActions.CachedAction
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)
@@ -37,7 +39,7 @@ class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointComm
     "firstName" -> subscriber.contact.firstName,
     "tier" -> subscriber.subscription.plan.tier.name,
     "isPaidTier" -> subscriber.subscription.plan.tier.isPaid,
-    "joinDate" -> subscriber.contact.joinDate,
+    "joinDate" -> subscriber.contact.joinDate.toInstant,
     "benefits" -> Json.obj(
       "discountedEventTickets" -> Benefits.DiscountTicketTiers.contains(subscriber.subscription.plan.tier),
       "complimentaryEventTickets" -> Benefits.ComplimentaryTicketTiers.contains(subscriber.subscription.plan.tier)

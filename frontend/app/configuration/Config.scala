@@ -131,8 +131,6 @@ object Config {
 
   lazy val googleGroupChecker = googleGroupCheckerFor(config)
 
-  lazy val googleAuthConfig = googleAuthConfigFor(config)
-
   val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianAppsDomain").toSet
 
   val thankYouEmailQueue = config.getString("email.thankYou.queueName")

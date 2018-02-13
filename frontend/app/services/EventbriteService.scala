@@ -14,9 +14,8 @@ import monitoring.EventbriteMetrics
 import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
 import play.api.Logger
-import play.api.cache.Cache
+import play.api.cache.AsyncCacheApi
 import play.api.libs.json.{Json, Reads}
-import play.api.cache.CacheApi
 import utils.StringUtils._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -227,14 +226,14 @@ object EventbriteService {
   }
 }
 
-class EventbriteCollectiveServices(val cache: CacheApi, val guardianLiveEventService: GuardianLiveEventService, val masterclassEventService: MasterclassEventService) {
+class EventbriteCollectiveServices(val cache: AsyncCacheApi, val guardianLiveEventService: GuardianLiveEventService, val masterclassEventService: MasterclassEventService) {
   lazy val services = Seq(guardianLiveEventService, masterclassEventService)
 
-  def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
+  def getPreviewEvent(id: String): Future[RichEvent] = cache.getOrElseUpdate[RichEvent](s"preview-event-$id", 2.seconds) {
     guardianLiveEventService.getPreviewEvent(id)
   }
 
-  def getPreviewMasterclass(id: String): Future[RichEvent] = cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2.seconds) {
+  def getPreviewMasterclass(id: String): Future[RichEvent] = cache.getOrElseUpdate[RichEvent](s"preview-event-$id", 2.seconds) {
     masterclassEventService.getPreviewEvent(id)
   }
 

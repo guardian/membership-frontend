@@ -1,5 +1,6 @@
 package controllers
 
+import actions.CommonActions
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
@@ -13,7 +14,10 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller with ActivityTracking {
+class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller with ActivityTracking {
+
+  import commonActions.CachedAction
+
   implicit val countryGroup = UK
 
   lazy val guLiveEvents = eventbriteService.guardianLiveEventService
