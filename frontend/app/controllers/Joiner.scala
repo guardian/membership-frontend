@@ -23,7 +23,6 @@ import forms.MemberForm.{paidMemberJoinForm, _}
 import model._
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -55,10 +54,11 @@ class Joiner(
   touchpointActionRefiners: TouchpointActionRefiners,
   touchpointCommonActions: TouchpointCommonActions,
   implicit val parser: BodyParser[AnyContent],
-  executionContext: ExecutionContext,
+  override implicit val executionContext: ExecutionContext,
   googleAuthConfig: GoogleAuthConfig,
   commonActions: CommonActions,
-  actionRefiners: ActionRefiners
+  actionRefiners: ActionRefiners,
+  membersDataAPI: MembersDataAPI
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
   with Controller
   with I18nSupport
@@ -178,7 +178,7 @@ class Joiner(
 
       tier match {
         case t: Tier.Supporter => for (user <- userOpt) {
-          MembersDataAPI.Service.upsertBehaviour(
+          membersDataAPI.Service.upsertBehaviour(
             user,
             activity = Some("enterPaidDetails.show"),
             note = Some(t.name))
@@ -344,7 +344,7 @@ class Joiner(
     } yield {
       tier match {
         case t: Tier.Supporter if !upgrade => {salesforceService.metrics.putThankYou(tier)
-          MembersDataAPI.Service.removeBehaviour(request.user)}
+          membersDataAPI.Service.removeBehaviour(request.user)}
         case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
@@ -368,7 +368,7 @@ class Joiner(
 
   private def setBehaviourNote(tier: String, errorCode: Option[String], userOpt: Option[AuthenticatedIdUser]) = for (user <- userOpt) {
     if (tier.toLowerCase == "supporter") {
-      MembersDataAPI.Service.upsertBehaviour(user, note = errorCode)
+      membersDataAPI.Service.upsertBehaviour(user, note = errorCode)
     }
   }
 

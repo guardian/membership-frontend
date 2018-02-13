@@ -10,11 +10,10 @@ import play.api.mvc.Controller
 import services._
 import tracking.ActivityTracking
 import views.support.PageInfo
-import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller with ActivityTracking {
+class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions, implicit val executionContext: ExecutionContext) extends Controller with ActivityTracking {
 
   import commonActions.CachedAction
 

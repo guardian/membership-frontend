@@ -8,13 +8,14 @@ import com.gu.memsub.BillingPeriod.Year
 import com.gu.salesforce.Tier.partner
 import controllers.IdentityRequest
 import forms.MemberForm._
+import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsObject, Json}
 import services.IdentityService.DisregardResponseContent
 import utils.Resource
 
-class IdentityServiceTest extends Specification with Mockito {
+class IdentityServiceTest(implicit ev: ExecutionEnv) extends Specification with Mockito {
 
   val ip = "8.8.8.8"
   val user = new IdMinimalUser("4444", Some("Joe Bloggs"))

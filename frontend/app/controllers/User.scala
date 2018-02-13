@@ -14,7 +14,7 @@ import views.support.MembershipCompat._
 
 import scala.concurrent.ExecutionContext
 
-class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext, commonActions: CommonActions) extends Controller {
+class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext, commonActions: CommonActions, membersDataAPI: MembersDataAPI) extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
@@ -23,7 +23,7 @@ class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointComm
 
   def me = AjaxSubscriptionAction { implicit request =>
     val json = basicDetails(request.subscriber)
-    MembersDataAPI.Service.checkMatchesResolvedMemberIn(request)
+    membersDataAPI.Service.checkMatchesResolvedMemberIn(request)
     Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
   }
 

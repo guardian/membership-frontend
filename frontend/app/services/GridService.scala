@@ -19,11 +19,9 @@ import monitoring.GridApiMetrics
 import okhttp3.Request
 import play.api.libs.json.Json
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLogging {
-
+object GridService {
 
   val gridUrl: String = "https://media.gutools.co.uk/images/"
   val CropQueryParam = "crop"
@@ -40,12 +38,19 @@ object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLog
       } yield ImageIdWithCrop(imageId, crop)
   }
 
-  private lazy val atomicReference = new AtomicReference[Map[ImageIdWithCrop, GridImage]](Map.empty)
-
   // todo: remove once we upgrade to scala 2.12
   implicit def unarayConverter[T](f: T => T) = new UnaryOperator[T] {
     override def apply(t: T): T = f(t)
   }
+}
+
+class GridService(executionContext: ExecutionContext) extends WebServiceHelper[GridObject, Grid.Error]()(executionContext) with LazyLogging {
+
+  import GridService._
+
+  private implicit val ec = executionContext
+
+  private lazy val atomicReference = new AtomicReference[Map[ImageIdWithCrop, GridImage]](Map.empty)
 
   def getRequestedCrop(gridId: ImageIdWithCrop) : Future[Option[GridImage]] = {
     val currentImageData = atomicReference.get()

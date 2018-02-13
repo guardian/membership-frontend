@@ -17,7 +17,6 @@ import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import services.{IdentityApi, IdentityService, TouchpointBackends}
@@ -28,14 +27,21 @@ import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController(val joinerController: Joiner, val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller with ActivityTracking
+class TierController(
+  val joinerController: Joiner,
+  val identityApi: IdentityApi,
+  touchpointCommonActions: TouchpointCommonActions,
+  implicit val touchpointBackends: TouchpointBackends,
+  commonActions: CommonActions,
+  implicit val executionContext: ExecutionContext
+) extends Controller with ActivityTracking
   with LazyLogging
   with CatalogProvider
   with SubscriptionServiceProvider

@@ -1,6 +1,6 @@
 package services
 
-import _root_.services.api.MemberService.{MemberError, PendingAmendError, CreateMemberResult}
+import _root_.services.api.MemberService.{CreateMemberResult, MemberError, PendingAmendError}
 import _root_.services.paymentmethods._
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
@@ -34,14 +34,13 @@ import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{Benefit => _, _}
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import tracking._
 import utils.ReferralData
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 import scalaz._
 import scalaz.std.scalaFuture._
@@ -71,19 +70,22 @@ object MemberService {
   }
 }
 
-class MemberService(identityService: IdentityService,
-                    salesforceService: api.SalesforceService,
-                    zuoraService: ZuoraService,
-                    zuoraRestService: ZuoraRestService[Future],
-                    ukStripeService: StripeService,
-                    auStripeService: StripeService,
-                    payPalService: PayPalService,
-                    subscriptionService: SubscriptionService[Future],
-                    catalogService: CatalogService[Future],
-                    paymentService: PaymentService,
-                    discounter: Discounter,
-                    discountIds: DiscountRatePlanIds,
-                    invoiceIdsByCountry: Map[Country, InvoiceTemplate])
+class MemberService(
+  identityService: IdentityService,
+  salesforceService: api.SalesforceService,
+  zuoraService: ZuoraService,
+  zuoraRestService: ZuoraRestService[Future],
+  ukStripeService: StripeService,
+  auStripeService: StripeService,
+  payPalService: PayPalService,
+  subscriptionService: SubscriptionService[Future],
+  catalogService: CatalogService[Future],
+  paymentService: PaymentService,
+  discounter: Discounter,
+  discountIds: DiscountRatePlanIds,
+  invoiceIdsByCountry: Map[Country, InvoiceTemplate],
+  implicit val ec: ExecutionContext
+)
   extends api.MemberService with ActivityTracking with LazyLogging {
 
   import EventbriteService._

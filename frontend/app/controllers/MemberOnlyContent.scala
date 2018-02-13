@@ -8,15 +8,14 @@ import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import model._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import play.cache.CachedAction
 import services.{GuardianContentService, _}
 import views.support.PageInfo
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions) extends Controller with LazyLogging {
+class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions, implicit val executionContext: ExecutionContext) extends Controller with LazyLogging {
 
   import commonActions.CachedAction
 

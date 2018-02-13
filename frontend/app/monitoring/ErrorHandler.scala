@@ -13,17 +13,17 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.routing.Router
 import services.AuthenticationService
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.core.SourceMapper
 
 import scala.concurrent._
 
 class ErrorHandler(
-                               env: Environment,
-                               config: Configuration,
-                               sourceMapper: Option[SourceMapper],
-                               router: => Option[Router]
-                               ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) {
+  env: Environment,
+  config: Configuration,
+  sourceMapper: Option[SourceMapper],
+  router: => Option[Router],
+  implicit val executionContext: ExecutionContext
+) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) {
 
   override def logServerError(request: RequestHeader, usefulException: UsefulException) {
     try {
