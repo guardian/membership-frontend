@@ -36,9 +36,10 @@ class Event(
   override implicit val executionContext: ExecutionContext,
   googleAuthConfig: GoogleAuthConfig,
   commonActions: CommonActions,
-  actionRefiners: ActionRefiners
+  actionRefiners: ActionRefiners,
+  override protected val controllerComponents: ControllerComponents
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
-  with Controller
+  with BaseController
   with MemberServiceProvider
   with ActivityTracking
   with LazyLogging {

@@ -1,9 +1,9 @@
 package controllers
 
 import actions.CommonActions
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 
-class Login(commonActions: CommonActions) extends Controller {
+class Login(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.NoCacheAction
 

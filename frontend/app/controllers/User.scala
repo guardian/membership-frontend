@@ -6,7 +6,7 @@ import model.Benefits
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import play.cache.CachedAction
 import services.{IdentityApi, IdentityService, MembersDataAPI}
 import utils.GuMemCookie
@@ -14,7 +14,7 @@ import views.support.MembershipCompat._
 
 import scala.concurrent.ExecutionContext
 
-class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext, commonActions: CommonActions, membersDataAPI: MembersDataAPI) extends Controller {
+class User(val identityApi: IdentityApi, touchpointCommonActions: TouchpointCommonActions, implicit val executionContext: ExecutionContext, commonActions: CommonActions, membersDataAPI: MembersDataAPI, override protected val controllerComponents: ControllerComponents) extends BaseController {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 

@@ -6,14 +6,20 @@ import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
 import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import tracking.ActivityTracking
 import views.support.PageInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhatsOn(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions, implicit val executionContext: ExecutionContext) extends Controller with ActivityTracking {
+class WhatsOn(
+  eventbriteService: EventbriteCollectiveServices,
+  touchpointBackends: TouchpointBackends,
+  commonActions: CommonActions,
+  implicit val executionContext: ExecutionContext,
+  override protected val controllerComponents: ControllerComponents
+) extends BaseController with ActivityTracking {
 
   import commonActions.CachedAction
 

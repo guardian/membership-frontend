@@ -5,11 +5,11 @@ import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import model.OrientatedImages
 import model.RichEvent.EventBrandCollection
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import views.support.{Asset, PageInfo}
 
-class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.CachedAction
 

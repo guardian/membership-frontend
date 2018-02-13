@@ -3,7 +3,7 @@ package controllers
 import com.github.nscala_time.time.Imports._
 import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger.warn
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, BaseController, ControllerComponents}
 import services.{EventbriteCollectiveServices, GuardianLiveEventService, TouchpointBackend, TouchpointBackends}
 
 trait Test {
@@ -16,7 +16,7 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
   override def ok = exec()
 }
 
-class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends) extends Controller {
+class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   def tests = Seq(
     new BoolTest("Events", () => eventbriteService.guardianLiveEventService.events.nonEmpty),

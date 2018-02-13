@@ -8,7 +8,7 @@ import com.typesafe.scalalogging.LazyLogging
 import configuration.CopyConfig
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, OrientatedImages}
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import tracking.RedirectWithCampaignCodes._
 import utils.ReferralData
@@ -24,7 +24,7 @@ class Info(
   commonActions: CommonActions,
   actionRefiners: ActionRefiners,
   implicit val executionContext: ExecutionContext
-) extends Controller with LazyLogging {
+, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
 
   import commonActions.{CachedAction, NoCacheAction, StoreAcquisitionDataAction}
   import actionRefiners.PlannedOutageProtection

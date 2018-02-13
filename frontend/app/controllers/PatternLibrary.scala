@@ -3,10 +3,10 @@ package controllers
 import actions.CommonActions
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 
-class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+class PatternLibrary(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.NoCacheAction
 

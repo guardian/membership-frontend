@@ -5,7 +5,7 @@ import com.gu.i18n.Currency._
 import com.gu.memsub.subsv2.Catalog
 import com.gu.salesforce.PaidTier
 import play.api.libs.json.{JsArray, JsString, JsValue, Json, Writes}
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services.{TouchpointBackend, TouchpointBackends}
 import views.support.{CountryWithCurrency, Pricing}
 import views.support.Pricing._
@@ -55,7 +55,7 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-class PricingApi(touchpointBackends: TouchpointBackends, commonActions: CommonActions) extends Controller {
+class PricingApi(touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.CachedAction
   import PricingFormats._

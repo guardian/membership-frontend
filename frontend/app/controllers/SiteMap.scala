@@ -9,7 +9,7 @@ import utils.CountryGroupLang
 
 import scala.xml.Elem
 
-class SiteMap(commonActions: CommonActions) extends Controller with LazyLogging {
+class SiteMap(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
 
   import commonActions.CachedAction
 
