@@ -19,8 +19,13 @@ import views.support.{TestTrait, _}
 import scalaz.syntax.std.option._
 import scala.concurrent.{ExecutionContext, Future}
 
-class MembershipStatus(override val wsClient: WSClient, parser: BodyParser[AnyContent], executionContext: ExecutionContext, googleAuthConfig: GoogleAuthConfig, commonActions: CommonActions)
-  extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
+class MembershipStatus(
+  override val wsClient: WSClient,
+  parser: BodyParser[AnyContent],
+  executionContext: ExecutionContext,
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with Controller {
 
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen requireGroup[GoogleAuthRequest](Set(
     "membership.dev@guardian.co.uk",
