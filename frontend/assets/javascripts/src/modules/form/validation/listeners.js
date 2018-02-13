@@ -42,12 +42,7 @@ define([
                 loader.startLoader();
                 loader.setProcessingMessage('Processing...');
                 loader.disableSubmitButton(true);
-
-                if (form.hasPayment) {
-                    processing.getStripeToken();
-                } else {
-                    form.elem.submit();
-                }
+                form.elem.submit();
             }
         });
     };
