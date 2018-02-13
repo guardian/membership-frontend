@@ -13,7 +13,7 @@ module.exports = function(debug) { return {
         ],
         extensions: [".js", ".es6"],
         alias: {
-            '$$': 'jquery/dist/jquery',
+            '$$': 'jquery/dist/jquery.min',
             'lodash': 'lodash-amd',
             'bean': 'bean/bean',
             'respimage': 'respimage/respimage',
