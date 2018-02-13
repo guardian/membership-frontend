@@ -46,6 +46,9 @@ assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary t
     case "version.txt"                                           => MergeStrategy.discard // identity jars all include version.txt
     case "shared.thrift" => MergeStrategy.first
     case PathList("META-INF", xs@_*) => MergeStrategy.discard
+    case "play/reference-overrides.conf" => MergeStrategy.concat
+    case PathList("ahc-version.properties") => MergeStrategy.first
+    case PathList("ahc-default.properties") => MergeStrategy.concat
     case x =>
         val oldStrategy = (assemblyMergeStrategy in assembly).value
         oldStrategy(x)
