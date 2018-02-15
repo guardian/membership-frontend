@@ -13,10 +13,7 @@ import scala.util.{Failure, Success, Try}
 
 object SentryLogging {
 
-  val UserIdentityId = "userIdentityId"
-  val UserGoogleId = "userGoogleId"
-  val PlayErrorId = "playErrorId"
-  val AllMDCTags = Seq(UserIdentityId, UserGoogleId,PlayErrorId)
+  val AllMDCTags = Seq()
 
   def init() {
     Try(new Dsn(Config.config.getString("sentry.dsn"))) match {
