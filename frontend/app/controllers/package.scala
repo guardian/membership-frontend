@@ -6,7 +6,8 @@ import com.gu.memsub.subsv2.services._
 import com.gu.stripe.StripeService
 import com.gu.zuora.rest.ZuoraRestService
 import com.gu.zuora.api.ZuoraService
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.data.Form
 import play.api.http.HeaderNames.USER_AGENT
 import play.api.mvc.Results.Redirect
@@ -17,7 +18,7 @@ import services.api.{MemberService, SalesforceService}
 import scala.concurrent.Future
 import scala.reflect.{ClassTag, classTag}
 
-package object controllers extends LazyLogging {
+package object controllers {
 
   trait MemberServiceProvider {
     def memberService(implicit request: BackendProvider, tpbs: TouchpointBackends): MemberService =
@@ -75,8 +76,8 @@ package object controllers extends LazyLogging {
 
   def redirectToUnsupportedBrowserInfo[T: ClassTag](form: Form[T])(implicit req: RequestHeader): Future[Result] = {
     lazy val errors = form.errors.map { e => s"  - ${e.key}: ${e.messages.mkString(", ")}"}.mkString("\n")
-    logger.error(s"Server-side form errors on joining indicates a Javascript problem: ${req.headers.get(USER_AGENT)}")
-    logger.error(s"Server-side form errors : Failed to bind from form ${classTag[T]}:\n$errors")
+    SafeLogger.error(scrub"Server-side form errors on joining indicates a Javascript problem: ${req.headers.get(USER_AGENT)}")
+    SafeLogger.error(scrub"Server-side form errors : Failed to bind from form ${classTag[T]}:\n$errors")
     Future.successful(Redirect(routes.Joiner.unsupportedBrowser()))
   }
 }

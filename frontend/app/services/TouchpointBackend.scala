@@ -19,7 +19,7 @@ import com.gu.zuora.rest.{SimpleClient, ZuoraRestService}
 import com.gu.zuora.soap.ClientWithFeatureSupplier
 import com.gu.zuora.{soap, ZuoraSoapService => ZuoraSoapServiceImpl}
 import com.netaporter.uri.Uri
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import configuration.Config
 import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
@@ -126,7 +126,7 @@ object TouchpointBackend {
   )
 }
 
-class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) extends LazyLogging {
+class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) {
 
   import TouchpointBackend._
   import TouchpointBackendConfig.BackendType
@@ -156,9 +156,9 @@ class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionCo
   }
 
   Future {
-    logger.info(s"TouchpointBackend.TestUser is lazily initialised to ensure bad UAT settings can not block deployment to PROD. Initalisation starting...")
+    SafeLogger.info(s"TouchpointBackend.TestUser is lazily initialised to ensure bad UAT settings can not block deployment to PROD. Initalisation starting...")
     val amountOfPlans = TestUser.catalog.allMembership.size
-    logger.info(s"TouchpointBackend.TestUser initalisation complete: $amountOfPlans membership plans in UAT")
+    SafeLogger.info(s"TouchpointBackend.TestUser initalisation complete: $amountOfPlans membership plans in UAT")
   }
 
   def forUser(user: IdMinimalUser): TouchpointBackend = if (isTestUser(user)) TestUser else Normal

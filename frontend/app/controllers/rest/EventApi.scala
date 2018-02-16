@@ -2,7 +2,6 @@ package controllers.rest
 
 import actions.CommonActions
 import controllers._
-import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.Json
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{BaseController, ControllerComponents}
@@ -16,7 +15,7 @@ object EventApi {
   }
 }
 
-class EventApi(eventbriteService: EventbriteCollectiveServices, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
+class EventApi(eventbriteService: EventbriteCollectiveServices, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.CachedAction
   import EventApi._

@@ -3,7 +3,7 @@ package controllers
 import actions.Fallbacks._
 import actions._
 import com.gu.googleauth.GoogleAuthConfig
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import play.api.mvc._
 import utils.TestUsers.testUsers
 import play.api.libs.ws.WSClient
@@ -17,7 +17,7 @@ class Testing(
   googleAuthConfig: GoogleAuthConfig,
   commonActions: CommonActions,
   override protected val controllerComponents: ControllerComponents
-) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with BaseController with LazyLogging {
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with BaseController {
 
   import commonActions.CachedAction
 
@@ -41,7 +41,7 @@ class Testing(
 
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()
-    logger.info(s"Generated test user string $testUserString for ${request.user.email}")
+    SafeLogger.info(s"Generated test user string $testUserString for ${request.user.email}")
     val testUserCookie = Cookie(PreSigninTestCookieName, testUserString, Some(30 * 60), httpOnly = true)
     Ok(views.html.testing.testUsers(testUserString)).withCookies(testUserCookie, analyticsOffCookie)
   }

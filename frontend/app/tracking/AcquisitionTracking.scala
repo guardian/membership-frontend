@@ -8,7 +8,7 @@ import com.gu.acquisition.services.{MockOphanService, OphanService}
 import com.gu.memsub.PaymentMethod
 import com.gu.okhttp.RequestRunners
 import com.gu.salesforce.Tier
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import model.MembershipAcquisitionData
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc.{Session}
@@ -17,7 +17,7 @@ import views.support.ThankyouSummary
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AcquisitionTracking extends LazyLogging {
+trait AcquisitionTracking {
 
   private def ophanService(isTestUser: Boolean): OphanService = {
     if (isTestUser) MockOphanService
@@ -37,7 +37,7 @@ trait AcquisitionTracking extends LazyLogging {
       )
     } yield acquisitionData
 
-    decodeAttempt.leftMap(error => logger.warn(error)).toOption
+    decodeAttempt.leftMap(error => SafeLogger.warn(error)).toOption
   }
 
   def trackAcquisition(

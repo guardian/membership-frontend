@@ -13,7 +13,7 @@ import model.RichEvent._
 import monitoring.EventbriteMetrics
 import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
 import play.api.cache.AsyncCacheApi
 import play.api.libs.json.{Json, Reads}
 import utils.StringUtils._
@@ -68,7 +68,7 @@ abstract class EventbriteService(implicit val ec: ExecutionContext, system: Acto
   lazy val draftEventsTask =  eventsTaskFor("draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
 
   def start() {
-    Logger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
+    SafeLogger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
     eventsTask.start()
     draftEventsTask.start()
     archivedEventsTask.start()
@@ -170,7 +170,7 @@ class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def start() {
     super.start()
-    Logger.info("Starting EventsOrdering background task")
+    SafeLogger.info("Starting EventsOrdering background task")
     val timeout = (Config.eventbriteRefreshTimeForPriorityEvents - 3).seconds
     eventsOrderingTask.start()
   }

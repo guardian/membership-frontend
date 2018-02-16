@@ -9,7 +9,8 @@ import com.netaporter.uri.dsl._
 import configuration.Config
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -288,7 +289,7 @@ object Eventbrite {
       uri <- Try(Uri.parse(m.group(1))) match {
         case Success(uri) => Some(uri)
         case Failure(e) =>
-          Logger.error(s"Event $id - can't parse main-image url from text '${m.matched}'", e)
+          SafeLogger.error(scrub"Event $id - can't parse main-image url from text '${m.matched}'", e)
           None
       }
     } yield uri

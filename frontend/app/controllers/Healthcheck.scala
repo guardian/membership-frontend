@@ -2,7 +2,7 @@ package controllers
 
 import com.github.nscala_time.time.Imports._
 import com.gu.monitoring.CloudWatchHealth
-import play.api.Logger.warn
+import com.gu.monitoring.SafeLogger.warn
 import play.api.mvc.{Action, BaseController, ControllerComponents}
 import services.{EventbriteCollectiveServices, GuardianLiveEventService, TouchpointBackend, TouchpointBackends}
 

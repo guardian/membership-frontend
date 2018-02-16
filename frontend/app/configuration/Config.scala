@@ -10,13 +10,11 @@ import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
-import play.api.Logger
 import services._
 
 import scala.util.Try
 
 object Config {
-  val logger = Logger(this.getClass)
 
   val config = ConfigFactory.load()
 

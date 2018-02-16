@@ -10,7 +10,7 @@ import services.{AuthenticationService, TouchpointBackends}
 import com.gu.memsub.subsv2.reads.ChargeListReads._
 import com.gu.memsub.subsv2.reads.SubPlanReads._
 import com.gu.memsub.subsv2.{Subscription, _}
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc._
 import views.support.MembershipCompat._
@@ -21,7 +21,7 @@ import scalaz.std.scalaFuture._
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
 
-class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, executionContext: ExecutionContext) extends LazyLogging {
+class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, executionContext: ExecutionContext) {
 
   implicit private val ec = executionContext
   implicit private val tpbs = touchpointBackends
@@ -60,7 +60,7 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
     override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
       getSubRequest(request).map {
         case -\/(message) =>
-          logger.warn(s"error while sub refining: $message")
+          SafeLogger.warn(s"error while sub refining: $message")
           Left(InternalServerError(views.html.error500(new Throwable)))
         case \/-(maybeMember) => maybeMember toRight onNonMember(request)}
     }
@@ -73,7 +73,7 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
     override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
       getContributorRequest(request).map {
         case -\/(message) =>
-          logger.warn(s"error while contribution refining: $message")
+          SafeLogger.warn(s"error while contribution refining: $message")
           Left(InternalServerError(views.html.error500(new Throwable)))
         case \/-(maybeMember) => maybeMember toRight onNonContributor(request)
       }
@@ -87,7 +87,7 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
     override def filter[A](request: Request[A]) =
       getSubRequest(request).map {
         case -\/(message) =>
-          logger.warn(s"error while filtering: $message")
+          SafeLogger.warn(s"error while filtering: $message")
           Some(InternalServerError(views.html.error500(new Throwable)))
         case \/-(maybeSub) => maybeSub.map(onMember)
       }
@@ -100,7 +100,7 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
     override def filter[A](request: AuthRequest[A]) =
       getSubRequest(request).map {
         case -\/(message) =>
-          logger.warn(s"error while filtering: $message")
+          SafeLogger.warn(s"error while filtering: $message")
           Some(InternalServerError(views.html.error500(new Throwable)))
         case \/-(maybeSub) => maybeSub.map(onMember)
       }
@@ -113,7 +113,7 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
     override def filter[A](request: AuthRequest[A]) =
       getContributorRequest(request).map {
         case -\/(message) =>
-          logger.warn(s"error while filtering contributors: $message")
+          SafeLogger.warn(s"error while filtering contributors: $message")
           Some(InternalServerError(views.html.error500(new Throwable)))
         case \/-(maybeSub) => maybeSub.map(onContributor)
       }

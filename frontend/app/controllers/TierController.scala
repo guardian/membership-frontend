@@ -13,7 +13,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
@@ -41,8 +41,8 @@ class TierController(
   implicit val touchpointBackends: TouchpointBackends,
   commonActions: CommonActions,
   implicit val executionContext: ExecutionContext
-, override protected val controllerComponents: ControllerComponents) extends BaseController with ActivityTracking
-  with LazyLogging
+, override protected val controllerComponents: ControllerComponents) extends BaseController
+  with ActivityTracking
   with CatalogProvider
   with SubscriptionServiceProvider
   with MemberServiceProvider
@@ -165,12 +165,12 @@ class TierController(
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val identityRequest = IdentityRequest(request)
-    logger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
+    SafeLogger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, ReferralData.fromRequest)
       handleErrors(upgrade) {
-        logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
+        SafeLogger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
     }
@@ -191,7 +191,7 @@ class TierController(
       def doUpgrade(): Future[Result] = {
         val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, ReferralData.fromRequest)
         handleErrors(upgrade) {
-          logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
+          SafeLogger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
           Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
