@@ -9,7 +9,7 @@ object Dependencies {
   val sentryRavenLogback = "com.getsentry.raven" % "raven-logback" % "8.0.3"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "2.1"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.497"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.1-SNAPSHOT"
   val contentAPI = "com.gu" %% "content-api-client" % "11.40"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
