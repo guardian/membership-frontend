@@ -4,7 +4,7 @@ import com.gu.memsub.services.api.PaymentService
 import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services._
 import com.gu.stripe.StripeService
-import com.gu.zuora.ZuoraRestService
+import com.gu.zuora.rest.ZuoraRestService
 import com.gu.zuora.api.ZuoraService
 import com.typesafe.scalalogging.LazyLogging
 import play.api.data.Form
@@ -49,8 +49,8 @@ package object controllers extends LazyLogging {
       request.touchpointBackend.payPalService
   }
 
-  trait ZuoraServiceProvider {
-    def zuoraService(implicit request: BackendProvider, tpbs: TouchpointBackends): ZuoraService =
+  trait ZuoraSoapServiceProvider {
+    def zuoraSoapService(implicit request: BackendProvider, tpbs: TouchpointBackends): ZuoraService =
       request.touchpointBackend.zuoraService
   }
 

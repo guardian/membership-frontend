@@ -3,7 +3,7 @@ package services
 import akka.actor.ActorSystem
 import com.gu.config.MembershipRatePlanIds
 import com.gu.identity.play.IdMinimalUser
-import com.gu.memsub.services.{PaymentService, api => memsubapi}
+import com.gu.memsub.services.PaymentService
 import com.gu.memsub.subsv2
 import com.gu.memsub.subsv2.Catalog
 import com.gu.memsub.subsv2.services.SubscriptionService.CatalogMap
@@ -15,9 +15,9 @@ import com.gu.subscriptions.Discounter
 import com.gu.touchpoint.TouchpointBackendConfig
 import com.gu.touchpoint.TouchpointBackendConfig.BackendType
 import com.gu.zuora.api.ZuoraService
-import com.gu.zuora.rest.SimpleClient
+import com.gu.zuora.rest.{SimpleClient, ZuoraRestService}
 import com.gu.zuora.soap.ClientWithFeatureSupplier
-import com.gu.zuora.{ZuoraRestService, soap, ZuoraService => ZuoraServiceImpl}
+import com.gu.zuora.{soap, ZuoraSoapService => ZuoraSoapServiceImpl}
 import com.netaporter.uri.Uri
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
@@ -27,7 +27,6 @@ import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
-
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scalaz.std.scalaFuture._
@@ -72,22 +71,22 @@ object TouchpointBackend {
 
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
     val discounter = new Discounter(Config.discountRatePlanIds(config.zuoraEnvName))
-    val zuoraService = new ZuoraServiceImpl(zuoraSoapClient)
-    val zuoraRestService = new ZuoraRestService[Future]()
+    val zuoraSoapService = new ZuoraSoapServiceImpl(zuoraSoapClient)
+    val zuoraRestService = new ZuoraRestService[Future]
 
     val pids = Config.productIds(restBackendConfig.envName)
 
     val newCatalogService = new subsv2.services.CatalogService[Future](pids, simpleRestClient, Await.result(_, 10.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.toList.mkString}"); Map()}, _.map))
-    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraService.getAccountIds)
+    val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraSoapService.getAccountIds)
 
-    val paymentService = new PaymentService(zuoraService, newCatalogService.unsafeCatalog.productMap)
+    val paymentService = new PaymentService(zuoraSoapService, newCatalogService.unsafeCatalog.productMap)
     val salesforceService = new SalesforceService(config.salesforce)
     val identityService = IdentityService(new IdentityApi(wsClient, executionContext))
     val memberService = new MemberService(
       identityService = identityService,
       salesforceService = salesforceService,
-      zuoraService = zuoraService,
+      zuoraService = zuoraSoapService,
       zuoraRestService = zuoraRestService,
       ukStripeService = stripeUKMembershipService,
       auStripeService = stripeAUMembershipService,
@@ -111,7 +110,7 @@ object TouchpointBackend {
       memberService = memberService,
       subscriptionService = newSubsService,
       catalogService = newCatalogService,
-      zuoraService = zuoraService,
+      zuoraService = zuoraSoapService,
       zuoraRestService = zuoraRestService,
       membershipRatePlanIds = memRatePlanIds,
       paymentService = paymentService,

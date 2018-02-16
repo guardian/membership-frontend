@@ -21,7 +21,7 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import com.gu.stripe.StripeService
 import com.gu.subscriptions.Discounter
-import com.gu.zuora.ZuoraRestService
+import com.gu.zuora.rest.ZuoraRestService
 import com.gu.zuora.api._
 import com.gu.zuora.soap.models.Commands.{PaymentMethod, _}
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
@@ -39,7 +39,6 @@ import utils.ReferralData
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 import scalaz._
