@@ -82,10 +82,9 @@ class MembersDataAPI(executionContext: ExecutionContext) {
       case cookies: AccessCredentials.Cookies =>
         getAttributes(cookies).onComplete {
           case Success(memDataApiAttrs) =>
-            val prefix = s"members-data-api-check identity=${memberRequest.user.id} salesforce=${memberRequest.subscriber.contact.salesforceContactId} : "
             val salesforceAttrs = Attributes.fromMember(memberRequest.subscriber)
-            if (memDataApiAttrs != salesforceAttrs) {
-              SafeLogger.error(scrub"$prefix MISMATCH salesforce=$salesforceAttrs mem-data-api=$memDataApiAttrs")
+            if (memDataApiAttrs.tier != salesforceAttrs.tier) {
+              SafeLogger.error(scrub"${memberRequest.user.id} Salesforce and members-data-api had differing Tier info: salesforce=${salesforceAttrs.tier} mem-data-api=${memDataApiAttrs.tier}")
             }
           case Failure(err) => SafeLogger.error(scrub"Failed to get membership attributes from membership-data-api for user ${memberRequest.user.id} (OK in dev)", err)
         }
