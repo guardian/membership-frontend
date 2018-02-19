@@ -9,7 +9,7 @@ import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import model.EmbedSerializer._
 import model.Eventbrite.{EBCode, EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
@@ -42,7 +42,7 @@ class Event(
   with BaseController
   with MemberServiceProvider
   with ActivityTracking
-  with LazyLogging {
+  {
 
   import touchpointActionRefiners._
   import touchpointCommonActions._
@@ -149,7 +149,7 @@ class Event(
         }
       case _ =>
         // We seem to have a crawler(?) hitting the buy urls for past events
-        logger.info(s"User hit the buy url for event $id - neither a GuLiveEvent or Masterclass could be retrieved, returning 404...")
+        SafeLogger.info(s"User hit the buy url for event $id - neither a GuLiveEvent or Masterclass could be retrieved, returning 404...")
         CachedAction(NotFound)
     }
 

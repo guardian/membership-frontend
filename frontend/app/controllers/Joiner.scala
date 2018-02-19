@@ -17,7 +17,8 @@ import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
 import com.netaporter.uri.dsl._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{paidMemberJoinForm, _}
 import model._
@@ -65,7 +66,6 @@ class Joiner(
   with ActivityTracking
   with AcquisitionTracking
   with PaymentGatewayErrorHandler
-  with LazyLogging
   with CatalogProvider
   with StripeUKMembershipServiceProvider
   with StripeAUMembershipServiceProvider
@@ -141,7 +141,7 @@ class Joiner(
       val userSignedIn = userOpt.isDefined
       val canWaiveAuth = Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
-      logger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
+      SafeLogger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
       if (canAccess) None else Some(onUnauthenticated(req))
     }
   }
@@ -173,7 +173,7 @@ class Joiner(
     } yield {
 
       for (identityUser <- identityUserOpt) {
-        logger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")}")
+        SafeLogger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")}")
       }
 
       tier match {
@@ -204,7 +204,7 @@ class Joiner(
         pageInfo,
         countryGroup,
         resolution))
-    }).andThen { case Failure(e) => logger.error(s"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
+    }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
@@ -266,7 +266,7 @@ class Joiner(
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: Request[_]) = {
     val userOpt = authenticatedIdUserProvider(request)
-    logger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
+    SafeLogger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =
       touchpointBackend.forRequest(NameEnteredInForm, Some(formData))
@@ -283,7 +283,7 @@ class Joiner(
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case CreateMemberResult(sfContactId, zuoraSubName) =>
-          logger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
+          SafeLogger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           if (formData.marketingConsent)
             identityService.consentEmail(user.primaryEmailAddress, IdentityRequest(request))
 
@@ -302,7 +302,7 @@ class Joiner(
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
           salesforceService.metrics.putFailSignUpStripe(tier)
-          logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
+          SafeLogger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
           setBehaviourNote(tier.name, error.code, userOpt)
           Forbidden(Json.toJson(error))
 
@@ -313,7 +313,7 @@ class Joiner(
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
-          logger.error(s"${s"User id=${userOpt.map(_.id).mkString}"} could not become ${tier.name} member", error)
+          SafeLogger.error(scrub"${s"User id=${userOpt.map(_.id).mkString}"} could not become ${tier.name} member", error)
           setBehaviourNote(tier.name, Some("card_error"), userOpt)
           Forbidden
       }
@@ -348,7 +348,7 @@ class Joiner(
         case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
-      logger.info(s"thank you displayed for user: ${request.user.user.id} subscription: ${request.subscriber.subscription.accountId.get} tier: ${tier.name}")
+      SafeLogger.info(s"thank you displayed for user: ${request.user.user.id} subscription: ${request.subscriber.subscription.accountId.get} tier: ${tier.name}")
 
       trackAcquisition(paymentSummary, paymentMethod, tier, request)
 

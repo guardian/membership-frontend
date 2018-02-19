@@ -1,7 +1,8 @@
 package controllers
 
 import actions.CommonActions
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
 import play.api.mvc.{BaseController, ControllerComponents, Request}
@@ -21,7 +22,7 @@ object PayPal {
   implicit val readsBillingDetails = Json.reads[PayPalBillingDetails]
 }
 
-class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging with PayPalServiceProvider {
+class PayPal(touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController with PayPalServiceProvider {
 
   import commonActions.NoCacheAction
   import PayPal._
@@ -51,14 +52,14 @@ class PayPal(touchpointBackends: TouchpointBackends, implicit val executionConte
   // The endpoint corresponding to the PayPal return url, hit if the user is
   // redirected and needs to come back.
   def returnUrl = NoCacheAction {
-    logger.error("User hit the PayPal returnUrl.")
+    SafeLogger.error(scrub"User hit the PayPal returnUrl.")
     Ok(views.html.paypal.errorPage())
   }
 
   // The endpoint corresponding to the PayPal cancel url, hit if the user is
   // redirected and the payment fails.
   def cancelUrl = NoCacheAction {
-    logger.error("User hit the PayPal cancelUrl, something went wrong.")
+    SafeLogger.error(scrub"User hit the PayPal cancelUrl, something went wrong.")
     Ok(views.html.paypal.errorPage())
   }
 }

@@ -9,7 +9,7 @@ import com.gu.memsub.util.Timing
 import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
 import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import controllers.IdentityRequest
 import play.api.mvc.Results._
 import play.api.mvc.Security.{AuthenticatedBuilder, AuthenticatedRequest}
@@ -40,7 +40,7 @@ object ActionRefiners {
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
 }
 
-class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext) extends LazyLogging {
+class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext) {
   import ActionRefiners._
   import model.TierOrdering.upgradeOrdering
   implicit val pf: ProductFamily = Membership
@@ -93,7 +93,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionConte
     case _ => {
       // Log cancelled members attempting to re-join.
       if (req.subscriber.subscription.isCancelled) {
-        logger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
+        SafeLogger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
       }
       Ok(views.html.tier.upgrade.unavailableUpgradePath(req.subscriber.subscription.plan.tier, selectedTier))
     }

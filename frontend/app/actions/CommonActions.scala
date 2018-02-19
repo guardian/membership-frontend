@@ -5,7 +5,7 @@ import actions.Fallbacks._
 import com.gu.googleauth
 import com.gu.googleauth.GoogleAuthConfig
 import com.gu.salesforce.PaidTier
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
@@ -19,7 +19,7 @@ import utils.TestUsers.{PreSigninTestCookie, isTestUser}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CommonActions(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext, actionRefiners: ActionRefiners) extends LazyLogging {
+class CommonActions(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext, actionRefiners: ActionRefiners) {
 
   import actionRefiners.{authenticated, resultModifier}
 
@@ -34,7 +34,7 @@ class CommonActions(parser: BodyParser[AnyContent], implicit val executionContex
         val newABTestCookies = ABTest.cookiesWhichShouldBeDropped(request)
         if (newABTestCookies.nonEmpty) {
           val testUser = isTestUser(PreSigninTestCookie, request.cookies)(request).isDefined
-          logger.info(s"dropping-new-ab-test-cookies (path=${request.path} testUser=$testUser) : ${newABTestCookies.map(c => s"${c.name}=${c.value}").mkString(" ")}")
+          SafeLogger.info(s"dropping-new-ab-test-cookies (path=${request.path} testUser=$testUser) : ${newABTestCookies.map(c => s"${c.name}=${c.value}").mkString(" ")}")
         }
         result.withCookies(newABTestCookies ++ AudienceId.cookieWhichShouldBeDropped(request) :_*)
       }

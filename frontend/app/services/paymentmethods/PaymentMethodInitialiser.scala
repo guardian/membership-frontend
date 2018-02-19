@@ -6,7 +6,7 @@ import com.gu.stripe.StripeService
 import com.gu.zuora
 import com.gu.zuora.api.RegionalStripeGateways
 import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import forms.MemberForm.CommonPaymentForm
 import services.PayPalService
 
@@ -28,14 +28,14 @@ trait PaymentMethodInitialiser[PMCommand <: zuora.soap.models.Commands.PaymentMe
 }
 
 class StripeInitialiser(stripeService: StripeService) extends
-  PaymentMethodInitialiser[CreditCardReferenceTransaction] with LazyLogging {
+  PaymentMethodInitialiser[CreditCardReferenceTransaction] {
 
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.stripeToken
 
   def initialiseWith(stripeToken: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[CreditCardReferenceTransaction] = {
     for {
       stripeCustomer <- stripeService.Customer.create(user.id, stripeToken).andThen {
-        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+        case Failure(e) => SafeLogger.warn(s"Could not create Stripe customer for user ${user.id}", e)
       }
     } yield {
       val card = stripeCustomer.card

@@ -4,7 +4,7 @@ import actions.{ActionRefiners, CommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import configuration.CopyConfig
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, OrientatedImages}
@@ -24,7 +24,7 @@ class Info(
   commonActions: CommonActions,
   actionRefiners: ActionRefiners,
   implicit val executionContext: ExecutionContext
-, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
+, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.{CachedAction, NoCacheAction, StoreAcquisitionDataAction}
   import actionRefiners.PlannedOutageProtection

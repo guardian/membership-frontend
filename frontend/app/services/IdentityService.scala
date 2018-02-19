@@ -7,14 +7,14 @@ import com.gu.identity.play._
 import com.gu.identity.play.idapi.{CreateIdUser, UpdateIdUser, UserRegistrationResult}
 import com.gu.memsub.Address
 import com.gu.memsub.util.Timing
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import configuration.Config
 import controllers.IdentityRequest
 import dispatch.Defaults.timer
 import dispatch._
 import forms.MemberForm._
 import monitoring.IdentityApiMetrics
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
 import play.api.http.Status
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
@@ -29,10 +29,10 @@ case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-object IdentityService extends LazyLogging {
+object IdentityService {
   val DisregardResponseContent: (WSResponse => Either[String, Unit]) = {
     resp =>
-      logger.debug(s"Webservice returned code ${resp.status}, and body: ${resp.body}")
+      SafeLogger.debug(s"Webservice returned code ${resp.status}, and body: ${resp.body}")
       Right(Unit)
   }
 
@@ -107,7 +107,7 @@ class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: Exec
     retry.Backoff(max = 3, delay = 2.seconds, base = 2){ () =>
       getUser(user).value
     }.map(_.fold({ errorMessage =>
-      Logger.warn(s"identity get user failed with: $errorMessage")
+      SafeLogger.warn(s"identity get user failed with: $errorMessage")
       val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
       val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
       val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
@@ -158,7 +158,7 @@ class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: Exec
   }
 
   def updateUser(userUpdateCommand: UpdateIdUser, userId: String)(implicit idReq: IdentityRequest): EitherT[Future, String, Unit] = {
-    Logger.info(s"Posting updated information to Identity for user :$userId")
+    SafeLogger.info(s"Posting updated information to Identity for user :$userId")
 
     identityApi.post(s"user/$userId",
       Some(toJson(userUpdateCommand)),
@@ -208,7 +208,7 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
   } yield result
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    Logger.info(s"$responseMethod response $status for endpoint $endpoint")
+    SafeLogger.info(s"$responseMethod response $status for endpoint $endpoint")
     IdentityApiMetrics.putResponseCode(status, responseMethod)
   }
 }

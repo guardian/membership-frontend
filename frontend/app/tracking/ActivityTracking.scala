@@ -1,6 +1,6 @@
 package tracking
-import java.util.{Map => JMap}
 
+import java.util.{Map => JMap}
 import com.github.t3hnar.bcrypt._
 import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.BillingPeriod
@@ -15,7 +15,8 @@ import model.Eventbrite.{EBOrder, EBTicketClass}
 import model.GenericSFContact
 import model.RichEvent.{GuLiveEvent, MasterclassEvent, RichEvent}
 import org.joda.time._
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.mvc.RequestHeader
 import services.EventbriteService
 import com.gu.memsub.subsv2._
@@ -23,9 +24,7 @@ import _root_.services.EventbriteCollectiveServices
 import utils.ReferralData
 import utils.TestUsers.isTestUser
 import views.support.MembershipCompat._
-
 import scala.collection.JavaConversions._
-
 
 case class MemberActivity (source: String, member: MemberData) extends TrackerData {
   def toMap: JMap[String, Object] =
@@ -296,7 +295,7 @@ trait ActivityTracking {
       }
     } catch {
       case error: Throwable =>
-      Logger.error(s"Activity tracking error", error)
+      SafeLogger.error(scrub"Activity tracking error", error)
     }
   }
 

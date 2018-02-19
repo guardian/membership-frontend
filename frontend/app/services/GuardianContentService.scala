@@ -10,7 +10,8 @@ import com.gu.memsub.util.ScheduledTask
 import configuration.Config
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -107,7 +108,7 @@ trait GuardianContent {
       ContentApiMetrics.putResponseCode(200, "GET content")
     case Failure(GuardianContentApiError(status, message, _)) =>
       ContentApiMetrics.putResponseCode(status, "GET content")
-      Logger.error(s"Error response from Content API $status")
+      SafeLogger.error(scrub"Error response from Content API $status")
   }
 
   def masterclassesQuery(page: Int): Future[ItemResponse] = {

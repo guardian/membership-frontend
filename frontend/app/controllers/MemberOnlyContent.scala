@@ -5,7 +5,6 @@ import com.gu.contentapi.client.model.v1.{MembershipTier => ContentAccess}
 import com.gu.i18n.CountryGroup._
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
-import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import model._
 import play.api.mvc._
@@ -15,7 +14,7 @@ import views.support.PageInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions, implicit val executionContext: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
+class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions, implicit val executionContext: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.CachedAction
 

@@ -10,7 +10,8 @@ import com.amazonaws.services.sqs.model.{SendMessageRequest, SendMessageResult}
 import utils.LegacyHashing
 import com.gu.aws.CredentialsProvider
 import com.gu.identity.play.IdMinimalUser
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import forms.FeedbackForm
 import model.ContributorRow
@@ -22,7 +23,7 @@ import scala.util.{Failure, Success, Try}
 import scalaz.\/
 import scalaz.syntax.either._
 
-trait FeedbackEmailService extends LazyLogging {
+trait FeedbackEmailService {
 
   val client = AmazonSimpleEmailServiceClientBuilder.standard
     .withCredentials(CredentialsProvider)
@@ -35,7 +36,7 @@ trait FeedbackEmailService extends LazyLogging {
   }
   def sendFeedback(feedback: FeedbackForm, userOpt: Option[IdMinimalUser], userEmail:Option[String], uaOpt: Option[String]) = {
     if (md5(feedback.email) == "[33, -110, 33, 95, -127, -114, 55, -110, 100, -54, 104, -58, 2, 10, 47, 111]") {
-      logger.info("discarding email we can't do anything useful with")
+      SafeLogger.info("discarding email we can't do anything useful with")
     } else {
       val to = new Destination().withToAddresses(feedback.category.email)
       val subjectContent = new Content(s"Membership feedback from ${feedback.name}")
@@ -59,13 +60,13 @@ trait FeedbackEmailService extends LazyLogging {
         client.sendEmail(email)
       } match {
         case Success(details) => //all good
-        case Failure(error) => logger.error(s"Failed to send feedback, got ${error.getMessage}")
+        case Failure(error) => SafeLogger.error(scrub"Failed to send feedback, got ${error.getMessage}")
       }
     }
   }
 }
 
-trait ThankYouEmailService extends LazyLogging {
+trait ThankYouEmailService {
   private val sqsClient = AmazonSQSAsyncClientBuilder.standard.withCredentials(CredentialsProvider)
     .withRegion(Regions.EU_WEST_1)
     .build()
@@ -82,7 +83,7 @@ trait ThankYouEmailService extends LazyLogging {
       result.right
     } recover {
       case t: Throwable =>
-        logger.error(s"Unable to send message to the SQS queue $thankYouQueueUrl", t)
+        SafeLogger.error(scrub"Unable to send message to the SQS queue $thankYouQueueUrl", t)
         t.left
     }
   }

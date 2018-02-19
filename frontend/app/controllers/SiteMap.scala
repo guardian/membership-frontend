@@ -2,14 +2,13 @@ package controllers
 
 import actions.CommonActions
 import com.gu.i18n.CountryGroup
-import com.typesafe.scalalogging.LazyLogging
 import model.ActiveCountryGroups
 import play.api.mvc._
 import utils.CountryGroupLang
 
 import scala.xml.Elem
 
-class SiteMap(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController with LazyLogging {
+class SiteMap(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   import commonActions.CachedAction
 

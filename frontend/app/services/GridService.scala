@@ -12,7 +12,8 @@ import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import com.netaporter.uri.Uri
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
@@ -44,7 +45,7 @@ object GridService {
   }
 }
 
-class GridService(executionContext: ExecutionContext) extends WebServiceHelper[GridObject, Grid.Error]()(executionContext) with LazyLogging {
+class GridService(executionContext: ExecutionContext) extends WebServiceHelper[GridObject, Grid.Error]()(executionContext) {
 
   import GridService._
 
@@ -65,7 +66,7 @@ class GridService(executionContext: ExecutionContext) extends WebServiceHelper[G
           val image = GridImage(export.assets, grid.data.metadata, export.master)
           atomicReference.updateAndGet({ oldImageData: Map[ImageIdWithCrop, GridImage] =>
             val newImageData = oldImageData + (gridId -> image)
-            logger.trace(s"Adding image $gridId to the event image map")
+            SafeLogger.debug(s"Adding image $gridId to the event image map")
             newImageData
           })
           image
@@ -73,7 +74,7 @@ class GridService(executionContext: ExecutionContext) extends WebServiceHelper[G
       }
     }
   }.recover { case e =>
-    logger.error(s"Error getting crop for $gridId", e)
+    SafeLogger.error(scrub"Error getting crop for $gridId", e)
     None
   } // We should return no image, rather than die
 

@@ -27,7 +27,8 @@ import com.gu.zuora.soap.models.Commands.{PaymentMethod, _}
 import com.gu.zuora.soap.models.Results.{CreateResult, SubscribeResult, UpdateResult}
 import com.gu.zuora.soap.models.errors.PaymentGatewayError
 import com.gu.zuora.soap.models.{Queries => SoapQueries}
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
@@ -85,7 +86,7 @@ class MemberService(
   invoiceIdsByCountry: Map[Country, InvoiceTemplate],
   implicit val ec: ExecutionContext
 )
-  extends api.MemberService with ActivityTracking with LazyLogging {
+  extends api.MemberService with ActivityTracking {
 
   import EventbriteService._
   import MemberService._
@@ -117,20 +118,20 @@ class MemberService(
       (for {
         zuoraSub <- createFreeSubscription(sfContact, user.id, formData, email, ipCountry)
       } yield zuoraSub.subscriptionName).andThen { case Failure(e) =>
-        logger.error(s"Could not create free Zuora subscription for user ${user.id}", e)
+        SafeLogger.error(scrub"Could not create free Zuora subscription for user ${user.id}", e)
       }
 
     def createPaidZuoraSubscription(sfContact: ContactId, paid: PaidMemberJoinForm, email: String, paymentMethod: PaymentMethod): Future[String] =
       (for {
         zuoraSub <- createPaidSubscription(sfContact, user.id, paid, paid.name, paid.tier, email, paymentMethod, ipCountry)
       } yield zuoraSub.subscriptionName).andThen {
-        case Failure(e: PaymentGatewayError) => logger.warn(s"Could not create paid Zuora membership due to payment gateway failure: ID=${user.id}, Country: ${paid.billingAddress.flatMap(_.country)}", e)
-        case Failure(e) => logger.error(s"Could not create paid Zuora subscription: ID=${user.id}", e)
+        case Failure(e: PaymentGatewayError) => SafeLogger.warn(s"Could not create paid Zuora membership due to payment gateway failure: ID=${user.id}, Country: ${paid.billingAddress.flatMap(_.country)}", e)
+        case Failure(e) => SafeLogger.error(scrub"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
     def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
       salesforceService.updateMemberStatus(user.minimal, tier, stripeCustomer).andThen { case Failure(e) =>
-        logger.error(s"Could not update Salesforce contact with membership status for user ${user.id}", e)
+        SafeLogger.error(scrub"Could not update Salesforce contact with membership status for user ${user.id}", e)
       }
 
     formData match {
@@ -153,7 +154,7 @@ class MemberService(
 
   def createSalesforceContact(user: IdUser, formData: CommonForm): Future[ContactId] =
     salesforceService.upsert(user, formData).andThen { case Failure(e) =>
-      logger.error(s"Could not create Salesforce contact for user ${user.id}", e)
+      SafeLogger.error(scrub"Could not create Salesforce contact for user ${user.id}", e)
     }
 
   def retrieveEmail(baid: String) = Future {
@@ -312,7 +313,7 @@ class MemberService(
     val startDate = subscription.termStartDate.toDateTimeAtStartOfDay(DateTimeZone.forID("America/Los_Angeles"))
 
     zuoraService.getUsages(subscription.name, unitOfMeasure, startDate).map { usages =>
-      logger.info(s"getUsageCountWithinTerm: User ${subscription.accountId} has used ${usages.size} tickets since $startDate " +
+      SafeLogger.info(s"getUsageCountWithinTerm: User ${subscription.accountId} has used ${usages.size} tickets since $startDate " +
         s"(sub-start-date=${subscription.startDate} term-start-date=${subscription.termStartDate})")
 
       val hasComplimentaryTickets = features.map(_.code).contains(FreeEventTickets.zuoraCode)
@@ -331,7 +332,7 @@ class MemberService(
         quantity = quantity
       )
     } yield {
-      logger.info(s"Recorded a complimentary event ticket usage for account ${subs.accountId}, subscription: ${subs.name}, details: $description")
+      SafeLogger.info(s"Recorded a complimentary event ticket usage for account ${subs.accountId}, subscription: ${subs.name}, details: $description")
       result
     }
   }
@@ -343,11 +344,11 @@ class MemberService(
       } yield {
         val hasComplimentaryTickets = usageCount.isDefined
         val allowanceNotExceeded = usageCount.exists(_ < FreeEventTickets.allowance)
-        logger.info(
+        SafeLogger.info(
           s"User ${sub.accountId} has used $usageCount tickets" ++
             s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")
 
-        logger.info(s"Complementary tickets: ${event.internalTicketing.map(_.complimentaryTickets)}")
+        SafeLogger.info(s"Complementary tickets: ${event.internalTicketing.map(_.complimentaryTickets)}")
         if (hasComplimentaryTickets && allowanceNotExceeded)
           event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
         else Nil
@@ -387,7 +388,7 @@ class MemberService(
         contractAcceptance = today,
         contractEffective = today
       ))
-    } yield result).andThen { case Failure(e) => logger.error(s"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e) }
+    } yield result).andThen { case Failure(e) => SafeLogger.error(scrub"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
 
   implicit private def features = zuoraService.getFeatures
@@ -421,13 +422,13 @@ class MemberService(
         ipCountry = ipCountry,
         contractAcceptance = today,
         contractEffective = today)
-    }.andThen { case Failure(e) => logger.error(s"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
+    }.andThen { case Failure(e) => SafeLogger.error(scrub"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     subscribe
       .flatMap(zuoraService.createSubscription)
       .andThen {
         case Success(_) => salesforceService.metrics.putCreationOfPaidSubscription(paymentMethod)
-        case Failure(e) => logger.error(s"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId} for transacting country: $transactingCountry", e)
+        case Failure(e) => SafeLogger.error(scrub"Could not create paid subscription in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId} for transacting country: $transactingCountry", e)
       }
   }
 
@@ -475,13 +476,13 @@ class MemberService(
     val zuoraFeatures = zuoraService.getFeatures.map { fs => featureIdsForTier(fs)(tier, form) }
     val newRatePlan = zuoraFeatures.map(fs => RatePlan(newPlan.id.get, None, fs.map(_.get)))
     val currentRatePlan = sub.plan.id
-    logger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: $currentRatePlan")
+    SafeLogger.info(s"Current Rate Plan is: ${sub.plan.productName}. Plan to remove is: $currentRatePlan")
 
     (newRatePlan |@| ids) { case (newPln, restSub) =>
       val discountsToRemove = getDiscountRatePlanIdsToRemove(restSub, discountIds)
-      if (discountsToRemove.nonEmpty) logger.info(s"Discount Rate Plan ids to remove when upgrading are: $discountsToRemove")
+      if (discountsToRemove.nonEmpty) SafeLogger.info(s"Discount Rate Plan ids to remove when upgrading are: $discountsToRemove")
       val plansToRemove = currentRatePlan +: discountsToRemove
-      if (plansToRemove.isEmpty) logger.error(s"plansToRemove is empty - this could lead to overlapping rate plans on the Zuora sub: ${sub.id}")
+      if (plansToRemove.isEmpty) SafeLogger.error(scrub"plansToRemove is empty - this could lead to overlapping rate plans on the Zuora sub: ${sub.id}")
       Amend(sub.id.get, plansToRemove.map(_.get), NonEmptyList(newPln), None)
     }
   }

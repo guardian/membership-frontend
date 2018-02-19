@@ -5,7 +5,7 @@ import com.amazonaws.util.EC2MetadataUtils
 import configuration.Config
 import play.api.Configuration
 import com.gu.aws.CredentialsProvider
-import com.typesafe.scalalogging.StrictLogging
+import com.gu.monitoring.SafeLogger
 
 case class LogStashConf(enabled: Boolean,
                         stream: String,
@@ -13,7 +13,7 @@ case class LogStashConf(enabled: Boolean,
                         awsCredentialsProvider: AWSCredentialsProvider,
                         customFields: Map[String, String])
 
-object Logstash extends StrictLogging {
+object Logstash {
 
   def customFields(playConfig: Config.type) = Map(
     "app" -> playConfig.appName,
@@ -37,7 +37,7 @@ object Logstash extends StrictLogging {
   }
 
   def init(playConfig: Config.type): Unit = {
-    config(playConfig).fold(logger.info("Logstash config is missing"))(LogbackConfig.init)
+    config(playConfig).fold(SafeLogger.info("Logstash config is missing"))(LogbackConfig.init)
   }
 
 }
