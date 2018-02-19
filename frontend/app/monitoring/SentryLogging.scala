@@ -13,8 +13,6 @@ import scala.util.{Failure, Success, Try}
 
 object SentryLogging {
 
-  val AllMDCTags = Seq()
-
   def init() {
     Try(new Dsn(Config.config.getString("sentry.dsn"))) match {
       case Failure(ex) =>
@@ -32,7 +30,6 @@ object SentryLogging {
           addFilter(filter)
           setTags(tagsString)
           setRelease(app.BuildInfo.gitCommitId)
-          setExtraTags(AllMDCTags.mkString(","))
           setContext(LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext])
         }
         sentryAppender.start()
