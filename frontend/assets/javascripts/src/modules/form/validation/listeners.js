@@ -2,9 +2,8 @@ define([
     'bean',
     'src/modules/form/helper/formUtil',
     'src/modules/form/helper/loader',
-    'src/modules/form/payment/processing',
     'src/modules/form/validation/validity'
-], function (bean, form, loader, processing, validity) {
+], function (bean, form, loader, validity) {
     'use strict';
 
     var SUBMIT_ELEM = document.querySelector('.js-submit-input');
@@ -42,12 +41,7 @@ define([
                 loader.startLoader();
                 loader.setProcessingMessage('Processing...');
                 loader.disableSubmitButton(true);
-
-                if (form.hasPayment) {
-                    processing.getStripeToken();
-                } else {
-                    form.elem.submit();
-                }
+                form.elem.submit();
             }
         });
     };

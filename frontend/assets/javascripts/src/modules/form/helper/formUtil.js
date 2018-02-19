@@ -30,10 +30,6 @@ define([
         return inputsToValidate(utilsHelper.toArray(elems));
     };
 
-    var hasPayment = function () {
-        return !!document.querySelector('.js-credit-card-number');
-    };
-
     function hasPaypal () {
 
         var platform = url.getQueryParameterByName('platform');
@@ -74,11 +70,10 @@ define([
      * formUtil singleton provides:
      *    elem: DomElement - the form element
      *    elems: Array - form elements that need validation
-     *    hasPayment: Boolean - does the form has payment facilities
      *    errs: Array[String] - current form errors
      *    flush: enables elem and elems flushing for add/remove of validation
      *
-     * @returns {{elem, elems, hasPayment, errs: Array, flush: flush}}
+     * @returns {{elem, elems, errs: Array, flush: flush}}
      */
     var formUtil = function () {
         var form = getFormElem();
@@ -88,7 +83,6 @@ define([
                 elem: form,
                 elems: getInputsToValidate(form.elements),
                 hasAccordion: hasAccordion(),
-                hasPayment: hasPayment(),
                 hasPaypal: hasPaypal(),
                 hasStripeCheckout: hasStripeCheckout(),
                 hasEmailInput: hasEmailInput(),

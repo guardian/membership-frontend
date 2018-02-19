@@ -16,7 +16,6 @@ module.exports = function(debug) { return {
             '$$': 'jquery/dist/jquery.min',
             'lodash': 'lodash-amd',
             'bean': 'bean/bean',
-            'reqwest': 'reqwest/reqwest',
             'respimage': 'respimage/respimage',
             'lazySizes': 'lazysizes/lazysizes',
             'smoothScroll': 'smooth-scroll/dist/js/smooth-scroll',
