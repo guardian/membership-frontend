@@ -274,28 +274,6 @@ Resources:
         - FrontendElasticLoadBalancer
         - DNSName
 
-  monthlyContributorAttempts:
-    Type: AWS::Logs::MetricFilter
-    Condition: IsProd
-    Properties:
-      LogGroupName: !Sub membership-frontend-${Stage}
-      FilterPattern: "attempting to become a monthly contributor"
-      MetricTransformations:
-      - MetricNamespace: !Sub ${Stage}/contributions
-        MetricName: new-monthly-contributor-attempt
-        MetricValue: 1
-
-  monthlyContributorSuccess:
-    Type: AWS::Logs::MetricFilter
-    Condition: IsProd
-    Properties:
-      LogGroupName: !Sub membership-frontend-${Stage}
-      FilterPattern: "successfully became monthly contributor"
-      MetricTransformations:
-      - MetricNamespace: !Sub ${Stage}/contributions
-        MetricName: new-monthly-contributor-success
-        MetricValue: 1
-
 Outputs:
   URL:
     Description: URL of the Frontend website
