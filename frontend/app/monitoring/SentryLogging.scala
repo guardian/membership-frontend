@@ -31,11 +31,6 @@ object SentryFilters {
 
 object SentryLogging {
 
-  val UserIdentityId = "userIdentityId"
-  val UserGoogleId = "userGoogleId"
-  val PlayErrorId = "playErrorId"
-  val AllMDCTags = Seq(UserIdentityId, UserGoogleId,PlayErrorId)
-
   def init() {
     Try(new Dsn(Config.config.getString("sentry.dsn"))) match {
       case Failure(ex) =>
@@ -50,7 +45,6 @@ object SentryLogging {
           addFilter(SentryFilters.piiFilter)
           setTags(tagsString)
           setRelease(app.BuildInfo.gitCommitId)
-          setExtraTags(AllMDCTags.mkString(","))
           setContext(LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext])
         }
         sentryAppender.start()

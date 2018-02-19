@@ -49,7 +49,7 @@ class ErrorHandler(
 
   override protected def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
     val reference = Long.toString(currentTimeMillis(), 36).toUpperCase
-    logServerError(request, new PlayException("Bad request", s"A bad request was received. URI: ${request.uri}, Reference: $reference"))
+    logger.warn(s"A bad request was received. URI: ${request.uri}, Reference: $reference")
     Future.successful(NoCache(BadRequest(views.html.error400(request, s"Bad request received. Reference: $reference"))))
   }
 }
