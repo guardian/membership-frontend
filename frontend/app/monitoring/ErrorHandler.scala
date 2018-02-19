@@ -2,19 +2,14 @@ package monitoring
 
 import java.lang.Long
 import java.lang.System.currentTimeMillis
-
-import com.gu.googleauth.UserIdentity
+import com.typesafe.scalalogging.StrictLogging
 import controllers.{Cached, NoCache}
-import monitoring.SentryLogging.{UserGoogleId, UserIdentityId}
-import org.slf4j.MDC
 import play.api._
 import play.api.http.DefaultHttpErrorHandler
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.routing.Router
-import services.AuthenticationService
 import play.core.SourceMapper
-
 import scala.concurrent._
 
 class ErrorHandler(
@@ -23,17 +18,7 @@ class ErrorHandler(
   sourceMapper: Option[SourceMapper],
   router: => Option[Router],
   implicit val executionContext: ExecutionContext
-) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) {
-
-  override def logServerError(request: RequestHeader, usefulException: UsefulException) {
-    try {
-      for (identityUser <- AuthenticationService.authenticatedUserFor(request)) { MDC.put(UserIdentityId, identityUser.id) }
-      for (googleUser <- UserIdentity.fromRequest(request)) { MDC.put(UserGoogleId, googleUser.email.split('@').head) }
-
-      super.logServerError(request, usefulException)
-
-    } finally MDC.clear()
-  }
+) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with StrictLogging {
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String = ""): Future[Result] = {
     super.onClientError(request, statusCode, message).map(Cached(_))
@@ -48,7 +33,7 @@ class ErrorHandler(
 
   override protected def onBadRequest(request: RequestHeader, message: String): Future[Result] = {
     val reference = Long.toString(currentTimeMillis(), 36).toUpperCase
-    logServerError(request, new PlayException("Bad request", s"A bad request was received. URI: ${request.uri}, Reference: $reference"))
+    logger.warn(s"A bad request was received. URI: ${request.uri}, Reference: $reference")
     Future.successful(NoCache(BadRequest(views.html.error400(request, s"Bad request received. Reference: $reference"))))
   }
 }
