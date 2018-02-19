@@ -2,19 +2,16 @@ package monitoring
 
 import java.lang.Long
 import java.lang.System.currentTimeMillis
-
-import com.gu.googleauth.UserIdentity
+import com.gu.monitoring.SafeLogger
+import com.typesafe.scalalogging.StrictLogging
 import controllers.{Cached, NoCache}
-import monitoring.SentryLogging.{UserGoogleId, UserIdentityId}
-import org.slf4j.MDC
+import play.api.PlayException.ExceptionSource
 import play.api._
 import play.api.http.DefaultHttpErrorHandler
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.routing.Router
-import services.AuthenticationService
 import play.core.SourceMapper
-
 import scala.concurrent._
 
 class ErrorHandler(
@@ -23,16 +20,20 @@ class ErrorHandler(
   sourceMapper: Option[SourceMapper],
   router: => Option[Router],
   implicit val executionContext: ExecutionContext
-) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) {
+) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with StrictLogging {
 
-  override def logServerError(request: RequestHeader, usefulException: UsefulException) {
-    try {
-      for (identityUser <- AuthenticationService.authenticatedUserFor(request)) { MDC.put(UserIdentityId, identityUser.id) }
-      for (googleUser <- UserIdentity.fromRequest(request)) { MDC.put(UserGoogleId, googleUser.email.split('@').head) }
+  override protected def logServerError(request: RequestHeader, usefulException: UsefulException): Unit = {
+    val lineInfo = usefulException match {
+      case source: ExceptionSource => s"${source.sourceName()} at line ${source.line()}"
+      case _ => "unknown line number, please check the logs"
+    }
+    val sanitizedExceptionDetails = s"Caused by: ${usefulException.cause} in $lineInfo"
+    val requestDetails = s"(${request.method}) [${request.path}]" // Use path, not uri, as query strings often contain things like ?api-key=my_secret
 
-      super.logServerError(request, usefulException)
+    // We are deliberately bypassing the SafeLogger here, because we need to use standard string interpolation to make this exception handling useful.
+    logger.error(SafeLogger.sanitizedLogMessage, s"Internal server error, for $requestDetails. $sanitizedExceptionDetails")
 
-    } finally MDC.clear()
+    super.logServerError(request, usefulException) // We still want the full uri and stack trace in our logs, just not in Sentry
   }
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String = ""): Future[Result] = {
