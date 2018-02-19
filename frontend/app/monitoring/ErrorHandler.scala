@@ -2,8 +2,10 @@ package monitoring
 
 import java.lang.Long
 import java.lang.System.currentTimeMillis
+import com.gu.monitoring.SafeLogger
 import com.typesafe.scalalogging.StrictLogging
 import controllers.{Cached, NoCache}
+import play.api.PlayException.ExceptionSource
 import play.api._
 import play.api.http.DefaultHttpErrorHandler
 import play.api.mvc.Results._
@@ -19,6 +21,20 @@ class ErrorHandler(
   router: => Option[Router],
   implicit val executionContext: ExecutionContext
 ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with StrictLogging {
+
+  override protected def logServerError(request: RequestHeader, usefulException: UsefulException): Unit = {
+    val lineInfo = usefulException match {
+      case source: ExceptionSource => s"${source.sourceName()} at line ${source.line()}"
+      case _ => "unknown line number, please check the logs"
+    }
+    val sanitizedExceptionDetails = s"Caused by: ${usefulException.cause} in $lineInfo"
+    val requestDetails = s"(${request.method}) [${request.path}]" // Use path, not uri, as query strings often contain things like ?api-key=my_secret
+
+    // We are deliberately bypassing the SafeLogger here, because we need to use standard string interpolation to make this exception handling useful.
+    logger.error(SafeLogger.sanitizedLogMessage, s"Internal server error, for $requestDetails. $sanitizedExceptionDetails")
+
+    super.logServerError(request, usefulException) // We still want the full uri and stack trace in our logs, just not in Sentry
+  }
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String = ""): Future[Result] = {
     super.onClientError(request, statusCode, message).map(Cached(_))
