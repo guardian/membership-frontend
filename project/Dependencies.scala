@@ -31,7 +31,9 @@ object Dependencies {
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
-  val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.10"
+  val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.11"
+  // This is required to force aws libraries to use the latest version of jackson
+  val dataBind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.11"
   val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play26" % "3.0.0" % "compile" excludeAll(
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
@@ -41,7 +43,7 @@ object Dependencies {
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
-    PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
+    PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat, dataBind,
     acquisitionEventProducer)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
