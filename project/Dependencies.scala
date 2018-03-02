@@ -33,7 +33,7 @@ object Dependencies {
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.11"
   // This is required to force aws libraries to use the latest version of jackson
-  val dataBind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.11"
+  val dataBind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.11.1"
   val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play26" % "3.0.0" % "compile" excludeAll(
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
