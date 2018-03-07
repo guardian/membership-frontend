@@ -223,7 +223,7 @@ class MemberService(
     }).run
   }
 
-  override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member): Future[MemberError \/ Unit] = {
+  override def cancelSubscription(subscriber: com.gu.memsub.Subscriber.Member, reason: CancellationReason): Future[MemberError \/ Unit] = {
 
     val cancelDate = subscriber.subscription.plan match {
       case PaidSubscriptionPlan(_, _, _, _, _, _, _, _, chargedThrough, _, _) => chargedThrough.getOrElse(DateTime.now.toLocalDate)
@@ -231,6 +231,7 @@ class MemberService(
     }
 
     (for {
+      _ <- zuoraRestService.updateCancellationReason(subscriber.subscription.name, reason.reason).liftM
       _ <- zuoraService.cancelPlan(subscriber.subscription.id, subscriber.subscription.plan.id, cancelDate).liftM
     } yield {
       salesforceService.metrics.putCancel(subscriber.subscription.plan.tier)

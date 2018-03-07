@@ -46,7 +46,7 @@ trait MemberService {
   def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, referralData: ReferralData)
                              (implicit id: IdentityRequest): Future[MemberError \/ ContactId]
 
-  def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
+  def cancelSubscription(subscriber: Member, reason: CancellationReason): Future[MemberError \/ Unit]
 
   def upgradeTierIsValidForCurrency(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
 

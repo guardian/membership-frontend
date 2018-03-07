@@ -17,6 +17,7 @@ import com.gu.monitoring.SafeLogger
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
+import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc.{BaseController, ControllerComponents, Result}
 import services.{IdentityApi, IdentityService, TouchpointBackends}
@@ -84,7 +85,10 @@ class TierController(
   }
 
   def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
-    handleErrors(memberService.cancelSubscription(request.subscriber)) {
+    //If we can't get a cancellation reason, it's not really a problem.
+    val reason = cancellationReasonFrom.bindFromRequest.value.getOrElse(CancellationReason("mma_none"))
+
+    handleErrors(memberService.cancelSubscription(request.subscriber, reason)) {
       if (request.subscriber.subscription.plan.isPaid) {
         Redirect(routes.TierController.cancelFreeTierSummary())
       } else {
