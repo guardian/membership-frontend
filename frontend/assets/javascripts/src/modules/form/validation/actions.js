@@ -1,10 +1,9 @@
 define([
     '$',
-    'bean',
     'src/utils/helper',
     'src/modules/form/helper/formUtil',
     'src/modules/form/validation/listeners'
-], function ($, bean, utilsHelper, form, listeners) {
+], function ($, utilsHelper, form, listeners) {
     'use strict';
 
     var FORM_FIELD_CLASSNAME = 'form-field';
@@ -50,7 +49,7 @@ define([
 
             $elem.removeAttr('data-validation').removeAttr(ARIA_REQUIRED_ATTRIBUTE_NAME).removeAttr(REQUIRED_ATTRIBUTE_NAME);
             $(LABEL_CLASSNAME, $formField).addClass(OPTIONAL_MARKER_CLASSNAME).removeClass('form-field--error');
-            bean.off(elem, 'blur');
+            $(elem).off('blur');
         });
         form.flush();
     };
