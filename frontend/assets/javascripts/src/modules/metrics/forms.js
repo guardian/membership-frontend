@@ -1,9 +1,9 @@
 define([
-    'bean',
+    '$',
     'src/modules/metrics/logger',
     'src/modules/form/helper/formUtil',
     'src/modules/analytics/setup'
-], function (bean, logMetric, formUtil, analytics) {
+], function ($, logMetric, formUtil, analytics) {
     'use strict';
 
     /**
@@ -80,15 +80,15 @@ define([
 
             formAction = formUtil.elem.getAttribute('action');
 
-            bean.on(window, 'beforeunload.formMetrics', function() {
+            $(document).on('beforeunload.formMetrics', function() {
                 recordAbandonedForm(formAction);
             });
 
             var formSubmit = formUtil.elem.querySelector('[type="submit"]');
             if(formSubmit) {
-                bean.on(formSubmit, 'click', function() {
+                $(formSubmit).on('click', function() {
                     // Unbind `beforeunload` listener as form submission counts as `beforeunload`
-                    bean.off(window, 'beforeunload.formMetrics');
+                    $(document).off('beforeunload.formMetrics');
                     if (formUtil.errs.length) {
                         recordFormWithErrors(formAction);
                     } else {
