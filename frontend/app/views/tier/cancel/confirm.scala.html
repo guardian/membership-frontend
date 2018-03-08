@@ -8,7 +8,7 @@
 @import views.support.DisplayText._
 
 @currentTierDetails = {
-    <h3 class="h-stack">This is what you'll be giving up</h3>
+    <h3 class="h-stack">As a Guardian member, you also have access to...</h3>
 @fragments.tier.tierTrail(tier, showCaption = false)
     <div class="copy">
         <ul>
@@ -60,18 +60,16 @@
 
                             <select name="reason">
                                 <option disabled selected value> -- select an option -- </option>
-                                <option value="mma_article">As a result of a specific Guardian article I read</option>
-                                <option value="mma_editorial">I disagree with some editorial decisions</option>
-                                <option value="mma_values">I don't feel that the Guardian values my support</option>
-                                <option value="mma_support_another_way">
-                                    I support in another way e.g. through a subscription</option>
-                                <option value="mma_one_off">I only want to make a one-off contribution</option>
-                                <option value="mma_cant_afford">I can no longer afford it</option>
-                                <option value="mma_not_value">I wasn't getting value for money</option>
+                                <option value="mma_financial_circumstances">A change in my financial circumstances</option>
+                                <option value="mma_not_value">It is poor value for money</option>
                                 <option value="mma_payment_issue">A payment issue</option>
-                                <option value="mma_direct_debit">Want to change to Direct Debit</option>
+                                <option value="mma_editorial">I disagree with editorial decisions</option>
+                                <option value="mma_benefits">None of the benefits were of interest to me</option>
+                                <option value="mma_support_another_way">
+                                    I want to support the Guardian in another way eg. subscription</option>
                                 <option value="mma_health">Ill-health</option>
-                                <option value="mma_none">None of the above</option>                        </select>
+                                <option value="mma_none">None of the above</option>
+                            </select>
                         </div>
                         <div class="form-field">
 
