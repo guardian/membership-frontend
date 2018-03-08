@@ -116,6 +116,8 @@ object MemberForm {
     val addressDetails: Option[AddressDetails]
   }
 
+  case class CancellationReason(reason: String)
+
   case class PaidMemberChangeForm(password: String, featureChoice: Set[FeatureChoice]) extends MemberChangeForm {
     val addressDetails = None
   }
@@ -255,6 +257,12 @@ object MemberForm {
       "featureChoice" -> productFeature,
       "ophanPageviewId" -> optional(nonEmptyText)
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
+  )
+
+  val cancellationReasonFrom: Form[CancellationReason] = Form(
+    mapping(
+      "reason" -> nonEmptyText
+    )(CancellationReason.apply)(CancellationReason.unapply)
   )
 
   val freeMemberChangeForm: Form[FreeMemberChangeForm] = Form(
