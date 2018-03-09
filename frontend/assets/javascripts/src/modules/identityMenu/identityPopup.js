@@ -10,8 +10,8 @@ define([
 ], function ($, userUtil) {
     'use strict';
 
-    var IDENTITY_MENU_CTA_ELEM = $('.js-identity-menu-toggle');
-    var IDENTITY_MENU_CTA_URL = $('.js-identity-menu-url');
+    var IDENTITY_MENU_CTA_ELEM = document.querySelector('.js-identity-menu-toggle');
+    var IDENTITY_MENU_CTA_URL = document.querySelector('.js-identity-menu-url');
     var DROPDOWN_DISABLED_CLASS = 'js-dropdown-disabled';
 
     function init() {
@@ -24,13 +24,13 @@ define([
     }
 
     function disableLink() {
-        IDENTITY_MENU_CTA_ELEM.on('click', function(e) {
+        $(IDENTITY_MENU_CTA_ELEM).on('click', function(e) {
             e.preventDefault();
         });
     }
 
     function disableMenu() {
-        IDENTITY_MENU_CTA_ELEM.addClass(DROPDOWN_DISABLED_CLASS);
+        IDENTITY_MENU_CTA_ELEM.classList.add(DROPDOWN_DISABLED_CLASS);
     }
 
     function setIdentityCtaReturnUrl() {
@@ -38,8 +38,8 @@ define([
         var currentUrl = windowLocation.pathname + windowLocation.search;
 
         if (IDENTITY_MENU_CTA_URL) {
-            IDENTITY_MENU_CTA_URL.prop('href',
-                populateReturnUrl(IDENTITY_MENU_CTA_ELEM.attr('href'), currentUrl)
+            IDENTITY_MENU_CTA_URL.setAttribute('href',
+                populateReturnUrl(IDENTITY_MENU_CTA_ELEM.getAttribute('href'), currentUrl)
             );
         }
     }

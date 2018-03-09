@@ -1,10 +1,10 @@
 import * as payment from 'src/modules/payment';
-import $ from '$'
+import $ from '$';
 export function init() {
     let handler = window.StripeCheckout.configure(guardian.stripeCheckout);
     let success = false;
     const button = $('.js-stripe-checkout');
-    $(document).on('popstate', handler.close);
+    window.addEventListener('popstate', handler.close);
     const amount = () => {
 
         let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
@@ -41,5 +41,5 @@ export function init() {
         e.preventDefault();
     };
 
-    $(button).on('click', open);
+    button.on('click', open);
 }

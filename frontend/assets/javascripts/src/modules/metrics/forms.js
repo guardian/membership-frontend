@@ -73,26 +73,28 @@ define([
             });
     }
 
-    function init() {
-        var formAction;
+    function getFormAction() {
+        return formUtil.elem.getAttribute('action');
+    }
 
+    function beforeUnloadFormMetrics() {
+        recordAbandonedForm(getFormAction());
+    }
+
+    function init() {
         if (analytics.enabled && typeof formUtil.elems != 'undefined') {
 
-            formAction = formUtil.elem.getAttribute('action');
-
-            $(document).on('beforeunload.formMetrics', function() {
-                recordAbandonedForm(formAction);
-            });
+            window.addEventListener('beforeunload.formMetrics', beforeUnloadFormMetrics);
 
             var formSubmit = formUtil.elem.querySelector('[type="submit"]');
             if(formSubmit) {
                 $(formSubmit).on('click', function() {
                     // Unbind `beforeunload` listener as form submission counts as `beforeunload`
-                    $(document).off('beforeunload.formMetrics');
+                    window.removeEventListener('beforeunload.formMetrics', beforeUnloadFormMetrics);
                     if (formUtil.errs.length) {
-                        recordFormWithErrors(formAction);
+                        recordFormWithErrors(getFormAction());
                     } else {
-                        recordFormSuccess(formAction);
+                        recordFormSuccess(getFormAction());
                     }
                 });
             }
