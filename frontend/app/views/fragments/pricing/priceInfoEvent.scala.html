@@ -10,6 +10,9 @@
                 <div class="price-info-inline__value qa-event-detail-price">
                     @for(generalReleaseTicket <- ticketing.generalReleaseTicketOpt) {
                         @generalReleaseTicket.priceText
+                        @generalReleaseTicket.feeText.map { fee =>
+                            <span class="price-info-inline__fee" >plus @fee booking fee</span>
+                        }
                         @for(description <- generalReleaseTicket.description) {
                             <div class="price-info-inline__trail">@description</div>
                         }
