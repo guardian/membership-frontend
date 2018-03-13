@@ -37,7 +37,7 @@ define([
 
     function renderTermsAndConditions() {
         var usLegalSelector = $('.us-legal');
-        var territory = territoryFromCountry(checkoutForm.billingCountry)
+        var territory = territoryFromCountry(checkoutForm.billingCountry);
         if (usLegalSelector[0]) {
             switch (territory) {
                 case 'US':
