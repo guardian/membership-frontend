@@ -15,7 +15,6 @@ module.exports = function(debug) { return {
         alias: {
             '$$': 'jquery/dist/jquery.min',
             'lodash': 'lodash-amd',
-            'bean': 'bean/bean',
             'respimage': 'respimage/respimage',
             'lazySizes': 'lazysizes/lazysizes',
             'smoothScroll': 'smooth-scroll/dist/js/smooth-scroll',

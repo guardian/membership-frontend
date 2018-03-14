@@ -1,12 +1,10 @@
 define([
     '$',
-    'bean',
     'src/modules/form/billingPeriodChoice',
     'src/modules/form/validation/display',
     'src/modules/form/helper/formUtil'
 ], function (
     $,
-    bean,
     billingPeriodChoice,
     validationDisplay,
     form
@@ -39,7 +37,7 @@ define([
 
     function renderTermsAndConditions() {
         var usLegalSelector = $('.us-legal');
-        var territory = territoryFromCountry(checkoutForm.billingCountry)
+        var territory = territoryFromCountry(checkoutForm.billingCountry);
         if (usLegalSelector[0]) {
             switch (territory) {
                 case 'US':
@@ -109,7 +107,7 @@ define([
         selectCountry(DELIVERY_COUNTRY_EL, checkoutForm.deliveryCountry);
         if (!checkoutForm.showBillingAddress && checkoutForm.selectedBillingCountry !== checkoutForm.billingCountry) {
             selectCountry(BILLING_COUNTRY_EL, checkoutForm.billingCountry);
-            bean.fire(BILLING_COUNTRY_EL, 'change');
+            $(BILLING_COUNTRY_EL).trigger('change');
         }
     }
 
@@ -136,12 +134,12 @@ define([
         }
 
         if (DELIVERY_COUNTRY_EL) {
-            bean.fire(DELIVERY_COUNTRY_EL, 'change');
+            $(DELIVERY_COUNTRY_EL).trigger('change');
         }
     }
 
     function addListeners() {
-        bean.on(DELIVERY_COUNTRY_EL, 'change', function(e) {
+        $(DELIVERY_COUNTRY_EL).on('change', function(e) {
             var input = e.target;
             var selectedCountry = $(input).val();
 
@@ -153,7 +151,7 @@ define([
             renderPrices();
         });
 
-        bean.on(BILLING_COUNTRY_EL, 'change', function(e) {
+        $(BILLING_COUNTRY_EL).on('change', function(e) {
             var input = e.target;
             var selectedCountry = $(input).val();
             var selectedEl = toArray($('option', input)).filter(function (el) {
@@ -173,14 +171,14 @@ define([
             renderPrices();
         });
 
-        bean.on(USE_BILLING_ADDRESS_EL, 'click', function() {
+        $(USE_BILLING_ADDRESS_EL).on('click', function() {
             checkoutForm.showBillingAddress = true;
 
             renderPrices();
             form.flush();
         });
 
-        bean.on(USE_DELIVERY_ADDRESS_EL, 'click', function() {
+        $(USE_DELIVERY_ADDRESS_EL).on('click', function() {
             checkoutForm.showBillingAddress = false;
             checkoutForm.billingCountry = checkoutForm.deliveryCountry;
 

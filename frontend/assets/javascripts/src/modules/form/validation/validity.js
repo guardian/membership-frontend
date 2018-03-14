@@ -13,7 +13,7 @@ define([
     var check = function (elem) {
         var valid = testValidity(elem);
         display.toggleErrorState({
-            isValid: testValidity(elem),
+            isValid: valid,
             elem: elem
         });
         return valid;

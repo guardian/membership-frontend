@@ -1,9 +1,9 @@
 define([
-    'bean',
+    '$',
     'src/modules/form/helper/formUtil',
     'src/modules/form/helper/loader',
     'src/modules/form/validation/validity'
-], function (bean, form, loader, validity) {
+], function ($, form, loader, validity) {
     'use strict';
 
     var SUBMIT_ELEM = document.querySelector('.js-submit-input');
@@ -12,7 +12,7 @@ define([
         // blur and change events for select elems, just blur for everything else (which is just text inputs at present)
         var event = elem.nodeName.toLowerCase() === 'select' ? 'blur change' : 'blur';
 
-        bean.on(elem, event, function () {
+        $(elem).on(event, function () {
             validity.check(elem);
         });
     };
@@ -30,7 +30,7 @@ define([
             return;
         }
 
-        bean.on(SUBMIT_ELEM, 'click', function (e) {
+        $(SUBMIT_ELEM).on('click', function (e) {
             e.preventDefault();
 
             form.elems.map(function (elem) {
