@@ -10,7 +10,7 @@ import configuration.Config
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
-import monitoring.EventbriteMetrics
+import monitoring.DummyMetrics
 import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
 import com.gu.monitoring.SafeLogger
@@ -146,7 +146,7 @@ class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: 
   //
   // see https://www.eventbrite.com/developer/v3/formats/event/#ebapi-access-code
   val maxDiscountQuantityAvailable = 4
-  val wsMetrics = new EventbriteMetrics("Guardian Live")
+  val wsMetrics = DummyMetrics
 
   override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
 
@@ -193,7 +193,7 @@ class MasterclassEventService(executionContext: ExecutionContext, actorSystem: A
   val apiToken = Config.eventbriteMasterclassesApiToken
   val maxDiscountQuantityAvailable = 1
 
-  val wsMetrics = new EventbriteMetrics("Masterclasses")
+  val wsMetrics = DummyMetrics
 
   override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
 

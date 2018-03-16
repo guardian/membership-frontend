@@ -8,7 +8,6 @@ import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.memsub.util.ScheduledTask
 import configuration.Config
-import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
@@ -105,9 +104,7 @@ trait GuardianContent {
 
   val logAndRecord: PartialFunction[Try[_], Unit] = {
     case Success(_) =>
-      ContentApiMetrics.putResponseCode(200, "GET content")
     case Failure(GuardianContentApiError(status, message, _)) =>
-      ContentApiMetrics.putResponseCode(status, "GET content")
       SafeLogger.error(scrub"Error response from Content API $status")
   }
 

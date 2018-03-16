@@ -22,11 +22,12 @@ import com.netaporter.uri.Uri
 import com.gu.monitoring.SafeLogger
 import configuration.Config
 import model.FeatureChoice
-import monitoring.TouchpointBackendMetrics
+import monitoring.{DummyMetrics, TouchpointBackendMetrics}
 import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
 import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scalaz.std.scalaFuture._
@@ -34,7 +35,7 @@ import scalaz.std.scalaFuture._
 object TouchpointBackend {
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
     def zuoraEnvName: String = tpbc.zuoraSoap.envName
-    def zuoraMetrics(component: String): ServiceMetrics = new ServiceMetrics(zuoraEnvName, "membership", component)
+    def zuoraMetrics(component: String): ServiceMetrics = DummyMetrics
     def zuoraRestUrl(config: com.typesafe.config.Config): String =
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
