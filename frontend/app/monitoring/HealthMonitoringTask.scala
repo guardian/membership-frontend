@@ -32,10 +32,8 @@ object HealthMonitoringTask {
       }.toList
 
     val metricDefinitions = Seq[MetricItem](
-      MetricItem("max-heap-memory", ManagementFactory.getMemoryMXBean.getHeapMemoryUsage.getMax, StandardUnit.Bytes),
       MetricItem("used-heap-memory", ManagementFactory.getMemoryMXBean.getHeapMemoryUsage.getUsed, StandardUnit.Bytes),
       MetricItem("committed-heap-memory", ManagementFactory.getMemoryMXBean.getHeapMemoryUsage.getCommitted, StandardUnit.Bytes),
-      MetricItem("max-non-heap-memory", ManagementFactory.getMemoryMXBean.getNonHeapMemoryUsage.getMax, StandardUnit.Bytes),
       MetricItem("used-non-heap-memory", ManagementFactory.getMemoryMXBean.getNonHeapMemoryUsage.getUsed, StandardUnit.Bytes),
       MetricItem("committed-non-heap-memory", ManagementFactory.getMemoryMXBean.getNonHeapMemoryUsage.getCommitted, StandardUnit.Bytes),
 
