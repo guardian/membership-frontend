@@ -33,6 +33,7 @@ Parameters:
     Type: String
     AllowedValues:
     - t2.micro
+    - t2.small
     - t2.medium
     - m3.medium
     ConstraintDescription: must be a valid EC2 instance type.
