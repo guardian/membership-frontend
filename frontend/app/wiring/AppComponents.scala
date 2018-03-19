@@ -53,10 +53,10 @@ trait AppComponents
   private lazy val actionRefiners = new TouchpointActionRefiners(touchpointBackends, executionContext)
   private lazy val touchpointCommonActions = new TouchpointCommonActions(touchpointBackends, actionRefiners, defaultBodyParser, executionContext, commonActionRefiners)
   private lazy val oauthActions = new TouchpointOAuthActions(
-    touchpointBackends,actionRefiners, executionContext, wsClient, defaultBodyParser, googleAuthConfig, commonActions
+    touchpointBackends, actionRefiners, executionContext, wsClient, defaultBodyParser, googleAuthConfig, commonActions
   )
 
-  private lazy val joiner =  new Joiner(
+  private lazy val joiner = new Joiner(
     wsClient,
     identityApi,
     eventbriteCollectiveServices,
@@ -109,8 +109,9 @@ trait AppComponents
     )
   }
 
-
-  HealthMonitoringTask.start(actorSystem, executionContext, Config.stage, Config.appName)
+  if (Config.sendJVMMetrics) {
+    HealthMonitoringTask.start(actorSystem, executionContext, Config.stage, Config.appName)
+  }
   SentryLogging.init()
   Logstash.init(Config)
   guardianLiveEventService.start()
