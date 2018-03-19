@@ -85,8 +85,7 @@ class MemberService(
   discountIds: DiscountRatePlanIds,
   invoiceIdsByCountry: Map[Country, InvoiceTemplate],
   implicit val ec: ExecutionContext
-)
-  extends api.MemberService with ActivityTracking {
+) extends api.MemberService {
 
   import EventbriteService._
   import MemberService._
@@ -186,10 +185,6 @@ class MemberService(
         referralData = referralData
       ))
     } yield {
-      track(MemberActivity("upgradeMembership", MemberData(
-        sub.contact.salesforceContactId,
-        sub.contact.identityId,
-        sub.subscription.plan.tier)), sub.contact)
       salesforceService.metrics.putUpgrade(newTier)
       memberId
     }).run
@@ -210,16 +205,6 @@ class MemberService(
         effectiveFrom = effectiveFrom(paidSub)).liftM
     } yield {
       salesforceService.metrics.putDowngrade(subscriber.subscription.plan.tier)
-      track(
-        MemberActivity(
-          "downgradeMembership",
-          MemberData(
-            salesforceContactId = subscriber.contact.salesforceContactId,
-            identityId = subscriber.contact.identityId,
-            tier = subscriber.subscription.plan.tier,
-            tierAmendment = Some(DowngradeAmendment(subscriber.subscription.plan.tier)) //getting effective date and subscription annual / month is proving difficult
-          )),
-        subscriber.contact)
     }).run
   }
 
@@ -235,11 +220,6 @@ class MemberService(
       _ <- zuoraService.cancelPlan(subscriber.subscription.id, subscriber.subscription.plan.id, cancelDate).liftM
     } yield {
       salesforceService.metrics.putCancel(subscriber.subscription.plan.tier)
-      track(MemberActivity("cancelMembership", MemberData(
-        subscriber.contact.salesforceContactId,
-        subscriber.contact.identityId,
-        subscriber.subscription.plan.tier)), subscriber.contact)
-      track(MemberActivity("cancelMembership", MemberData(subscriber.contact.salesforceContactId, subscriber.contact.identityId, subscriber.subscription.plan.tier)), subscriber.contact)
     }).run
   }
 
@@ -507,7 +487,6 @@ class MemberService(
     } yield {
       salesforceService.metrics.putUpgrade(tier)
       addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
-      trackUpgrade(contact, sub, newPlan, addressDetails, referralData)
       contact
     }).run
   }

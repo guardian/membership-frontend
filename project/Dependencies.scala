@@ -17,8 +17,6 @@ object Dependencies {
   val playIteratees = "com.typesafe.play" %% "play-iteratees" % "2.6.1"
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
-  val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
-  val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "3.1"
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.7"
   val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.5.3" % "test"
@@ -42,7 +40,7 @@ object Dependencies {
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
-    contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, sqs, snowPlow, bCrypt, scalaz, pegdown,
+    contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, sqs, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat, dataBind,
     acquisitionEventProducer)
 

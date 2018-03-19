@@ -28,7 +28,6 @@ scalaVersion := "2.11.12"
 
 resolvers ++= Seq(
     "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",
-    "Guardian Github Snapshots" at "http://guardian.github.com/maven/repo-snapshots",
     "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
     Resolver.sonatypeRepo("releases"),
     Resolver.bintrayRepo("guardian", "ophan"))

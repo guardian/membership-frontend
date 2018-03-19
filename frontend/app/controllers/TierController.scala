@@ -21,7 +21,6 @@ import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc.{BaseController, ControllerComponents, Result}
 import services.{IdentityApi, IdentityService, TouchpointBackends}
-import tracking.ActivityTracking
 import utils.RequestCountry._
 import utils.{ReferralData, TierChangeCookies}
 import views.support.MembershipCompat._
@@ -41,9 +40,9 @@ class TierController(
   touchpointCommonActions: TouchpointCommonActions,
   implicit val touchpointBackends: TouchpointBackends,
   commonActions: CommonActions,
-  implicit val executionContext: ExecutionContext
-, override protected val controllerComponents: ControllerComponents) extends BaseController
-  with ActivityTracking
+  implicit val executionContext: ExecutionContext,
+  override protected val controllerComponents: ControllerComponents
+) extends BaseController
   with CatalogProvider
   with SubscriptionServiceProvider
   with MemberServiceProvider

@@ -182,7 +182,7 @@ case class TouchpointBackend(
   paymentService: PaymentService,
   identityService: IdentityService,
   simpleRestClient: SimpleClient[Future]
-) extends ActivityTracking {
+) {
 
   lazy val catalog: Catalog = catalogService.unsafeCatalog
 }

@@ -31,7 +31,7 @@ import services.AuthenticationService.authenticatedIdUserProvider
 import services.api.MemberService.CreateMemberResult
 import services.checkout.identitystrategy.Strategy.identityStrategyFor
 import services.{GuardianContentService, _}
-import tracking.{AcquisitionTracking, ActivityTracking}
+import tracking.AcquisitionTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
 import utils.{Feature, ReferralData, TierChangeCookies}
@@ -63,7 +63,6 @@ class Joiner(
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
   with BaseController
   with I18nSupport
-  with ActivityTracking
   with AcquisitionTracking
   with PaymentGatewayErrorHandler
   with CatalogProvider
@@ -288,10 +287,6 @@ class Joiner(
             identityService.consentEmail(user.primaryEmailAddress, IdentityRequest(request))
 
           salesforceService.metrics.putSignUp(tier)
-
-          trackRegistration(formData, tier, sfContactId, user.minimal, referralData)
-          trackRegistrationViaEvent(sfContactId, user.minimal, eventId, referralData, tier)(eventbriteService)
-
           formData match {
             case paid: PaidMemberJoinForm =>
               onSuccess.withSession(paid.pageviewId.map(id => request.session + ("pageviewId" -> id)).getOrElse(request.session))

@@ -8,7 +8,6 @@ import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
 import play.api.mvc.{BaseController, ControllerComponents}
 import services._
-import tracking.ActivityTracking
 import views.support.PageInfo
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,7 +18,7 @@ class WhatsOn(
   commonActions: CommonActions,
   implicit val executionContext: ExecutionContext,
   override protected val controllerComponents: ControllerComponents
-) extends BaseController with ActivityTracking {
+) extends BaseController {
 
   import commonActions.CachedAction
 
