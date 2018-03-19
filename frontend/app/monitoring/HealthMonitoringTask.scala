@@ -9,16 +9,16 @@ import com.amazonaws.services.cloudwatch.model._
 import com.amazonaws.util.EC2MetadataUtils
 import com.gu.monitoring.CloudWatch.cloudwatch
 import com.gu.monitoring.CloudWatchHealth
-import com.typesafe.scalalogging.StrictLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import monitoring.CloudwatchMetric.MetricItem
 import monitoring.Scheduler.TaskDefinition
-
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.{FiniteDuration, _}
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.{Failure, Success}
 
-object HealthMonitoringTask extends StrictLogging {
+object HealthMonitoringTask {
 
   def start(implicit system: ActorSystem, executionContext: ExecutionContext, stage: String, appName: String): Unit = {
 
@@ -63,20 +63,20 @@ object HealthMonitoringTask extends StrictLogging {
 }
 
 // simple stateless fire and forget scheduler
-object Scheduler extends StrictLogging {
+object Scheduler {
 
   case class TaskDefinition(name: String, task: () => Future[Unit])
 
   def schedule(
     task: TaskDefinition, initialDelay: FiniteDuration, interval: FiniteDuration
   )(implicit system: ActorSystem, executionContext: ExecutionContext) = {
-    logger.info(s"Starting $task.name scheduled task with an initial delay of: $initialDelay. This task will refresh every: $interval")
+    SafeLogger.info(s"Starting $task.name scheduled task with an initial delay of: $initialDelay. This task will refresh every: $interval")
     system.scheduler.schedule(initialDelay, interval) {
       task.task().onComplete {
         case Success(t) =>
-          logger.debug(s"Scheduled task $task.name succeeded. This task will repeat in: $interval")
+          SafeLogger.debug(s"Scheduled task $task.name succeeded. This task will repeat in: $interval")
         case Failure(e) =>
-          logger.error(s"Scheduled task $task.name failed due to: $e. This task will retry in: $interval")
+          SafeLogger.error(scrub"Scheduled task $task.name failed due to: $e. This task will retry in: $interval")
       }
     }
   }
@@ -84,7 +84,7 @@ object Scheduler extends StrictLogging {
 }
 
 // simple stateless writer for cloudwatch metrics
-object CloudwatchMetric extends StrictLogging {
+object CloudwatchMetric {
 
   case class MetricItem(name: String, value: () => Long, unit: StandardUnit)
 
@@ -105,12 +105,12 @@ object CloudwatchMetric extends StrictLogging {
       cloudwatch.putMetricDataAsync(request, new AsyncHandler[PutMetricDataRequest, PutMetricDataResult] {
 
         def onError(exception: Exception): Unit = {
-          logger.info(s"CloudWatch PutMetricDataRequest error: ${exception.getMessage}}")
+          SafeLogger.info(s"CloudWatch PutMetricDataRequest error: ${exception.getMessage}}")
           promise.failure(exception)
         }
 
         def onSuccess(request: PutMetricDataRequest, result: PutMetricDataResult ): Unit = {
-          logger.trace("CloudWatch PutMetricDataRequest - success")
+          SafeLogger.debug("CloudWatch PutMetricDataRequest - success")
           CloudWatchHealth.hasPushedMetricSuccessfully = true
           promise.success(())
         }

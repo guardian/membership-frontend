@@ -1,16 +1,25 @@
 package controllers
 
-import javax.inject.Inject
-
 import actions.Fallbacks._
 import actions._
-import com.typesafe.scalalogging.LazyLogging
-import play.api.mvc.{Controller, Cookie}
+import com.gu.googleauth.GoogleAuthConfig
+import com.gu.monitoring.SafeLogger
+import play.api.mvc._
 import utils.TestUsers.testUsers
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 
-class Testing @Inject()(override val wsClient: WSClient) extends Controller with LazyLogging with OAuthActions {
+import scala.concurrent.ExecutionContext
+
+class Testing(
+  override val wsClient: WSClient,
+  parser: BodyParser[AnyContent],
+  override implicit val executionContext: ExecutionContext,
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions,
+  override protected val controllerComponents: ControllerComponents
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions) with BaseController {
+
+  import commonActions.CachedAction
 
   import Testing._
   val analyticsOffCookie = Cookie(AnalyticsCookieName, "true", httpOnly = false)
@@ -32,7 +41,7 @@ class Testing @Inject()(override val wsClient: WSClient) extends Controller with
 
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()
-    logger.info(s"Generated test user string $testUserString for ${request.user.email}")
+    SafeLogger.info(s"Generated test user string $testUserString for ${request.user.email}")
     val testUserCookie = Cookie(PreSigninTestCookieName, testUserString, Some(30 * 60), httpOnly = true)
     Ok(views.html.testing.testUsers(testUserString)).withCookies(testUserCookie, analyticsOffCookie)
   }

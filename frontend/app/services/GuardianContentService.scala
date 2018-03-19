@@ -2,19 +2,19 @@ package services
 
 import java.time.Instant
 
+import akka.actor.ActorSystem
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.memsub.util.ScheduledTask
 import configuration.Config
-import configuration.Config.Implicits.akkaSystem
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.libs.iteratee.{Enumerator, Iteratee}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.duration._
 
@@ -22,7 +22,10 @@ case class ContentAPIPagination(currentPage: Int, pages: Int) {
   lazy val nextPageOpt = Some(currentPage + 1).filter(_ <= pages)
 }
 
-trait GuardianContentService extends GuardianContent {
+class GuardianContentService(actorSystem: ActorSystem, executionContext: ExecutionContext) extends GuardianContent {
+
+  implicit private val as = actorSystem
+  override implicit val ec = executionContext
 
   private def eventbrite: Future[Seq[Content]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -92,9 +95,9 @@ trait GuardianContentService extends GuardianContent {
 
 }
 
-object GuardianContentService extends GuardianContentService
-
 trait GuardianContent {
+
+  implicit val ec: ExecutionContext
 
   val client = new GuardianContentClient(Config.contentApiKey) {
     override val targetUrl = "https://content.guardianapis.com"
@@ -105,7 +108,7 @@ trait GuardianContent {
       ContentApiMetrics.putResponseCode(200, "GET content")
     case Failure(GuardianContentApiError(status, message, _)) =>
       ContentApiMetrics.putResponseCode(status, "GET content")
-      Logger.error(s"Error response from Content API $status")
+      SafeLogger.error(scrub"Error response from Content API $status")
   }
 
   def masterclassesQuery(page: Int): Future[ItemResponse] = {

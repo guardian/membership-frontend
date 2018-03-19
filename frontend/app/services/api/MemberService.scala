@@ -14,6 +14,7 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{GenericSFContact, PlanChoice}
+import _root_.services.EventbriteCollectiveServices
 import utils.ReferralData
 import views.support.ThankyouSummary
 
@@ -45,7 +46,7 @@ trait MemberService {
   def upgradePaidSubscription(sub: PaidMember, newTier: PaidTier, form: PaidMemberChangeForm, referralData: ReferralData)
                              (implicit id: IdentityRequest): Future[MemberError \/ ContactId]
 
-  def cancelSubscription(subscriber: Member): Future[MemberError \/ Unit]
+  def cancelSubscription(subscriber: Member, reason: CancellationReason): Future[MemberError \/ Unit]
 
   def upgradeTierIsValidForCurrency(subscription: Subscription[SubscriptionPlan.Member], newTier: PaidTier): Boolean
 
@@ -66,7 +67,7 @@ trait MemberService {
 
   def retrieveComplimentaryTickets(subscription: Subscription[SubscriptionPlan.Member], event: RichEvent): Future[Seq[EBTicketClass]]
 
-  def createEBCode(subscriber: Member, event: RichEvent): Future[Option[EBCode]]
+  def createEBCode(subscriber: Member, event: RichEvent)(implicit services: EventbriteCollectiveServices): Future[Option[EBCode]]
 
   def createPaidSubscription(contactId: ContactId,
                              identityId: String,

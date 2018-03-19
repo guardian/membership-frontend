@@ -2,9 +2,9 @@ package controllers
 
 import com.github.nscala_time.time.Imports._
 import com.gu.monitoring.CloudWatchHealth
-import play.api.Logger.warn
-import play.api.mvc.{Action, Controller}
-import services.{GuardianLiveEventService, TouchpointBackend}
+import com.gu.monitoring.SafeLogger.warn
+import play.api.mvc.{Action, BaseController, ControllerComponents}
+import services.{EventbriteCollectiveServices, GuardianLiveEventService, TouchpointBackend, TouchpointBackends}
 
 trait Test {
   def ok: Boolean
@@ -16,14 +16,13 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
   override def ok = exec()
 }
 
-object Healthcheck extends Controller {
-  import TouchpointBackend.Normal._
+class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   def tests = Seq(
-    new BoolTest("Events", () => GuardianLiveEventService.events.nonEmpty),
+    new BoolTest("Events", () => eventbriteService.guardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes)),
-    new BoolTest("Salesforce", () => salesforceService.isAuthenticated)
+    new BoolTest("ZuoraPing", () => touchpointBackends.Normal.zuoraSoapClient.lastPingTimeWithin(2.minutes)),
+    new BoolTest("Salesforce", () => touchpointBackends.Normal.salesforceService.isAuthenticated)
   )
 
   def healthcheck() = Action {

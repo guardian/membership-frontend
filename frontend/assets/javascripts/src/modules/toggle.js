@@ -12,7 +12,7 @@
  *     * data-toggle-label is optional
  *     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
  */
-define(['$', 'bean'], function ($, bean) {
+define(['$'], function ($) {
     'use strict';
 
     var TOGGLE_BTN_SELECTOR = '.js-toggle',
@@ -68,8 +68,8 @@ define(['$', 'bean'], function ($, bean) {
 
     var bindToggles = function() {
         var $toggles = $(TOGGLE_BTN_SELECTOR);
-        $toggles.each(function (elem) {
-            bean.on(elem, 'click', toggleElement($(elem)));
+        $toggles.each(function (i, elem) {
+            $(elem).on('click', toggleElement($(elem)));
         });
     };
 

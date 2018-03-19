@@ -79,18 +79,12 @@ module.exports = function (grunt) {
                 precision: 5
             },
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= dirs.assets.stylesheets %>',
-                    src: [
-                        'style.scss',
-                        'ie9.style.scss',
-                        'tools.style.scss',
-                        'event-card.scss'
-                    ],
-                    dest: '<%= dirs.publicDir.stylesheets %>',
-                    ext: '.css'
-                }]
+                files: {
+                    '<%= dirs.publicDir.stylesheets %>/style.css': '<%= dirs.assets.stylesheets %>/garnett.scss',
+                    '<%= dirs.publicDir.stylesheets %>/ie9.style.css': '<%= dirs.assets.stylesheets %>/ie9.style.scss',
+                    '<%= dirs.publicDir.stylesheets %>/tools.style.css': '<%= dirs.assets.stylesheets %>/tools.style.scss',
+                    '<%= dirs.publicDir.stylesheets %>/event-card.css': '<%= dirs.assets.stylesheets %>/event-card.scss'
+                }
             }
         },
 

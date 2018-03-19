@@ -1,16 +1,16 @@
 package controllers
 
+import actions.CommonActions
 import com.gu.i18n.CountryGroup
-import com.typesafe.scalalogging.LazyLogging
 import model.ActiveCountryGroups
 import play.api.mvc._
 import utils.CountryGroupLang
 
 import scala.xml.Elem
 
+class SiteMap(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
-
-object SiteMap extends Controller with LazyLogging {
+  import commonActions.CachedAction
 
   def sitemap() = CachedAction { implicit request =>
     val foo = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"

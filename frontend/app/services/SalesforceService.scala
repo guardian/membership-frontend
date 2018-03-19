@@ -6,16 +6,14 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
 import dispatch.Defaults.timer
 import dispatch._
-import forms.MemberForm.{CommonForm, JoinForm, MonthlyContributorForm}
+import forms.MemberForm.{CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.{ContributorMetrics, MemberMetrics}
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import akka.actor.ActorSystem
 import play.api.libs.json._
 import services.FrontendMemberRepository._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 import scalaz.\/
 
@@ -23,9 +21,7 @@ object FrontendMemberRepository {
   type UserId = String
 }
 
-class SalesforceService(salesforceConfig: SalesforceConfig) extends api.SalesforceService {
-
-  private implicit val system = Akka.system
+class SalesforceService(salesforceConfig: SalesforceConfig)(implicit val system: ActorSystem, implicit val executionContext: ExecutionContext) extends api.SalesforceService {
 
   val metricsVal = new MemberMetrics(salesforceConfig.envName)
 
@@ -57,9 +53,9 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
     )
   }.getOrElse(Json.obj())
 
-  private def initialData(user: IdUser, formData: CommonForm): JsObject = {
+  private def initialData(user: IdUser, formData: CommonForm): JsObject =
     formData match {
-      case jf : JoinForm => Seq(Json.obj(
+      case jf: JoinForm => Json.obj(
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> jf.name.first,
         Keys.LAST_NAME -> jf.name.last,
@@ -67,33 +63,25 @@ class SalesforceService(salesforceConfig: SalesforceConfig) extends api.Salesfor
         Keys.MAILING_CITY -> jf.deliveryAddress.town,
         Keys.MAILING_STATE -> jf.deliveryAddress.countyOrState,
         Keys.MAILING_POSTCODE -> jf.deliveryAddress.postCode,
-        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.fold(jf.deliveryAddress.countryName)(_.name),
-        Keys.ALLOW_MEMBERSHIP_MAIL -> true
-      )) ++ Map(
-        Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
-        Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
-      ).collect { case (k, Some(v)) => Json.obj(k -> v) }
+        Keys.MAILING_COUNTRY -> jf.deliveryAddress.country.fold(jf.deliveryAddress.countryName)(_.name)
+      )
 
-      case _ => Seq(Json.obj(
+      case _ => Json.obj(
         Keys.EMAIL -> user.primaryEmailAddress,
         Keys.FIRST_NAME -> formData.name.first,
-        Keys.LAST_NAME -> formData.name.last,
-        Keys.ALLOW_MEMBERSHIP_MAIL -> !formData.isInstanceOf[MonthlyContributorForm] // yes, if not monthly contributor
-      )) ++ Map(
-        Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
-        Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
-      ).collect { case (k, Some(v)) => Json.obj(k -> v) }
+        Keys.LAST_NAME -> formData.name.last
+      )
     }
-  }.reduce(_ ++ _)
+
 
   private def upsert(userId: UserId, value: JsObject) =
   // upsert is POST request but safe to retry
-  retry.Backoff(max = 2, delay = 2.seconds, base = 2) { () =>
-    repository.upsert(Some(userId), value).either
-  }.map {
-    case Left(e) => throw new SalesforceServiceError(s"User $userId could not be upsert in Salesforce", e)
-    case Right(contactId) => contactId
-  }
+    retry.Backoff(max = 2, delay = 2.seconds, base = 2) { () =>
+      repository.upsert(Some(userId), value).either
+    }.map {
+      case Left(e) => throw new SalesforceServiceError(s"User $userId could not be upsert in Salesforce", e)
+      case Right(contactId) => contactId
+    }
 }
 
 case class SalesforceServiceError(msg: String, cause: Throwable) extends Throwable(msg, cause)

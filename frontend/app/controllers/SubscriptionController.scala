@@ -1,11 +1,17 @@
 package controllers
 
+import actions.TouchpointCommonActions
 import model.FreeEventTickets
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.TouchpointBackends
 
-trait Subscription extends Controller with MemberServiceProvider {
+import scala.concurrent.ExecutionContext
+
+class SubscriptionController(touchpointCommonActions: TouchpointCommonActions, implicit val touchpointBackends: TouchpointBackends, implicit val executionContext: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController with MemberServiceProvider {
+
+  import touchpointCommonActions._
+
   def remainingTickets() = AjaxPaidSubscriptionAction.async { implicit request =>
     memberService.getUsageCountWithinTerm(request.subscriber.subscription, FreeEventTickets.unitOfMeasure) map { ticketsUsedCount =>
       Ok(Json.obj(
@@ -16,4 +22,3 @@ trait Subscription extends Controller with MemberServiceProvider {
   }
 }
 
-object Subscription extends Subscription

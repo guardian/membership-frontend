@@ -4,18 +4,16 @@ import javax.inject.Inject
 
 import akka.stream.Materializer
 import configuration.Config
-import play.api.Play.current
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.ws.WS
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class AddEC2InstanceHeader @Inject()(implicit val mat: Materializer) extends Filter {
+class AddEC2InstanceHeader(wsClient: WSClient)(implicit val mat: Materializer, implicit val ec: ExecutionContext) extends Filter {
 
   // http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
   lazy val instanceIdOptF = if (Config.stageProd)
-    WS.url("http://169.254.169.254/latest/meta-data/instance-id").get().map(resp => Some(resp.body).filter(_.nonEmpty)).recover { case _ => None }
+    wsClient.url("http://169.254.169.254/latest/meta-data/instance-id").get().map(resp => Some(resp.body).filter(_.nonEmpty)).recover { case _ => None }
   else
     Future(None)
 

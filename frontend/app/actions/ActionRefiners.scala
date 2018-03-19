@@ -9,16 +9,15 @@ import com.gu.memsub.util.Timing
 import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
 import com.gu.monitoring.CloudWatch
 import com.gu.salesforce._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import controllers.IdentityRequest
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Results._
 import play.api.mvc.Security.{AuthenticatedBuilder, AuthenticatedRequest}
 import play.api.mvc._
 import utils.PlannedOutage
 import views.support.MembershipCompat._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, EitherT, OptionT, \/, \/-}
 import scalaz.std.scalaFuture._
 
@@ -28,17 +27,8 @@ import scalaz.std.scalaFuture._
  *
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
-object ActionRefiners extends LazyLogging {
-  import model.TierOrdering.upgradeOrdering
-  implicit val pf: ProductFamily = Membership
 
-  def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
-    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
-  }
-
-  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_)): ActionBuilder[AuthRequest] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, onUnauthenticated)
-
+object ActionRefiners {
   type SubRequestOrResult[A] = Future[Either[Result, SubReqWithSub[A]]]
   type SubRequestWithContributorOrResult[A] = Future[Either[Result, SubReqWithContributor[A]]]
   type PaidSubRequestOrResult[A] = Future[Either[Result, SubscriptionRequest[A] with PaidSubscriber]]
@@ -48,60 +38,36 @@ object ActionRefiners extends LazyLogging {
   type SubReqWithFree[A] = SubscriptionRequest[A] with FreeSubscriber
   type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
+}
 
-  private def getContributorRequest[A](request: AuthRequest[A]): Future[String \/ Option[SubReqWithContributor[A]]] = {
-    implicit val pf = Membership
-    val tp = request.touchpointBackend
-    val contributor = Subscriber[Subscription[SubscriptionPlan.Contributor]] _
-    (for {
-      member <- OptionEither(request.forMemberOpt)
-      subscription <- OptionEither.liftEither(tp.subscriptionService.getSubscription(member))
-    } yield new SubscriptionRequest[A](tp, request) with Contributor {
-      override val contributor = subscription
-    }).run.run
+class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext) {
+  import ActionRefiners._
+  import model.TierOrdering.upgradeOrdering
+  implicit val pf: ProductFamily = Membership
+
+  def resultModifier(f: Result => Result) = new ActionBuilder[Request, AnyContent] {
+
+    override def parser = ActionRefiners.this.parser
+
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
 
-  private def getSubRequest[A](request: Request[A]): Future[String \/ Option[SubReqWithSub[A]]] = {
-    implicit val pf = Membership
-    val FreeSubscriber = Subscriber[Subscription[SubscriptionPlan.FreeMember]] _
-    val PaidSubscriber = Subscriber[Subscription[SubscriptionPlan.PaidMember]] _
-    (for {
-      user <- OptionEither.liftFutureEither(AuthenticationService.authenticatedIdUserProvider(request))
-      authRequest = new AuthenticatedRequest(user, request)
-      tp = authRequest.touchpointBackend
-      member <- OptionEither(authRequest.forMemberOpt)
-      subscription <- OptionEither.liftEither(tp.subscriptionService.either[SubscriptionPlan.FreeMember, SubscriptionPlan.PaidMember](member).map(_.toOption.flatten))
-    } yield new SubscriptionRequest[A](tp, authRequest) with Subscriber {
-      override def paidOrFreeSubscriber = subscription.bimap(FreeSubscriber(_, member), PaidSubscriber(_, member))
-    }).run.run
-  }
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_))(implicit bodyParser: BodyParser[AnyContent]): ActionBuilder[AuthRequest, AnyContent] =
+    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, bodyParser, onUnauthenticated)
 
   val PlannedOutageProtection = new ActionFilter[Request] {
+
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override def filter[A](request: Request[A]) = Future.successful(PlannedOutage.currentOutage.map(_ => maintenance(request)))
   }
 
-  def subscriptionRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithSub] {
-    override def refine[A](request: AuthRequest[A]): SubRequestOrResult[A] = {
-      getSubRequest(request).map {
-        case -\/(message) =>
-          logger.warn(s"error while sub refining: $message")
-          Left(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeMember) => maybeMember toRight onNonMember(request)}
-    }
-  }
-
-  def contributionRefiner(onNonContributor: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
-    override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
-      getContributorRequest(request).map {
-        case -\/(message) =>
-          logger.warn(s"error while contribution refining: $message")
-          Left(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeMember) => maybeMember toRight onNonContributor(request)
-      }
-    }
-  }
-
   def paidSubscriptionRefiner(onFreeMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithPaid] {
+
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithPaid[A]]] =
       Future.successful(request.paidOrFreeSubscriber.bimap(free => onFreeMember(request), paid =>
         new SubscriptionRequest[A](request) with PaidSubscriber {
@@ -111,6 +77,9 @@ object ActionRefiners extends LazyLogging {
   }
 
   def freeSubscriptionRefiner(onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithFree] {
+
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithFree[A]]] =
       Future.successful(request.paidOrFreeSubscriber.bimap(free =>
         new SubscriptionRequest[A](request) with FreeSubscriber {
@@ -119,68 +88,25 @@ object ActionRefiners extends LazyLogging {
       )                                              // but we need Either[Response, Free], hence the swap and toEither
   }
 
-  def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {
-    override protected def filter[A](request: SubReqWithSub[A]): Future[Option[Result]] = {
-      val currentSubscription = request.subscriber.subscription
-      val memberService = request.touchpointBackend.memberService
-      Future.successful {
-        if (!memberService.upgradeTierIsValidForCurrency(currentSubscription, targetTier)) {
-          Some(Ok(views.html.tier.upgrade.unavailableTierForCurrency(currentSubscription.plan.tier, targetTier)))
-        } else if (!memberService.upgradeTierIsHigher(currentSubscription, targetTier)) {
-          Some(Ok(views.html.tier.upgrade.unavailableUpgradePath(currentSubscription.plan.tier, targetTier)))
-        } else {
-          None
-        }
-      }
-    }
-  }
-
   def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result = selectedTier match {
     case t: PaidTier if t > req.subscriber.subscription.plan.tier => tierChangeEnterDetails(t)(req)
     case _ => {
       // Log cancelled members attempting to re-join.
       if (req.subscriber.subscription.isCancelled) {
-        logger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
+        SafeLogger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
       }
       Ok(views.html.tier.upgrade.unavailableUpgradePath(req.subscriber.subscription.plan.tier, selectedTier))
     }
   }
 
-  def noAuthenticatedMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[Request] {
-    override def filter[A](request: Request[A]) =
-      getSubRequest(request).map {
-        case -\/(message) =>
-          logger.warn(s"error while filtering: $message")
-          Some(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeSub) => maybeSub.map(onMember)
-      }
-  }
-
-  def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-    override def filter[A](request: AuthRequest[A]) =
-      getSubRequest(request).map {
-        case -\/(message) =>
-          logger.warn(s"error while filtering: $message")
-          Some(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeSub) => maybeSub.map(onMember)
-      }
-  }
-
-  def onlyNonContributorFilter(onContributor: SubReqWithContributor[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-    override def filter[A](request: AuthRequest[A]) =
-      getContributorRequest(request).map {
-        case -\/(message) =>
-          logger.warn(s"error while filtering contributors: $message")
-          Some(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeSub) => maybeSub.map(onContributor)
-      }
-  }
-
-  def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result =
+  def matchingGuardianEmail(identityService: IdentityService, onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
+
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
-        user <- IdentityService(IdentityApi).getFullUserDetails(request.identityUser)(IdentityRequest(request))
+        user <- identityService.getFullUserDetails(request.identityUser)(IdentityRequest(request))
       } yield {
         if (GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
         else Some(onNonGuEmail(request))
@@ -188,7 +114,12 @@ object ActionRefiners extends LazyLogging {
     }
   }
 
-  def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
+  def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request, AnyContent] {
+
+    override def parser = ActionRefiners.this.parser
+
+    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
+
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       Timing.record(cloudWatch, metricName) {
         block(request)
@@ -204,7 +135,7 @@ object OptionEither {
   def apply[A](m: Future[\/[String, Option[A]]]): OptionT[FutureEither, A] =
     OptionT[FutureEither, A](EitherT[Future, String, Option[A]](m))
 
-  def liftEither[A](x: Future[Option[A]]): OptionT[FutureEither, A] =
+  def liftEither[A](x: Future[Option[A]])(implicit ec: ExecutionContext): OptionT[FutureEither, A] =
     apply(x.map(\/.right))
 
   def liftFutureOption[A](x: \/[String, A]): OptionT[FutureEither, A] =

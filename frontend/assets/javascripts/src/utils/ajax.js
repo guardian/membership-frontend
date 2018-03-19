@@ -1,4 +1,4 @@
-define(['reqwest'], function (reqwest) {
+define(['$'], function ($) {
     'use strict';
 
     var makeAbsolute = function () {
@@ -9,10 +9,41 @@ define(['reqwest'], function (reqwest) {
         if (!params.url.match('^https?://')) {
             params.url = makeAbsolute(params.url);
         }
-        return ajax.reqwest(params);
-    }
 
-    ajax.reqwest = reqwest; // expose publicly so we can inspect it in unit tests
+        var jqParams = {
+            url: params.url
+        };
+
+        if (params.method) {
+            jqParams.type = params.method;
+        }
+
+        if (params.data) {
+            jqParams.data = params.data;
+        }
+
+        if (params.type) {
+            jqParams.dataType = params.type;
+        }
+
+        if (params.withCredentials) {
+            jqParams.xhrFields = {
+                withCredentials: params.withCredentials
+            };
+        }
+
+        return $.ajax(jqParams)
+            .done(function(data) {
+                if (params.success) {
+                    params.success(data);
+                }
+            })
+            .fail(function(jqXHR, textStatus, errorThrown){
+                if (params.error) {
+                    params.error(errorThrown);
+                }
+            });
+     }
 
     ajax.init = function (config) {
         makeAbsolute = function (url) {

@@ -1,8 +1,11 @@
 package controllers
 
-import play.api.mvc.Controller
+import actions.CommonActions
+import play.api.mvc.{BaseController, ControllerComponents}
 
-object Login extends Controller {
+class Login(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
+
+  import commonActions.NoCacheAction
 
   /*
    *   Interstitial sign in page =========================================

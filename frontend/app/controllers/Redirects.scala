@@ -1,8 +1,11 @@
 package controllers
 
+import actions.CommonActions
 import play.api.mvc._
 
-trait Redirects extends Controller {
+class Redirects(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
+
+  import commonActions.CachedAction
 
   def homepageRedirect = CachedAction(MovedPermanently("/"))
 
@@ -12,5 +15,3 @@ trait Redirects extends Controller {
 
   def supportRedirect = CachedAction(MovedPermanently("https://support.theguardian.com/"))
 }
-
-object Redirects extends Redirects

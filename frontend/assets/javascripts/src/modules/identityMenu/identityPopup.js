@@ -5,9 +5,9 @@
  * Sets the identity icon returnUrl when a user needs to sign in (controlled via JavaScript for caching reasons)
  */
 define([
-    'bean',
+    '$',
     'src/utils/user'
-], function (bean, userUtil) {
+], function ($, userUtil) {
     'use strict';
 
     var IDENTITY_MENU_CTA_ELEM = document.querySelector('.js-identity-menu-toggle');
@@ -24,7 +24,7 @@ define([
     }
 
     function disableLink() {
-        bean.on(IDENTITY_MENU_CTA_ELEM, 'click', function(e) {
+        $(IDENTITY_MENU_CTA_ELEM).on('click', function(e) {
             e.preventDefault();
         });
     }

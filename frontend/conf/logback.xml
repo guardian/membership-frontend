@@ -5,6 +5,13 @@
     <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/frontend.log</file>
 
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>SENTRY</marker>
+            </evaluator>
+            <onMatch>DENY</onMatch>
+        </filter>
+
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/frontend.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>30</maxHistory>

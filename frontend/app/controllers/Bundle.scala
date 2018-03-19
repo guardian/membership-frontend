@@ -1,14 +1,17 @@
 package controllers
 
 import abtests.BundleVariant
+import actions.CommonActions
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import configuration.CopyConfig
 import model._
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import views.support.PageInfo
 
-trait Bundle extends Controller {
+class Bundle(touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
+
+  import commonActions.CachedAction
 
   private val landingMainImage = ResponsiveImageGroup(
     availableImages = ResponsiveImageGenerator(
@@ -67,7 +70,7 @@ trait Bundle extends Controller {
     bundleVariant match {
       case _: BundleVariant => Ok(views.html.bundle.bundleSetA(
         heroOrientated,
-        TouchpointBackend.Normal.catalog.supporter,
+        touchpointBackends.Normal.catalog.supporter,
         PageInfo(
           title = CopyConfig.copyTitleSupporters,
           url = request.path,
@@ -120,7 +123,4 @@ trait Bundle extends Controller {
     ))
 
   }
-
 }
-
-object Bundle extends Bundle

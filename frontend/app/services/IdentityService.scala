@@ -7,35 +7,34 @@ import com.gu.identity.play._
 import com.gu.identity.play.idapi.{CreateIdUser, UpdateIdUser, UserRegistrationResult}
 import com.gu.memsub.Address
 import com.gu.memsub.util.Timing
+import com.gu.monitoring.SafeLogger
 import configuration.Config
 import controllers.IdentityRequest
 import dispatch.Defaults.timer
 import dispatch._
 import forms.MemberForm._
 import monitoring.IdentityApiMetrics
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import com.gu.monitoring.SafeLogger
+import play.api.http.Status
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
-import play.api.libs.ws.{WS, WSRequest, WSResponse}
+import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import services.IdentityService.DisregardResponseContent
 import views.support.IdentityUser
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
-import dispatch._
-import Defaults.timer
-import play.api.http.Status
-import play.api.mvc.Results
 
 case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
 object IdentityService {
-  val DisregardResponseContent: (WSResponse => Either[String, Unit]) = resp => Right(Unit)
+  val DisregardResponseContent: (WSResponse => Either[String, Unit]) = {
+    resp =>
+      SafeLogger.debug(s"Webservice returned code ${resp.status}, and body: ${resp.body}")
+      Right(Unit)
+  }
 
   def privateFieldsFor(form: CommonForm): PrivateFields = {
     val deliveryOpt = form match {
@@ -53,11 +52,6 @@ object IdentityService {
       }
     )
   }
-
-  def statusFieldsFor(form: CommonForm): StatusFields = StatusFields(
-    receiveGnmMarketing = form.marketingChoices.gnm,
-    receive3rdPartyMarketing = form.marketingChoices.thirdParty
-  )
 
   def privateFieldsFor(
     firstName: Option[String] = None,
@@ -86,9 +80,15 @@ object IdentityService {
       country(billing)
     )
   }
+
+  def apply(identityApiProvider: => IdentityApi)(implicit ec: ExecutionContext) =
+    new IdentityService(identityApiProvider, ec)
 }
 
-case class IdentityService(identityApi: IdentityApi) {
+class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: ExecutionContext) {
+
+  lazy val identityApi = identityApiProvider
+
   def getIdentityUserView(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdentityUser] =
     getFullUserDetails(user)(identityRequest)
       .zip(doesUserPasswordExist(identityRequest))
@@ -107,7 +107,7 @@ case class IdentityService(identityApi: IdentityApi) {
     retry.Backoff(max = 3, delay = 2.seconds, base = 2){ () =>
       getUser(user).value
     }.map(_.fold({ errorMessage =>
-      Logger.warn(s"identity get user failed with: $errorMessage")
+      SafeLogger.warn(s"identity get user failed with: $errorMessage")
       val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
       val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")
       val errContext = s"SC_GU_U=$guCookieExists GU-IdentityToken=$guTokenExists trackingParamters=${identityRequest.trackingParameters.toString}"
@@ -150,8 +150,15 @@ case class IdentityService(identityApi: IdentityApi) {
     _.json.validate[UserRegistrationResult].asEither.leftMap(_.mkString(","))
   }
 
+  def consentEmail(email: String, idReq: IdentityRequest): EitherT[Future, String, Unit] = {
+    identityApi.post("/consent-email",
+      Some(Json.obj("email" -> email, "set-consents" -> List("supporter"))),
+      idReq.headers,
+      Nil, "consentEmail")(DisregardResponseContent)
+  }
+
   def updateUser(userUpdateCommand: UpdateIdUser, userId: String)(implicit idReq: IdentityRequest): EitherT[Future, String, Unit] = {
-    Logger.info(s"Posting updated information to Identity for user :$userId")
+    SafeLogger.info(s"Posting updated information to Identity for user :$userId")
 
     identityApi.post(s"user/$userId",
       Some(toJson(userUpdateCommand)),
@@ -161,13 +168,13 @@ case class IdentityService(identityApi: IdentityApi) {
   }
 }
 
-trait IdentityApi {
+class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"
     val url = s"${Config.idApiUrl}/$endpoint"
     Timing.record(IdentityApiMetrics, "get-user-password-exists") {
-      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000 milli).get().map { response =>
+      wsClient.url(url).withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1000 milli).get().map { response =>
         recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
         (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
       }
@@ -180,7 +187,7 @@ trait IdentityApi {
     parameters: List[(String, String)],
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
     execute(endpoint, metricName, func,
-      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000 milli).withMethod("GET"))
+      wsClient.url(s"${Config.idApiUrl}/$endpoint").withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1000 milli).withMethod("GET"))
   }
 
   def post[A](
@@ -189,7 +196,7 @@ trait IdentityApi {
     parameters: List[(String, String)],
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
     execute(endpoint, metricName, func,
-      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*)
+      wsClient.url(s"${Config.idApiUrl}/$endpoint").withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*)
         .withRequestTimeout(5000 milli).withMethod("POST").withBody(data.getOrElse(JsNull)))
   }
 
@@ -201,12 +208,10 @@ trait IdentityApi {
   } yield result
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    Logger.info(s"$responseMethod response $status for endpoint $endpoint")
+    SafeLogger.info(s"$responseMethod response $status for endpoint $endpoint")
     IdentityApiMetrics.putResponseCode(status, responseMethod)
   }
 }
-
-object IdentityApi extends IdentityApi
 
 case class IdentityApiError(s: String) extends Throwable {
   override def getMessage: String = s

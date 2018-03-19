@@ -1,9 +1,7 @@
 package controllers
 
-import javax.inject.Inject
-
 import _root_.services.api.MemberService._
-import actions.BackendProvider
+import actions.{BackendProvider, CommonActions, TouchpointCommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.identity.play.PrivateFields
@@ -15,29 +13,36 @@ import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
 import com.gu.zuora.soap.models.errors._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import forms.MemberForm._
 import model._
 import org.joda.time.LocalDate
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.data.Form
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, Result}
-import services.{IdentityApi, IdentityService}
+import play.api.mvc.{BaseController, ControllerComponents, Result}
+import services.{IdentityApi, IdentityService, TouchpointBackends}
 import utils.RequestCountry._
 import utils.{ReferralData, TierChangeCookies}
 import views.support.MembershipCompat._
 import views.support.Pricing._
 import views.support.{CheckoutForm, CountryWithCurrency, PageInfo, PaidToPaidUpgradeSummary}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scalaz.std.scalaFuture._
 import scalaz.syntax.monad._
 import scalaz.syntax.std.option._
 import scalaz.{EitherT, \/}
 
-class TierController @Inject()(val joinerController: Joiner) extends Controller
-  with LazyLogging
+class TierController(
+  val joinerController: Joiner,
+  val identityApi: IdentityApi,
+  touchpointCommonActions: TouchpointCommonActions,
+  implicit val touchpointBackends: TouchpointBackends,
+  commonActions: CommonActions,
+  implicit val executionContext: ExecutionContext,
+  override protected val controllerComponents: ControllerComponents
+) extends BaseController
   with CatalogProvider
   with SubscriptionServiceProvider
   with MemberServiceProvider
@@ -47,23 +52,8 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller
   with PaymentServiceProvider
   with ZuoraRestServiceProvider {
 
-  def downgradeToFriend() = PaidSubscriptionAction { implicit request =>
-    Ok(views.html.tier.downgrade.confirm(request.subscriber.subscription.plan.tier, request.touchpointBackend.catalogService.unsafeCatalog))
-  }
-
-  def downgradeToFriendConfirm = PaidSubscriptionAction.async { implicit request => // POST
-    for {
-      cancelledSubscription <- memberService.downgradeSubscription(request.subscriber)
-    } yield Redirect(routes.TierController.downgradeToFriendSummary)
-  }
-
-  def downgradeToFriendSummary = PaidSubscriptionAction { implicit request =>
-    val startDate = request.subscriber.subscription.plan.chargedThrough.map(_.plusDays(1)).getOrElse(LocalDate.now).toDateTimeAtCurrentTime()
-    implicit val c = catalog
-    Ok(views.html.tier.downgrade.summary(
-      request.subscriber.subscription,
-      catalog.friend, startDate)).discardingCookies(TierChangeCookies.deletionCookies: _*)
-  }
+  import touchpointCommonActions._
+  import commonActions.AuthenticatedAction
 
   def change() = SubscriptionAction.async { implicit request =>
     implicit val countryGroup = UK
@@ -94,7 +84,10 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller
   }
 
   def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
-    handleErrors(memberService.cancelSubscription(request.subscriber)) {
+    //If we can't get a cancellation reason, it's not really a problem.
+    val reason = cancellationReasonFrom.bindFromRequest.value.getOrElse(CancellationReason("mma_none"))
+
+    handleErrors(memberService.cancelSubscription(request.subscriber, reason)) {
       if (request.subscriber.subscription.plan.isPaid) {
         Redirect(routes.TierController.cancelFreeTierSummary())
       } else {
@@ -136,7 +129,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller
     val countriesWithCurrency = CountryWithCurrency.withCurrency(currency)
 
     val idUserFuture =
-      IdentityService(IdentityApi)
+      IdentityService(identityApi)
         .getIdentityUserView(request.user, IdentityRequest(request))
 
     // Preselect the country from Identity fields
@@ -175,12 +168,12 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val identityRequest = IdentityRequest(request)
-    logger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
+    SafeLogger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, ReferralData.fromRequest)
       handleErrors(upgrade) {
-        logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
+        SafeLogger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
     }
@@ -201,7 +194,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller
       def doUpgrade(): Future[Result] = {
         val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, ReferralData.fromRequest)
         handleErrors(upgrade) {
-          logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
+          SafeLogger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
           Redirect(routes.TierController.upgradeThankyou(target))
         }
       }
@@ -213,7 +206,7 @@ class TierController @Inject()(val joinerController: Joiner) extends Controller
       emailFromZuora.flatMap { maybeEmail =>
         maybeEmail.map { email =>
           for {
-            reauthResult <- IdentityService(IdentityApi).reauthUser(email, form.password).value
+            reauthResult <- IdentityService(identityApi).reauthUser(email, form.password).value
             result <- reauthResult.fold(_ => reauthFailedMessage, _ => doUpgrade())
           } yield result
         }.getOrElse(noEmailMessage)

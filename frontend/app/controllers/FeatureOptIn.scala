@@ -1,11 +1,12 @@
 package controllers
 
-
-import com.typesafe.scalalogging.LazyLogging
-import play.api.mvc.Controller
+import actions.CommonActions
+import play.api.mvc.{BaseController, ControllerComponents}
 import utils.{Feature, OnOrOff}
 
-object FeatureOptIn extends Controller with LazyLogging {
+class FeatureOptIn(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
+
+  import commonActions.NoCacheAction
 
   def state(feature: Feature) = NoCacheAction { request =>
     val s = feature.stateFor(request)

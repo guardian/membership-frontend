@@ -1,13 +1,12 @@
 define(
     [
         '$',
-        'bean',
         'lodash/template',
         'src/modules/form/submitButton',
         'src/modules/form/ongoingCardPayments',
         'text-loader!src/templates/checkout/billingPeriodChoice.html'
     ],
-    function($, bean, template, submitButton, ongoingCardPayments, billingPeriodChoiceTemplate) {
+    function($, template, submitButton, ongoingCardPayments, billingPeriodChoiceTemplate) {
         'use strict';
 
         var checkoutForm = guardian.membership.checkoutForm,
@@ -43,7 +42,7 @@ define(
         return {
             init: function() {
                 if (billingPeriods && $BILLING_PERIOD_CONTAINER.length > 0) {
-                    bean.on($BILLING_PERIOD_CONTAINER[0], 'change', '[type=radio]', function (el) {
+                    $BILLING_PERIOD_CONTAINER.on('change', '[type=radio]', function (el) {
                         el.target.checked = true;
                         checkoutForm.billingPeriod = el.target.value;
                         notifyOtherModulesToRender(el.target.value);

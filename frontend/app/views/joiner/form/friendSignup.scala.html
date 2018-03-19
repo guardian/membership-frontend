@@ -57,7 +57,6 @@
                             postcode = idUser.privateFields.postcode,
                             county = idUser.privateFields.address4
                         )
-                        @fragments.form.marketingChoices(Some(idUser.marketingChoices))
 
                         @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()

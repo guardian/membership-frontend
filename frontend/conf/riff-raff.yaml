@@ -9,6 +9,7 @@ deployments:
         Recipe: xenial-membership
         AmigoStage: PROD
       amiParameter: ImageId
+      amiEncrypted: true
   frontend:
     type: autoscaling
     dependencies: [ami]

@@ -1,16 +1,16 @@
 package controllers
 
 import com.gu.zuora.soap.models.errors._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import play.api.libs.json.Json
 import play.api.mvc.Results.Forbidden
 
-trait PaymentGatewayErrorHandler extends LazyLogging {
+trait PaymentGatewayErrorHandler {
 
   def handlePaymentGatewayError(e: PaymentGatewayError, userId: String, tier: String, country: String = "") = {
 
     def handleError(code: String) = {
-      logger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\tcountry=$country")
+      SafeLogger.warn(s"User $userId could not become $tier member due to payment gateway failed transaction: \n\terror=$e \n\tuser=$userId \n\tcountry=$country")
       Forbidden(Json.obj("type" -> "PaymentGatewayError", "code" -> code))
     }
 

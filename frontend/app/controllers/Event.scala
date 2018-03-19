@@ -1,22 +1,20 @@
 package controllers
 
-import javax.inject.Inject
-
-import _root_.services.{EventbriteService, GuardianLiveEventService, MasterclassEventService}
+import _root_.services._
 import actions.ActionRefiners._
 import actions.Fallbacks._
-import actions.{OAuthActions, Subscriber, SubscriptionRequest}
+import actions.{ActionRefiners, CommonActions, OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
+import com.gu.googleauth.GoogleAuthConfig
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import model.EmbedSerializer._
 import model.Eventbrite.{EBCode, EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
 import model._
 import org.joda.time.format.ISODateTimeFormat
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
@@ -26,18 +24,44 @@ import utils.ReferralData
 import views.support.MembershipCompat._
 import views.support.PageInfo
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class Event @Inject()(override val wsClient: WSClient) extends Controller with MemberServiceProvider with OAuthActions with LazyLogging {
+class Event(
+  val wsClient: WSClient,
+  implicit val eventbriteService: EventbriteCollectiveServices,
+  implicit val touchpointBackends: TouchpointBackends,
+  touchpointActionRefiners: TouchpointActionRefiners,
+  touchpointCommonActions: TouchpointCommonActions,
+  implicit val parser: BodyParser[AnyContent],
+  override implicit val executionContext: ExecutionContext,
+  googleAuthConfig: GoogleAuthConfig,
+  commonActions: CommonActions,
+  actionRefiners: ActionRefiners,
+  override protected val controllerComponents: ControllerComponents
+) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
+  with BaseController
+  with MemberServiceProvider
+  {
 
-  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
+  import touchpointActionRefiners._
+  import touchpointCommonActions._
+  import actionRefiners.authenticated
+  import commonActions.{CachedAction, CorsPublicCachedAction, Cors, NoCacheAction}
+
+  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request, AnyContent] {
+
+    override def parser = Event.this.parser
+
+    override protected implicit def executionContext: ExecutionContext = Event.this.executionContext
+
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
-      EventbriteService.getEvent(eventId).map { event =>
+      eventbriteService.getEvent(eventId).map { event =>
         Timing.record(event.service.wsMetrics, "buy-action-invoked") {
           block(request)
         }
       }.getOrElse(Future.successful(NotFound))
     }
+
   }
 
   private def BuyAction(id: String, onUnauthenticated: RequestHeader => Result = notYetAMemberOn(_)) = NoCacheAction andThen recordBuyIntention(id) andThen
@@ -46,7 +70,7 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
   def details(slug: String) = CachedAction { implicit request =>
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
-      correctEvent <-(Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(EventbriteService.getEvent).headOption
+      correctEvent <-(Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(eventbriteService.getEvent).headOption
     } yield {
       if (slug == correctEvent.slug) {
         eventDetail(correctEvent)
@@ -67,7 +91,7 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
 
     val eventDataOpt = for {
       id <- EBEvent.slugToId(slug)
-      event <- EventbriteService.getEvent(id)
+      event <- eventbriteService.getEvent(id)
     } yield EmbedData(
       title = event.name.text,
       image = event.socialImgUrl,
@@ -88,7 +112,7 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
   def embedCard(slug: String) = CorsPublicCachedAction { implicit request =>
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
-      event <- EventbriteService.getEvent(id)
+      event <- eventbriteService.getEvent(id)
     } yield event
 
     Ok(eventOpt.fold {
@@ -109,7 +133,7 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
     Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
-  def buy(id: String): Action[AnyContent] = EventbriteService.getEvent(id) match {
+  def buy(id: String): Action[AnyContent] = eventbriteService.getEvent(id) match {
       case Some(event@(_: GuLiveEvent)) =>
         BuyAction(id).async { implicit request =>
           if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
@@ -122,7 +146,7 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
         }
       case _ =>
         // We seem to have a crawler(?) hitting the buy urls for past events
-        logger.info(s"User hit the buy url for event $id - neither a GuLiveEvent or Masterclass could be retrieved, returning 404...")
+        SafeLogger.info(s"User hit the buy url for event $id - neither a GuLiveEvent or Masterclass could be retrieved, returning 404...")
         CachedAction(NotFound)
     }
 
@@ -157,7 +181,7 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
-        event <- EventbriteService.getEvent(id)
+        event <- eventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
           val count = event.countComplimentaryTicketsInOrder(order)
@@ -176,17 +200,17 @@ class Event @Inject()(override val wsClient: WSClient) extends Controller with M
   }
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
-    EventbriteService.getEvent(id).map { event =>
+    eventbriteService.getEvent(id).map { event =>
       // only log a conversion if the user came from a membership event page
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
   }
 
   def preview(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-     EventbriteService.getPreviewEvent(id).map(eventDetail)
+    eventbriteService.getPreviewEvent(id).map(eventDetail)
   }
 
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   EventbriteService.getPreviewMasterclass(id).map(eventDetail)
+    eventbriteService.getPreviewMasterclass(id).map(eventDetail)
   }
 }

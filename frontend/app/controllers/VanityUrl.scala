@@ -1,14 +1,15 @@
 package controllers
 
-import play.api.mvc.Controller
+import actions.CommonActions
+import play.api.mvc.{BaseController, ControllerComponents}
 import com.netaporter.uri.dsl._
 import tracking.RedirectWithCampaignCodes.internalCampaignCode
 
-trait VanityUrl extends Controller {
+class VanityUrl(commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
+
+  import commonActions.CachedAction
 
   def redirect = CachedAction { implicit request =>
     MovedPermanently(routes.FrontPage.index().url ? (internalCampaignCode -> "pap_233874"))
   }
 }
-
-object VanityUrl extends VanityUrl

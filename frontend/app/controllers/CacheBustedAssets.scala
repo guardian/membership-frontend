@@ -1,10 +1,10 @@
 package controllers
 
-import play.api.mvc.{AnyContent, Action, Controller}
+import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
 import views.support.Asset
 
-object CacheBustedAssets extends Controller{
+class CacheBustedAssets(assets: Assets, override protected val controllerComponents: ControllerComponents) extends BaseController {
   def at(path: String): Action[AnyContent] =  {
-    controllers.Assets.at("/public", Asset.map(path), true)
+    assets.at("/public", Asset.map(path), true)
   }
 }

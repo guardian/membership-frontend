@@ -1,4 +1,4 @@
-define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
+define(['$', 'src/utils/user'], function ($, userUtil) {
     'use strict';
 
     var selectors = {
@@ -18,7 +18,7 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
 
     var enhanceWithTier = function (memberDetail) {
         if (memberDetail && memberDetail.benefits && memberDetail.benefits.discountedEventTickets) {
-            events.each(function(el) {
+            events.each(function(_, el) {
                 updateEventPricing(el);
             });
         }

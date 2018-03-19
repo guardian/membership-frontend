@@ -8,7 +8,7 @@ checkout form. The user can only continue if the previous section validates.
 // ----- Imports ----- //
 
 import * as payment from 'src/modules/payment';
-
+import formUtil from 'src/modules/form/helper/formUtil';
 
 // ----- Functions ----- //
 
@@ -111,7 +111,7 @@ function benefitsListeners (panels) {
 function nameAddressListeners (panels) {
 
 	panels.nameAddress.continue.addEventListener('click', () => {
-
+        formUtil.flush();
 		if (payment.validateForm()) {
 			closePanel(panels.nameAddress, true);
 			openPanel(panels.payment);

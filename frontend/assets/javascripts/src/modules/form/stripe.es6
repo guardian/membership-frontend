@@ -1,11 +1,10 @@
 import * as payment from 'src/modules/payment';
-import bean from 'bean'
-import $ from '$'
+import $ from '$';
 export function init() {
     let handler = window.StripeCheckout.configure(guardian.stripeCheckout);
     let success = false;
     const button = $('.js-stripe-checkout');
-    bean.on(window, 'popstate', handler.close);
+    window.addEventListener('popstate', handler.close);
     const amount = () => {
 
         let billingPeriod = guardian.membership.checkoutForm.billingPeriods[guardian.membership.checkoutForm.billingPeriod];
@@ -42,5 +41,5 @@ export function init() {
         e.preventDefault();
     };
 
-    bean.on(button[0], 'click', open);
+    button.on('click', open);
 }

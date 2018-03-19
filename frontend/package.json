@@ -12,7 +12,9 @@
     "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
     "test": "grunt validate && grunt karma",
-    "postinstall": "npm run bowerSetup"
+    "postinstall": "npm run bowerSetup",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "autoprefixer-core": "^6.0.1",
@@ -20,8 +22,6 @@
     "babel-loader": "^7.1.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
-    "bean": "^1.0.15",
-    "bonzo": "~2.0.0",
     "bower": "^1.8.2",
     "curl-amd": "~0.8.10",
     "domready": "^1.0.8",
@@ -37,12 +37,13 @@
     "grunt-karma": "^2.0.0",
     "grunt-postcss": "^0.9.0",
     "grunt-px-to-rem": "^0.4.0",
-    "grunt-sass": "^2.0.0",
+    "grunt-sass": "2.0.0",
     "grunt-svgmin": "^4.0.0",
-    "grunt-svgstore": "^1.0.0",
+    "grunt-svgstore": "1.0.0",
     "grunt-webpack": "^3.0.2",
     "gumshoejs": "^3.5.0",
     "jasmine-core": "^2.8.0",
+    "jquery": "^3.3.1",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",
@@ -55,21 +56,18 @@
     "mkdirp": "^0.5.1",
     "ophan-tracker-js": "^1.3.9",
     "phantomjs-prebuilt": "^2.1.15",
-    "qwery": "~4.0.0",
     "raven-js": "^3.19.1",
     "requirejs": "^2.3.5",
-    "reqwest": "^2.0.5",
     "respimage": "^1.4.2",
     "rimraf": "^2.6.2",
     "smooth-scroll": "^12.1.5",
+    "snyk": "^1.52.1",
     "text-loader": "0.0.1",
     "time-grunt": "^1.4.0",
     "url-search-params": "^0.10.0",
     "vinyl-fs": "^2.4.4",
-    "webpack": "~3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.5"
   },
-  "resolutions": {
-    "uglify-js": "2.8.29"
-  }
+  "snyk": true
 }

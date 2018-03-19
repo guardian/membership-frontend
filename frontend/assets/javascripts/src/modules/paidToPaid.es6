@@ -41,27 +41,28 @@ export function init() {
         ajax({
             type: 'json',
             url: window.location.pathname.replace('change', 'preview'),
-            data: {promoCode: PROMO_CODE.val()}
-        }).then(result => {
-            LOADER.removeClass('is-loading');
+            data: {promoCode: PROMO_CODE.val()},
+            success: function(result) {
+                LOADER.removeClass('is-loading');
 
-            if (result.error) {
-                FEEDBACK_CONTAINER.html(promoError({errorMessage: result.error}));
-                return;
+                if (result.error) {
+                    FEEDBACK_CONTAINER.html(promoError({errorMessage: result.error}));
+                    return;
+                }
+
+                let prices = result.summary ? {
+                    firstPayment: combineCurrency(result.summary.targetSummary.firstPayment),
+                    nextPayment: combineCurrency(result.summary.targetSummary.nextPayment)
+                } : NORMAL_PRICES;
+
+                FIRST_PAYMENT.text(prices.firstPayment.amount);
+                NEXT_PAYMENT.text(prices.nextPayment.amount);
+
+                let promoMessage = result.promotion ? promoTemplate(result.promotion) : '';
+                FEEDBACK_CONTAINER.html(promoMessage);
+                LOADER.removeClass('is-loading');
             }
-
-            let prices = result.summary ? {
-                firstPayment: combineCurrency(result.summary.targetSummary.firstPayment),
-                nextPayment: combineCurrency(result.summary.targetSummary.nextPayment)
-            } : NORMAL_PRICES;
-
-            FIRST_PAYMENT.text(prices.firstPayment.amount);
-            NEXT_PAYMENT.text(prices.nextPayment.amount);
-
-            let promoMessage = result.promotion ? promoTemplate(result.promotion) : '';
-            FEEDBACK_CONTAINER.html(promoMessage);
-            LOADER.removeClass('is-loading');
-        })
+        });
     }
 
     bean.on(PROMO_CODE[0], 'keyup', () => {

@@ -1,13 +1,14 @@
 package controllers
 
 import play.Logger
-import play.api.mvc.{Action, Controller}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.{Action, BaseController, ControllerComponents}
 
-object CachedAssets extends Controller {
+import scala.concurrent.ExecutionContext
+
+class CachedAssets(assets: Assets, implicit val ec: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   def at(path: String, file: String, aggressiveCaching: Boolean = false) = Action.async { request =>
-    controllers.Assets.at(path, file, aggressiveCaching).apply(request).recover {
+    assets.at(path, file, aggressiveCaching).apply(request).recover {
       case e: RuntimeException => {
         Logger.warn(s"Asset run time exception for path $path $file. Does this file exist?", e)
         Cached(NotFound)
@@ -18,7 +19,7 @@ object CachedAssets extends Controller {
   }
 
   def bookmarkletAt(path: String, file: String) = Action.async { request =>
-    controllers.Assets.at(path, file).apply(request).recover {
+    assets.at(path, file).apply(request).recover {
       case e: RuntimeException => {
         Logger.warn(s"Bookmarklet run time exception for path $path $file. Does this file exist?", e)
         Cached(NotFound)

@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import $ from 'src/utils/$';
+import $ from 'jquery'; //'src/utils/$';
 import {Raven} from 'src/modules/raven';
 
 

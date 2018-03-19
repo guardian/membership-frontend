@@ -1,16 +1,20 @@
 package controllers
 
+import actions.CommonActions
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import model.OrientatedImages
 import model.RichEvent.EventBrandCollection
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import views.support.{Asset, PageInfo}
 
-trait FrontPage extends Controller {
-  val liveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
+
+  import commonActions.CachedAction
+
+  val liveEvents = eventbriteService.guardianLiveEventService
+  val masterclassEvents = eventbriteService.masterclassEventService
 
   def index = CachedAction { implicit request =>
     implicit val countryGroup = UK
@@ -39,7 +43,7 @@ trait FrontPage extends Controller {
 
     Ok(views.html.index(
       heroImages,
-      TouchpointBackend.Normal.catalog,
+      touchpointBackends.Normal.catalog,
       pageImages,
       eventCollections))
   }
@@ -120,9 +124,4 @@ trait FrontPage extends Controller {
 
     Ok(views.html.welcome(PageInfo(title = "Welcome", url = request.path), slideShowImages))
   }
-}
-
-object FrontPage extends FrontPage {
-  val liveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

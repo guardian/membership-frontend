@@ -4,16 +4,16 @@ import com.gu.okhttp.RequestRunners
 import com.gu.paypal.PayPalConfig
 import com.netaporter.uri.QueryString
 import com.netaporter.uri.Uri.parseQuery
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import controllers.PayPal.{PayPalBillingDetails, Token}
 import okhttp3.{FormBody, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
+class PayPalService(apiConfig: PayPalConfig, implicit val executionContext: ExecutionContext) {
 
   val config = apiConfig
   // The parameters sent with every NVP request.
@@ -29,10 +29,10 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
     def msg(status: String) = s"PayPal: $status (NVPResponse: $response)"
 
     retrieveNVPParam(response, "ACK") match {
-      case "Success" => logger.info("Successful PayPal NVP request")
-      case "SuccessWithWarning" => logger.warn(msg("Warning"))
-      case "Failure" => logger.error(msg("Error"))
-      case "FailureWithWarning" => logger.error(msg("Error With Warning"))
+      case "Success" => SafeLogger.info("Successful PayPal NVP request")
+      case "SuccessWithWarning" => SafeLogger.warn(msg(s"PayPal NVP request succeeded with a warning $response"))
+      case "Failure" => SafeLogger.error(scrub"Error making PayPal NVP request $response")
+      case "FailureWithWarning" => SafeLogger.error(scrub"Error (with warning) making PayPal NVP request $response")
     }
 
   }
@@ -43,7 +43,7 @@ class PayPalService(apiConfig: PayPalConfig) extends LazyLogging {
     val responseBody = response.body().string()
 
     if (Config.stageDev)
-      logger.info("NVP response body = " + responseBody)
+      SafeLogger.info("NVP response body = " + responseBody)
 
     val parsedResponse = parseQuery(responseBody)
 

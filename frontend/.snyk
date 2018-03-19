@@ -1,0 +1,127 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:handlebars:20151207':
+    - grunt-svgstore > handlebars:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+  'npm:parsejson:20170908':
+    - karma > socket.io > socket.io-client > engine.io-client > parsejson:
+        reason: Only used during test runs not in production
+        expires: '2019-01-05T12:40:53.136Z'
+  'npm:qs:20170213':
+    - grunt-contrib-watch > tiny-lr > qs:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-watch > tiny-lr > body-parser > qs:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+  'npm:tunnel-agent:20170305':
+    - grunt-sass > node-sass > request > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-imagemin > imagemin-gifsicle > gifsicle > bin-wrapper > download > caw > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-imagemin > imagemin-jpegtran > jpegtran-bin > bin-build > download > caw > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-imagemin > imagemin-jpegtran > jpegtran-bin > bin-wrapper > download > caw > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-imagemin > imagemin-optipng > optipng-bin > bin-build > download > caw > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-imagemin > imagemin-optipng > optipng-bin > bin-wrapper > download > caw > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - grunt-contrib-imagemin > imagemin-gifsicle > gifsicle > bin-build > download > caw > tunnel-agent:
+        reason: Only used during build process not in production
+        expires: '2019-01-05T12:40:53.136Z'
+  'npm:ws:20171108':
+    - karma > socket.io > engine.io > ws:
+        reason: Only used during test runs not in production
+        expires: '2019-01-05T12:40:53.136Z'
+    - karma > socket.io > socket.io-client > engine.io-client > ws:
+        reason: Only used during test runs not in production
+        expires: '2019-01-05T12:40:53.136Z'
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - grunt-contrib-watch > tiny-lr > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+      engine.io > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > socket.io > socket.io-client > socket.io-parser > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+      watchpack > chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > socket.io > socket.io-parser > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+      chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > socket.io > socket.io-adapter > socket.io-parser > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+      engine.io-client > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > socket.io > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > engine.io > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-adapter > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-client > engine.io-client > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - webpack-dev-server > chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - webpack > watchpack > chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - grunt-contrib-watch > tiny-lr > body-parser > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-client > debug:
+        patched: '2017-12-06T12:36:33.827Z'
+  'npm:ms:20170412':
+    - grunt-contrib-watch > tiny-lr > body-parser > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+      engine.io > debug > ms:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+      engine.io-client > debug > ms:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > socket.io > socket.io-client > socket.io-parser > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-parser > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > engine.io > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-adapter > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-client > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - karma > socket.io > socket.io-client > engine.io-client > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+    - grunt-contrib-watch > tiny-lr > debug > ms:
+        patched: '2017-12-06T12:36:33.827Z'
+  'npm:uglify-js:20150824':
+    - grunt-svgstore > handlebars > uglify-js:
+        patched: '2017-12-06T12:36:33.827Z'
+  'npm:uglify-js:20151024':
+    - grunt-svgstore > handlebars > uglify-js:
+        patched: '2017-12-06T12:36:33.827Z'
+  'npm:tough-cookie:20170905':
+    - watchpack > chokidar > fsevents > node-pre-gyp > request > tough-cookie:
+        patched: '2017-12-06T16:39:29.589Z'
+    - webpack-dev-server > chokidar > fsevents > node-pre-gyp > request > tough-cookie:
+        patched: '2017-12-06T16:39:29.589Z'
+    - webpack > watchpack > chokidar > fsevents > node-pre-gyp > request > tough-cookie:
+        patched: '2017-12-06T16:39:29.589Z'
+    - chokidar > fsevents > node-pre-gyp > request > tough-cookie:
+        patched: '2017-12-06T16:39:29.589Z'
+    - karma > chokidar > fsevents > node-pre-gyp > request > tough-cookie:
+        patched: '2017-12-06T16:39:29.589Z'

@@ -44,7 +44,7 @@
         @if(showDescription) {
             <div class="package-promo__description copy">
                 <ul class="o-bulleted-list">
-                    @for(highlight <- if(chooseTier && plans.tier == Tier.patron) plans.tier.chooseTierPatron else highlightOverrides.fold(plans.tier.highlights(cg))(_.list) ) {
+                    @for(highlight <- if(chooseTier && plans.tier == Tier.patron) plans.tier.chooseTierPatron else highlightOverrides.fold(plans.tier.highlights(cg))(_.list.toList) ) {
                         <li>
                             @if(highlight.isNew) {
                                 @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))

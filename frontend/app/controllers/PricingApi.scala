@@ -5,11 +5,14 @@ import com.gu.i18n.Currency._
 import com.gu.memsub.subsv2.Catalog
 import com.gu.salesforce.PaidTier
 import play.api.libs.json.{JsArray, JsString, JsValue, Json, Writes}
-import play.api.mvc.Controller
-import services.TouchpointBackend
+import play.api.mvc.{BaseController, ControllerComponents}
+import services.{TouchpointBackend, TouchpointBackends}
 import views.support.{CountryWithCurrency, Pricing}
 import views.support.Pricing._
 import views.support.MembershipCompat._
+import javax.inject.{Inject, Singleton}
+
+import actions.CommonActions
 
 case class MembershipPlan(tier: PaidTier, prices: List[Pricing])
 
@@ -52,12 +55,13 @@ object PricingFormats {
   implicit val writes = Json.writes[MembershipPlanResponse]
 }
 
-object PricingApi extends Controller {
+class PricingApi(touchpointBackends: TouchpointBackends, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
+  import commonActions.CachedAction
   import PricingFormats._
   import views.support.Pricing._
 
-  val membersCatalog: Catalog = TouchpointBackend.Normal.catalog
+  lazy val membersCatalog: Catalog = touchpointBackends.Normal.catalog
 
   def currencies = CachedAction {
     Ok(Json.toJson(CountryWithCurrency.all))

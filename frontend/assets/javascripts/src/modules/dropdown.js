@@ -7,7 +7,7 @@
  *     <div id="js-foo" class="js-dropdown-menu is-hidden">all the foo (initially hidden)</div>
  *
  */
-define(['$', 'bean'], function ($, bean) {
+define(['$'], function ($) {
     'use strict';
 
     var DROPDOWN_CLASS = 'js-dropdown',
@@ -16,7 +16,7 @@ define(['$', 'bean'], function ($, bean) {
         DROPDOWN_DISABLED_CLASS = 'js-dropdown-disabled';
 
     function bindHandlers() {
-        bean.on(document, 'click', function(event) {
+        $(document).on('click', function(event) {
             var dropdown = closest(event.target, DROPDOWN_CLASS);
             var isHidden;
 
@@ -38,6 +38,7 @@ define(['$', 'bean'], function ($, bean) {
     }
 
     // bonzo doesn't provide this so had to write my own
+    // TODO: Now we've removed bonzo in favour of jQuery, we might use JQ's native function instead
     function closest(elem, className) {
         do {
             if ($(elem).hasClass(className)) {

@@ -1,5 +1,8 @@
 package services
 
+import java.util.concurrent.atomic.AtomicReference
+import java.util.function.UnaryOperator
+
 import akka.agent.Agent
 import com.gu.memsub.images.Grid
 import com.gu.memsub.images.Grid.{Export, GridObject, GridResult}
@@ -9,18 +12,17 @@ import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners.LoggingHttpClient
 import com.netaporter.uri.Uri
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
 import okhttp3.Request
 import play.api.libs.json.Json
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLogging {
-
+object GridService {
 
   val gridUrl: String = "https://media.gutools.co.uk/images/"
   val CropQueryParam = "crop"
@@ -37,10 +39,22 @@ object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLog
       } yield ImageIdWithCrop(imageId, crop)
   }
 
-  private lazy val agent = Agent[Map[ImageIdWithCrop, GridImage]](Map.empty)
+  // todo: remove once we upgrade to scala 2.12
+  implicit def unarayConverter[T](f: T => T) = new UnaryOperator[T] {
+    override def apply(t: T): T = f(t)
+  }
+}
+
+class GridService(executionContext: ExecutionContext) extends WebServiceHelper[GridObject, Grid.Error]()(executionContext) {
+
+  import GridService._
+
+  private implicit val ec = executionContext
+
+  private lazy val atomicReference = new AtomicReference[Map[ImageIdWithCrop, GridImage]](Map.empty)
 
   def getRequestedCrop(gridId: ImageIdWithCrop) : Future[Option[GridImage]] = {
-    val currentImageData = agent.get()
+    val currentImageData = atomicReference.get()
     if(currentImageData.contains(gridId)) Future.successful(currentImageData.get(gridId))
     else {
       getGrid(gridId).map { grid =>
@@ -50,18 +64,17 @@ object GridService extends WebServiceHelper[GridObject, Grid.Error] with LazyLog
           if export.assets.nonEmpty
         } yield {
           val image = GridImage(export.assets, grid.data.metadata, export.master)
-          agent send {
-            oldImageData =>
-              val newImageData = oldImageData + (gridId -> image)
-              logger.trace(s"Adding image $gridId to the event image map")
-              newImageData
-          }
+          atomicReference.updateAndGet({ oldImageData: Map[ImageIdWithCrop, GridImage] =>
+            val newImageData = oldImageData + (gridId -> image)
+            SafeLogger.debug(s"Adding image $gridId to the event image map")
+            newImageData
+          })
           image
         }
       }
     }
   }.recover { case e =>
-    logger.error(s"Error getting crop for $gridId", e)
+    SafeLogger.error(scrub"Error getting crop for $gridId", e)
     None
   } // We should return no image, rather than die
 

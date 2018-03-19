@@ -6,12 +6,11 @@ import com.gu.stripe.StripeService
 import com.gu.zuora
 import com.gu.zuora.api.RegionalStripeGateways
 import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
-import com.typesafe.scalalogging.LazyLogging
+import com.gu.monitoring.SafeLogger
 import forms.MemberForm.CommonPaymentForm
 import services.PayPalService
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
 
 /** An initialiser just takes a token from the Payment form and sends it on to the 3rd-party
@@ -23,20 +22,20 @@ trait PaymentMethodInitialiser[PMCommand <: zuora.soap.models.Commands.PaymentMe
   // at some point, the token may be more complicated, but right now it's always a string
   def extractTokenFrom(form: CommonPaymentForm): Option[String]
 
-  def initialiseWith(token: String, user: IdMinimalUser): Future[PMCommand]
+  def initialiseWith(token: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[PMCommand]
 
   def appliesToCountry(country: Country): Boolean
 }
 
 class StripeInitialiser(stripeService: StripeService) extends
-  PaymentMethodInitialiser[CreditCardReferenceTransaction] with LazyLogging {
+  PaymentMethodInitialiser[CreditCardReferenceTransaction] {
 
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.stripeToken
 
-  def initialiseWith(stripeToken: String, user: IdMinimalUser): Future[CreditCardReferenceTransaction] = {
+  def initialiseWith(stripeToken: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[CreditCardReferenceTransaction] = {
     for {
       stripeCustomer <- stripeService.Customer.create(user.id, stripeToken).andThen {
-        case Failure(e) => logger.warn(s"Could not create Stripe customer for user ${user.id}", e)
+        case Failure(e) => SafeLogger.warn(s"Could not create Stripe customer for user ${user.id}", e)
       }
     } yield {
       val card = stripeCustomer.card
@@ -51,7 +50,7 @@ class PayPalInitialiser(payPalService: PayPalService) extends PaymentMethodIniti
 
   def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.payPalBaid
 
-  def initialiseWith(baid: String, user: IdMinimalUser): Future[PayPalReferenceTransaction] = for {
+  def initialiseWith(baid: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[PayPalReferenceTransaction] = for {
     payPalEmail <- payPalService.retrieveEmail(baid)
   } yield PayPalReferenceTransaction(baid, payPalEmail)
 

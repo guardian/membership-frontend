@@ -9,7 +9,8 @@ import com.netaporter.uri.dsl._
 import configuration.Config
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
-import play.api.Logger
+import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -288,7 +289,7 @@ object Eventbrite {
       uri <- Try(Uri.parse(m.group(1))) match {
         case Success(uri) => Some(uri)
         case Failure(e) =>
-          Logger.error(s"Event $id - can't parse main-image url from text '${m.matched}'", e)
+          SafeLogger.error(scrub"Event $id - can't parse main-image url from text '${m.matched}'", e)
           None
       }
     } yield uri
@@ -373,7 +374,7 @@ object EventbriteDeserializer {
   // Remove any leading/trailing spaces left by the events team
   implicit val readsTrimString = Reads[String] {
     case JsString(s) => JsSuccess(s.trim)
-    case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jsstring"))))
+    case _ => JsError(JsPath() -> JsonValidationError("error.expected.jsstring"))
   }
 
   implicit val instant: Reads[Instant] = JsPath.read[String].map(convertInstantText)
@@ -385,7 +386,16 @@ object EventbriteDeserializer {
 
   implicit val ebError = Json.reads[EBError]
   implicit val ebLocation = Json.reads[EBAddress]
-  implicit val ebVenue = Json.reads[EBVenue]
+
+  implicit val ebVenue = new Reads[EBVenue] {
+
+    private val reader = Json.reads[EBVenue]
+
+    override def reads(json: JsValue) = json match {
+      case JsNull => JsSuccess(EBVenue(None, None))
+      case _ => reader.reads(json)
+    }
+  }
 
   implicit val ebRichText: Reads[EBRichText] = (
     (JsPath \ "text").readNullable[String].map(_.getOrElse("")) and

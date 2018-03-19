@@ -1,22 +1,31 @@
 package controllers
 
+import actions.CommonActions
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.CountryGroup._
 import configuration.CopyConfig
 import model.RichEvent.MasterclassEvent._
 import model.RichEvent._
-import play.api.mvc.Controller
+import play.api.mvc.{BaseController, ControllerComponents}
 import services._
 import views.support.PageInfo
-import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-trait WhatsOn extends Controller {
+class WhatsOn(
+  eventbriteService: EventbriteCollectiveServices,
+  touchpointBackends: TouchpointBackends,
+  commonActions: CommonActions,
+  implicit val executionContext: ExecutionContext,
+  override protected val controllerComponents: ControllerComponents
+) extends BaseController {
+
+  import commonActions.CachedAction
+
   implicit val countryGroup = UK
 
-  val guLiveEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+  lazy val guLiveEvents = eventbriteService.guardianLiveEventService
+  lazy val masterclassEvents = eventbriteService.masterclassEventService
 
   private def allEvents = guLiveEvents.events
 
@@ -28,8 +37,8 @@ trait WhatsOn extends Controller {
     getCitiesWithCount(allEvents).map(FilterItem.tupled)
   }
 
-  private val normalCatalog =
-    Future.successful(TouchpointBackend.Normal.catalogService.unsafeCatalog)
+  private lazy val normalCatalog =
+    Future.successful(touchpointBackends.Normal.catalogService.unsafeCatalog)
 
   def list = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
@@ -102,9 +111,4 @@ trait WhatsOn extends Controller {
       Ok(views.html.event.masterclassesList(c, pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
     )
   }
-}
-
-object WhatsOn extends WhatsOn {
-  val guLiveEvents = GuardianLiveEventService
-  val masterclassEvents = MasterclassEventService
 }

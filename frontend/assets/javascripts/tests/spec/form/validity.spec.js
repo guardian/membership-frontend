@@ -39,7 +39,7 @@ define([
             });
 
             it('with value', function () {
-                requiredElem.value = 'Henry Dorsett Case'
+                requiredElem.value = 'Henry Dorsett Case';
 
                 expect(validity.testValidity(requiredElem)).toBe(true);
             });

@@ -45,7 +45,6 @@
  - formUtil (a singleton to provide an object for useful form properties/methods)
  - elem (form dom element)
  - elems (form elements to validate)
- - hasPayment (method to tell us if the form has payment)
  - errs (global form errors array)
  - flush (a method to flush the elem and elems on the form - used when validation is added/removed)
  - loader (loader and processing message work)
@@ -79,12 +78,6 @@ define([
             submitButton.init();
             ongoingCardPayments.init();
             billingPeriodChoice.init();
-
-            if (form.hasPayment) {
-                curl('js!stripe').then(function () {
-                    payment.init();
-                });
-            }
 
             if (form.hasPaypal) {
                 curl('js!paypal').then(function () {
