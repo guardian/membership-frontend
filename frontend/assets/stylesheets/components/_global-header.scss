@@ -92,6 +92,9 @@ $global-header-height-mobile: 116px;
 .live-header__inner ~ .global-navigation {
     .global-navigation__link {
         color: #000;
+        @include mq($until: tablet) {
+            color: $white;
+        }
     }
 }
 
