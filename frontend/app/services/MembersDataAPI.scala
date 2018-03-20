@@ -8,7 +8,7 @@ import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners._
 import com.gu.salesforce.Tier
 import configuration.Config
-import monitoring.MembersDataAPIMetrics
+import monitoring.DummyMetrics
 import okhttp3.Request
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
@@ -18,6 +18,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import views.support.MembershipCompat._
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -66,7 +67,7 @@ class MembersDataAPI(executionContext: ExecutionContext) {
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
       req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     }
-    override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(MembersDataAPIMetrics)
+    override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(DummyMetrics)
   }
 
   private case class BehaviourHelper(accessCredentials: AccessCredentials.Cookies) extends WebServiceHelper[Behaviour, ApiError] {
@@ -74,7 +75,7 @@ class MembersDataAPI(executionContext: ExecutionContext) {
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
       req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     }
-    override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(MembersDataAPIMetrics)
+    override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(DummyMetrics)
   }
 
   object Service  {

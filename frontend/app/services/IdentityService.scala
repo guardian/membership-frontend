@@ -13,7 +13,6 @@ import controllers.IdentityRequest
 import dispatch.Defaults.timer
 import dispatch._
 import forms.MemberForm._
-import monitoring.IdentityApiMetrics
 import com.gu.monitoring.SafeLogger
 import play.api.http.Status
 import play.api.libs.json.Json.toJson
@@ -173,11 +172,9 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"
     val url = s"${Config.idApiUrl}/$endpoint"
-    Timing.record(IdentityApiMetrics, "get-user-password-exists") {
-      wsClient.url(url).withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1000 milli).get().map { response =>
-        recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
-        (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
-      }
+    wsClient.url(url).withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1000 milli).get().map { response =>
+      recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
+      (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
     }
   }
 
@@ -201,7 +198,7 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
   }
 
   private def execute[A](endpoint: String, metricName: String, func: (WSResponse) => Either[String, A], requestHolder: WSRequest): EitherT[Future, String, A] = for {
-    r <- EitherT.right(Timing.record(IdentityApiMetrics, metricName)(requestHolder.execute()))
+    r <- EitherT.right(requestHolder.execute())
     _ = recordAndLogResponse(r.status, s"${requestHolder.method} $metricName", endpoint)
     response <- EitherT.fromEither[Future](Either.cond((r.status / 100) == 2, right = r, left = s"Identity API error: ${requestHolder.method} ${Config.idApiUrl}/$endpoint STATUS ${r.status}"))
     result <- EitherT.fromEither[Future](func(response))
@@ -209,7 +206,6 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
     SafeLogger.info(s"$responseMethod response $status for endpoint $endpoint")
-    IdentityApiMetrics.putResponseCode(status, responseMethod)
   }
 }
 

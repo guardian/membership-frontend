@@ -42,6 +42,8 @@ object Config {
 
   val idMember = "clientId" -> "members"
 
+  val sendJVMMetrics = Try { config.getBoolean("send-jvm-metrics") }.toOption.contains(true)
+
   private val idSkipConfirmation: (String, String) = "skipConfirmation" -> "true"
 
   def googleSigninUrl = oauthWebAppSigninUrl("google")(_)

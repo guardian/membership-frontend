@@ -1,15 +1,21 @@
 package monitoring
 
-import com.gu.monitoring.StatusMetrics
+import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 
-object IdentityApiMetrics extends Metrics with StatusMetrics {
-  val service = "Identity API"
-}
+object DummyMetrics extends ServiceMetrics("", "", "") with Metrics with StatusMetrics {
+  override val service = "Dummy Service"
 
-object GridApiMetrics extends Metrics with StatusMetrics {
-  val service = "Grid API"
-}
+  override val stage = ""
 
-object CASMetrics extends Metrics with StatusMetrics {
-  val service = "CAS"
+  override val application = ""
+
+  override def putResponseCode(status: Int, responseMethod: String): Unit = {}
+
+  override def recordRequest() { }
+
+  override def recordResponse(status: Int, responseMethod: String) { }
+
+  override def recordAuthenticationError() { }
+
+  override def recordError() {}
 }

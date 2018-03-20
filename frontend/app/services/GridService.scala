@@ -16,7 +16,7 @@ import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import model.RichEvent.GridImage
-import monitoring.GridApiMetrics
+import monitoring.DummyMetrics
 import okhttp3.Request
 import play.api.libs.json.Json
 
@@ -87,7 +87,7 @@ class GridService(executionContext: ExecutionContext) extends WebServiceHelper[G
 
   override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader("X-Gu-Media-Key", Config.gridConfig.key)
 
-  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(GridApiMetrics)
+  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(DummyMetrics)
 }
 
 case class GridConfig(apiUrl: String, key: String)
