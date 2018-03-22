@@ -77,7 +77,8 @@ object TouchpointBackend {
 
     val pids = Config.productIds(restBackendConfig.envName)
 
-    val newCatalogService = new subsv2.services.CatalogService[Future](pids, simpleRestClient, Await.result(_, 10.seconds), restBackendConfig.envName)
+    val catalogRestClient: SimpleClient[Future] = new SimpleClient[Future](restBackendConfig, RequestRunners.configurableFutureRunner(60.seconds))
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, catalogRestClient, Await.result(_, 60.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.toList.mkString}"); Map()}, _.map))
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraSoapService.getAccountIds)
 
