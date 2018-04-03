@@ -60,10 +60,12 @@ $global-header-height-mobile: 116px;
     }
 
     .global-header__logo__image {
-        height: 40px;
+        height: 50px;
+        width: 151px;
 
-        @include mq($until: desktop) {
-            height: 30px;
+        @include mq($from: desktop) {
+            height: 85px;
+            width: 256px;
         }
     }
 
@@ -77,14 +79,12 @@ $global-header-height-mobile: 116px;
     background-position: center;
 
     .global-header__logo__image {
-        height: 40px;
-    }
+        height: 50px;
+        width: 97px;
 
-    .global-header__logo__image {
-        height: 40px;
-
-        @include mq($until: desktop) {
-            height: 30px;
+        @include mq($from: desktop) {
+            height: 85px;
+            width: 165px;
         }
     }
 }
