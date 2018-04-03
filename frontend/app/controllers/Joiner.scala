@@ -245,6 +245,7 @@ class Joiner(
 
   def joinPaid(tier: PaidTier) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold({ formWithErrors =>
+      SafeLogger.info(s"There was an error in the form submitted to join-paid: ${formWithErrors.errorsAsJson}")
       Future.successful(BadRequest(formWithErrors.errorsAsJson))
     },
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))))
