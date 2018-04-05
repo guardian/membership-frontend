@@ -101,7 +101,7 @@ define(['src/modules/raven'],function(raven) {
 
     function init() {
         if (playerEls.length) {
-            curl(['js!//www.youtube.com/iframe_api?noext']);
+            // curl(['js!//www.youtube.com/iframe_api?noext']);
         }
     }
 

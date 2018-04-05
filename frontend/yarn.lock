@@ -1598,10 +1598,6 @@ cssom@0.3.x, "cssom@>= 0.3.0 < 0.4.0":
   dependencies:
     cssom "0.3.x"
 
-curl-amd@~0.8.10:
-  version "0.8.12"
-  resolved "https://registry.yarnpkg.com/curl-amd/-/curl-amd-0.8.12.tgz#e3912ecf6bd83e782aef91610da05c89425ae7ed"
-
 currently-unhandled@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"

@@ -80,17 +80,17 @@ define([
             billingPeriodChoice.init();
 
             if (form.hasPaypal) {
-                curl('js!paypal').then(function () {
-                    paypal.init();
-                });
+                // curl('js!paypal').then(function () {
+                //     paypal.init();
+                // });
             }
 
             if (form.hasStripeCheckout) {
 
-                curl('js!stripeCheckout')
-                    .then(function () {
-                        stripe.init();
-                    });
+                // curl('js!stripeCheckout')
+                //     .then(function () {
+                //         stripe.init();
+                //     });
             }
 
             if (form.hasAccordion){
