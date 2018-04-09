@@ -1,13 +1,16 @@
 /* global YT */
-define(['src/modules/raven'],function(raven) {
-    'use strict';
 
-    var SELECTOR_PLAYER = '.js-video';
-    var SELECTOR_PLAYER_IFRAME = '.js-video__iframe';
-    var SELECTOR_PLAYER_OVERLAY = '.js-video__overlay';
-    var CLASSNAME_IS_PLAYING = 'is-playing';
+import { loadScript } from 'src/utils/loadScript';
+import { raven } from 'src/modules/raven';
 
-    var playerEls = document.querySelectorAll(SELECTOR_PLAYER);
+'use strict';
+
+const SELECTOR_PLAYER = '.js-video';
+const SELECTOR_PLAYER_IFRAME = '.js-video__iframe';
+const SELECTOR_PLAYER_OVERLAY = '.js-video__overlay';
+const CLASSNAME_IS_PLAYING = 'is-playing';
+
+const playerEls = document.querySelectorAll(SELECTOR_PLAYER);
 
     // Adds a class to an element, backwards compat for IE.
     function addClass (elem, newClass) {
@@ -101,12 +104,8 @@ define(['src/modules/raven'],function(raven) {
 
     function init() {
         if (playerEls.length) {
-            // curl(['js!//www.youtube.com/iframe_api?noext']);
+            loadScript('//www.youtube.com/iframe_api?noext', {});
         }
     }
 
-    return {
-        init: init
-    };
-
-});
+export { init };
