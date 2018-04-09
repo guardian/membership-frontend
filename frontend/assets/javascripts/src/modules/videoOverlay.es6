@@ -3,8 +3,6 @@
 import { loadScript } from 'src/utils/loadScript';
 import { raven } from 'src/modules/raven';
 
-'use strict';
-
 const SELECTOR_PLAYER = '.js-video';
 const SELECTOR_PLAYER_IFRAME = '.js-video__iframe';
 const SELECTOR_PLAYER_OVERLAY = '.js-video__overlay';
@@ -102,10 +100,8 @@ function playerReady(player, playerApi, playerOverlay, autoplay) {
 
 }
 
-function init() {
+export function init() {
     if (playerEls.length) {
         loadScript('//www.youtube.com/iframe_api?noext', {});
     }
 }
-
-export { init };
