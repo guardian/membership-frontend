@@ -76,13 +76,13 @@ export function init() {
         billingPeriodChoice.init();
 
         if (form.hasPaypal) {
-            loadScript('//www.paypalobjects.com/api/checkout.js', {}).then(function () {
+            loadScript(sideLoad.paths.paypal, {}).then(function () {
                 paypalInit();
             });
         }
 
         if (form.hasStripeCheckout) {
-            loadScript('//checkout.stripe.com/checkout.js', {})
+            loadScript(sideLoad.paths.stripeCheckout, {})
                 .then(function () {
                     stripeInit();
                 });
