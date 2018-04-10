@@ -102,6 +102,6 @@ function playerReady(player, playerApi, playerOverlay, autoplay) {
 
 export function init() {
     if (playerEls.length) {
-        loadScript('//www.youtube.com/iframe_api?noext', {});
+        loadScript(sideLoad.paths.youTubeApi, {});
     }
 }
