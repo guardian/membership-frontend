@@ -4,14 +4,14 @@ define([
     'src/modules/analytics/ga',
     'src/modules/analytics/krux',
     'src/modules/analytics/facebook',
-    //'src/modules/analytics/uet',
+    'src/modules/analytics/uet',
     'src/modules/analytics/campaignCode'
 ], function (
     cookie,
     ga,
     krux,
     facebook,
-    //uet,
+    uet,
     campaignCode
 ) {
     'use strict';
@@ -34,7 +34,7 @@ define([
 
     function setupAnalytics() {
         ga.init();
-        //uet.init();
+        uet.init();
     }
 
     function setupThirdParties() {
