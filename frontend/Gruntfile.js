@@ -138,12 +138,6 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
-            curl: {
-                src: 'node_modules/curl-amd/dist/curl-with-js-and-domReady/curl.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/curl/',
-                expand: true,
-                flatten: true
-            },
             uet: {
                 src: '<%= dirs.assets.javascripts %>/lib/analytics/uet.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/uet/',
@@ -370,7 +364,6 @@ module.exports = function (grunt) {
             'clean:js',
             'webpack',
             'copy:polyfills',
-            'copy:curl',
             'copy:uet'
         ]);
     });

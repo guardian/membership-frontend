@@ -51,61 +51,52 @@
  - serializer (serialize the form inputs into a data object for sending to stripe)
  */
 
-define([
-    'src/modules/form/validation',
-    'src/modules/form/helper/formUtil',
-    'src/modules/form/payment',
-    'src/modules/form/address',
-    'src/modules/form/options',
-    'src/modules/form/submitButton',
-    'src/modules/form/ongoingCardPayments',
-    'src/modules/form/billingPeriodChoice',
-    'src/modules/form/paypal',
-    'src/modules/form/stripe',
-    'src/modules/form/accordion',
-    'src/modules/form/validation/existEmail'
-], function (validation, form, payment, address, options, submitButton,
-             ongoingCardPayments, billingPeriodChoice, paypal,
-             stripe, accordion, existEmail) {
-    'use strict';
+import validation from 'src/modules/form/validation';
+import form from 'src/modules/form/helper/formUtil';
+// import payment from 'src/modules/form/payment'; // TODO Can this be deleted?
+import address from 'src/modules/form/address';
+import options from 'src/modules/form/options';
+import submitButton from 'src/modules/form/submitButton';
+import ongoingCardPayments from 'src/modules/form/ongoingCardPayments';
+import billingPeriodChoice from 'src/modules/form/billingPeriodChoice';
+import { init as paypalInit } from 'src/modules/form/paypal';
+import { init as stripeInit } from 'src/modules/form/stripe';
+import { init as accordionInit } from 'src/modules/form/accordion';
+import { init as existEmailInit } from 'src/modules/form/validation/existEmail';
+import { loadScript } from 'src/utils/loadScript';
 
-    var init = function () {
+export function init() {
 
-        if (typeof form.elems != 'undefined') {
-            validation.init();
-            address.init();
-            options.init();
-            submitButton.init();
-            ongoingCardPayments.init();
-            billingPeriodChoice.init();
+    if (typeof form.elems != 'undefined') {
+        validation.init();
+        address.init();
+        options.init();
+        submitButton.init();
+        ongoingCardPayments.init();
+        billingPeriodChoice.init();
 
-            if (form.hasPaypal) {
-                curl('js!paypal').then(function () {
-                    paypal.init();
-                });
-            }
-
-            if (form.hasStripeCheckout) {
-
-                curl('js!stripeCheckout')
-                    .then(function () {
-                        stripe.init();
-                    });
-            }
-
-            if (form.hasAccordion){
-                accordion.init();
-            }
-
-            if (form.hasEmailInput){
-                existEmail.init();
-            }
-
-            form.attachOphanPageviewId();
+        if (form.hasPaypal) {
+            loadScript(sideLoad.paths.paypal, {}).then(function () {
+                paypalInit();
+            });
         }
-    };
 
-    return {
-        init: init
-    };
-});
+        if (form.hasStripeCheckout) {
+            loadScript(sideLoad.paths.stripeCheckout, {})
+                .then(function () {
+                    stripeInit();
+                });
+        }
+
+        if (form.hasAccordion){
+            accordionInit();
+        }
+
+        if (form.hasEmailInput){
+            existEmailInit();
+        }
+
+        form.attachOphanPageviewId();
+    }
+}
+
