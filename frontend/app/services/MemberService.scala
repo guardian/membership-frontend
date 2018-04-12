@@ -507,7 +507,7 @@ class MemberService(
     val paymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
     val stripeService = stripeServicesByPaymentGateway.getOrElse(paymentGateway, ukStripeService)
     for {
-      customer <- stripeService.Customer.create(contact.identityId, stripeToken)
+      customer <- stripeService.Customer.create(stripeToken)
       sub <- subscriptionService.current[SubscriptionPlan.Member](contact).map(_.head)
       result <- zuoraService.createCreditCardPaymentMethod(sub.accountId, customer, stripeService.paymentGateway, None)
     } yield result

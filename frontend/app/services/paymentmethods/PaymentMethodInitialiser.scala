@@ -34,7 +34,7 @@ class StripeInitialiser(stripeService: StripeService) extends
 
   def initialiseWith(stripeToken: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[CreditCardReferenceTransaction] = {
     for {
-      stripeCustomer <- stripeService.Customer.create(user.id, stripeToken).andThen {
+      stripeCustomer <- stripeService.Customer.create(stripeToken).andThen {
         case Failure(e) => SafeLogger.warn(s"Could not create Stripe customer for user ${user.id}", e)
       }
     } yield {
