@@ -174,16 +174,6 @@ class Joiner(
       for (identityUser <- identityUserOpt) {
         SafeLogger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")}")
       }
-
-      tier match {
-        case t: Tier.Supporter => for (user <- userOpt) {
-          membersDataAPI.Service.upsertBehaviour(
-            user,
-            activity = Some("enterPaidDetails.show"),
-            note = Some(t.name))
-        }
-        case _ =>
-      }
       val plans = catalog.findPaid(tier)
       val supportedCurrencies = plans.allPricing.map(_.currency).toSet
       val pageInfo = PageInfo(
@@ -299,18 +289,15 @@ class Joiner(
         case error: Stripe.Error =>
           salesforceService.metrics.putFailSignUpStripe(tier)
           SafeLogger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
-          setBehaviourNote(tier.name, error.code, userOpt)
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
           salesforceService.metrics.putFailSignUpGatewayError(tier)
-          setBehaviourNote(tier.name, Some(error.code), userOpt)
           handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
           SafeLogger.error(scrub"${s"User id=${userOpt.map(_.id).mkString}"} could not become ${tier.name} member", error)
-          setBehaviourNote(tier.name, Some("card_error"), userOpt)
           Forbidden
       }
     }
@@ -339,8 +326,6 @@ class Joiner(
       email <- emailFromZuora
     } yield {
       tier match {
-        case t: Tier.Supporter if !upgrade => {salesforceService.metrics.putThankYou(tier)
-          membersDataAPI.Service.removeBehaviour(request.user)}
         case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
@@ -361,11 +346,5 @@ class Joiner(
   }
 
   def thankyouStaff = thankyou(Tier.partner)
-
-  private def setBehaviourNote(tier: String, errorCode: Option[String], userOpt: Option[AuthenticatedIdUser]) = for (user <- userOpt) {
-    if (tier.toLowerCase == "supporter") {
-      membersDataAPI.Service.upsertBehaviour(user, note = errorCode)
-    }
-  }
 
 }
