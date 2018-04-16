@@ -61,7 +61,6 @@ class MembersDataAPI(executionContext: ExecutionContext) {
   }
 
   object Service  {
-
     def checkMatchesResolvedMemberIn(memberRequest: SubReqWithSub[_]) = memberRequest.user.credentials match {
       case cookies: AccessCredentials.Cookies =>
         getAttributes(cookies).onComplete {
