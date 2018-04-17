@@ -152,7 +152,6 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       enterDetails.payPal
 
       Then("the PayPal Express Checkout mini-browser should display")
-      enterDetails.switchToPayPal
       assert(enterDetails.payPalCheckoutHasLoaded)
 
       When("Users fill in their PayPal credentials")
