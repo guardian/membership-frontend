@@ -149,6 +149,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
     // Fills in the sandbox user credentials.
     def fillIn() = {
+      setValueSlowly(emailInput, Config.paypalBuyerEmail)
       if (pageHasElement(nextButton)) {
         clickNext()
       }
