@@ -2,7 +2,6 @@ package acceptance.pages
 
 import acceptance.util.{Browser, Config, TestUser}
 import Config.baseUrl
-import org.openqa.selenium.support.ui.ExpectedConditions
 import org.scalatest.selenium.Page
 
 case class EnterDetails(val testUser: TestUser) extends Page with Browser {
@@ -50,10 +49,9 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
   def switchToPayPal() = {
     switchWindow
-    switchFrame(PayPalCheckout.container)
   }
 
-  def payPalCheckoutHasLoaded(): Boolean = pageHasElement(PayPalCheckout.loginButton)
+  def payPalCheckoutHasLoaded(): Boolean = pageHasElement(PayPalCheckout.emailInput)
 
   def payPalFillInDetails() = PayPalCheckout.fillIn
 
@@ -143,6 +141,7 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
     val container = name("injectedUl")
     val loginButton = name("btnLogin")
+    val nextButton = name("btnNext")
     val emailInput = name("login_email")
     val passwordInput = name("login_password")
     val agreeAndPay = id("confirmButtonTop")
@@ -150,11 +149,16 @@ case class EnterDetails(val testUser: TestUser) extends Page with Browser {
 
     // Fills in the sandbox user credentials.
     def fillIn() = {
-
       setValueSlowly(emailInput, Config.paypalBuyerEmail)
-      setValueSlowly(passwordInput, Config.paypalBuyerPassword)
-
+      if (pageHasElement(nextButton)) {
+        clickNext()
+      }
+      if (pageHasElement(loginButton)) {
+        setValueSlowly(passwordInput, Config.paypalBuyerPassword)
+      }
     }
+
+    def clickNext(): Unit = clickOn(nextButton)
 
     def logIn() = clickOn(loginButton)
 
