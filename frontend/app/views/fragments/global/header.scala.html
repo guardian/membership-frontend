@@ -1,5 +1,5 @@
 @import model.Header
-@import model.Header.{SimpleHeader, BundlesHeader, GuardianHeader, MasterClassesHeader, LiveHeader}
+@import model.Header.{SimpleHeader, BundlesHeader, GuardianHeader, MasterClassesHeader, LiveHeader, PatronsHeader}
 @import model.SVG.Logos
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
@@ -16,6 +16,9 @@
     }
     case LiveHeader => {
         @fragments.global.defaultHeader(pageInfo, countryGroup, "live-header__inner", Logos.guardianLiveHeader)
+    }
+    case PatronsHeader => {
+        @fragments.global.defaultHeader(pageInfo, countryGroup, "patrons-header__inner", Logos.guardianPatronsHeader)
     }
     case _ => { @fragments.global.defaultHeader(pageInfo, countryGroup) }
 }

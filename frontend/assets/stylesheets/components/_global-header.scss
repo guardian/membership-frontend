@@ -41,6 +41,18 @@ $global-header-height-mobile: 116px;
         }
     }
 
+    .nav-control__item--last {
+        .control__item {
+            &:first-child {
+                width: 36px;
+                height: 36px;
+                background-image: url('');
+                background-repeat: no-repeat;
+                background-size: 100%;
+            }
+        }
+    }
+
 }
 
 .master-classes-header__inner {
@@ -95,6 +107,42 @@ $global-header-height-mobile: 116px;
         @include mq($until: tablet) {
             color: $white;
         }
+    }
+}
+
+.patrons-header__inner {
+    background-image: none;
+    background-color: #4f524a;
+
+    .global-navigation__link {
+        color: white;
+    }
+    .global-header__logo__image {
+        height: 50px;
+        width: 97px;
+
+        @include mq($from: desktop) {
+            height: 85px;
+            width: 165px;
+        }
+    }
+
+    .global-brandbar {
+        background-image: none;
+        background-color: #4f524a;
+    }
+
+    .control__info {
+        color: white;
+    }
+
+    .icon-holder {
+        border-color: white;
+        color: white;
+    }
+
+    .icon--g-mark-link {
+        filter: invert(1);
     }
 }
 

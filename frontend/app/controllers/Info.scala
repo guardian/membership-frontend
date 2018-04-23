@@ -178,6 +178,60 @@ class Info(
     )
   }
 
+  def patron2018_1() = CachedAndOutageProtected { implicit request =>
+    implicit val countryGroup = UK
+
+    val pageInfo = PageInfo(
+      title = "Become a Patron",
+      url = request.path,
+      description = Some("The support of Patrons plays a key part in ensuring that the Guardian can stand witness to the best and the worst in that world, without interference.")
+    )
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name = Some("intro"),
+        altText = Some("Become a Patron"),
+        availableImages = ResponsiveImageGenerator(
+          id = "359f92848f978e58ff1fcee87c39d237b554b036/0_877_3569_2141",
+          sizes = List(200, 1000, 500)
+        )
+      )
+    )
+
+    Ok(views.html.info.patron2018_1(
+      patronPlans = touchpointBackends.Normal.catalog.patron,
+      pageInfo = pageInfo,
+      countryGroup = UK,
+      pageImages = pageImages)
+    )
+  }
+
+  def patron2018_2() = CachedAndOutageProtected { implicit request =>
+    implicit val countryGroup = UK
+
+    val pageInfo = PageInfo(
+      title = "Become a Patron",
+      url = request.path,
+      description = Some("The support of Patrons plays a key part in ensuring that the Guardian can stand witness to the best and the worst in that world, without interference.")
+    )
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name = Some("intro"),
+        altText = Some("Become a Patron"),
+        availableImages = ResponsiveImageGenerator(
+          id = "359f92848f978e58ff1fcee87c39d237b554b036/0_877_3569_2141",
+          sizes = List(2000, 1000, 500)
+        )
+      )
+    )
+
+    Ok(views.html.info.patron2018_2(
+      patronPlans = touchpointBackends.Normal.catalog.patron,
+      pageInfo = pageInfo,
+      countryGroup = UK,
+      pageImages = pageImages)
+    )
+  }
+
   def offersAndCompetitions = CachedAction { implicit request =>
     implicit val countryGroup = UK
 

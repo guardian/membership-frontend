@@ -1,0 +1,38 @@
+@import com.gu.i18n.CountryGroup
+
+@import model.Header.PatronsHeader
+@import com.gu.memsub.Current
+@import views.support.{Asset, PageInfo, PaidPlans}
+@import com.gu.salesforce.Tier
+@import com.gu.memsub.Benefit
+
+@import com.gu.memsub.subsv2.PaidMembershipPlans
+@import com.gu.memsub.subsv2.CatalogPlan
+@(
+    patronPlans: PaidMembershipPlans[Benefit.Patron.type],
+    pageInfo: PageInfo,
+    countryGroup: CountryGroup,
+    pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup]
+)
+
+@main("Patrons", pageInfo=pageInfo, header = PatronsHeader) {
+
+    @* ===== About Patronage ===== *@
+    @for(img <- pageImages.find(_.name.contains("intro"))) {
+        <div class="page-slice l-constrained tier-page--patron">
+            @fragments.promos.promoPrimary(title="Become a Patron", img=img, isLead=true, toneClass=Some("tone-trans-white")) {
+                <div class="text-feature">
+                    <p>Guardian Patrons are people who passionately believe in our values and are happy to invest in powerful, committed journalism.</p>
+                    <p>They understand that it costs money to investigate the truth, seek out a full and balanced range of opinion, and hold those in power to account.</p>
+                    <p>They value the fact that the Guardian has no proprietor, so our editor has total independence.</p>
+                </div>
+                @fragments.tier.packagePromoMinimal(patronPlans, countryGroup, showDescription = false, modifierClass = Some("package-promo--spread"))
+                <div class="text-feature">
+                    <p>Every week, more readers across the world sign up to back us financially because they know how important journalistic integrity, curiosity and courage are in safeguarding the truth and fighting for a fairer world. </p>
+                    <p>The support of Patrons plays a key part in ensuring that the Guardian can stand witness to the best and the worst in that world, without interference.</p>
+                </div>
+            }
+        </div>
+    }
+
+}
