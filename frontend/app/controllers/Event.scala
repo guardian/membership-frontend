@@ -135,7 +135,11 @@ class Event(
 
   def buy(id: String): Action[AnyContent] = eventbriteService.getEvent(id) match {
       case Some(event@(_: GuLiveEvent)) =>
-        BuyAction(id).async { implicit request =>
+        // Logged out readers and non-members will go via the onUnauthenticated route
+        // They will get a "SOLD OUT" EventBrite page if the even only has membership tickets.
+        BuyAction(id, onUnauthenticated = redirectAnonUserToEventbrite(event)(_)).async { implicit request =>
+          // Only logged in Members come here. If they are a Friend and the event is only for paid members
+          // we will redirect to the upgrade screen rather than to EventBrite with or without a promo code.
           if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
             redirectSignedInMemberToEventbrite(event)
           else suggestUserUpgrades
