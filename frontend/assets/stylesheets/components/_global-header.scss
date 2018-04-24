@@ -124,8 +124,12 @@ $global-header-height-mobile: 116px;
         color: white;
     }
 
-    .icon--g-mark-link {
-        filter: invert(1);
+    .nav-control__item--last {
+        .control__item {
+            &:first-child {
+                filter: invert(1);
+            }
+        }
     }
 }
 
