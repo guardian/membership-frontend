@@ -282,7 +282,7 @@ class Joiner(
               // Hackday  - 23/24 April 2018 call out to Twilio to orchestrate a phone call
               if (paid.tier == Tier.patron) {
                 paid.phone.foreach { phone =>
-                  // TODO
+                  twilio();
                 }
               }
               onSuccess.withSession(paid.pageviewId.map(id => request.session + ("pageviewId" -> id)).getOrElse(request.session))
@@ -306,6 +306,12 @@ class Joiner(
           Forbidden
       }
     }
+  }
+
+  def twilio(): Unit = {
+    import sys.process._
+      "bash /Users/jduffell/ws/twilio/curl.sh"!
+
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>
