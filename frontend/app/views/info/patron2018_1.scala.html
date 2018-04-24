@@ -1,6 +1,7 @@
 @import com.gu.i18n.CountryGroup
 
 @import model.Header.PatronsHeader
+@import model.Footer.PatronsFooter
 @import com.gu.memsub.Current
 @import views.support.{Asset, PageInfo, PaidPlans}
 @import com.gu.salesforce.Tier
@@ -15,7 +16,7 @@
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup]
 )
 
-@main("Patrons", pageInfo=pageInfo, header = PatronsHeader) {
+@main("Patrons", pageInfo=pageInfo, header = PatronsHeader, footer = PatronsFooter) {
 
     @* ===== About Patronage ===== *@
     @for(img <- pageImages.find(_.name.contains("intro"))) {

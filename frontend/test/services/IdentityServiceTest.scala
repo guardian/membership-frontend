@@ -69,6 +69,7 @@ class IdentityServiceTest(implicit ev: ExecutionEnv) extends Specification with 
         None,
         subscriberOffer = false,
         Set.empty,
+        None,
         None
       )
 

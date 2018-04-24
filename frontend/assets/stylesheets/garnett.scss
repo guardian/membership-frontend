@@ -27,7 +27,7 @@
   }
 }
 
-:not(.global-brandbar__masterclasses):not(.global-brandbar__live).global-brandbar .global-brandbar__logo__image {
+:not(.global-brandbar__masterclasses):not(.global-brandbar__live):not(.global-brandbar__patrons).global-brandbar .global-brandbar__logo__image {
   .inline-svg__image {
     display: none;
   }

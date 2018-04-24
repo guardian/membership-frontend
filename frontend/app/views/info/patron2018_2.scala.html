@@ -1,6 +1,7 @@
 @import com.gu.i18n.CountryGroup
 
 @import model.Header.PatronsHeader
+@import model.Footer.PatronsFooter
 @import com.gu.memsub.Current
 @import views.support.{Asset, PageInfo, PaidPlans}
 @import com.gu.salesforce.Tier
@@ -15,11 +16,11 @@
     pageImages: Seq[com.gu.memsub.images.ResponsiveImageGroup]
 )
 
-@main("Patrons", pageInfo=pageInfo, header = PatronsHeader) {
+@main("Patrons", pageInfo=pageInfo, header = PatronsHeader, footer = PatronsFooter) {
 
     @* ===== About Patronage ===== *@
     @for(img <- pageImages.find(_.name.contains("intro"))) {
-        <div class="page-slice l-constrained">
+        <div class="page-slice l-constrained tier-page--patron">
             @fragments.promos.promoPrimary(title="Become a Patron", img=img, isLead=true, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
                     <p>Guardian Patrons are people who passionately believe in our values and are happy to invest in powerful, committed journalism.</p>
