@@ -41,18 +41,6 @@ $global-header-height-mobile: 116px;
         }
     }
 
-    .nav-control__item--last {
-        .control__item {
-            &:first-child {
-                width: 36px;
-                height: 36px;
-                background-image: url('');
-                background-repeat: no-repeat;
-                background-size: 100%;
-            }
-        }
-    }
-
 }
 
 .master-classes-header__inner {
