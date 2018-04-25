@@ -134,17 +134,12 @@ class Event(
   }
 
   def buy(id: String): Action[AnyContent] = eventbriteService.getEvent(id) match {
-      case Some(event@(_: GuLiveEvent)) =>
-        // Logged out readers and non-members will go via the onUnauthenticated route
-        // They will get a "SOLD OUT" EventBrite page if the even only has membership tickets.
-        BuyAction(id, onUnauthenticated = redirectAnonUserToEventbrite(event)(_)).async { implicit request =>
-          // Only logged in Members come here. If they are a Friend and the event is only for paid members
-          // we will redirect to the upgrade screen rather than to EventBrite with or without a promo code.
-          if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
-            redirectSignedInMemberToEventbrite(event)
-          else suggestUserUpgrades
-        }
-      case Some(event@(_: MasterclassEvent)) =>
+      // One conditional now covers Live Events AND Masterclasses...
+
+      // Logged out readers and non-members will go via the onUnauthenticated route
+      // They, and any ineligible-tier Members will get a "SOLD OUT" EventBrite page if the event has membership-only tickets.
+      // Previously ineligible-tier Members would get a suggested upgrade page.
+      case Some(event@(_: RichEvent)) =>
         BuyAction(id, onUnauthenticated = redirectAnonUserToEventbrite(event)(_)).async { implicit request =>
           redirectSignedInMemberToEventbrite(event)
         }
@@ -180,7 +175,7 @@ class Event(
     Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
   }
 
-
+  @deprecated("Guardian Live Events are not configured to use this anymore, and host their own thankyou page on EventBrite.")
   def thankyou(id: String, orderIdOpt: Option[String]) = SubscriptionAction.async { implicit request =>
     orderIdOpt.fold {
       val resultOpt = for {
