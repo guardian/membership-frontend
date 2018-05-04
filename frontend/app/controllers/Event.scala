@@ -134,24 +134,20 @@ class Event(
   }
 
   def buy(id: String): Action[AnyContent] = eventbriteService.getEvent(id) match {
-      case Some(event@(_: GuLiveEvent)) =>
-        BuyAction(id).async { implicit request =>
-          if (event.isBookableByTier(request.subscriber.subscription.plan.tier))
-            redirectSignedInMemberToEventbrite(event)
-          else suggestUserUpgrades
-        }
-      case Some(event@(_: MasterclassEvent)) =>
-        BuyAction(id, onUnauthenticated = redirectAnonUserToEventbrite(event)(_)).async { implicit request =>
-          redirectSignedInMemberToEventbrite(event)
+      // One conditional now covers Live Events AND Masterclasses...
+
+      // Logged out readers and non-members will go via the onUnauthenticated route
+      // They, and any ineligible-tier Members will get a "SOLD OUT" EventBrite page if the event has membership-only tickets.
+      // Previously ineligible-tier Members would get a suggested upgrade page.
+      case Some(event@(_: RichEvent)) =>
+        BuyAction(id, onUnauthenticated = redirectNonMemberToEventbrite(event)(_)).async { implicit request =>
+          redirectMemberToEventbrite(event)
         }
       case _ =>
         // We seem to have a crawler(?) hitting the buy urls for past events
         SafeLogger.info(s"User hit the buy url for event $id - neither a GuLiveEvent or Masterclass could be retrieved, returning 404...")
         CachedAction(NotFound)
     }
-
-  private def suggestUserUpgrades(implicit request: SubReqWithSub[AnyContent]) =
-    Future.successful(Redirect(routes.TierController.change()).addingToSession("preJoinReturnUrl" -> request.uri))
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
@@ -160,14 +156,14 @@ class Event(
     req.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
   }
 
-  private def redirectSignedInMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
+  private def redirectMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${req.subscriber.subscription.plan.tier}") {
       memberService.createEBCode(req.subscriber, event).map { codeOpt =>
         eventbriteRedirect(event, codeOpt)
       }
     }
 
-  private def redirectAnonUserToEventbrite(event: RichEvent)(implicit req: RequestHeader): Result = {
+  private def redirectNonMemberToEventbrite(event: RichEvent)(implicit req: RequestHeader): Result = {
     eventbriteRedirect(event, None)
   }
 
@@ -176,7 +172,7 @@ class Event(
     Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
   }
 
-
+  @deprecated("Guardian Live Events are not configured to use this anymore, and host their own thankyou page on EventBrite.")
   def thankyou(id: String, orderIdOpt: Option[String]) = SubscriptionAction.async { implicit request =>
     orderIdOpt.fold {
       val resultOpt = for {
