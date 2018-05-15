@@ -38,7 +38,6 @@
     "grunt-px-to-rem": "^0.4.0",
     "grunt-sass": "2.0.0",
     "grunt-svgmin": "^4.0.0",
-    "grunt-svgstore": "1.0.0",
     "grunt-webpack": "^3.0.2",
     "gumshoejs": "^3.5.0",
     "jasmine-core": "^2.8.0",
