@@ -31,7 +31,7 @@
         membership: {
             checkoutForm: @Html(Json.toJson(pageInfo.initialCheckoutForm).toString),
             buildNumber: '@app.BuildInfo.buildNumber',
-            svgSprite: "@Asset.at("images/svg-sprite.svg")"
+            svgSprite: "@Asset.at("images/inline-svgs/svg-sprite.svg")"
         },
         abTests: @Html(Json.toJson(pageInfo.abTests).toString),
         googleAnalytics: {

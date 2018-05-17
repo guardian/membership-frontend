@@ -302,7 +302,8 @@ module.exports = function (grunt) {
                     { removeViewBox: false },
                     { removeUselessStrokeAndFill: false },
                     { removeEmptyAttrs: false },
-                    { cleanUpIds: false }
+                    { cleanupIDs: false },
+                    { removeUselessDefs: false }
                 ]
             },
             dist: {
@@ -312,25 +313,6 @@ module.exports = function (grunt) {
                 dest: '<%= dirs.assets.images %>/inline-svgs'
             }
         },
-
-        svgstore: {
-            options: {
-                prefix: 'icon-',
-                symbol: true,
-                inheritviewbox: true,
-                cleanup: ['fill'],
-                svg: {
-                    id: 'svg-sprite',
-                    width: 0,
-                    height: 0
-                }
-            },
-            icons: {
-                files: {
-                    '<%= dirs.assets.images %>/svg-sprite.svg': ['<%= dirs.assets.images %>/inline-svgs/*.svg']
-                }
-            }
-        }
 
     });
 
@@ -403,7 +385,7 @@ module.exports = function (grunt) {
      * Icons
      ***********************************************************************/
 
-    grunt.registerTask('svgSprite', ['clean:icons', 'svgmin', 'svgstore']);
+    grunt.registerTask('svgSprite', ['clean:icons', 'svgmin']);
 
     /***********************************************************************
      * Clean
