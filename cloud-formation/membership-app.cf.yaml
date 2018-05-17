@@ -196,6 +196,7 @@ Resources:
               Fn::FindInMap: [ StageVariables, { Ref: Stage }, DynamoDBTables ]
       ManagedPolicyArns:
             - !Ref 'LoggingPolicy'
+            - !Sub arn:aws:iam::${AWS::AccountId}:policy/guardian-ec2-role-for-ssm
   MembershipAppInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -244,7 +245,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Open up SSH access and enable HTTP access on the configured
+      GroupDescription: Open up ssh access and enable HTTP access on the configured
         port
       VpcId:
         Ref: VpcId
