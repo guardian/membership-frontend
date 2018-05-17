@@ -247,7 +247,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Open up SSH access and enable HTTP access on the configured
-        port
+        port. TODO - Remove SSH when SSM works?
       VpcId:
         Ref: VpcId
       SecurityGroupIngress:
