@@ -1,8 +1,8 @@
-var Uglify = require("webpack/lib/optimize/UglifyJsPlugin");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 var LoaderOptions = require("webpack/lib/LoaderOptionsPlugin");
 var path = require("path");
 
-var prodPlugins = [ new Uglify({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
+var prodPlugins = [ new UglifyJSPlugin({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
 var debugPlugins = [new LoaderOptions({ debug: true })];
 
 module.exports = function(debug) { return {
@@ -42,6 +42,8 @@ module.exports = function(debug) { return {
     },
 
     plugins: !debug ? prodPlugins :debugPlugins,
+
+    mode: debug ? 'development' : 'production',
 
     watch: false,
 
