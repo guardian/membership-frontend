@@ -2,10 +2,10 @@
 @import com.gu.i18n.CountryGroup
 @import configuration.CopyConfig.usLegalTerms
 
-@(countryGroup: CountryGroup, monthlyContribution: Boolean = false)
+@(countryGroup: CountryGroup)
 
-<p class="ts-and-cs">@if(monthlyContribution){By proceeding,} else {By joining Guardian Members,} you are agreeing to our
-    <a href="@if(monthlyContribution){@Links.monthlyContributionTerms}else{@Links.membershipTerms(Some(countryGroup))}" class="text-link" target="_blank">Terms and Conditions</a> and
+<p class="ts-and-cs">By joining Guardian Members, you agree to our
+    <a href="@Links.membershipTerms(Some(countryGroup))" class="text-link" target="_blank">Terms and Conditions</a>. To find out what personal data we collect and how we use it, please visit our
     <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
 </p>
 
