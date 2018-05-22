@@ -28,6 +28,11 @@ define([
 
         removeCookies = function () {
             cookie.removeCookie(GU_USER_COOKIE_KEY);
+        },
+
+        removeClasses = function () {
+            $(document.documentElement).removeClass(userDetails._.CLASS_NAMES.signedIn);
+            $(document.documentElement).removeClass(userDetails._.CLASS_NAMES.hasTier);
         };
 
     describe('User state classes', function () {
@@ -35,11 +40,6 @@ define([
         var addClasses = function (member) {
                 // This is hardcoded in main.scala.html
                 $(document.documentElement).addClass(userDetails._.CLASS_NAMES.signedOut);
-            },
-
-            removeClasses = function () {
-                $(document.documentElement).removeClass(userDetails._.CLASS_NAMES.signedIn);
-                $(document.documentElement).removeClass(userDetails._.CLASS_NAMES.hasTier);
             };
 
         beforeEach(function () {
@@ -102,6 +102,7 @@ define([
         afterEach(function () {
             removeFixtures();
             removeCookies();
+            removeClasses();
         });
 
         it('Should not attempt to inject user details for anonymous users', function () {
