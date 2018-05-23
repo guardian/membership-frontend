@@ -36,7 +36,7 @@ object Dependencies {
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
   )
-  val googleAuth = "com.gu" %% "play-googleauth" % "0.7.2"
+  val googleAuth = "com.gu" %% "play-googleauth" % "0.7.5"
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
