@@ -18,7 +18,7 @@ class PiiFilter extends Filter[ILoggingEvent] {
 
 object SentryLogging {
 
-  def init() = {
+  def init(): Unit = {
     Config.sentryDsn match {
       case Failure(ex) =>
         SafeLogger.warn("No server-side Sentry logging configured (OK for dev)")
