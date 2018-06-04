@@ -34,7 +34,6 @@ object SentryLogging {
           case Failure(e) => SafeLogger.error(scrub"Something went wrong when setting up Sentry logging ${e.getStackTrace}")
         }
     }
-    SafeLogger.error(scrub"*TEST* more spam courtesy of Leigh-Anne. You are just the cat's pyjamas!")
   }
 }
 
