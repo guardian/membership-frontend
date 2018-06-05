@@ -43,10 +43,6 @@ Parameters:
   ELBSSLCertificate:
     Description: ELB SSL Certificate ARN
     Type: String
-  VulnerabilityScanningSecurityGroup:
-    Description: Security group that grants access to the account's Vulnerability
-      Scanner
-    Type: AWS::EC2::SecurityGroup::Id
 Mappings:
   StageVariables:
     PROD:
@@ -106,7 +102,6 @@ Resources:
         Ref: ImageId
       SecurityGroups:
       - Ref: InstanceSecurityGroup
-      - Ref: VulnerabilityScanningSecurityGroup
       InstanceType:
         Ref: InstanceType
       IamInstanceProfile:
