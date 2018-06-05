@@ -62,7 +62,7 @@ require([
     'use strict';
 
     ajax.init({page: {ajaxUrl: ''}});
-    raven.init('https://8ad435f4fefe468eb59b19fd81a06ea9@app.getsentry.com/56405');
+    raven.init('https://d35a3ab8382a49889557d312e75b2179@sentry.io/1218929');
 
     analytics.init();
 

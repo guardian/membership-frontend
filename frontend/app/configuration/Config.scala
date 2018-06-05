@@ -1,5 +1,4 @@
 package configuration
-import com.getsentry.raven.dsn.Dsn
 import com.gu.config._
 import com.gu.i18n.Country
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
@@ -22,7 +21,7 @@ object Config {
 
   lazy val siteTitle = config.getString("site.title")
 
-  lazy val sentryDsn = Try(new Dsn(config.getString("sentry.dsn")))
+  lazy val sentryDsn = Try(config.getString("sentry.dsn"))
 
   lazy val awsAccessKey = config.getString("aws.access.key")
   lazy val awsSecretKey = config.getString("aws.secret.key")

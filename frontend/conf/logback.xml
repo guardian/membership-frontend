@@ -21,11 +21,20 @@
             <pattern>%date [%.-30thread] %logger[%file:%L] %highlight(%level: %msg%n%xException{3})</pattern>
         </encoder>
     </appender>
+    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <filter class="monitoring.PiiFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
 
     <logger name="com.google.api.client.http" level="WARN" />
 
     <root level="INFO">
         <appender-ref ref="LOGFILE"/>
+        <appender-ref ref="Sentry"/>
     </root>
 
 </configuration>
