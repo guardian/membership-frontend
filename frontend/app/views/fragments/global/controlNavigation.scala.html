@@ -17,7 +17,7 @@
         >
             <span class="control__item">
                 <span class="control__icon icon-holder icon-holder--large icon-holder--neutral">
-                    @fragments.inlineIcon("user")
+                    @fragments.inlineIcon("user", Seq("user-icon"))
                 </span>
             </span>
             <span class="control__item hidden-mobile js-user-detail">
@@ -77,7 +77,7 @@
     <li class="nav-control__item nav-control__item--last hidden-mobile">
         <a class="control" href="http://theguardian.com/" role="menuitem">
             <span class="control__item">
-                @fragments.inlineIcon("g-mark", List("icon-inline--large"))
+                @fragments.inlineIcon("g-mark", List("icon-inline--large", "icon--g-mark-link"))
             </span>
             <span class="control__item">
                 <span class="control__info">The Guardian</span>

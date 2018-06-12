@@ -64,6 +64,25 @@
     }
 }
 
+.global-brandbar__patrons {
+    background-color: #4f524a;
+    background-image: none;
+
+    .global-brandbar__logo__image {
+        height: 35px;
+        width: 72px;
+    }
+
+    .control__info {
+        color: white;
+    }
+
+    .icon-holder {
+        border-color: white;
+        color: white;
+    }
+}
+
 .global-brandbar__inner {
    @include clearfix();
    padding: ($gs-gutter / 2) ($gs-gutter / 4);

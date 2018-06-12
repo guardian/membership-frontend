@@ -96,3 +96,15 @@
         padding-top: rem($gs-gutter * 2);
     }
 }
+
+
+.tier-page--patron {
+    .tone-border-patron {
+        border-color: #b29163;
+    }
+
+    .action {
+        background-color: #b29163;
+        border-color: #b29163;
+    }
+}

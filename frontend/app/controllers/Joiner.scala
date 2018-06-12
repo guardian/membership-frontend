@@ -276,10 +276,15 @@ class Joiner(
           SafeLogger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           if (formData.marketingConsent)
             identityService.consentEmail(user.primaryEmailAddress, IdentityRequest(request))
-
           salesforceService.metrics.putSignUp(tier)
           formData match {
             case paid: PaidMemberJoinForm =>
+              // Hackday  - 23/24 April 2018 call out to Twilio to orchestrate a phone call
+              if (paid.tier == Tier.patron) {
+                paid.phone.foreach { phone =>
+                  twilio();
+                }
+              }
               onSuccess.withSession(paid.pageviewId.map(id => request.session + ("pageviewId" -> id)).getOrElse(request.session))
             case _ =>
               onSuccess
@@ -301,6 +306,12 @@ class Joiner(
           Forbidden
       }
     }
+  }
+
+  def twilio(): Unit = {
+    import sys.process._
+      "bash /Users/jduffell/ws/twilio/curl.sh"!
+
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = SubscriptionAction.async { implicit request =>

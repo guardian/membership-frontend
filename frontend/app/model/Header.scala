@@ -10,5 +10,6 @@ object Header {
   case object MasterClassesHeader extends Header
   case object LiveHeader extends Header
   case object GuardianHeader extends Header
+  case object PatronsHeader extends Header
 
 }

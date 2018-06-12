@@ -98,6 +98,41 @@ $global-header-height-mobile: 116px;
     }
 }
 
+.patrons-header__inner {
+    background-image: none;
+    background-color: #4f524a;
+
+    .global-navigation__link {
+        color: white;
+    }
+    .global-header__logo__image {
+        height: 50px;
+        width: 97px;
+
+        @include mq($from: desktop) {
+            height: 85px;
+            width: 165px;
+        }
+    }
+
+    .control__info {
+        color: white;
+    }
+
+    .icon-holder {
+        border-color: white;
+        color: white;
+    }
+
+    .nav-control__item--last {
+        .control__item {
+            &:first-child {
+                filter: invert(1);
+            }
+        }
+    }
+}
+
 .global-header__branding {
     @include clearfix();
     padding: ($gs-gutter / 2);

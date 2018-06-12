@@ -55,6 +55,12 @@ object SVG {
       width = 789, height = 68
     )
 
+    val guardianPatronsHeader = SVGImage(
+      "TheGuardian Patrons",
+      "images/logos/guardian-patrons.svg",
+      width = 789, height = 68
+    )
+
     val guardianTitlePiece = SVGImage(
       "Guardian TitlePiece",
       s"images/logos/brand/guardian-titlepiece.svg",

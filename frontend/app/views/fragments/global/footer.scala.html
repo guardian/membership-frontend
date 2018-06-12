@@ -1,5 +1,5 @@
 @import model.Footer
-@import model.Footer.{SimpleFooter, BundlesFooter, DefaultFooter, LiveFooter, MasterClassesFooter}
+@import model.Footer.{SimpleFooter, BundlesFooter, DefaultFooter, LiveFooter, MasterClassesFooter, PatronsFooter}
 @import model.SVG.Logos
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
@@ -14,6 +14,7 @@
         case DefaultFooter | BundlesFooter => {@fragments.global.brandbar()}
         case LiveFooter => {@fragments.global.brandbar("global-brandbar__live", Logos.guardianLiveHeader)}
         case MasterClassesFooter  => {@fragments.global.brandbar("global-brandbar__masterclasses", Logos.guardianMasterclassesHeader)}
+            case PatronsFooter => {@fragments.global.brandbar("global-brandbar__patrons", Logos.guardianPatronsHeader)}
         case _ => {}
     }
 
