@@ -2,24 +2,19 @@ package services
 
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.UnaryOperator
-
-import akka.agent.Agent
 import com.gu.memsub.images.Grid
 import com.gu.memsub.images.Grid.{Export, GridObject, GridResult}
 import com.gu.memsub.images.GridDeserializer._
 import com.gu.memsub.util.WebServiceHelper
-import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
-import com.gu.okhttp.RequestRunners.LoggingHttpClient
+import com.gu.okhttp.RequestRunners.FutureHttpClient
 import com.netaporter.uri.Uri
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import model.RichEvent.GridImage
-import monitoring.DummyMetrics
 import okhttp3.Request
 import play.api.libs.json.Json
-
 import scala.concurrent.{ExecutionContext, Future}
 
 object GridService {
@@ -87,7 +82,7 @@ class GridService(executionContext: ExecutionContext) extends WebServiceHelper[G
 
   override def wsPreExecute(req: Request.Builder): Request.Builder = req.addHeader("X-Gu-Media-Key", Config.gridConfig.key)
 
-  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(DummyMetrics)
+  override val httpClient: FutureHttpClient = RequestRunners.futureRunner
 }
 
 case class GridConfig(apiUrl: String, key: String)

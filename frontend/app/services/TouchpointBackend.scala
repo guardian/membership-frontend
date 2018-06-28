@@ -6,8 +6,8 @@ import com.gu.identity.play.IdMinimalUser
 import com.gu.memsub.services.PaymentService
 import com.gu.memsub.subsv2
 import com.gu.memsub.subsv2.Catalog
+import com.gu.memsub.subsv2.services.FetchCatalog
 import com.gu.memsub.subsv2.services.SubscriptionService.CatalogMap
-import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.gu.okhttp.RequestRunners
 import com.gu.salesforce._
 import com.gu.stripe.StripeService
@@ -22,10 +22,8 @@ import com.netaporter.uri.Uri
 import com.gu.monitoring.SafeLogger
 import configuration.Config
 import model.FeatureChoice
-import monitoring.{DummyMetrics, TouchpointBackendMetrics}
 import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
-import tracking._
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
 
 import scala.concurrent.duration._
@@ -35,7 +33,6 @@ import scalaz.std.scalaFuture._
 object TouchpointBackend {
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
     def zuoraEnvName: String = tpbc.zuoraSoap.envName
-    def zuoraMetrics(component: String): ServiceMetrics = DummyMetrics
     def zuoraRestUrl(config: com.typesafe.config.Config): String =
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
   }
@@ -48,17 +45,11 @@ object TouchpointBackend {
   def apply(config: TouchpointBackendConfig, backendType: BackendType)(implicit system: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient): TouchpointBackend = {
     val stripeUKMembershipService = new StripeService(
       apiConfig = config.stripeUKMembership,
-      client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-        val backendEnv: String = config.stripeUKMembership.envName
-        val service = "Stripe UK Membership"
-      })
+      client = RequestRunners.futureRunner
     )
     val stripeAUMembershipService = new StripeService(
       apiConfig = config.stripeAUMembership,
-      client = RequestRunners.loggingRunner(new TouchpointBackendMetrics with StatusMetrics {
-        val backendEnv: String = config.stripeAUMembership.envName
-        val service = "Stripe AU Membership"
-      })
+      client = RequestRunners.futureRunner
     )
     val payPalService = new PayPalService(config.payPal, executionContext)
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
@@ -66,9 +57,9 @@ object TouchpointBackend {
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
     val paperRatePlanIds = Config.subsProductIds(restBackendConfig.envName)
     val digipackRatePlanIds = Config.digipackRatePlanIds(restBackendConfig.envName)
-    val runner = RequestRunners.loggingRunner(config.zuoraMetrics("zuora-soap-client"))
+    val runner = RequestRunners.futureRunner
     // extendedRunner sets the configurable read timeout, which is used for the createSubscription call.
-    val extendedRunner = RequestRunners.configurableLoggingRunner(20.seconds, config.zuoraMetrics("zuora-soap-client"))
+    val extendedRunner = RequestRunners.configurableFutureRunner(20.seconds)
 
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
     val discounter = new Discounter(Config.discountRatePlanIds(config.zuoraEnvName))
@@ -78,7 +69,7 @@ object TouchpointBackend {
     val pids = Config.productIds(restBackendConfig.envName)
 
     val catalogRestClient: SimpleClient[Future] = new SimpleClient[Future](restBackendConfig, RequestRunners.configurableFutureRunner(60.seconds))
-    val newCatalogService = new subsv2.services.CatalogService[Future](pids, catalogRestClient, Await.result(_, 60.seconds), restBackendConfig.envName)
+    val newCatalogService = new subsv2.services.CatalogService[Future](pids, FetchCatalog.fromZuoraApi(catalogRestClient), Await.result(_, 60.seconds), restBackendConfig.envName)
     val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.toList.mkString}"); Map()}, _.map))
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraSoapService.getAccountIds)
 

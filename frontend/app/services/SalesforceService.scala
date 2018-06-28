@@ -8,11 +8,10 @@ import dispatch.Defaults.timer
 import dispatch._
 import forms.MemberForm.{CommonForm, JoinForm}
 import model.GenericSFContact
-import monitoring.{ContributorMetrics, MemberMetrics}
+import monitoring.MemberMetrics
 import akka.actor.ActorSystem
 import play.api.libs.json._
 import services.FrontendMemberRepository._
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 import scalaz.\/
@@ -25,16 +24,12 @@ class SalesforceService(salesforceConfig: SalesforceConfig)(implicit val system:
 
   val metricsVal = new MemberMetrics(salesforceConfig.envName)
 
-  val contributorMetricsVal = new ContributorMetrics(salesforceConfig.envName)
-
   private val repository = new SimpleContactRepository(salesforceConfig, system.scheduler, "membership")
 
   override def getMember(userId: UserId): Future[String \/ Option[GenericSFContact]] =
     repository.get(userId)
 
   override def metrics = metricsVal
-
-  override def contributorMetrics = contributorMetricsVal
 
   override def upsert(user: IdUser, joinData: CommonForm): Future[ContactId] =
     upsert(user.id, initialData(user, joinData))

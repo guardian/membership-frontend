@@ -1,17 +1,14 @@
 package controllers
 
 import _root_.services._
-import actions.ActionRefiners._
 import actions.Fallbacks._
 import actions.{ActionRefiners, CommonActions, OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
 import com.gu.googleauth.GoogleAuthConfig
-import com.gu.memsub.Subscriber.Member
-import com.gu.memsub.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.gu.monitoring.SafeLogger
 import model.EmbedSerializer._
-import model.Eventbrite.{EBCode, EBEvent, EBOrder}
+import model.Eventbrite.{EBCode, EBEvent}
 import model.RichEvent.{RichEvent, _}
 import model._
 import org.joda.time.format.ISODateTimeFormat
@@ -19,11 +16,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services.EventbriteService._
-import tracking._
-import utils.ReferralData
-import views.support.MembershipCompat._
 import views.support.PageInfo
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class Event(
@@ -56,9 +49,8 @@ class Event(
 
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       eventbriteService.getEvent(eventId).map { event =>
-        Timing.record(event.service.wsMetrics, "buy-action-invoked") {
-          block(request)
-        }
+        SafeLogger.info(s"Successfully found event: ${event.id}")
+        block(request)
       }.getOrElse(Future.successful(NotFound))
     }
 
@@ -156,12 +148,11 @@ class Event(
     req.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
   }
 
-  private def redirectMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] =
-    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${req.subscriber.subscription.plan.tier}") {
-      memberService.createEBCode(req.subscriber, event).map { codeOpt =>
-        eventbriteRedirect(event, codeOpt)
-      }
+  private def redirectMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] = {
+    memberService.createEBCode(req.subscriber, event).map { codeOpt =>
+      eventbriteRedirect(event, codeOpt)
     }
+  }
 
   private def redirectNonMemberToEventbrite(event: RichEvent)(implicit req: RequestHeader): Result = {
     eventbriteRedirect(event, None)
