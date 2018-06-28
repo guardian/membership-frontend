@@ -43,13 +43,6 @@ Parameters:
   ELBSSLCertificate:
     Description: ELB SSL Certificate ARN
     Type: String
-  VulnerabilityScanningSecurityGroup:
-    Description: Security group that grants access to the account's Vulnerability
-      Scanner
-    Type: AWS::EC2::SecurityGroup::Id
-  LoggingPolicy:
-    Description: Policy needed to access the kinesis stream
-    Type: String
 Mappings:
   StageVariables:
     PROD:
@@ -109,7 +102,6 @@ Resources:
         Ref: ImageId
       SecurityGroups:
       - Ref: InstanceSecurityGroup
-      - Ref: VulnerabilityScanningSecurityGroup
       InstanceType:
         Ref: InstanceType
       IamInstanceProfile:
@@ -195,7 +187,7 @@ Resources:
             Resource:
               Fn::FindInMap: [ StageVariables, { Ref: Stage }, DynamoDBTables ]
       ManagedPolicyArns:
-            - !Ref 'LoggingPolicy'
+            - !Sub arn:aws:iam::${AWS::AccountId}:policy/guardian-ec2-role-for-ssm
   MembershipAppInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -244,7 +236,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Open up SSH access and enable HTTP access on the configured
+      GroupDescription: Open up ssh access and enable HTTP access on the configured
         port
       VpcId:
         Ref: VpcId
