@@ -49,7 +49,7 @@ class Event(
 
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       eventbriteService.getEvent(eventId).map { event =>
-        SafeLogger.info(s"Successfully found event: ${event.id}")
+        SafeLogger.info(s"Buy action invoked for event: ${event.id}")
         block(request)
       }.getOrElse(Future.successful(NotFound))
     }
