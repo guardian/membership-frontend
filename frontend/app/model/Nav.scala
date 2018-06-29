@@ -19,7 +19,7 @@ object Nav {
   }
 
   val primaryNavigation = List(
-    NavItem("become a supporter", "https://support.theguardian.com/?acquisitionData=%7B%22source%22%3A%22GUARDIAN_WEB%22%2C%22componentId%22%3A%22become_a_supporter_link_on_membership_site%22%7D", "Become a supporter"),
+    NavItem("support the guardian", "https://support.theguardian.com/?acquisitionData=%7B%22source%22%3A%22GUARDIAN_WEB%22%2C%22componentId%22%3A%22become_a_supporter_link_on_membership_site%22%7D", "Support The Guardian"),
     NavItem("events", routes.WhatsOn.list.url, "Events", subNav = Seq(
       NavItem("archive", routes.WhatsOn.listArchive.url, "Archive")
     )),
