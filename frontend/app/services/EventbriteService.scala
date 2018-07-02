@@ -3,21 +3,18 @@ package services
 import akka.actor.ActorSystem
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.memsub.util.{ScheduledTask, WebServiceHelper}
-import com.gu.monitoring.StatusMetrics
 import com.gu.okhttp.RequestRunners
-import com.gu.okhttp.RequestRunners.LoggingHttpClient
+import com.gu.okhttp.RequestRunners.FutureHttpClient
 import configuration.Config
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
-import monitoring.DummyMetrics
 import okhttp3.Request
 import org.joda.time.{DateTime, Interval}
 import com.gu.monitoring.SafeLogger
 import play.api.cache.AsyncCacheApi
 import play.api.libs.json.{Json, Reads}
 import utils.StringUtils._
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
@@ -25,8 +22,6 @@ abstract class EventbriteService(implicit val ec: ExecutionContext, system: Acto
 
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
-
-  def wsMetrics: StatusMetrics
 
   override val wsUrl = Config.eventbriteApiUrl
   override def wsPreExecute(builder: Request.Builder): Request.Builder = {
@@ -146,13 +141,12 @@ class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: 
   //
   // see https://www.eventbrite.com/developer/v3/formats/event/#ebapi-access-code
   val maxDiscountQuantityAvailable = 4
-  val wsMetrics = DummyMetrics
 
-  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
+  override val httpClient: FutureHttpClient = RequestRunners.futureRunner
 
   private def getJson(url: String) = {
     val req = new Request.Builder().url(url).build()
-    httpClient(req).run(s"${req.method} $url").map { response =>
+    httpClient(req).map { response =>
       val responseBody = response.body.string()
       Json.parse(responseBody)
     }
@@ -193,9 +187,7 @@ class MasterclassEventService(executionContext: ExecutionContext, actorSystem: A
   val apiToken = Config.eventbriteMasterclassesApiToken
   val maxDiscountQuantityAvailable = 1
 
-  val wsMetrics = DummyMetrics
-
-  override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(wsMetrics)
+  override val httpClient: FutureHttpClient = RequestRunners.futureRunner
 
   override def events: Seq[RichEvent] =
     super.events.filter(MasterclassesWithAvailableMemberDiscounts)

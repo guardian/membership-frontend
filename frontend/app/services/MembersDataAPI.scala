@@ -8,7 +8,6 @@ import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners._
 import com.gu.salesforce.Tier
 import configuration.Config
-import monitoring.DummyMetrics
 import okhttp3.Request
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
@@ -16,7 +15,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import views.support.MembershipCompat._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 object MembersDataAPI {
@@ -57,7 +56,7 @@ class MembersDataAPI(executionContext: ExecutionContext) {
     override def wsPreExecute(req: Request.Builder): Request.Builder = {
       req.addHeader("Cookie", accessCredentials.cookies.map(c => s"${c.name}=${c.value}").mkString("; "))
     }
-    override val httpClient: LoggingHttpClient[Future] = RequestRunners.loggingRunner(DummyMetrics)
+    override val httpClient: FutureHttpClient = RequestRunners.futureRunner
   }
 
   object Service  {
