@@ -8,7 +8,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "2.1"
+  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "2.4"
   val membershipCommon = "com.gu" %% "membership-common" % "0.519"
   val contentAPI = "com.gu" %% "content-api-client" % "11.40"
   val playWS = PlayImport.ws
@@ -36,7 +36,7 @@ object Dependencies {
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
   )
-  val googleAuth = "com.gu" %% "play-googleauth" % "0.7.5"
+  val googleAuth = "com.gu" %% "play-googleauth" % "0.7.6"
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
