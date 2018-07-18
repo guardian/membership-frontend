@@ -1,0 +1,87 @@
+@import com.gu.salesforce.Tier
+@import views.support.MembershipCompat._
+@import com.gu.memsub.subsv2.Catalog
+@(tier: Tier, catalog: Catalog)(implicit request: RequestHeader)
+
+@import com.gu.salesforce.Tier.Friend
+@import views.html.helper._
+@import views.support.DisplayText._
+
+@currentTierDetails = {
+    <h3 class="h-stack">As a Guardian member, you also have access to...</h3>
+@fragments.tier.tierTrail(tier, showCaption = false)
+    <div class="copy">
+        <ul>
+        @for(benefit <- tier.benefits) {
+            <li>@benefit.title</li>
+        }
+        </ul>
+    </div>
+}
+
+
+@main("Cancel Tier") {
+
+    <main role="main" class="page-content l-constrained">
+
+        @fragments.page.pageHeader("We don't like goodbyes…",
+            Some("So instead we're going to try to tempt you to stay by reminding you that your ongoing financial support helps to make our independent journalism possible in the long-term."))
+
+        <div class="page-section">
+            <div class="page-section__content">
+                @if(tier == Friend()) {
+                    <a href="@routes.TierController.change" class="action action--secondary u-margin-bottom">
+                        @fragments.actionIcon("arrow-left", leftIcon = true)
+                        <span class="action__label">Stay as a Friend</span>
+                    </a>
+                    @currentTierDetails
+                } else {
+                    <ul class="grid grid--2up-stacked grid--bordered grid--stretch">
+                        <li class="grid__item">
+                            <a href="@routes.TierController.change" class="action action--secondary u-margin-bottom">
+                                @fragments.actionIcon("arrow-left", leftIcon = true)
+                                <span class="action__label">Stay as a @tier.name</span>
+                            </a>
+                            @currentTierDetails
+                        </li>
+                    </ul>
+                }
+                <div class="action-group u-divider-neutral u-margin-top">
+
+                    <form method="POST" action="@routes.TierController.cancelTierConfirm" class="js-processing-form">
+                        @CSRF.formField
+                        <div class="form-field">
+
+                            <p>
+                                We value your feedback. Please take a moment to tell us why you are cancelling.
+                            </p>
+                        </div>
+                        <div class="form-field">
+
+                            <select name="reason">
+                                <option disabled selected value> -- select an option -- </option>
+                                <option value="mma_financial_circumstances">A change in my financial circumstances</option>
+                                <option value="mma_not_value">It is poor value for money</option>
+                                <option value="mma_editorial">I disagree with editorial decisions</option>
+                                <option value="mma_benefits">None of the benefits were of interest to me</option>
+                                <option value="mma_support_another_way">
+                                    I want to support the Guardian in another way eg. subscription</option>
+                                <option value="mma_health">Ill-health</option>
+                                <option value="mma_none">None of the above</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+
+                            <button id="qa-confirm-cancel" class="action js-processing-form-submit u-align-right" type="submit">
+                                Cancel membership
+                            </button>
+
+                            <div class="loader js-loader">Processing&hellip;</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+}
