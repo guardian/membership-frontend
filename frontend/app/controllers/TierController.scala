@@ -78,32 +78,9 @@ class TierController(
       case err => throw err
     }, identity)
 
-
-  def cancelTier() = SubscriptionAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm(request.subscriber.subscription.plan.tier, catalog))
-  }
-
-  def cancelTierConfirm() = SubscriptionAction.async { implicit request =>
-    //If we can't get a cancellation reason, it's not really a problem.
-    val reason = cancellationReasonFrom.bindFromRequest.value.getOrElse(CancellationReason("mma_none"))
-
-    handleErrors(memberService.cancelSubscription(request.subscriber, reason)) {
-      if (request.subscriber.subscription.plan.isPaid) {
-        Redirect(routes.TierController.cancelFreeTierSummary())
-      } else {
-        Redirect(routes.TierController.cancelPaidTierSummary())
-      }
-    }
-  }
-
-  def cancelFreeTierSummary = AuthenticatedAction(
-    Ok(views.html.tier.cancel.summaryFree())
+  def redirectToNewCancellationFlow() = AuthenticatedAction(
+    Redirect(url = "https://manage.theguardian.com/cancel/membership")
   )
-
-  def cancelPaidTierSummary = PaidSubscriptionAction { implicit request =>
-    implicit val c = catalog
-    Ok(views.html.tier.cancel.summaryPaid(request.subscriber.subscription)).discardingCookies(TierChangeCookies.deletionCookies: _*)
-  }
 
   def paymentSummary(subscriber: PaidMember, targetPlans: PaidMembershipPlans[PaidMemberTier])
     (implicit b: BackendProvider, c: Catalog, r: IdentityRequest): Future[MemberError \/ PaidToPaidUpgradeSummary] = {
