@@ -1,0 +1,15 @@
+@import configuration.Config
+@main("Cancel Tier summary") {
+    <main role="main" class="page-content l-constrained">
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Current Membership summary</h2>
+            </div>
+            <div class="page-section__content">
+                <p>We are processing your cancellation and will send a confirmation email shortly.</p>
+                <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community.</p>
+                <a href="@Config.idWebAppUrl/membership/edit" class="action">My Profile</a>
+            </div>
+        </section>
+    </main>
+}
