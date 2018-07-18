@@ -77,10 +77,10 @@ GET         /preview-masterclass/:id                   controllers.Event.preview
 
 # Tier
 GET         /tier/change                               controllers.TierController.change
-GET         /tier/cancel                               controllers.TierController.redirectToNewCancellationFlow
-POST        /tier/cancel/confirm                       controllers.TierController.redirectToNewCancellationFlow
-GET         /tier/cancel/paid/summary                  controllers.TierController.redirectToNewCancellationFlow
-GET         /tier/cancel/free/summary                  controllers.TierController.redirectToNewCancellationFlow
+GET         /tier/cancel                               controllers.TierController.cancelTier
+POST        /tier/cancel/confirm                       controllers.TierController.cancelTierConfirm
+GET         /tier/cancel/paid/summary                  controllers.TierController.cancelPaidTierSummary
+GET         /tier/cancel/free/summary                  controllers.TierController.cancelFreeTierSummary
 GET         /tier/change/:tier                         controllers.TierController.upgrade(tier: PaidTier)
 POST        /tier/change/:tier                         controllers.TierController.upgradeConfirm(tier: PaidTier)
 GET         /tier/change/:tier/summary                 controllers.TierController.upgradeThankyou(tier: PaidTier)
