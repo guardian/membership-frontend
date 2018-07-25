@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.1
+version: v1.12.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:handlebars:20151207':
@@ -51,20 +51,12 @@ patch:
   'npm:debug:20170905':
     - grunt-contrib-watch > tiny-lr > debug:
         patched: '2017-12-06T12:36:33.827Z'
-      engine.io > debug:
-        patched: '2017-12-06T16:39:29.589Z'
     - karma > socket.io > socket.io-client > socket.io-parser > debug:
         patched: '2017-12-06T12:36:33.827Z'
-      watchpack > chokidar > fsevents > node-pre-gyp > tar-pack > debug:
-        patched: '2017-12-06T16:39:29.589Z'
     - karma > socket.io > socket.io-parser > debug:
         patched: '2017-12-06T12:36:33.827Z'
-      chokidar > fsevents > node-pre-gyp > tar-pack > debug:
-        patched: '2017-12-06T16:39:29.589Z'
     - karma > socket.io > socket.io-adapter > socket.io-parser > debug:
         patched: '2017-12-06T12:36:33.827Z'
-      engine.io-client > debug:
-        patched: '2017-12-06T16:39:29.589Z'
     - karma > socket.io > debug:
         patched: '2017-12-06T12:36:33.827Z'
     - karma > socket.io > engine.io > debug:
@@ -83,15 +75,19 @@ patch:
         patched: '2017-12-06T12:36:33.827Z'
     - karma > socket.io > socket.io-client > debug:
         patched: '2017-12-06T12:36:33.827Z'
+    - engine.io > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - watchpack > chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - chokidar > fsevents > node-pre-gyp > tar-pack > debug:
+        patched: '2017-12-06T16:39:29.589Z'
+    - engine.io-client > debug:
+        patched: '2017-12-06T16:39:29.589Z'
   'npm:ms:20170412':
     - grunt-contrib-watch > tiny-lr > body-parser > debug > ms:
         patched: '2017-12-06T12:36:33.827Z'
-      engine.io > debug > ms:
-        patched: '2017-12-06T16:39:29.589Z'
     - karma > socket.io > socket.io-adapter > socket.io-parser > debug > ms:
         patched: '2017-12-06T12:36:33.827Z'
-      engine.io-client > debug > ms:
-        patched: '2017-12-06T16:39:29.589Z'
     - karma > socket.io > socket.io-client > socket.io-parser > debug > ms:
         patched: '2017-12-06T12:36:33.827Z'
     - karma > socket.io > socket.io-parser > debug > ms:
@@ -108,6 +104,10 @@ patch:
         patched: '2017-12-06T12:36:33.827Z'
     - grunt-contrib-watch > tiny-lr > debug > ms:
         patched: '2017-12-06T12:36:33.827Z'
+    - engine.io > debug > ms:
+        patched: '2017-12-06T16:39:29.589Z'
+    - engine.io-client > debug > ms:
+        patched: '2017-12-06T16:39:29.589Z'
   'npm:uglify-js:20150824':
     - grunt-svgstore > handlebars > uglify-js:
         patched: '2017-12-06T12:36:33.827Z'
@@ -125,3 +125,6 @@ patch:
         patched: '2017-12-06T16:39:29.589Z'
     - karma > chokidar > fsevents > node-pre-gyp > request > tough-cookie:
         patched: '2017-12-06T16:39:29.589Z'
+  'npm:lodash:20180130':
+    - grunt-karma > lodash:
+        patched: '2018-07-03T03:43:56.414Z'
