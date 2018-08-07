@@ -26,7 +26,7 @@ define([
         var $usStateSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(US_STATE_SELECTOR), FORM_FIELD_CLASSNAME));
         var $caProvinceSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(CA_PROVINCE_SELECTOR), FORM_FIELD_CLASSNAME));
         var $ausStateSelectParent = $(utilsHelper.getSpecifiedParent(context.querySelector(AUS_STATE_SELECTOR), FORM_FIELD_CLASSNAME));
-        countrySelect.addEventListener('change', function (e) {
+        $(context).find(COUNTRY_SELECTOR).on('change', function (e) {
             var select = e && e.target;
             implementRules(context, select, $countySelectParent, $usStateSelectParent, $caProvinceSelectParent, $ausStateSelectParent);
         });
