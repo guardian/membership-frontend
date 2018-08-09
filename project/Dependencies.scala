@@ -30,6 +30,7 @@ object Dependencies {
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.11"
+  val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
   // This is required to force aws libraries to use the latest version of jackson
   val dataBind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.11.1"
   val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play26" % "3.0.0" % "compile" excludeAll(
@@ -42,7 +43,7 @@ object Dependencies {
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, sqs, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat, dataBind,
-    acquisitionEventProducer)
+    acquisitionEventProducer, bcprovJdk15on)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
 
