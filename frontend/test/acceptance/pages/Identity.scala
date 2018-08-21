@@ -47,7 +47,3 @@ case class SecondRegistrationStep(testUser: TestUser) extends IdentityStep {
   override val submitButton = id("tssf-create-account")
 
 }
-
-
-
-
