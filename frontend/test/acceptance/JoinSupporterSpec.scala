@@ -31,6 +31,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
   feature("Become a Supporter in UK and US") {
 
     scenario("User joins as Supporter using Stripe in US", Acceptance) {
+
       checkDependenciesAreAvailable
 
       val testUser = new TestUser
@@ -38,15 +39,25 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       Given("users click 'Become a Supporter' button on Membership homepage")
 
       When("They land on 'Identity Frontend' page,")
-      val register = pages.Register(testUser)
-      go.to(register)
-      assert(register.pageHasLoaded)
+      val firstRegistrationPage = pages.FirstRegistrationStep(testUser)
+      go.to(firstRegistrationPage)
+      assert(firstRegistrationPage.pageHasLoaded)
 
-      And("fill in personal details,")
-      register.fillInPersonalDetails()
+      And("fill in their email address,")
+      firstRegistrationPage.fillInEmail()
 
-      And("submit the form to create their Identity account,")
-      register.submit()
+      And("they proceed to the next step,")
+      firstRegistrationPage.submit()
+
+      Then("they should be asked to finish registering for an Identity account")
+      val secondRegistrationPage = pages.SecondRegistrationStep(testUser)
+      assert(secondRegistrationPage.pageHasLoaded)
+
+      Given("that the user fills in their personal details correctly")
+      secondRegistrationPage.fillInPersonalDetails()
+
+      When("they submit the form to create their Identity account,")
+      secondRegistrationPage.submit()
 
       Then("they should land on 'Enter Details' page,")
       val enterDetails = pages.EnterDetails(testUser)
@@ -114,15 +125,25 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       Given("users click 'Become a Supporter' button on Membership homepage")
 
       When("They land on 'Identity Frontend' page,")
-      val register = pages.Register(testUser)
-      go.to(register)
-      assert(register.pageHasLoaded)
+      val firstRegistrationPage = pages.FirstRegistrationStep(testUser)
+      go.to(firstRegistrationPage)
+      assert(firstRegistrationPage.pageHasLoaded)
 
-      And("fill in personal details,")
-      register.fillInPersonalDetails()
+      And("fill in their email address,")
+      firstRegistrationPage.fillInEmail()
 
-      And("submit the form to create their Identity account,")
-      register.submit()
+      And("they proceed to the next step,")
+      firstRegistrationPage.submit()
+
+      Then("they should be asked to finish registering for an Identity account")
+      val secondRegistrationPage = pages.SecondRegistrationStep(testUser)
+      assert(secondRegistrationPage.pageHasLoaded)
+
+      Given("that the user fills in their personal details correctly")
+      secondRegistrationPage.fillInPersonalDetails()
+
+      When("they submit the form to create their Identity account,")
+      secondRegistrationPage.submit()
 
       Then("they should land on 'Enter Details' page,")
       val enterDetails = pages.EnterDetails(testUser)
