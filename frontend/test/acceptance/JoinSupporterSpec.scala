@@ -49,7 +49,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       And("they proceed to the next step,")
       firstRegistrationPage.submit()
 
-      Then("they should be redirected to register as an Identity user")
+      Then("they should be asked to finish registering for an Identity account")
       val secondRegistrationPage = pages.SecondRegistrationStep(testUser)
       assert(secondRegistrationPage.pageHasLoaded)
 
@@ -135,7 +135,7 @@ class JoinSupporterSpec extends FeatureSpec with Browser
       And("they proceed to the next step,")
       firstRegistrationPage.submit()
 
-      Then("they should be redirected to register as an Identity user")
+      Then("they should be asked to finish registering for an Identity account")
       val secondRegistrationPage = pages.SecondRegistrationStep(testUser)
       assert(secondRegistrationPage.pageHasLoaded)
 
