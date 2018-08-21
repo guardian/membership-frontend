@@ -19,9 +19,8 @@ object Dependencies {
   val sqs = "com.amazonaws" % "aws-java-sdk-sqs" % awsClientVersion
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.7"
-  val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.5.3" % "test"
-  val seleniumHtmlUnitDriver = "org.seleniumhq.selenium" % "htmlunit-driver" % "2.29.0" % "test"
-  val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "2.1.0" % "test"
+  val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.14.0" % "test"
+  val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "2.2.5" % "test"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.6.6" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.3.7"
@@ -45,6 +44,6 @@ object Dependencies {
     PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat, dataBind,
     acquisitionEventProducer, bcprovJdk15on)
 
-  val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumHtmlUnitDriver, seleniumManager)
+  val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager)
 
 }
