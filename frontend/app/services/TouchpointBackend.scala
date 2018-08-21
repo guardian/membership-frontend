@@ -20,12 +20,12 @@ import com.gu.zuora.soap.ClientWithFeatureSupplier
 import com.gu.zuora.{soap, ZuoraSoapService => ZuoraSoapServiceImpl}
 import com.netaporter.uri.Uri
 import com.gu.monitoring.SafeLogger
+import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import model.FeatureChoice
 import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
-
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scalaz.std.scalaFuture._
@@ -70,7 +70,15 @@ object TouchpointBackend {
 
     val catalogRestClient: SimpleClient[Future] = new SimpleClient[Future](restBackendConfig, RequestRunners.configurableFutureRunner(60.seconds))
     val newCatalogService = new subsv2.services.CatalogService[Future](pids, FetchCatalog.fromZuoraApi(catalogRestClient), Await.result(_, 60.seconds), restBackendConfig.envName)
-    val futureCatalog: Future[CatalogMap] = newCatalogService.catalog.map(_.fold[CatalogMap](error => {println(s"error: ${error.list.toList.mkString}"); Map()}, _.map))
+
+    val futureCatalog: Future[CatalogMap] = newCatalogService.catalog
+      .map(_.fold[CatalogMap](error => {println(s"error: ${error.list.toList.mkString}"); Map()}, _.map))
+      .recover {
+        case error =>
+          SafeLogger.error(scrub"Failed to load catalog from Zuora due to: $error")
+          throw error
+      }
+
     val newSubsService = new subsv2.services.SubscriptionService[Future](pids, futureCatalog, simpleRestClient, zuoraSoapService.getAccountIds)
 
     val paymentService = new PaymentService(zuoraSoapService, newCatalogService.unsafeCatalog.productMap)
