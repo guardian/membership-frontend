@@ -145,6 +145,8 @@ patch:
   'npm:lodash:20180130':
     - grunt-karma > lodash:
         patched: '2018-08-06T16:49:03.373Z'
+    - grunt-karma > lodash:
+        patched: '2018-08-09T16:34:37.611Z'
   'npm:tunnel-agent:20170305':
     - grunt-contrib-imagemin > imagemin-optipng > optipng-bin > bin-wrapper > download > caw > tunnel-agent:
         patched: '2018-08-06T16:49:03.373Z'
@@ -160,3 +162,15 @@ patch:
         patched: '2018-08-06T16:49:03.373Z'
     - grunt-contrib-imagemin > imagemin-gifsicle > gifsicle > bin-build > download > caw > tunnel-agent:
         patched: '2018-08-06T16:49:03.373Z'
+    - grunt-contrib-imagemin > imagemin-gifsicle > gifsicle > bin-build > download > caw > tunnel-agent:
+        patched: '2018-08-09T16:34:37.611Z'
+    - grunt-contrib-imagemin > imagemin-jpegtran > jpegtran-bin > bin-build > download > caw > tunnel-agent:
+        patched: '2018-08-09T16:34:37.611Z'
+    - grunt-contrib-imagemin > imagemin-optipng > optipng-bin > bin-build > download > caw > tunnel-agent:
+        patched: '2018-08-09T16:34:37.611Z'
+    - grunt-contrib-imagemin > imagemin-gifsicle > gifsicle > bin-wrapper > download > caw > tunnel-agent:
+        patched: '2018-08-09T16:34:37.611Z'
+    - grunt-contrib-imagemin > imagemin-jpegtran > jpegtran-bin > bin-wrapper > download > caw > tunnel-agent:
+        patched: '2018-08-09T16:34:37.611Z'
+    - grunt-contrib-imagemin > imagemin-optipng > optipng-bin > bin-wrapper > download > caw > tunnel-agent:
+        patched: '2018-08-09T16:34:37.611Z'
