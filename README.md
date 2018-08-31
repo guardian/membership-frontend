@@ -84,7 +84,6 @@ See [client-side-principles.md](docs/client-side-principles.md) for high-level c
 
 A library of common patterns used across the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
 
-
 ### Download private keys
 
 Download our private keys from the `membership-private` S3 bucket. If you have the AWS CLI set up you can run:
