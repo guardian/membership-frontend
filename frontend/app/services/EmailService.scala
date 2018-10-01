@@ -5,23 +5,13 @@ import java.util
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model._
-import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder
-import com.amazonaws.services.sqs.model.{SendMessageRequest, SendMessageResult}
 import utils.LegacyHashing
 import com.gu.aws.CredentialsProvider
 import com.gu.identity.play.IdMinimalUser
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
-import configuration.Config
 import forms.FeedbackForm
-import model.ContributorRow
-import play.api.libs.json.Json
-import utils.AwsAsyncHandler
-
-import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
-import scalaz.\/
-import scalaz.syntax.either._
 
 trait FeedbackEmailService {
 
@@ -66,28 +56,4 @@ trait FeedbackEmailService {
   }
 }
 
-trait ThankYouEmailService {
-  private val sqsClient = AmazonSQSAsyncClientBuilder.standard.withCredentials(CredentialsProvider)
-    .withRegion(Regions.EU_WEST_1)
-    .build()
-
-  private val thankYouQueueUrl = sqsClient.getQueueUrl(Config.thankYouEmailQueue).getQueueUrl
-
-  def thankYou(row: ContributorRow)(implicit ec: ExecutionContext): Future[\/[Throwable, SendMessageResult]] = {
-    val payload = Json.stringify(Json.toJson(row))
-
-    val handler = new AwsAsyncHandler[SendMessageRequest, SendMessageResult]
-    sqsClient.sendMessageAsync(thankYouQueueUrl, payload, handler)
-
-    handler.future.map { result =>
-      result.right
-    } recover {
-      case t: Throwable =>
-        SafeLogger.error(scrub"Unable to send message to the SQS queue $thankYouQueueUrl", t)
-        t.left
-    }
-  }
-
-}
-
-object EmailService extends FeedbackEmailService with ThankYouEmailService
+object EmailService extends FeedbackEmailService
