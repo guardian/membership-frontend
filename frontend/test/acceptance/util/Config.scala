@@ -36,6 +36,5 @@ object Config {
     logger.info(s"Stage: ${conf.getString("stage")}")
     logger.info(s"Membership Frontend: ${baseUrl}")
     logger.info(s"Identity Frontend: ${identityFrontendUrl}")
-    logger.info(s"Screencast = https://saucelabs.com/tests/${Driver.sessionId}")
   }
 }
