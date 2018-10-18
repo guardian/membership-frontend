@@ -30,7 +30,9 @@ object Dependencies {
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.11"
   val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
   // This is required to force aws libraries to use the latest version of jackson
-  val dataBind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.11.1"
+  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7"
+  val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % "2.9.7"
+  var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % "2.9.7"
   val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play26" % "3.0.0" % "compile" excludeAll(
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
@@ -40,8 +42,8 @@ object Dependencies {
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
-    PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat, dataBind,
-    acquisitionEventProducer, bcprovJdk15on)
+    PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat, jacksonDataBind,
+    jacksonAnnotations, jacksonCore, acquisitionEventProducer, bcprovJdk15on)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager)
 
