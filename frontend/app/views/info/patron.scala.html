@@ -4,6 +4,7 @@
 @import views.support.{Asset, PageInfo, PaidPlans}
 @import com.gu.salesforce.Tier
 @import com.gu.memsub.Benefit
+@import configuration.Links
 
 @import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.memsub.subsv2.CatalogPlan
@@ -42,7 +43,7 @@
             @fragments.promos.promoSecondary(Html("Backstage pass to the Guardian"), img=img, toneClass=Some("tone-trans-brand-supporting-2")) {
                 <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
                 <a class="action"
-                    href="@routes.Joiner.enterPaidDetails(Tier.patron)"
+                    href="@Links.patrons"
                 >Become a Patron today</a>
             }
         </div>

@@ -6,6 +6,7 @@
 @import com.gu.memsub.subsv2.Catalog
 @import model.PackagePromo
 @import views.model.Roundel
+@import configuration.Links
 
 @(
   images: model.OrientatedImages,
@@ -147,7 +148,7 @@
     @fragments.page.section("Join now", isNarrow = false, sectionId = Some("join-now")) {
         <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
         <ul class="grid">
-        @for(tier <- PaidTier.all) {
+        @for(tier <- PaidTier.all.filterNot(_.name.toLowerCase() == "patron")) {
             <li class="grid__item">
             @fragments.tier.packagePromo(PaidPlans(catalog.findPaid(tier)), countryGroup, modifierClass = Some("package-promo--homepage"))
             </li>
@@ -165,7 +166,7 @@
                 "Become a Patron",
                 "Patrons play a vital role to keep the Guardian fearless, progressive and free from interference",
                 Seq(image),
-                Some(BasicLink(routes.Info.patron.url, "Learn more about Patrons", Some("qa-learn-patron")))
+                Some(BasicLink(Links.patrons, "Learn more about Patrons", Some("qa-learn-patron")))
             )
         }
     }

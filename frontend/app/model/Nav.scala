@@ -24,7 +24,7 @@ object Nav {
       NavItem("archive", routes.WhatsOn.listArchive.url, "Archive")
     )),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
-    NavItem("patrons", "/patrons", "Patrons"),
+    NavItem("patrons", Links.patrons, "Patrons"),
     NavItem("feedback", "/feedback", "Feedback")
   )
 

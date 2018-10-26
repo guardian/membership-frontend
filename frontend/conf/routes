@@ -86,7 +86,7 @@ POST        /tier/change/:tier                         controllers.TierControlle
 GET         /tier/change/:tier/summary                 controllers.TierController.upgradeThankyou(tier: PaidTier)
 
 # Information
-GET         /patrons                                   controllers.Info.patron
+GET         /patrons                                   controllers.Info.patronsRedirect
 GET         /supporter                                 controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 GET         /about/supporter                           controllers.Redirects.supporterRedirect
 GET         /:countryGroup/supporter                   controllers.Info.supporterFor(countryGroup: CountryGroup)

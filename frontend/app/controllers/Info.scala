@@ -5,7 +5,7 @@ import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
 import com.gu.memsub.images.{Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import com.gu.monitoring.SafeLogger
-import configuration.CopyConfig
+import configuration.{CopyConfig, Links}
 import forms.FeedbackForm
 import model.{ContentItemOffer, FlashMessage, OrientatedImages}
 import play.api.mvc.{BaseController, ControllerComponents}
@@ -32,6 +32,10 @@ class Info(
   def supporterRedirect(countryGroup: Option[CountryGroup]) = (NoCacheAction andThen StoreAcquisitionDataAction) { implicit request =>
     val determinedCountryGroup = (countryGroup orElse request.getFastlyCountryCode).getOrElse(CountryGroup.RestOfTheWorld)
     Redirect(routes.Info.supporterFor(determinedCountryGroup).url, campaignCodes(request), SEE_OTHER)
+  }
+
+  def patronsRedirect = NoCacheAction { implicit request =>
+    Redirect(Links.patrons, campaignCodes(request), TEMPORARY_REDIRECT)
   }
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
