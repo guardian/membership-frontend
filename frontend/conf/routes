@@ -81,6 +81,7 @@ GET         /tier/cancel                               controllers.TierControlle
 POST        /tier/cancel/confirm                       controllers.TierController.redirectToNewCancellationFlow
 GET         /tier/cancel/paid/summary                  controllers.TierController.redirectToNewCancellationFlow
 GET         /tier/cancel/free/summary                  controllers.TierController.redirectToNewCancellationFlow
+GET         /tier/change/patron                        controllers.Info.patronsRedirect
 GET         /tier/change/:tier                         controllers.TierController.upgrade(tier: PaidTier)
 POST        /tier/change/:tier                         controllers.TierController.upgradeConfirm(tier: PaidTier)
 GET         /tier/change/:tier/summary                 controllers.TierController.upgradeThankyou(tier: PaidTier)
