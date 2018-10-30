@@ -11,7 +11,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader("Change tier", Some("Join as an annual Partner or Patron Member and get 2 months free"))
+        @fragments.page.pageHeader("Change tier", Some("Join as an annual Partner and get 2 months free"))
 
         <section class="page-section">
             <div class="page-section__lead-in">
@@ -20,7 +20,7 @@
                     <span class="action__label">Edit profile</span>
                 </a>
             </div>
-            @defining(Tier.allPublic.filterNot(_ == currentTier)) { availableTiers =>
+            @defining(Tier.allPublic.filterNot{t => t == currentTier || t.name.toLowerCase == "patron"}) { availableTiers =>
             <div class="page-section__content">
 
                 <h1 class="h-section">You are currently a @currentTier.name, choose the tier you would like to switch to:</h1>

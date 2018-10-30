@@ -3,6 +3,7 @@
 @import views.support.PageInfo
 @import configuration.Videos
 @import com.gu.memsub.images.ResponsiveImageGroup
+@import configuration.Links
 
 @(
 	pageInfo: PageInfo,
@@ -154,7 +155,7 @@
 				</picture>
 				<h2>Patrons</h2>
 				<p>The Patrons tier is for those who care deeply about the Guardian's journalism and the impact it has on the world</p>
-				<a class="other-ways__cta other-ways__cta--patron js-patrons" href="/patrons"><button>@fragments.inlineIcon("arrow-right-straight")</button><span>Become a Patron</span></a>
+				<a class="other-ways__cta other-ways__cta--patron js-patrons" href="@Links.patrons"><button>@fragments.inlineIcon("arrow-right-straight")</button><span>Become a Patron</span></a>
 			</div>
 			<div class="other-ways__way other-ways__way--burnt-yellow">
 				<picture>

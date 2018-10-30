@@ -13,12 +13,13 @@
         <div class="listing__content">
             <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                 @for(tier <- PaidTier.all) {
-                    <li class="grid__item">
+                    @if(tier.name.toLowerCase != "patron") {
+                        <li class="grid__item">
                         @fragments.tier.packagePromo(catalog.findPaid(tier), countryGroup, isReversed = true)
-                    </li>
+                        </li>
+                    }
                 }
             </ul>
-            @fragments.tier.friendTeaser()
         </div>
     </div>
 </section>

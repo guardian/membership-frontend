@@ -71,7 +71,6 @@
     <div class="comparison-table__header">
         @comparisonHeader(supporter, countryGroup.currency)
         @comparisonHeader(partner, countryGroup.currency, isActive = true)
-        @comparisonHeader(patron, countryGroup.currency)
     </div>
     <div class="comparison-table__body">
         <div class="comparison-table__row">
@@ -79,7 +78,6 @@
             <div class="comparison-table__checkmarks">
                 @comparisonCheckmark(supporter, checkmark = true)
                 @comparisonCheckmark(partner, checkmark = true, isActive = true)
-                @comparisonCheckmark(patron, checkmark = true)
             </div>
         </div>
         <div class="comparison-table__row">
@@ -87,24 +85,15 @@
             <div class="comparison-table__checkmarks">
                     @comparisonCheckmark(supporter, checkmark = false)
                     @comparisonCheckmark(partner, checkmark = true, isActive = true)
-                    @comparisonCheckmark(patron, checkmark = true)
                 </div>
-            </div>
-            <div class="comparison-table__row">
-            @comparisonDetails(catalog.patron.tier.detailsLimited())
-            <div class="comparison-table__checkmarks">
-                @comparisonCheckmark(supporter, checkmark = false)
-                @comparisonCheckmark(partner, checkmark = false, isActive = true)
-                @comparisonCheckmark(patron, checkmark = true)
             </div>
         </div>
     </div>
     <div class="comparison-table__footer">
         @comparisonPricing(supporter)
         @comparisonPricing(partner, isActive = true)
-        @comparisonPricing(patron)
     </div>
     <div class="comparison-table__extra">
-    @fragments.tier.friendTeaser()
-</div>
+        &nbsp;
+    </div>
 </div>
