@@ -6,12 +6,8 @@ import cats.syntax.either._
 import com.gu.identity.play._
 import com.gu.identity.play.idapi.{CreateIdUser, UpdateIdUser, UserRegistrationResult}
 import com.gu.memsub.Address
-import com.gu.memsub.util.Timing
-import com.gu.monitoring.SafeLogger
 import configuration.Config
 import controllers.IdentityRequest
-import dispatch.Defaults.timer
-import dispatch._
 import forms.MemberForm._
 import com.gu.monitoring.SafeLogger
 import play.api.http.Status
@@ -103,9 +99,7 @@ class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: Exec
   }).valueOr(_ => false)
 
   def getFullUserDetails(user: IdMinimalUser)(implicit identityRequest: IdentityRequest): Future[IdUser] =
-    retry.Backoff(max = 3, delay = 2.seconds, base = 2){ () =>
-      getUser(user).value
-    }.map(_.fold({ errorMessage =>
+    getUser(user).value.map(_.fold({ errorMessage =>
       SafeLogger.warn(s"identity get user failed with: $errorMessage")
       val guCookieExists = identityRequest.headers.exists(_._1 == "X-GU-ID-FOWARDED-SC-GU-U")
       val guTokenExists = identityRequest.headers.exists(_._1 == "Authorization")

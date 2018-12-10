@@ -4,8 +4,6 @@ import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer
-import dispatch.Defaults.timer
-import dispatch._
 import forms.MemberForm.{CommonForm, JoinForm}
 import model.GenericSFContact
 import monitoring.MemberMetrics
@@ -69,14 +67,11 @@ class SalesforceService(salesforceConfig: SalesforceConfig)(implicit val system:
     }
 
 
-  private def upsert(userId: UserId, value: JsObject) =
-  // upsert is POST request but safe to retry
-    retry.Backoff(max = 2, delay = 2.seconds, base = 2) { () =>
-      repository.upsert(Some(userId), value).either
-    }.map {
-      case Left(e) => throw new SalesforceServiceError(s"User $userId could not be upsert in Salesforce", e)
-      case Right(contactId) => contactId
-    }
+  private def upsert(userId: UserId, value: JsObject): Future[ContactId] = {
+    repository.upsert(Some(userId), value)
+      .recover { case e => throw new SalesforceServiceError(s"User $userId could not be upsert in Salesforce", e) }
+  }
+
 }
 
 case class SalesforceServiceError(msg: String, cause: Throwable) extends Throwable(msg, cause)
