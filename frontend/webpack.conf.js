@@ -1,8 +1,8 @@
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 var LoaderOptions = require("webpack/lib/LoaderOptionsPlugin");
 var path = require("path");
 
-var prodPlugins = [ new UglifyJSPlugin({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
+var prodPlugins = [ new TerserPlugin({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
 var debugPlugins = [new LoaderOptions({ debug: true })];
 
 module.exports = function(debug) { return {
