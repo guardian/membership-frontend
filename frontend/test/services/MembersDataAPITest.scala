@@ -15,12 +15,11 @@ class MembersDataAPITest extends FreeSpec {
 
   "Attributes can be deserialized" in {
     assertResult(
-      JsSuccess(Attributes(patron, Some("1234567abcdef")))
+      JsSuccess(Attributes(patron))
     )(
       Json.parse(
         """
           |{
-          |  "membershipNumber": "1234567abcdef",
           |  "tier": "Patron"
           |}
         """.stripMargin).validate[Attributes](MembersDataAPI.attributesReads)
