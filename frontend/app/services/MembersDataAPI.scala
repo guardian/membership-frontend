@@ -24,16 +24,13 @@ object MembersDataAPI {
     case _ => JsError("Expected a string representation of a tier")
   }
 
-  implicit val attributesReads: Reads[Attributes] = (
-    (JsPath \ "tier").read[Tier] and
-      (JsPath \ "membershipNumber").readNullable[String]
-    )(Attributes.apply _)
+  implicit val attributesReads: Reads[Attributes] = Json.reads[Attributes]
 
-  case class Attributes(tier: Tier, membershipNumber: Option[String])
+  case class Attributes(tier: Tier)
   case class Behaviour(userId: String, activity: Option[String], lastObserved: Option[String], note: Option[String], emailed: Option[Boolean])
 
   object Attributes {
-    def fromMember(member: Member) = Attributes(member.subscription.plan.tier, member.contact.regNumber)
+    def fromMember(member: Member) = Attributes(member.subscription.plan.tier)
   }
 
   case class ApiError(message: String, details: String) extends RuntimeException(s"$message - $details")
@@ -73,7 +70,7 @@ class MembersDataAPI(executionContext: ExecutionContext) {
       case _ => SafeLogger.error(scrub"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }
 
-    private def getAttributes(cookies: AccessCredentials.Cookies) = AttributeHelper(cookies).get[Attributes]("user-attributes/me/membership")
+    private def getAttributes(cookies: AccessCredentials.Cookies) = AttributeHelper(cookies).get[Attributes]("user-attributes/me")
 
   }
 }
