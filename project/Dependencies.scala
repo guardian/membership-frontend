@@ -4,7 +4,8 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.11.226"
+  val awsClientVersion = "1.11.478"
+  val jacksonVersion = "2.9.8"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
@@ -30,9 +31,9 @@ object Dependencies {
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.8.11"
   val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
   // This is required to force aws libraries to use the latest version of jackson
-  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7"
-  val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % "2.9.7"
-  var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % "2.9.7"
+  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
+  val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion
+  var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   val acquisitionEventProducer = "com.gu" %% "acquisition-event-producer-play26" % "4.0.0" % "compile" excludeAll(
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
