@@ -11,7 +11,6 @@ import play.api.mvc._
 import services.{GuardianContentService, _}
 import views.support.PageInfo
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Failure
 
 class MemberOnlyContent(contentApiService: GuardianContentService, commonActions: CommonActions, implicit val executionContext: ExecutionContext, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
