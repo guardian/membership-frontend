@@ -3948,11 +3948,12 @@ grunt-eslint@^20.1.0:
     chalk "^2.1.0"
     eslint "^4.0.0"
 
-grunt-karma@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/grunt-karma/-/grunt-karma-2.0.0.tgz#753583d115dfdc055fe57e58f96d6b3c7e612118"
+grunt-karma@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/grunt-karma/-/grunt-karma-3.0.1.tgz#f2bb7b0e2d35cbd2c9001381bbe557d1d88ef398"
+  integrity sha512-iNt1Qe5GoePMIfBQmeffvfrvnvwTfJ9/h9p9gqGMIuEdVsUo4PKhTxIwyW5NMbHrgD8p2UEdeTJH4l0QGz4YtA==
   dependencies:
-    lodash "^3.10.1"
+    lodash "^4.17.10"
 
 grunt-known-options@~1.1.0:
   version "1.1.1"
@@ -5650,10 +5651,6 @@ lodash.templatesettings@^3.0.0:
   dependencies:
     lodash._reinterpolate "^3.0.0"
     lodash.escape "^3.0.0"
-
-lodash@^3.10.1:
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
 lodash@^4, lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.5, lodash@^4.3.0, lodash@~4.17.10, lodash@~4.17.5:
   version "4.17.11"
