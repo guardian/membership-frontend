@@ -2,16 +2,15 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
     'use strict';
 
     // Trim subdomains for prod, code and dev.
-    const getShortDomain = () => {
-
-        const domain = document.domain || '';
+    function  getShortDomain(){
+        var domain = document.domain || '';
         return domain.replace(/^(membership|m\.code|m|mem)\./, '.');
-    };
+    }
 
-    const getDomainAttribute = () => {
-        const shortDomain = getShortDomain();
-        return shortDomain === 'localhost' ? '' : ` domain=${shortDomain};`;
-    };
+    function getDomainAttribute(){
+        var shortDomain = getShortDomain();
+        return shortDomain === 'localhost' ? '' : ' domain=' + shortDomain;
+    }
 
     /*
      Cookie functions originally from http://www.quirksmode.org/js/cookies.html
@@ -30,7 +29,7 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
             expires = '';
         }
 
-        document.cookie = `${name}=${value}; path=/; ${secureCookieString} ${expires};${getDomainAttribute()}`;
+        document.cookie = [name, '=', value, expires, '; path=/; ', secureCookieString, getDomainAttribute()].join('');
     }
 
     function getCookie(name) {
