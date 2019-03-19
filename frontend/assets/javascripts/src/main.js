@@ -27,7 +27,8 @@ require([
     'src/modules/memstatus',
     'src/modules/faq',
     'src/modules/landingBundles',
-    'src/modules/bundlesLanding'
+    'src/modules/bundlesLanding',
+    'src/modules/consentBanner'
 ], function(
     ajax,
     raven,
@@ -57,7 +58,8 @@ require([
     memstatus,
     faq,
     landingBundles,
-    bundlesLanding
+    bundlesLanding,
+    consentBanner
 ) {
     'use strict';
 
@@ -107,4 +109,6 @@ require([
     memstatus.init();
 
     faq.init();
+
+    consentBanner.init();
 });
