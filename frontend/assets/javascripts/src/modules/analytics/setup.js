@@ -5,14 +5,16 @@ define([
     'src/modules/analytics/krux',
     'src/modules/analytics/facebook',
     'src/modules/analytics/uet',
-    'src/modules/analytics/campaignCode'
+    'src/modules/analytics/campaignCode',
+    'src/modules/analytics/thirdPartyTracking'
 ], function (
     cookie,
     ga,
     krux,
     facebook,
     uet,
-    campaignCode
+    campaignCode,
+    thirdPartyTracking
 ) {
     'use strict';
 
@@ -32,14 +34,16 @@ define([
         !cookie.getCookie('ANALYTICS_OFF_KEY')
     );
 
+    const thirdPartyTrackingEnabled = thirdPartyTracking.thirdPartyTrackingEnabled();
+
     function setupAnalytics() {
         ga.init();
-        uet.init();
     }
 
     function setupThirdParties() {
         krux.init();
         facebook.init();
+        uet.init();
     }
 
     function init() {
@@ -49,7 +53,7 @@ define([
             setupAnalytics();
         }
 
-        if(analyticsEnabled && !guardian.isDev) {
+        if(analyticsEnabled && thirdPartyTrackingEnabled && !guardian.isDev) {
             setupThirdParties();
         }
     }
