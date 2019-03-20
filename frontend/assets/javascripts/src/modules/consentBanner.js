@@ -4,6 +4,7 @@ import {
     Unset,
     writeTrackingConsentCookie,
 } from './analytics/thirdPartyTracking';
+import { getCookie } from '../utils/cookie';
 
 const BANNER = 'js-consent-banner';
 const ACCEPT_BUTTON = 'js-consent-banner-accept';
@@ -17,7 +18,10 @@ function bindHandlers(elements) {
 }
 
 function setBannerVisibility(elements) {
-    if (getTrackingConsent() === Unset){
+    const visible = getCookie('_post_deploy_user') !== 'true' &&
+        getTrackingConsent() === Unset;
+
+    if (visible){
         elements.banner.style.display = 'block';
     } else {
         elements.banner.style.display = 'none';

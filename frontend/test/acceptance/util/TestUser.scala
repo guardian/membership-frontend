@@ -13,6 +13,7 @@ class TestUser {
   private def addTestUserCookies(testUsername: String) = {
     Driver.addCookie("ANALYTICS_OFF_KEY", "true")
     Driver.addCookie("pre-signin-test-user", testUsername)
+    Driver.addCookie(name = "_post_deploy_user", value = "true")
   }
 
   val username = testUsers.generate()
