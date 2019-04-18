@@ -3,9 +3,9 @@ package services
 import java.time.Instant
 
 import akka.actor.ActorSystem
-import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
+import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import com.gu.contentapi.client.model.v1._
-import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
+import com.gu.contentapi.client.GuardianContentClient
 import com.gu.memsub.util.ScheduledTask
 import configuration.Config
 import org.joda.time.DateTime
@@ -104,7 +104,7 @@ trait GuardianContent {
 
   val logAndRecord: PartialFunction[Try[_], Unit] = {
     case Success(_) =>
-    case Failure(GuardianContentApiError(status, message, _)) =>
+    case Failure(ContentApiError(status, message, _)) =>
       SafeLogger.error(scrub"Error response from Content API $status")
   }
 
