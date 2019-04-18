@@ -40,13 +40,14 @@ object Dependencies {
     ExclusionRule(organization = "org.scalactic")
   )
   val googleAuth = "com.gu" %% "play-googleauth" % "0.7.6"
+  val libthrift = "org.apache.thrift" % "libthrift" % "0.12.0"
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
-    acquisitionEventProducer, bcprovJdk15on)
+    acquisitionEventProducer, bcprovJdk15on, libthrift)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager)
 
