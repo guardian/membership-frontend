@@ -1,7 +1,7 @@
 package controllers
 
 import actions.CommonActions
-import com.gu.contentapi.client.GuardianContentApiError
+import com.gu.contentapi.client.model.ContentApiError
 import com.gu.i18n.CountryGroup._
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -49,7 +49,7 @@ class MemberOnlyContent(contentApiService: GuardianContentService, commonActions
             Redirect(routes.Joiner.tierChooser())
           )
       }.recoverWith {
-          case GuardianContentApiError(404, _, _) => Future.successful(NotFound(views.html.error404()))
+          case ContentApiError(404, _, _) => Future.successful(NotFound(views.html.error404()))
           case ex => Future.successful(InternalServerError(views.html.error500(ex)))
         }
     }
