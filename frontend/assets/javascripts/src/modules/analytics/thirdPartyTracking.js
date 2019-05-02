@@ -15,7 +15,7 @@ const getTrackingConsent = () => {
     return Unset;
 };
 
-const thirdPartyTrackingEnabled = () => getTrackingConsent() !== OptedOut;
+const thirdPartyTrackingEnabled = () => getTrackingConsent() === OptedIn;
 
 const writeTrackingConsentCookie = (trackingConsent) => {
     if (trackingConsent !== Unset) {
