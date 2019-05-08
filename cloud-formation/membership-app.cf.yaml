@@ -5,10 +5,12 @@ Parameters:
     Type: String
     Description: VpcId of your existing Virtual Private Cloud (VPC)
     Default: vpc-e6e00183
-  Subnets:
-    Type: CommaDelimitedList
-    Description: The list of SubnetIds in your Virtual Private Cloud (VPC)
-    Default: subnet-cb91ae8d, subnet-a7b74ac2, subnet-179e8063
+  PrivateVpcSubnets:
+    Description: Private subnets to use for EC2 instances
+    Type: List<AWS::EC2::Subnet::Id>
+  PublicVpcSubnets:
+    Description: Public subnets to use for the ELB
+    Type: List<AWS::EC2::Subnet::Id>
   Stack:
     Description: Applied directly as a tag ('membership', or 'memb-masterclasses')
     Type: String
@@ -63,10 +65,8 @@ Resources:
   FrontendAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      AvailabilityZones:
-        Fn::GetAZs: ''
       VPCZoneIdentifier:
-        Ref: Subnets
+        Ref: PrivateVpcSubnets
       LaunchConfigurationName:
         Ref: FrontendLaunchConfig
       MinSize:
@@ -195,7 +195,7 @@ Resources:
       SecurityGroups:
       - Ref: LoadBalancerSecurityGroup
       Subnets:
-        Ref: Subnets
+        Ref: PublicVpcSubnets
       HealthCheck:
         Target: HTTP:9000/healthcheck
         HealthyThreshold: '2'
