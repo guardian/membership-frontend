@@ -4,8 +4,8 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.11.478"
-  val jacksonVersion = "2.9.8"
+  val awsClientVersion = "1.11.564"
+  val jacksonVersion = "2.9.9"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
