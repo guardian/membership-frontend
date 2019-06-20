@@ -8,15 +8,6 @@ Membership depends on Identity, so **you'll need to perform the**
 
 ## Membership-specific setup
 
-#### Update your hosts file
-
-Add the following local development domains to your hosts file in `/etc/hosts`:
-
-```
-127.0.0.1   mem.thegulocal.com
-127.0.0.1   profile.thegulocal.com
-```
-
 #### Run Membership's Nginx setup script
 
 Run the Membership-specific [setup.sh](setup.sh) script from the root
