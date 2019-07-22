@@ -35,8 +35,7 @@
     "text-loader": "0.0.1",
     "time-grunt": "^1.4.0",
     "url-search-params": "^0.10.0",
-    "vinyl-fs": "^3.0.3",
-    "webpack": "^4.35.0"
+    "vinyl-fs": "^3.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -67,6 +66,7 @@
     "karma-webpack": "^4.0.2",
     "phantomjs-prebuilt": "^2.1.15",
     "snyk": "^1.114.1",
+    "webpack": "^4.35.0",
     "webpack-dev-server": "^3.7.2"
   },
   "snyk": true
