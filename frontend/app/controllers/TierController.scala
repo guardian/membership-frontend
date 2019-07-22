@@ -90,7 +90,7 @@ class TierController(
     val sub = subscriber.subscription
 
     (for {
-      country <- EitherT(memberService.country(subscriber.contact).map(\/.right))
+      country <- EitherT(memberService.country(subscriber.contact))
       paymentMethod <- EitherT(paymentService.getPaymentMethod(sub.accountId).map(_ \/>[MemberError] NoCardError(sub.name)))
       preview <- EitherT(memberService.previewUpgradeSubscription(subscriber, targetChoice))
     } yield PaidToPaidUpgradeSummary(preview, sub, targetChoice.productRatePlanId, paymentMethod)(c)).run

@@ -32,7 +32,7 @@ class DestinationServiceTest extends Specification {
     def createRequestWithSession(newSessions: (String, String)*) = {
 
       val testMember = Contact(
-        identityId= "id",
+        identityId= Some("id"),
         regNumber= None,
         title = None,
         firstName= Some("fn"),
@@ -44,7 +44,8 @@ class DestinationServiceTest extends Specification {
         mailingCity= None,
         mailingState= None,
         mailingPostcode= None,
-        mailingCountry= None
+        mailingCountry= None,
+        recordTypeId = None
       )
       val partnerCharge: PaidCharge[Partner.type, Month.type] = PaidCharge[Partner.type, Month.type](Partner, Month, PricingSummary(Map(GBP -> Price(0.1f, GBP))), ProductRatePlanChargeId("prpcId"),SubscriptionRatePlanChargeId("srpcid"))
       val testSub: Subscription[SubscriptionPlan.Member] = new Subscription[SubscriptionPlan.Partner](
