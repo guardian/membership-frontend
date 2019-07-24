@@ -1,6 +1,6 @@
 package services
 
-import _root_.services.api.MemberService.{CreateMemberResult, MemberError, PendingAmendError}
+import _root_.services.api.MemberService.{CreateMemberResult, MemberError, NoIdentityId, PendingAmendError}
 import _root_.services.paymentmethods._
 import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
@@ -40,11 +40,13 @@ import utils.ReferralData
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 import scalaz._
 import scalaz.std.scalaFuture._
 import scalaz.syntax.either._
+import scalaz.syntax.std.option._
 import scalaz.syntax.monad._
 
 object MemberService {
@@ -100,10 +102,12 @@ class MemberService(
 
   implicit val catalog = catalogService.unsafeCatalog
 
-  def country(contact: Contact)(implicit r: IdentityRequest): Future[Country] =
-    identityService.getFullUserDetails(IdMinimalUser(contact.identityId, None))
-      .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
-        .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
+  def country(contact: Contact)(implicit r: IdentityRequest): Future[MemberError \/ Country] =
+    contact.identityId.map { identityId =>
+      identityService.getFullUserDetails(IdMinimalUser(identityId, None))
+        .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
+          .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
+    }.map(_.map(\/.right)).getOrElse(Future.successful(\/.left[MemberError, Country](NoIdentityId())))
 
   override def createMember(
       user: IdUser,
@@ -227,7 +231,7 @@ class MemberService(
                                          (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule] = {
     (for {
       _ <- EitherT(Future.successful(subOrPendingAmendError(subscriber.subscription)))
-      country <- EitherT(country(subscriber.contact).map(\/.right))
+      country <- EitherT(country(subscriber.contact))
       a <- EitherT(amend(subscriber.subscription, newPlan, Set.empty).map(\/.right))
       result <- EitherT(zuoraService.upgradeSubscription(a.copy(previewMode = true)).map(\/.right))
     } yield BillingSchedule.fromPreviewInvoiceItems(_ => None)(result.invoiceItems).getOrElse(
@@ -367,7 +371,8 @@ class MemberService(
         email = email,
         promoCode = None,
         contractAcceptance = today,
-        contractEffective = today
+        contractEffective = today,
+        readerType = ReaderType.Direct
       ))
     } yield result).andThen { case Failure(e) => SafeLogger.error(scrub"Could not create free subscription for user with salesforceContactId ${contactId.salesforceContactId}", e) }
   }
@@ -394,7 +399,8 @@ class MemberService(
       val invoiceTemplateId = invoiceIdsByCountry.get(transactingCountry)
       val stripePaymentGateway = RegionalStripeGateways.getGatewayForCountry(transactingCountry)
 
-      Subscribe(account = createAccount(contactId, identityId, currency, joinData.payment, stripePaymentGateway, invoiceTemplateId),
+      Subscribe(
+        account = createAccount(contactId, identityId, currency, joinData.payment, stripePaymentGateway, invoiceTemplateId),
         paymentMethod = Some(paymentMethod),
         address = joinData.zuoraAccountAddress,
         email = email,
@@ -402,7 +408,9 @@ class MemberService(
         name = nameData,
         ipCountry = ipCountry,
         contractAcceptance = today,
-        contractEffective = today)
+        contractEffective = today,
+        readerType = ReaderType.Direct
+      )
     }.andThen { case Failure(e) => SafeLogger.error(scrub"Could not get features in tier ${tier.name} for user with salesforceContactId ${contactId.salesforceContactId}", e) }
 
     subscribe
@@ -479,14 +487,15 @@ class MemberService(
     val tier = newPlan.tier
 
     (for {
+      identityId <- EitherT(Future.successful(contact.identityId.\/>[MemberError](NoIdentityId())))
       s <- EitherT(Future.successful(subOrPendingAmendError(sub)))
-      country <- EitherT(country(contact).map(\/.right))
+      country <- EitherT(country(contact))
       command <- EitherT(amend(sub, planChoice, form.featureChoice).map(\/.right))
       _ <- zuoraService.upgradeSubscription(command).liftM
-      _ <- salesforceService.updateMemberStatus(IdMinimalUser(contact.identityId, None), newPlan.tier, None).liftM
+      _ <- salesforceService.updateMemberStatus(IdMinimalUser(identityId, None), newPlan.tier, None).liftM
     } yield {
       salesforceService.metrics.putUpgrade(tier)
-      addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(contact.identityId, _))
+      addressDetails.foreach(identityService.updateUserFieldsBasedOnUpgrade(identityId, _))
       contact
     }).run
   }

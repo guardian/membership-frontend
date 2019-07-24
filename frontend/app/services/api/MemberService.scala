@@ -26,7 +26,7 @@ trait MemberService {
 
   type ZuoraSubName = String
 
-  def country(contact: GenericSFContact)(implicit i: IdentityRequest): Future[Country]
+  def country(contact: GenericSFContact)(implicit i: IdentityRequest): Future[MemberError \/ Country]
 
   def createMember(user: IdUser,
                    formData: JoinForm,
@@ -102,5 +102,8 @@ object MemberService {
   }
   case class NoCardError(name: S.Name) extends MemberError {
     override def getMessage = s"Subscription ${name.get} has no card"
+  }
+  case class NoIdentityId() extends MemberError {
+    override def getMessage = s"SF Contact has no identity id"
   }
 }

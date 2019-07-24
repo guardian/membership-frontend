@@ -4,13 +4,13 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.11.564"
-  val jacksonVersion = "2.9.9"
+  val awsClientVersion = "1.11.594"
+  val (jacksonVersion, jacksonVersionBump) = ("2.9.9", "2.9.9.1")
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "2.5"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.527"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.549"
   val contentAPI = "com.gu" %% "content-api-client-default" % "14.1"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
@@ -24,14 +24,14 @@ object Dependencies {
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.8.6" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.5.14"
-  val catsCore = "org.typelevel" %% "cats-core" % "1.0.1"
+  val catsCore = "org.typelevel" %% "cats-core" % "1.6.1"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion
   val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
   // This is required to force aws libraries to use the latest version of jackson
-  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
+  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersionBump
   val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion
   var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   var jacksonDataType = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion
