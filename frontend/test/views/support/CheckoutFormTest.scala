@@ -2,7 +2,7 @@ package views.support
 
 import com.gu.i18n.Currency._
 import com.gu.i18n._
-import com.gu.identity.play.{PrivateFields, PublicFields, StatusFields}
+import com.gu.identity.model.{PrivateFields, PublicFields, StatusFields}
 import com.gu.memsub.Benefit._
 import com.gu.memsub.Subscription.{ProductRatePlanChargeId, ProductRatePlanId, SubscriptionRatePlanChargeId}
 import com.gu.memsub._

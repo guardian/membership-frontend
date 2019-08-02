@@ -21,7 +21,7 @@ import scalaz.std.scalaFuture._
 import scala.concurrent.{ExecutionContext, Future}
 import scalaz.{-\/, \/, \/-}
 
-class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, executionContext: ExecutionContext) {
+class TouchpointActionRefiners(authenticationService: AuthenticationService, touchpointBackends: TouchpointBackends, executionContext: ExecutionContext) {
 
   implicit private val ec = executionContext
   implicit private val tpbs = touchpointBackends
@@ -43,7 +43,7 @@ class TouchpointActionRefiners(touchpointBackends: TouchpointBackends, execution
     val FreeSubscriber = MemSubscriber[Subscription[SubscriptionPlan.FreeMember]] _
     val PaidSubscriber = MemSubscriber[Subscription[SubscriptionPlan.PaidMember]] _
     (for {
-      user <- OptionEither.liftFutureEither(AuthenticationService.authenticatedIdUserProvider(request))
+      user <- OptionEither.liftFutureEither(authenticationService.authenticateUser(request))
       authRequest = new AuthenticatedRequest(user, request)
       tp = authRequest.touchpointBackend
       member <- OptionEither(authRequest.forMemberOpt)

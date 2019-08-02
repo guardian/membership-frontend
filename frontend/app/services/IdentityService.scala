@@ -3,13 +3,14 @@ package services
 import cats.data.EitherT
 import cats.instances.all._
 import cats.syntax.either._
-import com.gu.identity.play._
-import com.gu.identity.play.idapi.{CreateIdUser, UpdateIdUser, UserRegistrationResult}
+import com.gu.identity.model.play.ReadsInstances
+import com.gu.identity.model.{PrivateFields, User => IdUser}
 import com.gu.memsub.Address
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import com.gu.monitoring.SafeLogger
+import model.{CreateIdUser, IdMinimalUser, UpdateIdUser, UserRegistrationResult}
 import play.api.http.Status
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
@@ -57,22 +58,22 @@ object IdentityService {
     def country(address: Option[Address]) = address.map(a => a.country.fold(a.countryName)(_.name))
 
     PrivateFields(
-      firstName,
-      lastName,
+      firstName = firstName,
+      secondName = lastName,
 
-      delivery.map(_.lineOne),
-      delivery.map(_.lineTwo),
-      delivery.map(_.town),
-      delivery.map(_.countyOrState),
-      delivery.map(_.postCode),
-      country(delivery),
+      address1 = delivery.map(_.lineOne),
+      address2 = delivery.map(_.lineTwo),
+      address3 = delivery.map(_.town),
+      address4 = delivery.map(_.countyOrState),
+      postcode = delivery.map(_.postCode),
+      country = country(delivery),
 
-      billing.map(_.lineOne),
-      billing.map(_.lineTwo),
-      billing.map(_.town),
-      billing.map(_.countyOrState),
-      billing.map(_.postCode),
-      country(billing)
+      billingAddress1 = billing.map(_.lineOne),
+      billingAddress2 = billing.map(_.lineTwo),
+      billingAddress3 = billing.map(_.town),
+      billingAddress4 = billing.map(_.countyOrState),
+      billingPostcode = billing.map(_.postCode),
+      billingCountry = country(billing)
     )
   }
 
@@ -80,7 +81,9 @@ object IdentityService {
     new IdentityService(identityApiProvider, ec)
 }
 
-class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: ExecutionContext) {
+class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: ExecutionContext)
+  // Provides type classes for writing / reading user models to / from JSON respectively.
+  extends ReadsInstances {
 
   lazy val identityApi = identityApiProvider
 

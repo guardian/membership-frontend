@@ -9,7 +9,8 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "2.5"
+  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "2.6"
+  val identityModelPlay = "com.gu.identity" %% "identity-model-play" % "3.184-M7"
   val membershipCommon = "com.gu" %% "membership-common" % "0.549"
   val contentAPI = "com.gu" %% "content-api-client-default" % "14.1"
   val playWS = PlayImport.ws
@@ -45,7 +46,7 @@ object Dependencies {
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
-    PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
+    PlayImport.specs2 % "test", specs2Extra, identityPlayAuth, identityModelPlay, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
     acquisitionEventProducer, bcprovJdk15on, libthrift)
 

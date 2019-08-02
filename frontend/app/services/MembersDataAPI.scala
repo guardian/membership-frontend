@@ -1,7 +1,7 @@
 package services
 
 import actions.ActionRefiners.SubReqWithSub
-import com.gu.identity.play.AccessCredentials
+import model.AccessCredentials
 import com.gu.memsub.Subscriber.Member
 import com.gu.memsub.util.WebServiceHelper
 import com.gu.okhttp.RequestRunners
@@ -63,9 +63,9 @@ class MembersDataAPI(executionContext: ExecutionContext) {
           case Success(memDataApiAttrs) =>
             val salesforceAttrs = Attributes.fromMember(memberRequest.subscriber)
             if (memDataApiAttrs.tier != salesforceAttrs.tier) {
-              SafeLogger.error(scrub"${memberRequest.user.id} Salesforce and members-data-api had differing Tier info: salesforce=${salesforceAttrs.tier} mem-data-api=${memDataApiAttrs.tier}")
+              SafeLogger.error(scrub"${memberRequest.user.minimalUser.id} Salesforce and members-data-api had differing Tier info: salesforce=${salesforceAttrs.tier} mem-data-api=${memDataApiAttrs.tier}")
             }
-          case Failure(err) => SafeLogger.error(scrub"Failed to get membership attributes from membership-data-api for user ${memberRequest.user.id} (OK in dev)", err)
+          case Failure(err) => SafeLogger.error(scrub"Failed to get membership attributes from membership-data-api for user ${memberRequest.user.minimalUser.id} (OK in dev)", err)
         }
       case _ => SafeLogger.error(scrub"Unexpected credentials for getAttributes! ${memberRequest.user.credentials}")
     }

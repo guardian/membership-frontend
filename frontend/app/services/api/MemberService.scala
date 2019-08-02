@@ -1,7 +1,7 @@
 package services.api
 
 import com.gu.i18n.Country
-import com.gu.identity.play.IdUser
+import com.gu.identity.model.{User => IdUser}
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.promo.PromoError
 import com.gu.memsub.subsv2._

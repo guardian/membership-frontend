@@ -50,7 +50,7 @@ trait AcquisitionTracking {
     def cookieValue(name: String): Option[String] =
       request.cookies.get(name).map(_.value)
 
-    ophanService(TestUsers.isTestUser(request.user.user)).submit(MembershipAcquisitionData(
+    ophanService(TestUsers.isTestUser(request.user.minimalUser)).submit(MembershipAcquisitionData(
       summary.amountPaidToday,
       summary.billingPeriod,
       paymentMethod,

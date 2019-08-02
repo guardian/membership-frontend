@@ -19,6 +19,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class Info(
   val identityApi: IdentityApi,
+  authenticationService: AuthenticationService,
   guardianContentService: GuardianContentService,
   touchpointBackends: TouchpointBackends,
   commonActions: CommonActions,
@@ -201,10 +202,10 @@ class Info(
 
 
   def feedback = NoCacheAction.async { implicit request =>
-    val authenticatedUser = AuthenticationService.authenticatedUserFor(request)
-    val name = authenticatedUser.flatMap(_.displayName)
+    val authenticatedUser = authenticationService.authenticateUser(request)
+    val name = authenticatedUser.flatMap(_.minimalUser.displayName)
 
-    val identityUser = authenticatedUser.map { user => identityService.getFullUserDetails(user)(IdentityRequest(request)) }
+    val identityUser = authenticatedUser.map { user => identityService.getFullUserDetails(user.minimalUser)(IdentityRequest(request)) }
     val email  = identityUser.map(_.map(u => Some(u.primaryEmailAddress))).getOrElse(Future.successful(None))
 
 
@@ -216,7 +217,7 @@ class Info(
 
   def submitFeedback = NoCacheAction.async { implicit request =>
 
-    val userOpt = AuthenticationService.authenticatedUserFor(request).map(_.user)
+    val userOpt = authenticationService.authenticateUser(request).map(_.minimalUser)
     val uaOpt = request.headers.get(USER_AGENT)
 
     val identityUser = userOpt.map { user => identityService.getFullUserDetails(user)(IdentityRequest(request)) }

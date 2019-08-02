@@ -1,7 +1,7 @@
 package services.paymentmethods
 
 import com.gu.i18n.{Country, CountryGroup}
-import com.gu.identity.play.IdMinimalUser
+import model.IdMinimalUser
 import com.gu.stripe.StripeService
 import com.gu.zuora
 import com.gu.zuora.api.RegionalStripeGateways
