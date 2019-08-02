@@ -20,7 +20,7 @@ class CheckoutFormTest extends Specification {
 
   val idUser =
     IdentityUser(
-      PublicFields(None),
+      PublicFields(),
       billingAddress,
       StatusFields(),
       passwordExists = false,
@@ -29,7 +29,7 @@ class CheckoutFormTest extends Specification {
 
   val idUserWithBlankCountry =
     IdentityUser(
-      PublicFields(None),
+      PublicFields(),
       billingAddress.copy(billingCountry = None),
       StatusFields(),
       passwordExists = false,
