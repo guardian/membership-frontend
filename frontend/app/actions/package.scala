@@ -1,5 +1,5 @@
 import com.gu.googleauth
-import com.gu.identity.play.AuthenticatedIdUser
+import model.AuthenticatedIdUser
 import com.gu.memsub.Subscriber.{FreeMember, Member, PaidMember}
 import com.gu.memsub.subsv2.{Subscription, SubscriptionPlan}
 import com.gu.salesforce._
@@ -23,12 +23,12 @@ package object actions {
   }
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) extends BackendProvider {
-    def touchpointBackend(implicit tpbs: TouchpointBackends) = tpbs.forUser(req.user)
+    def touchpointBackend(implicit tpbs: TouchpointBackends) = tpbs.forUser(req.user.minimalUser)
 
     def forMemberOpt(implicit executor: ExecutionContext, tpbs: TouchpointBackends): Future[String \/ Option[GenericSFContact]] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
-          memberOpt <- touchpointBackend.salesforceService.getMember(req.user.id)
+          memberOpt <- touchpointBackend.salesforceService.getMember(req.user.minimalUser.id)
         } yield memberOpt
       }
     }
@@ -65,7 +65,7 @@ package object actions {
   }
 
   case class IdentityGoogleAuthRequest[A](googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) with BackendProvider {
-    def touchpointBackend(implicit touchpointBackends: TouchpointBackends): TouchpointBackend = touchpointBackends.forUser(request.user)
+    def touchpointBackend(implicit touchpointBackends: TouchpointBackends): TouchpointBackend = touchpointBackends.forUser(request.user.minimalUser)
     val identityUser = request.user
   }
 }

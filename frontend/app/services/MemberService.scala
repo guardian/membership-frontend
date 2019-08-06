@@ -6,7 +6,8 @@ import com.gu.config.DiscountRatePlanIds
 import com.gu.i18n.Country.UK
 import com.gu.i18n.Currency.GBP
 import com.gu.i18n.{Country, CountryGroup, Currency}
-import com.gu.identity.play.{IdMinimalUser, IdUser}
+import model.IdMinimalUser
+import com.gu.identity.model.{User => IdUser}
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
 import com.gu.memsub.Subscription.{Feature, ProductRatePlanId, RatePlanId}
 import com.gu.memsub.services.api.PaymentService
@@ -105,7 +106,7 @@ class MemberService(
   def country(contact: Contact)(implicit r: IdentityRequest): Future[MemberError \/ Country] =
     contact.identityId.map { identityId =>
       identityService.getFullUserDetails(IdMinimalUser(identityId, None))
-        .map(c => c.privateFields.flatMap(_.billingCountry).orElse(c.privateFields.flatMap(_.country))
+        .map(c => c.privateFields.billingCountry.orElse(c.privateFields.country)
           .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
     }.map(_.map(\/.right)).getOrElse(Future.successful(\/.left[MemberError, Country](NoIdentityId())))
 
@@ -132,16 +133,19 @@ class MemberService(
         case Failure(e) => SafeLogger.error(scrub"Could not create paid Zuora subscription: ID=${user.id}", e)
       }
 
-    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] =
-      salesforceService.updateMemberStatus(user.minimal, tier, stripeCustomer).andThen { case Failure(e) =>
+    def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] = {
+      val minimalUser = IdMinimalUser(user.id, user.publicFields.displayName)
+      salesforceService.updateMemberStatus(minimalUser, tier, stripeCustomer).andThen { case Failure(e) =>
         SafeLogger.error(scrub"Could not update Salesforce contact with membership status for user ${user.id}", e)
       }
+    }
 
     formData match {
       case payingForm: PaidMemberJoinForm =>
         val transactingCountry = payingForm.billingAddress.flatMap(_.country) orElse payingForm.deliveryAddress.country orElse ipCountry getOrElse UK
+        val minimalUser = IdMinimalUser(user.id, user.publicFields.displayName)
         for {
-          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment, transactingCountry).initialiseUsing(user.minimal)
+          paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment, transactingCountry).initialiseUsing(minimalUser)
           sfContact <- createSalesforceContact(user, formData)
           zuoraSubName <- createPaidZuoraSubscription(sfContact, payingForm, user.primaryEmailAddress, paymentMethod)
           _ <- updateSalesforceContactWithMembership(None) // FIXME: This should go!

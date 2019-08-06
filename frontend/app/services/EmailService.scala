@@ -7,7 +7,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model._
 import utils.LegacyHashing
 import com.gu.aws.CredentialsProvider
-import com.gu.identity.play.IdMinimalUser
+import model.IdMinimalUser
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
 import forms.FeedbackForm

@@ -1,6 +1,7 @@
 package services.api
 
-import com.gu.identity.play.{IdMinimalUser, IdUser}
+import model.IdMinimalUser
+import com.gu.identity.model.{User => IdUser}
 import com.gu.salesforce.{ContactId, Tier}
 import com.gu.stripe.Stripe.Customer
 import forms.MemberForm.CommonForm

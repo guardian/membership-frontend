@@ -18,6 +18,8 @@ import services._
 import filters.{AddEC2InstanceHeader, CheckCacheHeadersFilter, Gzipper, RedirectMembersFilter}
 import configuration.Config.config
 import controllers._
+import services.checkout.identitystrategy.StrategyDecider
+import utils.TestUsers
 
 trait AppComponents
   extends AhcWSComponents
@@ -47,11 +49,15 @@ trait AppComponents
   private lazy val eventbriteCollectiveServices = new EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
   private lazy val membersDataAPI = new MembersDataAPI(executionContext)
 
-  private lazy val commonActionRefiners = new ActionRefiners(defaultBodyParser, executionContext)
-  private lazy val commonActions = new CommonActions(defaultBodyParser, executionContext, commonActionRefiners)
-  private lazy val touchpointBackends = new TouchpointBackends(actorSystem, executionContext, wsClient)
-  private lazy val actionRefiners = new TouchpointActionRefiners(touchpointBackends, executionContext)
-  private lazy val touchpointCommonActions = new TouchpointCommonActions(touchpointBackends, actionRefiners, defaultBodyParser, executionContext, commonActionRefiners)
+  private lazy val authenticationService = new AuthenticationService
+  private lazy val testUsers = new TestUsers(authenticationService)
+  private lazy val strategyDecider = new StrategyDecider(authenticationService)
+
+  private lazy val commonActionRefiners = new ActionRefiners(authenticationService, defaultBodyParser, executionContext)
+  private lazy val commonActions = new CommonActions(authenticationService, testUsers, defaultBodyParser, executionContext, commonActionRefiners)
+  private lazy val touchpointBackends = new TouchpointBackends(testUsers, actorSystem, executionContext, wsClient)
+  private lazy val actionRefiners = new TouchpointActionRefiners(authenticationService, touchpointBackends, executionContext)
+  private lazy val touchpointCommonActions = new TouchpointCommonActions(touchpointBackends, actionRefiners, authenticationService, testUsers, defaultBodyParser, executionContext, commonActionRefiners)
   private lazy val oauthActions = new TouchpointOAuthActions(
     touchpointBackends, actionRefiners, executionContext, wsClient, defaultBodyParser, googleAuthConfig, commonActions
   )
@@ -71,6 +77,9 @@ trait AppComponents
     commonActions,
     commonActionRefiners,
     membersDataAPI,
+    authenticationService,
+    testUsers,
+    strategyDecider,
     controllerComponents
   )
 
@@ -96,7 +105,7 @@ trait AppComponents
       new rest.EventApi(eventbriteCollectiveServices, commonActions, controllerComponents),
       new Event(wsClient, eventbriteCollectiveServices, touchpointBackends, actionRefiners, touchpointCommonActions, defaultBodyParser, executionContext, googleAuthConfig, commonActions, commonActionRefiners, controllerComponents),
       new TierController(joiner, identityApi, touchpointCommonActions, touchpointBackends, commonActions, executionContext, controllerComponents),
-      new Info(identityApi, contentApiService, touchpointBackends, commonActions, commonActionRefiners, executionContext, controllerComponents),
+      new Info(identityApi, authenticationService, contentApiService, touchpointBackends, commonActions, commonActionRefiners, executionContext, controllerComponents),
       new Redirects(commonActions, controllerComponents),
       new Bundle(touchpointBackends, commonActions, controllerComponents),
       new PatternLibrary(eventbriteCollectiveServices, touchpointBackends, commonActions, controllerComponents),

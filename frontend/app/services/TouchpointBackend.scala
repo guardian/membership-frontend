@@ -2,7 +2,7 @@ package services
 
 import akka.actor.ActorSystem
 import com.gu.config.MembershipRatePlanIds
-import com.gu.identity.play.IdMinimalUser
+import model.IdMinimalUser
 import com.gu.memsub.services.PaymentService
 import com.gu.memsub.subsv2
 import com.gu.memsub.subsv2.Catalog
@@ -26,9 +26,11 @@ import model.FeatureChoice
 import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
 import utils.TestUsers.{TestUserCredentialType, isTestUser}
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scalaz.std.scalaFuture._
+import utils.TestUsers
 
 object TouchpointBackend {
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
@@ -127,7 +129,7 @@ object TouchpointBackend {
   )
 }
 
-class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) {
+class TouchpointBackends(testUsers: TestUsers, actorSystem: ActorSystem, executionContext: ExecutionContext, wsClient: WSClient) {
 
   import TouchpointBackend._
   import TouchpointBackendConfig.BackendType
@@ -151,7 +153,7 @@ class TouchpointBackends(actorSystem: ActorSystem, executionContext: ExecutionCo
     */
   def forRequest[C](permittedAltCredentialType: TestUserCredentialType[C], altCredentialSource: C)(
     implicit request: RequestHeader): Resolution = {
-    val validTestUserCredentialOpt = isTestUser(permittedAltCredentialType, altCredentialSource)
+    val validTestUserCredentialOpt = testUsers.isTestUser(permittedAltCredentialType, altCredentialSource)
     val backendType = if (validTestUserCredentialOpt.isDefined) BackendType.Testing else BackendType.Default
     Resolution(backendFor(backendType), backendType, validTestUserCredentialOpt)
   }

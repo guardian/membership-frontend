@@ -18,11 +18,9 @@ object RequestCountry {
     def getIdentityCountryGroup(implicit touchpointBackends: TouchpointBackends, ec: ExecutionContext) = {
       implicit val identityRequest = IdentityRequest(r)
       r.touchpointBackend.identityService
-        .getFullUserDetails(r.user)
+        .getFullUserDetails(r.user.minimalUser)
         .map(
-          _.privateFields
-            .flatMap(_.country)
-            .flatMap(CountryGroup.byCountryNameOrCode)
+          _.privateFields.country.flatMap(CountryGroup.byCountryNameOrCode)
         )
     }
   }

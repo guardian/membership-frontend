@@ -150,7 +150,7 @@ class Event(
 
   private def redirectMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] = {
     memberService.createEBCode(req.subscriber, event).map { codeOpt =>
-      SafeLogger.info(s"Re-directing member with id ${req.user.id} to Eventbrite event: ${event.id} with code $codeOpt")
+      SafeLogger.info(s"Re-directing member with id ${req.user.minimalUser.id} to Eventbrite event: ${event.id} with code $codeOpt")
       eventbriteRedirect(event, codeOpt)
     }
   }

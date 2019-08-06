@@ -1,6 +1,7 @@
 package services
 
-import com.gu.identity.play.{IdMinimalUser, IdUser}
+import model.IdMinimalUser
+import com.gu.identity.model.{User => IdUser}
 import com.gu.salesforce.ContactDeserializer.Keys
 import com.gu.salesforce._
 import com.gu.stripe.Stripe.Customer

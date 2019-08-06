@@ -1,8 +1,7 @@
 package services
 
 import com.gu.i18n.Country
-import com.gu.identity.play.IdMinimalUser
-import com.gu.identity.play.idapi.UpdateIdUser
+import model.{IdMinimalUser, UpdateIdUser}
 import com.gu.memsub.Address
 import com.gu.memsub.BillingPeriod.Year
 import com.gu.salesforce.Tier.partner

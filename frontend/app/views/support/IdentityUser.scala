@@ -1,9 +1,7 @@
 package views.support
 
 import com.gu.i18n.{Country, CountryGroup}
-import com.gu.identity.play.PublicFields
-import com.gu.identity.play.{PrivateFields, StatusFields}
-import com.gu.identity.play.IdUser
+import com.gu.identity.model.{PrivateFields, PublicFields, StatusFields, User => IdUser}
 import com.gu.memsub.Address
 import utils.TestUsers
 
@@ -46,8 +44,8 @@ object IdentityUser {
   def apply(user: IdUser, passwordExists: Boolean): IdentityUser =
     IdentityUser(
       publicFields = user.publicFields,
-      privateFields = user.privateFields.getOrElse(PrivateFields()),
-      marketingChoices = user.statusFields.getOrElse(StatusFields()),
+      privateFields = user.privateFields,
+      marketingChoices = user.statusFields,
       passwordExists = passwordExists,
       email = user.primaryEmailAddress
     )

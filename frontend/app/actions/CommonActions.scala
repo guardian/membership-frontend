@@ -14,12 +14,12 @@ import play.api.libs.ws.WSClient
 import play.api.mvc.Results._
 import play.api.mvc._
 import services.{AuthenticationService, TouchpointBackend}
-import utils.GuMemCookie
+import utils.{GuMemCookie, TestUsers}
 import utils.TestUsers.{PreSigninTestCookie, isTestUser}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CommonActions(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext, actionRefiners: ActionRefiners) {
+class CommonActions(authenticationService: AuthenticationService, testUsers: TestUsers, parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext, actionRefiners: ActionRefiners) {
 
   import actionRefiners.{authenticated, resultModifier}
 
@@ -33,7 +33,7 @@ class CommonActions(parser: BodyParser[AnyContent], implicit val executionContex
       block(request).map { result =>
         val newABTestCookies = ABTest.cookiesWhichShouldBeDropped(request)
         if (newABTestCookies.nonEmpty) {
-          val testUser = isTestUser(PreSigninTestCookie, request.cookies)(request).isDefined
+          val testUser = testUsers.isTestUser(PreSigninTestCookie, request.cookies)(request).isDefined
           SafeLogger.info(s"dropping-new-ab-test-cookies (path=${request.path} testUser=$testUser) : ${newABTestCookies.map(c => s"${c.name}=${c.value}").mkString(" ")}")
         }
         result.withCookies(newABTestCookies ++ AudienceId.cookieWhichShouldBeDropped(request) :_*)
@@ -48,10 +48,10 @@ class CommonActions(parser: BodyParser[AnyContent], implicit val executionContex
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       block(request).map { result =>
-        (for (user <- AuthenticationService.authenticatedUserFor(request)) yield {
+        (for (user <- authenticationService.authenticateUser(request)) yield {
           result.withHeaders(
-            "X-Gu-Identity-Id" -> user.id,
-            "X-Gu-Membership-Test-User" -> isTestUser(user).toString)
+            "X-Gu-Identity-Id" -> user.minimalUser.id,
+            "X-Gu-Membership-Test-User" -> isTestUser(user.minimalUser).toString)
         }).getOrElse(result)
       }
     }
@@ -106,8 +106,8 @@ class CommonActions(parser: BodyParser[AnyContent], implicit val executionContex
   }
 
   def setGuMemCookie(implicit request: RequestHeader) =
-    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
-      val json = Json.obj("userId" -> user.id)
+    authenticationService.authenticateUser(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
+      val json = Json.obj("userId" -> user.minimalUser.id)
       Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }
 

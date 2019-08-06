@@ -2,9 +2,9 @@ package services.checkout.identitystrategy
 
 import cats.data.EitherT
 import cats.implicits._
-import com.gu.identity.play.CookieBuilder.cookiesFromDescription
-import com.gu.identity.play.idapi.CreateIdUser
-import com.gu.identity.play.{IdUser, PublicFields}
+import com.gu.identity.play.CookieBuilder.cookiesFromDescription // TODO
+import model.CreateIdUser
+import com.gu.identity.model.{User => IdUser, PublicFields}
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm.{CommonForm, PaidMemberJoinForm}

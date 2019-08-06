@@ -11,7 +11,6 @@ import com.gu.googleauth.GoogleAuthConfig
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.UK
 import com.gu.i18n.Currency.GBP
-import com.gu.identity.play.{AuthenticationService => _, _}
 import com.gu.salesforce._
 import com.gu.stripe.Stripe
 import com.gu.stripe.Stripe.Serializer._
@@ -27,14 +26,13 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc._
-import services.AuthenticationService.authenticatedIdUserProvider
 import services.api.MemberService.CreateMemberResult
-import services.checkout.identitystrategy.Strategy.identityStrategyFor
+import services.checkout.identitystrategy.StrategyDecider
 import services.{GuardianContentService, _}
 import tracking.AcquisitionTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
-import utils.{Feature, ReferralData, TierChangeCookies}
+import utils.{Feature, ReferralData, TestUsers, TierChangeCookies}
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -59,6 +57,9 @@ class Joiner(
   commonActions: CommonActions,
   actionRefiners: ActionRefiners,
   membersDataAPI: MembersDataAPI,
+  authenticationService: AuthenticationService,
+  testUsers: TestUsers,
+  strategyDecider: StrategyDecider,
   override protected val controllerComponents: ControllerComponents
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
   with BaseController
@@ -111,16 +112,16 @@ class Joiner(
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
-    val userSignedIn = AuthenticationService.authenticatedUserFor(request)
+    val userSignedIn = authenticationService.authenticateUser(request)
     val catalog = touchpointBackend.Normal.catalog
     implicit val countryGroup = UK
 
     userSignedIn match {
       case Some(user) => for {
-        fullUser <- identityService.getFullUserDetails(user)(IdentityRequest(request))
+        fullUser <- identityService.getFullUserDetails(user.minimalUser)(IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
-        avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
+        avatarUrl = fullUser.privateFields.socialAvatarUrl
       } yield
         Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
 
@@ -136,11 +137,11 @@ class Joiner(
     override protected def executionContext = Joiner.this.executionContext
 
     override def filter[A](req: Request[A]) = Future.successful {
-      val userOpt = authenticatedIdUserProvider(req)
+      val userOpt = authenticationService.authenticateUser(req)
       val userSignedIn = userOpt.isDefined
       val canWaiveAuth = Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
-      SafeLogger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
+      SafeLogger.info(s"optional-auth ${req.path} canWaiveAuth=$canWaiveAuth userSignedIn=$userSignedIn canAccess=$canAccess testUser=${testUsers.isTestUser(PreSigninTestCookie, req.cookies)(req).isDefined}")
       if (canAccess) None else Some(onUnauthenticated(req))
     }
   }
@@ -154,7 +155,7 @@ class Joiner(
   def enterPaidDetails(
     tier: PaidTier,
     countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
-    val userOpt = authenticatedIdUserProvider(request)
+    val userOpt = authenticationService.authenticateUser(request)
     implicit val resolution: TouchpointBackend.Resolution =
       touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
 
@@ -168,7 +169,7 @@ class Joiner(
     val identityRequest = IdentityRequest(request)
 
     (for {
-      identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
+      identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user.minimalUser, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
     } yield {
 
       for (identityUser <- identityUserOpt) {
@@ -193,7 +194,7 @@ class Joiner(
         pageInfo,
         countryGroup,
         resolution))
-    }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
+    }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.minimalUser.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
@@ -201,7 +202,7 @@ class Joiner(
     implicit val c = catalog
 
     for {
-      identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
+      identityUser <- identityService.getIdentityUserView(request.user.minimalUser, IdentityRequest(request))
     } yield {
 
       val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))
@@ -217,7 +218,7 @@ class Joiner(
     val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
     implicit val backendProvider: BackendProvider = request
     for {
-      identityUser <- identityService.getIdentityUserView(request.identityUser, IdentityRequest(request))
+      identityUser <- identityService.getIdentityUserView(request.identityUser.minimalUser, IdentityRequest(request))
     } yield {
       Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, identityUser, flashMsgOpt))
     }
@@ -244,7 +245,7 @@ class Joiner(
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     val googleEmail = request.googleUser.email
     for {
-      emailUpdateResult <- identityService.updateEmail(request.identityUser, googleEmail)(IdentityRequest(request)).value
+      emailUpdateResult <- identityService.updateEmail(request.identityUser.minimalUser, googleEmail)(IdentityRequest(request)).value
     } yield emailUpdateResult.fold(
       _ => Redirect(routes.Joiner.staff()).flashing("error" ->
         s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email."),
@@ -255,8 +256,8 @@ class Joiner(
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: Request[_]) = {
-    val userOpt = authenticatedIdUserProvider(request)
-    SafeLogger.info(s"${s"User id=${userOpt.map(_.id).mkString}"} attempting to become ${tier.name}...")
+    val userOpt = authenticationService.authenticateUser(request)
+    SafeLogger.info(s"${s"User id=${userOpt.map(_.minimalUser.id).mkString}"} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =
       touchpointBackend.forRequest(NameEnteredInForm, Some(formData))
@@ -268,12 +269,13 @@ class Joiner(
     val referralData = ReferralData.fromRequest
     val ipCountry = request.getFastlyCountry
 
-    val identityStrategy = identityStrategyFor(identityService, request, formData)
+    val identityStrategy = strategyDecider.identityStrategyFor(identityService, request, formData)
     identityStrategy.ensureIdUser { user =>
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case CreateMemberResult(sfContactId, zuoraSubName) =>
-          SafeLogger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(user.minimal)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
+          val minimalUser = IdMinimalUser(user.id, user.publicFields.displayName)
+          SafeLogger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(minimalUser)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           if (formData.marketingConsent)
             identityService.consentEmail(user.primaryEmailAddress, IdentityRequest(request))
 
@@ -297,7 +299,7 @@ class Joiner(
 
         case error =>
           salesforceService.metrics.putFailSignUp(tier)
-          SafeLogger.error(scrub"${s"User id=${userOpt.map(_.id).mkString}"} could not become ${tier.name} member", error)
+          SafeLogger.error(scrub"${s"User id=${userOpt.map(_.minimalUser.id).mkString}"} could not become ${tier.name} member", error)
           Forbidden
       }
     }
@@ -329,7 +331,7 @@ class Joiner(
         case t: Tier if !upgrade => salesforceService.metrics.putThankYou(tier)
         case _ =>
       }
-      SafeLogger.info(s"thank you displayed for user: ${request.user.user.id} subscription: ${request.subscriber.subscription.accountId.get} tier: ${tier.name}")
+      SafeLogger.info(s"thank you displayed for user: ${request.user.minimalUser.id} subscription: ${request.subscriber.subscription.accountId.get} tier: ${tier.name}")
 
       trackAcquisition(paymentSummary, paymentMethod, tier, request)
 

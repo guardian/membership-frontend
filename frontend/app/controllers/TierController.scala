@@ -4,7 +4,7 @@ import _root_.services.api.MemberService._
 import actions.{BackendProvider, CommonActions, TouchpointCommonActions}
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup._
-import com.gu.identity.play.PrivateFields
+import com.gu.identity.model.PrivateFields
 import com.gu.memsub.Benefit.PaidMemberTier
 import com.gu.memsub.BillingPeriod
 import com.gu.memsub.Subscriber.{FreeMember, PaidMember}
@@ -107,7 +107,7 @@ class TierController(
 
     val idUserFuture =
       IdentityService(identityApi)
-        .getIdentityUserView(request.user, IdentityRequest(request))
+        .getIdentityUserView(request.user.minimalUser, IdentityRequest(request))
 
     // Preselect the country from Identity fields
     // but the currency from Zuora account
@@ -145,12 +145,12 @@ class TierController(
 
   def upgradeConfirm(target: PaidTier) = ChangeToPaidAction(target).async { implicit request =>
     implicit val identityRequest = IdentityRequest(request)
-    SafeLogger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
+    SafeLogger.info(s"User ${request.user.minimalUser.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
       val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, ReferralData.fromRequest)
       handleErrors(upgrade) {
-        SafeLogger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
+        SafeLogger.info(s"User ${request.user.minimalUser.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))
       }
     }
@@ -171,7 +171,7 @@ class TierController(
       def doUpgrade(): Future[Result] = {
         val upgrade = memberService.upgradePaidSubscription(paidMember, target, form, ReferralData.fromRequest)
         handleErrors(upgrade) {
-          SafeLogger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
+          SafeLogger.info(s"User ${request.user.minimalUser.id} successfully upgraded to ${target.name}")
           Redirect(routes.TierController.upgradeThankyou(target))
         }
       }

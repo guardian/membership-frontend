@@ -2,9 +2,6 @@ package actions
 
 import _root_.services._
 import actions.Fallbacks._
-import com.gu.memsub.subsv2.reads.ChargeListReads._
-import com.gu.memsub.subsv2.reads.SubPlanReads._
-import com.gu.memsub.subsv2.{Subscription, _}
 import com.gu.memsub.util.Timing
 import com.gu.memsub.{Status => SubStatus, Subscription => Sub, _}
 import com.gu.monitoring.CloudWatch
@@ -40,7 +37,7 @@ object ActionRefiners {
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
 }
 
-class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext) {
+class ActionRefiners(authenticationService: AuthenticationService, parser: BodyParser[AnyContent], implicit val executionContext: ExecutionContext) {
   import ActionRefiners._
   import model.TierOrdering.upgradeOrdering
   implicit val pf: ProductFamily = Membership
@@ -55,7 +52,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionConte
   }
 
   def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_))(implicit bodyParser: BodyParser[AnyContent]): ActionBuilder[AuthRequest, AnyContent] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedIdUserProvider, bodyParser, onUnauthenticated)
+    new AuthenticatedBuilder(authenticationService.authenticateUser, bodyParser, onUnauthenticated)
 
   val PlannedOutageProtection = new ActionFilter[Request] {
 
@@ -106,7 +103,7 @@ class ActionRefiners(parser: BodyParser[AnyContent], implicit val executionConte
 
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
-        user <- identityService.getFullUserDetails(request.identityUser)(IdentityRequest(request))
+        user <- identityService.getFullUserDetails(request.identityUser.minimalUser)(IdentityRequest(request))
       } yield {
         if (GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
         else Some(onNonGuEmail(request))
