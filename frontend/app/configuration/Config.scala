@@ -1,7 +1,6 @@
 package configuration
 import com.gu.config._
 import com.gu.i18n.Country
-import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.memsub.auth.common.MemSub.Google._
 import com.gu.salesforce.Tier
 import com.gu.zuora.api.{InvoiceTemplate, InvoiceTemplates}
@@ -62,8 +61,6 @@ object Config {
 
   def idWebAppProfileUrl =
     idWebAppUrl / "membership"/ "edit"
-
-  val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
   val idApiClientToken = config.getString("identity.api.client.token")

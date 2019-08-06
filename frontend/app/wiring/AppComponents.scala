@@ -49,7 +49,8 @@ trait AppComponents
   private lazy val eventbriteCollectiveServices = new EventbriteCollectiveServices(defaultCacheApi, guardianLiveEventService, masterclassEventService)
   private lazy val membersDataAPI = new MembersDataAPI(executionContext)
 
-  private lazy val authenticationService = new AuthenticationService
+  private lazy val authenticationService: AuthenticationService =
+    AuthenticationService.unsafeInit(identityApiEndpoint = Config.idApiUrl, accessToken = Config.idApiClientToken)
   private lazy val testUsers = new TestUsers(authenticationService)
   private lazy val strategyDecider = new StrategyDecider(authenticationService)
 

@@ -202,7 +202,7 @@ class Info(
 
 
   def feedback = NoCacheAction.async { implicit request =>
-    val authenticatedUser = authenticationService.authenticateUser(request)
+    val authenticatedUser = authenticationService.authenticatedUserFor(request)
     val name = authenticatedUser.flatMap(_.minimalUser.displayName)
 
     val identityUser = authenticatedUser.map { user => identityService.getFullUserDetails(user.minimalUser)(IdentityRequest(request)) }
@@ -217,7 +217,7 @@ class Info(
 
   def submitFeedback = NoCacheAction.async { implicit request =>
 
-    val userOpt = authenticationService.authenticateUser(request).map(_.minimalUser)
+    val userOpt = authenticationService.authenticatedUserFor(request).map(_.minimalUser)
     val uaOpt = request.headers.get(USER_AGENT)
 
     val identityUser = userOpt.map { user => identityService.getFullUserDetails(user)(IdentityRequest(request)) }

@@ -2,9 +2,8 @@ package services.checkout.identitystrategy
 
 import cats.data.EitherT
 import cats.implicits._
-import com.gu.identity.play.CookieBuilder.cookiesFromDescription // TODO
-import model.CreateIdUser
-import com.gu.identity.model.{User => IdUser, PublicFields}
+import model.{CookieBuilder, CreateIdUser}
+import com.gu.identity.model.{PublicFields, User => IdUser}
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm.{CommonForm, PaidMemberJoinForm}
@@ -30,7 +29,7 @@ case class NewUser(creationCommand: CreateIdUser)(implicit idReq: IdentityReques
   def ensureIdUser(checkoutFunc: (IdUser) => Future[Result])(implicit executionContext: ExecutionContext) = (for {
     userRegAndAuthResponse <- identityService.createUser(creationCommand)
     result <- EitherT.right[String](checkoutFunc(userRegAndAuthResponse.user))
-  } yield result.withCookies(cookiesFromDescription(userRegAndAuthResponse.cookies.get, Some(Config.guardianShortDomain)): _*)
+  } yield result.withCookies(CookieBuilder.cookiesFromDescription(userRegAndAuthResponse.cookies.get, Some(Config.guardianShortDomain)): _*)
     ).valueOr { error => Results.InternalServerError(error) }
 
 }

@@ -52,7 +52,7 @@ class ActionRefiners(authenticationService: AuthenticationService, parser: BodyP
   }
 
   def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_))(implicit bodyParser: BodyParser[AnyContent]): ActionBuilder[AuthRequest, AnyContent] =
-    new AuthenticatedBuilder(authenticationService.authenticateUser, bodyParser, onUnauthenticated)
+    new AuthenticatedBuilder(authenticationService.authenticatedUserFor, bodyParser, onUnauthenticated)
 
   val PlannedOutageProtection = new ActionFilter[Request] {
 

@@ -112,7 +112,7 @@ class Joiner(
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
-    val userSignedIn = authenticationService.authenticateUser(request)
+    val userSignedIn = authenticationService.authenticatedUserFor(request)
     val catalog = touchpointBackend.Normal.catalog
     implicit val countryGroup = UK
 
@@ -137,7 +137,7 @@ class Joiner(
     override protected def executionContext = Joiner.this.executionContext
 
     override def filter[A](req: Request[A]) = Future.successful {
-      val userOpt = authenticationService.authenticateUser(req)
+      val userOpt = authenticationService.authenticatedUserFor(req)
       val userSignedIn = userOpt.isDefined
       val canWaiveAuth = Feature.MergedRegistration.turnedOnFor(req)
       val canAccess = userSignedIn || canWaiveAuth
@@ -155,7 +155,7 @@ class Joiner(
   def enterPaidDetails(
     tier: PaidTier,
     countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
-    val userOpt = authenticationService.authenticateUser(request)
+    val userOpt = authenticationService.authenticatedUserFor(request)
     implicit val resolution: TouchpointBackend.Resolution =
       touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
 
@@ -256,7 +256,7 @@ class Joiner(
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
 
   private def makeMember(tier: Tier, onSuccess: => Result)(formData: JoinForm)(implicit request: Request[_]) = {
-    val userOpt = authenticationService.authenticateUser(request)
+    val userOpt = authenticationService.authenticatedUserFor(request)
     SafeLogger.info(s"${s"User id=${userOpt.map(_.minimalUser.id).mkString}"} attempting to become ${tier.name}...")
     val eventId = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session)
     implicit val resolution: TouchpointBackend.Resolution =

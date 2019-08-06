@@ -43,7 +43,7 @@ class TouchpointActionRefiners(authenticationService: AuthenticationService, tou
     val FreeSubscriber = MemSubscriber[Subscription[SubscriptionPlan.FreeMember]] _
     val PaidSubscriber = MemSubscriber[Subscription[SubscriptionPlan.PaidMember]] _
     (for {
-      user <- OptionEither.liftFutureEither(authenticationService.authenticateUser(request))
+      user <- OptionEither.liftFutureEither(authenticationService.authenticatedUserFor(request))
       authRequest = new AuthenticatedRequest(user, request)
       tp = authRequest.touchpointBackend
       member <- OptionEither(authRequest.forMemberOpt)

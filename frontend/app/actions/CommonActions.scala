@@ -48,7 +48,7 @@ class CommonActions(authenticationService: AuthenticationService, testUsers: Tes
 
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       block(request).map { result =>
-        (for (user <- authenticationService.authenticateUser(request)) yield {
+        (for (user <- authenticationService.authenticatedUserFor(request)) yield {
           result.withHeaders(
             "X-Gu-Identity-Id" -> user.minimalUser.id,
             "X-Gu-Membership-Test-User" -> isTestUser(user.minimalUser).toString)
@@ -106,7 +106,7 @@ class CommonActions(authenticationService: AuthenticationService, testUsers: Tes
   }
 
   def setGuMemCookie(implicit request: RequestHeader) =
-    authenticationService.authenticateUser(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
+    authenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
       val json = Json.obj("userId" -> user.minimalUser.id)
       Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }

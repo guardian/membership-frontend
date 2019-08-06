@@ -57,7 +57,7 @@ class TestUsers(authenticationService: AuthenticationService) {
   def isTestUser[C](permittedAltCredentialType: TestUserCredentialType[C], altCredentialSource: C)(implicit request: RequestHeader)
   : Option[TestUserCredentialType[_]] = {
 
-    authenticationService.authenticateUser(request).map(_.minimalUser).fold[Option[TestUserCredentialType[_]]] {
+    authenticationService.authenticatedUserFor(request).map(_.minimalUser).fold[Option[TestUserCredentialType[_]]] {
       permittedAltCredentialType.passes(altCredentialSource)
     }(SignedInUsername.passes)
   }
