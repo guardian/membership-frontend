@@ -33,7 +33,7 @@ class TouchpointCommonActions(
     override def executionContext = TouchpointCommonActions.this.executionContext
 
     override protected def transform[A](request: Request[A]): Future[OptionallyAuthenticatedRequest[A]] = {
-      val user = authenticationService.authenticateUser(request)
+      val user = authenticationService.authenticatedUserFor(request)
       val touchpointBackend = user.fold(touchpointBackends.Normal)(u => touchpointBackends.forUser(u.minimalUser))
       Future.successful(OptionallyAuthenticatedRequest[A](touchpointBackend,user,request))
     }

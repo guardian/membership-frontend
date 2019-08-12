@@ -14,7 +14,7 @@ class StrategyDecider(authenticationService: AuthenticationService) {
     implicit val idService = identityService
     implicit val idRequest = IdentityRequest(request)
 
-    (for (user <- authenticationService.authenticateUser(request))
+    (for (user <- authenticationService.authenticatedUserFor(request))
       yield ExistingSignedInUser(user.minimalUser, form)).getOrElse(NewUser.strategyFrom(form).get)
   }
 }
