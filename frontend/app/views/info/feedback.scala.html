@@ -45,6 +45,7 @@
 
                 <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="js-form" novalidate>
                     @CSRF.formField
+                    <input type="hidden" name="ophanPageviewId" class="js-ophan-pageview-id" />
                     @fragments.form.feedback(feedbackText,name,email)
                     @fragments.form.errorMessageDisplay()
                     <fieldset class="fieldset fieldset--simple">
