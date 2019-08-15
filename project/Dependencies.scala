@@ -5,7 +5,7 @@ object Dependencies {
 
   //versions
   val awsClientVersion = "1.11.594"
-  val (jacksonVersion, jacksonVersionBump) = ("2.9.9", "2.9.9.1")
+  val (jacksonVersion, jacksonVersionBump) = ("2.9.9", "2.9.9.3")
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"

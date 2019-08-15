@@ -62,8 +62,10 @@ define([
     }
 
     function attachOphanPageviewId() {
-        var input = getFormElem().querySelector('.js-ophan-pageview-id')
-        input.setAttribute('value', ophan.viewId);
+        var input = getFormElem().querySelector('.js-ophan-pageview-id');
+        if(input) {
+            input.setAttribute('value', ophan.viewId);
+        }
     }
 
     /**
