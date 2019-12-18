@@ -2,7 +2,6 @@
 define([
     'src/utils/cookie',
     'src/modules/analytics/ga',
-    'src/modules/analytics/krux',
     'src/modules/analytics/facebook',
     'src/modules/analytics/uet',
     'src/modules/analytics/campaignCode',
@@ -10,7 +9,6 @@ define([
 ], function (
     cookie,
     ga,
-    krux,
     facebook,
     uet,
     campaignCode,
@@ -41,7 +39,6 @@ define([
     }
 
     function setupThirdParties() {
-        krux.init();
         facebook.init();
         uet.init();
     }
