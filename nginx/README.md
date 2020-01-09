@@ -1,24 +1,8 @@
 # Membership NGINX
 
-## Setup Nginx for `Identity-Platform`
-
-Membership depends on Identity, so **you'll need to perform the**
-[**Nginx setup for identity-platform**](https://github.com/guardian/identity-platform/tree/master/nginx)
-**first**, before you do anything else.
-
-## Membership-specific setup
-
-#### Run Membership's Nginx setup script
-
-Run the Membership-specific [setup.sh](setup.sh) script from the root
-of the `membership-frontend` project:
-
-```
-./nginx/setup.sh
-```
-
-The script doesn't start Nginx. To manually start it run `sudo nginx` or `sudo systemctl start nginx`
-depending on your system.
+1. `cd nginx`
+1. Install dependencies `brew bundle`
+2. Run `./setup.sh`
 
 #### NGINX error messages
 
