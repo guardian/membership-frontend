@@ -1,6 +1,7 @@
 package controllers
 
 import actions.CommonActions
+import com.gu.i18n.CountryGroup
 import configuration.Links
 import play.api.mvc._
 
@@ -14,5 +15,7 @@ class Redirects(commonActions: CommonActions, override protected val controllerC
     MovedPermanently(routes.Info.supporterRedirect(None).path)
   }
 
-  def supportRedirect = CachedAction(MovedPermanently("https://support.theguardian.com/"))
+  def supportRedirect = CachedAction{ implicit request =>
+    Redirect("https://support.theguardian.com/", request.queryString, MOVED_PERMANENTLY)
+  }
 }
