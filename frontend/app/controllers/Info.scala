@@ -106,28 +106,7 @@ class Info(
   }
 
   def supporterFor(implicit countryGroup: CountryGroup) = CachedAndOutageProtected { implicit request =>
-
-    val heroImage = heroImageFor(countryGroup)
-    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
-
-    val detailImage = detailImageFor(countryGroup)
-    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
-
-    val template = countryGroup match {
-      case US => views.html.info.supporterUSA.apply _
-      case Australia => views.html.info.supporterAustralia.apply _
-      case _ => views.html.info.supporter.apply _
-    }
-
-    Ok(template(
-      heroOrientated,
-      touchpointBackends.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters)
-      ),
-      detailImageOrientated))
+    Redirect(s"https://support.theguardian.com/${countryGroup.id}/support", request.queryString, MOVED_PERMANENTLY)
   }
 
   def patron() = CachedAndOutageProtected { implicit request =>
