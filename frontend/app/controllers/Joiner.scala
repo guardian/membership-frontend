@@ -154,8 +154,47 @@ class Joiner(
 
   def enterPaidDetails(
     tier: PaidTier,
-    countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier) { implicit request =>
-    Redirect(routes.Redirects.supportRedirect())
+    countryGroup: CountryGroup) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
+    val userOpt = authenticationService.authenticatedUserFor(request)
+    implicit val resolution: TouchpointBackend.Resolution =
+      touchpointBackend.forRequest(PreSigninTestCookie, request.cookies)
+
+    implicit val tpBackend = resolution.backend
+
+    implicit val backendProvider: BackendProvider = new BackendProvider {
+      override def touchpointBackend(implicit tpbs: TouchpointBackends) = tpBackend
+    }
+    implicit val c = catalog
+
+    val identityRequest = IdentityRequest(request)
+
+    (for {
+      identityUserOpt <- userOpt.map(user => identityService.getIdentityUserView(user.minimalUser, identityRequest).map(Option(_))).getOrElse(Future.successful[Option[IdentityUser]](None))
+    } yield {
+
+      for (identityUser <- identityUserOpt) {
+        SafeLogger.info(s"signed-in-enter-details tier=${tier.slug} testUser=${identityUser.isTestUser} passwordExists=${identityUser.passwordExists} ${ABTest.allTests.map(_.describeParticipation).mkString(" ")}")
+      }
+      val plans = catalog.findPaid(tier)
+      val supportedCurrencies = plans.allPricing.map(_.currency).toSet
+      val pageInfo = PageInfo(
+        stripeUKMembershipPublicKey = Some(stripeUKMembershipService.publicKey),
+        stripeAUMembershipPublicKey = Some(stripeAUMembershipService.publicKey),
+        payPalEnvironment = Some(tpBackend.payPalService.config.payPalEnvironment),
+        initialCheckoutForm = CheckoutForm.forIdentityUser(identityUserOpt.flatMap(_.country), plans, Some(countryGroup)),
+        abTests = abtests.ABTest.allocations(request)
+      )
+
+      val countryCurrencyWhitelist = CountryWithCurrency.whitelisted(supportedCurrencies, GBP)
+
+      Ok(views.html.joiner.form.payment(
+        plans,
+        countryCurrencyWhitelist,
+        identityUserOpt,
+        pageInfo,
+        countryGroup,
+        resolution))
+    }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.minimalUser.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
   def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
