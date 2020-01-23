@@ -4,6 +4,7 @@
 
 GET            /robots.txt                            controllers.CachedAssets.at(path="/public", file="robots.txt", aggressiveCaching:Boolean ?= false )
 GET         /humans.txt                                controllers.CachedAssets.at(path="/public", file="humans.txt", aggressiveCaching:Boolean ?= false )
+GET         /google30b9d2c5743afc06.html               controllers.CachedAssets.at(path="/public", file="google30b9d2c5743afc06.html", aggressiveCaching:Boolean ?= false )
 GET         /favicon.ico                               controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 GET         /sitemap.xml                               controllers.SiteMap.sitemap()
 
