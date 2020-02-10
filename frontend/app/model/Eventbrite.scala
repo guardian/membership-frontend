@@ -111,17 +111,18 @@ object Eventbrite {
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
   case class EBTicketClass(id: String,
-                           name: String,
-                           description: Option[String],
-                           free: Boolean,
-                           quantity_total: Int,
-                           quantity_sold: Int,
-                           on_sale_status: Option[String], // Currently undocumented, so treating as optional. "SOLD_OUT", "AVAILABLE", "UNAVAILABLE"
-                           cost: Option[EBPricing],
-                           fee: Option[EBPricing],
-                           sales_end: Instant,
-                           sales_start: Option[Instant],
-                           hidden: Option[Boolean]) extends EBObject {
+    name: String,
+    description: Option[String],
+    free: Boolean,
+    quantity_total: Int,
+    quantity_sold: Int,
+    on_sale_status: Option[String], // Currently undocumented, so treating as optional. "SOLD_OUT", "AVAILABLE", "UNAVAILABLE"
+    cost: Option[EBPricing],
+    fee: Option[EBPricing],
+    tax: Option[EBPricing],
+    sales_end: Instant,
+    sales_start: Option[Instant],
+    hidden: Option[Boolean]) extends EBObject {
     val isHidden = hidden.contains(true)
 
     val isGuestList = isHidden && name.toLowerCase.contains("guestlist")
@@ -135,7 +136,10 @@ object Eventbrite {
     val feeInPence = fee.map(_.value).getOrElse(0)
     val priceValue = formatPrice(priceInPence)
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
-    val feeText = fee.filter(_.value>0).map(_.formattedPrice)
+    val feeText = fee
+      .filter(_.value > 0)
+      .map(theFee => EBPricing(theFee.value + tax.map(_.value).getOrElse(0)))
+      .map(_.formattedPrice)
     val totalCost = cost.map(c => c add fee.getOrElse(EBPricing(0)))
     val currencyCode = GBP.toString
   }

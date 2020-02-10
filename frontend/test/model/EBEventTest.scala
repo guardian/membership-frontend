@@ -3,6 +3,7 @@ package model
 import com.netaporter.uri.Uri
 import model.Eventbrite._
 import model.EventbriteDeserializer._
+import org.joda.time.Instant
 import play.api.test.PlaySpecification
 import utils.Resource
 
@@ -105,6 +106,30 @@ class EBEventTest extends PlaySpecification {
     }
     "be pleasantly formatted as whole pounds if there are no pence" in {
       EBPricing(123400).formattedPrice mustEqual("£1234")
+    }
+  }
+
+  "feeText" should {
+    "include tax" in {
+      val ticketClass = EBTicketClass(
+        id = "",
+        name = "",
+        description = None,
+        free = false,
+        quantity_total = 1,
+        quantity_sold = 0,
+        on_sale_status = None,
+        cost = None,
+        fee = Some(EBPricing(600)),
+        tax = Some(EBPricing(130)),
+        sales_end = Instant.now(),
+        sales_start = None,
+        hidden = None
+      )
+
+      ticketClass.feeText must beSome("£7.30")
+      ticketClass.copy(tax = None).feeText must beSome("£6")
+      ticketClass.copy(fee = None, tax = None).feeText must beNone
     }
   }
 
