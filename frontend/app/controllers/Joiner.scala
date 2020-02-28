@@ -32,7 +32,7 @@ import services.{GuardianContentService, _}
 import tracking.AcquisitionTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
-import utils.{Feature, ReferralData, TestUsers, TierChangeCookies}
+import utils.{Feature, ReferralData, TestUsers, TierChangeCookies, DisplayName}
 import views.support
 import views.support.MembershipCompat._
 import views.support.Pricing._
@@ -120,7 +120,7 @@ class Joiner(
       case Some(user) => for {
         fullUser <- identityService.getFullUserDetails(user.minimalUser)(IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
-        displayName = fullUser.publicFields.displayName
+        displayName = DisplayName(fullUser)
         avatarUrl = fullUser.privateFields.socialAvatarUrl
       } yield
         Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
@@ -274,7 +274,7 @@ class Joiner(
       salesforceService.metrics.putAttemptedSignUp(tier)
       memberService.createMember(user, formData, eventId, tier, ipCountry, referralData).map {
         case CreateMemberResult(sfContactId, zuoraSubName) =>
-          val minimalUser = IdMinimalUser(user.id, user.publicFields.displayName)
+          val minimalUser = IdMinimalUser(user.id, DisplayName(user))
           SafeLogger.info(s"make-member-success ${tier.name} ${ABTest.allTests.map(_.describeParticipationFromCookie).mkString(" ")} ${identityStrategy.getClass.getSimpleName} user=${user.id} testUser=${isTestUser(minimalUser)} suppliedNewPassword=${formData.password.isDefined} sub=$zuoraSubName")
           if (formData.marketingConsent)
             identityService.consentEmail(user.primaryEmailAddress, IdentityRequest(request))

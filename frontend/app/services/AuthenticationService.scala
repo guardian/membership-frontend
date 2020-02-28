@@ -11,6 +11,7 @@ import com.gu.monitoring.SafeLogger._
 import model.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
 import org.http4s.Uri
 import play.api.mvc.RequestHeader
+import utils.DisplayName
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -68,7 +69,7 @@ object AuthenticationService {
       case UserCredentials.SCGUUCookie(value) => AccessCredentials.Cookies(scGuU = value)
       case UserCredentials.CryptoAccessToken(value, _) => AccessCredentials.Token(tokenText = value)
     }
-    AuthenticatedIdUser(accessCredentials, IdMinimalUser(user.id, user.publicFields.displayName))
+    AuthenticatedIdUser(accessCredentials, IdMinimalUser(user.id, DisplayName(user)))
   }
 
   // Logs failure to authenticate a user.

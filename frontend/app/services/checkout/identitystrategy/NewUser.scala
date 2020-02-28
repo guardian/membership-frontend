@@ -19,7 +19,7 @@ object NewUser {
   } yield NewUser(CreateIdUser(
     paidMemberJoinForm.email,
     password,
-    PublicFields(displayName = Some(s"${form.name.first} ${form.name.last}")),
+    PublicFields(),
     Some(IdentityService.privateFieldsFor(form)))
   )
 }

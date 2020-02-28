@@ -37,7 +37,7 @@ import model.RichEvent.RichEvent
 import model.{Benefit => _, _}
 import org.joda.time.{DateTime, DateTimeZone}
 import tracking._
-import utils.ReferralData
+import utils.{DisplayName, ReferralData}
 import views.support.MembershipCompat._
 import views.support.ThankyouSummary
 import views.support.ThankyouSummary.NextPayment
@@ -134,7 +134,7 @@ class MemberService(
       }
 
     def updateSalesforceContactWithMembership(stripeCustomer: Option[Customer]): Future[ContactId] = {
-      val minimalUser = IdMinimalUser(user.id, user.publicFields.displayName)
+      val minimalUser = IdMinimalUser(user.id, DisplayName.fallbackFullName(user))
       salesforceService.updateMemberStatus(minimalUser, tier, stripeCustomer).andThen { case Failure(e) =>
         SafeLogger.error(scrub"Could not update Salesforce contact with membership status for user ${user.id}", e)
       }
@@ -143,7 +143,7 @@ class MemberService(
     formData match {
       case payingForm: PaidMemberJoinForm =>
         val transactingCountry = payingForm.billingAddress.flatMap(_.country) orElse payingForm.deliveryAddress.country orElse ipCountry getOrElse UK
-        val minimalUser = IdMinimalUser(user.id, user.publicFields.displayName)
+        val minimalUser = IdMinimalUser(user.id, DisplayName.fallbackFullName(user))
         for {
           paymentMethod <- availablePaymentMethods.deriveInitialiserAndTokenFrom(payingForm.payment, transactingCountry).initialiseUsing(minimalUser)
           sfContact <- createSalesforceContact(user, formData)

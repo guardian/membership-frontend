@@ -31,7 +31,7 @@ case class IdentityUser(publicFields: PublicFields, privateFields: PrivateFields
     postCode =      privateFields.billingPostcode.mkString,
     countryName =   privateFields.billingCountry.mkString
   )
-
+  def displayName: Option[String] = publicFields.username.orElse(privateFields.firstName)
   def isTestUser: Boolean = privateFields.firstName.exists(TestUsers.isTestUser)
 }
 

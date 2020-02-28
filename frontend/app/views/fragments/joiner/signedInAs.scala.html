@@ -3,7 +3,7 @@
 
 @import configuration.Config.idWebAppSignOutThenRegisterUrl
 
-@for(displayName <- user.publicFields.displayName) {
+@for(displayName <- user.displayName) {
     <p class="text-note">
         You're signed in as <strong class="qa-user-displayname">@displayName</strong>.
     @if(!inline) {
