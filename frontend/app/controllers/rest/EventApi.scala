@@ -17,13 +17,13 @@ object EventApi {
 
 class EventApi(eventbriteService: EventbriteCollectiveServices, commonActions: CommonActions, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
-  import commonActions.CachedAction
+  import commonActions.CorsPublicCachedAction
   import EventApi._
 
   /**
     * @return for now, only Guardian Live Events - other types may be added in the future
     */
-  def events = CachedAction {
+  def events = CorsPublicCachedAction {
     Ok(toJson(EventsResponse(eventbriteService.guardianLiveEventService.events.map(Event.forRichEvent(_)))))
   }
 }
