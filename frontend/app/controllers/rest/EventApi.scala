@@ -23,7 +23,11 @@ class EventApi(eventbriteService: EventbriteCollectiveServices, commonActions: C
   /**
     * @return for now, only Guardian Live Events - other types may be added in the future
     */
-  def events = CorsPublicCachedAction {
+  def liveEvents = CorsPublicCachedAction {
     Ok(toJson(EventsResponse(eventbriteService.guardianLiveEventService.events.map(Event.forRichEvent(_)))))
+  }
+
+  def masterclassEvents = CorsPublicCachedAction {
+    Ok(toJson(EventsResponse(eventbriteService.masterclassEventService.events.map(Event.forRichEvent(_)))))
   }
 }
