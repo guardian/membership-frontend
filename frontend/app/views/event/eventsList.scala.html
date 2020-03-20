@@ -29,8 +29,9 @@
     @main("Events", pageInfo = pageInfo, header = LiveHeader, footer = LiveFooter) {
     <main>
         <div class="l-constrained">
-            @fragments.event.headerBar(
-                title="Discussions, debates, interviews and festivals that bring The Guardian's award-winning journalism to life"
+            @* Temporary COVID-19 message *@
+            @fragments.event.headerBarCovid(
+                twitterLink="https://twitter.com/guardianlive"
             )
         </div>
 
