@@ -29,8 +29,9 @@
     @main("Events", pageInfo = pageInfo, header = LiveHeader, footer = LiveFooter) {
     <main>
         <div class="l-constrained">
-            @fragments.event.headerBar(
-                title="Given the growing concerns over public health and safety due to the developing Coronavirus (COVID-19) situation, we have suspended our events propgramme until 31 May 2020. For updates please follow us on twitter or sign up to our newsletter."
+            @* Temporary COVID-19 message *@
+            @fragments.event.headerBarCovid(
+                twitterLink="https://twitter.com/guardianlive"
             )
         </div>
 
