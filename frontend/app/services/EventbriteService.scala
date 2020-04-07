@@ -43,7 +43,7 @@ abstract class EventbriteService(implicit val ec: ExecutionContext, system: Acto
   def eventsTaskFor(status: String, initialDelay: FiniteDuration, refreshTime: FiniteDuration): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, initialDelay, refreshTime) {
       for {
-        events <- getAll[EBEvent]("users/me/owned_events/", List(
+        events <- getAll[EBEvent]("organizations/104062388105/events/", List(
           "status" -> status,
           "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
