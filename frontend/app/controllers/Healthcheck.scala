@@ -19,7 +19,7 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
 class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBackends: TouchpointBackends, override protected val controllerComponents: ControllerComponents) extends BaseController {
 
   def tests = Seq(
-    new BoolTest("Events", () => eventbriteService.guardianLiveEventService.events.nonEmpty),
+    //new BoolTest("Events", () => eventbriteService.guardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
     new BoolTest("ZuoraPing", () => touchpointBackends.Normal.zuoraSoapClient.lastPingTimeWithin(2.minutes)),
     new BoolTest("Salesforce", () => touchpointBackends.Normal.salesforceService.isAuthenticated)
