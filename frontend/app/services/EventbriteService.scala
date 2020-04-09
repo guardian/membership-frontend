@@ -18,9 +18,25 @@ import utils.StringUtils._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
-abstract class EventbriteService(implicit val ec: ExecutionContext, system: ActorSystem) extends WebServiceHelper[EBObject, EBError] {
+case class OrganisationId(value: String) extends AnyVal
+case class EBAccount(apiToken: String, organisationId: OrganisationId)
 
-  val apiToken: String
+object EBAccount {
+  val live = EBAccount(
+    Config.eventbriteApiToken,
+    OrganisationId("104062388105")
+  )
+  val masterclass = EBAccount(
+    Config.eventbriteMasterclassesApiToken,
+    OrganisationId("7266571413")
+  )
+}
+abstract class EventbriteService(ebAccount: EBAccount)(
+  implicit val ec: ExecutionContext,
+  system: ActorSystem
+) extends WebServiceHelper[EBObject, EBError] {
+
+  import ebAccount._
   val maxDiscountQuantityAvailable: Int
 
   override val wsUrl = Config.eventbriteApiUrl
@@ -43,7 +59,7 @@ abstract class EventbriteService(implicit val ec: ExecutionContext, system: Acto
   def eventsTaskFor(status: String, initialDelay: FiniteDuration, refreshTime: FiniteDuration): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, initialDelay, refreshTime) {
       for {
-        events <- getAll[EBEvent]("users/me/owned_events/", List(
+        events <- getAll[EBEvent](s"organizations/${organisationId.value}/events/", List(
           "status" -> status,
           "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
@@ -122,25 +138,22 @@ abstract class EventbriteService(implicit val ec: ExecutionContext, system: Acto
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id/", "expand" -> EBOrder.expansions.mkString(","))
 }
 
-abstract class LiveService(implicit ec: ExecutionContext, system: ActorSystem, contentApiService: GuardianContentService, gridService: GridService) extends EventbriteService {
-
-  def gridImageFor(event: EBEvent) =
-    event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
-}
-
-class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService, gridService: GridService)
-  extends LiveService()(executionContext, actorSystem, contentApiService, gridService) {
+class GuardianLiveEventService(
+  executionContext: ExecutionContext,
+  actorSystem: ActorSystem,
+  contentApiService: GuardianContentService,
+  gridService: GridService
+) extends EventbriteService(EBAccount.live)(executionContext, actorSystem) {
 
   implicit private val as = actorSystem
 
-  val apiToken = Config.eventbriteApiToken
   // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
   // maximum 2 discounted tickets and 1 complimentary ticket.
   // The maxDiscountQuantityAvailable value is used to set the Access code 'quantity_available' attribute (i.e. the
   // maximum number of tickets that can be purchased with a given code).
   //
   // see https://www.eventbrite.com/developer/v3/formats/event/#ebapi-access-code
-  val maxDiscountQuantityAvailable = 4
+  override val maxDiscountQuantityAvailable = 4
 
   override val httpClient: FutureHttpClient = RequestRunners.futureRunner
 
@@ -158,7 +171,10 @@ class GuardianLiveEventService(executionContext: ExecutionContext, actorSystem: 
     } yield (ordering \ "order").as[Seq[String]]
   }
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
+  def gridImageFor(event: EBEvent) =
+    event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
+
+  override def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
     yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
@@ -174,12 +190,15 @@ case class MasterclassEventServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-class MasterclassEventService(executionContext: ExecutionContext, actorSystem: ActorSystem, contentApiService: GuardianContentService) extends EventbriteService()(executionContext: ExecutionContext, actorSystem: ActorSystem) {
+class MasterclassEventService(
+  executionContext: ExecutionContext,
+  actorSystem: ActorSystem,
+  contentApiService: GuardianContentService
+) extends EventbriteService(EBAccount.masterclass)(executionContext: ExecutionContext, actorSystem: ActorSystem) {
 
   implicit private val as = actorSystem
 
-  val apiToken = Config.eventbriteMasterclassesApiToken
-  val maxDiscountQuantityAvailable = 1
+  override val maxDiscountQuantityAvailable = 1
 
   override val httpClient: FutureHttpClient = RequestRunners.futureRunner
 
