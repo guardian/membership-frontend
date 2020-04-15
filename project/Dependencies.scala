@@ -9,7 +9,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
-  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.184-M7"
+  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.195"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.550"
   val contentAPI = "com.gu" %% "content-api-client-default" % "14.1"
