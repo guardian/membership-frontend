@@ -14,13 +14,14 @@ import org.specs2.matcher.JsonMatchers
 import org.specs2.mutable.Specification
 import org.specs2.specification.AroundEach
 import play.api.libs.json.Json
+import utils.Implicits._
 
 class EventsResponseTest extends Specification with JsonMatchers with EventFixtures {
   "Event response JSON created from RichEvent" should {
     "have event id" in {
       val response = EventsResponse(events = Seq(Event.forRichEvent(defaultLiveEvent)))
 
-      asJsonString(response) must /("events") /# 0 / ("id" -> defaultLiveEvent.id)
+      asJsonString(response) must /("events") /# 0 / ("id" -> defaultLiveEvent.underlying.ebEvent.id)
     }
 
     "have url" in {
@@ -32,13 +33,13 @@ class EventsResponseTest extends Specification with JsonMatchers with EventFixtu
     "have title" in {
       val response = EventsResponse(events = Seq(Event.forRichEvent(defaultLiveEvent)))
 
-      asJsonString(response) must /("events") /# 0 / ("title" -> defaultLiveEvent.name.text)
+      asJsonString(response) must /("events") /# 0 / ("title" -> defaultLiveEvent.underlying.ebEvent.name.text)
     }
 
     "have start and dates in utc with timezone" in {
       val response = EventsResponse(events = Seq(Event.forRichEvent(defaultLiveEvent)))
 
-      val expectedStartTime = defaultLiveEvent.start
+      val expectedStartTime = defaultLiveEvent.underlying.ebEvent.start
         .toDateTime(UTC)
         .toString(dateTimeNoMillis())
 
@@ -75,7 +76,7 @@ class EventsResponseTest extends Specification with JsonMatchers with EventFixtu
 
 trait EventFixtures {
   def liveEvent(venue: EBVenue = EBVenue(None, None)) = GuLiveEvent(
-    event = EBEvent(
+    underlying = EBEvent(
       name = EBRichText(text = "The ten (food) commandments with Jay Rayner", html = "The ten (food) commandments with Jay Rayner"),
       description = None,
       url = "https://membership.theguardian.com/event/guardian-live-the-ten-food-commandments-with-jay-rayner-22576715564",
@@ -86,7 +87,7 @@ trait EventFixtures {
       venue = venue,
       capacity = 200,
       ticket_classes = Seq.empty,
-      status = "live"),
+      status = "live").cheatyMigrate,
     image = Option(GridImage(
       assets = List.empty,
       metadata = Grid.Metadata(None, None, None),

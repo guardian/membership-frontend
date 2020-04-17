@@ -9,7 +9,7 @@
     </div>
     <div class="stat-item__second">
         <span class="qa-event-detail-datetime">
-            @dateTimeRange(event.startAndEnd)
+            @dateTimeRange(event.underlying.ebEvent.startAndEnd)
         </span>
     </div>
 </div>
@@ -20,10 +20,10 @@
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
     <div class="stat-item__second copy">
-        @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+        @for(addressDefaultLine <- event.underlying.ebEvent.venue.addressDefaultLine) {
             @addressDefaultLine
         }
-        @for(googleMapsLink <- event.venue.googleMapsLink) {
+        @for(googleMapsLink <- event.underlying.ebEvent.venue.googleMapsLink) {
             <div class="stat-item__supplementary copy">
                 <a href="@googleMapsLink">Google map</a>
             </div>
@@ -33,7 +33,7 @@
 
 @* Event ticket sale dates *@
 @if(showTicketSales && event.canHavePriorityBooking) {
-    @for(ticketing <- event.internalTicketing if event.isBookable) {
+    @for(ticketing <- event.underlying.internalTicketing if event.underlying.isBookable) {
         <div class="stat-item">
             <div class="stat-item__first">
                 @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))

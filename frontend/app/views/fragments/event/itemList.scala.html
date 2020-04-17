@@ -1,7 +1,7 @@
 @(event: model.RichEvent.RichEvent, classes: Seq[String] = Seq.empty)
 
-<a href="@routes.Event.details(event.slug)"
-   class="event-item event-item--list @if(event.isBookable){ qa-available-event-item} @classes.mkString(" ")">
+<a href="@routes.Event.details(event.underlying.ebEvent.slug)"
+   class="event-item event-item--list @if(event.underlying.isBookable){ qa-available-event-item} @classes.mkString(" ")">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
             <img src="@img.smallestImage" alt="@img.altText" class="responsive-img">
@@ -9,7 +9,7 @@
     }
     <div class="event-item__content">
         @fragments.event.itemMetaTitle(event)
-        @for(addressShortLine <- event.venue.addressShortLine) {
+        @for(addressShortLine <- event.underlying.ebEvent.venue.addressShortLine) {
             <div class="event-item__meta">
                 <div class="event-item__location">
                     @addressShortLine

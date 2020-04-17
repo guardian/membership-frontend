@@ -1,0 +1,393 @@
+{
+  "name": {
+    "text": "Elif Shafak in conversation",
+    "html": "Elif Shafak in conversation"
+  },
+  "description": {
+    "text": "A Guardian Live event with award-winning Turkish novelist Elif Shafak.",
+    "html": "A Guardian Live event with award-winning Turkish novelist Elif Shafak."
+  },
+  "id": "97295305879",
+  "url": "https://www.eventbrite.co.uk/e/elif-shafak-in-conversation-tickets-97295305879",
+  "start": {
+    "timezone": "Europe/London",
+    "local": "2020-06-15T19:00:00",
+    "utc": "2020-06-15T18:00:00Z"
+  },
+  "end": {
+    "timezone": "Europe/London",
+    "local": "2020-06-15T20:15:00",
+    "utc": "2020-06-15T19:15:00Z"
+  },
+  "organization_id": "104062388105",
+  "created": "2020-02-28T11:15:11Z",
+  "changed": "2020-03-31T10:01:11Z",
+  "capacity": 200,
+  "capacity_is_custom": true,
+  "status": "draft",
+  "currency": "GBP",
+  "listed": true,
+  "shareable": false,
+  "invite_only": false,
+  "online_event": false,
+  "show_remaining": false,
+  "tx_time_limit": 480,
+  "hide_start_date": false,
+  "hide_end_date": false,
+  "locale": "en_GB",
+  "is_locked": false,
+  "privacy_setting": "unlocked",
+  "is_series": false,
+  "is_series_parent": false,
+  "inventory_type": "limited",
+  "is_reserved_seating": false,
+  "show_pick_a_seat": false,
+  "show_seatmap_thumbnail": false,
+  "show_colors_in_seatmap_thumbnail": false,
+  "source": "coyote",
+  "is_free": false,
+  "version": "3.7.0",
+  "summary": "A Guardian Live event with award-winning Turkish novelist Elif Shafak.",
+  "logo_id": "94585361",
+  "organizer_id": "6693856275",
+  "venue_id": "48762111",
+  "category_id": null,
+  "subcategory_id": null,
+  "format_id": "2",
+  "resource_uri": "https://www.eventbriteapi.com/v3/events/97295305879/",
+  "is_externally_ticketed": false,
+  "category": null,
+  "subcategory": null,
+  "format": {
+    "resource_uri": "https://www.eventbriteapi.com/v3/formats/2/",
+    "id": "2",
+    "name": "Seminar or Talk",
+    "name_localized": "Seminar or Talk",
+    "short_name": "Seminar",
+    "short_name_localized": "Seminar"
+  },
+  "venue": {
+    "address": {
+      "address_1": "90 York Way",
+      "address_2": null,
+      "city": "London",
+      "region": "England",
+      "postal_code": "N1 9AG",
+      "country": "GB",
+      "latitude": "51.5349625",
+      "longitude": "-0.1215981",
+      "localized_address_display": "90 York Way, London, N1 9AG",
+      "localized_area_display": "London",
+      "localized_multi_line_address_display": [
+        "90 York Way",
+        "London",
+        "N1 9AG"
+      ]
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/venues/48762111/",
+    "id": "48762111",
+    "age_restriction": null,
+    "capacity": null,
+    "name": "Kings Place",
+    "latitude": "51.5349625",
+    "longitude": "-0.1215981"
+  },
+  "ticket_classes": [
+    {
+      "actual_cost": {
+        "display": "£20.00",
+        "currency": "GBP",
+        "value": 2000,
+        "major_value": "20.00"
+      },
+      "actual_fee": {
+        "display": "£1.51",
+        "currency": "GBP",
+        "value": 151,
+        "major_value": "1.51"
+      },
+      "cost": {
+        "display": "£20.00",
+        "currency": "GBP",
+        "value": 2000,
+        "major_value": "20.00"
+      },
+      "fee": {
+        "display": "£1.51",
+        "currency": "GBP",
+        "value": 151,
+        "major_value": "1.51"
+      },
+      "tax": {
+        "display": "£0.00",
+        "currency": "GBP",
+        "value": 0,
+        "major_value": "0.00"
+      },
+      "resource_uri": "https://www.eventbriteapi.com/v3/events/97295305879/ticket_classes/168339893/",
+      "display_name": "Standard ticket",
+      "name": "Standard ticket",
+      "description": "Tickets are non-refundable",
+      "sorting": 1,
+      "donation": false,
+      "free": false,
+      "minimum_quantity": 1,
+      "maximum_quantity": 10,
+      "maximum_quantity_per_order": 10,
+      "on_sale_status": "AVAILABLE",
+      "has_pdf_ticket": true,
+      "order_confirmation_message": null,
+      "delivery_methods": [
+        "electronic"
+      ],
+      "category": "admission",
+      "event_id": "97295305879",
+      "image_id": null,
+      "id": "168339893",
+      "capacity": 100,
+      "quantity_total": 100,
+      "quantity_sold": 0,
+      "sales_start": "2020-02-28T00:00:00Z",
+      "sales_end": "2020-06-15T17:00:00Z",
+      "sales_end_relative": null,
+      "hidden": false,
+      "hidden_currently": false,
+      "include_fee": false,
+      "split_fee": false,
+      "hide_description": true,
+      "hide_sale_dates": false,
+      "auto_hide": false,
+      "sales_channels": [
+        "online",
+        "atd"
+      ],
+      "secondary_assignment_enabled": false
+    },
+    {
+      "actual_cost": {
+        "display": "£18.00",
+        "currency": "GBP",
+        "value": 1800,
+        "major_value": "18.00"
+      },
+      "actual_fee": {
+        "display": "£1.42",
+        "currency": "GBP",
+        "value": 142,
+        "major_value": "1.42"
+      },
+      "cost": {
+        "display": "£18.00",
+        "currency": "GBP",
+        "value": 1800,
+        "major_value": "18.00"
+      },
+      "fee": {
+        "display": "£1.42",
+        "currency": "GBP",
+        "value": 142,
+        "major_value": "1.42"
+      },
+      "tax": {
+        "display": "£0.00",
+        "currency": "GBP",
+        "value": 0,
+        "major_value": "0.00"
+      },
+      "resource_uri": "https://www.eventbriteapi.com/v3/events/97295305879/ticket_classes/168339921/",
+      "display_name": "Concession",
+      "name": "Concession",
+      "description": null,
+      "sorting": 2,
+      "donation": false,
+      "free": false,
+      "minimum_quantity": 1,
+      "maximum_quantity": 10,
+      "maximum_quantity_per_order": 10,
+      "on_sale_status": "AVAILABLE",
+      "has_pdf_ticket": true,
+      "order_confirmation_message": null,
+      "delivery_methods": [
+        "electronic"
+      ],
+      "category": "admission",
+      "event_id": "97295305879",
+      "image_id": null,
+      "id": "168339921",
+      "capacity": 10,
+      "quantity_total": 10,
+      "quantity_sold": 0,
+      "sales_start": "2020-02-28T00:00:00Z",
+      "sales_end": "2020-06-15T18:00:00Z",
+      "sales_end_relative": null,
+      "hidden": false,
+      "hidden_currently": false,
+      "include_fee": false,
+      "split_fee": false,
+      "hide_description": true,
+      "hide_sale_dates": false,
+      "auto_hide": false,
+      "sales_channels": [
+        "online",
+        "atd"
+      ],
+      "secondary_assignment_enabled": false
+    },
+    {
+      "actual_cost": {
+        "display": "£8.94",
+        "currency": "GBP",
+        "value": 894,
+        "major_value": "8.94"
+      },
+      "actual_fee": {
+        "display": "£1.06",
+        "currency": "GBP",
+        "value": 106,
+        "major_value": "1.06"
+      },
+      "cost": {
+        "display": "£10.00",
+        "currency": "GBP",
+        "value": 1000,
+        "major_value": "10.00"
+      },
+      "fee": {
+        "display": "£0.00",
+        "currency": "GBP",
+        "value": 0,
+        "major_value": "0.00"
+      },
+      "tax": {
+        "display": "£0.00",
+        "currency": "GBP",
+        "value": 0,
+        "major_value": "0.00"
+      },
+      "resource_uri": "https://www.eventbriteapi.com/v3/events/97295305879/ticket_classes/169014509/",
+      "display_name": "Guardian Member's ticket",
+      "name": "Guardian Member's ticket",
+      "description": null,
+      "sorting": 3,
+      "donation": false,
+      "free": false,
+      "minimum_quantity": 1,
+      "maximum_quantity": 10,
+      "maximum_quantity_per_order": 1,
+      "on_sale_status": "AVAILABLE",
+      "has_pdf_ticket": true,
+      "order_confirmation_message": null,
+      "delivery_methods": [
+        "electronic"
+      ],
+      "category": "admission",
+      "event_id": "97295305879",
+      "image_id": null,
+      "id": "169014509",
+      "capacity": 1,
+      "quantity_total": 1,
+      "quantity_sold": 0,
+      "sales_start": "2020-03-02T00:00:00Z",
+      "sales_end": "2020-06-15T18:00:00Z",
+      "sales_end_relative": null,
+      "hidden": true,
+      "hidden_currently": true,
+      "include_fee": true,
+      "split_fee": false,
+      "hide_description": true,
+      "hide_sale_dates": false,
+      "auto_hide": false,
+      "sales_channels": [
+        "online",
+        "atd"
+      ],
+      "secondary_assignment_enabled": false
+    },
+    {
+      "actual_cost": null,
+      "actual_fee": null,
+      "cost": null,
+      "fee": null,
+      "tax": null,
+      "resource_uri": "https://www.eventbriteapi.com/v3/events/97295305879/ticket_classes/169015119/",
+      "display_name": "Member's ticket at no extra cost",
+      "name": "Member's ticket at no extra cost",
+      "description": null,
+      "sorting": 4,
+      "donation": false,
+      "free": true,
+      "minimum_quantity": 1,
+      "maximum_quantity": 10,
+      "maximum_quantity_per_order": 1,
+      "on_sale_status": "AVAILABLE",
+      "has_pdf_ticket": true,
+      "order_confirmation_message": null,
+      "delivery_methods": [
+        "electronic"
+      ],
+      "category": "admission",
+      "event_id": "97295305879",
+      "image_id": null,
+      "id": "169015119",
+      "capacity": 1,
+      "quantity_total": 1,
+      "quantity_sold": 0,
+      "sales_start": "2020-03-02T00:00:00Z",
+      "sales_end": "2020-06-15T18:00:00Z",
+      "sales_end_relative": null,
+      "hidden": true,
+      "hidden_currently": true,
+      "include_fee": false,
+      "split_fee": false,
+      "hide_description": true,
+      "hide_sale_dates": false,
+      "auto_hide": false,
+      "sales_channels": [
+        "online",
+        "atd"
+      ],
+      "secondary_assignment_enabled": false
+    }
+  ],
+  "logo": {
+    "crop_mask": {
+      "top_left": {
+        "x": 0,
+        "y": 561
+      },
+      "width": 5760,
+      "height": 2880
+    },
+    "original": {
+      "url": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F94585361%2F104062388105%2F1%2Foriginal.20200228-113053?auto=format%2Ccompress&q=75&sharp=10&s=099872e280fe87e02da2627d2b956b22",
+      "width": 5760,
+      "height": 3840
+    },
+    "id": "94585361",
+    "url": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F94585361%2F104062388105%2F1%2Foriginal.20200228-113053?h=200&w=450&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C561%2C5760%2C2880&s=d90511a64e2dd99f6d9660b836de4b29",
+    "aspect_ratio": "2",
+    "edge_color": "#423f5c",
+    "edge_color_set": true
+  },
+  "organizer": {
+    "description": {
+      "text": null,
+      "html": null
+    },
+    "long_description": {
+      "text": "Guardian Live is a series of events that bring the Guardian to life. From keynote speeches with famous faces, to festivals of culture and topical debates with Guardian journalists, our events bring you into contact with some of the most influential thinkers, artists and writers in the world, as well as the Guardian’s award-winning journalists.\r\n \r\nGuardian Live allows readers to participate in the debate and have a say in conversations that matter.\r\n ",
+      "html": "<div style=\"color: #222222; font-family: arial, sans-serif; font-size: 12.8000001907349px;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">Guardian Live is a series of events that bring the Guardian to life. From keynote speeches with famous faces, to festivals of culture and topical debates with Guardian journalists, our events bring you into contact with some of the most influential thinkers, artists and writers in the world, as well as the Guardian’s award-winning journalists.</span></div>\r\n<div style=\"color: #222222; font-family: arial, sans-serif; font-size: 12.8000001907349px;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"> </span></div>\r\n<div style=\"color: #222222; font-family: arial, sans-serif; font-size: 12.8000001907349px;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">Guardian Live allows readers to participate in the debate and have a say in conversations that matter.</span></div>\r\n<div style=\"color: #222222; font-family: arial, sans-serif; font-size: 12.8000001907349px;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"> </span></div>"
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/organizers/6693856275/",
+    "_type": "organizer",
+    "id": "6693856275",
+    "name": "Guardian Live",
+    "url": "https://www.eventbrite.co.uk/o/guardian-live-6693856275",
+    "num_past_events": 11,
+    "num_future_events": 0,
+    "twitter": "@guardianlive",
+    "organization_id": "104062388105",
+    "disable_marketing_opt_in": false,
+    "logo_id": "44444190"
+  }
+}

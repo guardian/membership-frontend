@@ -8,7 +8,7 @@ import com.gu.salesforce.Tier
 import configuration.Links
 import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
-import model.Eventbrite.{EBEvent, EBOrder, EBTicketClass}
+import model.Eventbrite.{EBOrder, EBTicketClass, EventWithDescription}
 import model.Footer.{LiveFooter, MasterClassesFooter}
 import model.Header.{LiveHeader, MasterClassesHeader}
 import org.joda.time.LocalDate
@@ -39,11 +39,11 @@ object RichEvent {
   }
 
   def chronologicalSort(events: Seq[RichEvent]) = {
-    events.sortWith(_.event.start < _.event.start)
+    events.sortWith(_.underlying.ebEvent.start < _.underlying.ebEvent.start)
   }
 
   def groupEventsByDay(events: Seq[RichEvent])(implicit ordering: Ordering[LocalDate]): SortedMap[LocalDate, Seq[RichEvent]] = {
-    SortedMap(events.groupBy(_.start.toLocalDate).toSeq :_*)(ordering)
+    SortedMap(events.groupBy(_.underlying.ebEvent.start.toLocalDate).toSeq :_*)(ordering)
   }
 
   def groupEventsByDayAndMonth(events: Seq[RichEvent])(implicit ordering: Ordering[LocalDate]): SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]] = {
@@ -51,11 +51,11 @@ object RichEvent {
   }
 
   def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
-    SortedMap(events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).toSeq :_*)
+    SortedMap(events.groupBy(_.underlying.ebEvent.start.toLocalDate.withDayOfMonth(1)).toSeq :_*)
   }
 
   def getCitiesWithCount(events: Seq[RichEvent]): Seq[(String, Int)] = {
-    val cities = events.flatMap(_.venue.address.flatMap(_.city))
+    val cities = events.flatMap(_.underlying.ebEvent.venue.address.flatMap(_.city))
     cities.groupBy(identity).mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
   }
 
@@ -64,7 +64,7 @@ object RichEvent {
   }
 
   trait RichEvent {
-    val event: EBEvent
+    val underlying: EventWithDescription
     val detailsUrl: String
     val logoOpt: Option[ProviderLogo]
     val imgOpt: Option[ResponsiveImageGroup]
@@ -82,13 +82,13 @@ object RichEvent {
     def deficientGuardianMembersTickets: Boolean
 
     def countComplimentaryTicketsInOrder(order: EBOrder): Int = {
-      val ticketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
+      val ticketIds = underlying.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
       order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
     }
 
     def retrieveDiscountedTickets(tier: Tier): Seq[EBTicketClass] = {
       val tickets = for {
-        ticketing <- event.internalTicketing
+        ticketing <- underlying.internalTicketing
         _ <- ticketing.memberDiscountOpt
         if Benefits.DiscountTicketTiers.contains(tier)
       } yield ticketing.memberBenefitTickets
@@ -96,14 +96,14 @@ object RichEvent {
       tickets.getOrElse(Seq[EBTicketClass]())
     }
 
-    def isBookableByTier(tier: Tier): Boolean = event.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
+    def isBookableByTier(tier: Tier): Boolean = underlying.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
   }
 
   abstract class LiveEvent(
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends RichEvent {
-    val detailsUrl = routes.Event.details(event.slug).url
+    val detailsUrl = routes.Event.details(underlying.ebEvent.slug).url
     val hasLargeImage = true
     val canHavePriorityBooking = true
     val imgOpt = image.flatMap(ResponsiveImageGroup.fromGridImage)
@@ -124,14 +124,14 @@ object RichEvent {
       .orElse(Some(fallbackHighlightsMetadata))
 
     def deficientGuardianMembersTickets = {
-      event.internalTicketing
+      underlying.internalTicketing
         .flatMap(_.memberDiscountOpt)
         .exists(_.fewerMembersTicketsThanGeneralTickets)
     }
   }
 
   case class GuLiveEvent(
-    event: EBEvent,
+    underlying: EventWithDescription,
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends LiveEvent(image, contentOpt) {
@@ -140,16 +140,16 @@ object RichEvent {
   }
 
   case class MasterclassEvent(
-    event: EBEvent,
+    underlying: EventWithDescription,
     data: Option[MasterclassData]
   ) extends RichEvent {
-    val detailsUrl = routes.Event.details(event.slug).url
+    val detailsUrl = routes.Event.details(underlying.ebEvent.slug).url
     val hasLargeImage = false
     val canHavePriorityBooking = false
     val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage.toString)
     val schema = EventSchema.from(this)
-    val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
+    val tags = MasterclassEvent.extractTags(underlying.ebDescription.description).getOrElse(Nil)
     val metadata = EventMetadata.masterclassMetadata
     val logoOpt = Some(ProviderLogo(this))
     override val header = MasterClassesHeader
@@ -183,6 +183,5 @@ object RichEvent {
       "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim.toLowerCase))
   }
 
-  implicit def eventToEBEvent(event: RichEvent): EBEvent = event.event
 }
 

@@ -48,15 +48,15 @@ object Social {
   }
 
   def eventDetail(event: RichEvent): Set[Social] = Set(
-    Email(event.name.text, s"The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n${event.name.text}\n${event.memUrl}"),
-    Twitter(s"${event.name.text} ${event.memUrl} ${event.metadata.socialHashtag.mkString}"),
-    Facebook(event.memUrl)
+    Email(event.underlying.ebEvent.name.text, s"The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n${event.underlying.ebEvent.name.text}\n${event.underlying.ebEvent.memUrl}"),
+    Twitter(s"${event.underlying.ebEvent.name.text} ${event.underlying.ebEvent.memUrl} ${event.metadata.socialHashtag.mkString}"),
+    Facebook(event.underlying.ebEvent.memUrl)
   )
 
   def eventThankyou(event: RichEvent): Set[Social] = Set(
-    Email(s"I'm going to ${event.name.text}!", s"I've just booked my ticket for ${event.name.text}. Come along too!\n\n${event.memUrl}"),
-    Twitter(s"I'm going to: ${event.name.text} ${event.memUrl} ${event.metadata.socialHashtag.mkString}"),
-    Facebook(event.memUrl)
+    Email(s"I'm going to ${event.underlying.ebEvent.name.text}!", s"I've just booked my ticket for ${event.underlying.ebEvent.name.text}. Come along too!\n\n${event.underlying.ebEvent.memUrl}"),
+    Twitter(s"I'm going to: ${event.underlying.ebEvent.name.text} ${event.underlying.ebEvent.memUrl} ${event.metadata.socialHashtag.mkString}"),
+    Facebook(event.underlying.ebEvent.memUrl)
   )
 
   val joinThankyou: Set[Social] = Set(

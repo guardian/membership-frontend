@@ -6,25 +6,45 @@ import model.EventbriteDeserializer._
 import org.joda.time.Instant
 import play.api.test.PlaySpecification
 import utils.Resource
+import utils.Implicits._
 
-class EBEventTest extends PlaySpecification {
+object EBEventTest {
   val event = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json")
   val ebResponse = event.as[EBResponse[EBEvent]]
+}
+
+class EBEventTest extends PlaySpecification {
+  import EBEventTest.ebResponse
   // val ebSoldOutEvent = ebResponse.data.find(_.id == "13043179501").get
   // val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
-  val ebLiveEvent = ebResponse.data.find(_.id == "12104040511").get
-  val ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get
-  val ebCompletedEvent = ebResponse.data.find(_.id == "13125971133").get
-  val ebCancelledEvent = ebResponse.data.find(_.id == "13087550215").get
-  val nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get
-  val soldOutEvent = ebResponse.data.find(_.id == "12238163677").get
-  val startedEvent = ebResponse.data.find(_.id == "12972720757").get
-  val completedEvent = ebResponse.data.find(_.id == "13024577863").get
-  val limitedAvailabilityEvent = ebResponse.data.find(_.id == "12718560557").get
+  def ebLiveEvent = ebResponse.data.find(_.id == "12104040511").get.cheatyMigrate
+  def ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get.cheatyMigrate
+  def ebCompletedEvent = ebResponse.data.find(_.id == "13125971133").get.cheatyMigrate
+  def ebCancelledEvent = ebResponse.data.find(_.id == "13087550215").get.cheatyMigrate
+  def nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get.cheatyMigrate
+  def soldOutEvent = ebResponse.data.find(_.id == "12238163677").get.cheatyMigrate
+  def startedEvent = ebResponse.data.find(_.id == "12972720757").get.cheatyMigrate
+  def completedEvent = ebResponse.data.find(_.id == "13024577863").get.cheatyMigrate
+  def limitedAvailabilityEvent = ebResponse.data.find(_.id == "12718560557").get.cheatyMigrate
 
-  val ticketedEvent = ebLiveEvent;
+  def ticketedEvent = ebLiveEvent
 
-  def updateEventWithDescription(event: EBEvent, desc: String) = event.copy(description = Some(EBRichText(desc,desc)))
+  def updateEventWithDescription(event: EventWithDescription, desc: String) = event.copy(ebDescription = event.ebDescription.copy(description = desc))
+
+  "structured event" should {
+
+    val structured = {
+      val event = Resource.getJson("model/eventbrite/structuredEvent/event.json").as[EBEvent]
+      val desc = Resource.getJson("model/eventbrite/structuredEvent/description.json").as[EBDescription]
+      EventWithDescription(event, desc)
+    }
+
+    "have the summary in the event description and the main description separately" in {
+      val expectedDesc = s"""<div>A Guardian Live event with award-winning Turkish novelist Elif Shafak.</div>${"\n"}<div style=\"margin-top: 20px\"><div><div style=\"margin:20px 10px;font-size:15px;line-height:22px;font-weight:400;text-align:left;\"><p>Elif Shafak, activist, essayist, academic and author of 17 books - including the Booker Prize shortlisted 10 Minutes 38 Seconds in This Strange World - will be joining us for an evening of conversation.</p><p>10 Minutes is her most recent novel, and follows the story of murdered sex worker Leila, who enters into a new state of self awareness in the minutes between her heart stopping and her brain activity dying. Like many of Shafak’s other books, the narrative transcends time and borders to offer an intricate, profound and often moving examination into the trauma women are subjected to at the hands of the patriarchy.</p><p>As well as writing fiction, Shafak writes and speaks about international politics, far-right populism, pluralism, women’s rights and democracy. She is an outspoken critic of the Turkish government, and last year her novels became a target for “crimes of obscenity”; fearing arrest, Shafak has since been living in self-imposed exile in London.</p><p>She will be joining us to talk about her career as a writer, as well as her activism, the importance of free speech, and art as an antidote to political uncertainty.</p></div></div></div>"""
+      structured.ebDescription.description mustEqual(expectedDesc)
+      structured.ebEvent.description.map(_.html) mustEqual(Some("A Guardian Live event with award-winning Turkish novelist Elif Shafak."))
+    }
+  }
 
   "event" should {
     "be sold out" in {
@@ -66,7 +86,7 @@ class EBEventTest extends PlaySpecification {
       ebCompletedEvent.statusText mustEqual Some("Past event")
     }
     "should handle multi-day events" in{
-      val multiDayEvent = Resource.getJson("model/eventbrite/event-started-multi-day.json").as[EBEvent]
+      val multiDayEvent = Resource.getJson("model/eventbrite/event-started-multi-day.json").as[EBEvent].cheatyMigrate
       multiDayEvent.statusText mustEqual None
       multiDayEvent.isBookable mustEqual(true)
     }
@@ -87,7 +107,7 @@ class EBEventTest extends PlaySpecification {
       nonTicketedEvent.mainImageUrl must beNone
     }
     "should display venue description" in {
-      ebLiveEvent.venue.addressDefaultLine.get mustEqual "The Royal Institution, London, W1S 4BS"
+      ebLiveEvent.ebEvent.venue.addressDefaultLine.get mustEqual "The Royal Institution, London, W1S 4BS"
     }
   }
 
@@ -135,19 +155,19 @@ class EBEventTest extends PlaySpecification {
 
   "Venue addressLine" should {
     "be a pleasantly formatted concatenation of the venue address" in {
-      ebCompletedEvent.venue.addressLine mustEqual Some("Kings Place, 90 York Way, London, N1 9GU")
+      ebCompletedEvent.ebEvent.venue.addressLine mustEqual Some("Kings Place, 90 York Way, London, N1 9GU")
     }
   }
 
   "Venue google link" should {
     "include the uri encoded venue name and address as the query parameter" in {
-      ebCompletedEvent.venue.googleMapsLink mustEqual Some("https://maps.google.com/?q=The%20Guardian,%20Kings%20Place,%2090%20York%20Way,%20London,%20N1%209GU")
+      ebCompletedEvent.ebEvent.venue.googleMapsLink mustEqual Some("https://maps.google.com/?q=The%20Guardian,%20Kings%20Place,%2090%20York%20Way,%20London,%20N1%209GU")
     }
   }
 
   "Event location" should {
     "be correct with all fields present" in {
-      val location = ebCompletedEvent.venue.address.get
+      val location = ebCompletedEvent.ebEvent.venue.address.get
       location.address_1.get mustEqual("Kings Place")
       location.address_2.get mustEqual("90 York Way")
       location.city.get mustEqual("London")
@@ -179,24 +199,24 @@ class EBEventTest extends PlaySpecification {
 
   "providerOpt" should {
     "be empty when there is no provider" in {
-      ebLiveEvent.providerOpt must beNone
+      ebLiveEvent.ebDescription.providerOpt must beNone
     }
 
     "be some when there is a valid provider" in {
-      val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent].cheatyMigrate.ebDescription
       event.providerOpt.map(_.id).get mustEqual "birkbeck"
       event.providerOpt.map(_.title).get mustEqual "Birkbeck"
     }
 
     "be none when there is an invalid provider" in {
-      val event = Resource.getJson("model/eventbrite/event-with-invalid-provider.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event-with-invalid-provider.json").as[EBEvent].cheatyMigrate.ebDescription
       event.providerOpt must beNone
     }
   }
 
   "memberDiscountOpt" should {
     "return Some when there is a general release ticket AND a discount-benefit ticket" in {
-      val event = Resource.getJson("model/eventbrite/event-guardian-members-discount.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event-guardian-members-discount.json").as[EBEvent].cheatyMigrate
       val ticketing = event.internalTicketing.get
 
       ticketing.memberDiscountOpt must beSome
@@ -204,7 +224,7 @@ class EBEventTest extends PlaySpecification {
     }
 
     "return None when there is only a general release ticket" in {
-      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent].cheatyMigrate
       val ticketing = event.internalTicketing.get
 
       ticketing.memberDiscountOpt must beNone
@@ -224,7 +244,7 @@ class EBEventTest extends PlaySpecification {
 
   "isFree" should {
     "report event as a free event" in {
-      val event = Resource.getJson("model/eventbrite/event-free-ticket-classes.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event-free-ticket-classes.json").as[EBEvent].cheatyMigrate
 
       event.internalTicketing.get.isFree must beTrue
     }
@@ -232,12 +252,12 @@ class EBEventTest extends PlaySpecification {
 
   "isSoldOut" should {
     "report event as sold out event" in {
-      val event = Resource.getJson("model/eventbrite/event-sold-out-ticket-classes.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event-sold-out-ticket-classes.json").as[EBEvent].cheatyMigrate
 
       event.isSoldOut must beTrue
     }
     "report an event with spare capacity as Sold Out if EventBrite says it is (due to people on waitlist)" in {
-      val event = Resource.getJson("model/eventbrite/event.not-sold-out-but-populated-waitlist.json").as[EBEvent]
+      val event = Resource.getJson("model/eventbrite/event.not-sold-out-but-populated-waitlist.json").as[EBEvent].cheatyMigrate
 
       event.isSoldOut must beTrue
     }

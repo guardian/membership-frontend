@@ -59,10 +59,19 @@ abstract class EventbriteService(ebAccount: EBAccount)(
   def eventsTaskFor(status: String, initialDelay: FiniteDuration, refreshTime: FiniteDuration): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, initialDelay, refreshTime) {
       for {
-        events <- getAll[EBEvent](s"organizations/${organisationId.value}/events/", List(
-          "status" -> status,
-          "expand" -> EBEvent.expansions.mkString(",")))
-        richEvents <- Future.traverse(events)(mkRichEvent)
+        events <- getAll[EBEvent](
+          s"organizations/${organisationId.value}/events/",
+          List(
+            "status" -> status,
+            "expand" -> EBEvent.expansions.mkString(",")
+          )
+        )
+        eventDesc <- Future.traverse(events) { event =>
+          getDescription(event.id).map { desc =>
+            EventWithDescription(event, desc)
+          }
+        }
+        richEvents <- Future.traverse(eventDesc)(mkRichEvent)
       } yield richEvents
     }
 
@@ -85,15 +94,15 @@ abstract class EventbriteService(ebAccount: EBAccount)(
     archivedEventsTask.start()
   }
 
-  def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
+  def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.underlying.ebEvent.id))
   def eventsDraft: Seq[RichEvent] = draftEventsTask.get()
   def eventsArchive: Seq[RichEvent] = archivedEventsTask.get()
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent]
+  def mkRichEvent(event: EventWithDescription): Future[RichEvent]
   def getFeaturedEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent] = Seq.empty
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
-  def getPartnerEvents: Seq[RichEvent] = events.filter(_.providerOpt.isDefined)
+  def getPartnerEvents: Seq[RichEvent] = events.filter(_.underlying.ebDescription.providerOpt.isDefined)
 
   private def getAll[T](url: String, params: Seq[(String, String)] = Seq.empty)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     def getPage(page: Int) = get[EBResponse[T]](url, Seq("page" -> page.toString) ++ params:_*)
@@ -106,22 +115,26 @@ abstract class EventbriteService(ebAccount: EBAccount)(
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
     event <- get[EBEvent](s"events/$id/", "expand" -> EBEvent.expansions.mkString(","))
-    richEvent <- mkRichEvent(event)
+    desc <- getDescription(event.id)
+    richEvent <- mkRichEvent(EventWithDescription(event, desc))
   } yield richEvent
 
-  def getBookableEvent(id: String): Option[RichEvent] = events.find(_.id == id)
-  def getEvent(id: String): Option[RichEvent] = (events ++ eventsArchive).find(_.id == id)
+  def getDescription(id: String): Future[EBDescription] =
+    get[EBDescription](s"events/$id/description/")
 
-  def getEventsByIds(ids: Seq[String]): Seq[RichEvent] = events.filter(e => ids.contains(e.event.id))
-  def getLimitedAvailability: Seq[RichEvent] = events.filter(_.event.isLimitedAvailability)
-  def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.created.isAfter(start))
-  def getSortedByCreationDate: Seq[RichEvent] = events.sortBy(_.created.toDateTime)(Ordering[DateTime].reverse)
-  def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.start))
+  def getBookableEvent(id: String): Option[RichEvent] = events.find(_.underlying.ebEvent.id == id)
+  def getEvent(id: String): Option[RichEvent] = (events ++ eventsArchive).find(_.underlying.ebEvent.id == id)
 
-  def getEventsByLocation(slug: String): Seq[RichEvent] = events.filter(_.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
+  def getEventsByIds(ids: Seq[String]): Seq[RichEvent] = events.filter(e => ids.contains(e.underlying.ebEvent.id))
+  def getLimitedAvailability: Seq[RichEvent] = events.filter(_.underlying.isLimitedAvailability)
+  def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.underlying.ebEvent.created.isAfter(start))
+  def getSortedByCreationDate: Seq[RichEvent] = events.sortBy(_.underlying.ebEvent.created.toDateTime)(Ordering[DateTime].reverse)
+  def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.underlying.ebEvent.start))
+
+  def getEventsByLocation(slug: String): Seq[RichEvent] = events.filter(_.underlying.ebEvent.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
 
   def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
-      val uri = s"events/${event.id}/access_codes/"
+      val uri = s"events/${event.underlying.ebEvent.id}/access_codes/"
 
       for {
         discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
@@ -171,11 +184,11 @@ class GuardianLiveEventService(
     } yield (ordering \ "order").as[Seq[String]]
   }
 
-  def gridImageFor(event: EBEvent) =
+  def gridImageFor(event: EventWithDescription) =
     event.mainImageGridId.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 
-  override def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
-    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+  override def mkRichEvent(event: EventWithDescription): Future[RichEvent] = for {gridImageOpt <- gridImageFor(event)}
+    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.ebEvent.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def start() {
@@ -202,8 +215,8 @@ class MasterclassEventService(
 
   override val httpClient: FutureHttpClient = RequestRunners.futureRunner
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val masterclassData = contentApiService.masterclassContent(event.id)
+  override def mkRichEvent(event: EventWithDescription): Future[RichEvent] = {
+    val masterclassData = contentApiService.masterclassContent(event.ebEvent.id)
     //todo change this to have link to weburl
     Future.successful(MasterclassEvent(event, masterclassData))
   }
@@ -215,8 +228,8 @@ class MasterclassEventService(
 object EventbriteServiceHelpers {
 
   def getFeaturedEvents(orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
-    val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.id) }
-    orderedEvents.sortBy { event => orderedIds.indexOf(event.id) } ++ normalEvents.filter(!_.isSoldOut).take(4 - orderedEvents.length)
+    val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.underlying.ebEvent.id) }
+    orderedEvents.sortBy { event => orderedIds.indexOf(event.underlying.ebEvent.id) } ++ normalEvents.filter(!_.underlying.isSoldOut).take(4 - orderedEvents.length)
   }
 }
 

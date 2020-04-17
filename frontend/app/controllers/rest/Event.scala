@@ -34,14 +34,14 @@ object Event {
   implicit val writesEvent = Json.writes[Event]
 
   def forRichEvent(e: RichEvent) = Event(
-    id = e.id,
-    url = e.memUrl,
+    id = e.underlying.ebEvent.id,
+    url = e.underlying.ebEvent.memUrl,
     mainImageUrl = e.gridImgUrl,
     socialImageUrl = e.socialImgUrl,
-    start = e.start,
-    end = e.end,
-    venue = Venue.forEventVenue(e.venue),
-    title = e.name.text
+    start = e.underlying.ebEvent.start,
+    end = e.underlying.ebEvent.end,
+    venue = Venue.forEventVenue(e.underlying.ebEvent.venue),
+    title = e.underlying.ebEvent.name.text
   )
 }
 

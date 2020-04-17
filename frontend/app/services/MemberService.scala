@@ -311,7 +311,7 @@ class MemberService(
   }
 
   override def recordFreeEventUsage(subs: Subscription[SubscriptionPlan.Member], event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
-    val description = s"event-id:${event.id};order-id:${order.id}"
+    val description = s"event-id:${event.underlying.ebEvent.id};order-id:${order.id}"
 
     for {
       result <- zuoraService.createFreeEventUsage(
@@ -337,9 +337,9 @@ class MemberService(
           s"User ${sub.accountId} has used $usageCount tickets" ++
             s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")
 
-        SafeLogger.info(s"Complementary tickets: ${event.internalTicketing.map(_.complimentaryTickets)}")
+        SafeLogger.info(s"Complementary tickets: ${event.underlying.internalTicketing.map(_.complimentaryTickets)}")
         if (hasComplimentaryTickets && allowanceNotExceeded)
-          event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
+          event.underlying.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
         else Nil
       }
     }
@@ -347,7 +347,7 @@ class MemberService(
 
   override def createEBCode(subscriber: com.gu.memsub.Subscriber.Member, event: RichEvent)(implicit services: EventbriteCollectiveServices): Future[Option[EBCode]] = {
     retrieveComplimentaryTickets(subscriber.subscription, event).flatMap { complimentaryTickets =>
-      val code = DiscountCode.generate(s"A_${subscriber.contact.identityId}_${event.id}")
+      val code = DiscountCode.generate(s"A_${subscriber.contact.identityId}_${event.underlying.ebEvent.id}")
       val unlockedTickets = complimentaryTickets ++ event.retrieveDiscountedTickets(subscriber.subscription.plan.tier)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
     }

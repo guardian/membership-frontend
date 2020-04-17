@@ -220,9 +220,86 @@ object Eventbrite {
     val fewerMembersTicketsThanGeneralTickets = member.quantity_total < generalRelease.quantity_total
   }
 
+  case class EventWithDescription(ebEvent: EBEvent, ebDescription: EBDescription) {
+
+    val ticketing: Option[Ticketing] =
+      if (ebDescription.description.contains("<!-- noTicketEvent -->")) Some(ExternalTicketing) else InternalTicketing.optFrom(this.ebEvent)
+
+    val internalTicketing: Option[InternalTicketing] = ticketing collect {
+      case t: InternalTicketing => t
+    }
+
+    val generalReleaseTicket = for {
+      ticketing <- internalTicketing
+      ticket <- ticketing.generalReleaseTicketOpt
+    } yield ticket
+
+    val hasComplimentaryTickets = internalTicketing.exists(_.complimentaryTickets.nonEmpty)
+    val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
+    val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
+    val isSoldOut = internalTicketing.exists(_.isSoldOut)
+
+    val isBookable = {
+      val isStartedAndHasBookableTicketClasses = ebEvent.status == "started" && ebEvent.ticket_classes.exists(_.sales_end < DateTime.now)
+      (ebEvent.status == "live" || isStartedAndHasBookableTicketClasses) && !isSoldOut
+    }
+
+    val statusSchema: Option[String] = {
+      if (ebEvent.isPastEvent) None
+      else if (isSoldOut) Some("http://schema.org/OutOfStock")
+      else if(isLimitedAvailability) Some("http://schema.org/LimitedAvailability")
+      else Some("http://schema.org/InStock")
+    }
+
+    val statusText: Option[String] = {
+      if (ebEvent.isPastEvent) Some("Past event")
+      else if (isSoldOut) Some("Sold out")
+      else if (ebEvent.status == "draft") Some("Preview of Draft Event")
+      else None
+    }
+
+    val mainImageUrl: Option[Uri] = for {
+      m <- """\smain-image:\s*(.*?)\s""".r.findFirstMatchIn(ebDescription.description)
+      uri <- Try(Uri.parse(m.group(1))) match {
+        case Success(uri) => Some(uri)
+        case Failure(e) =>
+          SafeLogger.error(scrub"Event ${ebEvent.id} - can't parse main-image url from text '${m.matched}'", e)
+          None
+      }
+    } yield uri
+
+    val mainImageHasNoCrop: Boolean = mainImageUrl.exists(!_.query.params.contains(CropQueryParam))
+
+    val mainImageGridId: Option[ImageIdWithCrop] = mainImageUrl.flatMap(ImageIdWithCrop.fromGuToolsUri)
+
+  }
+
+  case class EBDescription(
+    description: String
+  ) extends EBObject {
+
+    val providerOpt = for {
+      m <- "<!-- provider: (\\S+) -->".r.findFirstMatchIn(description)
+      providerOpt <- EBEvent.availableProviders.find(_.id == m.group(1))
+    } yield providerOpt
+
+    val isPartnerEvent = providerOpt.isDefined
+
+    def cleanHtml: String = {
+      val stylePattern = "(?i)style=(\".*?\"|'.*?'|[^\"'][^\\s]*)".r
+      val cleanStyle = stylePattern replaceAllIn(description, "")
+      val clean = "(?i)<br>".r.replaceAllIn(cleanStyle, "")
+
+      // Remove Masterclass return URL
+      val mcPattern = "(?i)<a[^>]+>Full course and returns information on the Masterclasses website</a>".r
+      mcPattern.replaceAllIn(clean, "")
+    }
+
+  }
+
   case class EBEvent(
     name: EBRichText,
-    description: Option[EBRichText],
+    description: Option[EBRichText],//summary, not the full description
     url: String,
     id: String,
     start: DateTime,
@@ -237,70 +314,11 @@ object Eventbrite {
     val times = EventTimes(created, start)
     val startAndEnd = new Interval(start, end)
 
-    val ticketing: Option[Ticketing] =
-      if (description.exists(_.html.contains("<!-- noTicketEvent -->"))) Some(ExternalTicketing) else InternalTicketing.optFrom(this)
-
-    val internalTicketing: Option[InternalTicketing] = ticketing collect {
-      case t: InternalTicketing => t
-    }
-
-    val generalReleaseTicket = for {
-      ticketing <- internalTicketing
-      ticket <- ticketing.generalReleaseTicketOpt
-    } yield ticket
-
-    val limitedAvailabilityText = "Last tickets remaining"
-    val hasComplimentaryTickets = internalTicketing.exists(_.complimentaryTickets.nonEmpty)
-    val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
-    val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
-    val isSoldOut = internalTicketing.exists(_.isSoldOut)
-
-    val isBookable = {
-      val isStartedAndHasBookableTicketClasses = status == "started" && ticket_classes.exists(_.sales_end < DateTime.now)
-      (status == "live" || isStartedAndHasBookableTicketClasses) && !isSoldOut
-    }
-
+    val limitedAvailabilityText = "Last tickets remaining" //why is this here?
     val isPastEvent = {
       val conditions = Set("ended", "completed")
       conditions.contains(status)
     }
-
-    val statusSchema: Option[String] = {
-      if (isPastEvent) None
-      else if (isSoldOut) Some("http://schema.org/OutOfStock")
-      else if(isLimitedAvailability) Some("http://schema.org/LimitedAvailability")
-      else Some("http://schema.org/InStock")
-    }
-
-    val statusText: Option[String] = {
-      if (isPastEvent) Some("Past event")
-      else if (isSoldOut) Some("Sold out")
-      else if (status == "draft") Some("Preview of Draft Event")
-      else None
-    }
-
-    val providerOpt = for {
-      desc <- description
-      m <- "<!-- provider: (\\S+) -->".r.findFirstMatchIn(desc.html)
-      providerOpt <- EBEvent.availableProviders.find(_.id == m.group(1))
-    } yield providerOpt
-
-    val isPartnerEvent = providerOpt.isDefined
-
-    val mainImageUrl: Option[Uri] = for {
-      desc <- description
-      m <- """\smain-image:\s*(.*?)\s""".r.findFirstMatchIn(desc.html)
-      uri <- Try(Uri.parse(m.group(1))) match {
-        case Success(uri) => Some(uri)
-        case Failure(e) =>
-          SafeLogger.error(scrub"Event $id - can't parse main-image url from text '${m.matched}'", e)
-          None
-      }
-    } yield uri
-
-    val mainImageHasNoCrop: Boolean = mainImageUrl.exists(!_.query.params.contains(CropQueryParam))
-
-    val mainImageGridId: Option[ImageIdWithCrop] = mainImageUrl.flatMap(ImageIdWithCrop.fromGuToolsUri)
 
     val slug = slugify(name.text) + "-" + id
 
@@ -409,6 +427,7 @@ object EventbriteDeserializer {
   implicit val ebPricingReads = Json.reads[EBPricing]
   implicit val ebTicketsReads = Json.reads[EBTicketClass]
   implicit val ebEventReads = Json.reads[EBEvent]
+  implicit val ebDescriptionReads = Json.reads[EBDescription]
   implicit val ebDiscountReads = Json.reads[EBDiscount]
   implicit val ebAccessCodeReads = Json.reads[EBAccessCode]
 

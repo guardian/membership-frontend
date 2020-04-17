@@ -5,17 +5,18 @@ import model.Eventbrite._
 import model.RichEvent.RichEvent
 import model.EventMetadata.{ChooseTierMetadata, Metadata}
 import org.joda.time.DateTime
+import utils.Implicits._
 
 object EventbriteTestObjects {
   def eventName(eventName: String = "Event Name") = EBRichText(eventName, "")
   def eventTime = DateTime.now()
-  def eventDescription(description: String = "Event Description") = new EBRichText(description, "")
+  def eventDescription(description: String = "Event Description") = new EBRichText(description, description)
   def eventLocation = new EBAddress(None, None, None, None, None, None)
   def eventVenue = new EBVenue(Option(eventLocation), None)
   def eventTicketClass = EBTicketClass("", "", None, false, 0, 0, None, None, None, None, eventTime.toInstant, None, None)
-  def eventWithName(name: String = "") = EBEvent(eventName(name), Option(eventDescription()), "", name, eventTime, eventTime + 2.hours, (eventTime - 1.month).toInstant, eventVenue, 0, Seq(eventTicketClass), "live")
+  def eventWithName(name: String = "") = EBEvent(eventName(name), Some(eventDescription()), "", name, eventTime, eventTime + 2.hours, (eventTime - 1.month).toInstant, eventVenue, 0, Seq(eventTicketClass), "live").cheatyMigrate
 
-  case class TestRichEvent(event: EBEvent) extends RichEvent {
+  case class TestRichEvent(underlying: EventWithDescription) extends RichEvent {
     val detailsUrl = ""
     val imgOpt = None
     val logoOpt = None

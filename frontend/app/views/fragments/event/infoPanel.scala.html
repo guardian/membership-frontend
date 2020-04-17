@@ -1,13 +1,13 @@
 @(event: model.RichEvent.RichEvent)
 
-<div class="event-info@if(event.isBookable && event.hasLargeImage) { event-info--bordered } @if(!event.isBookable) { event-info--unavailable}">
+<div class="event-info@if(event.underlying.isBookable && event.hasLargeImage) { event-info--bordered } @if(!event.underlying.isBookable) { event-info--unavailable}">
 
-    @if(!event.isBookable) {
+    @if(!event.underlying.isBookable) {
         <div class="status-panel">
             <div class="status-panel__header">
-                @if(event.isPastEvent) { Past event } else { Sold out }
+                @if(event.underlying.ebEvent.isPastEvent) { Past event } else { Sold out }
             </div>
-            @if(!event.isPastEvent) {
+            @if(!event.underlying.ebEvent.isPastEvent) {
                 <div class="status-panel__content">
                     @fragments.event.waitlist(event)
                 </div>
@@ -17,15 +17,15 @@
 
     <div class="event-info__inner">
 
-        <h4 class="event-info__name">@event.name.text</h4>
+        <h4 class="event-info__name">@event.underlying.ebEvent.name.text</h4>
 
         <div class="stats-listing">
             @fragments.event.stats(event, showTicketSales=true)
         </div>
 
-         @for(ticketing <- event.internalTicketing) {
+         @for(ticketing <- event.underlying.internalTicketing) {
             @fragments.pricing.priceInfoEvent(event, showLimited=true)
-            @if(event.isBookable) {
+            @if(event.underlying.isBookable) {
                 <div class="u-margin-vertical">
                     @fragments.event.ticketCta(event)
                 </div>

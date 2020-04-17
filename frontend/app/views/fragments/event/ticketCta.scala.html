@@ -1,4 +1,4 @@
 @(event: model.RichEvent.RichEvent, extraClasses: Seq[String] = Nil)
 
 <a class="js-ticket-cta action @extraClasses.mkString(" ")"
-   href="@routes.Event.buy(event.id)">Book tickets</a>
+   href="@routes.Event.buy(event.underlying.ebEvent.id)">Book tickets</a>
