@@ -9,7 +9,7 @@ case class EventDestination(event: RichEvent, iframeUrl: Uri) extends Destinatio
   val iframeHeight = {
     val ticketHeight = 60
     val iframeChrome = 560
-    event.ticket_classes.length * ticketHeight + iframeChrome
+    event.underlying.ebEvent.ticket_classes.length * ticketHeight + iframeChrome
   }
 }
 

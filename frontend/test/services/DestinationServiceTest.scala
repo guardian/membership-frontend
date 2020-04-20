@@ -24,7 +24,7 @@ class DestinationServiceTest extends Specification {
     type OldId[+X] = X
 
     val destinationService = new DestinationService[OldId](
-      getBookableEvent = _ => Some(TestRichEvent(eventWithName().copy(id = "0123456"))),
+      getBookableEvent = _ => Some(TestRichEvent(eventWithName().copy(ebEvent = eventWithName().ebEvent.copy(id = "0123456")))),
       capiItemQuery = _ => DestinationServiceTest.createContentItem,
       createCode = (_, _) => Some(EBAccessCode("some-discount-code", 2))
     )
@@ -81,14 +81,14 @@ class DestinationServiceTest extends Specification {
     "should return an event destination url if preJoinReturnUrl is in the request session" in {
       val (request, member) = createRequestWithSession("preJoinReturnUrl" -> "/event/0123456/buy")
       val result = destinationService.eventDestinationFor(request, member)
-      result.get.event.id mustEqual "0123456"
+      result.get.event.underlying.ebEvent.id mustEqual "0123456"
     }
 
     "should return either content or event destination if both are supplied" in {
       val (request, member) = createRequestWithSession("join-referrer" -> "http://www.theguardian.com/membership/2015/apr/17/guardian-live-diversity-in-the-arts", "preJoinReturnUrl" -> "/event/0123456/buy")
 
       destinationService.returnDestinationFor(request, member).get match {
-        case EventDestination(event, _) => event.id mustEqual "0123456"
+        case EventDestination(event, _) => event.underlying.ebEvent.id mustEqual "0123456"
         case ContentDestination(item) => item.content.id mustEqual "membership/2015/apr/17/guardian-live-diversity-in-the-arts"
       }
     }

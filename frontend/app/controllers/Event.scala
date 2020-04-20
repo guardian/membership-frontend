@@ -49,7 +49,7 @@ class Event(
 
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       eventbriteService.getEvent(eventId).map { event =>
-        SafeLogger.info(s"Buy action invoked for event: ${event.id}")
+        SafeLogger.info(s"Buy action invoked for event: ${event.underlying.ebEvent.id}")
         block(request)
       }.getOrElse(Future.successful(NotFound))
     }
@@ -64,9 +64,9 @@ class Event(
       id <- EBEvent.slugToId(slug)
       correctEvent <-(Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(eventbriteService.getEvent).headOption
     } yield {
-      if (slug == correctEvent.slug) {
+      if (slug == correctEvent.underlying.ebEvent.slug) {
         eventDetail(correctEvent)
-      } else Redirect(routes.Event.details(correctEvent.slug))
+      } else Redirect(routes.Event.details(correctEvent.underlying.ebEvent.slug))
     }
 
     eventOpt.getOrElse(Redirect(routes.WhatsOn.list))
@@ -85,14 +85,14 @@ class Event(
       id <- EBEvent.slugToId(slug)
       event <- eventbriteService.getEvent(id)
     } yield EmbedData(
-      title = event.name.text,
+      title = event.underlying.ebEvent.name.text,
       image = event.socialImgUrl,
-      venue = event.venue.name,
-      location = event.venue.addressLine,
-      price = event.internalTicketing.map(_.primaryTicket.priceText),
+      venue = event.underlying.ebEvent.venue.name,
+      location = event.underlying.ebEvent.venue.addressLine,
+      price = event.underlying.internalTicketing.map(_.primaryTicket.priceText),
       identifier = event.metadata.identifier,
-      start = event.start.toString(standardFormat),
-      end = event.end.toString(standardFormat)
+      start = event.underlying.ebEvent.start.toString(standardFormat),
+      end = event.underlying.ebEvent.end.toString(standardFormat)
     )
 
     Ok(eventToJson(eventDataOpt))
@@ -116,9 +116,9 @@ class Event(
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
     val pageInfo = PageInfo(
-      title = event.name.text,
+      title = event.underlying.ebEvent.name.text,
       url = request.path,
-      description = event.description.map(_.blurb),
+      description = event.underlying.ebEvent.description.map(_.blurb),// "description" is actually the summary
       image = event.socialImgUrl,
       schemaOpt = Some(event.schema)
     )
@@ -141,7 +141,7 @@ class Event(
         CachedAction(NotFound)
     }
 
-  private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
+  private def eventCookie(event: RichEvent) = s"mem-event-${event.underlying.ebEvent.id}"
 
   private def addEventBriteGACrossDomainParam(uri: Uri)(implicit req: RequestHeader): Uri = {
     // https://www.eventbrite.co.uk/support/articles/en_US/Troubleshooting/how-to-enable-cross-domain-and-ecommerce-tracking-with-google-universal-analytics
@@ -150,7 +150,7 @@ class Event(
 
   private def redirectMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] = {
     memberService.createEBCode(req.subscriber, event).map { codeOpt =>
-      SafeLogger.info(s"Re-directing member with id ${req.user.minimalUser.id} to Eventbrite event: ${event.id} with code $codeOpt")
+      SafeLogger.info(s"Re-directing member with id ${req.user.minimalUser.id} to Eventbrite event: ${event.underlying.ebEvent.id} with code $codeOpt")
       eventbriteRedirect(event, codeOpt)
     }
   }
@@ -160,11 +160,11 @@ class Event(
   }
 
   def eventbriteRedirect(event: RichEvent, discountCodeOpt: Option[EBCode])(implicit req: RequestHeader) = {
-    val eventUrl = discountCodeOpt.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
+    val eventUrl = discountCodeOpt.fold(Uri.parse(event.underlying.ebEvent.url))(c => event.underlying.ebEvent.url ? ("discount" -> c.code))
     Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
   }
 
-  @deprecated("Guardian Live Events are not configured to use this anymore, and host their own thankyou page on EventBrite.")
+  @deprecated("Guardian Live Events are not configured to use this anymore, and host their own thankyou page on EventBrite.", "")
   def thankyou(id: String, orderIdOpt: Option[String]) = SubscriptionAction.async { implicit request =>
     orderIdOpt.fold {
       val resultOpt = for {

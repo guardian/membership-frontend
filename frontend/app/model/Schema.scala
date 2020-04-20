@@ -29,7 +29,7 @@ case class OfferSchema(
 
 case class EventSchema(
   name: String,
-  description: Option[String],
+  description: String,
   startDate: String,
   endDate: String,
   url: String,
@@ -45,23 +45,23 @@ object EventSchema {
   implicit val writesSchema = Json.writes[EventSchema]
 
   private def locationOpt(event: RichEvent): Option[LocationSchema] = {
-    event.venue.name.map { name =>
-      LocationSchema(name, event.venue.addressLine, event.venue.googleMapsLink)
+    event.underlying.ebEvent.venue.name.map { name =>
+      LocationSchema(name, event.underlying.ebEvent.venue.addressLine, event.underlying.ebEvent.venue.googleMapsLink)
     }
   }
 
   private def offerOpt(event: RichEvent): Option[OfferSchema] = {
-    event.generalReleaseTicket.map { ticket =>
-      OfferSchema(event.memUrl, "primary", ticket.priceValue, ticket.currencyCode, event.statusSchema)
+    event.underlying.generalReleaseTicket.map { ticket =>
+      OfferSchema(event.underlying.ebEvent.memUrl, "primary", ticket.priceValue, ticket.currencyCode, event.underlying.statusSchema)
     }
   }
 
   def from(event: RichEvent): EventSchema = EventSchema(
-    event.name.text,
-    event.description.map(_.text),
-    event.start.toString,
-    event.end.toString,
-    event.memUrl,
+    event.underlying.ebEvent.name.text,
+    event.underlying.ebDescription.cleanHtml,
+    event.underlying.ebEvent.start.toString,
+    event.underlying.ebEvent.end.toString,
+    event.underlying.ebEvent.memUrl,
     event.socialImgUrl,
     locationOpt(event),
     offerOpt(event)

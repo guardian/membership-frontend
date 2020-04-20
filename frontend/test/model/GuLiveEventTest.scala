@@ -7,6 +7,7 @@ import model.RichEvent.{GuLiveEvent, GridImage}
 import org.specs2.mock.Mockito
 import play.api.test.PlaySpecification
 import utils.Resource
+import utils.Implicits._
 
 class GuLiveEventTest extends PlaySpecification with Mockito {
 

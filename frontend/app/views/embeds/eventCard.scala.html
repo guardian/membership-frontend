@@ -3,7 +3,7 @@
 @import views.support.Asset
 @import views.support.Dates.prettyShortDateWithTimeAndDayName
 
-@cardUrl = @{ event.memUrl + "?INTCMP=MEM_EVENT_CARD_" + event.id }
+@cardUrl = @{ event.underlying.ebEvent.memUrl + "?INTCMP=MEM_EVENT_CARD_" + event.underlying.ebEvent.id }
 
 @for(embedCss <- Asset.inlineResource("stylesheets/event-card.css")) {
     <style>
@@ -28,15 +28,15 @@
             </div>
         }
         <div class="membership-event__body">
-            <h3 class="membership-event__title">@event.name.text</h3>
+            <h3 class="membership-event__title">@event.underlying.ebEvent.name.text</h3>
             <div class="membership-event__meta">
                 <div class="membership-event__date">
-                    <time datetime="@event.start">@prettyShortDateWithTimeAndDayName(event.start)</time>
+                    <time datetime="@event.underlying.ebEvent.start">@prettyShortDateWithTimeAndDayName(event.underlying.ebEvent.start)</time>
                 </div>
-                @for(addressShortLine <- event.venue.addressShortLine) {
+                @for(addressShortLine <- event.underlying.ebEvent.venue.addressShortLine) {
                     <div class="membership-event__location">@addressShortLine</div>
                 }
-                @for(ticketing <- event.internalTicketing) {
+                @for(ticketing <- event.underlying.internalTicketing) {
                     <div class="membership-event__price">
                         @ticketing.generalReleaseTicketOpt.map(_.priceText)
                     </div>

@@ -31,35 +31,35 @@
                     <article class="event-detail">
                         <div>
                             <div class="event-detail_image">
-                                <a href="/event/@event.id" target="_blank">
+                                <a href="/event/@event.underlying.ebEvent.id" target="_blank">
                                     @event.imgOpt.fold {
                                         <img
                                             src="data:image/gif;base64,R0lGODdhQAHAAIAAAMzMzJaWliwAAAAAQAHAAAAC/oSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+s73/g8MCofEovGITCqXzKbzCY1Kp9Sq9YrNarfcrvcLDovH5LL5jE6r1+y2+w2Py+f0uv2Oz+v3/L7/DxgoOEhYaHiImKi4yNjo+AgZKTlJWWl5iZmpucnZ6fkJGio6SlpqeoqaqrrK2ur6ChsrO0tba3uLm6u7y9vr+wscLDxMXGx8jJysvMzc7PwMHS09TV1tfY2drb3N3e39DR4uPk5ebn6Onq6+zt7u/g4fLz9PX29/j5+vv8/f7/8PMKDAgQQLGjyIMKHChQwbOnwIMaLEiRQrWryIMaPGVI0cO3r8CDKkyJEkS5o8iTKlypUsW7p8CTOmzJk0a9q8iTOnzp08e/r8CTSo0KFEixo9ijSp0qVMmzp9CjWq1KlUq1q9ijWr1q1cu3r9Cjas2AkFAAA7"
-                                            alt="@event.name.text" class="responsive-img"
+                                            alt="@event.underlying.ebEvent.name.text" class="responsive-img"
                                         />
                                     } { img =>
-                                        <img src="@img.defaultImage" alt="@event.name.text" class="responsive-img"/>
+                                        <img src="@img.defaultImage" alt="@event.underlying.ebEvent.name.text" class="responsive-img"/>
                                     }
-                                    <span class="pseudo-link event-detail-title">@event.name.text</span>
+                                    <span class="pseudo-link event-detail-title">@event.underlying.ebEvent.name.text</span>
                                 </a>
                             </div>
                             <div class="event-detail_info">
-                                <a href="@(s"${Config.membershipUrl}/preview-${previewSubCategory}/${event.id}")"
+                                <a href="@(s"${Config.membershipUrl}/preview-${previewSubCategory}/${event.underlying.ebEvent.id}")"
                                    target="_blank"
                                    class="event-sub-detail">preview</a>
-                                <a href="@(s"https://dashboard.ophan.co.uk/info?url=${event.memUrl}")"
+                                <a href="@(s"https://dashboard.ophan.co.uk/info?url=${event.underlying.ebEvent.memUrl}")"
                                    target="_blank"
                                    class="event-sub-detail">ophan</a>
-                                <a href="@(s"${Config.eventbriteUrl}/myevent?eid=${event.id}")"
+                                <a href="@(s"${Config.eventbriteUrl}/myevent?eid=${event.underlying.ebEvent.id}")"
                                    target="_blank"
                                    class="event-sub-detail">eventbrite</a>
                             </div>
                         </div>
                         <ul class="event-trait-container u-unstyled">
-                        @if(event.mainImageHasNoCrop) {
+                        @if(event.underlying.mainImageHasNoCrop) {
                           @eventTrait("main-image URL with no crop parameter", "important")
                         }
-                        @event.ticketing.collect {
+                        @event.underlying.ticketing.collect {
                             case ExternalTicketing => {
                                 @eventTrait("Not Sold though Eventbrite", "noteworthy")
                             }

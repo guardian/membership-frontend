@@ -13,7 +13,7 @@ import utils.Resource
 class TicketSaleDatesTest extends Specification {
 
   val eventDate = new DateTime(2014, 6, 1, 18, 23)
-  val testEventTimes = eventWithName().copy(created = (eventDate - 2.months).toInstant).times
+  val testEventTimes = eventWithName().ebEvent.copy(created = (eventDate - 2.months).toInstant).times
 
   "Ticket Sales Dates" should {
 

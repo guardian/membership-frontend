@@ -8,10 +8,10 @@
     }
     <div class="event-snapshot__content">
         <h2 class="event-snapshot__title">
-            @if(event.isSoldOut){
+            @if(event.underlying.isSoldOut){
                 <span class="event-status event-status--sold-out">Sold out</span>
             }
-            @event.name.text
+            @event.underlying.ebEvent.name.text
         </h2>
         <div class="stats-listing">
             @fragments.event.stats(event)

@@ -3,7 +3,7 @@
 @import configuration.Config
 
 <a class="action action--external"
-   href="@Config.eventbriteWaitlistUrl(event)"
+   href="@Config.eventbriteWaitlistUrl(event.underlying.ebEvent)"
    data-metric-trigger="click"
    data-metric-category="events"
    data-metric-action="waitlist"

@@ -16,7 +16,7 @@
                 <div class="event-masthead__title section-header">
                     <a href="@event.metadata.eventListUrl" class="minimal-link">@event.metadata.shortTitle</a>
                 </div>
-                <h1 class="event-masthead__name qa-event-detail-name">@event.name.text</h1>
+                <h1 class="event-masthead__name qa-event-detail-name">@event.underlying.ebEvent.name.text</h1>
             </div>
         </div>
     </div>
@@ -26,20 +26,20 @@
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
-                    @dateTimeRange(event.startAndEnd)
+                    @dateTimeRange(event.underlying.ebEvent.startAndEnd)
                 </div>
-                @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+                @for(addressDefaultLine <- event.underlying.ebEvent.venue.addressDefaultLine) {
                     <div class="event-details__location qa-event-detail-location">
                         @addressDefaultLine
                     </div>
                 }
             </div>
-            @for(internalTicketing <- event.internalTicketing) {
+            @for(internalTicketing <- event.underlying.internalTicketing) {
                 <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">
                     <div class="event-ticket__item event-ticket__details">
                         @fragments.pricing.priceInfoEvent(event, isPrimary=true)
                     </div>
-                    @if(event.isBookable) {
+                    @if(event.underlying.isBookable) {
                         <div class="event-ticket__item event-ticket__action">
                             @fragments.event.ticketCta(event, List("qa-event-detail-booking-action"))
                         </div>
@@ -52,27 +52,27 @@
         </div>
     </div>
 
-    @if(event.isBookable && event.hasComplimentaryTickets && event.isInstanceOf[GuLiveEvent]) {
+    @if(event.underlying.isBookable && event.underlying.hasComplimentaryTickets && event.isInstanceOf[GuLiveEvent]) {
         @fragments.event.remainingTickets("event", List("l-constrained"))
     }
 
     @* Limited availability messaging *@
-    @if(event.isBookable && event.isLimitedAvailability) {
+    @if(event.underlying.isBookable && event.underlying.isLimitedAvailability) {
         <div class="event-extra l-constrained">
-            <div class="event-extra__item event-extra__message">@event.limitedAvailabilityText</div>
+            <div class="event-extra__item event-extra__message">@event.underlying.ebEvent.limitedAvailabilityText</div>
         </div>
     }
 
     @* Sold out & past events *@
-    @if(!event.isBookable) {
+    @if(!event.underlying.isBookable) {
         <div class="event-extra l-constrained">
-            @for(statusText <- event.statusText) {
+            @for(statusText <- event.underlying.statusText) {
                 <div class="event-extra__item event-extra__status">
                     @statusText
                 </div>
             }
             <div class="event-extra__item event-extra__action">
-                @if(event.isPastEvent) {
+                @if(event.underlying.ebEvent.isPastEvent) {
                     @for(highlight <- event.metadata.highlightsOpt) {
                         <a class="action action--external"
                            href="@highlight.url"
@@ -82,7 +82,7 @@
                         </a>
                     }
                 } else {
-                    @if(event.isSoldOut) {
+                    @if(event.underlying.isSoldOut) {
                         @fragments.event.waitlist(event)
                     }
                 }
@@ -112,11 +112,9 @@
         <div class="event-content__container u-cf">
 
             <div class="event-content__body">
-                @for(description <- event.description) {
-                    <div class="event__description copy qa-event-detail-description">
-                        @Html(description.cleanHtml)
-                    </div>
-                }
+                <div class="event__description copy qa-event-detail-description">
+                    @Html(event.underlying.ebDescription.cleanHtml)
+                </div>
                 <div class="event__social">
                     <h5 class="event__social__title hidden-mobile">Share this</h5>
                     @fragments.social(Social.eventDetail(event))
@@ -124,7 +122,7 @@
             </div>
 
             <div class="event-content__sidebar">
-                @if(event.isPastEvent) {
+                @if(event.underlying.ebEvent.isPastEvent) {
                     @fragments.event.relatedEntry(event)
                 }
                 @if(!event.hasLargeImage) {
@@ -134,12 +132,12 @@
                         </div>
                     }
                 }
-                @if(!event.isPastEvent){
+                @if(!event.underlying.ebEvent.isPastEvent){
                     <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
                         @fragments.event.infoPanel(event)
                     </div>
                 }
-                @if(!event.isBookable) {
+                @if(!event.underlying.isBookable) {
                     <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
                         Find other @event.metadata.pluralTitle
                         @fragments.actionIcon("arrow-right")
