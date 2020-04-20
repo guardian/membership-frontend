@@ -14,7 +14,7 @@ object EventbriteTestObjects {
   def eventLocation = new EBAddress(None, None, None, None, None, None)
   def eventVenue = new EBVenue(Option(eventLocation), None)
   def eventTicketClass = EBTicketClass("", "", None, false, 0, 0, None, None, None, None, eventTime.toInstant, None, None)
-  def eventWithName(name: String = "") = EBEvent(eventName(name), Some(eventDescription()), "", name, eventTime, eventTime + 2.hours, (eventTime - 1.month).toInstant, eventVenue, 0, Seq(eventTicketClass), "live").cheatyMigrate
+  def eventWithName(name: String = "") = EBEvent(eventName(name), Some(eventDescription()), "", name, eventTime, eventTime + 2.hours, (eventTime - 1.month).toInstant, eventVenue, 0, Seq(eventTicketClass), "live").toAssumedEventWithDescription
 
   case class TestRichEvent(underlying: EventWithDescription) extends RichEvent {
     val detailsUrl = ""

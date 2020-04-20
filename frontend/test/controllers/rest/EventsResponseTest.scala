@@ -87,7 +87,7 @@ trait EventFixtures {
       venue = venue,
       capacity = 200,
       ticket_classes = Seq.empty,
-      status = "live").cheatyMigrate,
+      status = "live").toAssumedEventWithDescription,
     image = Option(GridImage(
       assets = List.empty,
       metadata = Grid.Metadata(None, None, None),

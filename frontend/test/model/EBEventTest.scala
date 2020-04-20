@@ -17,15 +17,15 @@ class EBEventTest extends PlaySpecification {
   import EBEventTest.ebResponse
   // val ebSoldOutEvent = ebResponse.data.find(_.id == "13043179501").get
   // val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
-  def ebLiveEvent = ebResponse.data.find(_.id == "12104040511").get.cheatyMigrate
-  def ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get.cheatyMigrate
-  def ebCompletedEvent = ebResponse.data.find(_.id == "13125971133").get.cheatyMigrate
-  def ebCancelledEvent = ebResponse.data.find(_.id == "13087550215").get.cheatyMigrate
-  def nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get.cheatyMigrate
-  def soldOutEvent = ebResponse.data.find(_.id == "12238163677").get.cheatyMigrate
-  def startedEvent = ebResponse.data.find(_.id == "12972720757").get.cheatyMigrate
-  def completedEvent = ebResponse.data.find(_.id == "13024577863").get.cheatyMigrate
-  def limitedAvailabilityEvent = ebResponse.data.find(_.id == "12718560557").get.cheatyMigrate
+  def ebLiveEvent = ebResponse.data.find(_.id == "12104040511").get.toAssumedEventWithDescription
+  def ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get.toAssumedEventWithDescription
+  def ebCompletedEvent = ebResponse.data.find(_.id == "13125971133").get.toAssumedEventWithDescription
+  def ebCancelledEvent = ebResponse.data.find(_.id == "13087550215").get.toAssumedEventWithDescription
+  def nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get.toAssumedEventWithDescription
+  def soldOutEvent = ebResponse.data.find(_.id == "12238163677").get.toAssumedEventWithDescription
+  def startedEvent = ebResponse.data.find(_.id == "12972720757").get.toAssumedEventWithDescription
+  def completedEvent = ebResponse.data.find(_.id == "13024577863").get.toAssumedEventWithDescription
+  def limitedAvailabilityEvent = ebResponse.data.find(_.id == "12718560557").get.toAssumedEventWithDescription
 
   def ticketedEvent = ebLiveEvent
 
@@ -86,7 +86,7 @@ class EBEventTest extends PlaySpecification {
       ebCompletedEvent.statusText mustEqual Some("Past event")
     }
     "should handle multi-day events" in{
-      val multiDayEvent = Resource.getJson("model/eventbrite/event-started-multi-day.json").as[EBEvent].cheatyMigrate
+      val multiDayEvent = Resource.getJson("model/eventbrite/event-started-multi-day.json").as[EBEvent].toAssumedEventWithDescription
       multiDayEvent.statusText mustEqual None
       multiDayEvent.isBookable mustEqual(true)
     }
@@ -203,20 +203,20 @@ class EBEventTest extends PlaySpecification {
     }
 
     "be some when there is a valid provider" in {
-      val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent].cheatyMigrate.ebDescription
+      val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent].toAssumedEventWithDescription.ebDescription
       event.providerOpt.map(_.id).get mustEqual "birkbeck"
       event.providerOpt.map(_.title).get mustEqual "Birkbeck"
     }
 
     "be none when there is an invalid provider" in {
-      val event = Resource.getJson("model/eventbrite/event-with-invalid-provider.json").as[EBEvent].cheatyMigrate.ebDescription
+      val event = Resource.getJson("model/eventbrite/event-with-invalid-provider.json").as[EBEvent].toAssumedEventWithDescription.ebDescription
       event.providerOpt must beNone
     }
   }
 
   "memberDiscountOpt" should {
     "return Some when there is a general release ticket AND a discount-benefit ticket" in {
-      val event = Resource.getJson("model/eventbrite/event-guardian-members-discount.json").as[EBEvent].cheatyMigrate
+      val event = Resource.getJson("model/eventbrite/event-guardian-members-discount.json").as[EBEvent].toAssumedEventWithDescription
       val ticketing = event.internalTicketing.get
 
       ticketing.memberDiscountOpt must beSome
@@ -224,7 +224,7 @@ class EBEventTest extends PlaySpecification {
     }
 
     "return None when there is only a general release ticket" in {
-      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent].cheatyMigrate
+      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent].toAssumedEventWithDescription
       val ticketing = event.internalTicketing.get
 
       ticketing.memberDiscountOpt must beNone
@@ -244,7 +244,7 @@ class EBEventTest extends PlaySpecification {
 
   "isFree" should {
     "report event as a free event" in {
-      val event = Resource.getJson("model/eventbrite/event-free-ticket-classes.json").as[EBEvent].cheatyMigrate
+      val event = Resource.getJson("model/eventbrite/event-free-ticket-classes.json").as[EBEvent].toAssumedEventWithDescription
 
       event.internalTicketing.get.isFree must beTrue
     }
@@ -252,12 +252,12 @@ class EBEventTest extends PlaySpecification {
 
   "isSoldOut" should {
     "report event as sold out event" in {
-      val event = Resource.getJson("model/eventbrite/event-sold-out-ticket-classes.json").as[EBEvent].cheatyMigrate
+      val event = Resource.getJson("model/eventbrite/event-sold-out-ticket-classes.json").as[EBEvent].toAssumedEventWithDescription
 
       event.isSoldOut must beTrue
     }
     "report an event with spare capacity as Sold Out if EventBrite says it is (due to people on waitlist)" in {
-      val event = Resource.getJson("model/eventbrite/event.not-sold-out-but-populated-waitlist.json").as[EBEvent].cheatyMigrate
+      val event = Resource.getJson("model/eventbrite/event.not-sold-out-but-populated-waitlist.json").as[EBEvent].toAssumedEventWithDescription
 
       event.isSoldOut must beTrue
     }

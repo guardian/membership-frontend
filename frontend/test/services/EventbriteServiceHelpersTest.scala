@@ -10,7 +10,7 @@ import utils.Implicits._
 class EventbriteServiceHelpersTest extends Specification {
 
   "getEventsOrdering" should {
-    val events = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json").as[EBResponse[EBEvent]].data.map(eD => TestRichEvent(eD.cheatyMigrate))
+    val events = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json").as[EBResponse[EBEvent]].data.map(eD => TestRichEvent(eD.toAssumedEventWithDescription))
 
     "use only ordering if there are 4" in {
       val ordering = Seq(events(3), events(1), events(2), events(0))
