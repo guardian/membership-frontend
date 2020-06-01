@@ -21,6 +21,9 @@
     }
     .membership-event__action {
         padding-top: 0;
+        .membership-event__button{
+            color: $white;
+        }
     }
     .membership-event__header {
         color: $white;
