@@ -1,6 +1,6 @@
 package controllers
 
-import com.netaporter.uri.Uri
+import io.lemonlabs.uri.Uri
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.format.ISODateTimeFormat.dateTimeNoMillis
 import org.joda.time.DateTime

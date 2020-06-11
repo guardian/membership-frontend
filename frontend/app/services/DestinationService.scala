@@ -1,6 +1,6 @@
 package services
 import com.gu.memsub.Subscriber.Member
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.dsl._
 import configuration.Config
 import model.Eventbrite.EBCode
 import model.RichEvent.RichEvent
@@ -34,8 +34,8 @@ class DestinationService[M[+_] : Monad](
     * then lets find the bit of content they want to see and send them back to it
     */
   def contentDestinationFor(session: Session): M[Option[ContentDestination]] = (for {
-    guardianReferrer <- OptionT(session.get(DestinationService.JoinReferrer).filter(_.host.contains(Config.guardianHost)).point[M])
-    contentItem <- OptionT(capiItemQuery(guardianReferrer.path).map(resp => resp.content.map(ContentItem).map(ContentDestination)))
+    guardianReferrer <- OptionT(session.get(DestinationService.JoinReferrer).map(_.toUrl).filter(_.hostOption.map(_.value).contains(Config.guardianHost)).point[M])
+    contentItem <- OptionT(capiItemQuery(guardianReferrer.path.toString()).map(resp => resp.content.map(ContentItem).map(ContentDestination)))
   } yield contentItem).run
 
   /**

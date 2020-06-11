@@ -11,7 +11,7 @@ object Dependencies {
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.184-M7"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.6"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.550"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.567"
   val contentAPI = "com.gu" %% "content-api-client-default" % "14.1"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters

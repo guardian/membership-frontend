@@ -11,7 +11,7 @@ import forms.MemberForm.supportForm
 import play.api.libs.json.{JsArray, JsString, Json}
 import play.api.mvc._
 import services.{AuthenticationService, TouchpointBackend}
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.dsl._
 import play.api.libs.ws.WSClient
 import views.support.{TestTrait, _}
 

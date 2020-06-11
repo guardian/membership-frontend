@@ -8,20 +8,20 @@ class DatesTest extends Specification {
 
   "prettyTime" should {
     "respect Guardian style: 1am, 6.30pm, etc" in {
-      Dates.prettyTime(new DateTime(2015, 3, 22,  1,  0)) mustEqual "1am GMT"
-      Dates.prettyTime(new DateTime(2015, 3, 22, 18, 30)) mustEqual "6.30pm GMT"
+      Dates.prettyTime(new DateTime(2015, 3, 22,  1,  0)) mustEqual "1am"
+      Dates.prettyTime(new DateTime(2015, 3, 22, 18, 30)) mustEqual "6.30pm"
     }
   }
 
   "dateRange" should {
     "respect Guardian style on date ranges" in {
       val interval = new Interval(new DateTime(2015, 3, 22, 14, 45),  new DateTime(2015, 3, 22, 17,  0))
-      Dates.dateTimeRange(interval) mustEqual "Sunday 22 March 2015, 2.45pm GMT–5pm GMT"
+      Dates.dateTimeRange(interval) mustEqual "Sunday 22 March 2015, 2.45pm–5pm GMT"
     }
 
     "merge date if both dates are on the same day" in {
       val interval = new Interval(new DateTime(2014, 11, 6, 10, 20),  new DateTime(2014, 11, 6, 12, 30))
-      Dates.dateTimeRange(interval) mustEqual "Thursday 6 November 2014, 10.20am GMT–12.30pm GMT"
+      Dates.dateTimeRange(interval) mustEqual "Thursday 6 November 2014, 10.20am–12.30pm GMT"
     }
 
     "merge month and year if both are the same" in {

@@ -45,7 +45,8 @@ class DestinationServiceTest extends Specification {
         mailingState= None,
         mailingPostcode= None,
         mailingCountry= None,
-        recordTypeId = None
+        recordTypeId = None,
+        deliveryInstructions = None
       )
       val partnerCharge: PaidCharge[Partner.type, Month.type] = PaidCharge[Partner.type, Month.type](Partner, Month, PricingSummary(Map(GBP -> Price(0.1f, GBP))), ProductRatePlanChargeId("prpcId"),SubscriptionRatePlanChargeId("srpcid"))
       val testSub: Subscription[SubscriptionPlan.Member] = new Subscription[SubscriptionPlan.Partner](

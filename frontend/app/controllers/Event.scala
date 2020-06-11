@@ -4,8 +4,8 @@ import _root_.services._
 import actions.Fallbacks._
 import actions.{ActionRefiners, CommonActions, OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
 import com.gu.googleauth.GoogleAuthConfig
-import com.netaporter.uri.Uri
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.Uri
+import io.lemonlabs.uri.dsl._
 import com.gu.monitoring.SafeLogger
 import model.EmbedSerializer._
 import model.Eventbrite.{EBCode, EBEvent}
@@ -145,7 +145,7 @@ class Event(
 
   private def addEventBriteGACrossDomainParam(uri: Uri)(implicit req: RequestHeader): Uri = {
     // https://www.eventbrite.co.uk/support/articles/en_US/Troubleshooting/how-to-enable-cross-domain-and-ecommerce-tracking-with-google-universal-analytics
-    req.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri & ("_eboga", value))
+    req.cookies.get("_ga").map(_.value.replaceFirst("GA\\d+\\.\\d+\\.", "")).fold(uri)(value => uri.toUrl & ("_eboga", value))
   }
 
   private def redirectMemberToEventbrite(event: RichEvent)(implicit req: SubscriptionRequest[AnyContent] with Subscriber): Future[Result] = {

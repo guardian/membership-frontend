@@ -18,7 +18,7 @@ import com.gu.zuora.api.ZuoraService
 import com.gu.zuora.rest.{SimpleClient, ZuoraRestService}
 import com.gu.zuora.soap.ClientWithFeatureSupplier
 import com.gu.zuora.{soap, ZuoraSoapService => ZuoraSoapServiceImpl}
-import com.netaporter.uri.Uri
+import io.lemonlabs.uri.Uri
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
 import configuration.Config

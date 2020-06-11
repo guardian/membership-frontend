@@ -2,8 +2,8 @@ package views.support
 
 import com.gu.i18n.CountryGroup
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
-import com.netaporter.uri.Uri
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.Uri
+import io.lemonlabs.uri.dsl._
 import controllers.routes
 import model.PackagePromo.CtaButton
 import play.twirl.api.Html
@@ -17,8 +17,8 @@ object PackagePromo {
   def forCountryTier(t: Tier, cg: CountryGroup, promoCode: Option[String]) = {
 
     val link = (t match {
-      case p: PaidTier => Uri.parse(routes.Joiner.enterPaidDetails(p).url)
-      case _: FreeTier => Uri.parse(routes.Joiner.enterFriendDetails().url)
+      case p: PaidTier => Uri.parse(routes.Joiner.enterPaidDetails(p).url).toUrl
+      case _: FreeTier => Uri.parse(routes.Joiner.enterFriendDetails().url).toUrl
     }) ? ("countryGroup" -> cg.id) & ("promoCode" -> promoCode)
 
     val attrs = Map[String, String](

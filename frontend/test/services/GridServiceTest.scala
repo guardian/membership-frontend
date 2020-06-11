@@ -1,7 +1,7 @@
 package services
 
-import com.netaporter.uri.Uri
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.{Uri, Url}
+import io.lemonlabs.uri.dsl._
 import com.gu.memsub.images.Grid.GridResult
 import com.gu.memsub.images.GridDeserializer._
 import org.specs2.concurrent.ExecutionEnv
@@ -12,7 +12,7 @@ import utils.Resource
 class GridServiceTest(implicit ev: ExecutionEnv) extends Specification {
   import GridService.ImageIdWithCrop
 
-  val validGridUrl: Uri = "https://media.gutools.co.uk/images/aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288"
+  val validGridUrl: Url = "https://media.gutools.co.uk/images/aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288".toUrl
 
   "ImageIdWithCrop" should {
     "build only from valid urls" in {

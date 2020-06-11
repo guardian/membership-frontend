@@ -1,6 +1,6 @@
 package model
 
-import com.netaporter.uri.Uri
+import io.lemonlabs.uri.Uri
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import org.joda.time.Instant

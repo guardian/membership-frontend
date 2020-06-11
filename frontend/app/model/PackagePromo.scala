@@ -1,5 +1,5 @@
 package model
-import com.netaporter.uri.Uri
+import io.lemonlabs.uri.Uri
 
 object PackagePromo {
 
