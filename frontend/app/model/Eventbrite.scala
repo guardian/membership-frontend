@@ -4,8 +4,8 @@ import com.github.nscala_time.time.Imports._
 import com.gu.i18n.Currency.GBP
 import com.gu.memsub.Price
 import com.gu.salesforce.Tier
-import com.netaporter.uri.Uri
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.{Uri, Url}
+import io.lemonlabs.uri.dsl._
 import configuration.Config
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
@@ -33,7 +33,7 @@ object Eventbrite {
     "18882606384" -> "19223927284"
   )
 
-  val googleMapsUri = Uri.parse("https://maps.google.com/")
+  val googleMapsUri = Uri.parse("https://maps.google.com/").toUrl
 
   trait EBObject
 
@@ -258,10 +258,10 @@ object Eventbrite {
       else None
     }
 
-    val mainImageUrl: Option[Uri] = for {
+    val mainImageUrl: Option[Url] = for {
       m <- """\smain-image:\s*(.*?)\s""".r.findFirstMatchIn(ebDescription.description)
       uri <- Try(Uri.parse(m.group(1))) match {
-        case Success(uri) => Some(uri)
+        case Success(uri) => Some(uri.toUrl)
         case Failure(e) =>
           SafeLogger.error(scrub"Event ${ebEvent.id} - can't parse main-image url from text '${m.matched}'", e)
           None

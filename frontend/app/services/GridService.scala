@@ -2,19 +2,21 @@ package services
 
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.UnaryOperator
+
 import com.gu.memsub.images.Grid
 import com.gu.memsub.images.Grid.{Export, GridObject, GridResult}
 import com.gu.memsub.images.GridDeserializer._
 import com.gu.memsub.util.WebServiceHelper
 import com.gu.okhttp.RequestRunners
 import com.gu.okhttp.RequestRunners.FutureHttpClient
-import com.netaporter.uri.Uri
+import io.lemonlabs.uri.{Uri, Url}
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import model.RichEvent.GridImage
 import okhttp3.Request
 import play.api.libs.json.Json
+
 import scala.concurrent.{ExecutionContext, Future}
 
 object GridService {
@@ -26,9 +28,9 @@ object GridService {
   object ImageIdWithCrop {
     implicit val writesImageIdWithCrop = Json.writes[ImageIdWithCrop]
 
-    def fromGuToolsUri(uri: Uri): Option[ImageIdWithCrop] =
+    def fromGuToolsUri(uri: Url): Option[ImageIdWithCrop] =
       for {
-        imageId <- uri.path.split("/").lastOption
+        imageId <- uri.path.toString().split("/").lastOption
         crop <-  uri.query.param(CropQueryParam)
         if uri.toString().startsWith(gridUrl)
       } yield ImageIdWithCrop(imageId, crop)

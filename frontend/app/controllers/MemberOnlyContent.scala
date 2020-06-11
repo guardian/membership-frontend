@@ -3,8 +3,8 @@ package controllers
 import actions.CommonActions
 import com.gu.contentapi.client.model.ContentApiError
 import com.gu.i18n.CountryGroup._
-import com.netaporter.uri.Uri
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.Uri
+import io.lemonlabs.uri.dsl._
 import configuration.Config
 import model._
 import play.api.mvc.Results.InternalServerError
@@ -23,7 +23,7 @@ class MemberOnlyContent(contentApiService: GuardianContentService, commonActions
   def membershipContent(referringContentOpt: Option[String] = None) = CachedAction.async { implicit request =>
     referringContentOpt.fold(Future(Redirect((routes.Info.supporterRedirect(None))))){
         referringContent =>
-        contentApiService.contentItemQuery(Uri.parse(referringContent).path.stripPrefix("/")).map { response =>
+        contentApiService.contentItemQuery(Uri.parse(referringContent).path.toString().stripPrefix("/")).map { response =>
           val signInUrl = ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> ("https://theguardian.com/" + referringContent)) ? ("skipConfirmation" -> "true")).toString
           implicit val countryGroup = UK
 

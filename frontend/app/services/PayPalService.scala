@@ -2,16 +2,17 @@ package services
 
 import com.gu.okhttp.RequestRunners
 import com.gu.paypal.PayPalConfig
-import com.netaporter.uri.QueryString
-import com.netaporter.uri.Uri.parseQuery
+import io.lemonlabs.uri.QueryString
+import io.lemonlabs.uri.parsing.UrlParser.parseQuery
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
 import configuration.Config
 import controllers.PayPal.{PayPalBillingDetails, Token}
 import okhttp3.{FormBody, Request, Response}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
 
 class PayPalService(apiConfig: PayPalConfig, implicit val executionContext: ExecutionContext) {
 
@@ -38,7 +39,7 @@ class PayPalService(apiConfig: PayPalConfig, implicit val executionContext: Exec
   }
 
   // Extracts response params as a map.
-  private def extractResponse(response: Response) = {
+  private def extractResponse(response: Response): Try[QueryString] = {
 
     val responseBody = response.body().string()
 
@@ -47,7 +48,10 @@ class PayPalService(apiConfig: PayPalConfig, implicit val executionContext: Exec
 
     val parsedResponse = parseQuery(responseBody)
 
-    logNVPResponse(parsedResponse)
+    parsedResponse match {
+      case Success(parsedResponse) => logNVPResponse(parsedResponse)
+      case Failure(exception) => SafeLogger.error(scrub"error parsing url query", exception)
+    }
     parsedResponse
 
   }
@@ -66,14 +70,15 @@ class PayPalService(apiConfig: PayPalConfig, implicit val executionContext: Exec
 
     for {
       response <- RequestRunners.configurableFutureRunner(20.seconds)(ExecutionContext.Implicits.global)(request)
-    } yield extractResponse(response)
+      extracted <- Future.fromTry(extractResponse(response))
+    } yield extracted
   }
 
   // Takes an NVP response and retrieves a given parameter as a string.
   private def retrieveNVPParam(response: QueryString, paramName: String) =
     response.paramMap(paramName).head
 
-  def retrieveEmail(baid: String) = {
+  def retrieveEmail(baid: String): Future[String] = {
     val params = Map(
       "METHOD" -> "BillAgreementUpdate",
       "REFERENCEID" -> baid

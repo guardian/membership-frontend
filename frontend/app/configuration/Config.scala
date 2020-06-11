@@ -4,8 +4,8 @@ import com.gu.i18n.Country
 import com.gu.memsub.auth.common.MemSub.Google._
 import com.gu.salesforce.Tier
 import com.gu.zuora.api.{InvoiceTemplate, InvoiceTemplates}
-import com.netaporter.uri.Uri
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.Uri
+import io.lemonlabs.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import services._
@@ -30,7 +30,7 @@ object Config {
 
   val membershipUrl = config.getString("membership.url")
   val membershipSupporterUrl = config.getString("membership.supporter.url")
-  val membershipHost = Uri.parse(Config.membershipUrl).host.get
+  val membershipHost = Uri.parse(Config.membershipUrl).toUrl.hostOption.get
 
   val membersDataAPIUrl = config.getString("members-data-api.url")
 

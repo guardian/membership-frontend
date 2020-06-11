@@ -44,7 +44,8 @@ object Dates {
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
   def prettyDate(dt: LocalDate): String = dt.toString("d MMMMM YYYY")
   def prettyDateNoYear(dt: DateTime): String = dt.withZone(DateTimeZone.forID("Europe/London")).toString("d MMMMM")
-  def prettyTime(dt: DateTime): String = dt.toString(if (dt.getMinuteOfHour==0) "h" else "h.mm") + dt.toString("a").toLowerCase + " " + dt.toString("z")
+  def prettyTime(dt: DateTime): String = dt.toString(if (dt.getMinuteOfHour==0) "h" else "h.mm") + dt.toString("a").toLowerCase
+  def timezone(dt: DateTime): String = " " + dt.toString("z")
 
   def prettyDateWithTime(dt: DateTime): String = prettyDate(dt) + ", " + prettyTime(dt)
   def prettyDateNoYearTime(dt: DateTime): String = prettyDateNoYear(dt) + ", " + prettyTime(dt)
@@ -101,7 +102,7 @@ object Dates {
 
   def dateTimeRange(interval: Interval): String = {
     if (interval.isSameDay) {
-      prettyDateWithTimeAndDayName(interval.start) + "–" + prettyTime(interval.end)
+      prettyDateWithTimeAndDayName(interval.start) + "–" + prettyTime(interval.end) + timezone(interval.start)
     } else {
       val range = multiDateRangeFormatter(interval, "EEEE d MMMMM YYYY")
       range.start + "–" + range.end
