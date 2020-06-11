@@ -8,7 +8,7 @@ object Dependencies {
   val jacksonVersion = "2.10.1"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
-  val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.16"
+  val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.184-M7"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.550"
@@ -41,7 +41,7 @@ object Dependencies {
     ExclusionRule(organization = "org.scalactic")
   )
   val googleAuth = "com.gu" %% "play-googleauth" % "0.7.6"
-  val libthrift = "org.apache.thrift" % "libthrift" % "0.12.0"
+  val libthrift = "org.apache.thrift" % "libthrift" % "0.13.0"
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
