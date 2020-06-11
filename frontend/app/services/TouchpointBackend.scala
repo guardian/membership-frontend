@@ -63,7 +63,7 @@ object TouchpointBackend {
     // extendedRunner sets the configurable read timeout, which is used for the createSubscription call.
     val extendedRunner = RequestRunners.configurableFutureRunner(20.seconds)
 
-    val zuoraSoapClient = new ClientWithFeatureSupplier(Set.empty, config.zuoraSoap, runner, extendedRunner)
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, config.zuoraSoap, runner, extendedRunner)
     val discounter = new Discounter(Config.discountRatePlanIds(config.zuoraEnvName))
     val zuoraSoapService = new ZuoraSoapServiceImpl(zuoraSoapClient)
     val zuoraRestService = new ZuoraRestService[Future]
