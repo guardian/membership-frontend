@@ -18,7 +18,9 @@ function bindHandlers(elements) {
 }
 
 function setBannerVisibility(elements) {
+    console.log('** setBannerVisibility **');
     getTrackingConsent().then((consentState) => {
+        console.log('consentState --->', consentState);
         const visible = getCookie('_post_deploy_user') !== 'true' && consentState === Unset;
 
         if (visible){

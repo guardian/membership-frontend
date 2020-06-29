@@ -35,6 +35,8 @@ const getTrackingConsent = () => {
 
     const cookieVal = getCookie(ConsentCookieName);
 
+    console.log('cookieVal --->', cookieVal)
+
     if (cookieVal) {
       const consentVal = cookieVal.split('.')[0];
 

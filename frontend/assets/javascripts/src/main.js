@@ -29,7 +29,7 @@ require([
     'src/modules/landingBundles',
     'src/modules/bundlesLanding',
     'src/modules/consentBanner',
-    '../utils/cookie',
+    'src/utils/cookie',
     '@guardian/consent-management-platform'
 ], function(
     ajax,
