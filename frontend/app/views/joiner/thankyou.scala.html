@@ -9,7 +9,6 @@
 @import views.support.MembershipCompat._
 @import com.gu.memsub.Subscriber
 @import com.gu.memsub.promo.Promotion.AnyPromotion
-@import tracking.AppnexusPixel
 @import com.gu.memsub.{PaymentMethod, PaymentCard, PayPalMethod}
 @(member: Subscriber.Member,
   summary: ThankyouSummary,
@@ -78,8 +77,6 @@
    };
 </script>
     <main role="main" class="page-content l-constrained">
-
-        @fragments.analytics.appNexusPixel("id", AppnexusPixel.thankYouPageIds.get(member.subscription.plan.tier))
 
         @fragments.page.pageHeader(
             pageHeader,

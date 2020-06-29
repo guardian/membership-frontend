@@ -3,7 +3,6 @@
 @import com.gu.memsub.subsv2.PaidMembershipPlans
 @import views.support.PageInfo
 @import com.gu.memsub.Benefit
-@import tracking.AppnexusPixel
 @import views.support.Asset
 @import com.gu.salesforce.Tier.Supporter
 
@@ -15,8 +14,6 @@
 @main("Supporters", pageInfo=pageInfo, countryGroup=Some(countryGroup)) {
 
     <section class="elevated-supporter">
-
-        @fragments.analytics.appNexusPixel("add", AppnexusPixel.landingPageIds.get(Supporter()))
 
         @* ===== First part ===== *@
         @fragments.page.elevatedBecomeSupporter(heroImage, supporterPlans, countryGroup, Html("Become a Guardian<br>Australia Supporter"), Html("Help protect our independent journalism")){

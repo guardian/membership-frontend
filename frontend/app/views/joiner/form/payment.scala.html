@@ -2,7 +2,6 @@
 @import com.gu.memsub.Benefit.PaidMemberTier
 @import com.gu.memsub.subsv2.PaidMembershipPlans
 @import com.gu.salesforce.Tier.{Partner, Supporter}
-@import tracking.AppnexusPixel
 @import model.Header.SimpleHeader
 @import views.html.helper._
 @import views.support.DisplayText._
@@ -31,9 +30,7 @@
 
     <main class="page-content skin-checkout-b skin-checkout-paypal">
 
-        @fragments.analytics.appNexusPixel("add", AppnexusPixel.checkoutPageIds.get(plans.tier))
-
-            <!-- FORM TITLE -->
+        <!-- FORM TITLE -->
         <section class="checkout-header">
             <h1 class="checkout-headline">@fragments.form.formCta(plans.tier)</h1>
             <p class="security-note">@fragments.inlineIcon("lock", List("icon-inline--small", "icon-inline--top"))
