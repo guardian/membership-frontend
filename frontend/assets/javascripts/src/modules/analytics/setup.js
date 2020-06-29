@@ -32,7 +32,7 @@ define([
         !cookie.getCookie('ANALYTICS_OFF_KEY')
     );
 
-    const thirdPartyTrackingEnabled = thirdPartyTracking.thirdPartyTrackingEnabled();
+    // const thirdPartyTrackingEnabled = thirdPartyTracking.thirdPartyTrackingEnabled();
 
     function setupAnalytics() {
         ga.init();
@@ -44,15 +44,17 @@ define([
     }
 
     function init() {
-
         campaignCode.init();
+
         if (analyticsEnabled) {
             setupAnalytics();
         }
 
-        if(analyticsEnabled && thirdPartyTrackingEnabled && !guardian.isDev) {
-            setupThirdParties();
-        }
+        thirdPartyTracking.thirdPartyTrackingEnabled().then(thirdPartyTrackingEnabled => {
+            if (analyticsEnabled && thirdPartyTrackingEnabled && !guardian.isDev) {
+                setupThirdParties();
+            }
+        });
     }
 
     return {

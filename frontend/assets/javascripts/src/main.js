@@ -28,7 +28,9 @@ require([
     'src/modules/faq',
     'src/modules/landingBundles',
     'src/modules/bundlesLanding',
-    'src/modules/consentBanner'
+    'src/modules/consentBanner',
+    '../utils/cookie',
+    '@guardian/consent-management-platform'
 ], function(
     ajax,
     raven,
@@ -59,13 +61,29 @@ require([
     faq,
     landingBundles,
     bundlesLanding,
-    consentBanner
+    consentBanner,
+    cookie,
+    cmp
 ) {
     'use strict';
 
+    const countryId = cookie.getCookie('GU_country');
+
+    /**
+     * If in US initialise CMP as early as possible so
+     * subsequent call to onIabConsentNotification
+     * returns the correct consentState.
+    * */
+    if (countryId === 'US') {
+        cmp.init({
+            useCcpa: true,
+        });
+    } else {
+        consentBanner.init();
+    }
+
     ajax.init({page: {ajaxUrl: ''}});
     raven.init('https://d35a3ab8382a49889557d312e75b2179@sentry.io/1218929');
-
     analytics.init();
 
     // Global
@@ -109,6 +127,4 @@ require([
     memstatus.init();
 
     faq.init();
-
-    consentBanner.init();
 });

@@ -17,6 +17,7 @@
     "prepare": "npm run snyk-protect"
   },
   "dependencies": {
+    "@guardian/consent-management-platform": "3.4.3",
     "autoprefixer-core": "^6.0.1",
     "bower": "^1.8.8",
     "domready": "^1.0.8",

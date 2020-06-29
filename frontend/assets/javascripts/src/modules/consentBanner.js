@@ -18,15 +18,15 @@ function bindHandlers(elements) {
 }
 
 function setBannerVisibility(elements) {
-    const visible = getCookie('_post_deploy_user') !== 'true' &&
-        getTrackingConsent() === Unset;
+    getTrackingConsent().then((consentState) => {
+        const visible = getCookie('_post_deploy_user') !== 'true' && consentState === Unset;
 
-    if (visible){
-        elements.banner.style.display = 'block';
-    } else {
-        elements.banner.style.display = 'none';
-    }
-
+        if (visible){
+            elements.banner.style.display = 'block';
+        } else {
+            elements.banner.style.display = 'none';
+        }
+    });
 }
 
 function getElements() {
