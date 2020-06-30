@@ -14,7 +14,6 @@ const getTrackingConsent = () => {
     if (ccpaEnabled()) {
       return new Promise((resolve) => {
         onIabConsentNotification((consentState) => {
-          console.log('onIabConsentNotification --->', consentState);
           /**
            * In CCPA mode consentState will be a boolean.
            * In non-CCPA mode consentState will be an Object.
@@ -34,8 +33,6 @@ const getTrackingConsent = () => {
     }
 
     const cookieVal = getCookie(ConsentCookieName);
-
-    console.log('cookieVal --->', cookieVal)
 
     if (cookieVal) {
       const consentVal = cookieVal.split('.')[0];
