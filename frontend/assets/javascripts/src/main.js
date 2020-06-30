@@ -29,7 +29,7 @@ require([
     'src/modules/landingBundles',
     'src/modules/bundlesLanding',
     'src/modules/consentBanner',
-    'src/utils/cookie',
+    'src/modules/ccpa',
     '@guardian/consent-management-platform'
 ], function(
     ajax,
@@ -62,19 +62,17 @@ require([
     landingBundles,
     bundlesLanding,
     consentBanner,
-    cookie,
+    ccpa,
     cmp
 ) {
     'use strict';
-
-    const countryId = cookie.getCookie('GU_country');
 
     /**
      * If in US initialise CMP as early as possible so
      * subsequent call to onIabConsentNotification
      * returns the correct consentState.
     * */
-    if (countryId === 'US') {
+    if (ccpa.ccpaEnabled()) {
         cmp.init({
             useCcpa: true,
         });

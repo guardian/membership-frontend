@@ -1,5 +1,6 @@
 
 import { getCookie, setCookie } from '../../utils/cookie';
+import { ccpaEnabled } from 'src/modules/ccpa';
 import { onIabConsentNotification } from '@guardian/consent-management-platform';
 
 const ConsentCookieName = 'GU_TK';
@@ -10,9 +11,7 @@ const OptedOut = 'OptedOut';
 const Unset = 'Unset';
 
 const getTrackingConsent = () => {
-    const countryId = getCookie('GU_country');
-
-    if (countryId === 'US') {
+    if (ccpaEnabled()) {
       return new Promise((resolve) => {
         onIabConsentNotification((consentState) => {
           /**
