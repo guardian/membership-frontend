@@ -32,8 +32,6 @@ define([
         !cookie.getCookie('ANALYTICS_OFF_KEY')
     );
 
-    // const thirdPartyTrackingEnabled = thirdPartyTracking.thirdPartyTrackingEnabled();
-
     function setupAnalytics() {
         ga.init();
     }
