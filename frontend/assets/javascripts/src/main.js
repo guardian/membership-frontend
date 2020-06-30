@@ -67,18 +67,22 @@ require([
 ) {
     'use strict';
 
+    const ccpaEnabled = ccpa.ccpaEnabled();
+
     /**
-     * If in US initialise CMP as early as possible so
-     * subsequent call to onIabConsentNotification
-     * returns the correct consentState.
+     * If ccpaEnabled initialise CCPA CMP as early
+     * as possible so subsequent call so
+     * onIabConsentNotification returns the correct
+     * consentState.
     * */
-    if (ccpa.ccpaEnabled()) {
+    if (ccpaEnabled) {
         cmp.init({
             useCcpa: true,
         });
-    } else {
-        consentBanner.init();
     }
+
+    // If ccpaEnabled is true consentBanner will hide non-CCPA banner
+    consentBanner.init(ccpaEnabled);
 
     ajax.init({page: {ajaxUrl: ''}});
     raven.init('https://d35a3ab8382a49889557d312e75b2179@sentry.io/1218929');

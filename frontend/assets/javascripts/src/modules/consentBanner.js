@@ -17,16 +17,22 @@ function bindHandlers(elements) {
 
 }
 
+function hideBanner(elements) {
+    elements.banner.style.display = 'none';
+}
+
+function showBanner(elements) {
+    elements.banner.style.display = 'block';
+}
+
 function setBannerVisibility(elements) {
-    console.log('** setBannerVisibility **');
     getTrackingConsent().then((consentState) => {
-        console.log('consentState --->', consentState);
         const visible = getCookie('_post_deploy_user') !== 'true' && consentState === Unset;
 
         if (visible){
-            elements.banner.style.display = 'block';
+            showBanner(elements);
         } else {
-            elements.banner.style.display = 'none';
+            hideBanner(elements);
         }
     });
 }
@@ -38,10 +44,15 @@ function getElements() {
     }
 }
 
-export function init() {
+export function init(ccpaEnabled) {
     const elements = getElements();
-    bindHandlers(elements);
-    setBannerVisibility(elements);
+
+    if (ccpaEnabled) {
+        hideBanner(elements);
+    } else {
+        bindHandlers(elements);
+        setBannerVisibility(elements);
+    }
 }
 
 
