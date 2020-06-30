@@ -3,7 +3,7 @@
     "env": {
         "amd": true,
         "browser": true,
-        "node": true,
+        "node": true
     },
     "parserOptions": {
         "ecmaVersion": 6,
