@@ -1,14 +1,14 @@
 // ----- Imports ----- //
 
-import {
-    getCookie
-  } from 'src/utils/cookie';
+// import {
+//     getCookie
+//   } from 'src/utils/cookie';
 
-  // ----- Functions ----- //
+// ----- Functions ----- //
 
-  export const ccpaEnabled = () => {
+export const ccpaEnabled = () => {
     const useCCPA = true; // set false to switch CCPA off
-    const countryId = getCookie('GU_country');
+    const countryId = 'US'; // getCookie('GU_country');
 
     return useCCPA && countryId === 'US';
-  };
+};
