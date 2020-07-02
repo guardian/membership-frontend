@@ -5,6 +5,7 @@ $gu-cta-height: 42px;
     position: fixed;
     bottom: 0px;
     width: 100%;
+    display: none; /* hide by default */
 
     padding: ($gs-baseline / 2) 0 $gs-baseline * 2;
     background: $c-neutral1;
