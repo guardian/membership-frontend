@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { raven } from 'src/modules/raven';
+import { Raven } from 'src/modules/raven';
 
 // ----- Functions ----- //
 
@@ -30,7 +30,7 @@ export const ccpaEnabled = () => {
         countryCode = responseCountryCode;
         return responseCountryCode === US_COUNTRY_CODE;
     }).catch(err => {
-        raven.Raven.captureException(err);
+        Raven.captureException(err);
         return false;
     });
 };

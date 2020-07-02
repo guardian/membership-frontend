@@ -1,6 +1,7 @@
 
 import { getCookie, setCookie } from '../../utils/cookie';
 import { ccpaEnabled } from 'src/modules/ccpa';
+import { Raven } from 'src/modules/raven';
 import { onIabConsentNotification } from '@guardian/consent-management-platform';
 
 const ConsentCookieName = 'GU_TK';
@@ -21,13 +22,14 @@ const getTrackingConsent = () => {
                      * Check whether consentState is valid (a boolean).
                      * */
                     if (typeof consentState !== 'boolean') {
-                        throw new Error('consentState not a boolean');
+                        throw new Error('CCPA: consentState not a boolean');
                     } else {
                         // consentState true means the user has OptedOut
                         resolve(consentState ? OptedOut : OptedIn);
                     }
                 });
-            }).catch(() => {
+            }).catch(err => {
+                Raven.captureException(err);
                 // fallback to OptedOut if there's an issue getting consentState
                 return Promise.resolve(OptedOut);
             });
