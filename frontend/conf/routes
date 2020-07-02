@@ -141,3 +141,6 @@ POST        /paypal/setup-payment                      controllers.PayPal.setupP
 POST        /paypal/create-agreement                   controllers.PayPal.createAgreement
 GET         /paypal/return                             controllers.PayPal.returnUrl
 GET         /paypal/cancel                             controllers.PayPal.cancelUrl
+
+# Geo Country
+GET         /geocountry                              controllers.GeoCountry.getCountry()
