@@ -11,40 +11,42 @@ const OptedOut = 'OptedOut';
 const Unset = 'Unset';
 
 const getTrackingConsent = () => {
-    if (ccpaEnabled()) {
-      return new Promise((resolve) => {
-        onIabConsentNotification((consentState) => {
-          /**
-           * In CCPA mode consentState will be a boolean.
-           * In non-CCPA mode consentState will be an Object.
-           * Check whether consentState is valid (a boolean).
-           * */
-          if (typeof consentState !== 'boolean') {
-            throw new Error('consentState not a boolean');
-          } else {
-            // consentState true means the user has OptedOut
-            resolve(consentState ? OptedOut : OptedIn);
+    return ccpaEnabled().then(useCcpa => {
+        if (useCcpa) {
+            return new Promise((resolve) => {
+                onIabConsentNotification((consentState) => {
+                    /**
+                     * In CCPA mode consentState will be a boolean.
+                     * In non-CCPA mode consentState will be an Object.
+                     * Check whether consentState is valid (a boolean).
+                     * */
+                    if (typeof consentState !== 'boolean') {
+                        throw new Error('consentState not a boolean');
+                    } else {
+                        // consentState true means the user has OptedOut
+                        resolve(consentState ? OptedOut : OptedIn);
+                    }
+                });
+            }).catch(() => {
+                // fallback to OptedOut if there's an issue getting consentState
+                return Promise.resolve(OptedOut);
+            });
+        }
+
+        const cookieVal = getCookie(ConsentCookieName);
+
+        if (cookieVal) {
+          const consentVal = cookieVal.split('.')[0];
+
+          if (consentVal === '1') {
+            return Promise.resolve(OptedIn);
+          } else if (consentVal === '0') {
+            return Promise.resolve(OptedOut);
           }
-        });
-      }).catch(() => {
-        // fallback to OptedOut if there's an issue getting consentState
-        return Promise.resolve(OptedOut);
-      });
-    }
+        }
 
-    const cookieVal = getCookie(ConsentCookieName);
-
-    if (cookieVal) {
-      const consentVal = cookieVal.split('.')[0];
-
-      if (consentVal === '1') {
-        return Promise.resolve(OptedIn);
-      } else if (consentVal === '0') {
-        return Promise.resolve(OptedOut);
-      }
-    }
-
-    return Promise.resolve(Unset);
+        return Promise.resolve(Unset);
+    })
   };
 
 const thirdPartyTrackingEnabled = () => getTrackingConsent().then(consentState => consentState === OptedIn);
