@@ -17,16 +17,24 @@ function bindHandlers(elements) {
 
 }
 
+function hideBanner(elements) {
+    elements.banner.style.display = 'none';
+}
+
+function showBanner(elements) {
+    elements.banner.style.display = 'block';
+}
+
 function setBannerVisibility(elements) {
-    const visible = getCookie('_post_deploy_user') !== 'true' &&
-        getTrackingConsent() === Unset;
+    getTrackingConsent().then((consentState) => {
+        const visible = getCookie('_post_deploy_user') !== 'true' && consentState === Unset;
 
-    if (visible){
-        elements.banner.style.display = 'block';
-    } else {
-        elements.banner.style.display = 'none';
-    }
-
+        if (visible){
+            showBanner(elements);
+        } else {
+            hideBanner(elements);
+        }
+    });
 }
 
 function getElements() {
@@ -36,10 +44,15 @@ function getElements() {
     }
 }
 
-export function init() {
+export function init(ccpaEnabled) {
     const elements = getElements();
-    bindHandlers(elements);
-    setBannerVisibility(elements);
+
+    if (ccpaEnabled) {
+        hideBanner(elements);
+    } else {
+        bindHandlers(elements);
+        setBannerVisibility(elements);
+    }
 }
 
 

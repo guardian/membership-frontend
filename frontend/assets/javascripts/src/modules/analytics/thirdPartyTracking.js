@@ -1,5 +1,8 @@
 
 import { getCookie, setCookie } from '../../utils/cookie';
+import { ccpaEnabled } from 'src/modules/ccpa';
+import { Raven } from 'src/modules/raven';
+import { onIabConsentNotification } from '@guardian/consent-management-platform';
 
 const ConsentCookieName = 'GU_TK';
 const DaysToLive = 30 * 18;
@@ -9,13 +12,46 @@ const OptedOut = 'OptedOut';
 const Unset = 'Unset';
 
 const getTrackingConsent = () => {
-    const cookieVal = getCookie(ConsentCookieName);
-    if (cookieVal && cookieVal.split('.')[0] === '1') { return OptedIn; }
-    if (cookieVal && cookieVal.split('.')[0] === '0') { return OptedOut; }
-    return Unset;
-};
+    return ccpaEnabled().then(useCcpa => {
+        if (useCcpa) {
+            return new Promise((resolve) => {
+                onIabConsentNotification((consentState) => {
+                    /**
+                     * In CCPA mode consentState will be a boolean.
+                     * In non-CCPA mode consentState will be an Object.
+                     * Check whether consentState is valid (a boolean).
+                     * */
+                    if (typeof consentState !== 'boolean') {
+                        throw new Error('CCPA: consentState not a boolean');
+                    } else {
+                        // consentState true means the user has OptedOut
+                        resolve(consentState ? OptedOut : OptedIn);
+                    }
+                });
+            }).catch(err => {
+                Raven.captureException(err);
+                // fallback to OptedOut if there's an issue getting consentState
+                return Promise.resolve(OptedOut);
+            });
+        }
 
-const thirdPartyTrackingEnabled = () => getTrackingConsent() === OptedIn;
+        const cookieVal = getCookie(ConsentCookieName);
+
+        if (cookieVal) {
+          const consentVal = cookieVal.split('.')[0];
+
+          if (consentVal === '1') {
+            return Promise.resolve(OptedIn);
+          } else if (consentVal === '0') {
+            return Promise.resolve(OptedOut);
+          }
+        }
+
+        return Promise.resolve(Unset);
+    })
+  };
+
+const thirdPartyTrackingEnabled = () => getTrackingConsent().then(consentState => consentState === OptedIn);
 
 const writeTrackingConsentCookie = (trackingConsent) => {
     if (trackingConsent !== Unset) {

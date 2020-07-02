@@ -28,7 +28,9 @@ require([
     'src/modules/faq',
     'src/modules/landingBundles',
     'src/modules/bundlesLanding',
-    'src/modules/consentBanner'
+    'src/modules/consentBanner',
+    'src/modules/ccpa',
+    '@guardian/consent-management-platform'
 ], function(
     ajax,
     raven,
@@ -59,13 +61,31 @@ require([
     faq,
     landingBundles,
     bundlesLanding,
-    consentBanner
+    consentBanner,
+    ccpa,
+    cmp
 ) {
     'use strict';
 
+    ccpa.ccpaEnabled().then(useCcpa => {
+        /**
+         * If ccpaEnabled initialise CCPA CMP as early
+         * as possible so subsequent call to
+         * onIabConsentNotification returns the correct
+         * consentState.
+        * */
+        if (useCcpa) {
+            cmp.init({
+                useCcpa
+            });
+        }
+
+        // If useCcpa is true consentBanner will hide non-CCPA banner
+        consentBanner.init(useCcpa);
+    });
+
     ajax.init({page: {ajaxUrl: ''}});
     raven.init('https://d35a3ab8382a49889557d312e75b2179@sentry.io/1218929');
-
     analytics.init();
 
     // Global
@@ -109,6 +129,4 @@ require([
     memstatus.init();
 
     faq.init();
-
-    consentBanner.init();
 });

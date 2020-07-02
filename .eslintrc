@@ -11,7 +11,8 @@
     },
     "globals"   : {
         "guardian": true,
-        "curl": true
+        "curl": true,
+        "Promise":  true
     },
     "rules": {
         "curly": [2, "all"],
