@@ -115,7 +115,8 @@ trait AppComponents
       new PricingApi(touchpointBackends, commonActions, controllerComponents),
       new Giraffe(commonActions, controllerComponents),
       new MembershipStatus(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions, controllerComponents),
-      new PayPal(touchpointBackends, executionContext, commonActions, controllerComponents)
+      new PayPal(touchpointBackends, executionContext, commonActions, controllerComponents),
+      new GeoCountry(commonActions, controllerComponents)
     )
   }
 
