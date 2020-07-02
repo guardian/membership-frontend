@@ -7,7 +7,7 @@ import { Raven } from 'src/modules/raven';
 const GEOCOUNTRY_URL = '/geocountry';
 const US_COUNTRY_CODE = 'US';
 
-let countryCode;
+let fetchCountry;
 
 export const ccpaEnabled = () => {
     const useCCPA = true; // set false to switch CCPA off
@@ -16,21 +16,22 @@ export const ccpaEnabled = () => {
         return Promise.resolve(false);
     }
 
-    if (countryCode) {
-        return Promise.resolve(countryCode === US_COUNTRY_CODE);
+    if (fetchCountry) {
+        return fetchCountry;
     }
 
-    return fetch(GEOCOUNTRY_URL).then(response => {
+    fetchCountry = fetch(GEOCOUNTRY_URL).then(response => {
         if (response.ok) {
             return response.text();
         } else {
             throw new Error('failed to get geocountry');
         }
     }).then(responseCountryCode => {
-        countryCode = responseCountryCode;
         return responseCountryCode === US_COUNTRY_CODE;
     }).catch(err => {
         Raven.captureException(err);
         return false;
     });
+
+    return fetchCountry;
 };
