@@ -70,7 +70,7 @@ require([
     ccpa.ccpaEnabled().then(useCcpa => {
         /**
          * If ccpaEnabled initialise CCPA CMP as early
-         * as possible so subsequent call so
+         * as possible so subsequent call to
          * onIabConsentNotification returns the correct
          * consentState.
         * */
