@@ -80,7 +80,7 @@ require([
             });
         }
 
-        // If useCCPA is true consentBanner will hide non-CCPA banner
+        // If useCcpa is true consentBanner will hide non-CCPA banner
         consentBanner.init(useCcpa);
     });
 
