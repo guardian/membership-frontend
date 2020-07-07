@@ -5,14 +5,16 @@ define([
     'src/modules/analytics/facebook',
     'src/modules/analytics/uet',
     'src/modules/analytics/campaignCode',
-    'src/modules/analytics/thirdPartyTracking'
+    'src/modules/analytics/thirdPartyTracking',
+    'src/modules/analytics/remarketing',
 ], function (
     cookie,
     ga,
     facebook,
     uet,
     campaignCode,
-    thirdPartyTracking
+    thirdPartyTracking,
+    remarketing
 ) {
     'use strict';
 
@@ -39,6 +41,7 @@ define([
     function setupThirdParties() {
         facebook.init();
         uet.init();
+        remarketing.init();
     }
 
     function init() {
