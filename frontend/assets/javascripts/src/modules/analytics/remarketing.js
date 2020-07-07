@@ -6,11 +6,13 @@ export function init() {
         const { remarketing } = window.sideLoad.paths;
 
         if (remarketing) {
-            window.google_conversion_id = 971225648,
-            window.google_custom_params = window.google_tag_params,
-            window.google_remarketing_only = true;
-
-            loadScript(remarketing);
+            loadScript(remarketing).then(() => {
+                window.google_trackConversion({
+                    google_conversion_id: 971225648,
+                    google_custom_params: window.google_tag_params,
+                    google_remarketing_only: true,
+                });
+            });
         }
     }
 }
