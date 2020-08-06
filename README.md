@@ -161,7 +161,7 @@ These are browser driving Selenium tests.
 
 ## Deployment
 
-We use continuous deployment of the `master` branch to Production (https://membership.theguardian.com/).
+We use continuous deployment of the `main` branch to Production (https://membership.theguardian.com/).
 See [fix-a-failed-deploy.md](https://github.com/guardian/riff-raff/blob/master/riff-raff/public/docs/howto/fix-a-failed-deploy.md)
 for what to do if a deploy goes bad.
 
