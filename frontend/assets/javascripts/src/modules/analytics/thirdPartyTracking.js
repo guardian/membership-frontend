@@ -1,63 +1,25 @@
-
-import { getCookie, setCookie } from '../../utils/cookie';
-import { ccpaEnabled } from 'src/modules/ccpa';
 import { Raven } from 'src/modules/raven';
-import { onIabConsentNotification } from '@guardian/consent-management-platform';
-
-const ConsentCookieName = 'GU_TK';
-const DaysToLive = 30 * 18;
+import { onConsentChange } from '@guardian/consent-management-platform';
 
 const OptedIn = 'OptedIn';
 const OptedOut = 'OptedOut';
-const Unset = 'Unset';
 
-const getTrackingConsent = () => {
-    return ccpaEnabled().then(useCcpa => {
-        if (useCcpa) {
-            return new Promise((resolve) => {
-                onIabConsentNotification((consentState) => {
-                    /**
-                     * In CCPA mode consentState will be a boolean.
-                     * In non-CCPA mode consentState will be an Object.
-                     * Check whether consentState is valid (a boolean).
-                     * */
-                    if (typeof consentState !== 'boolean') {
-                        throw new Error('CCPA: consentState not a boolean');
-                    } else {
-                        // consentState true means the user has OptedOut
-                        resolve(consentState ? OptedOut : OptedIn);
-                    }
-                });
-            }).catch(err => {
-                Raven.captureException(err);
-                // fallback to OptedOut if there's an issue getting consentState
-                return Promise.resolve(OptedOut);
-            });
-        }
+const getTrackingConsent = () => new Promise((resolve) => {
+    onConsentChange(state => {
+            const consentGranted = state.ccpa ? !state.ccpa.doNotSell : state.tcfv2 && Object.values(state.tcfv2.consents).every(Boolean);
 
-        const cookieVal = getCookie(ConsentCookieName);
-
-        if (cookieVal) {
-          const consentVal = cookieVal.split('.')[0];
-
-          if (consentVal === '1') {
-            return Promise.resolve(OptedIn);
-          } else if (consentVal === '0') {
-            return Promise.resolve(OptedOut);
-          }
-        }
-
-        return Promise.resolve(Unset);
-    })
-  };
+            if (consentGranted) {
+                resolve(OptedIn);
+            } else {
+                resolve(OptedOut);
+            }
+        });
+    }).catch(err => {
+        Raven.captureException(err);
+        // fallback to OptedOut if there's an issue getting consent state
+        return Promise.resolve(OptedOut);
+    });
 
 const thirdPartyTrackingEnabled = () => getTrackingConsent().then(consentState => consentState === OptedIn);
 
-const writeTrackingConsentCookie = (trackingConsent) => {
-    if (trackingConsent !== Unset) {
-        const cookie = [trackingConsent === OptedIn ? '1' : '0', Date.now()].join('.');
-        setCookie(ConsentCookieName, cookie, DaysToLive);
-    }
-};
-
-export { getTrackingConsent, writeTrackingConsentCookie, thirdPartyTrackingEnabled, OptedIn, OptedOut, Unset, ConsentCookieName };
+export { thirdPartyTrackingEnabled, OptedIn, OptedOut };

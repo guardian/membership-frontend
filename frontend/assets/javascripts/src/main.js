@@ -28,8 +28,6 @@ require([
     'src/modules/faq',
     'src/modules/landingBundles',
     'src/modules/bundlesLanding',
-    'src/modules/consentBanner',
-    'src/modules/ccpa',
     '@guardian/consent-management-platform'
 ], function(
     ajax,
@@ -61,27 +59,23 @@ require([
     faq,
     landingBundles,
     bundlesLanding,
-    consentBanner,
-    ccpa,
     cmp
 ) {
     'use strict';
 
-    ccpa.ccpaEnabled().then(useCcpa => {
-        /**
-         * If ccpaEnabled initialise CCPA CMP as early
-         * as possible so subsequent call to
-         * onIabConsentNotification returns the correct
-         * consentState.
-        * */
-        if (useCcpa) {
-            cmp.init({
-                useCcpa
-            });
+    // Get country to initialise CMP library
+    fetch('/geocountry').then(response => {
+        if (response.ok) {
+            return response.text();
+        } else {
+            throw new Error('failed to get geocountry');
         }
-
-        // If useCcpa is true consentBanner will hide non-CCPA banner
-        consentBanner.init(useCcpa);
+    }).then(responseCountryCode => {
+        cmp.cmp.init({
+            isInUsa: responseCountryCode === 'US'
+        });
+    }).catch(err => {
+        raven.Raven.captureException(err);
     });
 
     ajax.init({page: {ajaxUrl: ''}});
