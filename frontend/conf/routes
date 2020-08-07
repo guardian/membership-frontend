@@ -20,6 +20,8 @@ GET         /feature/:feature                          controllers.FeatureOptIn.
 GET         /feature/:feature/:onOrOff                 controllers.FeatureOptIn.setFeatureOnOrOff(feature: Feature, onOrOff: OnOrOff)
 
 # Join
+GET         /join/*any                                controllers.Redirects.whySupportRedirectIgnore(any)
+#####Dead routes starting with /join - needed because of reverse routing until we delete the code
 GET         /join/staff                                controllers.Joiner.staff
 GET         /join/staff/enter-details                  controllers.Joiner.enterStaffDetails
 GET         /join/friend/enter-details                 controllers.Joiner.enterFriendDetails
