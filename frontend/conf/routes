@@ -21,6 +21,7 @@ GET         /feature/:feature/:onOrOff                 controllers.FeatureOptIn.
 
 # Join
 GET         /join/*any                                controllers.Redirects.whySupportRedirectIgnore(any)
+GET         /choose-tier                               controllers.Redirects.whySupportRedirect
 #####Dead routes starting with /join - needed because of reverse routing until we delete the code
 GET         /join/staff                                controllers.Joiner.staff
 GET         /join/staff/enter-details                  controllers.Joiner.enterStaffDetails
@@ -34,6 +35,7 @@ GET         /join/:tier/thankyou                       controllers.Joiner.thanky
 POST        /join/staff/update-email                   controllers.Joiner.updateEmailStaff
 GET         /join/unsupported-browser                  controllers.Joiner.unsupportedBrowser
 GET         /choose-tier                               controllers.Joiner.tierChooser
+### END OF DEAD ROUTES
 
 GET         /membership-content                        controllers.MemberOnlyContent.membershipContent(referringContent: Option[String] ?= None)
 

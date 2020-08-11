@@ -23,4 +23,6 @@ class Redirects(commonActions: CommonActions, override protected val controllerC
     Redirect("https://support.theguardian.com/support", request.queryString, MOVED_PERMANENTLY)
   }
 
+  def whySupportRedirect() = whySupportRedirectIgnore("")
+
 }
