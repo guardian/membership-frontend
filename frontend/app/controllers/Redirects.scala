@@ -18,4 +18,11 @@ class Redirects(commonActions: CommonActions, override protected val controllerC
   def supportRedirect = CachedAction{ implicit request =>
     Redirect("https://support.theguardian.com/", request.queryString, MOVED_PERMANENTLY)
   }
+
+  def whySupportRedirectIgnore(ignore: String) = CachedAction{ implicit request =>
+    Redirect("https://support.theguardian.com/support", request.queryString, MOVED_PERMANENTLY)
+  }
+
+  def whySupportRedirect() = whySupportRedirectIgnore("")
+
 }
