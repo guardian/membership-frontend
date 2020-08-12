@@ -3,7 +3,7 @@
 @import configuration.Config
 
 @for(label <- Config.googleAdwordsJoinerConversionLabel.get(tier) if Config.stage == "PROD") {
-    <div class="is-hidden">
+    <!-- <div class="is-hidden">
         <script type="text/javascript">
             var google_conversion_id = 967211513;
             var google_conversion_language = "en";
@@ -18,5 +18,5 @@
                 <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/967211513/?label=@label&amp;guid=ON&amp;script=0"/>
             </div>
         </noscript>
-    </div>
+    </div> -->
 }

@@ -1,9 +1,9 @@
 @(tier: com.gu.salesforce.Tier)
 
 @import configuration.Config
-    
+
 @for(trackingId <- Config.facebookJoinerConversionTrackingId.get(tier) if Config.stage == "PROD") {
-    <script>
+    <!-- <script>
         (function() {
             var _fbq = window._fbq || (window._fbq = []);
             if (!_fbq.loaded) {
@@ -18,5 +18,5 @@
         window._fbq = window._fbq || [];
         window._fbq.push(['track', '@trackingId', {'value': '0.00', 'currency': 'GBP'}]);
     </script>
-    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=@trackingId&amp;cd[value]=0.00&amp;cd[currency]=GBP&amp;noscript=1" /></noscript>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=@trackingId&amp;cd[value]=0.00&amp;cd[currency]=GBP&amp;noscript=1" /></noscript> -->
 }
