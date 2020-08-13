@@ -40,29 +40,33 @@ define([
             `The user has ${allPurposesAgreed ? '' : 'not'} agreed to all purposes.`);
     }
 
+    function loadTrackers() {
+        const trackers = [ga, facebook, uet, remarketing];
+        const vendorIds = trackers.map(tracker => tracker.cmpVendorId);
+
+        Promise.allSettled([
+            cmp.checkCCPA(),
+            cmp.getConsentForVendors(vendorIds),
+            cmp.checkAllTCFv2PurposesAreOptedIn(),
+        ]).then(results => {
+            const [ccpaConsent, vendorConsents, allPurposesAgreed] = results.map(promise => promise.value);
+
+            if (ccpaConsent) {
+                trackers.forEach(tracker => tracker.init());
+                campaignCode.init();
+            } else {
+                trackers.forEach(tracker => {
+                    vendorConsents[tracker.cmpVendorId] ?
+                        tracker.init() : reportTagLoadFail(tracker, allPurposesAgreed)
+                })
+                allPurposesAgreed && campaignCode.init()
+            }
+        });
+    }
+
     function init() {
         if (analyticsEnabled && !guardian.isDev) {
-            const trackers = [ga, facebook, uet, remarketing];
-            const vendorIds = trackers.map(tracker => tracker.cmpVendorId);
-
-            Promise.allSettled([
-                cmp.checkCCPA(),
-                cmp.getConsentForVendors(vendorIds),
-                cmp.checkAllTCFv2PurposesAreOptedIn(),
-            ]).then(results => {
-                const [ccpaConsent, vendorConsents, allPurposesAgreed] = results.map(promise => promise.value);
-
-                if (ccpaConsent) {
-                    trackers.forEach(tracker => tracker.init());
-                    campaignCode.init();
-                } else {
-                    trackers.forEach(tracker => {
-                        vendorConsents[tracker.cmpVendorId] ?
-                            tracker.init() : reportTagLoadFail(tracker, allPurposesAgreed)
-                    })
-                    allPurposesAgreed && campaignCode.init()
-                }
-            });
+            cmp.registerCallbackOnConsentChange(loadTrackers);
         }
     }
 

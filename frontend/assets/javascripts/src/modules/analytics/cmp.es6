@@ -32,4 +32,6 @@ const checkCCPA = () => new Promise((resolve) => {
     })
 });
 
-export { getConsentForVendors, checkAllTCFv2PurposesAreOptedIn, checkCCPA };
+const registerCallbackOnConsentChange = (fn) => onConsentChange(fn);
+
+export { getConsentForVendors, checkAllTCFv2PurposesAreOptedIn, checkCCPA, registerCallbackOnConsentChange };
