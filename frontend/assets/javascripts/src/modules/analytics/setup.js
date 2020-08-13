@@ -5,7 +5,7 @@ define([
     'src/modules/analytics/facebook',
     'src/modules/analytics/uet',
     'src/modules/analytics/campaignCode',
-    'src/modules/analytics/thirdPartyTracking',
+    'src/modules/analytics/cmp',
     'src/modules/analytics/remarketing',
 ], function (
     cookie,
@@ -13,7 +13,7 @@ define([
     facebook,
     uet,
     campaignCode,
-    thirdPartyTracking,
+    cmp,
     remarketing
 ) {
     'use strict';
@@ -34,21 +34,36 @@ define([
         !cookie.getCookie('ANALYTICS_OFF_KEY')
     );
 
-    function setupThirdParties() {
-        ga.init();
-        facebook.init();
-        uet.init();
-        remarketing.init();
+    function reportTagLoadFail(tracker, allPurposesAgreed) {
+        console.log(`Either there's insufficient consent for ${tracker.vendorName}, or the user has ` +
+            `turned that vendor off in the CMP (${tracker.cmpVendorId}). ` +
+            `The user has ${allPurposesAgreed ? '' : 'not'} agreed to all purposes.`);
     }
 
     function init() {
-        campaignCode.init();
+        if (analyticsEnabled && !guardian.isDev) {
+            const trackers = [ga, facebook, uet, remarketing];
+            const vendorIds = trackers.map(tracker => tracker.cmpVendorId);
 
-        thirdPartyTracking.thirdPartyTrackingEnabled().then(thirdPartyTrackingEnabled => {
-            if (analyticsEnabled && thirdPartyTrackingEnabled && !guardian.isDev) {
-                setupThirdParties();
-            }
-        });
+            Promise.allSettled([
+                cmp.checkCCPA(),
+                cmp.getConsentForVendors(vendorIds),
+                cmp.checkAllTCFv2PurposesAreOptedIn(),
+            ]).then(results => {
+                const [ccpaConsent, vendorConsents, allPurposesAgreed] = results.map(promise => promise.value);
+
+                if (ccpaConsent) {
+                    trackers.forEach(tracker => tracker.init());
+                    campaignCode.init();
+                } else {
+                    trackers.forEach(tracker => {
+                        vendorConsents[tracker.cmpVendorId] ?
+                            tracker.init() : reportTagLoadFail(tracker, allPurposesAgreed)
+                    })
+                    allPurposesAgreed && campaignCode.init()
+                }
+            });
+        }
     }
 
     return {

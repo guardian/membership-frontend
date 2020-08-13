@@ -79,7 +79,9 @@ define(['lodash/forEach'], function(forEach) {
     }
 
     return {
-        init: init
+        init: init,
+        vendorName: 'Facebook Pixel',
+        cmpVendorId: ''
     };
 
 });

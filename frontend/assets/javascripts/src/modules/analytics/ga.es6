@@ -145,3 +145,6 @@ export function init() {
     wrappedGa('send', 'pageview');
 
 }
+
+export const vendorName = 'Google Analytics'
+export const cmpVendorId = '5e542b3a4cd8884eb41b5a72'

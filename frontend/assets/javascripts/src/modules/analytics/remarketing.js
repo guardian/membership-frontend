@@ -16,3 +16,6 @@ export function init() {
         }
     }
 }
+
+export const vendorName = 'Google Ads Conversion Tracking'
+export const cmpVendorId = ''

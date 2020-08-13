@@ -30,3 +30,5 @@ frontend/conf/assets.map
 
 frontend/assets/images/inline-svgs/*.svg
 frontend/public/
+
+frontend/package-lock.json
