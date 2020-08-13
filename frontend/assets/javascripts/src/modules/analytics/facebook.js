@@ -81,7 +81,7 @@ define(['lodash/forEach'], function(forEach) {
     return {
         init: init,
         vendorName: 'Facebook Pixel',
-        cmpVendorId: ''
+        cmpVendorId: '5e7e1298b8e05c54a85c52d2'
     };
 
 });

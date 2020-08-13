@@ -18,4 +18,4 @@ export function init() {
 }
 
 export const vendorName = 'Google Ads Conversion Tracking'
-export const cmpVendorId = ''
+export const cmpVendorId = '5ed0eb688a76503f1016578f'
