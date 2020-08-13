@@ -56,6 +56,7 @@ define([
                 campaignCode.init();
             } else {
                 trackers.forEach(tracker => {
+                    console.log('Attempting to load ' + tracker.vendorName);
                     vendorConsents[tracker.cmpVendorId] ?
                         tracker.init() : reportTagLoadFail(tracker, allPurposesAgreed)
                 })
