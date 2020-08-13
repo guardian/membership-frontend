@@ -7,7 +7,7 @@
     },
     "parserOptions": {
         "ecmaVersion": 6,
-        "sourceType": "module",
+        "sourceType": "module"
     },
     "globals"   : {
         "guardian": true,
