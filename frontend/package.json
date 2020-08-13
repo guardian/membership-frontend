@@ -50,6 +50,7 @@
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "grunt": "^1.0.4",
     "grunt-asset-hash": "^0.1.9",
     "grunt-cli": "^1.2.0",

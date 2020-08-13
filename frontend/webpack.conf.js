@@ -31,7 +31,8 @@ module.exports = function(debug) { return {
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015'],
-                    cacheDirectory: ''
+                    cacheDirectory: '',
+                    plugins: ['transform-object-rest-spread']
                 }
             }
         ]
