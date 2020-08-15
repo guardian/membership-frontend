@@ -22,7 +22,7 @@
     "bower": "^1.8.8",
     "domready": "^1.0.8",
     "gumshoejs": "^3.5.0",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.1",
     "lazysizes": "^4.0.2",
     "load-grunt-tasks": "^4.0.0",
     "lodash-amd": "~4.17.10",
