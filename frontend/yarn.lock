@@ -6491,10 +6491,10 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-ophan-tracker-js@^1.3.9:
-  version "1.3.16"
-  resolved "https://registry.yarnpkg.com/ophan-tracker-js/-/ophan-tracker-js-1.3.16.tgz#0f4c14924d44eced7fa311cb6a9318a20325a680"
-  integrity sha512-kiWNxgHoGl4IDWNmcOQ+r4MNT6/WKPKhIJuKsJkd2YA8VQ5TJ4DTu4ht5WGegOawAfbhA3pOMd12yOK8vdnyaA==
+ophan-tracker-js@^1.3.20:
+  version "1.3.22"
+  resolved "https://registry.yarnpkg.com/ophan-tracker-js/-/ophan-tracker-js-1.3.22.tgz#1ce0ce5066ff8230edc97c2105f9b52b95c1efb4"
+  integrity sha512-UNTMjo/cEyHy7BfsrAs250Q7ujElYd6RqmAIb/+aoAT9oduHZ2giJ9nJMcd5qC83U4EP8adh9gcY+dGgJsEEBQ==
 
 opn@^5.5.0:
   version "5.5.0"
