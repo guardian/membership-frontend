@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@guardian/consent-management-platform@^3.4.5":
-  version "3.4.5"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-3.4.5.tgz#6d26f70b76d0ddd4ed1090433c992d61ccfbb9c7"
-  integrity sha512-aQvZ7aWrTAnda8FoWWoH9PTGRJQc4CQ7aO7oqkGgx0C3MJKayzLYe1Gsa3jlB5fuh4b8Nrw71PQ9HFglPmjEaw==
+"@guardian/consent-management-platform@^3.4.9":
+  version "3.4.10"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-3.4.10.tgz#604e71d27c6bfa4664c83c55578a8aa73ff09d82"
+  integrity sha512-P3dTf9EqYhpH7JQ+Bg9MNoIQ08U4yD5j+s5epO9mNTaIBiX1BeOF3RcI3KNj/dBxSggaut0rBdQ82GN54Bg4jA==
   dependencies:
     consent-string "1.5.2"
     js-cookie "2.2.1"
