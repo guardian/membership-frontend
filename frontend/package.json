@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/runtime": "^7.2.0",
     "@emotion/core": "^10.0.21",
-    "@guardian/consent-management-platform": "4.0.0-9",
+    "@guardian/consent-management-platform": "4.0.0",
     "@guardian/src-button": "^2.0.0",
     "@guardian/src-foundations": "^2.0.0",
     "@guardian/src-icons": "^2.0.0",
