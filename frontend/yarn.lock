@@ -5826,10 +5826,10 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-lodash-amd@~4.17.10:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash-amd/-/lodash-amd-4.17.11.tgz#d848ee833b01ade1d874f68a4b681ac0cbcaf708"
-  integrity sha512-PObX+MAaYNSBOb49vIF2hrMYBapFhS2Hb7ZBsMbQMAnGK5wpL49wo8fBEtEKoYga3un2Pt6Qu2F/u28nZm2x8Q==
+lodash-amd@~4.17.15:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash-amd/-/lodash-amd-4.17.15.tgz#ed15c118d9657fc2b690d68f7c7c3a966bcac1b5"
+  integrity sha512-5BRkD2PWpNVfR2bebk9DZKKUdS14WqopG5iIwunVf6XjX13unmsxZgENAlI4AFRPmHFlo3+HSzVaLPMzVIwyDw==
 
 lodash.assign@^4.2.0:
   version "4.2.0"
