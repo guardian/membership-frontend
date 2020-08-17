@@ -123,14 +123,14 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@guardian/consent-management-platform@4.0.0-9":
-  version "4.0.0-9"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-4.0.0-9.tgz#9335485e5b98c7771498dee2bb892a5f94e27b19"
-  integrity sha512-JL2LpgbUcYz488kBAmCAAn0t8NtmT8s4LDXd2sVvRhZAThG4evGyJDD1fI9FhBmwvhAukRaet2SPr52hxt7zUQ==
+"@guardian/consent-management-platform@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-4.0.0.tgz#b4ad18f3a5f310c481ba20f826fd3a8ee794372b"
+  integrity sha512-+UJdm26AnHORwxfJb5StoaFqSN1ADCH0n8Suzc+ItAGnkk2N9EtadbqXyjgI/kKewbVi9eYtTEZoyIZBdDOqIQ==
   dependencies:
-    "@guardian/old-cmp" "npm:@guardian/consent-management-platform@^3.4.9"
+    "@guardian/old-cmp" "npm:@guardian/consent-management-platform@^3.4.10"
 
-"@guardian/old-cmp@npm:@guardian/consent-management-platform@^3.4.9":
+"@guardian/old-cmp@npm:@guardian/consent-management-platform@^3.4.10":
   version "3.4.10"
   resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-3.4.10.tgz#604e71d27c6bfa4664c83c55578a8aa73ff09d82"
   integrity sha512-P3dTf9EqYhpH7JQ+Bg9MNoIQ08U4yD5j+s5epO9mNTaIBiX1BeOF3RcI3KNj/dBxSggaut0rBdQ82GN54Bg4jA==
@@ -1000,6 +1000,11 @@ babel-plugin-syntax-jsx@^6.18.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
   integrity sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=
 
+babel-plugin-syntax-object-rest-spread@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-object-rest-spread/-/babel-plugin-syntax-object-rest-spread-6.13.0.tgz#fd6536f2bce13836ffa3a5458c4903a597bb3bf5"
+  integrity sha1-/WU28rzhODb/o6VFjEkDpZe7O/U=
+
 babel-plugin-transform-es2015-arrow-functions@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-arrow-functions/-/babel-plugin-transform-es2015-arrow-functions-6.22.0.tgz#452692cb711d5f79dc7f85e440ce41b9f244d221"
@@ -1189,6 +1194,14 @@ babel-plugin-transform-es2015-unicode-regex@^6.24.1:
     babel-helper-regex "^6.24.1"
     babel-runtime "^6.22.0"
     regexpu-core "^2.0.0"
+
+babel-plugin-transform-object-rest-spread@^6.26.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-object-rest-spread/-/babel-plugin-transform-object-rest-spread-6.26.0.tgz#0f36692d50fef6b7e2d4b3ac1478137a963b7b06"
+  integrity sha1-DzZpLVD+9rfi1LOsFHgTepY7ewY=
+  dependencies:
+    babel-plugin-syntax-object-rest-spread "^6.8.0"
+    babel-runtime "^6.26.0"
 
 babel-plugin-transform-regenerator@^6.24.1:
   version "6.26.0"
