@@ -38,6 +38,12 @@ const metrics = {
 };
 
 function create(){
+    /**
+     * Instruction for Google Analytics
+     * to leverage the TCFv2 framework
+    */
+    window.gtag_enable_tcf_support = true;
+
     /*eslint-disable */
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
@@ -50,6 +56,7 @@ function create(){
         a.src = g;
         m.parentNode.insertBefore(a, m)
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
     /*eslint-enable */
     window.ga('create', guardian.googleAnalytics.trackingId, {
         'allowLinker': true,
