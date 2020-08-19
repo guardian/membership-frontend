@@ -123,10 +123,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@guardian/consent-management-platform@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-4.0.0.tgz#b4ad18f3a5f310c481ba20f826fd3a8ee794372b"
-  integrity sha512-+UJdm26AnHORwxfJb5StoaFqSN1ADCH0n8Suzc+ItAGnkk2N9EtadbqXyjgI/kKewbVi9eYtTEZoyIZBdDOqIQ==
+"@guardian/consent-management-platform@4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-4.0.2.tgz#a8ec4315e68e15902bac0d3bcd99675b546ed353"
+  integrity sha512-FhdhgzJ2+6Jpzo+QjLQUEXOxDK70D9DIfSvf5JTdX8yqAj0fptqPTPayBujqdLT5wYRUmqFN07kg76verh1CXg==
   dependencies:
     "@guardian/old-cmp" "npm:@guardian/consent-management-platform@^3.4.10"
 
