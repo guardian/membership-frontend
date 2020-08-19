@@ -16,7 +16,7 @@ object MemSub {
   }
 
   object Google {
-    val GuardianAppsDomain = "guardian.co.uk"
+    val GuardianAppsDomain = List("guardian.co.uk")
 
     object ServiceAccount {
       val PrivateKeyLocation = new S3ObjectId("membership-private", "membership_directory_cert.p12")
