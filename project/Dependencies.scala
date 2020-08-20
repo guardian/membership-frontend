@@ -42,6 +42,7 @@ object Dependencies {
   )
   val googleAuth = "com.gu.play-googleauth" %% "play-v26" % "1.0.7"
   val libthrift = "org.apache.thrift" % "libthrift" % "0.13.0"
+  val guava = "com.google.guava" % "guava" % "29.0-jre" // needed to stop sbt/google api client picking the android one
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
@@ -50,6 +51,6 @@ object Dependencies {
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
     acquisitionEventProducer, bcprovJdk15on, libthrift)
 
-  val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager)
+  val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager, guava)
 
 }
