@@ -16,7 +16,7 @@ object MemSub {
   }
 
   object Google {
-    val GuardianAppsDomain = List("guardian.co.uk")
+    val GuardianAppsDomain = "guardian.co.uk"
 
     object ServiceAccount {
       val PrivateKeyLocation = new S3ObjectId("membership-private", "membership_directory_cert.p12")
@@ -30,7 +30,7 @@ object MemSub {
         c.getString("client.id"),
         c.getString("client.secret"),
         c.getString("callback"),
-        GuardianAppsDomain,        // Google App domain to restrict login
+        List(GuardianAppsDomain),        // Google App domain to restrict login
         antiForgeryChecker = AntiForgeryChecker.borrowSettingsFromPlay(httpConfiguration)
       )
     }
