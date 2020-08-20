@@ -40,7 +40,7 @@ object Dependencies {
     ExclusionRule(organization = "org.scalatest"),
     ExclusionRule(organization = "org.scalactic")
   )
-  val googleAuth = "com.gu.play-googleauth" %% "play-v26" % "1.0.6"
+  val googleAuth = "com.gu.play-googleauth" %% "play-v26" % "1.0.7"
   val libthrift = "org.apache.thrift" % "libthrift" % "0.13.0"
   //projects
 
