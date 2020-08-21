@@ -30,7 +30,7 @@ object MemSub {
         c.getString("client.id"),
         c.getString("client.secret"),
         c.getString("callback"),
-        GuardianAppsDomain,        // Google App domain to restrict login
+        List(GuardianAppsDomain),        // Google App domain to restrict login
         antiForgeryChecker = AntiForgeryChecker.borrowSettingsFromPlay(httpConfiguration)
       )
     }
