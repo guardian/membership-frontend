@@ -208,7 +208,7 @@ module.exports = function (grunt) {
                 }
             },
             compile_images: {
-                files: ['<%= dirs.assets.images %>/**/*'],
+                files: ['<%= dirs.assets.images %>/**/*', '!<%= dirs.assets.images %>/inline-svgs/*'],
                 tasks: ['compile:images'],
                 options: {
                     atBegin: true
