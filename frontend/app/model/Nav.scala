@@ -33,9 +33,9 @@ object Nav {
   )
 
   def footerNavigation(countryGroup: Option[CountryGroup] = None) = List(
-    NavItem("help", routes.Info.help().toString, "Help"),
+    NavItem("masterclassesFAQ", Links.guardianMasterclassesFAQs, "Masterclass FAQ"),
+    NavItem("liveFAQ", Links.guardianLiveFAQs, "GuardianLive FAQ"),
     NavItem("contact", Links.membershipContact, "Contact us"),
-    NavItem("feedback", routes.Info.feedback().toString, "Feedback"),
     NavItem("terms", Links.membershipTerms(countryGroup), "Terms & conditions"),
     NavItem("privacy", Links.guardianPrivacyPolicy, "Privacy policy"),
     NavItem("cookies", Links.guardianCookiePolicy, "Cookie policy")
