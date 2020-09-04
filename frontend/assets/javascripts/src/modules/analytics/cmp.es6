@@ -1,6 +1,5 @@
 import { onConsentChange, cmp } from '@guardian/consent-management-platform';
 
-const HIDDEN_CLASS = 'is-hidden';
 const PRIVACY_SETTINGS_SELECTOR ='.js-privacy-settings-link';
 
 const getConsentForVendors = (cmpVendorIds) => new Promise((resolve) => {
@@ -39,7 +38,6 @@ const registerCallbackOnConsentChange = (fn) => onConsentChange(fn);
 
 const createPrivacySettingsLink = () => {
     const privacySettingsButton = document.querySelector(PRIVACY_SETTINGS_SELECTOR);
-    privacySettingsButton.classList.remove(HIDDEN_CLASS);
     privacySettingsButton.addEventListener('click', cmp.showPrivacyManager);
 }
 
