@@ -12,6 +12,9 @@ object Links {
   val guardianLiveTerms = "http://www.theguardian.com/info/2014/sep/09/guardian-live-events-terms-and-conditions"
   val guardianMasterclassesTerms = "http://www.theguardian.com/guardian-masterclasses/terms-and-conditions"
 
+  val guardianLiveFAQs = "https://www.theguardian.com/guardian-masterclasses/2020/aug/27/guardian-live-online-faqs"
+  val guardianMasterclassesFAQs = "https://www.theguardian.com/guardian-masterclasses/2020/jul/20/guardian-masterclasses-faqs"
+
   val membershipFront = "http://www.theguardian.com/membership"
 
   def membershipTerms(countryGroup: Option[CountryGroup] = None) = {
