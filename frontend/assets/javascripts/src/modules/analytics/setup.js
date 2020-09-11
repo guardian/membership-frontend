@@ -60,7 +60,14 @@ define([
                     vendorConsents[tracker.cmpVendorId] ?
                         tracker.init() : reportTagLoadFail(tracker, allPurposesAgreed)
                 })
-                allPurposesAgreed && campaignCode.init()
+                if (allPurposesAgreed) {
+                    campaignCode.init()
+                    if (typeof(vendorConsents[ga.cmpVendorId]) === 'undefined') {
+                        console.log('Google Analytics has not been configured as a vendor yet, but all purposes have been ' +
+                            'agreed so we\'re loading it.');
+                        ga.init();
+                    }
+                }
             }
         });
     }

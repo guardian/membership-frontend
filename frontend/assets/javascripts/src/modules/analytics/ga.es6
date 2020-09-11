@@ -90,6 +90,7 @@ export function wrappedGa(a,b,c){
 
 export function init() {
     let guardian = window.guardian;
+
     create();
 
     wrappedGa('require', 'linker');
