@@ -60,7 +60,12 @@ define([
                     vendorConsents[tracker.cmpVendorId] ?
                         tracker.init() : reportTagLoadFail(tracker, allPurposesAgreed)
                 })
-                allPurposesAgreed && campaignCode.init()
+                if (allPurposesAgreed) {
+                    campaignCode.init()
+                    if (typeof(vendorConsents[ga.cmpVendorId]) === 'undefined') {
+                        ga.init();
+                    }
+                }
             }
         });
     }

@@ -90,6 +90,9 @@ export function wrappedGa(a,b,c){
 
 export function init() {
     let guardian = window.guardian;
+
+    console.log('Loading Google Analytics');
+
     create();
 
     wrappedGa('require', 'linker');
