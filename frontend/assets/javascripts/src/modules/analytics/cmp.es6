@@ -11,7 +11,7 @@ const getConsentForVendors = (cmpVendorIds) => new Promise((resolve) => {
          * vendor specific consent from state.
          */
         resolve(cmpVendorIds.reduce((accumulator, vendorId) => {
-            const consented = state.tcfv2 && state.tcfv2.vendorConsents ? state.tcfv2.vendorConsents[vendorId] : undefined;
+            const consented = state.tcfv2 && state.tcfv2.vendorConsents ? state.tcfv2.vendorConsents[vendorId] : null;
             return {
                 ...accumulator,
                 [vendorId]: consented,
