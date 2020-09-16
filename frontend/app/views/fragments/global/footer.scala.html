@@ -25,6 +25,11 @@
                         <a class="colophon__link" id="qa-footer-link-@item.id" href="@item.href">@item.title</a>
                     </li>
                 }
+                <li class="colophon__item">
+                    <button class="fake-link colophon__link u-hidden-non-js js-privacy-settings-link" id="qa-footer-link-privacySettings">
+                        Privacy Settings
+                    </button>
+                </li>
             </ul>
             <small class="global-footer__copyright">
                 &copy; @{new DateTime().year.getAsText} Guardian News and Media Limited or its affiliated companies.

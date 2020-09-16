@@ -1,4 +1,6 @@
-import { onConsentChange } from '@guardian/consent-management-platform';
+import { onConsentChange, cmp } from '@guardian/consent-management-platform';
+
+const PRIVACY_SETTINGS_SELECTOR ='.js-privacy-settings-link';
 
 const getConsentForVendors = (cmpVendorIds) => new Promise((resolve) => {
     if (!Array.isArray(cmpVendorIds)) {
@@ -34,4 +36,11 @@ const checkCCPA = () => new Promise((resolve) => {
 
 const registerCallbackOnConsentChange = (fn) => onConsentChange(fn);
 
-export { getConsentForVendors, checkAllTCFv2PurposesAreOptedIn, checkCCPA, registerCallbackOnConsentChange };
+const createPrivacySettingsLink = () => {
+    const privacySettingsButton = document.querySelector(PRIVACY_SETTINGS_SELECTOR);
+    if (privacySettingsButton) {
+        privacySettingsButton.addEventListener('click', cmp.showPrivacyManager);
+    }
+}
+
+export { getConsentForVendors, checkAllTCFv2PurposesAreOptedIn, checkCCPA, registerCallbackOnConsentChange, createPrivacySettingsLink };

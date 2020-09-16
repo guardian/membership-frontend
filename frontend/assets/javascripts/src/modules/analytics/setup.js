@@ -73,6 +73,7 @@ define([
     }
 
     function init() {
+        cmp.createPrivacySettingsLink();
         if (analyticsEnabled && !guardian.isDev) {
             cmp.registerCallbackOnConsentChange(loadTrackers);
         }
