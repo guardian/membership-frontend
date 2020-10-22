@@ -119,22 +119,4 @@ class TouchpointActionRefiners(authenticationService: AuthenticationService, tou
       }
   }
 
-  def checkTierChangeTo(targetTier: PaidTier) = new ActionFilter[SubReqWithSub] {
-
-    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
-
-    override protected def filter[A](request: SubReqWithSub[A]): Future[Option[Result]] = {
-      val currentSubscription = request.subscriber.subscription
-      val memberService = request.touchpointBackend.memberService
-      Future.successful {
-        if (!memberService.upgradeTierIsValidForCurrency(currentSubscription, targetTier)) {
-          Some(Ok(views.html.tier.upgrade.unavailableTierForCurrency(currentSubscription.plan.tier, targetTier)))
-        } else if (!memberService.upgradeTierIsHigher(currentSubscription, targetTier)) {
-          Some(Ok(views.html.tier.upgrade.unavailableUpgradePath(currentSubscription.plan.tier, targetTier)))
-        } else {
-          None
-        }
-      }
-    }
-  }
 }

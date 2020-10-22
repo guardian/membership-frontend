@@ -85,16 +85,8 @@ class ActionRefiners(authenticationService: AuthenticationService, parser: BodyP
       )                                              // but we need Either[Response, Free], hence the swap and toEither
   }
 
-  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result = selectedTier match {
-    case t: PaidTier if t > req.subscriber.subscription.plan.tier => tierChangeEnterDetails(t)(req)
-    case _ => {
-      // Log cancelled members attempting to re-join.
-      if (req.subscriber.subscription.isCancelled) {
-        SafeLogger.info(s"Cancelled member with ID: ${req.subscriber.contact.identityId} attempted to re-join.")
-      }
-      Ok(views.html.tier.upgrade.unavailableUpgradePath(req.subscriber.subscription.plan.tier, selectedTier))
-    }
-  }
+  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result =
+    supportRedirect(req)
 
   def matchingGuardianEmail(identityService: IdentityService, onNonGuEmail: RequestHeader => Result =
                             joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
