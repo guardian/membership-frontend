@@ -56,7 +56,7 @@ class Event(
 
   }
 
-  private def BuyAction(id: String, onUnauthenticated: RequestHeader => Result = notYetAMemberOn(_)) = NoCacheAction andThen recordBuyIntention(id) andThen
+  private def BuyAction(id: String, onUnauthenticated: RequestHeader => Result) = NoCacheAction andThen recordBuyIntention(id) andThen
     authenticated(onUnauthenticated = onUnauthenticated) andThen subscriptionRefiner(onNonMember = onUnauthenticated)
 
   def details(slug: String) = CachedAction { implicit request =>
