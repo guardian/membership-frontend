@@ -18,7 +18,7 @@ object PackagePromo {
 
     val link = (t match {
       case p: PaidTier => Uri.parse(routes.Joiner.enterPaidDetails(p).url).toUrl
-      case _: FreeTier => Uri.parse(routes.Joiner.enterFriendDetails().url).toUrl
+      case _: FreeTier => Uri.parse(routes.Redirects.supportRedirect().url).toUrl
     }) ? ("countryGroup" -> cg.id) & ("promoCode" -> promoCode)
 
     val attrs = Map[String, String](

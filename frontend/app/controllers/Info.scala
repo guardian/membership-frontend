@@ -109,59 +109,6 @@ class Info(
     Redirect(s"https://support.theguardian.com/${countryGroup.id}/support", request.queryString, MOVED_PERMANENTLY)
   }
 
-  def patron() = CachedAndOutageProtected { implicit request =>
-    implicit val countryGroup = UK
-
-    val pageInfo = PageInfo(
-      title = CopyConfig.copyTitlePatrons,
-      url = request.path,
-      description = Some(CopyConfig.copyDescriptionPatrons)
-    )
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name = Some("intro"),
-        altText = Some("Patrons of the Guardian"),
-        availableImages = ResponsiveImageGenerator(
-          id = "8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
-          sizes = List(1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name = Some("independence"),
-        altText = Some("Katharine Viner, editor-in-chief of the Guardian"),
-        availableImages = ResponsiveImageGenerator(
-          id = "a4856412e2bef82e6d1d4ce5220fe2391e3f5ca5/0_0_2000_1200",
-          sizes = List(1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name = Some("backstage-pass"),
-        altText = Some("Backstage pass to the Guardian"),
-        availableImages = ResponsiveImageGenerator(
-          id = "83afa3867ef76d82c86291f4387b5799c26e07f8/0_0_1140_684",
-          sizes = List(1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name = Some("get-involved"),
-        altText = Some("Choose to get involved"),
-        availableImages = ResponsiveImageGenerator(
-          id = "ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
-          sizes = List(1000, 500)
-        )
-      )
-    )
-
-    Ok(views.html.info.patron(
-      patronPlans = touchpointBackends.Normal.catalog.patron,
-      partnerPlans = touchpointBackends.Normal.catalog.partner,
-      supporterPlans = touchpointBackends.Normal.catalog.supporter,
-      pageInfo = pageInfo,
-      countryGroup = UK,
-      pageImages = pageImages)
-    )
-  }
-
   def offersAndCompetitions = CachedAction { implicit request =>
     implicit val countryGroup = UK
 

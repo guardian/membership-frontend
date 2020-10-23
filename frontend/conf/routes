@@ -25,9 +25,8 @@ GET         /choose-tier                               controllers.Redirects.why
 #####Dead routes starting with /join - needed because of reverse routing until we delete the code
 GET         /join/staff                                controllers.Joiner.staff
 GET         /join/staff/enter-details                  controllers.Joiner.enterStaffDetails
-GET         /join/friend/enter-details                 controllers.Joiner.enterFriendDetails
+
 GET         /join/:tier/enter-details                  controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK)
-POST        /join/friend/enter-details                 controllers.Joiner.joinFriend
 POST        /join/staff/enter-details                  controllers.Joiner.joinStaff
 POST        /join/:tier/enter-details                  controllers.Joiner.joinPaid(tier: PaidTier)
 GET         /join/staff/thankyou                       controllers.Joiner.thankyouStaff

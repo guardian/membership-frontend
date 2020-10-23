@@ -197,23 +197,6 @@ class Joiner(
     }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.minimalUser.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
-  def enterFriendDetails = NonMemberAction(Tier.friend).async { implicit request =>
-    implicit val backendProvider: BackendProvider = request
-    implicit val c = catalog
-
-    for {
-      identityUser <- identityService.getIdentityUserView(request.user.minimalUser, IdentityRequest(request))
-    } yield {
-
-      val pageInfo = support.PageInfo(initialCheckoutForm = CheckoutForm.forIdentityUser(identityUser.country, catalog.friend, None))
-
-      Ok(views.html.joiner.form.friendSignup(
-        catalog.friend,
-        identityUser,
-        pageInfo))
-    }
-  }
-
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
     implicit val backendProvider: BackendProvider = request
@@ -222,11 +205,6 @@ class Joiner(
     } yield {
       Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, identityUser, flashMsgOpt))
     }
-  }
-
-  def joinFriend = AuthenticatedNonMemberAction.async { implicit request =>
-    friendJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-      makeMember(Tier.friend, Redirect(routes.Joiner.thankyou(Tier.friend))))
   }
 
   def joinStaff = AuthenticatedNonMemberAction.async { implicit request =>
