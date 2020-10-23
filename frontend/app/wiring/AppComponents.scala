@@ -105,7 +105,6 @@ trait AppComponents
       new rest.EventApi(eventbriteCollectiveServices, commonActions, controllerComponents),
       new Event(wsClient, eventbriteCollectiveServices, touchpointBackends, actionRefiners, touchpointCommonActions, defaultBodyParser, executionContext, googleAuthConfig, commonActions, commonActionRefiners, controllerComponents),
       new Info(identityApi, authenticationService, contentApiService, touchpointBackends, commonActions, commonActionRefiners, executionContext, controllerComponents),
-      new Bundle(touchpointBackends, commonActions, controllerComponents),
       new PatternLibrary(eventbriteCollectiveServices, touchpointBackends, commonActions, controllerComponents),
       new User(identityApi, touchpointCommonActions, executionContext, commonActions, membersDataAPI, controllerComponents),
       new VanityUrl(commonActions, controllerComponents),

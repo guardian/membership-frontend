@@ -84,9 +84,6 @@ GET         /help                                      controllers.Info.help
 GET            /feedback                              controllers.Info.feedback
 POST           /feedback                              controllers.Info.submitFeedback
 
-# Bundles - deprecated - TODO: remove
-GET            /bundles                               controllers.Bundle.get(INTCMP: abtests.BundleVariant)
-GET            /bundles/thankyou                      controllers.Bundle.thankYou(INTCMP: abtests.BundleVariant, selectedOption: String)
 GET            /uk                                    controllers.Redirects.supportRedirect
 
 # Styleguide
