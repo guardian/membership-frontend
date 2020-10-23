@@ -76,6 +76,7 @@ class ActionRefiners(authenticationService: AuthenticationService, parser: BodyP
   def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result =
     supportRedirect(req)
 
+
   def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request, AnyContent] {
 
     override def parser = ActionRefiners.this.parser

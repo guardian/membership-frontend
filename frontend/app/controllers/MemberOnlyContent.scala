@@ -46,7 +46,7 @@ class MemberOnlyContent(contentApiService: GuardianContentService, commonActions
               Redirect(("https://theguardian.com/" + referringContent))
             }
           }).getOrElse(
-            Redirect(routes.Joiner.tierChooser())
+            Redirect(routes.Redirects.supportRedirect())
           )
       }.recoverWith {
           case ContentApiError(404, _, _) => Future.successful(NotFound(views.html.error404()))

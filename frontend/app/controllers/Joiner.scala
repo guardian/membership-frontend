@@ -87,26 +87,6 @@ class Joiner(
 
   val identityService = IdentityService(identityApi)
 
-  def tierChooser = NoCacheAction { implicit request =>
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(eventbriteService.getBookableEvent)
-    val accessOpt = request.getQueryString("membershipAccess").flatMap(ContentAccess.valueOf)
-    val contentRefererOpt = request.headers.get(REFERER)
-
-    val signInUrl = contentRefererOpt.map { referer =>
-      ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referer) ? ("skipConfirmation" -> "true")).toString
-    }.getOrElse(Config.idWebAppSigninUrl(""))
-
-    implicit val countryGroup = UK
-    val pageInfo = PageInfo(
-      title = CopyConfig.copyTitleChooseTier,
-      url = request.path,
-      description = Some(CopyConfig.copyDescriptionChooseTier),
-      customSignInUrl = Some(signInUrl)
-    )
-
-    Ok(views.html.joiner.tierChooser(touchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
-      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
-  }
 
   def authenticatedIfNotMergingRegistration(onUnauthenticated: RequestHeader => Result = chooseRegister(_)) = new ActionFilter[Request] {
 
@@ -171,12 +151,6 @@ class Joiner(
         countryGroup,
         resolution))
     }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.minimalUser.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
-  }
-
-
-  def joinStaff = AuthenticatedNonMemberAction.async { implicit request =>
-    staffJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-      makeMember(Tier.partner, Redirect(routes.Joiner.thankyouStaff())))
   }
 
   def joinPaid(tier: PaidTier) = OptionallyAuthenticatedNonMemberAction(tier).async { implicit request =>
@@ -280,7 +254,5 @@ class Joiner(
       )}).discardingCookies(TierChangeCookies.deletionCookies: _*)
     }
   }
-
-  def thankyouStaff = thankyou(Tier.partner)
 
 }
