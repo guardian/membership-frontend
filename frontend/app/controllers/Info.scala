@@ -109,16 +109,6 @@ class Info(
     Redirect(s"https://support.theguardian.com/${countryGroup.id}/support", request.queryString, MOVED_PERMANENTLY)
   }
 
-  def offersAndCompetitions = CachedAction { implicit request =>
-    implicit val countryGroup = UK
-
-    val results =
-      guardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
-        item.content.fields.flatMap(_.membershipAccess).isEmpty && !item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
-
-    Ok(views.html.info.offersAndCompetitions(touchpointBackends.Normal.catalog, results))
-  }
-
   def help = CachedAction { implicit request =>
     Ok(views.html.info.help())
   }

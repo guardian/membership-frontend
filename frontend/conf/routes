@@ -83,7 +83,6 @@ GET         /:countryGroup/supporter                   controllers.Info.supporte
 GET         /help                                      controllers.Info.help
 GET            /feedback                              controllers.Info.feedback
 POST           /feedback                              controllers.Info.submitFeedback
-GET            /offers-competitions                   controllers.Info.offersAndCompetitions
 
 # Bundles - deprecated - TODO: remove
 GET            /bundles                               controllers.Bundle.get(INTCMP: abtests.BundleVariant)
