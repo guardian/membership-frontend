@@ -53,7 +53,6 @@ object TouchpointBackend {
       apiConfig = config.stripeAUMembership,
       client = RequestRunners.futureRunner
     )
-    val payPalService = new PayPalService(config.payPal, executionContext)
     val restBackendConfig = config.zuoraRest.copy(url = Uri.parse(config.zuoraRestUrl(Config.config)))
     implicit val simpleRestClient = new SimpleClient[Future](restBackendConfig, RequestRunners.futureRunner)
     val memRatePlanIds = Config.membershipRatePlanIds(restBackendConfig.envName)
@@ -93,7 +92,6 @@ object TouchpointBackend {
       zuoraRestService = zuoraRestService,
       ukStripeService = stripeUKMembershipService,
       auStripeService = stripeAUMembershipService,
-      payPalService = payPalService,
       subscriptionService = newSubsService,
       catalogService = newCatalogService,
       paymentService = paymentService,
@@ -106,7 +104,6 @@ object TouchpointBackend {
     TouchpointBackend(
       config.environmentName,
       salesforceService = salesforceService,
-      payPalService = payPalService,
       stripeUKMembershipService = stripeUKMembershipService,
       stripeAUMembershipService = stripeAUMembershipService,
       zuoraSoapClient = zuoraSoapClient,
@@ -172,7 +169,6 @@ class TouchpointBackends(testUsers: TestUsers, actorSystem: ActorSystem, executi
 case class TouchpointBackend(
   environmentName: String,
   salesforceService: api.SalesforceService,
-  payPalService: PayPalService,
   stripeUKMembershipService: StripeService,
   stripeAUMembershipService: StripeService,
   zuoraSoapClient: soap.ClientWithFeatureSupplier,

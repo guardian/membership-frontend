@@ -12,7 +12,7 @@ import play.api.data.Form
 import play.api.http.HeaderNames.USER_AGENT
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{AnyContent, RequestHeader, Result}
-import services.{PayPalService, TouchpointBackends}
+import services.TouchpointBackends
 import services.api.{MemberService, SalesforceService}
 
 import scala.concurrent.Future
@@ -45,11 +45,6 @@ package object controllers {
       request.touchpointBackend.stripeAUMembershipService
   }
 
-  trait PayPalServiceProvider {
-    def payPalService(implicit request: AuthRequest[AnyContent], tpbs: TouchpointBackends): PayPalService =
-      request.touchpointBackend.payPalService
-  }
-
   trait ZuoraSoapServiceProvider {
     def zuoraSoapService(implicit request: BackendProvider, tpbs: TouchpointBackends): ZuoraService =
       request.touchpointBackend.zuoraService
@@ -74,10 +69,4 @@ package object controllers {
     def regNumberLabel = m.contact.regNumber.getOrElse("")
   }
 
-  def redirectToUnsupportedBrowserInfo[T: ClassTag](form: Form[T])(implicit req: RequestHeader): Future[Result] = {
-    lazy val errors = form.errors.map { e => s"  - ${e.key}: ${e.messages.mkString(", ")}"}.mkString("\n")
-    SafeLogger.error(scrub"Server-side form errors on joining indicates a Javascript problem: ${req.headers.get(USER_AGENT)}")
-    SafeLogger.error(scrub"Server-side form errors : Failed to bind from form ${classTag[T]}:\n$errors")
-    Future.successful(Redirect(routes.Joiner.unsupportedBrowser()))
-  }
 }

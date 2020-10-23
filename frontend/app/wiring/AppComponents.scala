@@ -95,8 +95,6 @@ trait AppComponents
       new Testing(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions, controllerComponents),
       new FeatureOptIn(commonActions, controllerComponents),
       new Redirects(commonActions, controllerComponents),
-      joiner,
-      new MemberOnlyContent(contentApiService, commonActions, executionContext, controllerComponents),
       new Login(commonActions, controllerComponents),
       new StaffAuth(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions, controllerComponents),
       new OAuth(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions, controllerComponents),
@@ -114,7 +112,6 @@ trait AppComponents
       new PricingApi(touchpointBackends, commonActions, controllerComponents),
       new Giraffe(commonActions, controllerComponents),
       new MembershipStatus(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions, controllerComponents),
-      new PayPal(touchpointBackends, executionContext, commonActions, controllerComponents),
       new GeoCountry(commonActions, controllerComponents)
     )
   }
