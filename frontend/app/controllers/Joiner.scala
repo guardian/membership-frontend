@@ -75,7 +75,7 @@ class Joiner(
   with MemberServiceProvider
   with ZuoraRestServiceProvider {
 
-  import actionRefiners.{matchingGuardianEmail, PlannedOutageProtection, redirectMemberAttemptingToSignUp, authenticated}
+  import actionRefiners.{PlannedOutageProtection, redirectMemberAttemptingToSignUp, authenticated}
   import touchpointOAuthActions._
   import touchpointActionRefiners._
   import touchpointCommonActions._
@@ -86,8 +86,6 @@ class Joiner(
   val subscriberOfferDelayPeriod = 6.months
 
   val identityService = IdentityService(identityApi)
-
-  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail(identityService)
 
   def tierChooser = NoCacheAction { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request.session).flatMap(eventbriteService.getBookableEvent)
@@ -109,28 +107,6 @@ class Joiner(
     Ok(views.html.joiner.tierChooser(touchpointBackend.Normal.catalog, pageInfo, eventOpt, accessOpt, signInUrl))
       .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
-
-  def staff = PermanentStaffNonMemberAction.async { implicit request =>
-    val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
-    val userSignedIn = authenticationService.authenticatedUserFor(request)
-    val catalog = touchpointBackend.Normal.catalog
-    implicit val countryGroup = UK
-
-    userSignedIn match {
-      case Some(user) => for {
-        fullUser <- identityService.getFullUserDetails(user.minimalUser)(IdentityRequest(request))
-        primaryEmailAddress = fullUser.primaryEmailAddress
-        displayName = fullUser.publicFields.displayName
-        avatarUrl = fullUser.privateFields.socialAvatarUrl
-      } yield
-        Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
-
-      case _ =>
-        Future.successful(
-          Ok(views.html.joiner.staff(catalog, StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
-    }
-  }
-
 
   def authenticatedIfNotMergingRegistration(onUnauthenticated: RequestHeader => Result = chooseRegister(_)) = new ActionFilter[Request] {
 
@@ -197,15 +173,6 @@ class Joiner(
     }).andThen { case Failure(e) => SafeLogger.error(scrub"User ${userOpt.map(_.minimalUser.id)} could not enter details for paid tier ${tier.name}: ${identityRequest.trackingParameters}", e)}
   }
 
-  def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
-    val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
-    implicit val backendProvider: BackendProvider = request
-    for {
-      identityUser <- identityService.getIdentityUserView(request.identityUser.minimalUser, IdentityRequest(request))
-    } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, identityUser, flashMsgOpt))
-    }
-  }
 
   def joinStaff = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
@@ -218,17 +185,6 @@ class Joiner(
       Future.successful(BadRequest(formWithErrors.errorsAsJson))
     },
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))))
-  }
-
-  def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
-    val googleEmail = request.googleUser.email
-    for {
-      emailUpdateResult <- identityService.updateEmail(request.identityUser.minimalUser, googleEmail)(IdentityRequest(request)).value
-    } yield emailUpdateResult.fold(
-      _ => Redirect(routes.Joiner.staff()).flashing("error" ->
-        s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email."),
-      _ => Redirect(routes.Joiner.enterStaffDetails()).flashing("success" ->
-        s"Your email address has been changed to $googleEmail"))
   }
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))

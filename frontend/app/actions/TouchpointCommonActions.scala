@@ -1,6 +1,5 @@
 package actions
 
-import actions.Fallbacks.joinStaffMembership
 import com.gu.salesforce.PaidTier
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.{ActionTransformer, AnyContent, BodyParser, Request}
@@ -19,7 +18,7 @@ class TouchpointCommonActions(
   actionRefiners: ActionRefiners
 ) {
 
-  import actionRefiners.{paidSubscriptionRefiner, freeSubscriptionRefiner}
+  import actionRefiners.paidSubscriptionRefiner
   import touchpointActionRefiners._
 
   object BaseCommonActions extends CommonActions(authenticationService, testUsers, parser, executionContext, actionRefiners)

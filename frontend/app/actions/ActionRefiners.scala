@@ -73,35 +73,8 @@ class ActionRefiners(authenticationService: AuthenticationService, parser: BodyP
       )
   }
 
-  def freeSubscriptionRefiner(onPaidMember: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[SubReqWithSub, SubReqWithFree] {
-
-    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
-
-    override protected def refine[A](request: SubReqWithSub[A]): Future[Either[Result, SubReqWithFree[A]]] =
-      Future.successful(request.paidOrFreeSubscriber.bimap(free =>
-        new SubscriptionRequest[A](request) with FreeSubscriber {
-          override def subscriber = free
-        }, _ => onPaidMember(request)).swap.toEither // we convert paid to a response, thus giving Free \/ Response
-      )                                              // but we need Either[Response, Free], hence the swap and toEither
-  }
-
   def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: SubReqWithSub[_]): Result =
     supportRedirect(req)
-
-  def matchingGuardianEmail(identityService: IdentityService, onNonGuEmail: RequestHeader => Result =
-                            joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
-
-    override protected implicit def executionContext: ExecutionContext = ActionRefiners.this.executionContext
-
-    override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
-      for {
-        user <- identityService.getFullUserDetails(request.identityUser.minimalUser)(IdentityRequest(request))
-      } yield {
-        if (GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
-        else Some(onNonGuEmail(request))
-      }
-    }
-  }
 
   def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request, AnyContent] {
 

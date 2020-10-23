@@ -23,15 +23,12 @@ GET         /feature/:feature/:onOrOff                 controllers.FeatureOptIn.
 GET         /join/*any                                controllers.Redirects.whySupportRedirectIgnore(any)
 GET         /choose-tier                               controllers.Redirects.whySupportRedirect
 #####Dead routes starting with /join - needed because of reverse routing until we delete the code
-GET         /join/staff                                controllers.Joiner.staff
-GET         /join/staff/enter-details                  controllers.Joiner.enterStaffDetails
 
 GET         /join/:tier/enter-details                  controllers.Joiner.enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup ?= CountryGroup.UK)
 POST        /join/staff/enter-details                  controllers.Joiner.joinStaff
 POST        /join/:tier/enter-details                  controllers.Joiner.joinPaid(tier: PaidTier)
 GET         /join/staff/thankyou                       controllers.Joiner.thankyouStaff
 GET         /join/:tier/thankyou                       controllers.Joiner.thankyou(tier: Tier, upgrade: Boolean ?= false)
-POST        /join/staff/update-email                   controllers.Joiner.updateEmailStaff
 GET         /join/unsupported-browser                  controllers.Joiner.unsupportedBrowser
 GET         /choose-tier                               controllers.Joiner.tierChooser
 ### END OF DEAD ROUTES

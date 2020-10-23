@@ -18,13 +18,9 @@ object Fallbacks {
   def memberHome(implicit request: RequestHeader) =
     redirectTo(controllers.routes.FrontPage.welcome)
 
-  def notYetAMemberOn(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
+  def notYetAMemberOn(implicit request: RequestHeader) = Forbidden
 
   def chooseRegister(implicit request: RequestHeader) = SeeOther(Config.idWebAppRegisterUrl(request.uri))
-
-  def joinStaffMembership(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.Joiner.staff())
 
   def unauthorisedStaff(errorTemplate: Html)(implicit request: RequestHeader) =
     redirectTo(controllers.routes.StaffAuth.unauthorised()).flashing(
