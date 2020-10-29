@@ -107,11 +107,6 @@ GET            /assets/bookmarklets/*bookmarklet      controllers.CachedAssets.b
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*assetFile                         controllers.CachedAssets.at(path="/public", assetFile, aggressiveCaching:Boolean ?= true)
 
-# REST
-# Pricing
-GET         /currencies                                controllers.PricingApi.currencies
-GET         /rate-plans                                controllers.PricingApi.ratePlans
-
 # Giraffe
 GET         /contribute                                controllers.Giraffe.redirectToContributions()
 GET         /:countryGroup/contribute                  controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
