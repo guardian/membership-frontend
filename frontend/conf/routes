@@ -83,15 +83,12 @@ GET         /preview-event/:id                         controllers.Event.preview
 GET         /preview-masterclass/:id                   controllers.Event.previewMasterclass(id)
 
 # Tier
-GET         /tier/change                               controllers.TierController.change
-GET         /tier/cancel                               controllers.TierController.redirectToNewCancellationFlow
-POST        /tier/cancel/confirm                       controllers.TierController.redirectToNewCancellationFlow
-GET         /tier/cancel/paid/summary                  controllers.TierController.redirectToNewCancellationFlow
-GET         /tier/cancel/free/summary                  controllers.TierController.redirectToNewCancellationFlow
+GET         /tier/change                               controllers.Redirects.supportRedirect
+GET         /tier/cancel                               controllers.Redirects.redirectToNewCancellationFlow
+POST        /tier/cancel/confirm                       controllers.Redirects.redirectToNewCancellationFlow
+GET         /tier/cancel/paid/summary                  controllers.Redirects.redirectToNewCancellationFlow
+GET         /tier/cancel/free/summary                  controllers.Redirects.redirectToNewCancellationFlow
 GET         /tier/change/patron                        controllers.Info.patronsRedirect
-GET         /tier/change/:tier                         controllers.TierController.upgrade(tier: PaidTier)
-POST        /tier/change/:tier                         controllers.TierController.upgradeConfirm(tier: PaidTier)
-GET         /tier/change/:tier/summary                 controllers.TierController.upgradeThankyou(tier: PaidTier)
 
 # Information
 GET         /patrons                                   controllers.Info.patronsRedirect

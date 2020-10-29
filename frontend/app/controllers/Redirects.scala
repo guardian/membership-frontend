@@ -25,4 +25,8 @@ class Redirects(commonActions: CommonActions, override protected val controllerC
 
   def whySupportRedirect() = whySupportRedirectIgnore("")
 
+  def redirectToNewCancellationFlow() = CachedAction(
+    Redirect(url = "https://manage.theguardian.com/cancel/membership")
+  )
+
 }
