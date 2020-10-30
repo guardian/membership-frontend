@@ -80,7 +80,6 @@ class MemberService(
   zuoraRestService: ZuoraRestService[Future],
   ukStripeService: StripeService,
   auStripeService: StripeService,
-  payPalService: PayPalService,
   subscriptionService: SubscriptionService[Future],
   catalogService: CatalogService[Future],
   paymentService: PaymentService,
@@ -98,7 +97,6 @@ class MemberService(
   val availablePaymentMethods = new AvailablePaymentMethods(Set(
     new StripeInitialiser(ukStripeService),
     new StripeInitialiser(auStripeService),
-    new PayPalInitialiser(payPalService)
   ))
 
   implicit val catalog = catalogService.unsafeCatalog
@@ -164,9 +162,6 @@ class MemberService(
       SafeLogger.error(scrub"Could not create Salesforce contact for user ${user.id}", e)
     }
 
-  def retrieveEmail(baid: String) = Future {
-    payPalService.retrieveEmail(baid)
-  }
 
   override def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, referralData: ReferralData)
                                       (implicit identity: IdentityRequest): Future[MemberError \/ ContactId] = {

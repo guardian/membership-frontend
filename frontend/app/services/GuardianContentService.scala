@@ -59,17 +59,9 @@ class GuardianContentService(actorSystem: ActorSystem, executionContext: Executi
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def offersAndCompetitions: Future[Seq[Content]] = offersAndCompetitionsContentQuery(1).map(_.results.toSeq.flatten)
-
-  private def membershipFront: Future[Seq[Content]] = membershipFrontContentQuery(1).map(_.results.toSeq.flatten)
-
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
 
   def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
-
-  def offersAndCompetitionsContent: Seq[Content] = offersAndCompetitionsContentTask.get()
-
-  def membershipFrontContent: Seq[Content] = membershipFrontContentTask.get()
 
   private val contentApiPeriod = 30.minutes
 
@@ -79,17 +71,10 @@ class GuardianContentService(actorSystem: ActorSystem, executionContext: Executi
   val contentTask = ScheduledTask[Seq[Content]](
     "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
 
-  val offersAndCompetitionsContentTask = ScheduledTask[Seq[Content]](
-    "GuardianContentService - Content with Guardian Members Only", Nil, 1.second, contentApiPeriod)(offersAndCompetitions)
-
-  val membershipFrontContentTask = ScheduledTask[Seq[Content]](
-    "GuardianContentService - Content from Membership front", Nil, 1.second, contentApiPeriod)(membershipFront)
 
   def start() {
     masterclassContentTask.start()
-    offersAndCompetitionsContentTask.start()
     contentTask.start()
-    membershipFrontContentTask.start()
   }
 
 }
@@ -130,34 +115,5 @@ trait GuardianContent {
       .pageSize(100)
       .page(page)
     client.getResponse(searchQuery).andThen(logAndRecord)
-  }
-
-  def offersAndCompetitionsContentQuery(page: Int): Future[ItemResponse] = {
-    val itemQuery = ItemQuery("membership")
-      .showElements("image")
-      .showTags("keyword")
-      .pageSize(100)
-      .page(page)
-      .tag("membership/membership-offers|membership/membership-competitions")
-
-    client.getResponse(itemQuery).andThen(logAndRecord)
-  }
-
-  def membershipFrontContentQuery(page: Int): Future[ItemResponse] = {
-    val itemQuery = ItemQuery("/membership")
-      .showElements("image")
-      .tag("type/article")
-      .pageSize(20)
-      .page(page)
-
-    client.getResponse(itemQuery).andThen(logAndRecord)
-  }
-
-  def contentItemQuery(path: String): Future[ItemResponse] = {
-    val itemQuery = ItemQuery(path)
-      .showFields("trailText,membershipAccess")
-      .showElements("all")
-      .showTags("all")
-    client.getResponse(itemQuery).andThen(logAndRecord)
   }
 }

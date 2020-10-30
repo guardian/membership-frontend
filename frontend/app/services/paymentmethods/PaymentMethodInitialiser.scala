@@ -8,7 +8,6 @@ import com.gu.zuora.api.RegionalStripeGateways
 import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
 import com.gu.monitoring.SafeLogger
 import forms.MemberForm.CommonPaymentForm
-import services.PayPalService
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
@@ -46,13 +45,3 @@ class StripeInitialiser(stripeService: StripeService) extends
   def appliesToCountry(country: Country): Boolean = RegionalStripeGateways.getGatewayForCountry(country) == stripeService.paymentGateway
 }
 
-class PayPalInitialiser(payPalService: PayPalService) extends PaymentMethodInitialiser[PayPalReferenceTransaction] {
-
-  def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.payPalBaid
-
-  def initialiseWith(baid: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[PayPalReferenceTransaction] = for {
-    payPalEmail <- payPalService.retrieveEmail(baid)
-  } yield PayPalReferenceTransaction(baid, payPalEmail)
-
-  def appliesToCountry(country: Country): Boolean = true
-}

@@ -21,8 +21,6 @@ class Healthcheck(eventbriteService: EventbriteCollectiveServices, touchpointBac
   def tests = Seq(
     //new BoolTest("Events", () => eventbriteService.guardianLiveEventService.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    new BoolTest("ZuoraPing", () => touchpointBackends.Normal.zuoraSoapClient.lastPingTimeWithin(2.minutes)),
-    new BoolTest("Salesforce", () => touchpointBackends.Normal.salesforceService.isAuthenticated)
   )
 
   def healthcheck() = Action {

@@ -371,29 +371,6 @@
         }
     }
 
-    @pattern("Tier Trail - Caption", "Tier name with caption") {
-        @fragments.tier.tierTrail(partner)
-    }
-
-    @pattern("Tier Trail - No Caption", "Tier name with no caption") {
-        @fragments.tier.tierTrail(partner, showCaption=false)
-    }
-
-    @pattern("Package: Promo") {
-        <ul class="grid grid--3up-stacked">
-            <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.partner, UK)
-            </li>
-            <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.patron, UK)
-            </li>
-        </ul>
-    }
-
-    @pattern("Package: Stack") {
-        @fragments.tier.packageStack(partner)
-    }
-
     @pattern("Flash Message: Success") {
         @fragments.notifications.flashMessage(FlashMessage.success("A successful Message!"))
     }
