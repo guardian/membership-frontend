@@ -1,6 +1,22 @@
 
 import { loadScript } from 'src/utils/loadScript';
 
+const bindBuyButtonClickHandlers = () => {
+    const buyButtonClassName = 'js-ticket-cta';
+    const buyButtons = document.getElementsByClassName(buyButtonClassName);
+
+    [...buyButtons].forEach(buyButton => {
+        buyButton.addEventListener('click', () => {
+            window.google_trackConversion({
+                google_conversion_id: 618113903,
+                google_conversion_label: 'iIHRCLLc--UBEO_W3qYC',
+                google_custom_params: window.google_tag_params,
+                google_remarketing_only: true,
+            });
+        })
+    });
+}
+
 export function init() {
     if (window.sideLoad && window.sideLoad.paths) {
         const { remarketing } = window.sideLoad.paths;
@@ -12,6 +28,8 @@ export function init() {
                     google_custom_params: window.google_tag_params,
                     google_remarketing_only: true,
                 });
+
+                bindBuyButtonClickHandlers();
             });
         }
     }
