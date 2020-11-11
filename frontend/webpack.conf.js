@@ -1,6 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
-var LoaderOptions = require("webpack/lib/LoaderOptionsPlugin");
-var path = require("path");
+var LoaderOptions = require('webpack/lib/LoaderOptionsPlugin');
+var path = require('path');
 
 var prodPlugins = [ new TerserPlugin({sourceMap: true}), new LoaderOptions({ minimize: true, debug: false })];
 var debugPlugins = [new LoaderOptions({ debug: true })];
@@ -8,10 +8,10 @@ var debugPlugins = [new LoaderOptions({ debug: true })];
 module.exports = function(debug) { return {
     resolve: {
         modules: [
-            path.join(__dirname, "assets/javascripts"),
-            path.join(__dirname, "node_modules/")
+            path.join(__dirname, 'assets/javascripts'),
+            path.join(__dirname, 'node_modules/')
         ],
-        extensions: [".js", ".es6"],
+        extensions: ['.js', '.es6'],
         alias: {
             '$$': 'jquery/dist/jquery.min',
             'lodash': 'lodash-amd',
@@ -27,19 +27,33 @@ module.exports = function(debug) { return {
         rules: [
             {
                 test: /\.es6$/,
-                exclude: /node_modules/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015'],
-                    cacheDirectory: '',
-                    plugins: ['transform-object-rest-spread']
-                }
+                exclude: [
+                    {
+                        test: /node_modules/,
+                        exclude: [
+                        /@guardian\/(?!(automat-modules))/,
+                        ],
+                    },
+                ],
+                loader: 'babel-loader'
+            },
+            {
+                test: /\.js?$/,
+                exclude: [
+                    {
+                        test: /node_modules/,
+                        exclude: [
+                        /@guardian\/(?!(automat-modules))/,
+                        ],
+                    },
+                ],
+                loader: 'babel-loader'
             }
         ]
     },
 
     resolveLoader: {
-        modules: [path.join(__dirname, "node_modules")]
+        modules: [path.join(__dirname, 'node_modules')]
     },
 
     plugins: !debug ? prodPlugins :debugPlugins,

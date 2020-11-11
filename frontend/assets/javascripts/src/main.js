@@ -72,7 +72,7 @@ require([
         }
     }).then(responseCountryCode => {
         cmp.cmp.init({
-            isInUsa: responseCountryCode === 'US'
+            country: responseCountryCode
         });
     }).catch(err => {
         raven.Raven.captureException(err);
