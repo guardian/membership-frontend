@@ -52,6 +52,7 @@
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "babel-loader": "^8.2.1",
+    "core-js": "^3.7.0",
     "grunt": "^1.0.4",
     "grunt-asset-hash": "^0.1.9",
     "grunt-cli": "^1.2.0",
