@@ -46,6 +46,7 @@ define([
 
         Promise.allSettled([
             cmp.checkCCPA(),
+            cmp.checkAus(),
             cmp.getConsentForVendors(vendorIds),
             cmp.checkAllTCFv2PurposesAreOptedIn(),
         ]).then(results => {

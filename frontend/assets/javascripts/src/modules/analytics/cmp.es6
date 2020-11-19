@@ -34,6 +34,12 @@ const checkCCPA = () => new Promise((resolve) => {
     })
 });
 
+const checkAus = () => new Promise((resolve) => {
+    onConsentChange(state => {
+        resolve(state.aus ? state.ccpa.personalisedAdvertising : null);
+    })
+});
+
 const registerCallbackOnConsentChange = (fn) => onConsentChange(fn);
 
 const createPrivacySettingsLink = () => {
@@ -43,4 +49,4 @@ const createPrivacySettingsLink = () => {
     }
 }
 
-export { getConsentForVendors, checkAllTCFv2PurposesAreOptedIn, checkCCPA, registerCallbackOnConsentChange, createPrivacySettingsLink };
+export { getConsentForVendors, checkAllTCFv2PurposesAreOptedIn, checkCCPA, checkAus, registerCallbackOnConsentChange, createPrivacySettingsLink };
