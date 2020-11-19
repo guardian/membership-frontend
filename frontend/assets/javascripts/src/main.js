@@ -71,12 +71,8 @@ require([
             throw new Error('failed to get geocountry');
         }
     }).then(responseCountryCode => {
-        /**
-         * TODO: Enable Australian CMP by using
-         * property country instead of isInUsa
-        */
         cmp.cmp.init({
-            isInUsa: responseCountryCode === 'US'
+            country: responseCountryCode
         });
     }).catch(err => {
         raven.Raven.captureException(err);
