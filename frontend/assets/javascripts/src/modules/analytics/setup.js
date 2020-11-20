@@ -46,12 +46,13 @@ define([
 
         Promise.allSettled([
             cmp.checkCCPA(),
+            cmp.checkAus(),
             cmp.getConsentForVendors(vendorIds),
             cmp.checkAllTCFv2PurposesAreOptedIn(),
         ]).then(results => {
-            const [ccpaConsent, vendorConsents, allPurposesAgreed] = results.map(promise => promise.value);
+            const [ccpaConsent, ausConsent, vendorConsents, allPurposesAgreed] = results.map(promise => promise.value);
 
-            if (ccpaConsent) {
+            if (ccpaConsent || ausConsent) {
                 trackers.forEach(tracker => tracker.init());
                 campaignCode.init();
             } else {
