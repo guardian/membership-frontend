@@ -24,16 +24,13 @@ object Nav {
     )),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
     NavItem("support the guardian", "https://support.theguardian.com/?acquisitionData=%7B%22source%22%3A%22GUARDIAN_WEB%22%2C%22componentId%22%3A%22become_a_supporter_link_on_membership_site%22%7D", "Support The Guardian"),
-    NavItem("patrons", Links.patrons, "Patrons"),
-    NavItem("feedback", "/feedback", "Feedback")
+    NavItem("patrons", Links.patrons, "Patrons")
   )
 
-  val internationalLandingPageNavigation = List(
-    NavItem("feedback", "/feedback", "Feedback")
-  )
+  val internationalLandingPageNavigation = List()
 
   def footerNavigation(countryGroup: Option[CountryGroup] = None) = List(
-    NavItem("masterclassesFAQ", Links.guardianMasterclassesFAQs, "Masterclass FAQ"),
+    NavItem("masterclassesFAQ", Links.guardianMasterclassesFAQs, "Masterclasses FAQ"),
     NavItem("liveFAQ", Links.guardianLiveFAQs, "GuardianLive FAQ"),
     NavItem("contact", Links.membershipContact, "Contact us"),
     NavItem("terms", Links.membershipTerms(countryGroup), "Terms & conditions"),
