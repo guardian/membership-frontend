@@ -9,7 +9,7 @@ const dimensions = {
     ophanPageViewId: 'dimension3', // Hit
     ophanBrowserId: 'dimension4', // User
     platform: 'dimension5', // Hit
-    identityId: 'dimension6', // User
+    // Removed -- identityId: 'dimension6', // User
     isLoggedOn: 'dimension7', // Hit
     stripeId: 'dimension8', // Session
     zouraId: 'dimension9', // Session
@@ -113,9 +113,6 @@ export function init() {
 
     if (guardian.abTests) {
         wrappedGa('set', dimensions.experience, Object.keys(guardian.abTests).map(function(k){return k+"="+guardian.abTests[k]}).join(","));
-    }
-    if (isLoggedIn) {
-        wrappedGa('set', dimensions.identityId, u.id);
     }
     if (ophan) {
         wrappedGa('set', dimensions.ophanPageViewId, ophan.viewId);
