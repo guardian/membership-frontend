@@ -181,11 +181,6 @@
         padding-right: rem($gs-gutter);
     }
 }
-.event-ticket__item:last-child {
-    @include mq(tablet) {
-        padding-right: 0;
-    }
-}
 .event-ticket__details {
     @include mq(tablet) {
         padding-bottom: rem(3px); // Tweak for optical alignment (over actual alignment)
