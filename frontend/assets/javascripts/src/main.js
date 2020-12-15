@@ -75,6 +75,7 @@ require([
     }).then(responseCountryCode => {
         cmp.cmp.init({
             pubData: {
+                platform: 'membership',
                 pageViewId: ophan.viewId
             },
             country: responseCountryCode
