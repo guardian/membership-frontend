@@ -61,7 +61,7 @@ require([
     landingBundles,
     bundlesLanding,
     cmp,
-    ophan,
+    ophan
 ) {
     'use strict';
 
