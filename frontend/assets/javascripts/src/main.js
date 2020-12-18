@@ -28,7 +28,8 @@ require([
     'src/modules/faq',
     'src/modules/landingBundles',
     'src/modules/bundlesLanding',
-    '@guardian/consent-management-platform'
+    '@guardian/consent-management-platform',
+    'ophan-tracker-js/build/ophan.membership',
 ], function(
     ajax,
     raven,
@@ -59,7 +60,8 @@ require([
     faq,
     landingBundles,
     bundlesLanding,
-    cmp
+    cmp,
+    ophan,
 ) {
     'use strict';
 
@@ -72,6 +74,10 @@ require([
         }
     }).then(responseCountryCode => {
         cmp.cmp.init({
+            pubData: {
+                platform: 'membership',
+                pageViewId: ophan.viewId,
+            },
             country: responseCountryCode
         });
     }).catch(err => {
