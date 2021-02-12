@@ -6,14 +6,14 @@ const tracker = 'membershipPropertyTracker';
 const dimensions = {
     signedIn: 'dimension1', // User
     signedOut: 'dimension2', // User
-    ophanPageViewId: 'dimension3', // Hit
-    ophanBrowserId: 'dimension4', // User
+    // Removed -- ophanPageViewId: 'dimension3', // Hit
+    // Removed -- ophanBrowserId: 'dimension4', // User
     platform: 'dimension5', // Hit
     // Removed -- identityId: 'dimension6', // User
     isLoggedOn: 'dimension7', // Hit
-    stripeId: 'dimension8', // Session
+    // Never sent -- stripeId: 'dimension8', // Session
     zouraId: 'dimension9', // Session
-    membershipNumber: 'dimension10', // User
+    // Removed -- membershipNumber: 'dimension10', // User
     productPurchased: 'dimension11', // Session
     intcmp: 'dimension12', // Session
     customerAgent: 'dimension13', // Session
@@ -114,9 +114,7 @@ export function init() {
     if (guardian.abTests) {
         wrappedGa('set', dimensions.experience, Object.keys(guardian.abTests).map(function(k){return k+"="+guardian.abTests[k]}).join(","));
     }
-    if (ophan) {
-        wrappedGa('set', dimensions.ophanPageViewId, ophan.viewId);
-    }
+
     // The hash on the url is set in identity-federation-api to indicate user has come via facebook login, this identifies that and stops the referrer being counted as www.facebook.com
     if(document.location.hash === '#fbLogin') {
         wrappedGa('set', 'referrer', null);
@@ -125,14 +123,12 @@ export function init() {
 
     if("productData" in guardian) {
 
-        wrappedGa('set',dimensions.membershipNumber,guardian.productData.regNumber);
         wrappedGa('set',dimensions.productPurchased,guardian.productData.tier);
         wrappedGa('set',dimensions.paymentMethod,guardian.productData.paymentMethod);
         // Send analytics after acquisition (on thank you page).
         acquisitionEvent();
 
     }
-    wrappedGa('set', dimensions.ophanBrowserId, cookie.getCookie('bwid'));
 
     let intcmp = new RegExp('INTCMP=([^&]*)').exec(location.search);
     if (intcmp && intcmp[1]){
