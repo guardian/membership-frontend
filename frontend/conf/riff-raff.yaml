@@ -13,6 +13,6 @@ deployments:
       amiEncrypted: true
   frontend:
     type: autoscaling
-    dependencies: [ami]
+    dependencies: [cfn]
     parameters:
       bucket: membership-dist
