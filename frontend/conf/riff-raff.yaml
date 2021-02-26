@@ -6,7 +6,7 @@ deployments:
     app: frontend
     parameters:
       amiTags:
-        Recipe: xenial-membership
+        Recipe: bionic-membership-ARM
         AmigoStage: PROD
       amiParameter: ImageId
       amiEncrypted: true
