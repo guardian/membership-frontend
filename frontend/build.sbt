@@ -92,7 +92,7 @@ riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 
-riffRaffArtifactResources += (file("membership-frontend/cloud-formation/membership-app.cf.yaml"), "cfn/cfn.yaml")
+riffRaffArtifactResources += (file("cloud-formation/membership-app.cf.yaml"), "cfn/cfn.yaml")
 
 play.sbt.routes.RoutesKeys.routesImport ++= Seq(
     "utils.{Feature,OnOrOff}",
