@@ -92,6 +92,8 @@ riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 
+riffRaffArtifactResources += (file("cloud-formation/membership-app.cf.yaml"), "cfn/cfn.yaml")
+
 play.sbt.routes.RoutesKeys.routesImport ++= Seq(
     "utils.{Feature,OnOrOff}",
     "com.gu.salesforce.Tier",
