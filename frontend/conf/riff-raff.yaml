@@ -1,10 +1,11 @@
 stacks: [membership]
 regions: [eu-west-1]
 deployments:
-  ami:
-    type: ami-cloudformation-parameter
+  cfn:
+    type: cloud-formation
     app: frontend
     parameters:
+      templatePath: cfn.yaml
       amiTags:
         Recipe: bionic-membership-ARM
         AmigoStage: PROD
