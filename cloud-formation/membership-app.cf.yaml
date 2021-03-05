@@ -259,6 +259,7 @@ Resources:
   WazuhSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      GroupDescription: Allow outbound traffic from wazuh agent to manager
       VpcId:
         Ref: VpcId
       SecurityGroupEgress:
