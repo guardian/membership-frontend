@@ -129,9 +129,18 @@ Resources:
           - Effect: Allow
             Action: s3:GetObject
             Resource: arn:aws:s3:::membership-private/*
+      - PolicyName: SSMTunnel
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
           - Effect: Allow
-            Action: s3:GetObject
-            Resource: arn:aws:s3:::github-public-keys/Membership-and-Subscriptions/*
+            Action:
+            - ssm:UpdateInstanceInformation
+            - ssmmessages:CreateControlChannel
+            - ssmmessages:CreateDataChannel
+            - ssmmessages:OpenControlChannel
+            - ssmmessages:OpenDataChannel
+            Resource: '*'
       - PolicyName: SendingEmail
         PolicyDocument:
           Version: '2012-10-17'
@@ -233,15 +242,11 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Open up ssh access and enable HTTP access on the configured
+      GroupDescription: Enable HTTP access on the configured
         port
       VpcId:
         Ref: VpcId
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: '22'
-        ToPort: '22'
-        CidrIp: 77.91.248.0/21
       - IpProtocol: tcp
         FromPort: '9000'
         ToPort: '9000'
