@@ -248,6 +248,10 @@ Resources:
         Ref: VpcId
       SecurityGroupIngress:
       - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 77.91.248.0/21
+      - IpProtocol: tcp
         FromPort: '9000'
         ToPort: '9000'
         CidrIp: 77.91.248.0/21
