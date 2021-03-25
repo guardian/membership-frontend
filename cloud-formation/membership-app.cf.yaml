@@ -129,9 +129,18 @@ Resources:
           - Effect: Allow
             Action: s3:GetObject
             Resource: arn:aws:s3:::membership-private/*
+      - PolicyName: SSMTunnel
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
           - Effect: Allow
-            Action: s3:GetObject
-            Resource: arn:aws:s3:::github-public-keys/Membership-and-Subscriptions/*
+            Action:
+            - ssm:UpdateInstanceInformation
+            - ssmmessages:CreateControlChannel
+            - ssmmessages:CreateDataChannel
+            - ssmmessages:OpenControlChannel
+            - ssmmessages:OpenDataChannel
+            Resource: '*'
       - PolicyName: SendingEmail
         PolicyDocument:
           Version: '2012-10-17'
