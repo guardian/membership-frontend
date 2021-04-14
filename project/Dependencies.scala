@@ -22,7 +22,7 @@ object Dependencies {
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.7"
   val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.14.0" % "test"
   val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "2.2.5" % "test"
-  val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "3.8.6" % "test"
+  val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.5.14"
   val catsCore = "org.typelevel" %% "cats-core" % "1.6.1"
