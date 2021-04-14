@@ -5,7 +5,7 @@ object Dependencies {
 
   //versions
   val awsClientVersion = "1.11.594"
-  val jacksonVersion = "2.10.1"
+  val jacksonVersion = "2.10.5"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
@@ -32,7 +32,7 @@ object Dependencies {
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion
   val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
   // This is required to force aws libraries to use the latest version of jackson
-  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
+  val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % (jacksonVersion + ".1")
   val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion
   var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   var jacksonDataType = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion
