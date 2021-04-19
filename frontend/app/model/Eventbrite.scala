@@ -1,6 +1,7 @@
 package model
 
 import com.github.nscala_time.time.Imports._
+import com.gu.i18n.Currency
 import com.gu.i18n.Currency.GBP
 import com.gu.memsub.Price
 import com.gu.salesforce.Tier
@@ -94,14 +95,17 @@ object Eventbrite {
     if (priceInPounds.isWhole) f"$priceInPounds%.0f" else f"$priceInPounds%.2f"
   }
 
-  def formatPriceWithCurrency(priceInPence: Double): String = {
-    "£" + formatPrice(priceInPence)
+  def formatPriceWithCurrency(priceInPence: Double, currency: String): String = {
+    Currency.fromString(currency).getOrElse(GBP).glyph + formatPrice(priceInPence)
   }
 
-  case class EBPricing(value: Int) extends EBObject {
-    lazy val formattedPrice = formatPriceWithCurrency(value)
+  case class EBPricing(value: Int, currency: String) extends EBObject {
+    lazy val formattedPrice = formatPriceWithCurrency(value, currency)
     def add(other: EBPricing) : EBPricing = {
-      EBPricing(value+other.value)
+      if (currency != other.currency) {
+        throw new UnsupportedOperationException("Attempted to add two EBPricing objects with different currencies")
+      }
+      EBPricing(value+other.value, currency)
     }
   }
 
@@ -138,10 +142,10 @@ object Eventbrite {
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
     val feeText = fee
       .filter(_.value > 0)
-      .map(theFee => EBPricing(theFee.value + tax.map(_.value).getOrElse(0)))
+      .map(theFee => EBPricing(theFee.value + tax.map(_.value).getOrElse(0), theFee.currency))
       .map(_.formattedPrice)
-    val totalCost = cost.map(c => c add fee.getOrElse(EBPricing(0)))
-    val currencyCode = GBP.toString
+    val totalCost = cost.map(c => c add fee.getOrElse(EBPricing(0, c.currency)))
+    val currencyCode = cost.map(_.currency).getOrElse(GBP.iso)
   }
 
   sealed trait Ticketing
@@ -208,7 +212,7 @@ object Eventbrite {
     val saving = (generalRelease.priceInPence + generalRelease.feeInPence) - member.priceInPence
     val savingExcludingFee = generalRelease.priceInPence - member.priceInPence
 
-    val savingText = formatPriceWithCurrency(saving)
+    val savingText = formatPriceWithCurrency(saving, member.currencyCode)
 
     val roundedSavingPercentage: Int = math.round(100 * (saving.toFloat / generalRelease.priceInPence))
     val roundedSavingPercentageExcludingFee: Int = math.round(100 * (savingExcludingFee.toFloat / generalRelease.priceInPence))

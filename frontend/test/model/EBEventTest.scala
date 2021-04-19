@@ -1,5 +1,6 @@
 package model
 
+import com.gu.i18n.Currency.{GBP, USD}
 import io.lemonlabs.uri.Uri
 import model.Eventbrite._
 import model.EventbriteDeserializer._
@@ -122,10 +123,13 @@ class EBEventTest extends PlaySpecification {
 
   "getPrice" should {
     "be pleasantly formatted with pence if the value is not whole pounds" in {
-      EBPricing(123425).formattedPrice mustEqual("£1234.25")
+      EBPricing(123425, GBP.iso).formattedPrice mustEqual("£1234.25")
     }
     "be pleasantly formatted as whole pounds if there are no pence" in {
-      EBPricing(123400).formattedPrice mustEqual("£1234")
+      EBPricing(123400, GBP.iso).formattedPrice mustEqual("£1234")
+    }
+    "Display the correct currency" in {
+      EBPricing(123400, USD.iso).formattedPrice mustEqual("$1234")
     }
   }
 
@@ -140,8 +144,8 @@ class EBEventTest extends PlaySpecification {
         quantity_sold = 0,
         on_sale_status = None,
         cost = None,
-        fee = Some(EBPricing(600)),
-        tax = Some(EBPricing(130)),
+        fee = Some(EBPricing(600, GBP.iso)),
+        tax = Some(EBPricing(130, GBP.iso)),
         sales_end = Instant.now(),
         sales_start = None,
         hidden = None

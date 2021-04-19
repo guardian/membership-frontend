@@ -1,7 +1,7 @@
 package model
 
 import model.RichEvent.RichEvent
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Writes}
 
 object LocationSchema {
   implicit val writesSchema = Json.writes[LocationSchema]
