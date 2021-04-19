@@ -95,8 +95,8 @@ object Eventbrite {
     if (priceInPounds.isWhole) f"$priceInPounds%.0f" else f"$priceInPounds%.2f"
   }
 
-  def formatPriceWithCurrency(priceInPence: Double, currency: String): String = {
-    Currency.fromString(currency).getOrElse(GBP).glyph + formatPrice(priceInPence)
+  def formatPriceWithCurrency(priceInPence: Double, currencyCode: String): String = {
+    Currency.fromString(currencyCode).getOrElse(GBP).glyph + formatPrice(priceInPence)
   }
 
   case class EBPricing(value: Int, currency: String) extends EBObject {
