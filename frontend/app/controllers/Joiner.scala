@@ -29,7 +29,6 @@ import play.api.mvc._
 import services.api.MemberService.CreateMemberResult
 import services.checkout.identitystrategy.StrategyDecider
 import services.{GuardianContentService, _}
-import tracking.AcquisitionTracking
 import utils.RequestCountry._
 import utils.TestUsers.{NameEnteredInForm, PreSigninTestCookie, isTestUser}
 import utils.{Feature, ReferralData, TestUsers, TierChangeCookies}
@@ -64,7 +63,6 @@ class Joiner(
 ) extends OAuthActions(parser, executionContext, googleAuthConfig, commonActions)
   with BaseController
   with I18nSupport
-  with AcquisitionTracking
   with PaymentGatewayErrorHandler
   with CatalogProvider
   with StripeUKMembershipServiceProvider

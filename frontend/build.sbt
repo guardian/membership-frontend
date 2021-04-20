@@ -28,9 +28,8 @@ scalaVersion := "2.12.13"
 
 resolvers ++= Seq(
     "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",
-    "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
-    Resolver.sonatypeRepo("releases"),
-    Resolver.bintrayRepo("guardian", "ophan"))
+    Resolver.sonatypeRepo("releases")
+)
 
 sources in (Compile,doc) := Seq.empty
 
