@@ -29,10 +29,8 @@
     @main("Events", pageInfo = pageInfo, header = LiveHeader, footer = LiveFooter) {
     <main>
         <div class="l-constrained">
-            @* Temporary COVID-19 message *@
-            @fragments.event.headerBarCovid(
-                twitterLink="https://twitter.com/guardianlive",
-                showFormLink=false
+            @fragments.event.headerBar(
+                title = "Join us as we mark 200 years of The Guardian with a special digital festival. See our full lineup of online events below."
             )
         </div>
 
