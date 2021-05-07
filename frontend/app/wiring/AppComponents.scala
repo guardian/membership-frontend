@@ -63,27 +63,6 @@ trait AppComponents
     touchpointBackends, actionRefiners, executionContext, wsClient, defaultBodyParser, googleAuthConfig, commonActions
   )
 
-  private lazy val joiner = new Joiner(
-    wsClient,
-    identityApi,
-    eventbriteCollectiveServices,
-    contentApiService,
-    touchpointBackends,
-    oauthActions,
-    actionRefiners,
-    touchpointCommonActions,
-    defaultBodyParser,
-    executionContext,
-    googleAuthConfig,
-    commonActions,
-    commonActionRefiners,
-    membersDataAPI,
-    authenticationService,
-    testUsers,
-    strategyDecider,
-    controllerComponents
-  )
-
   lazy val router: Router = {
     new _root_.router.Routes(
       httpErrorHandler,
