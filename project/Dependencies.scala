@@ -12,7 +12,7 @@ object Dependencies {
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.239-C2"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.589"
-  val contentAPI = "com.gu" %% "content-api-client-default" % "14.1"
+  val contentAPI = "com.gu" %% "content-api-client-default" % "17.17"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.ehcache
@@ -30,22 +30,26 @@ object Dependencies {
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.0"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "4.9"
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion
-  val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
   // This is required to force aws libraries to use the latest version of jackson
   val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
   val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion
   var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   var jacksonDataType = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion
   val googleAuth = "com.gu.play-googleauth" %% "play-v26" % "1.0.7"
-  val libthrift = "org.apache.thrift" % "libthrift" % "0.13.0"
-  val guava = "com.google.guava" % "guava" % "29.0-jre" // needed to stop sbt/google api client picking the android one
+  // All the dependencies below here are to force upgrades to versions of the libs without vulnerabilities
+  val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.60"  //-- added explicitly - snyk report avoid logback vulnerability
+  val libthrift = "org.apache.thrift" % "libthrift" % "0.14.1"
+  val tomCat = "org.apache.tomcat.embed" % "tomcat-embed-core" % "8.5.63"
+  val httpComponents = "org.apache.httpcomponents" % "httpclient" % "4.5.13"
+  val blazeServer = "org.http4s" %% "http4s-blaze-server" % "0.21.18"
+  val guava = "com.google.guava" % "guava" % "30.0-jre" // needed to stop sbt/google api client picking the android one
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
-    bcprovJdk15on, libthrift)
+    bcprovJdk15on, libthrift, blazeServer, tomCat, httpComponents)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager, guava)
 
