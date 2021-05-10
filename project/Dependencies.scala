@@ -41,7 +41,6 @@ object Dependencies {
   val libthrift = "org.apache.thrift" % "libthrift" % "0.14.1"
   val tomCat = "org.apache.tomcat.embed" % "tomcat-embed-core" % "8.5.63"
   val httpComponents = "org.apache.httpcomponents" % "httpclient" % "4.5.13"
-  val blazeServer = "org.http4s" %% "http4s-blaze-server" % "0.21.18"
   val guava = "com.google.guava" % "guava" % "30.0-jre" // needed to stop sbt/google api client picking the android one
   //projects
 
@@ -49,7 +48,7 @@ object Dependencies {
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
-    bcprovJdk15on, libthrift, blazeServer, tomCat, httpComponents)
+    bcprovJdk15on, libthrift, tomCat, httpComponents)
 
   val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager, guava)
 
