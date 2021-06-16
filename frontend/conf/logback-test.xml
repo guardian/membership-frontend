@@ -7,13 +7,6 @@
         </layout>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <File>logs/acceptance-test.log</File>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%date %level %class - %m%n</Pattern>
-        </layout>
-    </appender>
-
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>

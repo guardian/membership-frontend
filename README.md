@@ -146,14 +146,6 @@ yarn test
 
 `sbt fast-test`
 
-#### Acceptance tests
-
-1. Run local membership-frontend: `sbt devrun`
-2. Run local [identity-frontend](https://github.com/guardian/identity-frontend): `sbt devrun`
-3. `sbt acceptance-test`
-
-These are browser driving Selenium tests.
-
 #### All tests
 
 `sbt test`

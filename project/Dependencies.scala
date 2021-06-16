@@ -18,10 +18,7 @@ object Dependencies {
   val playCache = PlayImport.ehcache
   val playIteratees = "com.typesafe.play" %% "play-iteratees" % "2.6.1"
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
-  val scalaTest =  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.7"
-  val selenium = "org.seleniumhq.selenium" % "selenium-java" % "3.14.0" % "test"
-  val seleniumManager = "io.github.bonigarcia" % "webdrivermanager" % "2.2.5" % "test"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.5.14"
@@ -41,7 +38,6 @@ object Dependencies {
   val libthrift = "org.apache.thrift" % "libthrift" % "0.14.1"
   val tomCat = "org.apache.tomcat.embed" % "tomcat-embed-core" % "8.5.63"
   val httpComponents = "org.apache.httpcomponents" % "httpclient" % "4.5.13"
-  val guava = "com.google.guava" % "guava" % "30.0-jre" // needed to stop sbt/google api client picking the android one
   //projects
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
@@ -49,7 +45,5 @@ object Dependencies {
     PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
     bcprovJdk15on, libthrift, tomCat, httpComponents)
-
-  val acceptanceTestDependencies = Seq(scalaTest, selenium, seleniumManager, guava)
 
 }
