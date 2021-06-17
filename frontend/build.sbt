@@ -110,5 +110,3 @@ libraryDependencies ++= frontendDependencies.map {
 }
 
 addCommandAlias("devrun", "run 9100")
-
-addCommandAlias("fast-test", "testOnly -- -l Acceptance")
