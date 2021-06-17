@@ -54,6 +54,8 @@ assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary t
 
 test in assembly := {} // skip tests during assembly
 
+javaOptions in Test += "-Dconfig.file=test/conf/test.conf"
+
 testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
 
 
