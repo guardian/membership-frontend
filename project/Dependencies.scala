@@ -18,6 +18,7 @@ object Dependencies {
   val playCache = PlayImport.ehcache
   val playIteratees = "com.typesafe.play" %% "play-iteratees" % "2.6.1"
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
+  val scalaTest =  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.7"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
@@ -44,6 +45,7 @@ object Dependencies {
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
     jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
-    bcprovJdk15on, libthrift, tomCat, httpComponents)
+    bcprovJdk15on, libthrift, tomCat, httpComponents, scalaTest)
+
 
 }
