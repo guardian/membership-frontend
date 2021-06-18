@@ -17,8 +17,10 @@ logs
 out
 target
 tmp
+.bloop
 project/project
 project/target
+project/metals.sbt
 
 bower_components
 */public/javascripts
