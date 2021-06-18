@@ -88,7 +88,6 @@ trait AppComponents
       new User(identityApi, touchpointCommonActions, executionContext, commonActions, membersDataAPI, controllerComponents),
       new VanityUrl(commonActions, controllerComponents),
       new Giraffe(commonActions, controllerComponents),
-      new MembershipStatus(wsClient, defaultBodyParser, executionContext, googleAuthConfig, commonActions, controllerComponents),
       new GeoCountry(commonActions, controllerComponents)
     )
   }

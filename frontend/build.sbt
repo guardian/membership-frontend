@@ -54,7 +54,7 @@ assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary t
 
 test in assembly := {} // skip tests during assembly
 
-javaOptions in Test += "-Dconfig.file=test/acceptance/conf/acceptance-test.conf"
+javaOptions in Test += "-Dconfig.file=test/conf/test.conf"
 
 testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
 
@@ -112,9 +112,3 @@ libraryDependencies ++= frontendDependencies.map {
 }
 
 addCommandAlias("devrun", "run 9100")
-
-libraryDependencies ++= acceptanceTestDependencies
-
-addCommandAlias("fast-test", "testOnly -- -l Acceptance")
-
-addCommandAlias("acceptance-test", "testOnly acceptance.JoinSupporterSpec")

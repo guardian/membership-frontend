@@ -111,7 +111,5 @@ GET         /assets/*assetFile                         controllers.CachedAssets.
 GET         /contribute                                controllers.Giraffe.redirectToContributions()
 GET         /:countryGroup/contribute                  controllers.Giraffe.redirectToContributionsFor(countryGroup: CountryGroup)
 
-GET         /change-mem-status-permission              controllers.MembershipStatus.load
-
 # Geo Country
 GET         /geocountry                              controllers.GeoCountry.getCountry()
