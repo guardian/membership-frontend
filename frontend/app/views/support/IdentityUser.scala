@@ -6,7 +6,7 @@ import com.gu.memsub.Address
 import utils.TestUsers
 
 case class IdentityUser(publicFields: PublicFields, privateFields: PrivateFields, marketingChoices: StatusFields, passwordExists: Boolean, email: String) {
-  private val countryName: Option[String] = privateFields.country
+  private val countryName: Option[String] = privateFields.billingCountry orElse privateFields.country
 
   val country: Option[Country] =
     countryName.flatMap(CountryGroup.countryByNameOrCode)
@@ -21,6 +21,15 @@ case class IdentityUser(publicFields: PublicFields, privateFields: PrivateFields
     countyOrState = privateFields.address4.mkString,
     postCode =      privateFields.postcode.mkString,
     countryName =   privateFields.country.mkString
+  )
+
+  val billingAddress = Address(
+    lineOne =       privateFields.billingAddress1.mkString,
+    lineTwo =       privateFields.billingAddress2.mkString,
+    town =          privateFields.billingAddress3.mkString,
+    countyOrState = privateFields.billingAddress4.mkString,
+    postCode =      privateFields.billingPostcode.mkString,
+    countryName =   privateFields.billingCountry.mkString
   )
 
   def isTestUser: Boolean = privateFields.firstName.exists(TestUsers.isTestUser)
