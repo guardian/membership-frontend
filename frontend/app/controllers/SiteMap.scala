@@ -16,11 +16,11 @@ class SiteMap(commonActions: CommonActions, override protected val controllerCom
     val foo = <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
                       xmlns:xhtml="http://www.w3.org/1999/xhtml">
       <url>
-        <loc>{routes.WhatsOn.list().absoluteURL(secure = true)}</loc>
+        <loc>{routes.WhatsOn.list.absoluteURL(secure = true)}</loc>
         <priority>1</priority>
       </url>
       <url>
-        <loc>{routes.WhatsOn.masterclassesList().absoluteURL(secure = true)}</loc>
+        <loc>{routes.WhatsOn.masterclassesList.absoluteURL(secure = true)}</loc>
         <priority>1</priority>
       </url>
     </urlset>
