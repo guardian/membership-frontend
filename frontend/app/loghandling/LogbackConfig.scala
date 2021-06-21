@@ -1,17 +1,15 @@
 package loghandling
 
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.classic.{LoggerContext, Logger => LogbackLogger}
+import ch.qos.logback.classic.{Logger => LogbackLogger, LoggerContext}
 import com.amazonaws.auth.AWSCredentialsProvider
 import com.gu.logback.appender.kinesis.KinesisAppender
 import net.logstash.logback.layout.LogstashLayout
-import org.slf4j.{LoggerFactory, Logger => SLFLogger}
-import play.api.Logger
+import org.slf4j.{Logger => SLFLogger, LoggerFactory}
 
 object LogbackConfig {
 
   lazy val loggingContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
-  lazy val logger = Logger("application")
 
   case class KinesisAppenderConfig(stream: String,
                                    region: String,
@@ -67,13 +65,13 @@ object LogbackConfig {
             lb.addAppender(appender)
             lb.info("Kinesis logging - Configured Logback")
           case _ =>
-            logger.info("Kinesis logging failed - not running using logback")
+            PlayLogger.info("Kinesis logging failed - not running using logback")
         }
       } catch {
-        case ex: Throwable => logger.info(s"Kinesis logging failed with exception: $ex")
+        case ex: Throwable => PlayLogger.info(s"Kinesis logging failed with exception: $ex")
       }
     } else {
-      logger.info("Kinesis logging not enabled by default (e.g. DEV mode)")
+      PlayLogger.info("Kinesis logging not enabled by default (e.g. DEV mode)")
     }
   }
 

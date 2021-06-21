@@ -23,7 +23,7 @@ object Fallbacks {
   def chooseRegister(implicit request: RequestHeader) = SeeOther(Config.idWebAppRegisterUrl(request.uri))
 
   def unauthorisedStaff(errorTemplate: Html)(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.StaffAuth.unauthorised()).flashing(
+    redirectTo(controllers.routes.StaffAuth.unauthorised).flashing(
       "errorTemplate" -> errorTemplate.toString
     )
 
