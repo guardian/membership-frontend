@@ -9,7 +9,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
-  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.239-C2"
+  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.248"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.589"
   val contentAPI = "com.gu" %% "content-api-client-default" % "17.17"
@@ -30,6 +30,7 @@ object Dependencies {
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion
   // This is required to force aws libraries to use the latest version of jackson
   val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
+  val jacksonScalaModule = "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion
   val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion
   var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   var jacksonDataType = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion
@@ -44,7 +45,7 @@ object Dependencies {
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
     contentAPI, playWS, playFilters, playCache, playIteratees, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
     PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash, dataFormat,
-    jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
+    jacksonDataType, jacksonDataBind, jacksonScalaModule, jacksonAnnotations, jacksonCore,
     bcprovJdk15on, libthrift, tomCat, httpComponents, scalaTest)
 
 

@@ -104,8 +104,7 @@ class MemberService(
   def country(contact: Contact)(implicit r: IdentityRequest): Future[MemberError \/ Country] =
     contact.identityId.map { identityId =>
       identityService.getFullUserDetails(IdMinimalUser(identityId, None))
-        .map(c => c.privateFields.billingCountry.orElse(c.privateFields.country)
-          .flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
+        .map(c => c.privateFields.country.flatMap(CountryGroup.countryByNameOrCode)).map(_.getOrElse(Country.UK))
     }.map(_.map(\/.right)).getOrElse(Future.successful(\/.left[MemberError, Country](NoIdentityId())))
 
   override def createMember(

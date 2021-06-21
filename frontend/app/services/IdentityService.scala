@@ -67,13 +67,6 @@ object IdentityService {
       address4 = delivery.map(_.countyOrState),
       postcode = delivery.map(_.postCode),
       country = country(delivery),
-
-      billingAddress1 = billing.map(_.lineOne),
-      billingAddress2 = billing.map(_.lineTwo),
-      billingAddress3 = billing.map(_.town),
-      billingAddress4 = billing.map(_.countyOrState),
-      billingPostcode = billing.map(_.postCode),
-      billingCountry = country(billing)
     )
   }
 

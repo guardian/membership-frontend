@@ -45,46 +45,6 @@ class Info(
     Redirect(s"https://support.theguardian.com/${countryGroup.id}/support", request.queryString, MOVED_PERMANENTLY)
   }
 
-  def help = CachedAction { implicit request =>
-    Ok(views.html.info.help())
-  }
-
   val identityService = IdentityService(identityApi)
-
-
-
-  def feedback = NoCacheAction.async { implicit request =>
-    val authenticatedUser = authenticationService.authenticatedUserFor(request)
-    val name = authenticatedUser.flatMap(_.minimalUser.displayName)
-
-    val identityUser = authenticatedUser.map { user => identityService.getFullUserDetails(user.minimalUser)(IdentityRequest(request)) }
-    val email  = identityUser.map(_.map(u => Some(u.primaryEmailAddress))).getOrElse(Future.successful(None))
-
-
-    val flashMsgOpt = request.flash.get("msg").map(FlashMessage.success)
-    email.map { email =>
-      Ok(views.html.info.feedback(flashMsgOpt, request.getQueryString("page"), name, email))
-    }
-  }
-
-  def submitFeedback = NoCacheAction.async { implicit request =>
-
-    val userOpt = authenticationService.authenticatedUserFor(request).map(_.minimalUser)
-    val uaOpt = request.headers.get(USER_AGENT)
-
-    val identityUser = userOpt.map { user => identityService.getFullUserDetails(user)(IdentityRequest(request)) }
-    val email  = identityUser.map(_.map(u => Some(u.primaryEmailAddress))).getOrElse(Future.successful(None))
-
-
-    def sendFeedback(formData: FeedbackForm) = {
-      email.map{email=>
-        EmailService.sendFeedback(formData, userOpt, email, uaOpt)
-        Redirect(routes.Info.feedback).flashing("msg" -> "Thank you for contacting us")
-      }
-
-    }
-
-    FeedbackForm.form.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
-  }
 
 }
