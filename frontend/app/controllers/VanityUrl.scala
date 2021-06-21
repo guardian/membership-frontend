@@ -10,6 +10,6 @@ class VanityUrl(commonActions: CommonActions, override protected val controllerC
   import commonActions.CachedAction
 
   def redirect = CachedAction { implicit request =>
-    MovedPermanently(routes.FrontPage.index.url ? (internalCampaignCode -> "pap_233874"))
+    MovedPermanently(routes.FrontPage.index().url ? (internalCampaignCode -> "pap_233874"))
   }
 }
