@@ -6,7 +6,6 @@ import com.amazonaws.auth.AWSCredentialsProvider
 import com.gu.logback.appender.kinesis.KinesisAppender
 import net.logstash.logback.layout.LogstashLayout
 import org.slf4j.{Logger => SLFLogger, LoggerFactory}
-import play.api.{Logger => PlayLogger}
 
 object LogbackConfig {
 
