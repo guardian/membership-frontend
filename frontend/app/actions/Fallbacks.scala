@@ -2,7 +2,7 @@ package actions
 
 import com.gu.salesforce.PaidTier
 import configuration.Config
-import controllers.Assets.MOVED_PERMANENTLY
+import play.api.http.Status.MOVED_PERMANENTLY
 import play.api.mvc.Results._
 import play.api.mvc.{Call, RequestHeader}
 import play.twirl.api.Html
