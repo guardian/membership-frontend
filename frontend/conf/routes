@@ -80,9 +80,6 @@ GET         /patrons                                   controllers.Info.patronsR
 GET         /supporter                                 controllers.Info.supporterRedirect(countryGroup: Option[CountryGroup])
 GET         /about/supporter                           controllers.Redirects.supportRedirect
 GET         /:countryGroup/supporter                   controllers.Info.supporterFor(countryGroup: CountryGroup)
-GET         /help                                      controllers.Info.help
-GET            /feedback                              controllers.Info.feedback()
-POST           /feedback                              controllers.Info.submitFeedback
 
 GET            /uk                                    controllers.Redirects.supportRedirect
 
