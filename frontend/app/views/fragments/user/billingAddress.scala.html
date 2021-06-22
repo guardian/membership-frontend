@@ -1,8 +1,0 @@
-@(userFields: com.gu.identity.model.PrivateFields)
-
-@if(userFields.billingAddress1.isEmpty) {
-    @fragments.user.deliveryAddress(userFields)
-} else {
-    @userFields.billingAddress1@if(userFields.billingAddress2.isDefined){, @userFields.billingAddress2.get}<br>
-    @for( town <- userFields.billingAddress3 ) {@town} @userFields.billingPostcode<br/>
-}
