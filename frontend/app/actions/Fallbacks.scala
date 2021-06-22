@@ -2,7 +2,7 @@ package actions
 
 import com.gu.salesforce.PaidTier
 import configuration.Config
-import controllers.Assets.MOVED_PERMANENTLY
+import play.api.http.Status.MOVED_PERMANENTLY
 import play.api.mvc.Results._
 import play.api.mvc.{Call, RequestHeader}
 import play.twirl.api.Html
@@ -23,7 +23,7 @@ object Fallbacks {
   def chooseRegister(implicit request: RequestHeader) = SeeOther(Config.idWebAppRegisterUrl(request.uri))
 
   def unauthorisedStaff(errorTemplate: Html)(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.StaffAuth.unauthorised()).flashing(
+    redirectTo(controllers.routes.StaffAuth.unauthorised).flashing(
       "errorTemplate" -> errorTemplate.toString
     )
 

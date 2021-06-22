@@ -51,7 +51,7 @@ class OAuth(
       // Redirect a user back there now if it exists
       val redirect = session.get(LOGIN_ORIGIN_KEY) match {
         case Some(url) => Redirect(url)
-        case None => Redirect(routes.FrontPage.index())
+        case None => Redirect(routes.FrontPage.index)
       }
       // Store the JSON representation of the identity in the session - this is checked by AuthAction later
       redirect.withSession {
@@ -65,7 +65,7 @@ class OAuth(
   }
 
   private def redirectWithError(errorMessage: String) =
-    Redirect(routes.OAuth.login())
+    Redirect(routes.OAuth.login)
     .flashing("error" -> errorMessage)
 
 }
