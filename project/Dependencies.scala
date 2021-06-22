@@ -5,7 +5,7 @@ object Dependencies {
 
   //versions
   val awsClientVersion = "1.11.594"
-  val jacksonVersion = "2.12.3"
+  val jacksonVersion = "2.11.4"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.5"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
@@ -30,6 +30,7 @@ object Dependencies {
   val dataFormat = "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion
   // This is required to force aws libraries to use the latest version of jackson
   val jacksonDataBind =  "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
+  val jacksonScalaModule = "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion
   val jacksonAnnotations = "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion
   var jacksonCore = "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   var jacksonDataType = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion

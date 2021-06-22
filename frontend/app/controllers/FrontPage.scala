@@ -12,10 +12,10 @@ class FrontPage(eventbriteService: EventbriteCollectiveServices, touchpointBacke
   val masterclassEvents = eventbriteService.masterclassEventService
 
   def index = CachedAction { implicit request =>
-    Redirect(routes.WhatsOn.list.url, request.queryString, MOVED_PERMANENTLY)
+    Redirect(routes.WhatsOn.list().url, request.queryString, MOVED_PERMANENTLY)
   }
 
   def welcome = CachedAction { implicit request =>
-    Redirect(routes.WhatsOn.list.url, request.queryString, MOVED_PERMANENTLY)
+    Redirect(routes.WhatsOn.list().url, request.queryString, MOVED_PERMANENTLY)
   }
 }

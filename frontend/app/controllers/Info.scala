@@ -79,7 +79,7 @@ class Info(
     def sendFeedback(formData: FeedbackForm) = {
       email.map{email=>
         EmailService.sendFeedback(formData, userOpt, email, uaOpt)
-        Redirect(routes.Info.feedback).flashing("msg" -> "Thank you for contacting us")
+        Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us")
       }
 
     }

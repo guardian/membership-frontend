@@ -9,8 +9,8 @@ GET         /favicon.ico                               controllers.CacheBustedAs
 GET         /sitemap.xml                               controllers.SiteMap.sitemap()
 
 # Home page
-GET         /                                          controllers.FrontPage.index
-GET         /welcome                                   controllers.FrontPage.welcome
+GET         /                                          controllers.FrontPage.index()
+GET         /welcome                                   controllers.FrontPage.welcome()
 
 # System
 GET         /healthcheck                               controllers.Healthcheck.healthcheck
@@ -28,9 +28,9 @@ GET         /membership-content                        controllers.Redirects.why
 GET         /signin                                    controllers.Login.chooseSigninOrRegister(returnUrl: String)
 
 # Staff signin (note, done by OAuth, in addition to regular signin)
-GET         /staff/unauthorised                        controllers.StaffAuth.unauthorised
-GET         /staff/login                               controllers.OAuth.login
-GET         /staff/loginAction                         controllers.OAuth.loginAction
+GET         /staff/unauthorised                        controllers.StaffAuth.unauthorised()
+GET         /staff/login                               controllers.OAuth.login()
+GET         /staff/loginAction                         controllers.OAuth.loginAction()
 GET         /oauth2callback                            controllers.OAuth.oauth2Callback
 
 GET         /maintenance                               controllers.Outages.maintenanceMessage
@@ -45,15 +45,15 @@ GET         /staff/event-overview/details              controllers.Staff.eventOv
 GET         /subscription/remaining-tickets            controllers.SubscriptionController.remainingTickets
 
 # What's On
-GET         /events                                    controllers.WhatsOn.list
+GET         /events                                    controllers.WhatsOn.list()
 GET         /events.json                               controllers.rest.EventApi.liveEvents
 GET         /masterclasses.json                        controllers.rest.EventApi.masterclassEvents
 
 
 GET         /events/archive                            controllers.WhatsOn.listArchive
 GET         /events/calendar                           controllers.WhatsOn.calendar
-GET         /masterclasses                             controllers.WhatsOn.masterclassesList
-GET         /masterclasses/all                         controllers.WhatsOn.masterclassesList
+GET         /masterclasses                             controllers.WhatsOn.masterclassesList()
+GET         /masterclasses/all                         controllers.WhatsOn.masterclassesList()
 GET         /masterclasses/:tag                        controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag = "")
 GET         /masterclasses/:tag/:subTag                controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag)
 
@@ -81,7 +81,7 @@ GET         /supporter                                 controllers.Info.supporte
 GET         /about/supporter                           controllers.Redirects.supportRedirect
 GET         /:countryGroup/supporter                   controllers.Info.supporterFor(countryGroup: CountryGroup)
 GET         /help                                      controllers.Info.help
-GET            /feedback                              controllers.Info.feedback
+GET            /feedback                              controllers.Info.feedback()
 POST           /feedback                              controllers.Info.submitFeedback
 
 GET            /uk                                    controllers.Redirects.supportRedirect

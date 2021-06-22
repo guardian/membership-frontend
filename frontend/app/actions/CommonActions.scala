@@ -121,9 +121,9 @@ abstract class OAuthActions(parser: BodyParser[AnyContent], implicit val executi
 
   import commonActions.NoCacheAction
   //routes
-  private val loginTarget = routes.OAuth.loginAction
-  override val defaultRedirectTarget = routes.FrontPage.welcome
-  override val failureRedirectTarget = routes.OAuth.login
+  private val loginTarget = routes.OAuth.loginAction()
+  override val defaultRedirectTarget = routes.FrontPage.welcome()
+  override val failureRedirectTarget = routes.OAuth.login()
 
 
   lazy val groupChecker = Config.googleGroupChecker
