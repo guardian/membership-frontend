@@ -5,7 +5,7 @@
 CONF_DIR=/etc/frontend
 # download dist
 mkdir /dist
-aws --region $region s3 cp --recursive s3://membership-dist/${stack}/${stage}/frontend/ /dist
+aws --region $region s3 cp s3://membership-dist/${stack}/${stage}/frontend/frontend_1.0-SNAPSHOT_all.deb /dist
 # download private for this stage
 mkdir /etc/gu
 aws --region $region s3 cp s3://membership-private/${stage}/membership.private.conf /etc/gu
