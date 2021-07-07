@@ -29,9 +29,9 @@
     @main("Events", pageInfo = pageInfo, header = LiveHeader, footer = LiveFooter) {
     <main>
         <div class="l-constrained">
-            @fragments.event.headerBar(
-                title = "Join us as we mark 200 years of The Guardian with a special digital festival. See our full lineup of online events below."
-            )
+            <section class="header-bar">
+                <h1 class="header-bar__title">Guardian Live brings you closer to the big stories, award-winning journalists, and leading thinkers in livestreamed and interactive events that you can access from wherever you are in the world. To stay informed, <a href="https://www.theguardian.com/guardian-masterclasses/2015/jan/19/sign-up-to-the-guardian-masterclasses-newsletter">sign up to our newsletter here</a>.</h1>
+            </section>
         </div>
 
         @fragments.eventListings.eventsFilters(
