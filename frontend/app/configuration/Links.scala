@@ -49,7 +49,7 @@ object ProfileLinks {
 
   val emailPreferences =  Config.idWebAppUrl / "email-prefs" ? Config.idMember
 
-  val changePassword =  Config.idWebAppUrl / "password/change" ? Config.idMember
+  val changePassword =  Config.idWebAppUrl / "reset" ? Config.idMember
 
   def signOut(path: String) = {
     Config.idWebAppUrl / "signout" ? Config.idMember ? ("returnUrl" -> (Config.membershipUrl + path))
