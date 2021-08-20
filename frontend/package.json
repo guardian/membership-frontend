@@ -79,5 +79,8 @@
     "webpack": "^4.35.0",
     "webpack-dev-server": "^3.7.2"
   },
+  "resolutions": {
+    "lodash": "^4.17.21"
+  },
   "snyk": true
 }
