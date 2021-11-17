@@ -26,5 +26,5 @@ object RedirectWithCampaignCodes {
   val internalCampaignCode = "INTCMP"
 
   def campaignCodes(request: RequestHeader): Map[String, Seq[String]] =
-    request.queryString.filterKeys(CampaignCodesToForward)
+    request.queryString.view.filterKeys(CampaignCodesToForward).toMap
 }

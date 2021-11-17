@@ -33,7 +33,7 @@ object ActionRefiners {
 
   type SubReqWithPaid[A] = SubscriptionRequest[A] with PaidSubscriber
   type SubReqWithFree[A] = SubscriptionRequest[A] with FreeSubscriber
-  type SubReqWithSub[A] = SubscriptionRequest[A] with Subscriber
+  type SubReqWithSub[A] = SubscriptionRequest[A] with actions.Subscriber
   type SubReqWithContributor[A] = SubscriptionRequest[A] with Contributor
 }
 
@@ -93,10 +93,10 @@ class ActionRefiners(authenticationService: AuthenticationService, parser: BodyP
 // this is helping us stack future/either/option
 object OptionEither {
 
-  type FutureEither[X] = EitherT[Future, String, X]
+  type FutureEither[X] = EitherT[String, Future, X]
 
   def apply[A](m: Future[\/[String, Option[A]]]): OptionT[FutureEither, A] =
-    OptionT[FutureEither, A](EitherT[Future, String, Option[A]](m))
+    OptionT[FutureEither, A](EitherT[String, Future, Option[A]](m))
 
   def liftEither[A](x: Future[Option[A]])(implicit ec: ExecutionContext): OptionT[FutureEither, A] =
     apply(x.map(\/.right))
@@ -105,6 +105,6 @@ object OptionEither {
     apply(Future.successful(x.map[Option[A]](Some.apply)))
 
   def liftFutureEither[A](x: Option[A]): OptionT[FutureEither, A] =
-    apply(Future.successful(\/.right(x)))
+    apply(Future.successful(\/.r[String](x)))
 
 }

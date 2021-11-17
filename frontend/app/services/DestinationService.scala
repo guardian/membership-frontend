@@ -1,21 +1,22 @@
 package services
 import com.gu.memsub.Subscriber.Member
-import io.lemonlabs.uri.dsl._
 import configuration.Config
+import io.lemonlabs.uri.dsl._
 import model.Eventbrite.EBCode
 import model.RichEvent.RichEvent
 import model.{ContentDestination, ContentItem, Destination, EventDestination}
-import scalaz.syntax.monadPlus._
 import play.api.mvc.Session
-import scala.language.higherKinds
-import scalaz.{Monad, OptionT}
+import scalaz.syntax.monadPlus._
+import scalaz.{MonadPlus, OptionT}
 import views.support.MembershipCompat._
+
+import scala.language.higherKinds
 
 object DestinationService {
   val JoinReferrer = "join-referrer" //session key
 }
 
-class DestinationService[M[+_] : Monad](
+class DestinationService[M[+_] : MonadPlus](
   getBookableEvent: String => Option[RichEvent],
   capiItemQuery: String => M[com.gu.contentapi.client.model.v1.ItemResponse],
   createCode: (Member, RichEvent) => M[Option[EBCode]]) {

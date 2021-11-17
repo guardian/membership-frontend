@@ -37,7 +37,7 @@ object MemSub {
 
     def googleGroupCheckerFor(config: Config): GoogleGroupChecker = {
       val con = config.getConfig("google.directory.service_account")
-      new GoogleGroupChecker(directoryServiceAccount = GoogleServiceAccount(
+      new GoogleGroupChecker(googleServiceAccount = GoogleServiceAccount(
         email = con.getString("id"),
         privateKey = ServiceAccount.PrivateKey,
         impersonatedUser = con.getString("email")

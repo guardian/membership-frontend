@@ -26,18 +26,6 @@ class TouchpointActionRefiners(authenticationService: AuthenticationService, tou
   implicit private val ec = executionContext
   implicit private val tpbs = touchpointBackends
 
-  private def getContributorRequest[A](request: AuthRequest[A]): Future[String \/ Option[SubReqWithContributor[A]]] = {
-    implicit val pf = Membership
-    val tp = request.touchpointBackend
-    val contributor = MemSubscriber[Subscription[SubscriptionPlan.Contributor]] _
-    (for {
-      member <- OptionEither(request.forMemberOpt)
-      subscription <- OptionEither.liftEither(tp.subscriptionService.getSubscription(member))
-    } yield new SubscriptionRequest[A](tp, request) with Contributor {
-      override val contributor = subscription
-    }).run.run
-  }
-
   private def getSubRequest[A](request: Request[A]): Future[String \/ Option[SubReqWithSub[A]]] = {
     implicit val pf = Membership
     val FreeSubscriber = MemSubscriber[Subscription[SubscriptionPlan.FreeMember]] _
@@ -64,59 +52,6 @@ class TouchpointActionRefiners(authenticationService: AuthenticationService, tou
           Left(InternalServerError(views.html.error500(new Throwable)))
         case \/-(maybeMember) => maybeMember toRight onNonMember(request)}
     }
-  }
-
-  def contributionRefiner(onNonContributor: RequestHeader => Result = notYetAMemberOn(_)) = new ActionRefiner[AuthRequest, SubReqWithContributor] {
-
-    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
-
-    override def refine[A](request: AuthRequest[A]): SubRequestWithContributorOrResult[A] = {
-      getContributorRequest(request).map {
-        case -\/(message) =>
-          SafeLogger.warn(s"error while contribution refining: $message")
-          Left(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeMember) => maybeMember toRight onNonContributor(request)
-      }
-    }
-  }
-
-  def noAuthenticatedMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[Request] {
-
-    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
-
-    override def filter[A](request: Request[A]) =
-      getSubRequest(request).map {
-        case -\/(message) =>
-          SafeLogger.warn(s"error while filtering: $message")
-          Some(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeSub) => maybeSub.map(onMember)
-      }
-  }
-
-  def onlyNonMemberFilter(onMember: SubReqWithSub[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-
-    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
-
-    override def filter[A](request: AuthRequest[A]) =
-      getSubRequest(request).map {
-        case -\/(message) =>
-          SafeLogger.warn(s"error while filtering: $message")
-          Some(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeSub) => maybeSub.map(onMember)
-      }
-  }
-
-  def onlyNonContributorFilter(onContributor: SubReqWithContributor[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
-
-    override protected def executionContext: ExecutionContext = TouchpointActionRefiners.this.executionContext
-
-    override def filter[A](request: AuthRequest[A]) =
-      getContributorRequest(request).map {
-        case -\/(message) =>
-          SafeLogger.warn(s"error while filtering contributors: $message")
-          Some(InternalServerError(views.html.error500(new Throwable)))
-        case \/-(maybeSub) => maybeSub.map(onContributor)
-      }
   }
 
 }

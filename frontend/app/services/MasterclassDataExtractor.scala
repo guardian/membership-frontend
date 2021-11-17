@@ -15,7 +15,7 @@ object MasterclassDataExtractor {
 
   def extractEventbriteInformation(content: Content): Seq[MasterclassData] = {
     val eventbriteIdsFromRefs =
-      content.references.filter(_.`type` == "eventbrite").map(_.id.stripPrefix("eventbrite/"))
+      content.references.toSeq.filter(_.`type` == "eventbrite").map(_.id.stripPrefix("eventbrite/"))
 
     val eventbriteIds = (eventbriteIdsFromRefs ++ scrapeEventbriteIdsFrom(content)).distinct
 

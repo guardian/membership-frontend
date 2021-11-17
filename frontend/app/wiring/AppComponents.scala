@@ -1,6 +1,6 @@
 package wiring
 
-import actions.{ActionRefiners, CommonActions, TouchpointActionRefiners, TouchpointCommonActions, TouchpointOAuthActions}
+import actions.{ActionRefiners, CommonActions, TouchpointActionRefiners, TouchpointCommonActions}
 import com.gu.googleauth.GoogleAuthConfig
 import com.gu.memsub.auth.common.MemSub.Google.googleAuthConfigFor
 import play.api.routing.Router
@@ -59,9 +59,6 @@ trait AppComponents
   private lazy val touchpointBackends = new TouchpointBackends(testUsers, actorSystem, executionContext, wsClient)
   private lazy val actionRefiners = new TouchpointActionRefiners(authenticationService, touchpointBackends, executionContext)
   private lazy val touchpointCommonActions = new TouchpointCommonActions(touchpointBackends, actionRefiners, authenticationService, testUsers, defaultBodyParser, executionContext, commonActionRefiners)
-  private lazy val oauthActions = new TouchpointOAuthActions(
-    touchpointBackends, actionRefiners, executionContext, wsClient, defaultBodyParser, googleAuthConfig, commonActions
-  )
 
   lazy val router: Router = {
     new _root_.router.Routes(

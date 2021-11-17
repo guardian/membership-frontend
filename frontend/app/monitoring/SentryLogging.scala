@@ -38,7 +38,7 @@ object SentryLogging {
           }
           sentryAppender.start()
 
-          val buildInfo: Map[String, String] = app.BuildInfo.toMap.mapValues(_.toString)
+          val buildInfo: Map[String, String] = app.BuildInfo.toMap.view.mapValues(_.toString).toMap
           val tags = Map("stage" -> Config.stage.toString) ++ buildInfo
           sentryClient.setTags(tags.asJava)
 

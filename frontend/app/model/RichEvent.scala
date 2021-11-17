@@ -106,9 +106,9 @@ object RichEvent {
     val detailsUrl = routes.Event.details(underlying.ebEvent.slug).url
     val hasLargeImage = true
     val canHavePriorityBooking = true
-    val imgOpt = image.flatMap(ResponsiveImageGroup.fromGridImage)
+    val imgOpt = image.flatMap(model.ResponsiveImageGroup.fromGridImage)
     val socialImgUrl = imgOpt.map(_.defaultImage.toString)
-    val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup.fromContent)
+    val pastImageOpt = contentOpt.flatMap(model.ResponsiveImageGroup.fromContent)
     val schema = EventSchema.from(this)
     val tags = Nil
 

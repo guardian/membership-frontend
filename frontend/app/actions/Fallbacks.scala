@@ -16,7 +16,7 @@ object Fallbacks {
     TemporaryRedirect(controllers.routes.Outages.maintenanceMessage.absoluteURL(secure=true))
 
   def memberHome(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.FrontPage.welcome)
+    redirectTo(controllers.routes.FrontPage.welcome())
 
   def notYetAMemberOn(implicit request: RequestHeader) = Forbidden
 
