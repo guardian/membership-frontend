@@ -111,4 +111,6 @@ libraryDependencies ++= frontendDependencies.map {
      .exclude("org.slf4j", "slf4j-simple") // snatches SLF4J logging from Logback, our chosen logging system
 }
 
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.11.4"
+
 addCommandAlias("devrun", "run 9100")

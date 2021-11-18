@@ -1,21 +1,18 @@
 package services
 
-import java.time.Instant
-
 import akka.actor.ActorSystem
-import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
-import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.GuardianContentClient
+import com.gu.contentapi.client.model.v1._
+import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import com.gu.memsub.util.ScheduledTask
-import configuration.Config
-import org.joda.time.DateTime
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
-import play.api.libs.iteratee.{Enumerator, Iteratee}
+import configuration.Config
 
+import java.time.Instant
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
-import scala.concurrent.duration._
 
 case class ContentAPIPagination(currentPage: Int, pages: Int) {
   lazy val nextPageOpt = Some(currentPage + 1).filter(_ <= pages)
@@ -26,37 +23,33 @@ class GuardianContentService(actorSystem: ActorSystem, executionContext: Executi
   implicit private val as = actorSystem
   override implicit val ec = executionContext
 
-  private def eventbrite: Future[Seq[Content]] = {
-    val enumerator = Enumerator.unfoldM(Option(1)) {
-      _.map { nextPage =>
-        for {
-          response <- eventbriteQuery(nextPage)
-        } yield {
-          val pagination = ContentAPIPagination(response.currentPage, response.pages)
-          Some(pagination.nextPageOpt, response.results)
-
+  private def eventbrite(nextPage: Int = 1, accumulatedEventbriteData: Seq[Content] = Nil): Future[Seq[Content]] = {
+    for {
+      response <- eventbriteQuery(nextPage)
+      rest <- {
+        val pagination = ContentAPIPagination(response.currentPage, response.pages)
+        val combined = response.results.toSeq.reverse ++ accumulatedEventbriteData // linked list - prepend the smaller amount
+        pagination.nextPageOpt match {
+          case Some(nextPage) => eventbrite(nextPage, combined)
+          case None => Future.successful(combined.reverse) // get back the original order
         }
-      }.getOrElse(Future.successful(None))
-    }
-
-    enumerator(Iteratee.consume()).flatMap(_.run)
+      }
+    } yield rest
   }
 
-  private def masterclasses: Future[Seq[MasterclassData]] = {
-    val enumerator = Enumerator.unfoldM(Option(1)) {
-      _.map { nextPage =>
-        for {
-          response <- masterclassesQuery(nextPage)
-        } yield {
-          val masterclassData = response.results.toSeq.flatten.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
-          val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
-          Some(pagination.nextPageOpt, masterclassData)
-
+  private def masterclasses(nextPage: Int = 1, accumultedMaasterclassData: Seq[MasterclassData] = Nil): Future[Seq[MasterclassData]] = {
+    for {
+      response <- masterclassesQuery(nextPage)
+      rest <- {
+        val masterclassData = response.results.toSeq.flatten.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
+        val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
+        val combined = masterclassData.reverse ++ accumultedMaasterclassData // linked list - prepend the smaller amount
+        pagination.nextPageOpt match {
+          case Some(nextPage) => masterclasses(nextPage, combined)
+          case None => Future.successful(combined.reverse) // get back the original order
         }
-      }.getOrElse(Future.successful(None))
-    }
-
-    enumerator(Iteratee.consume()).flatMap(_.run)
+      }
+    } yield rest
   }
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
@@ -66,10 +59,10 @@ class GuardianContentService(actorSystem: ActorSystem, executionContext: Executi
   private val contentApiPeriod = 30.minutes
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]](
-    "GuardianContentService - Masterclass content", Nil, 2.seconds, contentApiPeriod)(masterclasses)
+    "GuardianContentService - Masterclass content", Nil, 2.seconds, contentApiPeriod)(masterclasses())
 
   val contentTask = ScheduledTask[Seq[Content]](
-    "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
+    "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite())
 
 
   def start() = {

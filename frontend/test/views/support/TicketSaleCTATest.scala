@@ -9,7 +9,7 @@ import views.support.TicketSaleCTA.ctaFor
 
 class TicketSaleCTATest extends Specification {
 
-  val eventDate = DateTime.now + 1.month
+  val eventDate = DateTime.now() + 1.month
 
   "cta" should {
     "be unavailable if the tickets not yet on sale for anyone" in {

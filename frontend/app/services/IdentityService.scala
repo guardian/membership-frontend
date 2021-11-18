@@ -29,7 +29,7 @@ object IdentityService {
   val DisregardResponseContent: (WSResponse => Either[String, Unit]) = {
     resp =>
       SafeLogger.debug(s"Webservice returned code ${resp.status}, and body: ${resp.body}")
-      Right(Unit)
+      Right(())
   }
 
   def privateFieldsFor(form: CommonForm): PrivateFields = {

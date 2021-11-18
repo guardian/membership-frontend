@@ -2,11 +2,11 @@ package services
 
 import com.gu.salesforce.Tier
 import com.gu.salesforce.Tier.patron
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 import play.api.libs.json._
 import services.MembersDataAPI.Attributes
 
-class MembersDataAPITest extends FreeSpec {
+class MembersDataAPITest extends AnyFreeSpec {
   "A tier can be deserialized" in {
     assertResult(JsSuccess(patron))(
       Json.parse("\"patron\"").validate[Tier](MembersDataAPI.tierReads)

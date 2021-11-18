@@ -28,7 +28,7 @@ class GridServiceTest(implicit ev: ExecutionEnv) extends Specification {
       val exports = gridResponse.data.exports.get
       val requestedCrop = "0_130_1703_1022"
       val gridService = new GridService(ev.executionContext)
-      val export = gridService.findExport(exports, requestedCrop)
+      val `export` = gridService.findExport(`exports`, requestedCrop)
 
       export must beSome
       export.get.assets.size mustEqual(3)
