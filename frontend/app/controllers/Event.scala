@@ -69,7 +69,7 @@ class Event(
       } else Redirect(routes.Event.details(correctEvent.underlying.ebEvent.slug))
     }
 
-    eventOpt.getOrElse(Redirect(routes.WhatsOn.list))
+    eventOpt.getOrElse(Redirect(routes.WhatsOn.list()))
   }
 
   /*

@@ -72,7 +72,7 @@ class GuardianContentService(actorSystem: ActorSystem, executionContext: Executi
     "GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, contentApiPeriod)(eventbrite)
 
 
-  def start() {
+  def start() = {
     masterclassContentTask.start()
     contentTask.start()
   }

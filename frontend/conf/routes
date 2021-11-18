@@ -13,7 +13,7 @@ GET         /                                          controllers.FrontPage.ind
 GET         /welcome                                   controllers.FrontPage.welcome()
 
 # System
-GET         /healthcheck                               controllers.Healthcheck.healthcheck
+GET         /healthcheck                               controllers.Healthcheck.healthcheck()
 GET         /test-users                                controllers.Testing.testUser
 GET         /analytics-off                             controllers.Testing.analyticsOff
 GET         /feature/:feature                          controllers.FeatureOptIn.state(feature: Feature)
@@ -21,8 +21,8 @@ GET         /feature/:feature/:onOrOff                 controllers.FeatureOptIn.
 
 # Join
 GET         /join/*any                                controllers.Redirects.whySupportRedirectIgnore(any)
-GET         /choose-tier                               controllers.Redirects.whySupportRedirect
-GET         /membership-content                        controllers.Redirects.whySupportRedirect
+GET         /choose-tier                               controllers.Redirects.whySupportRedirect()
+GET         /membership-content                        controllers.Redirects.whySupportRedirect()
 
 # Normal user signin:
 GET         /signin                                    controllers.Login.chooseSigninOrRegister(returnUrl: String)
@@ -42,7 +42,7 @@ GET         /staff/event-overview/masterclasses        controllers.Staff.eventOv
 GET         /staff/event-overview/details              controllers.Staff.eventOverviewDetails
 
 # Subscription
-GET         /subscription/remaining-tickets            controllers.SubscriptionController.remainingTickets
+GET         /subscription/remaining-tickets            controllers.SubscriptionController.remainingTickets()
 
 # What's On
 GET         /events                                    controllers.WhatsOn.list()
@@ -68,10 +68,10 @@ GET         /preview-masterclass/:id                   controllers.Event.preview
 
 # Tier
 GET         /tier/change                               controllers.Redirects.supportRedirect
-GET         /tier/cancel                               controllers.Redirects.redirectToNewCancellationFlow
-POST        /tier/cancel/confirm                       controllers.Redirects.redirectToNewCancellationFlow
-GET         /tier/cancel/paid/summary                  controllers.Redirects.redirectToNewCancellationFlow
-GET         /tier/cancel/free/summary                  controllers.Redirects.redirectToNewCancellationFlow
+GET         /tier/cancel                               controllers.Redirects.redirectToNewCancellationFlow()
+POST        /tier/cancel/confirm                       controllers.Redirects.redirectToNewCancellationFlow()
+GET         /tier/cancel/paid/summary                  controllers.Redirects.redirectToNewCancellationFlow()
+GET         /tier/cancel/free/summary                  controllers.Redirects.redirectToNewCancellationFlow()
 GET         /tier/change/patron                        controllers.Info.patronsRedirect
 
 # Information

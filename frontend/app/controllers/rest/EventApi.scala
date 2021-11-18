@@ -1,7 +1,6 @@
 package controllers.rest
 
 import actions.CommonActions
-import controllers._
 import play.api.libs.json.Json
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{BaseController, ControllerComponents}

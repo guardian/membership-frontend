@@ -12,13 +12,12 @@ class SubscriptionController(touchpointCommonActions: TouchpointCommonActions, i
 
   import touchpointCommonActions._
 
-  def remainingTickets() = AjaxPaidSubscriptionAction.async { implicit request =>
-    memberService.getUsageCountWithinTerm(request.subscriber.subscription, FreeEventTickets.unitOfMeasure) map { ticketsUsedCount =>
-      Ok(Json.obj(
-        "totalAllocation" -> FreeEventTickets.allowance,
-        "remainingAllocation" -> ticketsUsedCount.map(FreeEventTickets.allowance - _)
-      ))
-    }
+  def remainingTickets() = AjaxPaidSubscriptionAction { implicit request =>
+    Ok(Json.obj(
+      "totalAllocation" -> FreeEventTickets.allowance,
+      // this was broken when it was changed so checkout was allowed on EB site, so the allowance has not been enforced for a while
+      "remainingAllocation" -> FreeEventTickets.allowance
+    ))
   }
 }
 
