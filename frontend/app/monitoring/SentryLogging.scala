@@ -13,7 +13,7 @@ import io.sentry.logback.SentryAppender
 import org.slf4j.Logger.ROOT_LOGGER_NAME
 import org.slf4j.LoggerFactory
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 class PiiFilter extends Filter[ILoggingEvent] {

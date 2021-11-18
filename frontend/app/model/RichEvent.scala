@@ -56,7 +56,7 @@ object RichEvent {
 
   def getCitiesWithCount(events: Seq[RichEvent]): Seq[(String, Int)] = {
     val cities = events.flatMap(_.underlying.ebEvent.venue.address.flatMap(_.city))
-    cities.groupBy(identity).mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
+    cities.groupBy(identity).view.mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
   }
 
   case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata, master: Option[Asset]) {
