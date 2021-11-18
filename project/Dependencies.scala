@@ -5,7 +5,7 @@ object Dependencies {
 
   //versions
   val awsClientVersion = "1.12.111"
-//  val jacksonVersion = "2.11.4"
+  val jacksonVersion = "2.11.4"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.30"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
@@ -27,18 +27,14 @@ object Dependencies {
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "6.6"
   val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.1.1"
-  // All the dependencies below here are to force upgrades to versions of the libs without vulnerabilities
-  val bcprovJdk15on = "org.bouncycastle" % "bcprov-jdk15on" % "1.69"  //-- added explicitly - snyk report avoid logback vulnerability
+  // vvv below here. All the dependencies are to force upgrades to versions of the libs without vulnerabilities
   val libthrift = "org.apache.thrift" % "libthrift" % "0.15.0"
-  val tomCat = "org.apache.tomcat.embed" % "tomcat-embed-core" % "8.5.73"
-  val httpComponents = "org.apache.httpcomponents" % "httpclient" % "4.5.13"
-  //projects
+  // ^^^ above here
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
-    contentAPI, playWS, playFilters, playCache, /*playIteratees,*/ sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
-    PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash, //dataFormat,
-//    jacksonDataType, jacksonDataBind, jacksonAnnotations, jacksonCore,
-    /*bcprovJdk15on,*/ libthrift, tomCat, httpComponents, scalaTest)
+    contentAPI, playWS, playFilters, playCache, sentryRavenLogback, awsSimpleEmail, scalaz, pegdown,
+    PlayImport.specs2 % "test", specs2Extra, identityAuthPlay, identityTestUsers, catsCore, scalaLogging, kinesisLogbackAppender, logstash,
+   libthrift, scalaTest)
 
 
 }
