@@ -19,7 +19,7 @@ object Nav {
   }
 
   val primaryNavigation = List(
-    NavItem("events", routes.WhatsOn.list.url, "Events", subNav = Seq(
+    NavItem("events", routes.WhatsOn.list().url, "Events", subNav = Seq(
       NavItem("archive", routes.WhatsOn.listArchive.url, "Archive")
     )),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),

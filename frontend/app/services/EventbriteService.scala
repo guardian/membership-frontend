@@ -87,7 +87,7 @@ abstract class EventbriteService(ebAccount: EBAccount)(
 
   lazy val draftEventsTask =  eventsTaskFor("draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
 
-  def start() {
+  def start() = {
     SafeLogger.info(s"Starting EventbriteService background tasks for ${this.getClass.getSimpleName}")
     eventsTask.start()
     draftEventsTask.start()
@@ -191,7 +191,7 @@ class GuardianLiveEventService(
     yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.ebEvent.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
-  override def start() {
+  override def start() = {
     super.start()
     SafeLogger.info("Starting EventsOrdering background task")
     val timeout = (Config.eventbriteRefreshTimeForPriorityEvents - 3).seconds

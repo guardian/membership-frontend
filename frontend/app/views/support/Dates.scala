@@ -34,7 +34,7 @@ object Dates {
     lazy val prettyNoYearWithTime = prettyDateNoYearTime(new DateTime(dt).withZone(london))
     def pretty(includeTime: Boolean): String = if (includeTime) prettyWithTime else pretty
     def prettyWithoutYear(includeTime: Boolean): String = if (includeTime) prettyNoYearWithTime else prettyWithoutYear
-    def isContemporary(threshold: Duration = 24.hours) = new Interval(dt - threshold, dt + threshold).contains(DateTime.now)
+    def isContemporary(threshold: Duration = 24.hours) = new Interval(dt - threshold, dt + threshold).contains(DateTime.now())
   }
 
   implicit class RichInterval(interval: Interval) {
@@ -59,9 +59,9 @@ object Dates {
   def prettyDateAndDayName(dt: DateTime): String =
     dt.toString("EE ") + prettyDate(dt)
 
-  def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)
+  def dayInMonthWithSuffix(date: DateTime = DateTime.now()): Html = addSuffix(date.toString("dd").toInt)
 
-  def dayInMonthWithSuffixAndMonth(date: DateTime = DateTime.now): Html = {
+  def dayInMonthWithSuffixAndMonth(date: DateTime = DateTime.now()): Html = {
     Html(addSuffix(date.toString("dd").toInt) + " " + date.toString("MMMM"))
   }
 

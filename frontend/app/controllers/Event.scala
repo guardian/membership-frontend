@@ -69,7 +69,7 @@ class Event(
       } else Redirect(routes.Event.details(correctEvent.underlying.ebEvent.slug))
     }
 
-    eventOpt.getOrElse(Redirect(routes.WhatsOn.list))
+    eventOpt.getOrElse(Redirect(routes.WhatsOn.list()))
   }
 
   /*
@@ -162,29 +162,6 @@ class Event(
   def eventbriteRedirect(event: RichEvent, discountCodeOpt: Option[EBCode])(implicit req: RequestHeader) = {
     val eventUrl = discountCodeOpt.fold(Uri.parse(event.underlying.ebEvent.url))(c => event.underlying.ebEvent.url ? ("discount" -> c.code))
     Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
-  }
-
-  @deprecated("Guardian Live Events are not configured to use this anymore, and host their own thankyou page on EventBrite.", "")
-  def thankyou(id: String, orderIdOpt: Option[String]) = SubscriptionAction.async { implicit request =>
-    orderIdOpt.fold {
-      val resultOpt = for {
-        oid <- request.flash.get("oid")
-        event <- eventbriteService.getEvent(id)
-      } yield {
-        event.service.getOrder(oid).map { order =>
-          val count = event.countComplimentaryTicketsInOrder(order)
-          if (count > 0) {
-            memberService.recordFreeEventUsage(request.subscriber.subscription, event, order, count)
-          }
-
-          Ok(views.html.event.thankyou(event, order))
-            .discardingCookies(DiscardingCookie(eventCookie(event)))
-        }
-      }
-      resultOpt.getOrElse(Future.successful(NotFound))
-    } { orderId =>
-      Future.successful(Redirect(routes.Event.thankyou(id, None)).flashing("oid" -> orderId))
-    }
   }
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>

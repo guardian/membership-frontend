@@ -24,22 +24,22 @@ organization := "com.gu"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.12.13"
+scalaVersion := "2.13.7"
 
 resolvers ++= Seq(
     "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",
     Resolver.sonatypeRepo("releases")
 )
 
-sources in (Compile,doc) := Seq.empty
+Compile / doc / sources := Seq.empty
 
-publishArtifact in (Compile, packageDoc) := false
+Compile / packageDoc / publishArtifact := false
 
-parallelExecution in Global := false
+Global / parallelExecution := false
 
 updateOptions := updateOptions.value.withCachedResolution(true)
 
-assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary to tell us about clashes - we DON'T use the generated uber-jar, instead the native-packaged zip
+assembly / assemblyMergeStrategy := { // We only use sbt-assembly as a canary to tell us about clashes - we DON'T use the generated uber-jar, instead the native-packaged zip
     case x if x.startsWith("com/google/gdata/util/common/base/") => MergeStrategy.first // https://github.com/playframework/playframework/issues/3365#issuecomment-198399016
     case "version.txt"                                           => MergeStrategy.discard // identity jars all include version.txt
     case "shared.thrift" => MergeStrategy.first
@@ -48,22 +48,22 @@ assemblyMergeStrategy in assembly := { // We only use sbt-assembly as a canary t
     case PathList("ahc-version.properties") => MergeStrategy.first
     case PathList("ahc-default.properties") => MergeStrategy.concat
     case x =>
-        val oldStrategy = (assemblyMergeStrategy in assembly).value
+        val oldStrategy = (assembly / assemblyMergeStrategy).value
         oldStrategy(x)
 }
 
-test in assembly := {} // skip tests during assembly
+assembly / test := {} // skip tests during assembly
 
-javaOptions in Test += "-Dconfig.file=test/conf/test.conf"
+Test / javaOptions += "-Dconfig.file=test/conf/test.conf"
 
-testOptions in Test += Tests.Argument("-oD") // display execution times in Scalatest output
+Test / testOptions += Tests.Argument("-oD") // display execution times in Scalatest output
 
 
 enablePlugins(SystemdPlugin)
 
 debianPackageDependencies := Seq("openjdk-8-jre-headless")
 
-javaOptions in Universal ++= Seq(
+Universal / javaOptions ++= Seq(
     "-Dpidfile.path=/dev/null",
     "-J-XX:MaxRAMFraction=2",
     "-J-XX:InitialRAMFraction=2",
@@ -79,7 +79,7 @@ packageSummary := "Membership Frontend service"
 
 packageDescription := """Membership Frontend appserver for https://membership.theguardian.com"""
 
-riffRaffPackageType := (packageBin in Debian).value
+riffRaffPackageType := (Debian / packageBin).value
 
 riffRaffBuildIdentifier := env("BUILD_NUMBER", "DEV")
 
@@ -110,5 +110,7 @@ libraryDependencies ++= frontendDependencies.map {
     _.exclude("commons-logging", "commons-logging") // our dependencies include jcl-over-slf4j http://www.slf4j.org/legacy.html#jcl-over-slf4j
      .exclude("org.slf4j", "slf4j-simple") // snatches SLF4J logging from Logback, our chosen logging system
 }
+
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
 
 addCommandAlias("devrun", "run 9100")

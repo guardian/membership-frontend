@@ -50,12 +50,12 @@ object TicketSaleDates {
 
         val generalRelease = effectiveSaleStart + gapBetweenSaleStartAndGeneralRelease.standardDuration
 
-        val memberTicketAvailabilityTimes = memberLeadTimes.mapValues(generalRelease - _.standardDuration)
+        val memberTicketAvailabilityTimes = memberLeadTimes.view.mapValues(generalRelease - _.standardDuration).toMap
 
         val needToDistinguishTicketTimes = needToDistinguishTimes(generalRelease, Some(memberTicketAvailabilityTimes))
         if(!needToDistinguishTicketTimes) {
 
-          val memberAdvanceTicketSales = memberTicketAvailabilityTimes.mapValues(maxStartSaleTime(effectiveSaleStart, _))
+          val memberAdvanceTicketSales = memberTicketAvailabilityTimes.view.mapValues(maxStartSaleTime(effectiveSaleStart, _)).toMap
 
           TicketSaleDates(generalRelease, Some(memberAdvanceTicketSales), needToDistinguishTicketTimes)
 

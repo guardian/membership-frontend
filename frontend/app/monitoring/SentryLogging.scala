@@ -13,7 +13,7 @@ import io.sentry.logback.SentryAppender
 import org.slf4j.Logger.ROOT_LOGGER_NAME
 import org.slf4j.LoggerFactory
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 class PiiFilter extends Filter[ILoggingEvent] {
@@ -38,7 +38,7 @@ object SentryLogging {
           }
           sentryAppender.start()
 
-          val buildInfo: Map[String, String] = app.BuildInfo.toMap.mapValues(_.toString)
+          val buildInfo: Map[String, String] = app.BuildInfo.toMap.view.mapValues(_.toString).toMap
           val tags = Map("stage" -> Config.stage.toString) ++ buildInfo
           sentryClient.setTags(tags.asJava)
 

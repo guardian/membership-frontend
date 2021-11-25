@@ -244,7 +244,7 @@ object Eventbrite {
     val isSoldOut = internalTicketing.exists(_.isSoldOut)
 
     val isBookable = {
-      val isStartedAndHasBookableTicketClasses = ebEvent.status == "started" && ebEvent.ticket_classes.exists(_.sales_end < DateTime.now)
+      val isStartedAndHasBookableTicketClasses = ebEvent.status == "started" && ebEvent.ticket_classes.exists(_.sales_end < DateTime.now())
       (ebEvent.status == "live" || isStartedAndHasBookableTicketClasses) && !isSoldOut
     }
 

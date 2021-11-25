@@ -29,7 +29,7 @@ object IdentityService {
   val DisregardResponseContent: (WSResponse => Either[String, Unit]) = {
     resp =>
       SafeLogger.debug(s"Webservice returned code ${resp.status}, and body: ${resp.body}")
-      Right(Unit)
+      Right(())
   }
 
   def privateFieldsFor(form: CommonForm): PrivateFields = {
@@ -113,11 +113,11 @@ class IdentityService(identityApiProvider: => IdentityApi, implicit val ec: Exec
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     identityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
-  def updateUserPassword(password: String)(implicit idReq: IdentityRequest) {
+  def updateUserPassword(password: String)(implicit idReq: IdentityRequest) = {
     identityApi.post("/user/password", Some(Json.obj("newPassword" -> password)), idReq.headers, idReq.trackingParameters, "update-user-password")(DisregardResponseContent)
   }
 
-  def updateUserFieldsBasedOnUpgrade(userId: String, addressDetails: AddressDetails)(implicit r: IdentityRequest) {
+  def updateUserFieldsBasedOnUpgrade(userId: String, addressDetails: AddressDetails)(implicit r: IdentityRequest) = {
     updateUser(UpdateIdUser(privateFields = Some(IdentityService.privateFieldsFor(
           delivery = Some(addressDetails.deliveryAddress),
           billing = Some(addressDetails.billingAddress.getOrElse(addressDetails.deliveryAddress))))), userId)(r)
@@ -162,7 +162,7 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"
     val url = s"${Config.idApiUrl}/$endpoint"
-    wsClient.url(url).withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1000 milli).get().map { response =>
+    wsClient.url(url).withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1.second).get().map { response =>
       recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
       (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
     }
@@ -174,7 +174,7 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
     parameters: List[(String, String)],
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
     execute(endpoint, metricName, func,
-      wsClient.url(s"${Config.idApiUrl}/$endpoint").withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1000 milli).withMethod("GET"))
+      wsClient.url(s"${Config.idApiUrl}/$endpoint").withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*).withRequestTimeout(1.second).withMethod("GET"))
   }
 
   def post[A](
@@ -184,7 +184,7 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
     metricName: String)(func: WSResponse => Either[String, A]): EitherT[Future, String, A] = {
     execute(endpoint, metricName, func,
       wsClient.url(s"${Config.idApiUrl}/$endpoint").withHttpHeaders(headers: _*).withQueryStringParameters(parameters: _*)
-        .withRequestTimeout(5000 milli).withMethod("POST").withBody(data.getOrElse(JsNull)))
+        .withRequestTimeout(5.seconds).withMethod("POST").withBody(data.getOrElse(JsNull)))
   }
 
   private def execute[A](endpoint: String, metricName: String, func: (WSResponse) => Either[String, A], requestHolder: WSRequest): EitherT[Future, String, A] = for {
@@ -194,7 +194,7 @@ class IdentityApi(val wsClient: WSClient, implicit val ec: ExecutionContext) {
     result <- EitherT.fromEither[Future](func(response))
   } yield result
 
-  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
+  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) = {
     SafeLogger.info(s"$responseMethod response $status for endpoint $endpoint")
   }
 }

@@ -25,7 +25,7 @@ object ResponsiveImageGroup {
     altText = element.assets.headOption.flatMap(_.typeData.flatMap(_.altText)),
     metadata = None,
     availableImages = for {
-      asset <- element.assets
+      asset <- element.assets.toSeq
       typeData <- asset.typeData
       file <- typeData.secureFile
       width <- typeData.width

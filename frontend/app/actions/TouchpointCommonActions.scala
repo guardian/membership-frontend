@@ -26,8 +26,6 @@ class TouchpointCommonActions(
   private val AuthenticatedAction = BaseCommonActions.AuthenticatedAction
   private val AjaxAuthenticatedAction = BaseCommonActions.AjaxAuthenticatedAction
 
-  val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
-
   val SubscriptionAction = AuthenticatedAction andThen subscriptionRefiner()
 
   val AjaxSubscriptionAction = AjaxAuthenticatedAction andThen subscriptionRefiner(onNonMember = BaseCommonActions.setGuMemCookie(_))
