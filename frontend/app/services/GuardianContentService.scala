@@ -23,33 +23,32 @@ class GuardianContentService(actorSystem: ActorSystem, executionContext: Executi
   implicit private val as = actorSystem
   override implicit val ec = executionContext
 
-  private def eventbrite(nextPage: Int = 1, accumulatedEventbriteData: Seq[Content] = Nil): Future[Seq[Content]] = {
+  private def eventbrite(nextPage: Int = 1): Future[Vector[Content]] = {
     for {
       response <- eventbriteQuery(nextPage)
-      rest <- {
+      content <- {
         val pagination = ContentAPIPagination(response.currentPage, response.pages)
-        val combined = response.results.toSeq.reverse ++ accumulatedEventbriteData // linked list - prepend the smaller amount
+        val pageResults = response.results.toVector
         pagination.nextPageOpt match {
-          case Some(nextPage) => eventbrite(nextPage, combined)
-          case None => Future.successful(combined.reverse) // get back the original order
+          case Some(nextPage) => eventbrite(nextPage).map(nextResults => pageResults ++ nextResults)
+          case None => Future.successful(pageResults)
         }
       }
-    } yield rest
+    } yield content
   }
 
-  private def masterclasses(nextPage: Int = 1, accumultedMaasterclassData: Seq[MasterclassData] = Nil): Future[Seq[MasterclassData]] = {
+  private def masterclasses(nextPage: Int = 1): Future[Vector[MasterclassData]] = {
     for {
       response <- masterclassesQuery(nextPage)
-      rest <- {
-        val masterclassData = response.results.toSeq.flatten.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
+      content <- {
+        val masterclassData = response.results.toSeq.flatten.flatMap(MasterclassDataExtractor.extractEventbriteInformation).toVector
         val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
-        val combined = masterclassData.reverse ++ accumultedMaasterclassData // linked list - prepend the smaller amount
         pagination.nextPageOpt match {
-          case Some(nextPage) => masterclasses(nextPage, combined)
-          case None => Future.successful(combined.reverse) // get back the original order
+          case Some(nextPage) => masterclasses(nextPage).map(masterclassData ++ _)
+          case None => Future.successful(masterclassData)
         }
       }
-    } yield rest
+    } yield content
   }
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
