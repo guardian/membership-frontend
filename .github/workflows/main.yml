@@ -22,10 +22,10 @@ jobs:
           command: monitor
           
       - name: Yarn - Run Snyk to check for vulnerabilities
-        uses: snyk/actions/scala@0.3.0
+        uses: snyk/actions/node@0.3.0
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --org=the-guardian-cuu --project-name=${{ github.repository }} --file=./frontend/package.json
+          args: --org=the-guardian-cuu --project-name=${{ github.repository }} --file=./frontend/yarn.lock
           command: monitor
           
