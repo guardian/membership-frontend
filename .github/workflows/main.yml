@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout branch
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: SBT - Run Snyk to check for vulnerabilities
         uses: snyk/actions/scala@0.3.0
