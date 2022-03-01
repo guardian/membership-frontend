@@ -7,7 +7,7 @@ object Dependencies {
   val awsClientVersion = "1.12.111"
   val jacksonVersion = "2.11.4"
   //libraries
-  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.30"
+  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "5.6.1"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.251"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
