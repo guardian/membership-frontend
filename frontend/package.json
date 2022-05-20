@@ -81,7 +81,8 @@
   },
   "resolutions": {
     "lodash": "^4.17.21",
-    "lodash.mergewith": "^4.6.2"
+    "lodash.mergewith": "^4.6.2",
+    "minimist": "^1.2.6"
   },
   "snyk": true
 }
