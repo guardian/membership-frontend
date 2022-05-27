@@ -20,4 +20,4 @@ export function init() {
 }
 
 export const vendorName = 'LinkedIn Pixel';
-export const cmpVendorId = '5ed0eb688a76503f1016578f';
+export const cmpVendorId = '5f2d22a6b8e05c02aa283b3c';
