@@ -8,9 +8,9 @@ export function init() {
         window.lintrk = (a, b) => window.lintrk.q.push([a, b]);
         window.lintrk.q = [];
     }
-    var s = document.getElementsByTagName('script')[0];
+    const s = document.getElementsByTagName('script')[0];
 
-    var b = document.createElement('script');
+    let b = document.createElement('script');
 
     b.type = 'text/javascript';
     b.async = true;
