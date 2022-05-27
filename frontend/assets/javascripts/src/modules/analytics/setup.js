@@ -7,6 +7,7 @@ define([
     'src/modules/analytics/campaignCode',
     'src/modules/analytics/cmp',
     'src/modules/analytics/remarketing',
+    'src/modules/analytics/linkedin',
 ], function (
     cookie,
     ga,
@@ -14,8 +15,8 @@ define([
     uet,
     campaignCode,
     cmp,
-    remarketing
-) {
+    remarketing,
+    linkedin) {
     'use strict';
 
     /*
@@ -41,7 +42,7 @@ define([
     }
 
     function loadTrackers() {
-        const trackers = [ga, facebook, uet, remarketing];
+        const trackers = [ga, facebook, uet, remarketing, linkedin];
         const vendorIds = trackers.map(tracker => tracker.cmpVendorId);
 
         Promise.allSettled([
@@ -63,7 +64,7 @@ define([
                 })
                 if (allPurposesAgreed) {
                     campaignCode.init()
-                    if (typeof(vendorConsents[ga.cmpVendorId]) === 'undefined') {
+                    if (typeof (vendorConsents[ga.cmpVendorId]) === 'undefined') {
                         console.log('Google Analytics has not been configured as a vendor yet, but all purposes have been ' +
                             'agreed so we\'re loading it.');
                         ga.init();
