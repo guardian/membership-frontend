@@ -6,8 +6,7 @@ define([
     'src/modules/analytics/uet',
     'src/modules/analytics/campaignCode',
     'src/modules/analytics/cmp',
-    'src/modules/analytics/remarketing',
-    'src/modules/analytics/linkedin',
+    'src/modules/analytics/remarketing'
 ], function (
     cookie,
     ga,
@@ -15,8 +14,7 @@ define([
     uet,
     campaignCode,
     cmp,
-    remarketing,
-    linkedin) {
+    remarketing) {
     'use strict';
 
     /*
@@ -42,7 +40,7 @@ define([
     }
 
     function loadTrackers() {
-        const trackers = [ga, facebook, uet, remarketing, linkedin];
+        const trackers = [ga, facebook, uet, remarketing];
         const vendorIds = trackers.map(tracker => tracker.cmpVendorId);
 
         Promise.allSettled([
