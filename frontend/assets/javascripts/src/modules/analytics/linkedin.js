@@ -1,5 +1,5 @@
 export function init() {
-    const _linkedin_partner_id = '2929546';
+    const _linkedin_partner_id = '4461137';
 
     window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
     window._linkedin_data_partner_ids.push(_linkedin_partner_id);
