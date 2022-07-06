@@ -22,7 +22,7 @@ object Dependencies {
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.0"
-  val catsCore = "org.typelevel" %% "cats-core" % "2.6.1"
+  val catsCore = "org.typelevel" %% "cats-core" % "2.8.0"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "6.6"
