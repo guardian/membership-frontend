@@ -26,7 +26,7 @@
                     <ul class="u-unstyled">
                         <li>First Name: <strong>@userString</strong></li>
                         <li>Username: <strong>@userString</strong></li>
-                        <li>Email: <strong>@userString@@gu.com</strong></li>
+                        <li>Email: <strong>@userString@@thegulocal.com</strong></li>
                     </ul>
                 </div>
                 <div class="copy">
@@ -50,7 +50,7 @@
                                     ['firstname', 'lastname', 'password', 'email'].forEach(function(field) {
                                         var element = document.getElementById(idFor(field));
                                         element.focus();
-                                        element.value = field === 'email' ? testUserToken + '@@gu.com' : testUserToken;
+                                        element.value = field === 'email' ? testUserToken + '@@thegulocal.com' : testUserToken;
                                         element.blur();
                                     });
                                     setTimeout(function(){
