@@ -12,7 +12,7 @@ object Dependencies {
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.254"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val membershipCommon = "com.gu" %% "membership-common" % "0.622"
-  val contentAPI = "com.gu" %% "content-api-client-default" % "17.22"
+  val contentAPI = "com.gu" %% "content-api-client-default" % "17.25.2"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.ehcache
