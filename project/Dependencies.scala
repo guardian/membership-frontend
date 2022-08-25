@@ -18,7 +18,7 @@ object Dependencies {
   val playCache = PlayImport.ehcache
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val scalaTest =  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test"
-  val scalaz = "org.scalaz" %% "scalaz-core" % "7.3.5"
+  val scalaz = "org.scalaz" %% "scalaz-core" % "7.3.6"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.0"
