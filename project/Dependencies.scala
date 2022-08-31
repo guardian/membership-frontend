@@ -4,11 +4,11 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.12.289"
+  val awsClientVersion = "1.12.293"
   val jacksonVersion = "2.11.4"
   //libraries
-  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.4.1"
-  val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.2"
+  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.30"
+  val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.6"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.254"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val membershipCommon = "com.gu" %% "membership-common" % "0.622"
@@ -23,12 +23,12 @@ object Dependencies {
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.0"
   val catsCore = "org.typelevel" %% "cats-core" % "2.8.0"
-  val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
+  val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "6.6"
   val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.1.1"
   // vvv below here. All the dependencies are to force upgrades to versions of the libs without vulnerabilities
-  val libthrift = "org.apache.thrift" % "libthrift" % "0.15.0"
+  val libthrift = "org.apache.thrift" % "libthrift" % "0.16.0"
   // ^^^ above here
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, membershipCommon, enumPlay,
