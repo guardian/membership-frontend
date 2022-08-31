@@ -8,7 +8,7 @@ object Dependencies {
   val jacksonVersion = "2.11.4"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "1.7.30"
-  val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.2.6"
+  val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.254"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val membershipCommon = "com.gu" %% "membership-common" % "0.622"
