@@ -3,6 +3,7 @@
 .bundle
 .idea
 .idea_modules
+.bloop
 *.iml
 *.sublime-project
 *.sublime-workspace
@@ -19,6 +20,7 @@ target
 tmp
 project/project
 project/target
+project/metals.sbt
 
 bower_components
 */public/javascripts
