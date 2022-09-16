@@ -10,5 +10,6 @@ jobs:
       DEBUG: true
       ORG: guardian-test
       SKIP_NODE: false
+      EXCLUDE: frontend/build.sbt
     secrets:
        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
