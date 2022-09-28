@@ -1,7 +1,10 @@
-# This action is just a test
-name: Snyk (test)
+name: Snyk
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 # Having 2 jobs here is a hack because this project's sbt build is set up to aggregate 
 # a single sub-project frontend which itself depends on the parent Dependencies.scala.
@@ -12,7 +15,7 @@ jobs:
     uses: guardian/.github/.github/workflows/sbt-node-snyk.yml@main
     with:
       DEBUG: true
-      ORG: guardian-test
+      ORG: the-guardian-cuu
       SKIP_NODE: true
       EXCLUDE: frontend
     secrets:
@@ -22,7 +25,7 @@ jobs:
     uses: guardian/.github/.github/workflows/sbt-node-snyk.yml@main
     with:
       DEBUG: true
-      ORG: guardian-test
+      ORG: the-guardian-cuu
       SKIP_NODE: false
       EXCLUDE: build.sbt
     secrets:
