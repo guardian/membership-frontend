@@ -1,0 +1,32 @@
+name: Snyk
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Having 2 jobs here is a hack because this project's sbt build is set up to aggregate 
+# a single sub-project frontend which itself depends on the parent Dependencies.scala.
+# To exclude the sub-project, but still scan frontend/yarn.lock, we have to run 2 jobs
+# because --excludes does not allow specifying a path, only a directory or filename(!)
+jobs:
+  security-sbt:
+    uses: guardian/.github/.github/workflows/sbt-node-snyk.yml@main
+    with:
+      DEBUG: true
+      ORG: the-guardian-cuu
+      SKIP_NODE: true
+      EXCLUDE: frontend
+    secrets:
+       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+       
+  security-yarn:
+    uses: guardian/.github/.github/workflows/sbt-node-snyk.yml@main
+    with:
+      DEBUG: true
+      ORG: the-guardian-cuu
+      SKIP_NODE: false
+      EXCLUDE: build.sbt
+    secrets:
+       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
