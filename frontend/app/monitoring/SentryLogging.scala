@@ -30,7 +30,7 @@ object SentryLogging {
       case Success(dsn) =>
         SafeLogger.info(s"Initialising Sentry logging.")
         Try {
-           Sentry.init(dsn)
+          val sentryClient = Sentry.init(dsn)
 
           val sentryAppender = new SentryAppender {
             addFilter(SentryFilters.errorLevelFilter)
@@ -40,7 +40,7 @@ object SentryLogging {
 
           val buildInfo: Map[String, String] = app.BuildInfo.toMap.view.mapValues(_.toString).toMap
           val tags = Map("stage" -> Config.stage.toString) ++ buildInfo
-          tags.foreach {case (key, value) => Sentry.setTag(key, value) }
+          sentryClient.setTags(tags.asJava)
 
           LoggerFactory.getLogger(ROOT_LOGGER_NAME).asInstanceOf[Logger].addAppender(sentryAppender)
         } match {
