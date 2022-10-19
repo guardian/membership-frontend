@@ -2,7 +2,6 @@
 define([
     'src/utils/cookie',
     'src/modules/analytics/ga',
-    'src/modules/analytics/facebook',
     'src/modules/analytics/uet',
     'src/modules/analytics/campaignCode',
     'src/modules/analytics/cmp',
@@ -11,7 +10,6 @@ define([
 ], function (
     cookie,
     ga,
-    facebook,
     uet,
     campaignCode,
     cmp,
@@ -42,7 +40,7 @@ define([
     }
 
     function loadTrackers() {
-        const trackers = [ga, facebook, uet, remarketing, linkedin];
+        const trackers = [ga, uet, remarketing, linkedin];
         const vendorIds = trackers.map(tracker => tracker.cmpVendorId);
 
         Promise.allSettled([
