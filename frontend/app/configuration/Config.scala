@@ -85,11 +85,6 @@ object Config {
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
-  val facebookJoinerConversionTrackingId =
-    Tier.allPublic.map { tier => tier -> config.getString(s"facebook.joiner.conversion.${tier.slug}") }.toMap
-
-  val facebookEventTicketSaleTrackingId = config.getString("facebook.ticket.purchase")
-
   val googleAdwordsJoinerConversionLabel =
     Tier.allPublic.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
