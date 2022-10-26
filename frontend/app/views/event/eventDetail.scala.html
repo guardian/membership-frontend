@@ -36,9 +36,11 @@
             </div>
             @for(internalTicketing <- event.underlying.internalTicketing) {
                 <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">
-                    <div class="event-ticket__item event-ticket__details">
-                        @fragments.pricing.priceInfoEvent(event, isPrimary=true)
-                    </div>
+                    @if(event.metadata.identifier == "masterclasses") {
+                        <div class="event-ticket__item event-ticket__details">
+                            @fragments.pricing.priceInfoEvent(event, isPrimary=true)
+                        </div>
+                    }
                     @if(event.underlying.isBookable) {
                         <div class="event-ticket__item event-ticket__action">
                             @fragments.event.ticketCta(event, List("qa-event-detail-booking-action"))
