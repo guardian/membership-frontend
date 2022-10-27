@@ -15,24 +15,26 @@
 </div>
 
 @* Event locations *@
-<div class="stat-item">
-    <div class="stat-item__first">
+@if(event.underlying.ebEvent.venue.addressDefaultLine.isDefined || event.underlying.ebEvent.venue.googleMapsLink.isDefined) {
+    <div class="stat-item">
+        <div class="stat-item__first">
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
+        </div>
+        <div class="stat-item__second copy">
+            @for(addressDefaultLine <- event.underlying.ebEvent.venue.addressDefaultLine) {
+                @addressDefaultLine
+            }
+            @for(googleMapsLink <- event.underlying.ebEvent.venue.googleMapsLink) {
+                <div class="stat-item__supplementary copy">
+                    <a href="@googleMapsLink">Google map</a>
+                </div>
+            }
+        </div>
     </div>
-    <div class="stat-item__second copy">
-        @for(addressDefaultLine <- event.underlying.ebEvent.venue.addressDefaultLine) {
-            @addressDefaultLine
-        }
-        @for(googleMapsLink <- event.underlying.ebEvent.venue.googleMapsLink) {
-            <div class="stat-item__supplementary copy">
-                <a href="@googleMapsLink">Google map</a>
-            </div>
-        }
-    </div>
-</div>
+}
 
 @* Event ticket sale dates *@
-@if(showTicketSales && event.canHavePriorityBooking) {
+@if(showTicketSales && event.canHavePriorityBooking && event.metadata.identifier == "masterclasses") {
     @for(ticketing <- event.underlying.internalTicketing if event.underlying.isBookable) {
         <div class="stat-item">
             <div class="stat-item__first">

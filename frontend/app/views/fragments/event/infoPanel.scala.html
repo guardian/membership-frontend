@@ -24,8 +24,10 @@
         </div>
 
          @for(ticketing <- event.underlying.internalTicketing) {
-            @fragments.pricing.priceInfoEvent(event, showLimited=true)
-            @if(event.underlying.isBookable) {
+             @if(event.metadata.identifier == "masterclasses") {
+                 @fragments.pricing.priceInfoEvent(event, showLimited=true)
+             }
+             @if(event.underlying.isBookable) {
                 <div class="u-margin-vertical">
                     @fragments.event.ticketCta(event)
                 </div>
