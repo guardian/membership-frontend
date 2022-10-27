@@ -15,7 +15,7 @@
 </div>
 
 @* Event locations *@
-@if(event.underlying.ebEvent.venue.name && event.underlying.ebEvent.venue.address) {
+@if(event.underlying.ebEvent.venue.addressDefaultLine.isDefined || event.underlying.ebEvent.venue.googleMapsLink.isDefined) {
     <div class="stat-item">
         <div class="stat-item__first">
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
