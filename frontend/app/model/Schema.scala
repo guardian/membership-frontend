@@ -50,7 +50,7 @@ object EventSchema {
     if (event.underlying.ebEvent.venue.name.isEmpty)
       "https://schema.org/OnlineEventAttendanceMode"
     else
-      "https://schema.org/OfflineEventAttendanceMode"
+      "https://schema.org/MixedEventAttendanceMode"
   }
 
   private def locationOpt(event: RichEvent): Option[LocationSchema] = {
