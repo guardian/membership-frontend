@@ -1,7 +1,5 @@
 package model
 
-
-import controllers.routes
 import model.RichEvent.RichEvent
 import play.api.libs.json.Json
 import configuration.{Config, CopyConfig}
