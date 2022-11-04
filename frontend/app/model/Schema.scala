@@ -9,11 +9,11 @@ object LocationSchema {
 }
 
 case class LocationSchema(
-                           name: Option[String],
-                           url:Option[String],
-                           address: Option[String],
-                           hasMap: Option[String],
-                           `@type`: String
+ name: Option[String],
+ url:Option[String],
+ address: Option[String],
+ hasMap: Option[String],
+ `@type`: String
                          )
 
 object OfferSchema {
@@ -21,28 +21,26 @@ object OfferSchema {
 }
 
 case class OfferSchema(
-                        url: String,
-                        category: String,
-                        price: String,
-                        priceCurrency: String,
-                        availability: Option[String],
-                        `@type`: String = "Offer"
-                      )
+ url: String,
+ category: String,
+ price: String,
+ priceCurrency: String,
+ availability: Option[String],
+ `@type`: String = "Offer")
 
 case class EventSchema(
-                        name: String,
-                        description: String,
-                        startDate: String,
-                        endDate: String,
-                        url: String,
-                        image: Option[String],
-                        eventAttendanceMode:String,
-                        eventStatus:String,
-                        location: Option[LocationSchema],
-                        offers: Option[OfferSchema],
-                        `@context`: String = "http://schema.org",
-                        `@type`: String = "Event"
-                      )
+ name: String,
+ description: String,
+ startDate: String,
+ endDate: String,
+ url: String,
+ image: Option[String],
+ eventAttendanceMode:String,
+ eventStatus:String,
+ location: Option[LocationSchema],
+ offers: Option[OfferSchema],
+ `@context`: String = "http://schema.org",
+ `@type`: String = "Event")
 
 object EventSchema {
 
