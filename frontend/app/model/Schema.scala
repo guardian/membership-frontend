@@ -54,16 +54,14 @@ object EventSchema {
   }
 
   private def locationOpt(event: RichEvent): Option[LocationSchema] = {
-    if (event.underlying.ebEvent.venue.name.isEmpty) {
-      if (!event.underlying.isSoldOut)
-        Some(LocationSchema(None,Some(event.underlying.ebEvent.memUrl),None,None,"VirtualLocation"))
-      else
-        Some(LocationSchema(None, Some(Config.eventbriteWaitlistUrl(event.underlying.ebEvent)), None, None,"VirtualLocation"))
+    event.underlying.ebEvent.venue.name match {
+      case None => if (!event.underlying.isSoldOut)
+          Some(LocationSchema(None, Some(event.underlying.ebEvent.memUrl), None, None, "VirtualLocation"))
+        else
+          Some(LocationSchema(None, Some(Config.eventbriteWaitlistUrl(event.underlying.ebEvent)), None, None, "VirtualLocation"))
+      case Some(name) =>
+        Some(LocationSchema(Some(name), None, event.underlying.ebEvent.venue.addressLine, event.underlying.ebEvent.venue.googleMapsLink, "Place"))
     }
-    else
-      event.underlying.ebEvent.venue.name.map { name =>
-        LocationSchema(Some(name),None, event.underlying.ebEvent.venue.addressLine, event.underlying.ebEvent.venue.googleMapsLink,"Place")
-      }
   }
 
   private def offerOpt(event: RichEvent): Option[OfferSchema] = {
