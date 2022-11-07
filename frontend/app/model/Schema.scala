@@ -2,51 +2,65 @@ package model
 
 import model.RichEvent.RichEvent
 import play.api.libs.json.Json
+import configuration.{Config, CopyConfig}
 
 object LocationSchema {
   implicit val writesSchema = Json.writes[LocationSchema]
 }
 
 case class LocationSchema(
-  name: String,
-  address: Option[String],
-  hasMap: Option[String],
-  `@type`: String = "Place"
-)
+ name: Option[String],
+ url:Option[String],
+ address: Option[String],
+ hasMap: Option[String],
+ `@type`: String
+                         )
 
 object OfferSchema {
   implicit val writesSchema = Json.writes[OfferSchema]
 }
 
 case class OfferSchema(
-  url: String,
-  category: String,
-  price: String,
-  priceCurrency: String,
-  availability: Option[String],
-  `@type`: String = "Offer"
-)
+ url: String,
+ category: String,
+ price: String,
+ priceCurrency: String,
+ availability: Option[String],
+ `@type`: String = "Offer")
 
 case class EventSchema(
-  name: String,
-  description: String,
-  startDate: String,
-  endDate: String,
-  url: String,
-  image: Option[String],
-  location: Option[LocationSchema],
-  offers: Option[OfferSchema],
-  `@context`: String = "http://schema.org",
-  `@type`: String = "Event"
-)
+ name: String,
+ description: String,
+ startDate: String,
+ endDate: String,
+ url: String,
+ image: Option[String],
+ eventAttendanceMode:String,
+ eventStatus:String,
+ location: Option[LocationSchema],
+ offers: Option[OfferSchema],
+ `@context`: String = "http://schema.org",
+ `@type`: String = "Event")
 
 object EventSchema {
 
   implicit val writesSchema = Json.writes[EventSchema]
 
+  private def eventAttendanceMode(event:RichEvent)={
+    if (event.underlying.ebEvent.venue.name.isEmpty)
+      "https://schema.org/OnlineEventAttendanceMode"
+    else
+      "https://schema.org/MixedEventAttendanceMode"
+  }
+
   private def locationOpt(event: RichEvent): Option[LocationSchema] = {
-    event.underlying.ebEvent.venue.name.map { name =>
-      LocationSchema(name, event.underlying.ebEvent.venue.addressLine, event.underlying.ebEvent.venue.googleMapsLink)
+    event.underlying.ebEvent.venue.name match {
+      case None => if (!event.underlying.isSoldOut)
+          Some(LocationSchema(None, Some(event.underlying.ebEvent.memUrl), None, None, "VirtualLocation"))
+        else
+          Some(LocationSchema(None, Some(Config.eventbriteWaitlistUrl(event.underlying.ebEvent)), None, None, "VirtualLocation"))
+      case Some(name) =>
+        Some(LocationSchema(Some(name), None, event.underlying.ebEvent.venue.addressLine, event.underlying.ebEvent.venue.googleMapsLink, "Place"))
     }
   }
 
@@ -56,6 +70,8 @@ object EventSchema {
     }
   }
 
+
+
   def from(event: RichEvent): EventSchema = EventSchema(
     event.underlying.ebEvent.name.text,
     event.underlying.ebDescription.cleanHtml,
@@ -63,7 +79,10 @@ object EventSchema {
     event.underlying.ebEvent.end.toString,
     event.underlying.ebEvent.memUrl,
     event.socialImgUrl,
+    eventAttendanceMode(event),
+    event.underlying.ebEvent.status,
     locationOpt(event),
-    offerOpt(event)
+    offerOpt(event),
   )
 }
+
