@@ -67,9 +67,37 @@
 
         @for(schema <- pageInfo.schemaOpt) {
             <script type="application/ld+json">
+         {
+                "@@context": "https://schema.org",
+                "@@type": "BreadcrumbList",
+                "description":"Breadcrumbs list",
+                "name": "Breadcrumbs",
+                "itemListElement": [{
+                "@@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": [{
+                "@@type": "WebPage",
+                "id":"https://membership.theguardian.com"
+                }]},{
+                "@@type": "ListItem",
+                "position": 2,
+                "name": "Events",
+                "item":[{
+                "@@type": "WebPage",
+                "id":"https://membership.theguardian.com/events"
+                }]},{
+                "@@type": "ListItem",
+                "position": 3,
+                "name":"@Html(schema.name)",
+                "item":[
                 @Html(Json.toJson(schema).toString)
+                ]
+                }]
+                }
             </script>
         }
+
 
         @fragments.javaScriptFirstSteps(pageInfo)
 

@@ -25,8 +25,17 @@ case class OfferSchema(
  category: String,
  price: String,
  priceCurrency: String,
+ validFrom:String,
  availability: Option[String],
  `@type`: String = "Offer")
+object OrganizerSchema {
+  implicit val writesSchema = Json.writes[OrganizerSchema]
+}
+
+case class OrganizerSchema(
+                        url: String,
+                        name: String,
+                        `@type`: String = "Organization")
 
 case class EventSchema(
  name: String,
@@ -39,6 +48,7 @@ case class EventSchema(
  eventStatus:String,
  location: Option[LocationSchema],
  offers: Option[OfferSchema],
+ organizer:Option[OrganizerSchema],
  `@context`: String = "http://schema.org",
  `@type`: String = "Event")
 
@@ -66,10 +76,13 @@ object EventSchema {
 
   private def offerOpt(event: RichEvent): Option[OfferSchema] = {
     event.underlying.generalReleaseTicket.map { ticket =>
-      OfferSchema(event.underlying.ebEvent.memUrl, "primary", ticket.priceValue, ticket.currencyCode, event.underlying.statusSchema)
+      OfferSchema(event.underlying.ebEvent.memUrl, "primary", ticket.priceValue, ticket.currencyCode,ticket.sales_start.getOrElse(None).toString, event.underlying.statusSchema)
     }
   }
 
+  private def organizerOpt(event: RichEvent): Option[OrganizerSchema] = {
+      Some(OrganizerSchema(event.underlying.ebEvent.memUrl, "Guardian Members"))
+  }
 
 
   def from(event: RichEvent): EventSchema = EventSchema(
@@ -83,6 +96,7 @@ object EventSchema {
     event.underlying.ebEvent.status,
     locationOpt(event),
     offerOpt(event),
+    organizerOpt(event),
   )
 }
 
