@@ -24,7 +24,7 @@ object Dependencies {
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.0"
   val catsCore = "org.typelevel" %% "cats-core" % "2.8.0"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
-  val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
+  val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "2.1.1"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "7.2"
   val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.1.1"
   // vvv below here. All the dependencies are to force upgrades to versions of the libs without vulnerabilities
