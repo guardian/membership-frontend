@@ -83,11 +83,15 @@
                 "@@type": "ListItem",
                 "position": 2,
                 "name":"@Html(schema.name)",
-                "item":[
-                @Html(Json.toJson(schema).toString)
-                ]
+                "item":[{
+                "@@type": "WebPage",
+                "id":"@Html(schema.url)"
                 }]
-                }
+                }]
+         }
+            </script>
+            <script type="application/ld+json">
+            @Html(Json.toJson(schema).toString)
             </script>
         }
 
