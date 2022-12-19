@@ -1,7 +1,7 @@
 package services
 
 import io.lemonlabs.uri.{Uri, Url}
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 import com.gu.memsub.images.Grid.GridResult
 import com.gu.memsub.images.GridDeserializer._
 import org.specs2.concurrent.ExecutionEnv
