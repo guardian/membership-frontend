@@ -3,7 +3,7 @@ package configuration
 import com.gu.i18n.CountryGroup
 import com.gu.i18n.CountryGroup.{UK,US,Australia}
 import controllers.routes
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 
 object Links {
   val guardianCookiePolicy = "http://www.theguardian.com/info/cookies"

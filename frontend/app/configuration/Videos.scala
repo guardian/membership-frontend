@@ -1,7 +1,7 @@
 package configuration
 
 import com.gu.memsub.images.{ResponsiveImageGenerator, ResponsiveImageGroup}
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 import model.Video
 
 object Videos {

@@ -5,7 +5,7 @@ import actions.Fallbacks._
 import actions.{ActionRefiners, CommonActions, OAuthActions, Subscriber, SubscriptionRequest, TouchpointActionRefiners, TouchpointCommonActions}
 import com.gu.googleauth.GoogleAuthConfig
 import io.lemonlabs.uri.Uri
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 import com.gu.monitoring.SafeLogger
 import model.EmbedSerializer._
 import model.Eventbrite.{EBCode, EBEvent}
@@ -161,7 +161,7 @@ class Event(
 
   def eventbriteRedirect(event: RichEvent, discountCodeOpt: Option[EBCode])(implicit req: RequestHeader) = {
     val eventUrl = discountCodeOpt.fold(Uri.parse(event.underlying.ebEvent.url))(c => event.underlying.ebEvent.url ? ("discount" -> c.code))
-    Found(addEventBriteGACrossDomainParam(eventUrl)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
+    Found(addEventBriteGACrossDomainParam(eventUrl).toString()).withCookies(Cookie(eventCookie(event), "", Some(3600)))
   }
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>

@@ -3,7 +3,7 @@ package views.support
 import com.gu.i18n.CountryGroup
 import com.gu.salesforce.{FreeTier, PaidTier, Tier}
 import io.lemonlabs.uri.Uri
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 import controllers.routes
 import model.PackagePromo.CtaButton
 import play.twirl.api.Html

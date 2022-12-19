@@ -6,7 +6,7 @@ import com.gu.i18n.Currency.GBP
 import com.gu.memsub.Price
 import com.gu.salesforce.Tier
 import io.lemonlabs.uri.{Uri, Url}
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 import configuration.Config
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
@@ -82,7 +82,7 @@ object Eventbrite {
     lazy val addressShortLine = seqToLine(Seq(name, address.flatMap(_.city)).flatten)
     lazy val addressDefaultLine = seqToLine(Seq(name, address.flatMap(_.city), address.flatMap(_.postal_code)).flatten)
     lazy val googleMapsLink: Option[String] = {
-      addressLine.map(al => googleMapsUri ? ("q" -> (name.map(_ + ", ").mkString + al)))
+      addressLine.map(al => (googleMapsUri ? ("q" -> (name.map(_ + ", ").mkString + al))).toString())
     }
   }
 

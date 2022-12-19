@@ -5,7 +5,7 @@ import com.gu.memsub.auth.common.MemSub.Google._
 import com.gu.salesforce.Tier
 import com.gu.zuora.api.{InvoiceTemplate, InvoiceTemplates}
 import io.lemonlabs.uri.Uri
-import io.lemonlabs.uri.dsl._
+import io.lemonlabs.uri.typesafe.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import services._
@@ -48,16 +48,16 @@ object Config {
   def facebookSigninUrl = oauthWebAppSigninUrl("facebook")(_)
 
   private def oauthWebAppSigninUrl(socialProvider: String)(uri: String): String =
-    ("https://oauth.theguardian.com" / socialProvider / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
+    (("https://oauth.theguardian.com" / socialProvider / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember).toString()
 
   def idWebAppSigninUrl(uri: String): String =
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
+    ((idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember).toString()
 
   def idWebAppRegisterUrl(uri: String): String =
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember
+    ((idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") & idSkipConfirmation & idMember).toString()
 
   def idWebAppSignOutThenRegisterUrl(uri: String): String =
-    (idWebAppUrl / "signout") ? ("returnUrl" -> (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri" & idSkipConfirmation & idMember))
+    ((idWebAppUrl / "signout") ? ("returnUrl" -> (idWebAppUrl / "register").toString())? ("returnUrl" -> s"$membershipUrl$uri" & idSkipConfirmation & idMember)).toString()
 
   def idWebAppProfileUrl =
     idWebAppUrl / "membership"/ "edit"
@@ -77,7 +77,7 @@ object Config {
   val eventbriteLimitedAvailabilityCutoff = config.getInt("eventbrite.limitedAvailabilityCutoff")
 
   def eventbriteWaitlistUrl(event: EBEvent): String =
-    eventbriteWaitlistUrl ? ("eid" -> event.id) & ("tid" -> 0)
+    (eventbriteWaitlistUrl ? ("eid" -> event.id) & ("tid" -> 0)).toString()
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
