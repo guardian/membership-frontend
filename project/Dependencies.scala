@@ -21,7 +21,7 @@ object Dependencies {
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.3.7"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
-  val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.0"
+  val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.2"
   val catsCore = "org.typelevel" %% "cats-core" % "2.9.0"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
