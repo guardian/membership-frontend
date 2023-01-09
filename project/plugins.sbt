@@ -11,7 +11,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.1.0")
 
 addSbtPlugin("com.gu" % "sbt-riffraff-artifact" % "1.1.3")
 
-addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "4.2.0")
+addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "4.3.0")
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.4")
 
