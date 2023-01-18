@@ -4,15 +4,15 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.12.350"
+  val awsClientVersion = "1.12.385"
   val jacksonVersion = "2.11.4"
   //libraries
-  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.11.0"
+  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.12.1"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.255"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val membershipCommon = "com.gu" %% "membership-common" % "0.622"
-  val contentAPI = "com.gu" %% "content-api-client-default" % "19.1.0"
+  val contentAPI = "com.gu" %% "content-api-client-default" % "19.1.1"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.ehcache
