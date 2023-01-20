@@ -84,7 +84,7 @@ class Event(
   def details(slug: String) = CachedAction { implicit request =>
     detailsResult(slug)((event: RichEvent) => {
       if (event.isInstanceOf[LiveEvent] || event.isInstanceOf[MasterclassEvent]) {
-        // the slug is not canonical so 302 to the correct one
+        // the url prefix is not canonical so 302 to the correct one
         Redirect(event.detailsUrl)
       } else {
         // event is neither LiveEvent or Masterclass (should never happen!)
@@ -101,7 +101,7 @@ class Event(
       if (slug == correctEvent.underlying.ebEvent.slug) {
         correctAction(correctEvent)
       } else {
-        // the slug is not correct capitalisation, or canonical
+        // the slug is not correct capitalisation, or canonical so 302 to the correct one
         Redirect(correctEvent.detailsUrl)
       }
     }
