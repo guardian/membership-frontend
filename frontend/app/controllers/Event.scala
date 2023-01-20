@@ -59,14 +59,51 @@ class Event(
   private def BuyAction(id: String, onUnauthenticated: RequestHeader => Result) = NoCacheAction andThen recordBuyIntention(id) andThen
     authenticated(onUnauthenticated = onUnauthenticated) andThen subscriptionRefiner(onNonMember = onUnauthenticated)
 
+  def detailsMasterclass(slug: String) = CachedAction { implicit request =>
+    detailsResult(slug)((event: RichEvent) => {
+      if (event.isInstanceOf[MasterclassEvent]) {
+        eventDetail(event)
+      } else {
+        // the url prefix or slug are not canonical so 302 to the correct one
+        Redirect(event.detailsUrl)
+      }
+    });
+  }
+
+  def detailsLive(slug: String) = CachedAction { implicit request =>
+    detailsResult(slug)((event: RichEvent) => {
+      if (event.isInstanceOf[LiveEvent]) {
+        eventDetail(event)
+      } else {
+        // the url prefix or slug are not canonical so 302 to the correct one
+        Redirect(event.detailsUrl)
+      }
+    });
+  }
+
   def details(slug: String) = CachedAction { implicit request =>
+    detailsResult(slug)((event: RichEvent) => {
+      if (event.isInstanceOf[LiveEvent] || event.isInstanceOf[MasterclassEvent]) {
+        // the slug is not canonical so 302 to the correct one
+        Redirect(event.detailsUrl)
+      } else {
+        // event is neither LiveEvent or Masterclass (should never happen!)
+        eventDetail(event)
+      }
+    })
+  }
+
+  def detailsResult(slug: String)(correctAction: RichEvent => Result) = {
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
-      correctEvent <-(Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(eventbriteService.getEvent).headOption
+      correctEvent <- (Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(eventbriteService.getEvent).headOption
     } yield {
       if (slug == correctEvent.underlying.ebEvent.slug) {
-        eventDetail(correctEvent)
-      } else Redirect(routes.Event.details(correctEvent.underlying.ebEvent.slug))
+        correctAction(correctEvent)
+      } else {
+        // the slug is not correct capitalisation, or canonical
+        Redirect(correctEvent.detailsUrl)
+      }
     }
 
     eventOpt.getOrElse(Redirect(routes.WhatsOn.list()))

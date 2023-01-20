@@ -34,7 +34,7 @@
     </div>
 }
 
-<a href="@routes.Event.details(event.underlying.ebEvent.slug).url" class="@RenderClasses(Map(
+<a href="@event.detailsUrl" class="@RenderClasses(Map(
     ("event-item", true),
     ("event-item--hero", isFeatured),
     ("qa-available-event-item", event.underlying.isBookable),

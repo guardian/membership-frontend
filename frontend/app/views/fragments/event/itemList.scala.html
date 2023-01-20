@@ -1,6 +1,6 @@
 @(event: model.RichEvent.RichEvent, classes: Seq[String] = Seq.empty)
 
-<a href="@routes.Event.details(event.underlying.ebEvent.slug)"
+<a href="@event.detailsUrl"
    class="event-item event-item--list @if(event.underlying.isBookable){ qa-available-event-item} @classes.mkString(" ")">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
