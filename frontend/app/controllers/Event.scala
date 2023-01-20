@@ -64,7 +64,7 @@ class Event(
       if (event.isInstanceOf[MasterclassEvent]) {
         eventDetail(event)
       } else {
-        // the url prefix or slug are not canonical so 302 to the correct one
+        // the url prefix is not canonical so 302 to the correct one
         Redirect(event.detailsUrl)
       }
     });
@@ -75,7 +75,7 @@ class Event(
       if (event.isInstanceOf[LiveEvent]) {
         eventDetail(event)
       } else {
-        // the url prefix or slug are not canonical so 302 to the correct one
+        // the url prefix is not canonical so 302 to the correct one
         Redirect(event.detailsUrl)
       }
     });
