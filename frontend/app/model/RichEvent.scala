@@ -103,7 +103,7 @@ object RichEvent {
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends RichEvent {
-    val detailsUrl = routes.Event.details(underlying.ebEvent.slug).url
+    val detailsUrl = routes.Event.detailsLive(underlying.ebEvent.slug).url
     val hasLargeImage = true
     val canHavePriorityBooking = true
     val imgOpt = image.flatMap(model.ResponsiveImageGroup.fromGridImage)
@@ -143,7 +143,7 @@ object RichEvent {
     underlying: EventWithDescription,
     data: Option[MasterclassData]
   ) extends RichEvent {
-    val detailsUrl = routes.Event.details(underlying.ebEvent.slug).url
+    val detailsUrl = routes.Event.detailsMasterclass(underlying.ebEvent.slug).url
     val hasLargeImage = false
     val canHavePriorityBooking = false
     val imgOpt = data.flatMap(_.images)

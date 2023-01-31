@@ -59,6 +59,8 @@ GET         /masterclasses/:tag/:subTag                controllers.WhatsOn.maste
 
 # Event Details
 GET         /event/:id                                 controllers.Event.details(id)
+GET         /live/:id                                  controllers.Event.detailsLive(id)
+GET         /masterclass/:id                           controllers.Event.detailsMasterclass(id)
 GET         /event/:id/embed                           controllers.Event.embedData(id)
 GET         /event/:id/buy                             controllers.Event.buy(id)
 GET         /event/:id/thankyou/pixel                  controllers.Event.thankyouPixel(id)
