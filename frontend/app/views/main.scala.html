@@ -76,17 +76,16 @@
                 "@@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": [{
-                "@@type": "WebPage",
-                "id":"https://membership.theguardian.com"
-                }]},{
+                "item": "https://membership.theguardian.com"},{
                 "@@type": "ListItem",
                 "position": 2,
+                "name":"Events",
+                "item": "https://membership.theguardian.com/events"
+                },{
+                "@@type": "ListItem",
+                "position": 3,
                 "name":"@Html(schema.name)",
-                "item":[{
-                "@@type": "WebPage",
-                "id":"@Html(schema.url)"
-                }]
+                "item": "@Html(schema.url)"
                 }]
          }
             </script>
