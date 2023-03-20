@@ -24,7 +24,7 @@
     "@guardian/src-foundations": "^2.0.0",
     "@guardian/src-icons": "^2.0.0",
     "autoprefixer-core": "^6.0.1",
-    "bower": "^1.8.8",
+    "bower": "^1.8.14",
     "domready": "^1.0.8",
     "emotion-theming": "^10.0.27",
     "gumshoejs": "^3.5.0",
