@@ -12,10 +12,10 @@
         @fragments.global.guardianHeader(pageInfo, countryGroup)
     }
     case MasterClassesHeader => {
-        @fragments.global.defaultHeader(pageInfo, countryGroup, "master-classes-header__inner", Logos.guardianMasterclassesHeader)
+        @fragments.global.defaultHeader(pageInfo, countryGroup, "master-classes-header__inner", Logos.guardianMasterclassesHeader, pageInfo.navigation.find(_.id == "masterclasses"))
     }
     case LiveHeader => {
-        @fragments.global.defaultHeader(pageInfo, countryGroup, "live-header__inner", Logos.guardianLiveHeader)
+        @fragments.global.defaultHeader(pageInfo, countryGroup, "live-header__inner", Logos.guardianLiveHeader, pageInfo.navigation.find(_.id == "events"))
     }
     case _ => { @fragments.global.defaultHeader(pageInfo, countryGroup) }
 }
