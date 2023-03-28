@@ -1,9 +1,10 @@
 @import model.SVG.Logos
+@import model.Nav.NavItem
 @import views.support.PageInfo
 @import com.gu.i18n.CountryGroup
 @import configuration.Config
 
-@(pageInfo: PageInfo, countryGroup: Option[CountryGroup], innerHeaderClass: String = "", svg: model.SVG.SVGImage = Logos.membersLogo)
+@(pageInfo: PageInfo, countryGroup: Option[CountryGroup], innerHeaderClass: String = "", svg: model.SVG.SVGImage = Logos.membersLogo, homepage: Option[NavItem] = None)
 
 <header class="global-header hidden-print js-header" role="banner">
     <div class="global-header__inner @innerHeaderClass">
@@ -13,7 +14,7 @@
             </div>
             @* Branding *@
             <div class="global-header__logo">
-	            <a href="/" class="global-header__logo__link" id="qa-header-logo">
+	            <a href="@homepage.map(_.href).getOrElse("/")" class="global-header__logo__link" id="qa-header-logo">
                     <span class="u-h">@Config.siteTitle</span>
                     @fragments.common.inlineSvgImage(svg, List("global-header__logo__image"))
                 </a>
