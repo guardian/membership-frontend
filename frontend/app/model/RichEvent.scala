@@ -164,14 +164,11 @@ object RichEvent {
     case class tagItem(categoryName: String, subCategories: Seq[String] = Seq())
 
     val tags = Seq(
-      tagItem("Writing", Seq("Copywriting", "Creative writing", "Research", "Fiction", "Non-fiction")),
-      tagItem("Publishing"),
-      tagItem("Journalism"),
       tagItem("Business"),
-      tagItem("Digital"),
-      tagItem("Culture"),
-      tagItem("Food and drink"),
-      tagItem("Media")
+      tagItem("Creative writing"),
+      tagItem("Journalism"),
+      tagItem("Lifestyle"),
+      tagItem("Personal development")
     )
 
     // if a tag is hyphenated (Non-fiction) then weirdness/duplication happens here
