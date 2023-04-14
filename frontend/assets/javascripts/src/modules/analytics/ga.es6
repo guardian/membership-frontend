@@ -1,6 +1,6 @@
 import * as user  from 'src/utils/user'
 import * as cookie from 'src/utils/cookie'
-import ophan from 'ophan-tracker-js/build/ophan.membership'
+import { loadScript } from 'src/utils/loadScript';
 
 const tracker = 'membershipPropertyTracker';
 const dimensions = {
@@ -63,6 +63,21 @@ function create(){
         'name': tracker,
         'cookieDomain': guardian.googleAnalytics.cookieDomain
     });
+
+    addGtagForGA4();
+}
+
+function addGtagForGA4 () {
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        window.dataLayer.push(arguments);
+    }
+
+    loadScript('https://www.googletagmanager.com/gtag/js?id=G-5SVJVDLPW0').then(() => {
+        gtag('js', new Date());
+        gtag('config', 'G-5SVJVDLPW0');
+    } )
 }
 
 // Queues up tracked events on the page, attempts to send to Google.
@@ -112,7 +127,7 @@ export function init() {
     wrappedGa('set', dimensions.platform, 'membership');
 
     if (guardian.abTests) {
-        wrappedGa('set', dimensions.experience, Object.keys(guardian.abTests).map(function(k){return k+"="+guardian.abTests[k]}).join(","));
+        wrappedGa('set', dimensions.experience, Object.keys(guardian.abTests).map(function(k){return k+'='+guardian.abTests[k]}).join(','));
     }
 
     // The hash on the url is set in identity-federation-api to indicate user has come via facebook login, this identifies that and stops the referrer being counted as www.facebook.com
@@ -121,7 +136,7 @@ export function init() {
         document.location.hash = '';
     }
 
-    if("productData" in guardian) {
+    if('productData' in guardian) {
 
         wrappedGa('set',dimensions.productPurchased,guardian.productData.tier);
         wrappedGa('set',dimensions.paymentMethod,guardian.productData.paymentMethod);
@@ -136,11 +151,11 @@ export function init() {
     }
     let cmpBunit = new RegExp('CMP_BUNIT=([^&]*)').exec(location.search);
     if (cmpBunit && cmpBunit[1]){
-        ga('set',dimensions.CamCodeBusinessUnit,cmpBunit[1]);
+        window.ga('set',dimensions.CamCodeBusinessUnit,cmpBunit[1]);
     }
     let cmpTu = new RegExp('CMP_TU=([^&]*)').exec(location.search);
     if (cmpTu && cmpTu[1]){
-        ga('set',dimensions.CamCodeTeam,cmpTu[1]);
+        window.ga('set',dimensions.CamCodeTeam,cmpTu[1]);
     }
 
     wrappedGa('send', 'pageview');
