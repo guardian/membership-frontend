@@ -4677,10 +4677,10 @@ grunt@^1.5.3:
     nopt "~3.0.6"
     rimraf "~3.0.2"
 
-gumshoejs@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/gumshoejs/-/gumshoejs-3.5.0.tgz#407f468e760d3817994f8afc107defa5fd4a7d0a"
-  integrity sha1-QH9GjnYNOBeZT4r8EH3vpf1KfQo=
+gumshoejs@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/gumshoejs/-/gumshoejs-5.1.2.tgz#82748afe83f3b76cbaef029e58322262f853b7d2"
+  integrity sha512-wIRdZGTNkWMP8dY3po8mtNYmCfiSva41LxXIEek2yEHceETpxRmO7DfW7aUbHsuucC9z2oDPu3alN3+00FUqlw==
 
 handle-thing@^2.0.0:
   version "2.0.0"
