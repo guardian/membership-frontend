@@ -137,18 +137,6 @@ object Config {
   val casServiceConfig = config.getString("cas.url")
   val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
 
-  def membershipRatePlanIds(env: String) = MembershipRatePlanIds.fromConfig(
-    config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.membership"))
-
-  def digipackRatePlanIds(env: String) = DigitalPackRatePlanIds.fromConfig(
-    config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds.digitalpack"))
-
-  def discountRatePlanIds(env: String): DiscountRatePlanIds =
-    DiscountRatePlanIds.fromConfig(config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds"))
-
-  def subsProductIds(env: String): SubscriptionsProductIds =
-    SubscriptionsProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds.subscriptions"))
-
   def productIds(env: String): com.gu.memsub.subsv2.reads.ChargeListReads.ProductIds =
     SubsV2ProductIds(config.getConfig(s"touchpoint.backend.environments.$env.zuora.productIds"))
 

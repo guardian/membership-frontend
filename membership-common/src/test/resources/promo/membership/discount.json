@@ -1,0 +1,33 @@
+{
+  "uuid": "e6c5c361-9b03-459e-9ec0-9eb26922a96b",
+  "name": "Test promotion",
+  "description": "description",
+  "appliesTo": {
+    "productRatePlanIds": [
+      "123"
+    ],
+    "countries": [
+      "GB"
+    ]
+  },
+  "campaignName": "1234 promotion",
+  "campaignCode": "C",
+  "codes": {
+    "testChannel": [
+      "1234"
+    ]
+  },
+  "landingPage": {
+    "title": "Page",
+    "subtitle": "Subtitle",
+    "productFamily": "membership",
+    "description": "Desc",
+    "roundelHtml": "Roundel"
+  },
+  "starts": "2016-05-04T13:58:20.113+01:00",
+  "expires": "2016-05-06T13:58:20.113+01:00",
+  "promotionType": {
+    "amount": 50,
+    "name": "percent_discount"
+  }
+}

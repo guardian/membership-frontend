@@ -1,0 +1,9 @@
+{
+  "error": {
+    "message": "Your card was declined.",
+    "type": "card_error",
+    "code": "card_declined",
+    "decline_code": "do_not_honor",
+    "charge": "ch_111111111111111111111111"
+  }
+}

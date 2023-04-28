@@ -1,0 +1,14 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Body>
+    <ns1:loginResponse xmlns:ns1="http://api.zuora.com/">
+        <ns1:result>
+            <ns1:Session>
+                yiZutsU55oKFQDR28lv210d7iWh8FVW9K45xFeFWMov7OSlRRI0soZ40DHmdLokscEjaUOo7Jt4sFxm_QZPyAhJdpR9yIxi_
+            </ns1:Session>
+            <ns1:ServerUrl>
+                https://apisandbox.zuora.com/apps/services/a/58.0
+            </ns1:ServerUrl>
+        </ns1:result>
+    </ns1:loginResponse>
+</soapenv:Body>
+</soapenv:Envelope>

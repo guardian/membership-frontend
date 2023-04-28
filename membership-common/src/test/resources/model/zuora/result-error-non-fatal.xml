@@ -1,0 +1,33 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:subscribeResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:AccountId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:AccountId>
+                <ns1:AccountNumber xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:AccountNumber>
+                <ns1:Errors>
+                    <ns1:Code>TRANSACTION_FAILED</ns1:Code>
+                    <ns1:Message>
+                        Transaction declined.generic_decline - Your card was declined.
+                    </ns1:Message>
+                </ns1:Errors>
+                <ns1:InvoiceId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:InvoiceId>
+                <ns1:InvoiceNumber xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:InvoiceNumber>
+                <ns1:InvoiceResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:InvoiceResult>
+                <ns1:SubscriptionId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:SubscriptionId>
+                <ns1:SubscriptionNumber xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:SubscriptionNumber>
+                <ns1:Success>false</ns1:Success>
+                <ns1:TotalMrr xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:TotalMrr>
+                <ns1:TotalTcv xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1">
+                </ns1:TotalTcv>
+            </ns1:result>
+        </ns1:subscribeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

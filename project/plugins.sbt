@@ -16,3 +16,7 @@ addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "5.1.0")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.4")
 
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")
+
+addSbtPlugin("com.localytics" % "sbt-dynamodb" % "2.0.3") // Needed for membership-common
+
+dependencyOverrides += "org.scala-lang.modules" %% "scala-xml" % "2.1.0"

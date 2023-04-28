@@ -26,11 +26,6 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.13.10"
 
-resolvers ++= Seq(
-    "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",
-    Resolver.sonatypeRepo("releases")
-)
-
 Compile / doc / sources := Seq.empty
 
 Compile / packageDoc / publishArtifact := false
@@ -114,3 +109,6 @@ libraryDependencies ++= frontendDependencies.map {
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
 
 addCommandAlias("devrun", "run 9100")
+
+dependencyOverrides += "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+dependencyOverrides += "org.scala-lang.modules" %% "scala-java8-compat" % "1.0.0"
