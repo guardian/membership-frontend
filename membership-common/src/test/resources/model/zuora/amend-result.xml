@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <ns1:amendResponse xmlns:ns1="http://api.zuora.com/">
+      <ns1:results>
+        <ns1:AmendmentIds>2c92c0f847f1dcf00147fe0a50520707</ns1:AmendmentIds>
+        <ns1:AmendmentIds>2c92c0f847f1dcf00147fe0a50f3071f</ns1:AmendmentIds>
+        <ns1:SubscriptionId>
+          2c92c0f847f1dcf00147fe0a51a10729
+        </ns1:SubscriptionId>
+        <ns1:Success>true</ns1:Success>
+        <ns1:TotalDeltaMrr>-11.250000000</ns1:TotalDeltaMrr>
+        <ns1:TotalDeltaTcv>0.0</ns1:TotalDeltaTcv>
+      </ns1:results>
+    </ns1:amendResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

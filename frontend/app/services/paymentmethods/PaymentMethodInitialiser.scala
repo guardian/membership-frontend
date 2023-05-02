@@ -1,13 +1,11 @@
 package services.paymentmethods
 
 import com.gu.i18n.{Country, CountryGroup}
-import model.IdMinimalUser
-import com.gu.stripe.StripeService
-import com.gu.zuora
-import com.gu.zuora.api.RegionalStripeGateways
-import com.gu.zuora.soap.models.Commands.{CreditCardReferenceTransaction, PayPalReferenceTransaction}
 import com.gu.monitoring.SafeLogger
+import com.gu.zuora
+import com.gu.zuora.soap.models.Commands.CreditCardReferenceTransaction
 import forms.MemberForm.CommonPaymentForm
+import model.IdMinimalUser
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
@@ -26,22 +24,5 @@ trait PaymentMethodInitialiser[PMCommand <: zuora.soap.models.Commands.PaymentMe
   def appliesToCountry(country: Country): Boolean
 }
 
-class StripeInitialiser(stripeService: StripeService) extends
-  PaymentMethodInitialiser[CreditCardReferenceTransaction] {
 
-  def extractTokenFrom(form: CommonPaymentForm): Option[String] = form.stripeToken
-
-  def initialiseWith(stripeToken: String, user: IdMinimalUser)(implicit executionContext: ExecutionContext): Future[CreditCardReferenceTransaction] = {
-    for {
-      stripeCustomer <- stripeService.Customer.create(stripeToken).andThen {
-        case Failure(e) => SafeLogger.warn(s"Could not create Stripe customer for user ${user.id}", e)
-      }
-    } yield {
-      val card = stripeCustomer.card
-      CreditCardReferenceTransaction(card.id, stripeCustomer.id, card.last4, CountryGroup.countryByCode(card.country), card.exp_month, card.exp_year, card.`type`)
-    }
-  }
-
-  def appliesToCountry(country: Country): Boolean = RegionalStripeGateways.getGatewayForCountry(country) == stripeService.paymentGateway
-}
 

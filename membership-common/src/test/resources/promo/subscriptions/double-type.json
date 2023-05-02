@@ -1,0 +1,39 @@
+{
+  "uuid": "b4209f28-4a13-4e4c-99e8-cd4c68825973",
+  "name": "Test promotion",
+  "description": "PARTNER99 description",
+  "appliesTo": {
+    "productRatePlanIds": ["test"],
+    "countries": ["GB"]
+  },
+  "campaignCode": "C",
+  "codes": {
+    "testChannel": ["PARTNER99"]
+  },
+  "landingPage": {
+    "title": "Page",
+    "description": "Desc",
+    "roundelHtml": "Roundel",
+    "image": {
+      "availableImages": [{
+        "path": "http://example.com",
+        "width": 0
+      }]
+    },
+    "sectionColour": "blue",
+    "productFamily": "digitalpack"
+  },
+  "starts": "2016-09-01T14:30:27.599+01:00",
+  "expires": "2016-09-03T14:30:27.836+01:00",
+  "promotionType": {
+    "a": {
+      "name": "tracking"
+    },
+    "b": {
+      "durationMonths": 3,
+      "amount": 20,
+      "name": "percent_discount"
+    },
+    "name": "double"
+  }
+}

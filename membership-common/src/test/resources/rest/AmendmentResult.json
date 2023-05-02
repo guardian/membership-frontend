@@ -1,0 +1,13 @@
+{
+  "results": [
+    {
+      "SubscriptionId": "1",
+      "TotalDeltaTcv": 2,
+      "AmendmentIds": [
+        "3"
+      ],
+      "TotalDeltaMrr": 0,
+      "Success": true
+    }
+  ]
+}

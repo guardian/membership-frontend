@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batchInfoList xmlns="http://www.force.com/2009/06/asyncapi/dataload">
+    <batchInfo>
+        <id>75111000000gUOCAA2</id>
+        <jobId>75011000000XgXSAA0</jobId>
+        <state>Failed</state>
+        <stateMessage>Failed message</stateMessage>
+        <createdDate>2014-10-17T13:25:32.000Z</createdDate>
+        <systemModstamp>2014-10-17T13:25:33.000Z</systemModstamp>
+        <numberRecordsProcessed>0</numberRecordsProcessed>
+        <numberRecordsFailed>0</numberRecordsFailed>
+        <totalProcessingTime>0</totalProcessingTime>
+        <apiActiveProcessingTime>0</apiActiveProcessingTime>
+        <apexProcessingTime>0</apexProcessingTime>
+    </batchInfo>
+    <batchInfo>
+        <id>75111000000gUOCAA3</id>
+        <jobId>75011000000XgXSAA1</jobId>
+        <state>Completed</state>
+        <stateMessage></stateMessage>
+        <createdDate>2014-10-17T13:25:32.000Z</createdDate>
+        <systemModstamp>2014-10-17T13:25:33.000Z</systemModstamp>
+        <numberRecordsProcessed>0</numberRecordsProcessed>
+        <numberRecordsFailed>0</numberRecordsFailed>
+        <totalProcessingTime>0</totalProcessingTime>
+        <apiActiveProcessingTime>0</apiActiveProcessingTime>
+        <apexProcessingTime>0</apexProcessingTime>
+    </batchInfo>
+</batchInfoList>

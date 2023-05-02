@@ -1,0 +1,18 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <soapenv:Fault xmlns:fns="http://fault.api.zuora.com/">
+            <faultcode>fns:INVALID_VALUE</faultcode>
+            <faultstring>
+                Invalid login. User name and password do not match.
+            </faultstring>
+            <detail>
+                <fns:LoginFault>
+                    <fns:FaultCode>INVALID_VALUE</fns:FaultCode>
+                    <fns:FaultMessage>
+                        Invalid login. User name and password do not match.
+                    </fns:FaultMessage>
+                </fns:LoginFault>
+            </detail>
+        </soapenv:Fault>
+    </soapenv:Body>
+</soapenv:Envelope>

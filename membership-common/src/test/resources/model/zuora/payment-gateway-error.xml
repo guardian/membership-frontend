@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:subscribeResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:Errors>
+                    <ns1:Code>TRANSACTION_FAILED</ns1:Code>
+                    <ns1:Message>Transaction declined.generic_decline - Your card was declined.</ns1:Message>
+                </ns1:Errors>
+                <ns1:GatewayResponse>Your card was declined.</ns1:GatewayResponse>
+                <ns1:GatewayResponseCode>Declined</ns1:GatewayResponseCode>
+                <ns1:Success>false</ns1:Success>
+            </ns1:result>
+        </ns1:subscribeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

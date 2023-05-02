@@ -1,0 +1,26 @@
+{
+  "records": [
+    {
+      "Balance": 0,
+      "Currency": "GBP",
+      "Id": "2c92c0f85cee08f3015cf32fa5df14a1"
+    },
+    {
+      "Balance": 12.34,
+      "Currency": "USD",
+      "Id": "2c92c0f95cee23f3015cf37ef9f24b6a",
+      "DefaultPaymentMethodId": "2c92a0fd58339435015844cd964c75d2",
+      "PaymentGateway": "Stripe Gateway GNM Membership AUS"
+    },
+    {
+      "Balance": 56.78,
+      "Currency": "GBP",
+      "Id": "2c92c0f8610ddce501613228973713a8",
+      "DefaultPaymentMethodId": "2c92c0f8610ddce501613228977313ac",
+      "PaymentGateway": "Stripe Gateway 1",
+      "LastInvoiceDate": "2018-01-26"
+    }
+  ],
+  "size": 2,
+  "done": true
+}

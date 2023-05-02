@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryResult xmlns="http://www.force.com/2009/06/asyncapi/dataload" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <records xsi:type="sObject">
+        <type>Contact</type>
+        <Id>0031100000ad2NpAAI</Id>
+        <Id>0031100000ad2NpAAI</Id>
+        <IdentityID__c>10000140</IdentityID__c>
+    </records>
+</queryResult>

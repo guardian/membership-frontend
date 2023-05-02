@@ -1,0 +1,33 @@
+{
+  "uuid": "7e843427-0621-42e4-b0c8-d2d7902d5862",
+  "name": "Test promotion",
+  "description": "description",
+  "appliesTo": {
+    "productRatePlanIds": [
+      "123"
+    ],
+    "countries": [
+      "GB"
+    ]
+  },
+  "campaignName": "1234 promotion",
+  "campaignCode": "C",
+  "codes": {
+    "testChannel": [
+      "1234"
+    ]
+  },
+  "landingPage": {
+    "title": "Page",
+    "description": "Desc",
+    "roundelHtml": "Roundel",
+    "imageUrl": "http://example.com",
+    "productFamily": "digitalpack"
+  },
+  "starts": "2016-05-04T13:57:05.878+01:00",
+  "expires": "2016-05-06T13:57:05.878+01:00",
+  "promotionType": {
+    "duration": 30,
+    "name": "free_trial"
+  }
+}

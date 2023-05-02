@@ -1,0 +1,37 @@
+{
+  "uuid": "60ef61e2-de7c-4472-a386-93ca54d9259f",
+  "name": "Test promotion",
+  "description": "description",
+  "appliesTo": {
+    "productRatePlanIds": [
+      "123"
+    ],
+    "countries": [
+      "GB"
+    ]
+  },
+  "campaignName": "1234 promotion",
+  "campaignCode": "C",
+  "codes": {
+    "testChannel": [
+      "1234"
+    ]
+  },
+  "landingPage": {
+    "title": "Page",
+    "subtitle": "Subtitle",
+    "productFamily": "membership",
+    "description": "Desc",
+    "roundelHtml": "Roundel",
+    "imageUrl": "http://example.com",
+    "sectionColour": "grey"
+  },
+  "starts": "2016-05-04T13:59:38.163+01:00",
+  "expires": "2016-05-06T13:59:38.163+01:00",
+  "promotionType": {
+    "redemptionInstructions": "this",
+    "termsAndConditions": "thing",
+    "name": "incentive",
+    "legalTerms": "legalese"
+  }
+}

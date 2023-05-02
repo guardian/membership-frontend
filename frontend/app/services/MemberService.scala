@@ -1,26 +1,15 @@
 package services
 
-import _root_.services.paymentmethods._
 import com.gu.config.DiscountRatePlanIds
-import com.gu.i18n.Country
 import com.gu.memsub.Subscription.{Feature, RatePlanId}
-import com.gu.memsub.services.api.PaymentService
-import com.gu.memsub.subsv2.services._
 import com.gu.memsub.subsv2._
-import com.gu.memsub.util.Timing
-import com.gu.monitoring.SafeLogger
+import com.gu.memsub.subsv2.services._
 import com.gu.salesforce.Tier.{Partner, Patron}
 import com.gu.salesforce._
-import com.gu.stripe.StripeService
-import com.gu.subscriptions.Discounter
-import com.gu.zuora.api._
-import com.gu.zuora.rest.ZuoraRestService
-import com.gu.zuora.soap.models.Results.CreateResult
 import com.gu.zuora.soap.models.{Queries => SoapQueries}
-import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
+import model.Eventbrite.{EBCode, EBTicketClass}
 import model.RichEvent.RichEvent
 import model.{Benefit => _, _}
-import org.joda.time.DateTimeZone
 import views.support.MembershipCompat._
 
 import scala.concurrent.{ExecutionContext, Future}
