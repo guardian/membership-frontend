@@ -77,7 +77,7 @@
     "phantomjs-prebuilt": "^2.1.15",
     "snyk": "^1.1064.0",
     "webpack": "^4.35.0",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^4.13.3"
   },
   "resolutions": {
     "lodash": "^4.17.21",
