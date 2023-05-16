@@ -9,7 +9,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.18.1"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
-  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.255"
+  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "4.11"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val contentAPI = "com.gu" %% "content-api-client-default" % "19.1.2"
   val playWS = PlayImport.ws
@@ -28,6 +28,7 @@ object Dependencies {
   val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.1.1"
   // vvv below here. All the dependencies are to force upgrades to versions of the libs without vulnerabilities
   val libthrift = "org.apache.thrift" % "libthrift" % "0.17.0"
+
   // ^^^ above here
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, enumPlay,
