@@ -1,10 +1,9 @@
 package services
 
 import java.util.concurrent.Executors
-
-import com.gu.identity.auth.UserCredentials
+import com.gu.identity.auth.{IdapiAuthConfig, IdapiUserCredentials, UserCredentials}
 import com.gu.identity.model.User
-import com.gu.identity.play.IdentityPlayAuthService
+import com.gu.identity.play.{IdapiPlayAuthService, IdentityPlayAuthService}
 import com.gu.identity.play.IdentityPlayAuthService.UserCredentialsMissingError
 import com.gu.monitoring.SafeLogger
 import com.gu.monitoring.SafeLogger._
@@ -18,7 +17,7 @@ import scala.concurrent.duration._
 // Class used to authenticate a user. Authentication is done by calling back to identity API.
 // This is so session invalidation can be taken into account when authenticating a user.
 // See comments on IdentityPlayAuthService for more information.
-class AuthenticationService private (identityPlayAuthService: IdentityPlayAuthService) {
+class AuthenticationService private (identityPlayAuthService: IdapiPlayAuthService) {
 
   import AuthenticationService._
 
@@ -59,14 +58,14 @@ object AuthenticationService {
     // Target client not relevant; only applicable to crypto access tokens,
     // which aren't used to authenticate requests for this application
     // (crypto access tokens only used to authenticate requests from native apps).
-    val identityPlayAuthService = IdentityPlayAuthService.unsafeInit(identityApiUri, accessToken, targetClient = None)
+    val identityPlayAuthService = IdapiPlayAuthService.unsafeInit(IdapiAuthConfig(identityApiUri, accessToken))
     new AuthenticationService(identityPlayAuthService)
   }
 
-  def buildAuthenticatedUser(credentials: UserCredentials, user: User): AuthenticatedIdUser = {
+  def buildAuthenticatedUser(credentials:IdapiUserCredentials, user: User): AuthenticatedIdUser = {
     val accessCredentials = credentials match {
-      case UserCredentials.SCGUUCookie(value) => AccessCredentials.Cookies(scGuU = value)
-      case UserCredentials.CryptoAccessToken(value, _) => AccessCredentials.Token(tokenText = value)
+      case IdapiUserCredentials.SCGUUCookie(value) => AccessCredentials.Cookies(scGuU = value)
+      case IdapiUserCredentials.CryptoAccessToken(value, _) => AccessCredentials.Token(tokenText = value)
     }
     AuthenticatedIdUser(accessCredentials, IdMinimalUser(user.id, user.publicFields.displayName))
   }
