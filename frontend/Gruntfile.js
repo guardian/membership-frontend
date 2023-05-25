@@ -2,9 +2,6 @@
 module.exports = function (grunt) {
     'use strict';
 
-    // Workaround to overcome https://github.com/webpack/webpack/issues/14532 following Node 18 upgrade
-    process.env.NODE_OPTIONS = '--openssl-legacy-provider';
-
     require('time-grunt')(grunt);
     var path = require('path');
     var sass = require('node-sass');

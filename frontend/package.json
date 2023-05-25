@@ -3,17 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "devSetup": "npm run compile --dev && npm run copyHooks",
+    "devSetup": "yarn run compile --dev && yarn run copyHooks",
     "bowerCss": "cd assets/stylesheets && rimraf bower_components &&  bower install",
-    "bowerSetup": "npm run bowerCss",
-    "compile": "echo 'compiling assets' && grunt compile",
+    "bowerSetup": "yarn run bowerCss",
+    "compile": "echo 'compiling assets' && grunt compile --openssl-legacy-provider",
     "compileCss": "grunt compile:css --dev",
-    "compileJs": "grunt compile:js --dev",
-    "watch": "grunt watch --dev",
-    "test": "grunt validate && grunt karma",
-    "postinstall": "npm run bowerSetup",
+    "compileJs": "grunt compile:js --dev --openssl-legacy-provider",
+    "watch": "grunt watch --dev --openssl-legacy-provider",
+    "test": "grunt validate && grunt karma --openssl-legacy-provider",
+    "postinstall": "yarn run bowerSetup",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "prepare": "yarn run snyk-protect"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
