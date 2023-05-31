@@ -2,7 +2,6 @@
 module.exports = function (grunt) {
     'use strict';
 
-    require('time-grunt')(grunt);
     var path = require('path');
     var sass = require('node-sass');
 
@@ -111,7 +110,7 @@ module.exports = function (grunt) {
             options: {
                 map: isDev ? true : false,
                 processors: [
-                    require('autoprefixer-core')({browsers: ['> 5%', 'last 2 versions', 'IE 9', 'Safari 6']})
+                    require('autoprefixer')()
                 ]
             },
             dist: { src: '<%= dirs.publicDir.stylesheets %>/*.css' }
