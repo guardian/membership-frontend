@@ -1,4 +1,4 @@
-    /* global module: false, process: false */
+/* global module: false, process: false */
 module.exports = function (grunt) {
     'use strict';
 
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
             frontend: {
                 output: {
                     path: path.join(__dirname, 'public/'),
-                    chunkFilename:  'webpack/[chunkhash].js',
+                    chunkFilename: 'webpack/[chunkhash].js',
                     filename: 'javascripts/[name].js',
                     publicPath: '/assets/'
                 },
@@ -180,7 +180,7 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         watch: {
-            clean_assetMap:{
+            clean_assetMap: {
                 files: ['conf/assets.map'],
                 tasks: ['clean:assetMap'],
                 options: {
@@ -339,7 +339,7 @@ module.exports = function (grunt) {
         'clean:images',
         'build:images'
     ]);
-    grunt.registerTask('compile:js', function() {
+    grunt.registerTask('compile:js', function () {
         if (!isDev) {
             grunt.task.run(['validate']);
         }
@@ -350,7 +350,7 @@ module.exports = function (grunt) {
             'copy:uet'
         ]);
     });
-    grunt.registerTask('compile', function(){
+    grunt.registerTask('compile', function () {
         grunt.task.run([
             'clean:public',
             'compile:css',
@@ -374,10 +374,10 @@ module.exports = function (grunt) {
      * Test
      ***********************************************************************/
 
-    grunt.registerTask('test', function(){
+    grunt.registerTask('test', function () {
         grunt.task.run(['test:unit']);
     });
-    grunt.registerTask('test:unit', function() {
+    grunt.registerTask('test:unit', function () {
         grunt.config.set('karma.options.singleRun', (singleRun === false) ? false : true);
         grunt.task.run(['karma:unit']);
     });
