@@ -22,7 +22,7 @@
     "@guardian/src-button": "^2.0.0",
     "@guardian/src-foundations": "^2.0.0",
     "@guardian/src-icons": "^2.0.0",
-    "autoprefixer-core": "^6.0.1",
+    "autoprefixer": "9.8.8",
     "bower": "^1.8.14",
     "domready": "^1.0.8",
     "emotion-theming": "^10.0.27",
@@ -40,7 +40,6 @@
     "rimraf": "^2.6.2",
     "smooth-scroll": "^12.1.5",
     "text-loader": "0.0.1",
-    "time-grunt": "^1.4.0",
     "url-search-params": "^1.1.0",
     "vinyl-fs": "^3.0.3"
   },
@@ -83,5 +82,7 @@
     "lodash": "^4.17.21",
     "lodash.mergewith": "^4.6.2"
   },
-  "snyk": true
+  "snyk": true,
+  "browserslist": ["> 5%", "last 2 versions", "IE 9", "Safari 6"]
+
 }
