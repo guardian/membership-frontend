@@ -107,6 +107,7 @@ libraryDependencies ++= frontendDependencies.map {
 }
 
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
+dependencyOverrides += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.1"
 
 addCommandAlias("devrun", "run 9100")
 

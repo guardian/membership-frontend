@@ -3,18 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "copyHooks": "cp  -f ../git-hooks/pre-commit ../.git/hooks/",
-    "devSetup": "npm run compile --dev && npm run copyHooks",
+    "devSetup": "yarn run compile --dev && yarn run copyHooks",
     "bowerCss": "cd assets/stylesheets && rimraf bower_components &&  bower install",
-    "bowerSetup": "npm run bowerCss",
-    "compile": "echo 'compiling assets' && grunt compile",
+    "bowerSetup": "yarn run bowerCss",
+    "compile": "echo 'compiling assets' && grunt compile --openssl-legacy-provider",
     "compileCss": "grunt compile:css --dev",
-    "compileJs": "grunt compile:js --dev",
-    "watch": "grunt watch --dev",
-    "test": "grunt validate && grunt karma",
-    "postinstall": "npm run bowerSetup",
+    "compileJs": "grunt compile:js --dev --openssl-legacy-provider",
+    "watch": "grunt watch --dev --openssl-legacy-provider",
+    "test": "grunt validate && grunt karma --openssl-legacy-provider",
+    "postinstall": "yarn run bowerSetup",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "prepare": "yarn run snyk-protect"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
@@ -27,7 +26,7 @@
     "bower": "^1.8.14",
     "domready": "^1.0.8",
     "emotion-theming": "^10.0.27",
-    "gumshoejs": "^3.5.0",
+    "gumshoejs": "^5.1.2",
     "jquery": "^3.5.1",
     "lazysizes": "^5.3.2",
     "load-grunt-tasks": "^4.0.0",
@@ -65,7 +64,7 @@
     "grunt-karma": "^3.0.0",
     "grunt-postcss": "^0.9.0",
     "grunt-px-to-rem": "^0.4.0",
-    "grunt-sass": "2.1.0",
+    "grunt-sass": "^3.1.0",
     "grunt-svgmin": "^5.0.0",
     "grunt-webpack": "^5.0.0",
     "jasmine-core": "^3.1.0",
@@ -75,10 +74,11 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-requirejs": "^1.1.0",
     "karma-webpack": "^4.0.2",
+    "node-sass": "^9.0.0",
     "phantomjs-prebuilt": "^2.1.15",
     "snyk": "^1.1064.0",
     "webpack": "^4.35.0",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^4.13.3"
   },
   "resolutions": {
     "lodash": "^4.17.21",

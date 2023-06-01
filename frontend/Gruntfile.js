@@ -4,6 +4,7 @@ module.exports = function (grunt) {
 
     require('time-grunt')(grunt);
     var path = require('path');
+    var sass = require('node-sass');
 
     /**
      * Setup
@@ -74,6 +75,7 @@ module.exports = function (grunt) {
 
         sass: {
             options: {
+                implementation: sass,
                 outputStyle: 'compressed',
                 sourceMap: isDev,
                 precision: 5
