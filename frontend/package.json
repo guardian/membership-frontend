@@ -50,7 +50,6 @@
     "@babel/plugin-transform-modules-amd": "^7.20.11",
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
-    "@guardian/libs": "^14.0.0",
     "babel-loader": "^8.2.1",
     "grunt": "^1.5.3",
     "grunt-asset-hash": "^0.1.9",
