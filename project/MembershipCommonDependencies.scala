@@ -30,7 +30,7 @@ object MembershipCommonDependencies {
   val libPhoneNumber = "com.googlecode.libphonenumber" % "libphonenumber" % "8.13.4"
   val dynamoDB = "com.amazonaws" % "aws-java-sdk-dynamodb" % awsClientVersion
   val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
-  val jacksonDatabind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.2"
+  val jacksonDatabind = "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.1"
 
   val dependencies = Seq(
     scalaUri,

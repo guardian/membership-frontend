@@ -5,11 +5,11 @@ object Dependencies {
 
   //versions
   val awsClientVersion = "1.12.460"
-  val jacksonVersion = "2.11.4"
+  val jacksonVersion = "2.15.1"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.18.1"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
-  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "3.255"
+  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "4.11"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val contentAPI = "com.gu" %% "content-api-client-default" % "19.1.2"
   val playWS = PlayImport.ws
@@ -25,7 +25,7 @@ object Dependencies {
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "7.3"
-  val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.1.1"
+  val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.2.7"
   // vvv below here. All the dependencies are to force upgrades to versions of the libs without vulnerabilities
   val libthrift = "org.apache.thrift" % "libthrift" % "0.17.0"
   // ^^^ above here
