@@ -37,7 +37,7 @@
     "react": "^16.10.2",
     "requirejs": "^2.3.5",
     "respimage": "^1.4.2",
-    "rimraf": "^2.6.2",
+    "rimraf": "^5.0.1",
     "smooth-scroll": "^12.1.5",
     "text-loader": "0.0.1",
     "url-search-params": "^1.1.0",
