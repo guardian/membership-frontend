@@ -26,6 +26,10 @@ jobs:
             - name: Env
               run: env
 
+            - name: Set Time Zone to GMT # Setting the Timezone as the test cases except it to be to Europe/London(for the daylight saving changes #
+              run: |
+                sudo timedatectl set-timezone Europe/London
+
             - name: Checkout repo
               uses: actions/checkout@v3
 
@@ -36,8 +40,11 @@ jobs:
                   cache: "yarn"
                   cache-dependency-path: frontend/yarn.lock
 
-            - name: Install
+            - name: Run Grunt and Install yarn
               run: |
+                set -o xtrace
+                set -o nounset
+                set -o errexit
                 export YARN_VERSION="1.12.3"
                 export YARN_LOCATION="tools/${YARN_VERSION}"
                 if [ ! -d "$YARN_LOCATION" ]; then
@@ -48,22 +55,14 @@ jobs:
                 fi
               working-directory: frontend
 
-            - name: Yarn Cache
-              run: yarn cache clean
-              uses: actions/cache@v3
-              with:
-                  path: tools/1.12.3
-                  key: yarn-cache-1.12.3
-
             - name: Install Dependencies
               run: |
-               cd tools/1.12.3/yarn-v1.12.3/
-               yarn install
-               cd ../..
-
-            - name: Build Static Assets
-              run: |
-               yarn "$@"
+                  export YARN_VERSION="1.12.3"
+                  export YARN_LOCATION="tools/${YARN_VERSION}"
+                  ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn cache clean
+                  ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn install
+                  yarn "$@"
+              working-directory: frontend
 
             # Required by sbt riffRaffUpload
             - name: Configure AWS credentials
@@ -77,7 +76,7 @@ jobs:
               with:
                   java-version: "8"
                   distribution: "adopt"
-            - uses: actions/cache@v3
+            - uses: actions/cache@v2
               with:
                   path: |
                       ~/.ivy2/cache
@@ -93,5 +92,4 @@ jobs:
             - name: Build and upload to RiffRaff
               run: |
                   export LAST_TEAMCITY_BUILD=15000
-                  export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
                   sbt "project frontend" riffRaffUpload
