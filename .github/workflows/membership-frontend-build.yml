@@ -1,0 +1,97 @@
+name: Build membership-frontend
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+jobs:
+    membership_frontend_build:
+        if: >-
+            (github.actor != 'dependabot[bot]') &&
+              (github.repository_owner == 'guardian' ||
+                github.event_name == 'push')
+
+        # Required by actions-assume-aws-role
+        permissions:
+            id-token: write
+            contents: read
+
+        name: membership-frontend build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Env
+              run: env
+
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+        # (Respects .nvmrc)
+            - name: Setup Node
+              uses: guardian/actions-setup-node@v2.4.1
+              with:
+                  cache: "yarn"
+                  cache-dependency-path: frontend/yarn.lock
+
+            - name: Install
+              run: |
+                export YARN_VERSION="1.12.3"
+                export YARN_LOCATION="tools/${YARN_VERSION}"
+                if [ ! -d "$YARN_LOCATION" ]; then
+                mkdir -p ${YARN_LOCATION}
+                cd ${YARN_LOCATION}/
+                wget -qO- https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz | tar zvx
+                cd ../..
+                fi
+              working-directory: frontend
+
+            - name: Yarn Cache
+              run: yarn cache clean
+              uses: actions/cache@v3
+              with:
+                  path: tools/1.12.3
+                  key: yarn-cache-1.12.3
+
+            - name: Install Dependencies
+              run: |
+               cd tools/1.12.3/yarn-v1.12.3/
+               yarn install
+               cd ../..
+
+            - name: Build Static Assets
+              run: |
+               yarn "$@"
+
+            # Required by sbt riffRaffUpload
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                  role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+                  aws-region: eu-west-1
+
+            - name: Setup Java 8
+              uses: actions/setup-java@v3
+              with:
+                  java-version: "8"
+                  distribution: "adopt"
+            - uses: actions/cache@v3
+              with:
+                  path: |
+                      ~/.ivy2/cache
+                      ~/.sbt
+                      ~/.coursier
+                  key: sbt
+
+        # ---- Test ---- #
+            - name: Test - membership-frontend
+              run: yarn run test
+              working-directory: frontend
+
+            - name: Build and upload to RiffRaff
+              run: |
+                  export LAST_TEAMCITY_BUILD=15000
+                  export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
+                  sbt "project frontend" riffRaffUpload
