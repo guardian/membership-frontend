@@ -61,12 +61,11 @@ jobs:
                   export YARN_LOCATION="tools/${YARN_VERSION}"
                   ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn cache clean
                   ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn install
-                  yarn "$@"
               working-directory: frontend
 
             - name: Build the static asset files for the project
               run: |
-                  ./node_modules/.bin/grunt "$@" --force
+                  ./node_modules/.bin/grunt test compile --openssl-legacy-provider
               working-directory: frontend
 
             # Required by sbt riffRaffUpload
@@ -92,6 +91,25 @@ jobs:
         # ---- Test ---- #
             - name: Test - membership-frontend
               run: yarn run test
+              working-directory: frontend
+
+        # ---- Publish Artifacts ---- #
+            - name: Publish- membership-frontend artifacts
+              run: |
+                  echo ${BUILD_NUMBER:-DEV} > conf/build.txt
+
+                  export NVM_DIR="$HOME/.nvm"
+                  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+                  nvm install
+                  nvm use
+
+                  # put the init-instance.sh script into the riff-raff package so that it ends up in S3 ready
+                  # to be fetched by the instance on boot
+                  # the special ##teamcity command causes teamcity to write it to the build output
+                  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+                  echo "##teamcity[publishArtifacts '$DIR/instance => .']"
+
               working-directory: frontend
 
             - name: Build and upload to RiffRaff
