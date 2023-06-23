@@ -59,7 +59,7 @@
     "grunt-contrib-imagemin": "^3.1.0",
     "grunt-contrib-requirejs": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^20.1.0",
+    "grunt-eslint": "^24.2.0",
     "grunt-karma": "^3.0.0",
     "grunt-postcss": "^0.9.0",
     "grunt-px-to-rem": "^0.4.0",
