@@ -1046,10 +1046,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@guardian/consent-management-platform@^13.0.2":
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-13.1.0.tgz#da58321d3450a89bf2fba55addde41c5279985ff"
-  integrity sha512-jCcaf7Faj8P4PAndh8s0f6ikbwpJON4AyOdplXvO3lSfC+Z+coHfQ+S65cI9tptNqRUlMf3l2YhirjAack0rBw==
+"@guardian/consent-management-platform@^13.5.0":
+  version "13.5.0"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-13.5.0.tgz#61a97c823f6b18f62a6517a3374f6e7bdfca121d"
+  integrity sha512-9iz04lyonWAbUeZ7B+fNp0KbgAervsWDO3A4CE/3e+d876AQj0I3TwU7W4jpWxI4tthcA6UVk7Y6faaS8l+lFw==
 
 "@guardian/libs@^14.0.0":
   version "14.0.0"
