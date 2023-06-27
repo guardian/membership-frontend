@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 echo ${BUILD_NUMBER:-DEV} > conf/build.txt
 
 export NVM_DIR="$HOME/.nvm"
@@ -11,4 +12,3 @@ nvm use
 # to be fetched by the instance on boot
 # the special ##teamcity command causes teamcity to write it to the build output
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "##teamcity[publishArtifacts '$DIR/instance => .']"

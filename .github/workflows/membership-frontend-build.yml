@@ -88,31 +88,53 @@ jobs:
                       ~/.coursier
                   key: sbt
 
-        # ---- Test ---- #
+              # ---- Test ---- #
             - name: Test - membership-frontend
               run: yarn run test
               working-directory: frontend
 
-        # ---- Publish Artifacts ---- #
-            - name: Publish- membership-frontend artifacts
-              run: |
-                  echo ${BUILD_NUMBER:-DEV} > conf/build.txt
+            - name:  Run script/ci.sh
+              run: ./script/ci.sh
 
-                  export NVM_DIR="$HOME/.nvm"
-                  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#            # ---- Publish Artifacts ---- #
+#            - name: Publish- membership-frontend artifacts
+#              run: |
+#                  echo ${BUILD_NUMBER:-DEV} > conf/build.txt
+#
+#                  export NVM_DIR="$HOME/.nvm"
+#                  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#
+#                  nvm install
+#                  nvm use
+#
+#                  # put the init-instance.sh script into the riff-raff package so that it ends up in S3 ready
+#                  # to be fetched by the instance on boot
+#                  # the special ##teamcity command causes teamcity to write it to the build output
+#                  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#                  echo "##teamcity[publishArtifacts '$DIR/instance => .']"
+#              working-directory: frontend
 
-                  nvm install
-                  nvm use
 
-                  # put the init-instance.sh script into the riff-raff package so that it ends up in S3 ready
-                  # to be fetched by the instance on boot
-                  # the special ##teamcity command causes teamcity to write it to the build output
-                  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-                  echo "##teamcity[publishArtifacts '$DIR/instance => .']"
+#            - name: Use the Upload Artifact GitHub Action
+#              uses: actions/upload-artifact@v3
+#              with:
+#                   name: publishArtifacts
+#                   path: ${{ github.workspace }}/frontend/instance
 
-              working-directory: frontend
+            - name: Upload to Riff-Raff
+              uses: guardian/actions-riff-raff@v2
+              with:
+                  app: frontend
+                  configPath: ./frontend/conf/riff-raff.yaml
+                  buildNumberOffset: 13500 # This is the last build number from TeamCity
+                  contentDirectories: |
+                      cfn:
+                        -  ./cloud-formation/membership-app.cf.yaml
+                      frontend:
+                        - ./frontend/instance
 
-            - name: Build and upload to RiffRaff
-              run: |
-                  export LAST_TEAMCITY_BUILD=15000
-                  sbt "project frontend" riffRaffUpload
+#            - name: Build and upload to RiffRaff
+#              run: |
+#                  export LAST_TEAMCITY_BUILD=15000
+#                  export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
+#                  sbt "project frontend" riffRaffUpload
