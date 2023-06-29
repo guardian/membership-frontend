@@ -12,3 +12,5 @@ nvm use
 # to be fetched by the instance on boot
 # the special ##teamcity command causes teamcity to write it to the build output
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR="${DIR}/.."
+cd "$ROOT_DIR/frontend/instance"
