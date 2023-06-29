@@ -46,18 +46,19 @@ $global-header-height-mobile: 116px;
 .master-classes-header__inner {
     background: color(brand-main) url(/assets/images/headers/masterclasses.svg) no-repeat;
     background-position: center;
+    background-size: cover;
 
-    .control__info {
-        color: #fff;
-    }
+    // .control__info {
+    //     color: #fff;
+    // }
 
-    .control__icon {
-        border-color: #fff;
-    }
+    // .control__icon {
+    //     border-color: #fff;
+    // }
 
-    .icon-inline {
-        fill: #fff;
-    }
+    // .icon-inline {
+    //     fill: #fff;
+    // }
 
     .global-header__logo__image {
         height: 50px;
@@ -69,14 +70,15 @@ $global-header-height-mobile: 116px;
         }
     }
 
-    .control:hover .control__icon {
-        border-color: #fff;
-    }
+    // .control:hover .control__icon {
+    //     border-color: #fff;
+    // }
 }
 
 .live-header__inner {
     background: color(brand-main) url(/assets/images/headers/live.svg) no-repeat;
     background-position: center;
+    background-size: cover;
 
     .global-header__logo__image {
         height: 50px;
