@@ -80,6 +80,7 @@ jobs:
               with:
                   java-version: "8"
                   distribution: "adopt"
+
             - uses: actions/cache@v2
               with:
                   path: |
@@ -88,10 +89,14 @@ jobs:
                       ~/.coursier
                   key: sbt
 
-              # ---- Test ---- #
+                # ---- Build and Test membership-frontend---- #
             - name: Test - membership-frontend
-              run: yarn run test
-              working-directory: frontend
+              run: |
+                  sbt clean test riffRaffNotifyTeamcity
+            - name: Tree
+              run: |
+                tree
+                find . -name "frontend_1.0-SNAPSHOT_all.deb"
 
             - name:  Run script/ci.sh
               run: ./script/ci.sh
@@ -107,3 +112,5 @@ jobs:
                         - ./cloud-formation/membership-app.cf.yaml
                       frontend:
                         - ./frontend/instance/frontend/init-instance.sh
+                        - ./frontend/target/frontend_1.0-SNAPSHOT_all.deb
+
