@@ -93,10 +93,6 @@ jobs:
             - name: Test - membership-frontend
               run: |
                   sbt clean test riffRaffNotifyTeamcity
-            - name: Tree
-              run: |
-                tree
-                find . -name "frontend_1.0-SNAPSHOT_all.deb"
 
             - name:  Run script/ci.sh
               run: ./script/ci.sh
