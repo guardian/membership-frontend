@@ -109,7 +109,7 @@ jobs:
                   buildNumberOffset: 13500 # This is the last build number from TeamCity
                   contentDirectories: |
                       cfn:
-                        - ./cloud-formation/membership-app.cf.yaml
+                        - ./cloud-formation/cfn.yaml
                       frontend:
                         - ./frontend/instance/frontend/init-instance.sh
                         - ./frontend/target/frontend_1.0-SNAPSHOT_all.deb
