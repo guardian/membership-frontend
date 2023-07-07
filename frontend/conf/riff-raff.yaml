@@ -15,4 +15,4 @@ deployments:
     type: autoscaling
     dependencies: [cfn]
     parameters:
-      bucket: membership-dist
+        bucketSsmLookup: true
