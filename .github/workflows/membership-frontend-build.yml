@@ -10,10 +10,7 @@ on:
 
 jobs:
     membership_frontend_build:
-        if: >-
-            (github.actor != 'dependabot[bot]') &&
-              (github.repository_owner == 'guardian' ||
-                github.event_name == 'push')
+        if: github.repository_owner == 'guardian'
 
         # Required by actions-assume-aws-role
         permissions:
@@ -26,7 +23,7 @@ jobs:
             - name: Env
               run: env
 
-            - name: Set Time Zone to GMT # Setting the Timezone as the test cases except it to be to Europe/London(for the daylight saving changes #
+            - name: Set Time Zone to GMT # Setting the Timezone as the test cases expect it to be to Europe/London(for the daylight saving changes #
               run: |
                 sudo timedatectl set-timezone Europe/London
 
@@ -40,27 +37,10 @@ jobs:
                   cache: "yarn"
                   cache-dependency-path: frontend/yarn.lock
 
-            - name: Run Grunt and Install yarn
-              run: |
-                set -o xtrace
-                set -o nounset
-                set -o errexit
-                export YARN_VERSION="1.12.3"
-                export YARN_LOCATION="tools/${YARN_VERSION}"
-                if [ ! -d "$YARN_LOCATION" ]; then
-                mkdir -p ${YARN_LOCATION}
-                cd ${YARN_LOCATION}/
-                wget -qO- https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz | tar zvx
-                cd ../..
-                fi
-              working-directory: frontend
-
             - name: Install Dependencies
               run: |
-                  export YARN_VERSION="1.12.3"
-                  export YARN_LOCATION="tools/${YARN_VERSION}"
-                  ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn cache clean
-                  ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn install
+                      yarn cache clean
+                      yarn install
               working-directory: frontend
 
             - name: Build the static asset files for the project
@@ -93,9 +73,6 @@ jobs:
             - name: Test - membership-frontend
               run: |
                   sbt clean test riffRaffNotifyTeamcity
-
-            - name:  Run script/ci.sh
-              run: ./script/ci.sh
 
             - name: Upload to Riff-Raff
               uses: guardian/actions-riff-raff@v2
