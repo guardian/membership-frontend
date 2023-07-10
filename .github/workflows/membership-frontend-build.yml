@@ -1,0 +1,89 @@
+name: Build membership-frontend
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+jobs:
+    membership_frontend_build:
+        if: github.repository_owner == 'guardian'
+
+        # Required by actions-assume-aws-role
+        permissions:
+            id-token: write
+            contents: read
+
+        name: membership-frontend build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Env
+              run: env
+
+            - name: Set Time Zone to GMT # Setting the Timezone as the test cases expect it to be to Europe/London(for the daylight saving changes #
+              run: |
+                sudo timedatectl set-timezone Europe/London
+
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+        # (Respects .nvmrc)
+            - name: Setup Node
+              uses: guardian/actions-setup-node@v2.4.1
+              with:
+                  cache: "yarn"
+                  cache-dependency-path: frontend/yarn.lock
+
+            - name: Install Dependencies
+              run: |
+                      yarn cache clean
+                      yarn install
+              working-directory: frontend
+
+            - name: Build the static asset files for the project
+              run: |
+                  ./node_modules/.bin/grunt test compile --openssl-legacy-provider
+              working-directory: frontend
+
+            # Required by sbt riffRaffUpload
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                  role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+                  aws-region: eu-west-1
+
+            - name: Setup Java 8
+              uses: actions/setup-java@v3
+              with:
+                  java-version: "8"
+                  distribution: "adopt"
+
+            - uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.ivy2/cache
+                      ~/.sbt
+                      ~/.coursier
+                  key: sbt
+
+                # ---- Build and Test membership-frontend---- #
+            - name: Test - membership-frontend
+              run: |
+                  sbt clean test riffRaffNotifyTeamcity
+
+            - name: Upload to Riff-Raff
+              uses: guardian/actions-riff-raff@v2
+              with:
+                  projectName: MemSub::Membership::Frontend
+                  configPath: ./frontend/conf/riff-raff.yaml
+                  buildNumberOffset: 13500 # This is the last build number from TeamCity
+                  contentDirectories: |
+                      cfn:
+                        - ./cloud-formation/cfn.yaml
+                      frontend:
+                        - ./frontend/instance/frontend/init-instance.sh
+                        - ./frontend/target/frontend_1.0-SNAPSHOT_all.deb
+
