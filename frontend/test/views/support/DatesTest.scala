@@ -1,10 +1,26 @@
 package views.support
 
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.specs2.mutable.Specification
 
 class DatesTest extends Specification {
+
+  "these tests" should {
+    "be run with a Europe/London timezone" in {
+      DateTimeZone.getDefault().getName(1687532931000L) mustEqual "British Summer Time"
+      DateTimeZone.getDefault().getName(1674486531000L) mustEqual "Greenwich Mean Time"
+      // These tests are written to expect the default timezone to be
+      // Europe/London, i.e. to vary according to daylight savings as UK time
+      // does between UTC and UTC+1. (This comes up in tests in this file and in
+      // CachedTest.scala, for example.)
+      // This may undermine their validity as tests: I’m not sure. We came
+      // across this while moving the tests from TeamCity to Github Actions, so
+      // I’ve added this test to save people time in the future if they’re in a
+      // similar situation.
+    }
+  }
 
   "prettyTime" should {
     "respect Guardian style: 1am, 6.30pm, etc" in {
