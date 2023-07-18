@@ -137,7 +137,8 @@ object ChargeListReads {
   implicit def readPaidChargeList: ChargeListReads[PaidChargeList] = new ChargeListReads[PaidChargeList] {
     def read(cat: PlanChargeMap, charges: List[ZuoraCharge]): ValidationNel[String, PaidChargeList] = {
       readPaperChargeList.read(cat, charges).map(identity[PaidChargeList]) orElse2
-       readPaidCharge[Benefit, BillingPeriod](readAnyProduct, anyBpReads).read(cat, charges)
+       readPaidCharge[Benefit, BillingPeriod](readAnyProduct, anyBpReads).read(cat, charges) orElse2
+        readSupporterPlusV2ChargeList.read(cat, charges)
     }.withTrace("readPaidChargeList")
   }
 
@@ -173,6 +174,29 @@ object ChargeListReads {
     override def read(cat: PlanChargeMap, charges: List[ZuoraCharge]): ValidationNel[String, PaperCharges] = {
       val chargeMap = charges.flatMap(c => cat.get(c.productRatePlanChargeId).map(_ -> c.pricing))
       (getDays(chargeMap) |@| findDigipack(chargeMap))(PaperCharges).withTrace("readPaperChargeList")
+    }
+  }
+
+  implicit def readSupporterPlusV2ChargeList: ChargeListReads[SupporterPlusCharges] = new ChargeListReads[SupporterPlusCharges] {
+
+    def getBillingPeriod(charges: List[ZuoraCharge]): ValidationNel[String, BillingPeriod] = {
+      val billingPeriods = charges.flatMap(_.billingPeriod).distinct
+      billingPeriods match {
+        case Nil => Validation.failureNel("No billing period found")
+        case b :: Nil => Validation.success[NonEmptyList[String], BillingPeriod](b.toBillingPeriod)
+        case _ => Validation.failureNel("Too many billing periods found")
+      }
+    }
+
+    def getPricingSummaries(charges: List[ZuoraCharge]): ValidationNel[String, List[PricingSummary]] = {
+      val pricingSummaries = charges.map(_.pricing)
+      Validation
+        .success[NonEmptyList[String], List[PricingSummary]](pricingSummaries)
+        .ensure("No pricing summaries found".wrapNel)(_.nonEmpty)
+    }
+
+    override def read(cat: PlanChargeMap, charges: List[ZuoraCharge]): ValidationNel[String, SupporterPlusCharges] = {
+      (getBillingPeriod(charges) |@| getPricingSummaries(charges)).apply(SupporterPlusCharges)
     }
   }
 
