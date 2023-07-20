@@ -53,16 +53,7 @@ object EndDateCondition {
   implicit val reads: Reads[EndDateCondition] = ZuoraEnum.getReads(values, "invalid end date condition value")
 }
 
-sealed trait ZBillingPeriod extends ZuoraEnum {
-  def toBillingPeriod: BillingPeriod = this match {
-    case ZYear => Year
-    case ZTwoYears => TwoYears
-    case ZThreeYears => ThreeYears
-    case ZMonth => Month
-    case ZQuarter => Quarter
-    case  _ => throw new IllegalArgumentException("Zuora billing period not supported")
-  }
-}
+sealed trait ZBillingPeriod extends ZuoraEnum
 
 case object ZYear extends ZBillingPeriod {
   override val id = "Annual"
