@@ -179,11 +179,17 @@ object ChargeListReads {
 
   implicit def readSupporterPlusV2ChargeList: ChargeListReads[SupporterPlusCharges] = new ChargeListReads[SupporterPlusCharges] {
 
+    def validateBillingPeriod(zBillingPeriod: ZBillingPeriod): ValidationNel[String, BillingPeriod] = zBillingPeriod match {
+      case ZMonth => Validation.success[NonEmptyList[String], BillingPeriod](Month)
+      case ZYear => Validation.success[NonEmptyList[String], BillingPeriod](Year)
+      case _ => Validation.failureNel(s"Supporter plus V2 must have a Monthly or Annual billing period, not $zBillingPeriod")
+    }
+
     def getBillingPeriod(charges: List[ZuoraCharge]): ValidationNel[String, BillingPeriod] = {
       val billingPeriods = charges.flatMap(_.billingPeriod).distinct
       billingPeriods match {
         case Nil => Validation.failureNel("No billing period found")
-        case b :: Nil => Validation.success[NonEmptyList[String], BillingPeriod](b.toBillingPeriod)
+        case b :: Nil => validateBillingPeriod(b)
         case _ => Validation.failureNel("Too many billing periods found")
       }
     }
