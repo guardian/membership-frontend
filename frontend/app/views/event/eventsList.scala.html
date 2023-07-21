@@ -16,14 +16,22 @@
 @import model.SVG.Logos
 
 @eventsToShow = @{
+
+    /**
+     * Manual override to remove the Football Weekly Live tour events which have their own sale page on www
+     */
+    var candidateEvents = events.copy(events =
+        events.events.filterNot(_.underlying.ebEvent.name.text.contains("Football Weekly Live tour"))
+    )
+
     /**
      * - If no location is set exclude featured events from the main listing.
      * - If the user has an active filter, display all expected events in the main listing.
      *   Featured container is no longer shown.
      */
     if(selectedLocation.isEmpty) {
-        events.copy(events = events.events.diff(featuredEvents.events))
-    } else events
+        candidateEvents.copy(events = candidateEvents.events.diff(featuredEvents.events))
+    } else candidateEvents
 }
 
     @main("Events", pageInfo = pageInfo, header = LiveHeader, footer = LiveFooter) {
