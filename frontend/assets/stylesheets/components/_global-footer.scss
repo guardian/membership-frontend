@@ -2,6 +2,9 @@
    Global Footer
    ========================================================================== */
 
+$global-brandbar-height: 130px;
+$global-brandbar-height-mobile: 116px;
+
 .global-footer {
     position: relative;
     z-index: 2;
@@ -34,6 +37,14 @@
    ========================================================================== */
 
 .global-brandbar {
+    // we need to know the exact brandbar height
+    // hence using the variable to enforce it
+    height: $global-brandbar-height-mobile;
+
+    @include mq($from: tablet) {
+        height: $global-brandbar-height;
+    }
+
     background: color(brand-main) url(/assets/images/common/bg-brandbar.png) no-repeat;
     background-position: 65% 100%;
 

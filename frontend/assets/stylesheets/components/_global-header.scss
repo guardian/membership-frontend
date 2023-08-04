@@ -121,10 +121,6 @@ $global-header-height-mobile: 116px;
 .global-header__logo {
     float: right;
     width: auto;
-
-    @include mq(tablet) {
-        margin-right: -20px;
-    }
 }
 .global-header__logo__image,
 .global-header__logo__link {

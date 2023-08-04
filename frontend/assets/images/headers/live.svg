@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 27.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 2500 130" style="enable-background:new 0 0 2500 130;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#F7DCE6;}
-	.st1{fill:#FDF4F7;}
-	.st2{fill:#FAEAF0;}
+	.st0{fill:#FFD87D;}
+	.st1{fill:#FCBC00;}
 </style>
-<g>
+<g id="Layer_1">
 	<rect class="st0" width="2500" height="130"/>
-	<g>
-		<rect x="539" class="st1" width="61" height="130"/>
-		<rect x="1901" class="st1" width="31" height="130"/>
-		<rect x="1931" class="st2" width="101" height="130"/>
-		<rect x="436" class="st2" width="103" height="130"/>
-		<rect x="599" width="1" height="130"/>
-		<rect class="st2" width="164" height="130"/>
-		<rect x="163" width="1" height="130"/>
-		<rect x="1900" width="1" height="130"/>
-		<rect x="1931" width="1" height="130"/>
-		<rect x="2031" width="1" height="130"/>
-		<rect x="2278" class="st1" width="89" height="130"/>
-		<rect x="2367" class="st2" width="133" height="130"/>
-		<rect x="2367" width="1" height="130"/>
-		<rect x="2278" width="1" height="130"/>
-		<rect x="538" width="1" height="130"/>
-		<rect x="436" width="1" height="130"/>
-	</g>
+	<rect x="680" class="st1" width="1140" height="130"/>
+	<rect x="679" width="1" height="130"/>
+	<rect x="1820" width="1" height="130"/>
+</g>
+<g id="Layer_2">
 </g>
 </svg>
