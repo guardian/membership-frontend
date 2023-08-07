@@ -1,7 +1,9 @@
 @import views.support.PageInfo
 @(pageInfo: PageInfo, groupedEvents: model.RichEvent.CalendarMonthDayGroup)
+@import model.Header.LiveHeader
+@import model.Footer.LiveFooter
 
-@main(pageInfo.title, pageInfo) {
+@main(pageInfo.title, pageInfo, header = LiveHeader, footer = LiveFooter) {
     <main class="page-content l-constrained">
         @fragments.page.pageHeader(groupedEvents.title, None)
         @for((month, monthGroup) <- groupedEvents.list) {
