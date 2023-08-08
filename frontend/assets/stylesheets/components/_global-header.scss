@@ -46,18 +46,7 @@ $global-header-height-mobile: 116px;
 .master-classes-header__inner {
     background: color(brand-main) url(/assets/images/headers/masterclasses.svg) no-repeat;
     background-position: center;
-
-    .control__info {
-        color: #fff;
-    }
-
-    .control__icon {
-        border-color: #fff;
-    }
-
-    .icon-inline {
-        fill: #fff;
-    }
+    background-size: cover;
 
     .global-header__logo__image {
         height: 50px;
@@ -68,15 +57,12 @@ $global-header-height-mobile: 116px;
             width: 256px;
         }
     }
-
-    .control:hover .control__icon {
-        border-color: #fff;
-    }
 }
 
 .live-header__inner {
     background: color(brand-main) url(/assets/images/headers/live.svg) no-repeat;
     background-position: center;
+    background-size: cover;
 
     .global-header__logo__image {
         height: 50px;
@@ -119,10 +105,6 @@ $global-header-height-mobile: 116px;
 .global-header__logo {
     float: right;
     width: auto;
-
-    @include mq(tablet) {
-        margin-right: -20px;
-    }
 }
 .global-header__logo__image,
 .global-header__logo__link {

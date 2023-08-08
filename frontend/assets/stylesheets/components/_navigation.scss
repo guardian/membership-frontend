@@ -91,6 +91,10 @@
     &, &:active {
         color: $white;
         text-decoration: none;
+        
+        @include mq(tablet) {
+            color: $black;
+        }
     }
     &:focus,
     &:active {
