@@ -11,7 +11,7 @@ object Dependencies {
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "4.12"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
-  val contentAPI = "com.gu" %% "content-api-client-default" % "19.3.1"
+  val contentAPI = "com.gu" %% "content-api-client-default" % "19.3.2"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.ehcache
