@@ -50,7 +50,7 @@ jobs:
 
             # Required by sbt riffRaffUpload
             - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v2
+              uses: aws-actions/configure-aws-credentials@v4
               with:
                   role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
                   aws-region: eu-west-1
