@@ -32,8 +32,9 @@ jobs:
 
         # (Respects .nvmrc)
             - name: Setup Node
-              uses: guardian/actions-setup-node@v2.4.1
+              uses: actions/setup-node@v3
               with:
+                  node-version-file: '.nvmrc'
                   cache: "yarn"
                   cache-dependency-path: frontend/yarn.lock
 
