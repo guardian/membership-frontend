@@ -9,7 +9,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.28.0"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
-  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "4.12"
+  val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "4.13"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
   val contentAPI = "com.gu" %% "content-api-client-default" % "19.4.0"
   val playWS = PlayImport.ws
