@@ -18,7 +18,7 @@ object Dependencies {
   val awsSimpleEmail = "com.amazonaws" % "aws-java-sdk-ses" % awsClientVersion
   val scalaTest =  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % "test"
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.3.7"
-  val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
+  val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.20.2" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
   val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.3"
   val catsCore = "org.typelevel" %% "cats-core" % "2.9.0"
