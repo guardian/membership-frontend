@@ -7,11 +7,11 @@ object Dependencies {
   val awsClientVersion = "1.12.565"
   val jacksonVersion = "2.15.1"
   //libraries
-  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.25.2"
+  val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.28.0"
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "2.3.1"
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % "4.12"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.8"
-  val contentAPI = "com.gu" %% "content-api-client-default" % "19.3.1"
+  val contentAPI = "com.gu" %% "content-api-client-default" % "19.3.2"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
   val playCache = PlayImport.ehcache
@@ -20,7 +20,7 @@ object Dependencies {
   val scalaz = "org.scalaz" %% "scalaz-core" % "7.3.7"
   val specs2Extra = "org.specs2" %% "specs2-matcher-extra" % "4.5.1" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.6.0"
-  val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.2"
+  val enumPlay = "com.beachape" %% "enumeratum-play" % "1.7.3"
   val catsCore = "org.typelevel" %% "cats-core" % "2.9.0"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
   val kinesisLogbackAppender = "com.gu" % "kinesis-logback-appender" % "1.4.4"
