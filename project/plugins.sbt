@@ -7,7 +7,7 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.19")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.7.0")
 
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.1.1")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.1.4")
 
 addSbtPlugin("com.gu" % "sbt-riffraff-artifact" % "1.1.3")
 
