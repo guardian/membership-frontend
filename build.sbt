@@ -10,7 +10,7 @@ val `membership-common` =
             Seq(
                 name := "membership-common",
                 organization := "com.gu",
-                scalaVersion := "2.13.11",
+                scalaVersion := "2.13.12",
                 scalacOptions := Seq("-feature", "-deprecation"),
                 crossScalaVersions := Seq(scalaVersion.value),
                 Compile / doc / sources := List(), // no docs please

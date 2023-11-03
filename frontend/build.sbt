@@ -24,7 +24,7 @@ organization := "com.gu"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.13.11"
+scalaVersion := "2.13.12"
 
 Compile / doc / sources := Seq.empty
 
