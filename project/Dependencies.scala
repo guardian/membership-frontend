@@ -4,7 +4,7 @@ import sbt._
 object Dependencies {
 
   //versions
-  val awsClientVersion = "1.12.565"
+  val awsClientVersion = "1.12.580"
   val jacksonVersion = "2.15.1"
   //libraries
   val sentryRavenLogback = "io.sentry" % "sentry-logback" % "6.25.2"
