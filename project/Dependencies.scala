@@ -27,7 +27,7 @@ object Dependencies {
   val logstash = "net.logstash.logback" % "logstash-logback-encoder" % "7.4"
   val googleAuth = "com.gu.play-googleauth" %% "play-v28" % "2.2.7"
   // vvv below here. All the dependencies are to force upgrades to versions of the libs without vulnerabilities
-  val libthrift = "org.apache.thrift" % "libthrift" % "0.17.0"
+  val libthrift = "org.apache.thrift" % "libthrift" % "0.19.0"
   // ^^^ above here
 
   val frontendDependencies =  Seq(googleAuth, scalaUri, enumPlay,
