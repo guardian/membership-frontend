@@ -229,7 +229,11 @@ object EventbriteServiceHelpers {
 
   def getFeaturedEvents(orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
     val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.underlying.ebEvent.id) }
-    orderedEvents.sortBy { event => orderedIds.indexOf(event.underlying.ebEvent.id) } ++ normalEvents.filter(!_.underlying.isSoldOut).take(4 - orderedEvents.length)
+    orderedEvents.sortBy { event => orderedIds.indexOf(event.underlying.ebEvent.id) } ++ normalEvents
+      .filterNot(_.underlying.isSoldOut)
+      // Manual override to remove the Football Weekly Live tour events which have their own sale page on www
+      .filterNot(_.underlying.ebEvent.name.text.contains("Football Weekly Live tour"))
+      .take(4 - orderedEvents.length)
   }
 }
 
