@@ -83,7 +83,7 @@ abstract class EventbriteService(ebAccount: EBAccount)(
   // goal here is to keep the downstream cache warm (AWS CloudFront - ttl 61s).
   lazy val eventsTask = eventsTaskFor("live", 1.second, Config.eventbriteRefreshTime.seconds)
 
-  lazy val archivedEventsTask = eventsTaskFor("ended", 29.seconds, 3600.seconds)
+  lazy val archivedEventsTask = eventsTaskFor("ended", 29.seconds, 7200.seconds)
 
   lazy val draftEventsTask =  eventsTaskFor("draft", 59.seconds, Config.eventbriteRefreshTime.seconds)
 
