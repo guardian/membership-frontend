@@ -76,7 +76,7 @@ jobs:
                   sbt clean test riffRaffNotifyTeamcity
 
             - name: Upload to Riff-Raff
-              uses: guardian/actions-riff-raff@v2
+              uses: guardian/actions-riff-raff@v3
               with:
                   projectName: MemSub::Membership::Frontend
                   configPath: ./frontend/conf/riff-raff.yaml
