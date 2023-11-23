@@ -1,3 +1,13 @@
+# DEPRECATION NOTICE
+
+This software was decommissioned on 23 November 2023. 
+
+Old Event detail URLs (`/event/...` and `/masterclass/...`) redirect to `https://www.eventbrite.co.uk/e/[\d+].` 
+
+`/patrons` redirects to [patrons.theguardian.com](patrons.theguardian.com).
+
+All other URLs redirect to wherever [https://theguardian.live](https://theguardian.live) redirects to. (`theguardian.live` is parked over the [https://github.com/guardian/domains-platform](https://github.com/guardian/domains-platform))
+
 # Membership Frontend
 
 [https://membership.theguardian.com/](https://membership.theguardian.com/). Bringing the Guardian to life through live events and meet-ups.
